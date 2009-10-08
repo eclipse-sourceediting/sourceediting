@@ -3874,8 +3874,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4949,8 +4948,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_028() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-028.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4986,8 +4984,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_029() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-029.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5023,8 +5020,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_030() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-030.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5060,8 +5056,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_031() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-031.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5097,8 +5092,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_032() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-032.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5134,8 +5128,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_033() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-033.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5171,8 +5164,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_034() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-034.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5208,8 +5200,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_035() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-035.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5245,8 +5236,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_036() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-036.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5282,8 +5272,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_037() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-037.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5319,8 +5308,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_038() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-038.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5356,8 +5344,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_039() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-039.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5393,8 +5380,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_040() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-040.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5430,8 +5416,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_041() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-041.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5467,8 +5452,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_042() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-042.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5504,8 +5488,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_043() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-043.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5541,8 +5524,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_044() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-044.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5578,8 +5560,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_045() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-045.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5615,8 +5596,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_046() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-046.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5689,8 +5669,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_048() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-048.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5726,8 +5705,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_049() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-049.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5763,8 +5741,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_050() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-050.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5800,8 +5777,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_051() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-051.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5837,8 +5813,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_052() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-052.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5874,8 +5849,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_053() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-053.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5911,8 +5885,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_054() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-054.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5948,8 +5921,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_055() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-055.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6022,8 +5994,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_057() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-057.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6059,8 +6030,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_058() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-058.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6096,8 +6066,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_059() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-059.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6133,8 +6102,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_060() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-060.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6170,8 +6138,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_061() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-061.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6207,8 +6174,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_062() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-062.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6244,8 +6210,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_063() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-063.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6281,8 +6246,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_064() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-064.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6318,8 +6282,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_065() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-065.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6355,8 +6318,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_066() throws Exception {
       String inputFile = "/TestSources/bib2.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-066.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

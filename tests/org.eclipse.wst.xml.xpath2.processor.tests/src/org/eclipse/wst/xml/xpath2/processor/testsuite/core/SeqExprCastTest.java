@@ -1986,8 +1986,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs011() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs011.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2171,8 +2170,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs016() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs016.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2208,8 +2206,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs017() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs017.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2245,8 +2242,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs018() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs018.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2282,8 +2278,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs019() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs019.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2356,8 +2351,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs021() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs021.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2393,8 +2387,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs022() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs022.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2430,8 +2423,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs023() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs023.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2467,8 +2459,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs024() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs024.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2504,8 +2495,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs025() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs025.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2541,8 +2531,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs026() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs026.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2652,8 +2641,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs029() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs029.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2689,8 +2677,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs030() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs030.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2800,8 +2787,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs033() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs033.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2837,8 +2823,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs034() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs034.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2948,8 +2933,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs037() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs037.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3096,8 +3080,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs041() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs041.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3244,8 +3227,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs045() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs045.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3392,8 +3374,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs049() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs049.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3540,8 +3521,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs053() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs053.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3688,8 +3668,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs057() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs057.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3836,8 +3815,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs061() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs061.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3984,8 +3962,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs065() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs065.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4132,8 +4109,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs069() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs069.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4169,8 +4145,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs070() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs070.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5018,8 +4993,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs093() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs093.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5203,8 +5177,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs098() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs098.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5240,8 +5213,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs099() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs099.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5277,8 +5249,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs100() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs100.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5314,8 +5285,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs101() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs101.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5388,8 +5358,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs103() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs103.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5425,8 +5394,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs104() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs104.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5462,8 +5430,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs105() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs105.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5499,8 +5466,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs106() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs106.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5536,8 +5502,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs107() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs107.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5573,8 +5538,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs108() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs108.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5684,8 +5648,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs111() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs111.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5721,8 +5684,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs112() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs112.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5832,8 +5794,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs115() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs115.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5869,8 +5830,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs116() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs116.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -5980,8 +5940,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs119() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs119.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6128,8 +6087,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs123() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs123.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6276,8 +6234,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs127() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs127.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6424,8 +6381,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs131() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs131.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6572,8 +6528,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs135() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs135.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6720,8 +6675,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs139() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs139.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6868,8 +6822,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs143() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs143.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -7016,8 +6969,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs147() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs147.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -7164,8 +7116,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs151() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs151.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -7201,8 +7152,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs152() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs152.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8237,8 +8187,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs180() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs180.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOCA0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8274,8 +8223,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs181() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs181.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8311,8 +8259,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs182() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs182.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8348,8 +8295,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs183() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs183.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8385,8 +8331,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs184() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs184.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8422,8 +8367,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs185() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs185.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8459,8 +8403,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs186() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs186.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8496,8 +8439,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs187() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs187.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8533,8 +8475,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs188() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs188.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8570,8 +8511,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs189() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs189.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8607,8 +8547,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs190() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs190.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8644,8 +8583,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs191() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs191.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8829,8 +8767,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs196() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs196.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8866,8 +8803,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs197() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs197.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -8903,8 +8839,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs198() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs198.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9458,8 +9393,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs213() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs213.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOCA0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9606,8 +9540,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs217() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs217.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOCA0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9643,8 +9576,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs218() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs218.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOCA0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9680,8 +9612,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs219() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs219.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOCA0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9717,8 +9648,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs220() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs220.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9754,8 +9684,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs221() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs221.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9791,8 +9720,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs222() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs222.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9828,8 +9756,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs223() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs223.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9865,8 +9792,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs224() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs224.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9902,8 +9828,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs225() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs225.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9939,8 +9864,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs226() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs226.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -9976,8 +9900,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs227() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs227.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10013,8 +9936,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs228() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs228.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10050,8 +9972,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs229() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs229.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10124,8 +10045,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs231() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs231.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10161,8 +10081,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs232() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs232.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10198,8 +10117,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs233() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs233.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10494,8 +10412,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs241() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs241.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10531,8 +10448,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs242() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs242.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10568,8 +10484,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs243() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs243.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10605,8 +10520,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs244() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs244.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10642,8 +10556,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs245() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs245.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10679,8 +10592,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs246() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs246.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10716,8 +10628,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs247() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs247.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10753,8 +10664,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs248() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs248.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10790,8 +10700,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs249() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs249.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10827,8 +10736,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs250() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs250.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10864,8 +10772,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs251() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs251.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10938,8 +10845,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs253() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs253.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -10975,8 +10881,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs254() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs254.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11012,8 +10917,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs255() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs255.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11271,8 +11175,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs262() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs262.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11308,8 +11211,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs263() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs263.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11345,8 +11247,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs264() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs264.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11382,8 +11283,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs265() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs265.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11419,8 +11319,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs266() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs266.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11456,8 +11355,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs267() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs267.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11493,8 +11391,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs268() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs268.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11530,8 +11427,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs269() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs269.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11567,8 +11463,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs270() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs270.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11604,8 +11499,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs271() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs271.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11641,8 +11535,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs272() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs272.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11715,8 +11608,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs274() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs274.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11752,8 +11644,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs275() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs275.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11789,8 +11680,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs276() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs276.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11900,8 +11790,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs279() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs279.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11937,8 +11826,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs280() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs280.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -11974,8 +11862,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs281() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs281.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12011,8 +11898,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs282() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs282.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12344,8 +12230,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs291() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs291.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12381,8 +12266,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs292() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs292.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12418,8 +12302,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs293() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs293.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12455,8 +12338,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs294() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs294.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12492,8 +12374,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs295() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs295.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12529,8 +12410,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs296() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs296.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12566,8 +12446,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs297() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs297.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12603,8 +12482,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs298() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs298.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12640,8 +12518,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs299() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs299.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12677,8 +12554,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs300() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs300.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12714,8 +12590,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs301() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs301.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12751,8 +12626,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs302() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs302.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12862,8 +12736,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs305() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs305.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12899,8 +12772,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs306() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs306.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12936,8 +12808,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs307() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs307.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -12973,8 +12844,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs308() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs308.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13158,8 +13028,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs313() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs313.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13195,8 +13064,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs314() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs314.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13232,8 +13100,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs315() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs315.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13269,8 +13136,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs316() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs316.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13306,8 +13172,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs317() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs317.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13343,8 +13208,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs318() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs318.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13380,8 +13244,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs319() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs319.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13417,8 +13280,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs320() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs320.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13454,8 +13316,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs321() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs321.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13491,8 +13352,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs322() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs322.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13528,8 +13388,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs323() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs323.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13565,8 +13424,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs324() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs324.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13750,8 +13608,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs329() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs329.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13787,8 +13644,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs330() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs330.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13824,8 +13680,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs331() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs331.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -13861,8 +13716,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs332() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs332.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14157,8 +14011,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs340() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs340.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14194,8 +14047,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs341() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs341.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14231,8 +14083,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs342() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs342.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14268,8 +14119,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs343() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs343.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14305,8 +14155,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs344() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs344.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14342,8 +14191,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs345() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs345.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14379,8 +14227,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs346() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs346.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14416,8 +14263,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs347() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs347.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14453,8 +14299,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs348() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs348.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14490,8 +14335,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs349() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs349.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14527,8 +14371,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs350() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs350.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14564,8 +14407,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs351() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs351.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14749,8 +14591,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs356() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs356.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14786,8 +14627,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs357() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs357.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14823,8 +14663,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs358() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs358.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14860,8 +14699,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs359() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs359.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14897,8 +14735,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs360() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs360.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14934,8 +14771,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs361() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs361.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -14971,8 +14807,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs362() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs362.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15563,8 +15398,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs378() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs378.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15600,8 +15434,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs379() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs379.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15637,8 +15470,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs380() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs380.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15674,8 +15506,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs381() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs381.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15785,8 +15616,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs384() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs384.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15822,8 +15652,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs385() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs385.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15859,8 +15688,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs386() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs386.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15896,8 +15724,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs387() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs387.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15933,8 +15760,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs388() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs388.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -15970,8 +15796,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs389() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs389.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16007,8 +15832,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs390() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs390.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16044,8 +15868,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs391() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs391.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16192,8 +16015,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs395() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs395.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16229,8 +16051,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs396() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs396.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16266,8 +16087,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs397() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs397.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16303,8 +16123,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs398() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs398.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16340,8 +16159,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs399() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs399.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16377,8 +16195,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs400() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs400.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16414,8 +16231,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs401() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs401.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16451,8 +16267,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs402() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs402.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16488,8 +16303,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs403() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs403.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16525,8 +16339,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs404() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs404.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16710,8 +16523,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs409() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs409.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16747,8 +16559,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs410() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs410.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16784,8 +16595,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs411() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs411.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16821,8 +16631,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs412() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs412.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16858,8 +16667,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs413() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs413.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16895,8 +16703,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs414() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs414.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -16932,8 +16739,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs415() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs415.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17006,8 +16812,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs417() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs417.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17524,8 +17329,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs431() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs431.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17561,8 +17365,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs432() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs432.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17598,8 +17401,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs433() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs433.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17635,8 +17437,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs434() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs434.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17746,8 +17547,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs437() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs437.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17783,8 +17583,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs438() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs438.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17820,8 +17619,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs439() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs439.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17857,8 +17655,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs440() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs440.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17894,8 +17691,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs441() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs441.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17931,8 +17727,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs442() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs442.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -17968,8 +17763,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs443() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs443.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18005,8 +17799,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs444() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs444.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18042,8 +17835,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs445() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs445.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18079,8 +17871,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs446() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs446.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18116,8 +17907,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs447() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs447.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18264,8 +18054,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs451() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs451.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18301,8 +18090,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs452() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs452.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18338,8 +18126,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs453() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs453.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18375,8 +18162,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs454() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs454.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18412,8 +18198,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs455() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs455.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18449,8 +18234,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs456() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs456.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18486,8 +18270,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs457() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs457.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18523,8 +18306,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs458() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs458.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18634,8 +18416,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs461() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs461.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18671,8 +18452,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs462() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs462.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18708,8 +18488,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs463() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs463.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18745,8 +18524,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs464() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs464.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18782,8 +18560,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs465() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs465.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18819,8 +18596,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs466() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs466.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18856,8 +18632,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs467() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs467.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18893,8 +18668,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs468() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs468.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18930,8 +18704,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs469() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs469.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -18967,8 +18740,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs470() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs470.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19115,8 +18887,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs474() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs474.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19152,8 +18923,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs475() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs475.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19189,8 +18959,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs476() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs476.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19226,8 +18995,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs477() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs477.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19263,8 +19031,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs478() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs478.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19300,8 +19067,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs479() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs479.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19337,8 +19103,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs480() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs480.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19448,8 +19213,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs483() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs483.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19485,8 +19249,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs484() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs484.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19522,8 +19285,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs485() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs485.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19559,8 +19321,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs486() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs486.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19596,8 +19357,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs487() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs487.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19633,8 +19393,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs488() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs488.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19670,8 +19429,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs489() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs489.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19707,8 +19465,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs490() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs490.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19744,8 +19501,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs491() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs491.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19781,8 +19537,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs492() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs492.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19818,8 +19573,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs493() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs493.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -19855,8 +19609,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs494() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs494.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20003,8 +19756,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs498() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs498.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20040,8 +19792,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs499() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs499.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20077,8 +19828,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs500() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs500.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20114,8 +19864,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs501() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs501.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20151,8 +19900,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs502() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs502.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20188,8 +19936,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs503() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs503.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20336,8 +20083,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs507() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs507.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20373,8 +20119,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs508() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs508.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20410,8 +20155,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs509() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs509.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20447,8 +20191,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs510() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs510.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20484,8 +20227,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs511() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs511.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20521,8 +20263,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs512() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs512.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20558,8 +20299,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs513() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs513.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20595,8 +20335,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs514() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs514.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20632,8 +20371,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs515() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs515.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20669,8 +20407,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs516() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs516.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20706,8 +20443,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs517() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs517.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20743,8 +20479,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs518() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs518.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20891,8 +20626,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs522() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs522.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20928,8 +20662,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs523() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs523.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -20965,8 +20698,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs524() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs524.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21002,8 +20734,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs525() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs525.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21039,8 +20770,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs526() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs526.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21150,8 +20880,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs529() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs529.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21187,8 +20916,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs530() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs530.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21224,8 +20952,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs531() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs531.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21261,8 +20988,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs532() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs532.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21298,8 +21024,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs533() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs533.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21335,8 +21060,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs534() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs534.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21372,8 +21096,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs535() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs535.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21409,8 +21132,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs536() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs536.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21446,8 +21168,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs537() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs537.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21483,8 +21204,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs538() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs538.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21520,8 +21240,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs539() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs539.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21557,8 +21276,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs540() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs540.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21594,8 +21312,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs541() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs541.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21631,8 +21348,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs542() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs542.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21779,8 +21495,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs546() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs546.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21816,8 +21531,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs547() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs547.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21853,8 +21567,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs548() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs548.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -21890,8 +21603,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs549() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs549.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22297,8 +22009,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs560() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs560.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22334,8 +22045,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs561() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs561.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22371,8 +22081,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs562() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs562.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22408,8 +22117,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs563() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs563.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22445,8 +22153,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs564() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs564.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22482,8 +22189,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs565() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs565.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22519,8 +22225,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs566() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs566.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22556,8 +22261,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs567() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs567.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22593,8 +22297,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs568() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs568.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22630,8 +22333,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs569() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs569.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22667,8 +22369,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs570() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs570.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22778,8 +22479,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs573() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs573.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22815,8 +22515,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs574() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs574.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -22852,8 +22551,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs575() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs575.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23037,8 +22735,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs580() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs580.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23074,8 +22771,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs581() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs581.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23111,8 +22807,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs582() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs582.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23148,8 +22843,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs583() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs583.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23185,8 +22879,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs584() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs584.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23222,8 +22915,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs585() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs585.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23259,8 +22951,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs586() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs586.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23296,8 +22987,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs587() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs587.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23333,8 +23023,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs588() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs588.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23370,8 +23059,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs589() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs589.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23407,8 +23095,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs590() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs590.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23444,8 +23131,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs591() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs591.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23481,8 +23167,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs592() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs592.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23518,8 +23203,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs593() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs593.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23555,8 +23239,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs594() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs594.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23592,8 +23275,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs595() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs595.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23851,8 +23533,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs602() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs602.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23962,8 +23643,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs605() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs605.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -23999,8 +23679,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs606() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs606.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24036,8 +23715,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs607() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs607.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24073,8 +23751,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs608() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs608.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24110,8 +23787,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs609() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs609.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24147,8 +23823,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs610() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs610.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24184,8 +23859,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs611() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs611.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24221,8 +23895,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs612() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs612.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24258,8 +23931,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs613() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs613.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24295,8 +23967,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs614() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs614.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24332,8 +24003,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs615() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs615.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24369,8 +24039,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs616() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs616.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24406,8 +24075,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs617() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs617.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24443,8 +24111,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs618() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs618.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24480,8 +24147,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs619() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs619.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24517,8 +24183,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs620() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs620.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24702,8 +24367,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs625() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs625.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24813,8 +24477,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs628() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs628.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24850,8 +24513,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs629() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs629.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24887,8 +24549,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs630() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs630.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24924,8 +24585,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs631() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs631.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24961,8 +24621,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs632() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs632.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -24998,8 +24657,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs633() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs633.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25035,8 +24693,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs634() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs634.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25072,8 +24729,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs635() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs635.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25109,8 +24765,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs636() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs636.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25146,8 +24801,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs637() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs637.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25183,8 +24837,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs638() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs638.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25220,8 +24873,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs639() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs639.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25257,8 +24909,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs640() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs640.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25294,8 +24945,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs641() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs641.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25331,8 +24981,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs642() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs642.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25368,8 +25017,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs643() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs643.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25405,8 +25053,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs644() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs644.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -25442,8 +25089,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs645() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs645.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -26443,8 +26089,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs672() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs672.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

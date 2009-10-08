@@ -655,8 +655,7 @@ public class NodeLangFuncTest extends AbstractPsychoPathTest {
    public void test_fn_lang_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeLangFunc/fn-lang-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeLangFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

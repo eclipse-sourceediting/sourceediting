@@ -266,8 +266,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			isrf.close();
 
 		} catch (IOException e) {
-			// e.printStackTrace();
-			content = "XPST0003";
+			throw new RuntimeException("Can't load expected result from : " + xqFile, e);
 		}
 		if (unescape && content.contains("&")) return resolveCharacterReferences(content);
 		return content;
@@ -326,8 +325,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			xqreader.close();
 			isxq.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("Can't extract XPath expression from XQuery file : " + xqFile, e);
 		}
 		if (unescape && xpath2Expr.contains("&")) {
 			return resolveCharacterReferences(xpath2Expr);

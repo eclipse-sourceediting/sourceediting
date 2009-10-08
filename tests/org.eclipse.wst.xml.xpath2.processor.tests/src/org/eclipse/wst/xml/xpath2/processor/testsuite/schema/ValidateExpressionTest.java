@@ -25,8 +25,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_1() throws Exception {
       String inputFile = "/TestSources/orderData.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-1.xq";
-      String resultFile = "/ExpectedTestResults/SchemaValidation/ValidateExpression/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XQTY0030";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -136,8 +135,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-4.xq";
-      String resultFile = "/ExpectedTestResults/SchemaValidation/ValidateExpression/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XQTY0030";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -173,8 +171,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-5.xq";
-      String resultFile = "/ExpectedTestResults/SchemaValidation/ValidateExpression/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XQTY0030";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -210,8 +207,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-6.xq";
-      String resultFile = "/ExpectedTestResults/SchemaValidation/ValidateExpression/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XQTY0030";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -247,8 +243,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-7.xq";
-      String resultFile = "/ExpectedTestResults/SchemaValidation/ValidateExpression/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XQTY0030";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -284,8 +279,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-8.xq";
-      String resultFile = "/ExpectedTestResults/SchemaValidation/ValidateExpression/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XQTY0030";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -321,8 +315,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-9.xq";
-      String resultFile = "/ExpectedTestResults/SchemaValidation/ValidateExpression/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XQTY0030";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -802,8 +795,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-23.xq";
-      String resultFile = "/ExpectedTestResults/SchemaValidation/ValidateExpression/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XQDY0084";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

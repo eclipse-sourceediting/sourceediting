@@ -254,8 +254,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
    public void test_XQueryComment015() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/XQueryComment/XQueryComment015.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/XQueryComment/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -291,8 +290,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
    public void test_XQueryComment016() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/XQueryComment/XQueryComment016.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/XQueryComment/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -328,8 +326,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
    public void test_XQueryComment017() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/XQueryComment/XQueryComment017.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/XQueryComment/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -365,8 +362,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
    public void test_XQueryComment018() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/XQueryComment/XQueryComment018.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/XQueryComment/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -402,8 +398,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
    public void test_XQueryComment019() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/XQueryComment/XQueryComment019.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/XQueryComment/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

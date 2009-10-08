@@ -97,43 +97,41 @@ public class BaseURIFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   // Psychopath will always have a context item.
-//   //Evaluates the "base-uri" function with argument set to "." and no context node set. Should raise runtime error.
-//   public void test_fn_base_uri_22() throws Exception {
-//      String inputFile = "/TestSources/emptydoc.xml";
-//      String xqFile = "/Queries/XQuery/Functions/AccessorFunc/BaseURIFunc/fn-base-uri-22.xq";
-//      String resultFile = "/ExpectedTestResults/Functions/AccessorFunc/BaseURIFunc/";
-//      String expectedResult = getExpectedResult(resultFile);
-//      URL fileURL = bundle.getEntry(inputFile);
-//      loadDOMDocument(fileURL);
-//      
-//      // Get XML Schema Information for the Document
-//      XSModel schema = getGrammar();
-//
-//      DynamicContext dc = setupDynamicContext(schema);
-//
-//      String xpath = extractXPathExpression(xqFile, inputFile);
-//      String actual = null;
-//      try {
-//	   	  XPath path = compileXPath(dc, xpath);
-//	
-//	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-//	      ResultSequence rs = eval.evaluate(path);
-//         
-//          actual = buildResultString(rs);
-//	
-//      } catch (XPathParserException ex) {
-//    	 actual = ex.code();
-//      } catch (StaticError ex) {
-//         actual = ex.code();
-//      } catch (DynamicError ex) {
-//         actual = ex.code();
-//      }
-//
-//      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-//        
-//
-//   }
+   //Evaluates the "base-uri" function with argument set to "." and no context node set. Should raise runtime error.
+   public void test_fn_base_uri_22() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/AccessorFunc/BaseURIFunc/fn-base-uri-22.xq";
+      String expectedResult = "XPDY0002";
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
 
 }
       

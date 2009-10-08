@@ -25,8 +25,7 @@ public class InternalContextExprTest extends AbstractPsychoPathTest {
    public void test_internalcontextitem_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/ContextExpr/InternalContextExpr/internalcontextitem-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/InternalContextExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -54,10 +53,6 @@ public class InternalContextExprTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
       
-      if (actual.equals("XPST0017")) {
-    	  actual = "XPST0003";
-      }
-
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 

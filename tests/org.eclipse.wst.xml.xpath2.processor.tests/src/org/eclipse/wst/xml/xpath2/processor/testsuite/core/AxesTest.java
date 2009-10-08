@@ -1394,8 +1394,7 @@ public class AxesTest extends AbstractPsychoPathTest {
    public void test_Axes012_1() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/Axes012.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6834,8 +6833,7 @@ public class AxesTest extends AbstractPsychoPathTest {
    public void test_Axes088() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/Axes088.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -6871,8 +6869,7 @@ public class AxesTest extends AbstractPsychoPathTest {
    public void test_axis_err_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/axis-err-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0020";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

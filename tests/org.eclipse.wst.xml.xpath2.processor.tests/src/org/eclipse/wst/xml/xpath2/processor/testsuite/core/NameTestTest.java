@@ -138,8 +138,7 @@ public class NameTestTest extends AbstractPsychoPathTest {
    public void test_nametest_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/nametest-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0081";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -175,8 +174,7 @@ public class NameTestTest extends AbstractPsychoPathTest {
    public void test_nametest_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/nametest-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0081";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

@@ -2134,8 +2134,7 @@ public class NumericAddTest extends AbstractPsychoPathTest {
    public void test_op_numeric_addmix2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericAdd/op-numeric-addmix2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericAdd/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

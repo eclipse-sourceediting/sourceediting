@@ -2282,8 +2282,7 @@ public class NumericSubtractTest extends AbstractPsychoPathTest {
    public void test_op_numeric_subtractmix2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericSubtract/op-numeric-subtractmix2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericSubtract/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

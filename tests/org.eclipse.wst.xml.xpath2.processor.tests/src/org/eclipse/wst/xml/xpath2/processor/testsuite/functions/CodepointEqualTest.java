@@ -359,8 +359,7 @@ public class CodepointEqualTest extends AbstractPsychoPathTest {
    public void test_fn_codepoint_equal_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CodepointEqualFunc/fn-codepoint-equal-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CodepointEqualFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -396,8 +395,7 @@ public class CodepointEqualTest extends AbstractPsychoPathTest {
    public void test_fn_codepoint_equal_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CodepointEqualFunc/fn-codepoint-equal-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CodepointEqualFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

@@ -399,8 +399,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
    public void test_CondExpr019() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr019.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/CondExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

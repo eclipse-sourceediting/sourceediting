@@ -25,8 +25,7 @@ public class TraceFuncTest extends AbstractPsychoPathTest {
    public void test_fn_trace_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/TraceFunc/fn-trace-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/TraceFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

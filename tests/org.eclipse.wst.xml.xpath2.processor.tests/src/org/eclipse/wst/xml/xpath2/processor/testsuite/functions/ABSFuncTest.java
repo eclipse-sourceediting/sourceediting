@@ -2357,8 +2357,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_025() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-025.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2394,8 +2393,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_026() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-026.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2431,8 +2429,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_027() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-027.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2468,8 +2465,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_028() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-028.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2505,8 +2501,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_029() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-029.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2542,8 +2537,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_030() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-030.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2579,8 +2573,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_031() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-031.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2616,8 +2609,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_032() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-032.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2653,8 +2645,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_033() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-033.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2690,8 +2681,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_034() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-034.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2727,8 +2717,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_035() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-035.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2764,8 +2753,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_036() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-036.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2801,8 +2789,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_037() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-037.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2838,8 +2825,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_038() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-038.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2875,8 +2861,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_039() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-039.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2912,8 +2897,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_040() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-040.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2949,8 +2933,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_041() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-041.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2986,8 +2969,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_042() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-042.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3023,8 +3005,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_043() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-043.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3060,8 +3041,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_044() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-044.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3097,8 +3077,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_045() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-045.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3134,8 +3113,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_046() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-046.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3171,8 +3149,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_047() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-047.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3208,8 +3185,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_048() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-048.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3245,8 +3221,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_049() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-049.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3282,8 +3257,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_050() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-050.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3319,8 +3293,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_051() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-051.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3356,8 +3329,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_052() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-052.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3393,8 +3365,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_053() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-053.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3430,8 +3401,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_054() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-054.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3467,8 +3437,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_055() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-055.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3504,8 +3473,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_056() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-056.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3541,8 +3509,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_057() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-057.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3578,8 +3545,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_058() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-058.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3615,8 +3581,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_059() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-059.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3652,8 +3617,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_060() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-060.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3689,8 +3653,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_061() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-061.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3726,8 +3689,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_062() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-062.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3763,8 +3725,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_063() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-063.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3800,8 +3761,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_064() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-064.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3837,8 +3797,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_065() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-065.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3874,8 +3833,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_066() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-066.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3911,8 +3869,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_067() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-067.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3948,8 +3905,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_068() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-068.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3985,8 +3941,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_069() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-069.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4022,8 +3977,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_070() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-070.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4059,8 +4013,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_071() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-071.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4096,8 +4049,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_072() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-072.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4133,8 +4085,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_073() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-073.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4170,8 +4121,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_074() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-074.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4207,8 +4157,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_075() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-075.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4244,8 +4193,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_076() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-076.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4281,8 +4229,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_077() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-077.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4318,8 +4265,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_078() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-078.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4355,8 +4301,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_079() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-079.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4392,8 +4337,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_080() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-080.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4429,8 +4373,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_081() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-081.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4466,8 +4409,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_082() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-082.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4503,8 +4445,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_083() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-083.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4540,8 +4481,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_084() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-084.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4577,8 +4517,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_085() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-085.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -4614,8 +4553,7 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_086() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-086.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/ABSFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

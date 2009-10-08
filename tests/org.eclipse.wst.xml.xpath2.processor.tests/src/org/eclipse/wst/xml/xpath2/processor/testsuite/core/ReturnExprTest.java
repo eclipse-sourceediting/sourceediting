@@ -284,8 +284,7 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
    public void test_ReturnExpr012() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ReturnExpr/ReturnExpr012.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ReturnExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -321,8 +320,7 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
    public void test_ReturnExpr013() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ReturnExpr/ReturnExpr013.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ReturnExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -512,8 +510,7 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
    public void test_ReturnExpr019() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ReturnExpr/ReturnExpr019.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ReturnExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

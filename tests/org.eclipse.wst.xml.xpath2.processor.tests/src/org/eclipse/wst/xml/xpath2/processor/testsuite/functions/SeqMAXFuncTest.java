@@ -3873,8 +3873,7 @@ public class SeqMAXFuncTest extends AbstractPsychoPathTest {
    public void test_fn_max_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqMAXFunc/fn-max-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqMAXFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

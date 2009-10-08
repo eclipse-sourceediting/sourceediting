@@ -755,8 +755,7 @@ public class StringLengthFuncTest extends AbstractPsychoPathTest {
    public void test_fn_string_length_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/StringLengthFunc/fn-string-length-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/StringLengthFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0018";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

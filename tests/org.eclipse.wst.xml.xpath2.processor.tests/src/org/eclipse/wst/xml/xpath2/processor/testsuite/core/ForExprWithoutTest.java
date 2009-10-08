@@ -247,8 +247,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
    public void test_ForExpr014() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr014.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -358,8 +357,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
    public void test_ForExpr017() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr017.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -395,8 +393,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
    public void test_ForExpr018() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr018.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -432,8 +429,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
    public void test_ForExpr019() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr019.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -469,8 +465,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
    public void test_ForExpr020() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr020.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -580,8 +575,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
    public void test_ForExpr026() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr026.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -617,8 +611,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
    public void test_ForExpr027() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr027.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

@@ -3281,8 +3281,7 @@ public class SeqBooleanFuncTest extends AbstractPsychoPathTest {
    public void test_fn_boolean_050() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqBooleanFunc/fn-boolean-050.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqBooleanFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -3318,8 +3317,7 @@ public class SeqBooleanFuncTest extends AbstractPsychoPathTest {
    public void test_context_item_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqBooleanFunc/context-item-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqBooleanFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

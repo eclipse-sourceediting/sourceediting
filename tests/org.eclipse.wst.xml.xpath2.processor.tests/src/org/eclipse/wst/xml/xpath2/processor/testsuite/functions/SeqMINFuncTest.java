@@ -3873,8 +3873,7 @@ public class SeqMINFuncTest extends AbstractPsychoPathTest {
    public void test_fn_min_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqMINFunc/fn-min-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/AggregateSeqFunc/SeqMINFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

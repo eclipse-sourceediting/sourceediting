@@ -876,8 +876,7 @@ public class YearMonthDurationMultiplyTest extends AbstractPsychoPathTest {
    public void test_op_multiply_yearMonthDuration_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/YearMonthDurationMultiply/op-multiply-yearMonthDuration-19.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/YearMonthDurationMultiply/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOCA0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

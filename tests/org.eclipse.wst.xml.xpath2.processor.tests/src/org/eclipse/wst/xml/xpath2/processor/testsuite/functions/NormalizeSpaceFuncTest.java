@@ -6,6 +6,7 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -237,8 +238,7 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
    public void test_fn_normalize_space_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/NormalizeSpaceFunc/fn-normalize-space-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/NormalizeSpaceFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -251,7 +251,8 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
-	
+
+	   	  dc.set_focus(new Focus(ResultSequenceFactory.create_new()));
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          

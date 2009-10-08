@@ -1468,8 +1468,7 @@ public class SeqOneOrMoreFuncTest extends AbstractPsychoPathTest {
    public void test_fn_one_or_more_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/CardinalitySeqFunc/SeqOneOrMoreFunc/fn-one-or-more-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/CardinalitySeqFunc/SeqOneOrMoreFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

@@ -25,8 +25,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
    public void test_fn_collection_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqCollectionFunc/fn-collection-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqCollectionFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -62,8 +61,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
    public void test_fn_collection_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqCollectionFunc/fn-collection-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqCollectionFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FODC0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -99,8 +97,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
    public void test_fn_collection_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqCollectionFunc/fn-collection-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqCollectionFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FODC0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

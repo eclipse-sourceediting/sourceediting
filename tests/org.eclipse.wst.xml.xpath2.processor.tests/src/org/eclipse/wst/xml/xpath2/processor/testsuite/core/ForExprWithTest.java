@@ -25,8 +25,7 @@ public class ForExprWithTest extends AbstractPsychoPathTest {
    public void test_ForExprType007() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExprType/ForExprType007.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExprType/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -62,8 +61,7 @@ public class ForExprWithTest extends AbstractPsychoPathTest {
    public void test_ForExprType008() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExprType/ForExprType008.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExprType/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -99,8 +97,7 @@ public class ForExprWithTest extends AbstractPsychoPathTest {
    public void test_ForExprType012() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExprType/ForExprType012.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExprType/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -136,8 +133,7 @@ public class ForExprWithTest extends AbstractPsychoPathTest {
    public void test_ForExprType013() throws Exception {
       String inputFile = "/TestSources/orderData.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExprType/ForExprType013.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExprType/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

@@ -12,6 +12,8 @@
 package org.eclipse.wst.xml.xpath2.processor.testsuite.schema;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
@@ -173,8 +175,7 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
    public void test_notation_cast_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/SeqExprCastSI/notation-cast-2.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/";
-      String expectedResult = getExpectedResult(resultFile);
+      List<String> expectedResult = Arrays.asList("XPST0080", "XPST0017");
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -201,9 +202,7 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
+      assertTrue("Expected one of " + expectedResult + " but actual was: " + actual, expectedResult.contains(actual));
    }
 
    //Evaluates casting a type derived from an xs:NOTATION to a type derived from xs:NOTATION.

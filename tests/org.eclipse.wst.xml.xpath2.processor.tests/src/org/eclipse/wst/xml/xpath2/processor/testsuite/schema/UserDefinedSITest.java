@@ -12,6 +12,8 @@
 package org.eclipse.wst.xml.xpath2.processor.testsuite.schema;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
@@ -62,8 +64,8 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
    public void test_user_defined_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/UserDefinedSI/user-defined-2.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/";
-      String expectedResult = getExpectedResult(resultFile);
+      List<String> expectedResult = Arrays.asList( "FORG0001", "XQST0009", "XPST0017" );
+      
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -89,10 +91,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       } catch (DynamicError ex) {
          actual = ex.code();
       }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
+      assertTrue("Expected one of " + expectedResult + " but actual was: " + actual, expectedResult.contains(actual));
    }
 
    //Evaluation of simple constructor function for used in addition operation. Type derived from xs:integer.

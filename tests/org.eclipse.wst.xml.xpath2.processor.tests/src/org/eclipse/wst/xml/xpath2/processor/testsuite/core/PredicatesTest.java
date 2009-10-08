@@ -989,8 +989,7 @@ public class PredicatesTest extends AbstractPsychoPathTest {
    public void test_predicates_29() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/Predicates/predicates-29.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Predicates/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0006";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
