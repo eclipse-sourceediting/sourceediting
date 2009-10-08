@@ -19,10 +19,15 @@ import org.eclipse.core.runtime.PlatformObject;
  */
 public abstract class XSLModelObject extends PlatformObject
 {
-	public enum Type {STYLESHEET_MODEL,IMPORT,INCLUDE,TEMPLATE,VARIABLE, CALL_TEMPLATE, STYLESHEET, ATTRIBUTE, OTHER_ELEMENT, /**
+	public enum Type {STYLESHEET_MODEL,IMPORT,INCLUDE,TEMPLATE,VARIABLE, CALL_TEMPLATE, STYLESHEET, ATTRIBUTE, OTHER_ELEMENT,
+	/**
 	 * @since 1.1
 	 */
-	PARAM};
+	PARAM,
+	/**
+	 * @since 1.1
+	 */
+	FUNCTION};
 	
 	public abstract Type getModelType();
 }

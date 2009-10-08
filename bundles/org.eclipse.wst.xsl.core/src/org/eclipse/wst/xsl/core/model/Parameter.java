@@ -59,4 +59,11 @@ public class Parameter extends Variable
 	public Type getModelType() {
 		return Type.PARAM;
 	}
+	
+	/**
+	 * @since 1.1
+	 */
+	public String getAs() {
+		return getAttributeValue("as"); //$NON-NLS-1$
+	}
 }

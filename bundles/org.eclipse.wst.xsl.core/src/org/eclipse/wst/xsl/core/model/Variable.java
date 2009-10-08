@@ -54,4 +54,14 @@ public class Variable extends XSLElement
 	{
 		return Type.VARIABLE;
 	}
+	
+	/**
+	 * If an XSLT 2.0, return the value of the <code>as</code> attribute if one exists.
+	 * 
+	 * @return the as value, or null
+	 * @since 1.1
+	 */
+	public String getAs() {
+		return getAttributeValue("as"); //$NON-NLS-1$
+	}
 }

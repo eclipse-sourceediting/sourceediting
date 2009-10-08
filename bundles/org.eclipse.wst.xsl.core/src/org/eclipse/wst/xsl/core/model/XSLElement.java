@@ -21,60 +21,58 @@ import java.util.Map;
  * @author Doug Satchwell
  * @since 1.0
  */
-public class XSLElement extends XSLNode
-{
+public class XSLElement extends XSLNode {
 	final Map<String, XSLAttribute> attributes = new HashMap<String, XSLAttribute>();
 	final List<XSLElement> childElements = new ArrayList<XSLElement>();
-	
+
 	/**
 	 * Create a new instance of this.
 	 * 
-	 * @param stylesheet the stylesheet that this belongs to
+	 * @param stylesheet
+	 *            the stylesheet that this belongs to
 	 */
-	public XSLElement(Stylesheet stylesheet)
-	{
+	public XSLElement(Stylesheet stylesheet) {
 		super(stylesheet, XSLNode.ELEMENT_NODE);
 	}
-	
+
 	/**
 	 * Add an attribute of this
 	 * 
-	 * @param attribute the attribute to add
+	 * @param attribute
+	 *            the attribute to add
 	 */
-	public void setAttribute(XSLAttribute attribute)
-	{
+	public void setAttribute(XSLAttribute attribute) {
 		attributes.put(attribute.name, attribute);
 	}
-	
+
 	/**
 	 * Get the attribute with the given name.
 	 * 
-	 * @param name the name of the attribute
+	 * @param name
+	 *            the name of the attribute
 	 * @return the attribute
 	 */
-	public XSLAttribute getAttribute(String name)
-	{
+	public XSLAttribute getAttribute(String name) {
 		return attributes.get(name);
 	}
 
 	/**
-	 * Get the attributes keyed by their names. 
+	 * Get the attributes keyed by their names.
 	 * 
 	 * @return the map of attribute names and instances
 	 */
-	public Map<String, XSLAttribute> getAttributes()
-	{
+	public Map<String, XSLAttribute> getAttributes() {
 		return attributes;
 	}
-	
+
 	/**
 	 * Get the value of the attribute with the given name.
 	 * 
-	 * @param name the name of the attribute
+	 * @param name
+	 *            the name of the attribute
 	 * @return the attribute value
 	 */
-	public String getAttributeValue(String name)
-	{
+	public String getAttributeValue(String name) {
 		XSLAttribute attribute = attributes.get(name);
 		return attribute == null ? null : attribute.getValue();
 	}
@@ -82,26 +80,24 @@ public class XSLElement extends XSLNode
 	/**
 	 * Add a child element of this.
 	 * 
-	 * @param element the chold element
+	 * @param element
+	 *            the chold element
 	 */
-	public void addChild(XSLElement element)
-	{
+	public void addChild(XSLElement element) {
 		childElements.add(element);
 	}
-	
+
 	/**
 	 * Get the list of child elements
 	 * 
 	 * @return the list of children
 	 */
-	public List<XSLElement> getChildElements()
-	{
+	public List<XSLElement> getChildElements() {
 		return childElements;
 	}
 
 	@Override
-	public Type getModelType()
-	{
+	public Type getModelType() {
 		return Type.OTHER_ELEMENT;
 	}
 }
