@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.wst.xsl.core.internal.StylesheetBuilder;
+import org.eclipse.wst.xsl.core.model.Function;
 import org.eclipse.wst.xsl.core.model.Import;
 import org.eclipse.wst.xsl.core.model.Include;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
@@ -12,19 +13,30 @@ import org.eclipse.wst.xsl.core.model.Variable;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
 
 public class TestStylesheet extends AbstractModelTest {
+	StylesheetBuilder builder = null;
 
 	public TestStylesheet() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		builder = StylesheetBuilder.getInstance();
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		builder.release();
+	}
 
 	public void testLoadModel() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet model = builder.getStylesheet(getFile("style1.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", model);
 	}
 
 	public void testgetLocalTemplatesTemplates() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet model = builder.getStylesheet(getFile("style1.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", model);
 
@@ -34,7 +46,6 @@ public class TestStylesheet extends AbstractModelTest {
 	}
 
 	public void testGetIncludes() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet stylesheet = builder.getStylesheet(getFile("style1.xsl"),
 				false);
 		assertNotNull("Model failed to load, returned NULL", stylesheet);
@@ -45,7 +56,6 @@ public class TestStylesheet extends AbstractModelTest {
 	}
 
 	public void testGetImports() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet stylesheet = builder.getStylesheet(getFile("style1.xsl"),
 				false);
 		assertNotNull("Model failed to load, returned NULL", stylesheet);
@@ -57,7 +67,6 @@ public class TestStylesheet extends AbstractModelTest {
 	}
 
 	public void testGetGlobalVariables() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", stylesheet);
@@ -68,7 +77,6 @@ public class TestStylesheet extends AbstractModelTest {
 	}
 
 	public void testGetLineNumber() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", stylesheet);
@@ -77,7 +85,6 @@ public class TestStylesheet extends AbstractModelTest {
 	}
 
 	public void testGetColumnNumber() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", stylesheet);
@@ -87,7 +94,6 @@ public class TestStylesheet extends AbstractModelTest {
 	}
 
 	public void testGetVersion() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", stylesheet);
@@ -98,7 +104,6 @@ public class TestStylesheet extends AbstractModelTest {
 	}
 
 	public void testXSLT2GetVersion() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("XSLT20Test.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", stylesheet);
@@ -108,7 +113,6 @@ public class TestStylesheet extends AbstractModelTest {
 	}
 
 	public void testGetAttributes() {
-		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", stylesheet);
@@ -122,4 +126,28 @@ public class TestStylesheet extends AbstractModelTest {
 
 	}
 
+	public void testGetFunction() {
+		Stylesheet stylesheet = builder.getStylesheet(
+				getFile("XSLT20FunctionTest.xsl"), false);
+		assertNotNull("Model failed to load, returned NULL", stylesheet);
+
+		List<Function> functionList = stylesheet.getFunctions();
+		assertEquals("Wrong number of global variables returned.", 2,
+				functionList.size());
+	}
+	
+	public void testGetFunctionFunc1() {
+		Stylesheet stylesheet = builder.getStylesheet(
+				getFile("XSLT20FunctionTest.xsl"), false);
+		assertNotNull("Model failed to load, returned NULL", stylesheet);
+
+		List<Function> functionList = stylesheet.getFunctions();
+		for (Function function : functionList) {
+			if (function.getName().equals("func1")) {
+				return;
+			}
+		}
+		fail("Did not find XSL func func1");
+	}
+		
 }
