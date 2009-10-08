@@ -12,4 +12,8 @@
       <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_processorType.html" label="org.eclipse.wst.xsl.jaxp.processorType">
       </topic>
    </topic>
+   <topic label="XSLT Editor">
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_ui_contentAssistProcessor.html" label="org.eclipse.wst.xsl.ui.contentAssistProcessor">
+      </topic>
+   </topic>
 </toc>

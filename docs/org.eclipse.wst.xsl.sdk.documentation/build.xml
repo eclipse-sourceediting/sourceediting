@@ -74,6 +74,9 @@
 		<pde.convertSchemaToHTML manifest="../org.eclipse.wst.xsl.jaxp.launching/plugin.xml"
 			                     destination="${workspace}/doc/html/extension_point"
 		/>
+		<pde.convertSchemaToHTML manifest="../org.eclipse.wst.xsl.ui/plugin.xml"
+			                     destination="${workspace}/doc/html/extension_point"
+		/>
 	</target>
 
 </project>

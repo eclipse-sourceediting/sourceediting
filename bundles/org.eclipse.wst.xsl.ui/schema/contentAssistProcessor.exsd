@@ -1,13 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.wst.xsl.ui" xmlns="http://www.w3.org/2001/XMLSchema">
- <annotation>
+<annotation>
       <appinfo>
          <meta.schema plugin="org.eclipse.wst.xsl.ui" id="contentAssistProcessor" name="XSL Content Assistance"/>
       </appinfo>
       <documentation>
          XSL Content Asisstance processor extension point, allows for the contribution of adopter defined XSL processor extensions.
-
       </documentation>
    </annotation>
 
@@ -24,7 +23,7 @@
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  A unique ID for this extension point
                </documentation>
             </annotation>
          </attribute>
@@ -38,7 +37,7 @@
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+                  Extension point name
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -58,7 +57,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The class that implements the content assistant processor.
                </documentation>
                <appinfo>
                   <meta.attribute kind="java"/>
@@ -76,4 +75,39 @@
          1.1
       </documentation>
    </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         &lt;p&gt;&amp;lt;extension
+       point=&quot;org.eclipse.wst.xsl.ui.contentAssistProcessor&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&amp;#160;&amp;#160;&amp;#160;&amp;lt;processor
+          class=&quot;org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&amp;#160;&amp;#160;&amp;#160;&amp;lt;/processor&gt;&lt;/p&gt;
+&lt;p&gt;&amp;lt;/extension&gt;&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+*******************************************************************************
+ * Copyright (c) 2009 Standards for Technology in Automotive Retail and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver (STAR) - initial API and implementation
+ ******************************************************************************
+      </documentation>
+   </annotation>
+
 </schema>
