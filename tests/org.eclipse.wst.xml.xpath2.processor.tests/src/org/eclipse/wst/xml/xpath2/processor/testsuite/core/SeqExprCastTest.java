@@ -9612,7 +9612,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastAs219() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastAs219.xq";
-      String expectedResult = "FOCA0002";
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
