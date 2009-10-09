@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     David Carver - bug 280547 - fix dates for comparison 
+ *     David Carver - bug 280547 - fix dates for comparison
+ *     Jesper Steen Moller  - bug 262765 - fix type tests
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -39,7 +40,9 @@ public abstract class CalendarType extends CtrType {
 		
 	}
 
-	protected boolean isGDataType(AnyAtomicType aat) {
+	protected boolean isGDataType(AnyType aat) {
+		if (! (aat instanceof AnyAtomicType)) return false;
+		
 		String type = aat.string_type();
 		if (type.equals("xs:gMonthDay") ||
 			type.equals("xs:gDay") ||

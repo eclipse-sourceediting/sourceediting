@@ -11,6 +11,7 @@
  *                      BigInteger class to enhance numerical range to -INF -> +INF.
  *     David Carver (STAR) - bug 262765 - fix comparision to zero.
  *     David Carver (STAR) - bug 282223 - fix casting issues.
+ *     Jesper Steen Moller - bug 262765 - fix type tests
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -166,7 +167,7 @@ public class XSInteger extends XSDecimal {
 	protected boolean isLexicalValue(String value) {
 		
 		try {
-			Integer.parseInt(value);
+			new BigInteger(value);
 		} catch (NumberFormatException ex) {
 			return false;
 		}

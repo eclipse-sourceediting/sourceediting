@@ -11,6 +11,7 @@
  *     David Carver - bug 282223 - implementation of xs:duration data type.
  *                                 correction of casting to time. 
  *     David Carver - bug 280547 - fix dates for comparison 
+ *     Jesper Steen Moller - bug 262765 - fix type tests
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -141,14 +142,8 @@ Cloneable {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
-		if (aat instanceof NumericType || aat instanceof XSDuration ||
-			aat instanceof XSDate || isGDataType(aat) ||
-			aat instanceof XSBoolean) {
-			throw DynamicError.invalidType();
-		}
-
 		if (!isCastable(aat)) {
-			throw DynamicError.cant_cast(null); 
+			throw DynamicError.invalidType();
 		}
 		
 		CalendarType t = castTime(aat);

@@ -8,13 +8,14 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moller  - bug 262765 - propagate possible errors from xs:boolean
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
@@ -38,9 +39,10 @@ public class FnNot extends Function {
 	 * @param args
 	 *            argument expressions.
 	 * @return Result of evaluation.
+	 * @throws DynamicError 
 	 */
 	@Override
-	public ResultSequence evaluate(Collection args) {
+	public ResultSequence evaluate(Collection args) throws DynamicError {
 		// 1 argument only!
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
@@ -55,11 +57,10 @@ public class FnNot extends Function {
 	 * @param arg
 	 *            Result from the expressions evaluation.
 	 * @return Result of fn:note operation.
+	 * @throws DynamicError 
 	 */
-	public static ResultSequence fn_not(ResultSequence arg) {
-		ResultSequence rs = FnBoolean.fn_boolean(arg);
-
-		XSBoolean ret = (XSBoolean) rs.first();
+	public static ResultSequence fn_not(ResultSequence arg) throws DynamicError {
+		XSBoolean ret = FnBoolean.fn_boolean(arg);
 
 		boolean answer = false;
 

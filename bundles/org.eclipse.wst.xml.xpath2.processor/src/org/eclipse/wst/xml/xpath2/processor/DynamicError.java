@@ -13,6 +13,7 @@
  *     Jesper Steen Moller  - bug 281159 - fix document loading and resolving URIs 
  *     Jesper Steen Moller  - Bug 286062 - Add FOAR0002  
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
+ *     Jesper Steen Moller  - bug 262765 - Add FORG0006
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -97,7 +98,7 @@ public class DynamicError extends XPathException {
 	 */
 	public static DynamicError throw_type_error() throws DynamicError {
 		
-		throw new DynamicError(new TypeError(XPathParserException.INVALID_XPATH_EXPRESSION, "Invalid static type."));
+		throw new DynamicError(new TypeError("FORG0006", "Invalid argument type."));
 	}
 	
 	/**

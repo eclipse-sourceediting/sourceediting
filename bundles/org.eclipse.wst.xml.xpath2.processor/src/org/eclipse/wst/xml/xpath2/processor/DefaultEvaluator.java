@@ -13,6 +13,7 @@
  *     Jesper Steen Moller  - bug 275610 - Avoid big time and memory overhead for externals
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *     Jesper Steen Moller  - bug 281938 - undefined context should raise error
+ *     Jesper Steen Moller  - bug 262765 - use correct 'effective boolean value'
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -239,7 +240,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 				// of the expression
 				case 1:
 				case 2:
-					effbool = (XSBoolean) FnBoolean.fn_boolean(res).first();
+					effbool = effective_boolean_value(res);
 					break;
 
 				default:
@@ -346,9 +347,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	public Object visit(IfExpr ifex) {
 		ResultSequence test_res = do_expr(ifex.iterator());
 
-		ResultSequence bval = FnBoolean.fn_boolean(test_res);
-
-		XSBoolean res = (XSBoolean) bval.first();
+		XSBoolean res = effective_boolean_value(test_res);
 
 		if (res.value())
 			return ifex.then_clause().accept(this);
@@ -364,8 +363,8 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence one = (ResultSequence) argiter.next();
 		ResultSequence two = (ResultSequence) argiter.next();
 
-		boolean oneb = ((XSBoolean) FnBoolean.fn_boolean(one).first()).value();
-		boolean twob = ((XSBoolean) FnBoolean.fn_boolean(two).first()).value();
+		boolean oneb = effective_boolean_value(one).value();
+		boolean twob = effective_boolean_value(two).value();
 
 		boolean res[] = { oneb, twob };
 		return res;
@@ -537,6 +536,16 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		}
 	}
 
+	private XSBoolean effective_boolean_value(ResultSequence rs) {
+		try {
+			return FnBoolean.fn_boolean(rs);
+		} catch (DynamicError err) {
+			report_error(err);
+			return null; // unreach
+		}
+	}
+
+	
 	/**
 	 * visit and expression
 	 * 
@@ -1794,11 +1803,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		}
 
 		// rule 2
-		// XXX: do we need to do all that function call prolog bullshit
-		// ? [atomizing arguments, casting to whatever bla bla ?]
-		ResultSequence res = FnBoolean.fn_boolean(rs);
-
-		XSBoolean ret = (XSBoolean) res.first();
+		XSBoolean ret = effective_boolean_value(rs);
 
 		return ret.value();
 	}

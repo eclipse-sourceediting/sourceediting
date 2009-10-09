@@ -8,13 +8,14 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moller  - bug 262765 - use correct 'effective boolean value'
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
@@ -44,73 +45,67 @@ public class FnBoolean extends Function {
 	 * @return Result of evaluation.
 	 */
 	@Override
-	public ResultSequence evaluate(Collection args) {
+	public ResultSequence evaluate(Collection args) throws DynamicError {
 		// 1 argument only!
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		ResultSequence argument = (ResultSequence) args.iterator().next();
 
-		return fn_boolean(argument);
+		return ResultSequenceFactory.create_new(fn_boolean(argument));
 	}
 
-	private static ResultSequence make_sequence(boolean val) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new XSBoolean(val));
-		return rs;
-	}
-
-	private static ResultSequence make_true() {
-		return make_sequence(true);
-	}
-
-	private static ResultSequence make_false() {
-		return make_sequence(false);
-	}
-
+	private static final XSBoolean TRUE = new XSBoolean(true);
+	
+	private static final XSBoolean FALSE = new XSBoolean(false);
+	
 	/**
 	 * Boolean operation.
 	 * 
 	 * @param arg
 	 *            Result from the expressions evaluation.
 	 * @return Result of fn:boolean operation.
+	 * @throws DynamicError 
 	 */
-	public static ResultSequence fn_boolean(ResultSequence arg) {
+	public static XSBoolean fn_boolean(ResultSequence arg) throws DynamicError {
 		if (arg.empty())
-			return make_false();
-
-		if (arg.size() > 1)
-			return make_true();
+			return FALSE;
 
 		AnyType at = arg.first();
+		
+		if (at instanceof NodeType)
+			return TRUE;
+		
+		if (arg.size() > 1)
+			throw DynamicError.throw_type_error();
 
 		// XXX ??
 		if (!(at instanceof AnyAtomicType))
-			return make_true();
+			return TRUE;
 
 		// ok we got 1 single atomic type element
 
 		if (at instanceof XSBoolean) {
 			if (!((XSBoolean) at).value())
-				return make_false();
+				return FALSE;
 		}
 
 		if ((at instanceof XSString) || (at instanceof XSUntypedAtomic)) {
 			if (at.string_value().equals(""))
-				return make_false();
+				return FALSE;
 		}
 
 		if (at instanceof NumericType) {
 			if (((NumericType) at).zero())
-				return make_false();
+				return FALSE;
 		}
 
 		if ((at instanceof XSFloat) && (((XSFloat) at).nan()))
-			return make_false();
+			return FALSE;
 
 		if ((at instanceof XSDouble) && (((XSDouble) at).nan()))
-			return make_false();
+			return FALSE;
 
-		return make_true();
+		return TRUE;
 	}
 
 }

@@ -12,6 +12,7 @@
  *     David Carver - bug 262765 - various numeric formatting fixes and calculations
  *     David Carver (STAR) - bug 282223 - Can't Cast Exponential values to Decimal values.
  *     David Carver (STAR) - bug 262765 - fixed edge case where rounding was occuring when it shouldn't. 
+ *     Jesper Steen Moller - bug 262765 - fix type tests
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -159,15 +160,16 @@ public class XSDecimal extends NumericType {
 		return true;
 	}
 	private boolean isCastable(AnyType aat) {
+		if (aat instanceof XSBoolean || aat instanceof NumericType) {
+			return true;
+		}
+		
 		if (aat.string_value().contains("E") || aat.string_value().contains("e") && !(aat instanceof XSBoolean)) {
 			return false;
 		}
 
 		if (aat instanceof XSString || aat instanceof XSUntypedAtomic ||
 			aat instanceof NodeType) {
-			return true;
-		}
-		if (aat instanceof XSBoolean || aat instanceof NumericType) {
 			return true;
 		}
 		return false;
