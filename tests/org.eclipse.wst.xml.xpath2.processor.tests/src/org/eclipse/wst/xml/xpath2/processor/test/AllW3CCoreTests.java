@@ -55,7 +55,7 @@ public class AllW3CCoreTests {
 		suite.addTestSuite(DurationEQTest.class);
 		suite.addTestSuite(CombNodeSeqTest.class);
 		suite.addTestSuite(SeqIntersectTest.class);
-//		suite.addTestSuite(NameTestTest.class);
+		suite.addTestSuite(NameTestTest.class);
 		suite.addTestSuite(NodeNameFuncTest.class);
 		suite.addTestSuite(SequenceTypeSyntaxTest.class);
 		suite.addTestSuite(GenCompEqTest.class);
