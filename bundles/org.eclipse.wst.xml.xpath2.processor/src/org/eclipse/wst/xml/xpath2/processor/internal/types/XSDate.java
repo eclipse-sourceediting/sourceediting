@@ -158,7 +158,7 @@ Cloneable {
 		if (!isCastable(aat)) {
 			throw DynamicError.invalidType();
 		}
-		
+				
 		XSDate dt = castDate(aat);
 
 		if (dt == null)

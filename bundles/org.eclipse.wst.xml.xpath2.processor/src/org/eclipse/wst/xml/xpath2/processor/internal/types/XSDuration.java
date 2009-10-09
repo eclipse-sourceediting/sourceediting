@@ -329,7 +329,8 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		
 		if (aat instanceof NumericType || aat instanceof CalendarType ||
-			aat instanceof XSBoolean || aat instanceof XSBase64Binary) {
+			aat instanceof XSBoolean || aat instanceof XSBase64Binary ||
+			aat instanceof XSHexBinary || aat instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
 		}
 

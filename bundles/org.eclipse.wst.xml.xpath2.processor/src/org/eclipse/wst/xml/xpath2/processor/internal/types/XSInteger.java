@@ -112,7 +112,8 @@ public class XSInteger extends XSDecimal {
 		AnyType aat = arg.first();
 
 		if (aat instanceof XSDuration || aat instanceof CalendarType ||
-			aat instanceof XSBase64Binary) {
+			aat instanceof XSBase64Binary || aat instanceof XSHexBinary ||
+			aat instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
 		}
 		
@@ -171,26 +172,6 @@ public class XSInteger extends XSDecimal {
 		} catch (NumberFormatException ex) {
 			return false;
 		}
-		
-//		if (value.contains(".")) {
-//			return false;
-//		}
-//		
-//		if (value.equalsIgnoreCase("nan")) {
-//			return false;
-//		}
-//		
-//		if (value.equalsIgnoreCase("-nan")) {
-//			return false;
-//		}
-//		
-//		if (value.equalsIgnoreCase("inf")) {
-//			return false;
-//		}
-//		
-//		if (value.equalsIgnoreCase("-inf")) {
-//			return false;
-//		}
 		
 		return true;
 	}

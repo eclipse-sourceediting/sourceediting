@@ -109,6 +109,12 @@ public class DynamicError extends XPathException {
 	}
 
 	/**
+	 * @since 1.1
+	 */
+	public static DynamicError inputToLargeForDecimal() throws DynamicError {
+		throw new DynamicError("FOCA0001", "Input value too large for decimal");
+	}
+	/**
 	 * Returns the dynamic error.
 	 * 
 	 * @param desc

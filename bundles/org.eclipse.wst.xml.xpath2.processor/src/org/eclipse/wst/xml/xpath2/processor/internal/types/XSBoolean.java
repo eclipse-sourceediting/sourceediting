@@ -101,7 +101,9 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 		
 		AnyType anyType = (AnyType)arg.first();
 		
-		if (anyType instanceof XSDuration || anyType instanceof CalendarType) {
+		if (anyType instanceof XSDuration || anyType instanceof CalendarType ||
+			anyType instanceof XSBase64Binary || anyType instanceof XSHexBinary ||
+			anyType instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
 		}
 		

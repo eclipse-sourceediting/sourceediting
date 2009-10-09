@@ -124,7 +124,8 @@ public class XSGYear extends CalendarType implements CmpEq {
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		if (aat instanceof NumericType || aat instanceof XSDuration ||
 			aat instanceof XSTime || isGDataType(aat) ||
-			aat instanceof XSBoolean) {
+			aat instanceof XSBoolean || aat instanceof XSBase64Binary ||
+			aat instanceof XSHexBinary || aat instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
 		}
 		

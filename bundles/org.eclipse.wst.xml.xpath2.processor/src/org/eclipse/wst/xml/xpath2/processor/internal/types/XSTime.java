@@ -145,6 +145,7 @@ Cloneable {
 		if (!isCastable(aat)) {
 			throw DynamicError.invalidType();
 		}
+
 		
 		CalendarType t = castTime(aat);
 

@@ -62,6 +62,7 @@ public class XSEntity extends XSNCName {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		
 
 		rs.add(new XSEntity(aat.string_value()));
 

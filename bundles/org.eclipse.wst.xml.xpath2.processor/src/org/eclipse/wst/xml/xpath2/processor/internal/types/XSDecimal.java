@@ -124,7 +124,8 @@ public class XSDecimal extends NumericType {
 		AnyType aat = arg.first();
 		
 		if (aat instanceof XSDuration || aat instanceof CalendarType ||
-			aat instanceof XSBase64Binary) {
+			aat instanceof XSBase64Binary || aat instanceof XSHexBinary ||
+			aat instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
 		}
 		
@@ -159,10 +160,10 @@ public class XSDecimal extends NumericType {
 		}
 		return true;
 	}
-	private boolean isCastable(AnyType aat) {
+	private boolean isCastable(AnyType aat) throws DynamicError {
 		if (aat instanceof XSBoolean || aat instanceof NumericType) {
 			return true;
-		}
+		}		
 		
 		if (aat.string_value().contains("E") || aat.string_value().contains("e") && !(aat instanceof XSBoolean)) {
 			return false;

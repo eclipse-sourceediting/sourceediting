@@ -115,7 +115,8 @@ public class XSDouble extends NumericType {
 		AnyType aat = arg.first();
 
 		if (aat instanceof XSDuration || aat instanceof CalendarType ||
-			aat instanceof XSBase64Binary) {
+			aat instanceof XSBase64Binary || aat instanceof XSHexBinary ||
+			aat instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
 		}
 		

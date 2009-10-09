@@ -101,7 +101,8 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		if (aat instanceof NumericType || aat instanceof CalendarType ||
-			aat instanceof XSBoolean || aat instanceof XSBase64Binary) {
+			aat instanceof XSBoolean || aat instanceof XSBase64Binary ||
+			aat instanceof XSHexBinary || aat instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
 		}
 
