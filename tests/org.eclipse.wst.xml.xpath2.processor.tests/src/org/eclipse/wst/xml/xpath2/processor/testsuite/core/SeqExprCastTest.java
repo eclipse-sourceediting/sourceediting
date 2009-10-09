@@ -8,7 +8,6 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
- *     Jesper Steen Moller - bug 262765 - fix test expectance
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
@@ -26099,7 +26098,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(\"a\",\"b\",\"c\") cast as xs:ENTITY";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
