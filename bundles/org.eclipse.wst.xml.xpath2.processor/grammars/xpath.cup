@@ -8,7 +8,8 @@
 // * Contributors:
 // *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
 // *     David Carver - bug 269833 - A work around for the keyword in node issue.
-// *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars 
+// *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
+// *     David Carver (STAR) - bug 262765 - Fixed Wildcard and NCName issue. 
 // *******************************************************************************/
 
 
@@ -708,7 +709,8 @@ NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  SCHEMA_ELEMENT:n {: RESULT = new String("schema-element"); :} |
 						  TEXT:n {: RESULT = new String("text"); :} |
 						  TYPESWITCH:n {: RESULT = new String("typeswitch"); :} |
-						  MOD:n {: RESULT = new String("mod"); :}
+						  MOD:n {: RESULT = new String("mod"); :} |
+						  STAR:n {: RESULT = new String("*"); :}
 			; 
 
 UnqualifiedNCName     ::= NCNAME:n {: RESULT = n; :} |
@@ -747,5 +749,7 @@ UnqualifiedNCName     ::= NCNAME:n {: RESULT = n; :} |
 						  DIV:n {: RESULT = new String("div"); :} |
 						  IDIV:n {: RESULT = new String("idiv"); :} |
 						  MOD:n {: RESULT = new String("mod"); :}
+						  STAR:n {: RESULT = new String("*"); :}
+						  
 			; 
 			
