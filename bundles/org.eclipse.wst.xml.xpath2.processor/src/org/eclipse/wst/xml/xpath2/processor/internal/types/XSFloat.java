@@ -149,8 +149,9 @@ public class XSFloat extends NumericType {
 
 		AnyType aat = arg.first();
 		
-		if (aat instanceof XSGDay) {
-			throw new DynamicError(TypeError.invalid_type(null));
+		if (aat instanceof XSDuration || aat instanceof CalendarType ||
+			aat instanceof XSBase64Binary) {
+			throw DynamicError.invalidType();
 		}
 		
 		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType ||

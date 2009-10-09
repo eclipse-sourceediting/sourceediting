@@ -100,11 +100,16 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 		  return rs;
 		
 		AnyType anyType = (AnyType)arg.first();
+		
+		if (anyType instanceof XSDuration || anyType instanceof CalendarType) {
+			throw DynamicError.invalidType();
+		}
+		
 		String str_value = anyType.string_value();
 		
 		
 		if (!(isCastable(anyType, str_value))) {
-		   DynamicError.throw_type_error();
+		   throw DynamicError.cant_cast(null);
 		}
 
 		Boolean b = null;

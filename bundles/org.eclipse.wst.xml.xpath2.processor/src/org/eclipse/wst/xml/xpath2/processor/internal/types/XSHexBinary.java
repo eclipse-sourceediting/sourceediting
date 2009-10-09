@@ -101,7 +101,11 @@ public class XSHexBinary extends CtrType implements CmpEq {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
-		
+		if (aat instanceof NumericType || aat instanceof XSDuration ||
+			aat instanceof CalendarType || aat instanceof XSBoolean) {
+			throw DynamicError.invalidType();
+		}
+
 		String str_value = aat.string_value();
 		
 		if (!(aat instanceof XSHexBinary ||

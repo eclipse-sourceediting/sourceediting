@@ -122,6 +122,15 @@ public class XSDecimal extends NumericType {
 
 		AnyType aat = arg.first();
 		
+		if (aat instanceof XSDuration || aat instanceof CalendarType ||
+			aat instanceof XSBase64Binary) {
+			throw DynamicError.invalidType();
+		}
+		
+		if (!isLexicalValue(aat.string_value())) {
+			throw DynamicError.invalidLexicalValue();
+		}
+		
 		if (!isCastable(aat)) {
 			throw DynamicError.cant_cast(null);
 		}
@@ -139,6 +148,16 @@ public class XSDecimal extends NumericType {
 
 	}
 
+	protected boolean isLexicalValue(String value) {
+		if (value.equalsIgnoreCase("inf")) {
+			return false;
+		}
+		
+		if (value.equalsIgnoreCase("-inf")) {
+			return false;
+		}
+		return true;
+	}
 	private boolean isCastable(AnyType aat) {
 		if (aat.string_value().contains("E") || aat.string_value().contains("e") && !(aat instanceof XSBoolean)) {
 			return false;

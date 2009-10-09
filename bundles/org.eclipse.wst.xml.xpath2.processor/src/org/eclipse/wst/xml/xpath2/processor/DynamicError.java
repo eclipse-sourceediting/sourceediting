@@ -58,6 +58,7 @@ public class DynamicError extends XPathException {
 	public DynamicError(TypeError te) {
 		super(te.reason());
 		_te = te;
+		_code = te.code();
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class DynamicError extends XPathException {
 		if (err != null)
 			error += " " + err;
 
-		return new DynamicError("XPST0003", error);
+		return new DynamicError("FORG0001", error);
 	}
 
 	/**
@@ -97,6 +98,13 @@ public class DynamicError extends XPathException {
 	public static DynamicError throw_type_error() throws DynamicError {
 		
 		throw new DynamicError(new TypeError(XPathParserException.INVALID_XPATH_EXPRESSION, "Invalid static type."));
+	}
+	
+	/**
+	 * @since 1.1
+	 */
+	public static DynamicError invalidType() throws DynamicError {
+		throw new DynamicError(TypeError.invalid_type(null));
 	}
 
 	/**
@@ -438,5 +446,14 @@ public class DynamicError extends XPathException {
 	 */
 	public static DynamicError nan() {
 		return make_error("FOCA0005", "NaN supplied as float/double value.", null);
+	}
+	
+	/**
+	 * Invalid lexical value
+	 * 
+	 * @since 1.1
+	 */
+	public static DynamicError invalidLexicalValue() {
+		return make_error("FOCA0002", "Invalid lexical value.", null);
 	}
 }

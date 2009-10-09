@@ -123,6 +123,11 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		if (aat instanceof NumericType || aat instanceof XSDuration ||
+			aat instanceof XSTime || isGDataType(aat) ||
+			aat instanceof XSBoolean) {
+			throw DynamicError.invalidType();
+		}
 
 		if (!isCastable(aat)) {
 			throw DynamicError.cant_cast(null);
@@ -136,6 +141,17 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 		rs.add(val);
 
 		return rs;
+	}
+	
+	protected boolean isGDataType(AnyAtomicType aat) {
+		String type = aat.string_type();
+		if (type.equals("xs:gMonthDay") ||
+			type.equals("xs:gDay") ||
+			type.equals("xs:gMonth") ||
+			type.equals("xs:gYear")) {
+			return true;
+		}
+		return false;
 	}
 	
 	private boolean isCastable(AnyAtomicType aat) {

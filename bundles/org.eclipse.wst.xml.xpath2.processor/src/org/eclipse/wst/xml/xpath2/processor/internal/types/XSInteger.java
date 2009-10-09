@@ -110,6 +110,11 @@ public class XSInteger extends XSDecimal {
 		// and convert it's string value to an integer.
 		AnyType aat = arg.first();
 
+		if (aat instanceof XSDuration || aat instanceof CalendarType ||
+			aat instanceof XSBase64Binary) {
+			throw DynamicError.invalidType();
+		}
+		
 		if (!isCastable(aat)) {
 			throw DynamicError.cant_cast(null);
 		}
@@ -120,7 +125,7 @@ public class XSInteger extends XSDecimal {
 			rs.add(new XSInteger(bigInt));
 			return rs;
 		} catch (NumberFormatException e) {
-			throw DynamicError.cant_cast(null);
+			throw DynamicError.invalidLexicalValue();
 		}
 
 	}
@@ -143,15 +148,50 @@ public class XSInteger extends XSDecimal {
 		return new BigInteger(aat.string_value());
 	}
 	
-	private boolean isCastable(AnyType aat) {
+	private boolean isCastable(AnyType aat) throws DynamicError {
 		if (aat instanceof XSString || aat instanceof XSUntypedAtomic ||
 			aat instanceof NodeType) {
-			return true;
+			if (isLexicalValue(aat.string_value())) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 		if (aat instanceof XSBoolean || aat instanceof NumericType) {
 			return true;
 		}
 		return false;
+	}
+	
+	protected boolean isLexicalValue(String value) {
+		
+		try {
+			Integer.parseInt(value);
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+		
+//		if (value.contains(".")) {
+//			return false;
+//		}
+//		
+//		if (value.equalsIgnoreCase("nan")) {
+//			return false;
+//		}
+//		
+//		if (value.equalsIgnoreCase("-nan")) {
+//			return false;
+//		}
+//		
+//		if (value.equalsIgnoreCase("inf")) {
+//			return false;
+//		}
+//		
+//		if (value.equalsIgnoreCase("-inf")) {
+//			return false;
+//		}
+		
+		return true;
 	}
 
 	/**

@@ -94,14 +94,14 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 		
 		if (arg2 != null && arg2.empty()) {
 			if (dateTime.timezoned()) {
-				XSDateTime localized = new XSDateTime(dateTime.calendar(), null);
+				CalendarType localized = new XSDateTime(dateTime.calendar(), null);
 				rs.add(localized);
 				return rs;
 			} else {
 				return arg1;
 			}
 		} else if (arg2 == null) {
-			XSDateTime localized = new XSDateTime(dateTime.normalizeCalendar(dateTime.calendar(), dateTime.tz()), null);
+			CalendarType localized = new XSDateTime(dateTime.normalizeCalendar(dateTime.calendar(), dateTime.tz()), null);
 			rs.add(localized);
 			return rs;
 		}

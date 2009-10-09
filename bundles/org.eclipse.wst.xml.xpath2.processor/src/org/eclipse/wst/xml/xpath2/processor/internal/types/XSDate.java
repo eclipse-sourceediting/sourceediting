@@ -154,6 +154,12 @@ Cloneable {
 
 		AnyType aat = arg.first();
 		
+		if (aat instanceof NumericType || aat instanceof XSDuration ||
+			aat instanceof XSTime || isGDataType((AnyAtomicType)aat) ||
+			aat instanceof XSBoolean) {
+			throw DynamicError.invalidType();
+		}
+		
 		if (!isCastable(aat)) {
 			throw DynamicError.cant_cast(null);
 		}

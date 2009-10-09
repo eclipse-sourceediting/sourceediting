@@ -105,7 +105,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 		if (!(aat.string_type().equals("xs:string")
 				|| aat.string_type().equals("xs:anyURI") || aat.string_type()
 				.equals("xs:untypedAtomic"))) {
-			throw DynamicError.throw_type_error();
+			throw DynamicError.invalidType();
 		}
 
 		rs.add(new XSAnyURI(aat.string_value()));
