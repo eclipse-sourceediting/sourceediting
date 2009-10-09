@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * @author pavery
  */
 class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
+	private static final String DEFAULT_FRAGMENT_CONTENT_TYPE = "org.eclipse.jst.jsp.core.jspfragmentsource"; //$NON-NLS-1$
 	private final JSPTranslator fTranslator;
 	protected JSPSourceParser fLocalParser = null;
 	protected String fTextToParse = null;
@@ -135,7 +136,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			 * translator for dealing with TEI variables
 			 */
 			try {
-				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f);
+				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f, false);
+				if (handler == null)
+					handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(DEFAULT_FRAGMENT_CONTENT_TYPE);
 				document = (IStructuredDocument) handler.getDocumentLoader().createNewStructuredDocument();
 				contents = FileContentCache.getInstance().getContents(f.getFullPath());
 			}

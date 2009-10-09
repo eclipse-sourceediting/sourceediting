@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -113,13 +113,14 @@ public class ModelHandlerRegistry {
 	 * type.
 	 * 
 	 * @param file
+	 * @param provideDefault should the default extension be used in the absence of other methods
 	 * @return The IModelHandler registered for the content type of the given
 	 *         file. If an exact match is not found, the most-specific match
 	 *         according to IContentType.isKindOf() will be returned. If none
 	 *         are found, either a default or null will be returned.
 	 * @throws CoreException
 	 */
-	public IModelHandler getHandlerFor(IFile file) throws CoreException {
+	public IModelHandler getHandlerFor(IFile file, boolean provideDefault) throws CoreException {
 		IModelHandler modelHandler = null;
 		IContentDescription contentDescription = null;
 		IContentType contentType = null;
@@ -169,12 +170,27 @@ public class ModelHandlerRegistry {
 		if (contentType != null) {
 			modelHandler = getHandlerForContentType(contentType);
 		}
-		else {
+		else if (contentType == null && provideDefault) {
 			// hard coding for null content type
 			modelHandler = getHandlerExtension(INTERNAL_DEFAULT_EXTENSION); //$NON-NLS-1$
 		}
 
 		return modelHandler;
+	}
+
+	/**
+	 * Finds the registered IModelHandler for a given named file's content
+	 * type. Will check for a default.
+	 * 
+	 * @param file
+	 * @return The IModelHandler registered for the content type of the given
+	 *         file. If an exact match is not found, the most-specific match
+	 *         according to IContentType.isKindOf() will be returned. If none
+	 *         are found, either a default or null will be returned.
+	 * @throws CoreException
+	 */
+	public IModelHandler getHandlerFor(IFile file) throws CoreException {
+		return getHandlerFor(file, true);
 	}
 
 
