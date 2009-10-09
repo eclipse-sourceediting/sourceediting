@@ -310,7 +310,7 @@ public class XSDecimal extends NumericType {
 			AnyType type = (AnyType) it.next();
 			if (type.string_type().equals("xs:untypedAtomic") ||
 				type.string_type().equals("xs:string")) {
-				throw DynamicError.throw_type_error();
+				throw DynamicError.invalidType();
 			}
 		}
 		carg = constructor(carg);
