@@ -8,13 +8,13 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Steen Moller - bug 262765 - fix range expression test
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
@@ -999,6 +999,10 @@ public class PredicatesTest extends AbstractPsychoPathTest {
       DynamicContext dc = setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
+      
+      // The original XQuery test expression uses a let expression, this mimicks the important part
+      xpath = ".[(2 to 5)]";
+      
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

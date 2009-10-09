@@ -8,6 +8,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Steen Moller - bug 262765 - fix test expectance
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
@@ -26125,8 +26126,10 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
    public void test_CastFOCA0001_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/CastFOCA0001-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/CastFOCA0001-1.txt";
-      String expectedResult = "XPST0003";
+      
+      // We support the high precision
+      String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/CastFOCA0003alt-1.txt";
+      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
