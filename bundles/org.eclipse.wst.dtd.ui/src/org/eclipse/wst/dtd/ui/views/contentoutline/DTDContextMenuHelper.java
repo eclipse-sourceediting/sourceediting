@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Naoki Akiyama (Fujitsu) - bug 187172 - fix attribute grouping
  *     
  *******************************************************************************/
 
@@ -187,7 +188,7 @@ class DTDContextMenuHelper {
 				menu.add(addParameterEntityReferenceAction);
 			}
 			else if (folder.getListType().equals(DTDRegionTypes.ATTLIST_TAG)) {
-				menu.add(addAttributeAction);
+				menu.add(addAttributeListAction);
 			}
 		}
 		if (selectedObject instanceof DTDFile || selectedObject == null) {
@@ -214,17 +215,9 @@ class DTDContextMenuHelper {
 			else if (contentModel != null && CMNode.EMPTY.equals(contentModel.getType())) {
 				menu.add(replaceEmptyContentModelWithGroupAction);
 			}
-			// if (!(((Element)selectedObject).getContentModel() instanceof
-			// CMGroupNode))
-			// {
-			// menu.add(addGroupToContentModelAction);
-			// }
-			// addAttributeAction.setElement(selectedObject);
 			menu.add(addAttributeAction);
 		}
 		else if (selectedObject instanceof CMGroupNode) {
-			// addElementToContentModelAction.setElement(selectedObject);
-			// addGroupToContentModelAction.setElement(selectedObject);
 			menu.add(addElementToContentModelAction);
 			menu.add(addGroupToContentModelAction);
 		}
@@ -239,15 +232,6 @@ class DTDContextMenuHelper {
 		if (selectedObject instanceof DTDNode && !(selectedObject instanceof CMNode && ((CMNode) selectedObject).isRootElementContent())) {
 			menu.add(deleteAction);
 			deleteAction.setEnabled(true);
-			// if (selectedObject instanceof DTDElementContent)
-			// {
-			// DTDElementContent content = (DTDElementContent) selectedObject;
-			// if (content.getElement() != null && (content instanceof
-			// DTDPCDataContent || content instanceof DTDEmptyContent))
-			// {
-			// deleteAction.setEnabled(false);
-			// } // end of if ()
-			// } // end of if ()
 		}
 	}
 
