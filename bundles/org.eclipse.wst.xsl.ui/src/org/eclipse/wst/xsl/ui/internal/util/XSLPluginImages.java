@@ -53,7 +53,19 @@ public class XSLPluginImages {
 	/**
 	 * Path to the xsl template image use for Content Assistance.
 	 */
-	public static final String IMG_TEMPLATE = "icons/full/template.gif"; //$NON-NLS-1$ 
+	public static final String IMG_TEMPLATE = "icons/full/template.gif"; //$NON-NLS-1$
+	
+	public static final String IMG_ELM_STYLESHET = "icons/full/xslt_launch.gif"; //$NON-NLS-1$
+	
+	public static final String IMG_ELM_IMPORT_INCLUDE = "icons/full/import.gif"; //$NON-NLS-1$
+	
+	public static final String IMG_ELM_TEMPLATE = "icons/full/package_obj.gif"; //$NON-NLS-1$
+	
+	public static final String IMG_ELM_VARIABLE = "icons/full/field_default_obj.gif"; //$NON-NLS-1$
+	
+	public static final String IMG_ELM_FUNCTION = "icons/full/function.gif"; //$NON-NLS-1$
+	
+	
 	
 	
 }
