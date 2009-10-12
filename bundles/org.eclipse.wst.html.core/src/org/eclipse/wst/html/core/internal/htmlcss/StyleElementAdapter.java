@@ -198,7 +198,7 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 			return false;
 		}
 		String type = element.getAttribute(HTML40Namespace.ATTR_NAME_TYPE);
-		if (type != null && type.length() > 0 && !type.equalsIgnoreCase("text/css")) { //$NON-NLS-1$
+		if (element.hasAttribute(HTML40Namespace.ATTR_NAME_TYPE) && type.length() > 0 && !type.equalsIgnoreCase("text/css")) { //$NON-NLS-1$
 			return false;
 		}
 		return true;

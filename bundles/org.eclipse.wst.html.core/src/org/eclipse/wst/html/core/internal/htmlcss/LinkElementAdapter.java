@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -201,14 +201,11 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 		Element element = getElement();
 		if (element == null)
 			return false;
-		String rel = element.getAttribute("rel");//$NON-NLS-1$
-		if (rel == null || !rel.equalsIgnoreCase("stylesheet"))//$NON-NLS-1$
+		if (!element.hasAttribute("rel") || !"stylesheet".equalsIgnoreCase(element.getAttribute("rel")))//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return false;
-		String type = element.getAttribute("type");//$NON-NLS-1$
-		if (type != null && !type.equalsIgnoreCase("text/css"))//$NON-NLS-1$
+		if (element.hasAttribute("type") && !"text/css".equalsIgnoreCase(element.getAttribute("type")))//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return false;
-		String href = element.getAttribute("href");//$NON-NLS-1$
-		if (href == null || href.length() == 0)
+		if (!element.hasAttribute("href") || element.getAttribute("href").length() == 0) //$NON-NLS-1$ //$NON-NLS-2$
 			return false;
 		return true;
 	}
