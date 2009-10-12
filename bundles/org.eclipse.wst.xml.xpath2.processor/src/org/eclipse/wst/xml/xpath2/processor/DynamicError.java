@@ -463,4 +463,21 @@ public class DynamicError extends XPathException {
 	public static DynamicError invalidLexicalValue() {
 		return make_error("FOCA0002", "Invalid lexical value.", null);
 	}
+	
+	/**
+	 * Overflow/underflow in date/time operation 
+	 * @since 1.1
+	 */
+	public static DynamicError overflowDateTime() {
+		return make_error("FODT0001", "Overflow/underflow in date/time operation", null);
+	}
+	
+	/**
+	 * The two arguments to fn:dateTime have inconsistent timezones
+	 * 
+	 * @since 1.1
+	 */
+	public static DynamicError inconsistentTimeZone() {
+		return make_error("FORG0008", "The two arguments to fn:dateTime have inconsistent timezones", null);
+	}
 }

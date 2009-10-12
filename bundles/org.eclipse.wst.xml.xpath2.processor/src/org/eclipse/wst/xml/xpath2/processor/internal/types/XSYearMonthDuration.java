@@ -391,6 +391,14 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		XSDouble val = (XSDouble) NumericType.get_single_type(convertedRS,
 				XSDouble.class);
 
+		if (val.nan()) {
+			throw DynamicError.nan();
+		}
+		
+		if (val.infinite()) {
+			throw DynamicError.overflowDateTime();
+		}
+		
 		int res = (int) Math.round(monthValue() * val.double_value());
 
 		return ResultSequenceFactory.create_new(new XSYearMonthDuration(res));

@@ -93,7 +93,7 @@ public class FnDateTime extends Function {
 		if ((dateTimeZone != null && timeTimeZone != null) &&
 		     !dateTimeZone.string_value().equals(timeTimeZone.string_value())) {
 		  // it's an error, if the arguments have different timezones
-		  DynamicError.throw_type_error();
+		  throw DynamicError.inconsistentTimeZone();
 		} else if (dateTimeZone == null && timeTimeZone != null) {
            rs.add(new XSDateTime(cal, timeTimeZone));
 		} else if (dateTimeZone != null && timeTimeZone == null) {
