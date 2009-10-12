@@ -732,8 +732,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 			if (node.getNodeType() != ELEMENT_NODE)
 				continue;
 			ElementImpl element = (ElementImpl) node;
-			String value = element.getAttribute("id");//$NON-NLS-1$
-			if (id.equals(value))
+			if (element.hasAttribute("id") && id.equals(element.getAttribute("id"))) //$NON-NLS-1$ //$NON-NLS-2$
 				return element;
 		}
 

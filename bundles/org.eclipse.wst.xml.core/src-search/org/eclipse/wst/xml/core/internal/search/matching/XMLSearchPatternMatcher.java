@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,7 +49,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 		{
 		  Element e = (Element)node;
 		  String attributeName = (prefix != null && prefix.length() > 0) ? ("xmlns:" + prefix) : "xmlns";  //$NON-NLS-1$ //$NON-NLS-2$
-		  result = e.getAttribute(attributeName);
+		  result = e.hasAttribute(attributeName) ? e.getAttribute(attributeName) : null;
 		  if (result != null && result.length() > 0)
 		  {
 			 break;  
@@ -66,7 +66,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 			pattern.setElementNamespace(domElement.getNamespaceURI());
             // TODO (cs) set the depth attribute on the pattern
             //
-			String actualValue = domElement.getAttribute(pattern.getAttributeName());
+			String actualValue = domElement.hasAttribute(pattern.getAttributeName()) ? domElement.getAttribute(pattern.getAttributeName()) : null;
 			 if(actualValue != null && actualValue.length() > 0){
 					int n = actualValue.indexOf(":"); //$NON-NLS-1$
 					if(n > 0){

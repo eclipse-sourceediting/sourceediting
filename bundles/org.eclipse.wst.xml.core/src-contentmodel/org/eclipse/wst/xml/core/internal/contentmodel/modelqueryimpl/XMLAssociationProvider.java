@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -296,7 +296,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     String xsiPrefix = namespaceTable.getPrefixForURI("http://www.w3.org/2001/XMLSchema-instance"); //$NON-NLS-1$
     if (xsiPrefix != null)
     {
-      String xsiTypeValue = element.getAttribute(xsiPrefix + ":type"); //$NON-NLS-1$
+      String xsiTypeValue = element.hasAttribute(xsiPrefix + ":type") ? element.getAttribute(xsiPrefix + ":type") : null; //$NON-NLS-1$ //$NON-NLS-2$
       if (xsiTypeValue != null && xsiTypeValue.length() > 0)
       {  
         String typePrefix = DOMNamespaceHelper.getPrefix(xsiTypeValue);
