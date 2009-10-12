@@ -61,6 +61,9 @@ public class XSLPluginImages {
 	
 	public static final String IMG_ELM_TEMPLATE = "icons/full/package_obj.gif"; //$NON-NLS-1$
 	
+	public static final String IMG_ELM_TEMPLATE_NAME = "icons/full/templatenamed_obj.gif"; //$NON-NLS-1$
+
+	
 	public static final String IMG_ELM_VARIABLE = "icons/full/field_default_obj.gif"; //$NON-NLS-1$
 	
 	public static final String IMG_ELM_FUNCTION = "icons/full/function.gif"; //$NON-NLS-1$

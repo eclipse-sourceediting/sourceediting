@@ -39,17 +39,6 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	final static Class ADAPTER_KEY = IJFaceNodeAdapter.class;
 
-	/**
-	 * debug .option
-	 */
-	private static final boolean DEBUG = getDebugValue();
-
-	private static boolean getDebugValue() {
-		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
-		boolean result = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-		return result;
-	}
-
 	JFaceNodeAdapterFactory fAdapterFactory;
 	RefreshStructureJob fRefreshJob = null;
 
@@ -58,13 +47,17 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		this.fAdapterFactory = adapterFactory;
 	}
 
-	protected ImageDescriptor getXSLImage(String name) {
-		String path = null;
+	protected ImageDescriptor getXSLImage(Element node) {
+		String name = node.getLocalName();
 		if (name.equals("import") || name.equals("include")) {  //$NON-NLS-1$//$NON-NLS-2$
 			return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_IMPORT_INCLUDE);
 		}
 		if (name.equals("template")) { //$NON-NLS-1$
-			return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_TEMPLATE);
+			if (node.hasAttribute("name")) { //$NON-NLS-1$
+				return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_TEMPLATE_NAME);
+			} else {
+				return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_TEMPLATE);
+			}
 		}
 		
 		if (name.equals("variable") || name.equals("param")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -83,9 +76,9 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		Node node = (Node) object;
 		switch (node.getNodeType()) {
 			case Node.ELEMENT_NODE : {
-				if (node.getNamespaceURI().equals(XSLCore.XSL_NAMESPACE_URI)) {
+				if (XSLCore.XSL_NAMESPACE_URI.equals(node.getNamespaceURI())) {
 					Element elem = (Element) node;
-					ImageDescriptor imgDesc = getXSLImage(elem.getLocalName()); 
+					ImageDescriptor imgDesc = getXSLImage(elem); 
 					if (imgDesc == null) {
 						image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_ELEMENT);
 					} else {
@@ -118,6 +111,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 				image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_PROCESSINGINSTRUCTION);
 				break;
 			}
+			// Should never see COMMENT NODEs.
 			case Node.COMMENT_NODE : {
 				image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_COMMENT);
 				break;
@@ -144,17 +138,12 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	public Object[] getChildren(Object object) {
 
-		// (pa) 20021217
-		// cmvc defect 235554
-		// performance enhancement: using child.getNextSibling() rather than
-		// nodeList(item) for O(n) vs. O(n*n)
-		//
 		ArrayList v = new ArrayList();
 		if (object instanceof Node) {
 			Node node = (Node) object;
 			for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 				Node n = child;
-				if (n.getNodeType() != Node.TEXT_NODE) {
+				if (n.getNodeType() != Node.TEXT_NODE && n.getNodeType() != Node.COMMENT_NODE) {
 					v.add(n);
 				}
 			}
@@ -165,6 +154,8 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	/**
 	 * Returns an enumeration with the elements belonging to the passed
 	 * element. These are the top level items in a list, tree, table, etc...
+	 * @param node 
+	 * @return 
 	 */
 	public Object[] getElements(Object node) {
 		return getChildren(node);
@@ -172,6 +163,8 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	/**
 	 * Fetches the label image specific to this object instance.
+	 * @param node DOM Node
+	 * @return Image for the label.
 	 */
 	public Image getLabelImage(Object node) {
 		Image image = null;
@@ -192,6 +185,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	/**
 	 * Fetches the label text specific to this object instance.
+	 * @return Node Name for the Label
 	 */
 	public String getLabelText(Object node) {
 		return getNodeName(node);
@@ -199,21 +193,24 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	private String getNodeName(Object object) {
 		StringBuffer nodeName = new StringBuffer();
-		if (object instanceof Node) {
-			Node node = (Node) object;
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				if (XSLCore.XSL_NAMESPACE_URI.equals(node.getNamespaceURI())) {
-					Element elem = (Element) node;
-					nodeName.append(elem.getLocalName());
-				} else {
-					nodeName.append(node.getNodeName());
-				}
-			} else {
-				nodeName.append(node.getNodeName());
-			}
+		if (!(object instanceof Node)) {
+			return nodeName.toString();
+		}
+		
+		Node node = (Node) object;
+		if (node.getNodeType() != Node.ELEMENT_NODE) {
+			nodeName.append(node.getNodeName());
 			if (node.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
 				nodeName.insert(0, "DOCTYPE:"); //$NON-NLS-1$
 			}
+			return nodeName.toString();
+		}
+		
+		if (XSLCore.XSL_NAMESPACE_URI.equals(node.getNamespaceURI())) {
+			Element elem = (Element) node;
+			nodeName.append(elem.getLocalName());
+		} else {
+			nodeName.append(node.getNodeName());
 		}
 		return nodeName.toString();
 	}
@@ -236,9 +233,6 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 
 	public boolean hasChildren(Object object) {
-		// (pa) 20021217
-		// cmvc defect 235554 > use child.getNextSibling() instead of
-		// nodeList(item) for O(n) vs. O(n*n)
 		Node node = (Node) object;
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child.getNodeType() != Node.TEXT_NODE) {
@@ -277,19 +271,9 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 			while (iterator.hasNext()) {
 				Object listener = iterator.next();
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=90637
-				// if (notifier instanceof Node && (listener instanceof
-				// StructuredViewer) && (eventType ==
-				// INodeNotifier.STRUCTURE_CHANGED || (eventType ==
-				// INodeNotifier.CHANGE && changedFeature == null))) {
 				if ((listener instanceof StructuredViewer) && ((eventType == INodeNotifier.STRUCTURE_CHANGED) || (eventType == INodeNotifier.CONTENT_CHANGED) || (eventType == INodeNotifier.CHANGE))) {
-					if (DEBUG) {
-						System.out.println("JFaceNodeAdapter notified on event type > " + eventType); //$NON-NLS-1$
-					}
 
-					// refresh on structural and "unknown" changes
 					StructuredViewer structuredViewer = (StructuredViewer) listener;
-					// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5230
 					if (structuredViewer.getControl() != null) {
 						getRefreshJob().refresh(structuredViewer, (Node) notifier);
 					}

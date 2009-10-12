@@ -31,6 +31,10 @@
 			class="org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL"
 			target="org.eclipse.wst.xml.core.xslsource">
 		</sourceViewerConfiguration>
+		<contentOutlineConfiguration
+        class="org.eclipse.wst.xsl.ui.internal.contentoutline.XSLContentOutlineConfiguration"
+        target="org.eclipse.wst.xml.core.xslsource">
+		</contentOutlineConfiguration>
 	    <doubleClickStrategy
            class="org.eclipse.wst.xsl.ui.internal.doubleclick.XSLDoubleClickStrategy"
            target="org.eclipse.wst.xsl.XSL_XPATH">
@@ -146,16 +150,17 @@
   <extension
         point="org.eclipse.ui.views">
      <view
-           class="org.eclipse.wst.xsl.ui.internal.StylesheetView"
+           category="org.eclipse.wst.xml"
+           class="org.eclipse.wst.xsl.ui.internal.views.stylesheet.StylesheetModelView"
+           icon="icons/full/hierarchy.gif"
            id="org.eclipse.wst.xsl.ui.view.outline"
            name="%viewNameStylesheet"
-           category="org.eclipse.wst.xml"
            restorable="true">
      </view>
   </extension>
   <extension point="org.eclipse.core.runtime.adapters">		
 		<factory 
-            class="org.eclipse.wst.xsl.ui.internal.XSLModelAdapterFactory" 
+            class="org.eclipse.wst.xsl.ui.internal.views.stylesheet.XSLModelAdapterFactory" 
             adaptableType="org.eclipse.wst.xsl.core.model.XSLModelObject">
             <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
 		</factory>

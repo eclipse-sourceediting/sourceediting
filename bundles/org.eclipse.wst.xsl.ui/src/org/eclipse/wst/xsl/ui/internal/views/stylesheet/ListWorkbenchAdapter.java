@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.internal;
+package org.eclipse.wst.xsl.ui.internal.views.stylesheet;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
+import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 public class ListWorkbenchAdapter implements IWorkbenchAdapter
 {

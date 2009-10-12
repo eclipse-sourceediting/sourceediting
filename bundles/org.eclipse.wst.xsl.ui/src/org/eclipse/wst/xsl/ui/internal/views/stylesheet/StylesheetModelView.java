@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2009 Chase Technology Ltd and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,9 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 244674 - Enhanced and cleaned up view 
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.internal;
+package org.eclipse.wst.xsl.ui.internal.views.stylesheet;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -39,7 +40,7 @@ import org.eclipse.wst.xsl.core.model.XSLNode;
  * 
  *
  */
-public class StylesheetView extends ViewPart
+public class StylesheetModelView extends ViewPart
 {
 	private IEditorPart activeEditor;
 	//private boolean isFiringSelection;
@@ -113,7 +114,7 @@ public class StylesheetView extends ViewPart
 
 			public void selectionChanged(SelectionChangedEvent event)
 			{
-				if (getSite().getPage().getActivePart() == StylesheetView.this)
+				if (getSite().getPage().getActivePart() == StylesheetModelView.this)
 					handleTreeSelection((IStructuredSelection)event.getSelection(),false);
 			}
 		});
