@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ public interface CMDataType extends CMNode {
 	static final String CDATA = "CDATA"; //$NON-NLS-1$
 	static final String ID = "ID"; //$NON-NLS-1$
 	static final String IDREF = "IDREF"; //$NON-NLS-1$
+	static final String IDREFS = "IDREFS"; //$NON-NLS-1$
 	static final String ENTITY = "ENTITY"; //$NON-NLS-1$
 	static final String ENTITIES = "ENTITIES"; //$NON-NLS-1$
 	static final String NOTATION = "NOTATION"; //$NON-NLS-1$
