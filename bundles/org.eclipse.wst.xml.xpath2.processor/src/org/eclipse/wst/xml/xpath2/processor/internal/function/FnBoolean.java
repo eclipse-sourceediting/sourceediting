@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Jesper Steen Moller  - bug 262765 - use correct 'effective boolean value'
+ *     David Carver (STAR) - bug 262765 - fix checking of data types.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -72,6 +73,11 @@ public class FnBoolean extends Function {
 
 		AnyType at = arg.first();
 		
+		if (at instanceof CalendarType) {
+			throw DynamicError.throw_type_error();
+		}
+
+		
 		if (at instanceof NodeType)
 			return TRUE;
 		
@@ -104,6 +110,7 @@ public class FnBoolean extends Function {
 
 		if ((at instanceof XSDouble) && (((XSDouble) at).nan()))
 			return FALSE;
+		
 
 		return TRUE;
 	}
