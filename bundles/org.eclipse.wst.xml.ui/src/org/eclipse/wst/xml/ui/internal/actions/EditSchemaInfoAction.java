@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -114,53 +114,55 @@ public class EditSchemaInfoAction extends NodeAction {
 	}
 
 	public void run() {
-		manager.beginNodeAction(this);
-
-		// todo... change constructor to take an element
-		Element element = getElement(node);
-		if (element != null) {
-			Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-			EditSchemaInfoDialog dialog = new EditSchemaInfoDialog(shell, new Path(resourceLocation));
-
-			List namespaceInfoList = namespaceInfoManager.getNamespaceInfoList(element);
-			List oldNamespaceInfoList = NamespaceInfo.cloneNamespaceInfoList(namespaceInfoList);
-
-			// here we store a copy of the old info for each NamespaceInfo
-			// this info will be used in createPrefixMapping() to figure out
-			// how to update the document
-			// in response to these changes
-			for (Iterator i = namespaceInfoList.iterator(); i.hasNext();) {
-				NamespaceInfo info = (NamespaceInfo) i.next();
-				NamespaceInfo oldCopy = new NamespaceInfo(info);
-				info.setProperty("oldCopy", oldCopy); //$NON-NLS-1$
-			}
-
-			dialog.setNamespaceInfoList(namespaceInfoList);
-			dialog.create();
-			// dialog.getShell().setSize(500, 300);
-			dialog.getShell().setText(XMLUIMessages._UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE);
-			dialog.setBlockOnOpen(true);
-			dialog.open();
-
-			if (dialog.getReturnCode() == Window.OK) {
-				List newInfoList = dialog.getNamespaceInfoList();
-				namespaceInfoManager.removeNamespaceInfo(element);
-				namespaceInfoManager.addNamespaceInfo(element, newInfoList, true);
-
-				// see if we need to rename any prefixes
-				Map prefixMapping = createPrefixMapping(oldNamespaceInfoList, namespaceInfoList);
-				if (prefixMapping.size() > 0) {
-					try {
-						manager.getModel().aboutToChangeModel();
-						ReplacePrefixAction replacePrefixAction = new ReplacePrefixAction(manager, element, prefixMapping);
-						replacePrefixAction.run();
-					}
-					finally {
-						manager.getModel().changedModel();
+		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+		if (validateEdit(manager.getModel(), shell)) {
+			manager.beginNodeAction(this);
+	
+			// todo... change constructor to take an element
+			Element element = getElement(node);
+			if (element != null) {
+				EditSchemaInfoDialog dialog = new EditSchemaInfoDialog(shell, new Path(resourceLocation));
+	
+				List namespaceInfoList = namespaceInfoManager.getNamespaceInfoList(element);
+				List oldNamespaceInfoList = NamespaceInfo.cloneNamespaceInfoList(namespaceInfoList);
+	
+				// here we store a copy of the old info for each NamespaceInfo
+				// this info will be used in createPrefixMapping() to figure out
+				// how to update the document
+				// in response to these changes
+				for (Iterator i = namespaceInfoList.iterator(); i.hasNext();) {
+					NamespaceInfo info = (NamespaceInfo) i.next();
+					NamespaceInfo oldCopy = new NamespaceInfo(info);
+					info.setProperty("oldCopy", oldCopy); //$NON-NLS-1$
+				}
+	
+				dialog.setNamespaceInfoList(namespaceInfoList);
+				dialog.create();
+				// dialog.getShell().setSize(500, 300);
+				dialog.getShell().setText(XMLUIMessages._UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE);
+				dialog.setBlockOnOpen(true);
+				dialog.open();
+	
+				if (dialog.getReturnCode() == Window.OK) {
+					List newInfoList = dialog.getNamespaceInfoList();
+					namespaceInfoManager.removeNamespaceInfo(element);
+					namespaceInfoManager.addNamespaceInfo(element, newInfoList, true);
+	
+					// see if we need to rename any prefixes
+					Map prefixMapping = createPrefixMapping(oldNamespaceInfoList, namespaceInfoList);
+					if (prefixMapping.size() > 0) {
+						try {
+							manager.getModel().aboutToChangeModel();
+							ReplacePrefixAction replacePrefixAction = new ReplacePrefixAction(manager, element, prefixMapping);
+							replacePrefixAction.run();
+						}
+						finally {
+							manager.getModel().changedModel();
+						}
 					}
 				}
 			}
+			manager.endNodeAction(this);
 		}
-		manager.endNodeAction(this);
 	}
 }

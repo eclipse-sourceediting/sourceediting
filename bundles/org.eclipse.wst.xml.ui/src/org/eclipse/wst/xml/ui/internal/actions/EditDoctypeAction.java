@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@
 package org.eclipse.wst.xml.ui.internal.actions;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -33,7 +32,7 @@ import org.w3c.dom.NodeList;
 /**
  * EditDoctypeAction
  */
-public class EditDoctypeAction extends Action {
+public class EditDoctypeAction extends NodeAction {
 	protected DocumentType doctype;
 	protected Document document;
 	protected IStructuredModel model;
@@ -120,24 +119,26 @@ public class EditDoctypeAction extends Action {
 	}
 
 	public void run() {
-		model.beginRecording(this, getUndoDescription());
-		// Shell shell =
-		// XMLCommonUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 		Shell shell = getDisplay().getActiveShell();
-		EditDoctypeDialog dialog = showEditDoctypeDialog(shell);
-
-		if (dialog.getReturnCode() == Window.OK) {
-			if (doctype != null) {
-				updateDoctype(dialog, doctype);
-			}
-			else if (document != null) {
-				DocumentType doctype = createDoctype(dialog, document);
+		if (validateEdit(model, shell)) {
+			model.beginRecording(this, getUndoDescription());
+			// Shell shell =
+			// XMLCommonUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+			EditDoctypeDialog dialog = showEditDoctypeDialog(shell);
+	
+			if (dialog.getReturnCode() == Window.OK) {
 				if (doctype != null) {
-					insertDoctype(doctype, document);
+					updateDoctype(dialog, doctype);
+				}
+				else if (document != null) {
+					DocumentType doctype = createDoctype(dialog, document);
+					if (doctype != null) {
+						insertDoctype(doctype, document);
+					}
 				}
 			}
+			model.endRecording(this);
 		}
-		model.endRecording(this);
 	}
 
 	protected EditDoctypeDialog showEditDoctypeDialog(Shell shell) {

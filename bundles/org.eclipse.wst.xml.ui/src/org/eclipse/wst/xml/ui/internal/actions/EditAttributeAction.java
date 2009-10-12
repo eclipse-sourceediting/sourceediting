@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,24 +56,26 @@ public class EditAttributeAction extends NodeAction {
 	}
 
 	public void run() {
-		manager.beginNodeAction(this);
 		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		EditAttributeDialog dialog = new EditAttributeDialog(shell, ownerElement, attr);
-		dialog.create();
-		dialog.getShell().setText(title);
-		dialog.setBlockOnOpen(true);
-		dialog.open();
-
-		if (dialog.getReturnCode() == Window.OK) {
-			if (attr != null) {
-				ownerElement.removeAttributeNode(attr);
+		if (validateEdit(manager.getModel(), shell)) {
+			manager.beginNodeAction(this);
+			EditAttributeDialog dialog = new EditAttributeDialog(shell, ownerElement, attr);
+			dialog.create();
+			dialog.getShell().setText(title);
+			dialog.setBlockOnOpen(true);
+			dialog.open();
+	
+			if (dialog.getReturnCode() == Window.OK) {
+				if (attr != null) {
+					ownerElement.removeAttributeNode(attr);
+				}
+				Document document = ownerElement.getOwnerDocument();
+				Attr newAttribute = document.createAttribute(dialog.getAttributeName());
+				newAttribute.setValue(dialog.getAttributeValue());
+				ownerElement.setAttributeNode(newAttribute);
+				manager.setViewerSelection(newAttribute);
 			}
-			Document document = ownerElement.getOwnerDocument();
-			Attr newAttribute = document.createAttribute(dialog.getAttributeName());
-			newAttribute.setValue(dialog.getAttributeValue());
-			ownerElement.setAttributeNode(newAttribute);
-			manager.setViewerSelection(newAttribute);
+			manager.endNodeAction(this);
 		}
-		manager.endNodeAction(this);
 	}
 }

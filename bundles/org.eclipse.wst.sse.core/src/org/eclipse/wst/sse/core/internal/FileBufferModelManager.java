@@ -33,7 +33,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -44,11 +43,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
-import org.eclipse.wst.sse.core.internal.document.IDocumentStateValidationListener;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
@@ -56,7 +53,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 
 /**
@@ -85,8 +81,6 @@ public class FileBufferModelManager {
 		 * points in the ITextFileBuffer's lifecycle
 		 */
 		IStructuredModel model = null;
-
-		IDocumentStateValidationListener listener = null;
 
 		/**
 		 * Whether FileBufferModelManager called connect() for this
@@ -262,41 +256,16 @@ public class FileBufferModelManager {
 		public void bufferCreated(IFileBuffer buffer) {
 			if (buffer instanceof ITextFileBuffer) {
 				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
-				IDocument document = textBuffer.getDocument();
-				if (!(document instanceof IStructuredDocument))
+				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
 					return;
 
 				if (Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
 					Logger.log(Logger.INFO, "Learned new buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
-				final DocumentInfo info = new DocumentInfo();
+				DocumentInfo info = new DocumentInfo();
 				info.buffer = textBuffer;
 				info.contentTypeID = detectContentType(buffer.getLocation()).getId();
 				info.bufferReferenceCount++;
-
-				/*
-				 * Adds a document state validation listener to the document.
-				 * The file buffer validates its state and returns the result
-				 */
-				if (document instanceof BasicStructuredDocument) {
-					BasicStructuredDocument structuredDocument = (BasicStructuredDocument) document;
-					info.listener = new IDocumentStateValidationListener() {
-
-						public boolean validateDocumentState(DocumentEvent event) {
-							boolean validated = false;
-							try {
-								info.buffer.validateState(null, IWorkspace.VALIDATE_PROMPT);
-								if (info.buffer.isStateValidated() && info.buffer.getStatus().isOK())
-									validated = true;
-							} catch (CoreException e) {
-								Logger.logException(e);
-							}
-							return validated;
-						}
-
-					};
-					structuredDocument.setDocumentStateValidationListener(info.listener);
-				}
 				fDocumentMap.put(textBuffer.getDocument(), info);
 			}
 		}
@@ -337,18 +306,6 @@ public class FileBufferModelManager {
 					if (!isDirty && workspaceFile != null) {
 						info.model.resetSynchronizationStamp(workspaceFile);
 					}
-				}
-
-				/*
-				 * Adds or removes the listener from the document based on the
-				 * dirty state of the buffer
-				 */
-				if (info != null && info.listener != null && textBuffer.getDocument() instanceof BasicStructuredDocument) {
-					BasicStructuredDocument document = (BasicStructuredDocument) textBuffer.getDocument();
-					if (isDirty)
-						document.setDocumentStateValidationListener(null);
-					else
-						document.setDocumentStateValidationListener(info.listener);
 				}
 			}
 		}
@@ -800,11 +757,8 @@ public class FileBufferModelManager {
 	 * references
 	 */
 	private void checkReferenceCounts(DocumentInfo info, IDocument document) {
-		if (info.bufferReferenceCount == 0 && info.modelReferenceCount == 0) {
+		if (info.bufferReferenceCount == 0 && info.modelReferenceCount == 0)
 			fDocumentMap.remove(document);
-			if (document instanceof BasicStructuredDocument)
-				((BasicStructuredDocument) document).setDocumentStateValidationListener(null);
-		}
 	}
 
 	public boolean isExistingBuffer(IDocument document) {

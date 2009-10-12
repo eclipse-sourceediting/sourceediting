@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,9 +19,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.common.ui.internal.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -160,6 +164,9 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 		boolean result = true;
 		if (target instanceof Node) {
 			Node targetNode = (Node) target;
+			if (!testOnly && fTreeViewer != null && !validateEdit(getStructuredModel(targetNode), fTreeViewer.getControl().getShell()))
+				return false;
+
 			Node parentNode = getParentForDropPosition(targetNode);
 			Node refChild = getRefChild(targetNode);
 
@@ -196,6 +203,22 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 		return result;
 	}
 
+	/**
+	 * Checks that the resource backing the model is writeable utilizing <code>validateEdit</code>
+	 * on a given <tt>IWorkspace</tt>.
+	 * 
+	 * @param model the model to be checked
+	 * @param context the shell context for which <code>validateEdit</code> will be run
+	 * @return boolean result of checking <code>validateEdit</code>. If the resource is unwriteable, <code>status.isOK()</code>
+	 * will return true; otherwise, false.
+	 */
+	private boolean validateEdit(IStructuredModel model, Shell context) {
+		if (model != null && model.getBaseLocation() != null) {
+			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+			return !file.isAccessible() || ResourcesPlugin.getWorkspace().validateEdit(new IFile[] {file}, context).isOK();
+		}
+		return false; //$NON-NLS-1$
+	}
 
 	public int getFeedback() {
 		int result = DND.FEEDBACK_SELECT;

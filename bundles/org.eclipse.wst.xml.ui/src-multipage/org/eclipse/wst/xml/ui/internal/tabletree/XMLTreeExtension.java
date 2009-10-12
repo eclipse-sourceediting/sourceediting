@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,10 @@ import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * 
+ * @deprecated No longer used
+ */
 public class XMLTreeExtension extends TreeExtension {
 
 	public final static String STRUCTURE_PROPERTY = XMLEditorMessages.XMLTreeExtension_0;

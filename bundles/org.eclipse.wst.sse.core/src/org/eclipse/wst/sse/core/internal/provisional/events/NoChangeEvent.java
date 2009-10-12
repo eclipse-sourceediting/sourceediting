@@ -46,11 +46,6 @@ public class NoChangeEvent extends StructuredDocumentEvent {
 	 * changed, not the content itself.
 	 */
 	public final static int READ_ONLY_STATE_CHANGE = 4;
-	/**
-	 * INVALID_STATE means that the changes were not made to the document due to
-	 * the document being in a state that prevents editing
-	 */
-	public final static int INVALID_STATE = 16;
 
 	/**
 	 * set to one of the above detailed reasons for why no change was done.

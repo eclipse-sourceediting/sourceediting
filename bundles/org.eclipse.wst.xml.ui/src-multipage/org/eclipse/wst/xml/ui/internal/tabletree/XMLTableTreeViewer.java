@@ -385,7 +385,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			String oldValue = treeContentHelper.getNodeValue((Node) item.getData());
 			String newValue = value.toString();
 			if ((newValue != null) && !newValue.equals(oldValue)) {
-				treeContentHelper.setNodeValue((Node) item.getData(), value.toString());
+				treeContentHelper.setNodeValue((Node) item.getData(), value.toString(), getControl().getShell());
 			}
 		}
 

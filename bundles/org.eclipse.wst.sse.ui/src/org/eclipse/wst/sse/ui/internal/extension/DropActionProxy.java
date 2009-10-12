@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,8 @@ import java.util.Set;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorExtension2;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
@@ -122,17 +124,8 @@ public class DropActionProxy implements InvocationHandler {
 					editor = (IExtendedSimpleEditor) args[1];
 				}
 				beginRecording();
-				if ((editor != null) && !(obj instanceof ISelfValidateEditAction)) {
-					
-					// TODO: cleanup validateEdit
-					// just leaving this check and following code here for transition. 
-					// I assume we'll remove all need for 'validateEdit'
-					// or move to platform editor's validateState 
-					
-//					IStatus status = editor.validateEdit(getDisplay().getActiveShell());
-//					if (!status.isOK()) {
-//						return null;
-//					}
+				if ((args[1] instanceof ITextEditor) && !(obj instanceof ISelfValidateEditAction) && !isEditable((ITextEditor) args[1])) {
+					return Boolean.FALSE;
 				}
 			}
 			result = m.invoke(obj, args);
@@ -146,5 +139,11 @@ public class DropActionProxy implements InvocationHandler {
 			}
 		}
 		return result;
+	}
+
+	private boolean isEditable(ITextEditor editor) {
+		if (editor instanceof ITextEditorExtension2)
+			return ((ITextEditorExtension2) editor).validateEditorInputState();
+		return editor.isEditable();
 	}
 }
