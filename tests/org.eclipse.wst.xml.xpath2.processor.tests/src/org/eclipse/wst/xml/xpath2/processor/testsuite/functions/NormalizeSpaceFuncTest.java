@@ -247,12 +247,14 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:normalize-space()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 
 	      Evaluator eval = new DefaultEvaluator(dc, null); // no context document!
+	      Focus focus = new Focus(ResultSequenceFactory.create_new());
+	      dc.set_focus(focus);
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);

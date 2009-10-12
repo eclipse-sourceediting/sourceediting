@@ -16,6 +16,8 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -71,7 +73,8 @@ public class TraceFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:trace(xs:integer(\"123\"),\"The Value of $var is: \")";
+    	  
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -329,11 +332,12 @@ public class TraceFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "for $var1 in (2,4,6,8), $var2 in (3 + $var1) - (4 * $var1) " +
+      		"return fn:trace($var1 + $var2, \"The Value of $var 1 + $var2 is: \")";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
+	   	  
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
