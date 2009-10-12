@@ -6,6 +6,7 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -755,7 +756,7 @@ public class StringLengthFuncTest extends AbstractPsychoPathTest {
    public void test_fn_string_length_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/StringLengthFunc/fn-string-length-18.xq";
-      String expectedResult = "XPDY0018";
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -764,12 +765,15 @@ public class StringLengthFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:string-length()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Focus focus = new Focus(ResultSequenceFactory.create_new());
+	      dc.set_focus(focus);
+	      
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);

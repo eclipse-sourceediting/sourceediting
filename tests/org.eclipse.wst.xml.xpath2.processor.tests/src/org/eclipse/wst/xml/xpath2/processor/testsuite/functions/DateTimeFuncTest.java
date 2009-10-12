@@ -1135,7 +1135,7 @@ public class DateTimeFuncTest extends AbstractPsychoPathTest {
    public void test_forg0008_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/forg0008-1.xq";
-      String expectedResult = "FORG008";
+      String expectedResult = "FORG0008";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
