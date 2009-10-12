@@ -527,7 +527,7 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 	public String getTitle() {
 		Node node = getOwnerNode();
 		if (node instanceof Element) {
-			return ((Element) node).getAttribute("TITLE");//$NON-NLS-1$
+			return ((Element) node).hasAttribute("TITLE") ? ((Element) node).getAttribute("TITLE") : null;//$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}
@@ -543,7 +543,7 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 	public String getType() {
 		Node node = getOwnerNode();
 		if (node instanceof Element) {
-			return ((Element) node).getAttribute("TYPE");//$NON-NLS-1$
+			return ((Element) node).hasAttribute("TYPE") ? ((Element) node).getAttribute("TYPE") : null;//$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}

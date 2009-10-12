@@ -303,8 +303,7 @@ class CSSSelector implements ICSSSelector {
 		if (i > 0) {
 			if (i > 1)
 				return false;
-			key = element.getAttribute("id");//$NON-NLS-1$
-			if (key == null || key.length() == 0)
+			if (!element.hasAttribute("id") || (key = element.getAttribute("id")).length() == 0)//$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			if (!selector.getID(0).equals(key))
 				return false;
@@ -313,8 +312,7 @@ class CSSSelector implements ICSSSelector {
 		// check class
 		i = selector.getNumOfClasses();
 		if (i > 0) {
-			key = element.getAttribute("class");//$NON-NLS-1$
-			if (key == null || key.length() == 0)
+			if (!element.hasAttribute("class") || (key = element.getAttribute("class")).length() == 0) //$NON-NLS-1$  //$NON-NLS-2$
 				return false;
 			StringTokenizer tokenizer = new StringTokenizer(key);
 			for (i = i - 1; i >= 0; i--) {
@@ -335,8 +333,9 @@ class CSSSelector implements ICSSSelector {
 			StringTokenizer tokenizer = new StringTokenizer(selector.getAttribute(i), "=~| \t\r\n\f");//$NON-NLS-1$
 			int countTokens = tokenizer.countTokens();
 			if (countTokens > 0) {
-				String attrValue = element.getAttribute(tokenizer.nextToken());
-				if (attrValue == null || attrValue.length() == 0)
+				String attrName = tokenizer.nextToken();
+				String attrValue = null;
+				if (!element.hasAttribute(attrName) || (attrValue = element.getAttribute(attrName)).length() == 0)
 					return false;
 				if (countTokens > 1) {
 					String token = tokenizer.nextToken("= \t\r\n\f");//$NON-NLS-1$
