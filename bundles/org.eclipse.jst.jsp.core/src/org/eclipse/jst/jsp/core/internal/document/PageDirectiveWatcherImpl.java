@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,14 +35,14 @@ class PageDirectiveWatcherImpl implements PageDirectiveWatcher {
 	public PageDirectiveWatcherImpl(IDOMElement target) {
 		super();
 		targetElement = target;
-		String contentTypeValue = target.getAttribute("contentType"); //$NON-NLS-1$
-		if (contentTypeValue != null) {
+		if (target.hasAttribute("contentType")) { //$NON-NLS-1$
+			String contentTypeValue = target.getAttribute("contentType"); //$NON-NLS-1$
 			// using concrete class below, since "changed" is something of an internal method
 			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
 			pageDirectiveAdapter.changedContentType(((IndexedRegion) targetElement).getStartOffset(), contentTypeValue);
 		}
-		String languageValue = target.getAttribute("language"); //$NON-NLS-1$
-		if (languageValue != null) {
+		if (target.hasAttribute("language")) { //$NON-NLS-1$
+			String languageValue = target.getAttribute("language"); //$NON-NLS-1$
 			// using concrete class below, since "changed" is something of an internal method
 			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
 			pageDirectiveAdapter.changedLanguage(((IndexedRegion) targetElement).getStartOffset(), languageValue);

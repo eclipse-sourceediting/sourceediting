@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,10 +47,9 @@ public class JSPSourceEditingTextTools extends XMLSourceEditingTextTools {
 				NodeList pageDirectives = doc.getElementsByTagName(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
 				for (int i = 0; i < pageDirectives.getLength(); i++) {
 					Element pageDirective = (Element) pageDirectives.item(i);
-					String langValue = pageDirective.getAttribute(JSP11Namespace.ATTR_NAME_LANGUAGE);
 					// last one to declare a language wins
-					if (langValue != null)
-						language = langValue;
+					if (pageDirective.hasAttribute(JSP11Namespace.ATTR_NAME_LANGUAGE))
+						language = pageDirective.getAttribute(JSP11Namespace.ATTR_NAME_LANGUAGE);
 				}
 			}
 		}

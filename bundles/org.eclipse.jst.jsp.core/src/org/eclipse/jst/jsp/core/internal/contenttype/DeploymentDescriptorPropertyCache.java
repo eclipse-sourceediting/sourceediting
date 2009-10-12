@@ -636,8 +636,8 @@ public final class DeploymentDescriptorPropertyCache {
 		if (webapp != null) {
 			if (webapp.getTagName().equals(WEB_APP_ELEMENT_NAME) || webapp.getNodeName().endsWith(WEB_APP_ELEMENT_LOCAL_NAME)) {
 				// this convention only started with 2.4?
-				String versionValue = webapp.getAttribute(WEB_APP_VERSION_NAME);
-				if (versionValue != null) {
+				if (webapp.hasAttribute(WEB_APP_VERSION_NAME)) {
+					String versionValue = webapp.getAttribute(WEB_APP_VERSION_NAME);
 					versionValue = versionValue.trim();
 					if (versionValue.length() > 0) {
 						try {

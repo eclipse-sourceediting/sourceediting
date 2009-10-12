@@ -110,10 +110,12 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 	}
 
 	private void addBeanPropertyProposals(ContentAssistRequest contentAssistRequest, IDOMNode node, boolean isGetProperty, String matchString) {
+		if (!((Element) node).hasAttribute(JSP11Namespace.ATTR_NAME_NAME))
+			return;
 		// assumes that the node is the [gs]etProperty tag
 		String useBeanName = ((Element) node).getAttribute(JSP11Namespace.ATTR_NAME_NAME);
 		// properties can only be provided if a class/type/beanName has been declared
-		if (useBeanName != null && useBeanName.length() > 0) {
+		if (useBeanName.length() > 0) {
 			NodeList useBeans = node.getOwnerDocument().getElementsByTagName(JSP11Namespace.ElementName.USEBEAN);
 			if (useBeans != null) {
 				String typeName = null;
@@ -124,10 +126,10 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 					if (useBean instanceof IndexedRegion && ((IndexedRegion) useBean).getStartOffset() < node.getStartOffset()) {
 						if (useBeanName.equals(useBean.getAttribute(JSP11Namespace.ATTR_NAME_ID))) {
 							typeName = useBean.getAttribute(JSP11Namespace.ATTR_NAME_CLASS);
-							if (typeName == null || typeName.length() < 1) {
+							if (!useBean.hasAttribute(JSP11Namespace.ATTR_NAME_CLASS) || typeName.length() < 1) {
 								typeName = useBean.getAttribute(JSP11Namespace.ATTR_NAME_TYPE);
 							}
-							if (typeName == null || typeName.length() < 1) {
+							if (!useBean.hasAttribute(JSP11Namespace.ATTR_NAME_TYPE) || typeName.length() < 1) {
 								typeName = useBean.getAttribute(JSP11Namespace.ATTR_NAME_BEAN_NAME);
 							}
 						}
@@ -174,17 +176,18 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 					continue;
 				Element useBean = (Element) useBeans.item(j);
 				if (useBean instanceof IndexedRegion && ((IndexedRegion) useBean).getStartOffset() < node.getStartOffset() && useBean.hasAttribute(JSP11Namespace.ATTR_NAME_ID)) {
-					id = StringUtils.strip(useBean.getAttribute(JSP11Namespace.ATTR_NAME_ID));
+					id = useBean.hasAttribute(JSP11Namespace.ATTR_NAME_ID) ? StringUtils.strip(useBean.getAttribute(JSP11Namespace.ATTR_NAME_ID)) : null;
 					displayString = null;
 					classOrType = null;
 					imageName = JSPEditorPluginImages.IMG_OBJ_CLASS_OBJ;
 					// set the Image based on whether the class, type, or beanName attribute is present
-					classOrType = useBean.getAttribute(JSP11Namespace.ATTR_NAME_CLASS);
-					if (classOrType == null || classOrType.length() < 1) {
+					if (useBean.hasAttribute(JSP11Namespace.ATTR_NAME_CLASS))
+						classOrType = useBean.getAttribute(JSP11Namespace.ATTR_NAME_CLASS);
+					if ((classOrType == null || classOrType.length() < 1) && useBean.hasAttribute(JSP11Namespace.ATTR_NAME_TYPE)) {
 						classOrType = useBean.getAttribute(JSP11Namespace.ATTR_NAME_TYPE);
 						imageName = JSPEditorPluginImages.IMG_OBJ_PUBLIC;
 					}
-					if (classOrType == null || classOrType.length() < 1) {
+					if ((classOrType == null || classOrType.length() < 1) && useBean.hasAttribute(JSP11Namespace.ATTR_NAME_BEAN_NAME)) {
 						classOrType = useBean.getAttribute(JSP11Namespace.ATTR_NAME_BEAN_NAME);
 						imageName = JSPEditorPluginImages.IMG_OBJ_PUBLIC;
 					}
