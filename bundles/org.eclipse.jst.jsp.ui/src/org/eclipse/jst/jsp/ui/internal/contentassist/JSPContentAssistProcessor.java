@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,6 @@ import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
-import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
@@ -45,9 +44,7 @@ import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
 import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
-import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.JSPCMDocument;
-import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
@@ -75,9 +72,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvid
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryAction;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
@@ -86,11 +81,9 @@ import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
-import org.eclipse.wst.xml.ui.internal.contentassist.NonValidatingModelQueryAction;
 import org.eclipse.wst.xml.ui.internal.contentassist.ProposalComparator;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistUtilities;
@@ -255,46 +248,35 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 			if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 				break;
 		}
-
-		String attributeName = null;
-		if (nameRegion != null)
-			attributeName = open.getText(nameRegion);
-		String currentValue = null;
-		if (attributeName != null)
-			currentValue = node.getAttributes().getNamedItem(attributeName).getNodeValue();
-
+		
 		// on an empty value, add all the JSP and taglib tags
-		if ((contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS && contentAssistRequest.getReplacementLength() == 0) || (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && (currentValue == null || currentValue.length() == 0))) {
-			List rejectElements = new ArrayList();
-			rejectElements.add(JSP12Namespace.ElementName.SCRIPTLET);
-			rejectElements.add(JSP12Namespace.ElementName.EXPRESSION);
-			rejectElements.add(JSP12Namespace.ElementName.DECLARATION);
-			rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
-			rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
-			rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-			rejectElements.add(JSP12Namespace.ElementName.FALLBACK);
-			rejectElements.add(JSP12Namespace.ElementName.USEBEAN);
-			rejectElements.add(JSP12Namespace.ElementName.SETPROPERTY);
-			rejectElements.add(JSP12Namespace.ElementName.FORWARD);
-			rejectElements.add(JSP12Namespace.ElementName.PLUGIN);
-			rejectElements.add(JSP12Namespace.ElementName.FALLBACK);
-			rejectElements.add(JSP12Namespace.ElementName.PARAMS);
-
-			List additionalElements = getAdditionalChildren(new ArrayList(), node, -1);
-			for (i = 0; i < additionalElements.size(); i++) {
-				CMElementDeclaration ed = (CMElementDeclaration) additionalElements.get(i);
-				if (rejectElements.contains(ed.getNodeName()))
-					continue;
-				String tagname = getContentGenerator().getRequiredName(node, ed);
-				StringBuffer contents = new StringBuffer("\""); //$NON-NLS-1$
-				getContentGenerator().generateTag(node, ed, contents);
-				contents.append('"');
-				CustomCompletionProposal proposal = new CustomCompletionProposal(contents.toString(), contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), contents.length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), tagname, null, null, XMLRelevanceConstants.R_JSP_ATTRIBUTE_VALUE);
-				contentAssistRequest.addProposal(proposal);
+		CMElementDeclaration elementDecl = getCMElementDeclaration(node);
+		if (nameRegion != null && elementDecl != null) {
+			String attributeName = open.getText(nameRegion);
+			if (attributeName != null) {
+				String currentValue = node.getAttributes().getNamedItem(attributeName).getNodeValue();
+				
+				if(currentValue == null || currentValue.length() == 0) { //$NON-NLS-1$
+					List additionalElements = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent((Element) node, elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
+					for (i = 0; i < additionalElements.size(); i++) {
+						Object additionalElement = additionalElements.get(i);
+						if(additionalElement instanceof CMElementDeclaration) {
+							CMElementDeclaration ed = (CMElementDeclaration) additionalElement;
+	
+							String tagname = getContentGenerator().getRequiredName(node, ed);
+							StringBuffer contents = new StringBuffer("\""); //$NON-NLS-1$
+							getContentGenerator().generateTag(node, ed, contents);
+							contents.append('"'); //$NON-NLS-1$
+							CustomCompletionProposal proposal = new CustomCompletionProposal(contents.toString(), contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), contents.length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), tagname, null, null, XMLRelevanceConstants.R_JSP_ATTRIBUTE_VALUE);
+							contentAssistRequest.addProposal(proposal);
+						}
+					}
+				
+				}
 			}
 		}
-
-		else if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+		
+		if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			try {
 				// Create a new model for Content Assist to operate on. This
 				// will simulate
@@ -422,127 +404,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 	}
 
-	private List getAdditionalChildren(List elementDecls, Node node, int childIndex) {
-		if (node instanceof IDOMNode) {
-			/*
-			 * find the location of the intended insertion as it will give us
-			 * the correct offset for checking position dependent CMDocuments
-			 */
-			int textInsertionOffset = 0;
-			NodeList children = node.getChildNodes();
-			if (children.getLength() >= childIndex && childIndex >= 0) {
-				Node nodeAlreadyAtIndex = children.item(childIndex);
-				if (nodeAlreadyAtIndex instanceof IDOMNode)
-					textInsertionOffset = ((IDOMNode) nodeAlreadyAtIndex).getEndOffset();
-			}
-			else {
-				textInsertionOffset = ((IDOMNode) node).getStartOffset();
-			}
-			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(((IDOMNode) node).getStructuredDocument());
-			if (mgr != null) {
-				List moreCMDocuments = mgr.getCMDocumentTrackers(textInsertionOffset);
-				if (moreCMDocuments != null) {
-					for (int i = 0; i < moreCMDocuments.size(); i++) {
-						CMDocument doc = (CMDocument) moreCMDocuments.get(i);
-						CMNamedNodeMap elements = doc.getElements();
-						if (elements != null) {
-							for (int j = 0; j < elements.getLength(); j++) {
-								CMElementDeclaration ed = (CMElementDeclaration) elements.item(j);
-								elementDecls.add(ed);
-							}
-						}
-					}
-				}
-			}
-
-			// get position dependent CMDocuments and insert their tags as
-			// proposals
-
-			ModelQueryAdapter mqAdapter = null;
-			if (node.getNodeType() == Node.DOCUMENT_NODE)
-				mqAdapter = (ModelQueryAdapter) ((IDOMNode) node).getAdapterFor(ModelQueryAdapter.class);
-			else
-				mqAdapter = (ModelQueryAdapter) ((IDOMNode) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
-
-			if (mqAdapter != null) {
-				CMDocument doc = mqAdapter.getModelQuery().getCorrespondingCMDocument(node);
-				if (doc != null) {
-					CMDocument jcmdoc = getDefaultJSPCMDocument((IDOMNode) node);
-					CMNamedNodeMap jspelements = jcmdoc.getElements();
-
-					/*
-					 * For a built-in JSP action the content model is properly
-					 * set up, so don't just blindly add the rest--unless this
-					 * will be a direct child of the document
-					 */
-					if (jspelements != null && (!(doc instanceof JSPCMDocument) || node.getNodeType() == Node.DOCUMENT_NODE)) {
-						List rejectElements = new ArrayList();
-
-						// determine if the document is in XML form
-						Document domDoc = null;
-						if (node.getNodeType() == Node.DOCUMENT_NODE)
-							domDoc = (Document) node;
-						else
-							domDoc = node.getOwnerDocument();
-
-						// Show XML tag forms of JSP markers if jsp:root is
-						// the document element OR it's HTML but
-						// isn't really in the text.
-						// If the document isn't strictly XML, pull out the
-						// XML tag forms it is xml format
-						rejectElements.add(JSP12Namespace.ElementName.SCRIPTLET);
-						rejectElements.add(JSP12Namespace.ElementName.EXPRESSION);
-						rejectElements.add(JSP12Namespace.ElementName.DECLARATION);
-						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_INCLUDE);
-						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_PAGE);
-						rejectElements.add(JSP12Namespace.ElementName.TEXT);
-						rejectElements.add(JSP12Namespace.ElementName.DIRECTIVE_TAGLIB);
-						rejectElements.add(JSP20Namespace.ElementName.DIRECTIVE_TAG);
-						rejectElements.add(JSP20Namespace.ElementName.DIRECTIVE_ATTRIBUTE);
-						rejectElements.add(JSP20Namespace.ElementName.DIRECTIVE_VARIABLE);
-						if (isXMLFormat(domDoc)) {
-							// jsp actions
-							rejectElements.add(JSP12Namespace.ElementName.FALLBACK);
-							rejectElements.add(JSP12Namespace.ElementName.USEBEAN);
-							rejectElements.add(JSP12Namespace.ElementName.GETPROPERTY);
-							rejectElements.add(JSP12Namespace.ElementName.SETPROPERTY);
-							rejectElements.add(JSP12Namespace.ElementName.INCLUDE);
-							rejectElements.add(JSP12Namespace.ElementName.FORWARD);
-							rejectElements.add(JSP12Namespace.ElementName.PLUGIN);
-							rejectElements.add(JSP12Namespace.ElementName.FALLBACK);
-							rejectElements.add(JSP12Namespace.ElementName.PARAM);
-							rejectElements.add(JSP12Namespace.ElementName.PARAMS);
-						}
-
-
-						// don't show jsp:root if a document element already
-						// exists
-						Element docElement = domDoc.getDocumentElement();
-						if (docElement != null && ((docElement.getNodeName().equals("jsp:root")) || ((((IDOMNode) docElement).getStartStructuredDocumentRegion() != null || ((IDOMNode) docElement).getEndStructuredDocumentRegion() != null)))) //$NON-NLS-1$
-							rejectElements.add(JSP12Namespace.ElementName.ROOT);
-
-						for (int j = 0; j < jspelements.getLength(); j++) {
-							CMElementDeclaration ed = (CMElementDeclaration) jspelements.item(j);
-							if (rejectElements.contains(ed.getNodeName()))
-								continue;
-							elementDecls.add(ed);
-						}
-
-					}
-				}
-				// No cm document (such as for the Document (a non-Element) node itself)
-				else {
-					CMNamedNodeMap jspElements = getDefaultJSPCMDocument((IDOMNode) node).getElements();
-					int length = jspElements.getLength();
-					for (int i = 0; i < length; i++) {
-						elementDecls.add(jspElements.item(i));
-					}
-				}
-			}
-		}
-		return elementDecls;
-	}
-
 	/**
 	 * For JSP files and segments, this is just the JSP
 	 *         document, but when editing tag files and their fragments, it
@@ -570,56 +431,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		}
 
 		return jcmdoc;
-	}
-
-	protected List getAvailableChildrenAtIndex(Element parent, int index, int validityChecking) {
-		List list = new ArrayList();
-		List additionalElements = getAdditionalChildren(new ArrayList(), parent, index);
-		for (int i = 0; i < additionalElements.size(); i++) {
-			ModelQueryAction insertAction = new NonValidatingModelQueryAction((CMElementDeclaration) additionalElements.get(i), ModelQueryAction.INSERT, 0, parent.getChildNodes().getLength(), null);
-			list.add(insertAction);
-		}
-
-		// add allowed children of implicit tags that don't already exist
-		NodeList children = parent.getChildNodes();
-		List childNames = new ArrayList();
-		if (children != null) {
-			for (int i = 0; i < children.getLength(); i++) {
-				Node child = children.item(i);
-				if (child.getNodeType() == Node.ELEMENT_NODE)
-					childNames.add(child.getNodeName().toLowerCase());
-			}
-		}
-		List allActions = new ArrayList();
-		Iterator iterator = list.iterator();
-		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(parent.getOwnerDocument());
-		while (iterator.hasNext()) {
-			ModelQueryAction action = (ModelQueryAction) iterator.next();
-			allActions.add(action);
-			if (action.getCMNode() instanceof HTMLElementDeclaration) {
-				HTMLElementDeclaration ed = (HTMLElementDeclaration) action.getCMNode();
-				String ommission = (String) ed.getProperty(HTMLCMProperties.OMIT_TYPE);
-				if (!childNames.contains(ed.getNodeName().toLowerCase()) && ((ommission != null) && (ommission.equals(HTMLCMProperties.Values.OMIT_BOTH)))) {
-					List implicitValidActions = new ArrayList();
-					modelQuery.getInsertActions(parent, ed, 0, ModelQuery.INCLUDE_CHILD_NODES, ModelQuery.VALIDITY_NONE, implicitValidActions);
-					if (implicitValidActions != null) {
-						Iterator implicitValidActionsIterator = implicitValidActions.iterator();
-						while (implicitValidActionsIterator.hasNext()) {
-							ModelQueryAction insertAction = new NonValidatingModelQueryAction(((ModelQueryAction) implicitValidActionsIterator.next()).getCMNode(), ModelQueryAction.INSERT, 0, parent.getChildNodes().getLength(), null);
-							allActions.add(insertAction);
-						}
-					}
-				}
-			}
-		}
-		return allActions;
-	}
-
-	protected List getAvailableRootChildren(Document document, int childIndex) {
-		List list = new ArrayList();
-		if (!isXMLFormat(document))
-			getAdditionalChildren(list, document, childIndex);
-		return list;
 	}
 
 	protected void init() {
@@ -1322,9 +1133,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.TAG);
-
-		super.addTagInsertionProposals(contentAssistRequest, childPosition);
-		if (isInternalAdapter)
-			useEmbeddedResults = false;
+		//don't need to call super here because otherwise we duplicate what the HTMLCOntentAssistProcessor that is running is already doing
 	}
 }

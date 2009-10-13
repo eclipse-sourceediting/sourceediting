@@ -351,4 +351,17 @@
 			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
 	</extension>	
 	-->
+	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
+		<modelQueryExtension
+			class="org.eclipse.jst.jsp.core.internal.modelquery.JSPModelQueryExtension"
+			contentType="org.eclipse.jst.jsp.core.jspsource">
+		</modelQueryExtension>
+	</extension>
+	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
+		<modelQueryExtension
+			class="org.eclipse.jst.jsp.core.internal.modelquery.TaglibModelQueryExtension"
+			contentType="org.eclipse.jst.jsp.core.jspsource">
+		</modelQueryExtension>
+	</extension>
+
 </plugin>
