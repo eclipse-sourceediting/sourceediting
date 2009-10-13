@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -41,7 +42,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	
 	private static final String fExpressionHeader1 = "public String _elExpression"; //$NON-NLS-1$
 	private static final String fExpressionHeader2 = "()" + ENDL + //$NON-NLS-1$
-	"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
+	"\t\tthrows java.io.IOException, javax.servlet.ServletException, javax.servlet.jsp.JspException {" + ENDL + //$NON-NLS-1$
 	"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
 	"java.util.Map param = null;" + ENDL + //$NON-NLS-1$
 	"java.util.Map paramValues = null;" + ENDL + //$NON-NLS-1$
@@ -56,18 +57,18 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	"return \"\"+"; //$NON-NLS-1$
 
 	private static final String fExpressionHeader2_param = "()" + ENDL + //$NON-NLS-1$
-	"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
+	"\t\tthrows java.io.IOException, javax.servlet.ServletException, javax.servlet.jsp.JspException {" + ENDL + //$NON-NLS-1$
 	"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<java.lang.String, java.lang.String> param = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<java.lang.String, java.lang.String[]> paramValues = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<java.lang.String, java.lang.String> header = null;" + ENDL + //$NON-NLS-1$ 
-	"java.util.Map<java.lang.String, java.lang.String[]> headerValues = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<java.lang.String, javax.servlet.http.Cookie> cookie = null;" + ENDL + //$NON-NLS-1$ 
-	"java.util.Map<java.lang.String, java.lang.String> initParam = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<java.lang.String, java.lang.Object> pageScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<java.lang.String, java.lang.Object> requestScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<java.lang.String, java.lang.Object> sessionScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<java.lang.String, java.lang.Object> applicationScope = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<String, String> param = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<String, String[]> paramValues = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<String, String> header = null;" + ENDL + //$NON-NLS-1$ 
+	"java.util.Map<String, String[]> headerValues = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<String, javax.servlet.http.Cookie> cookie = null;" + ENDL + //$NON-NLS-1$ 
+	"java.util.Map<String, String> initParam = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<String, Object> pageScope = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<String, Object> requestScope = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<String, Object> sessionScope = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<String, Object> applicationScope = null;" + ENDL + //$NON-NLS-1$
 	"return \"\"+"; //$NON-NLS-1$
 	
 	private static final String fJspImplicitObjects[] = { "pageContext" }; //$NON-NLS-1$
@@ -96,7 +97,9 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	private IStructuredDocument fDocument = null;
 	private int fContentStart;
 	private static Map fOperatorMap;
-	
+	// start of the generated function definition, if any:
+	private int fGeneratedFunctionStart;
+
 	// this flag lets us know if we were unable to generate for some reason.  One possible reason is that the expression 
 	// contains a reference to a variable for which information is only available at runtime.
 	private boolean fCanGenerate = true;
@@ -138,7 +141,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		fContentStart = contentStart;
 		fDocument = document;
 		fCurrentNode = currentNode;
-		
+		fGeneratedFunctionStart = -1; //set when generating function definition
 		fUseParameterizedTypes = compilerSupportsParameterizedTypes();
 	}
 
@@ -238,26 +241,44 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * Handle top-level expression
 	 */
 	public Object visit(ASTExpression node, Object data) {
-		int start = node.getFirstToken().beginColumn - 1;
-		int end = node.lastToken.endColumn - 1;
+		return node.childrenAccept(this, data);
+	}
+
+	public void startFunctionDefinition(int start) {
+		fGeneratedFunctionStart = fResult.length();
 		append(fExpressionHeader1, start, start);
 		append(Integer.toString(getMethodCounter()), start, start);
 		if (fUseParameterizedTypes)
 			append(fExpressionHeader2_param, start, start);
 		else
 			append(fExpressionHeader2, start, start);
-		
-		Object retval = node.childrenAccept(this, data);
-
-		append(fFooter, end, end);
-		
-		// something is preventing good code generation so empty out the result and the map.
-		if(!fCanGenerate) {
-			fResult.delete(0, fResult.length());
-			fCodeMap.clear();			
-		}
-		return retval;
 	}
+
+	public void endFunctionDefinition(int end) {
+		if (fGeneratedFunctionStart < 0) {
+			throw new IllegalStateException("Cannot end function definition because none has been started."); //$NON-NLS-1$
+		}
+		append(fFooter, end, end);
+
+		// something is preventing good code generation so empty out the result
+		// and the map.
+		if (!fCanGenerate) {
+			fResult.delete(fGeneratedFunctionStart, fResult.length());
+			fOffsetInUserCode = fResult.length();
+			// remove all fCodeMap entries for the removed code:
+			for (Iterator it = fCodeMap.entrySet().iterator(); it.hasNext();) {
+				Map.Entry entry = (Entry) it.next();
+				if (entry.getKey() instanceof Position) {
+					Position pos = (Position) entry.getKey();
+					if (pos.getOffset() >= fGeneratedFunctionStart) {
+						it.remove();
+					}
+				}
+			}
+		}
+		fGeneratedFunctionStart = -1;
+	}
+
 
 	private boolean compilerSupportsParameterizedTypes() {
 		if (fDocument != null) {
@@ -424,7 +445,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 */
 	public Object visit(ASTValuePrefix node, Object data) {
 		// this is a raw identifier.  May sure it's an implicit object.
-		// This is the primary plae where modification is needed to 
+		// This is the primary place where modification is needed to 
 		// support JSF backing beans.
 		if(null == node.children) {
 			if(isCompletingObject(node.firstToken.image)) {
