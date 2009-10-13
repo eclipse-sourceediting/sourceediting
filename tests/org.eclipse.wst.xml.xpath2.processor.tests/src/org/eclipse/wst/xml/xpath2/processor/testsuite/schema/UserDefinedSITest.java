@@ -15,10 +15,15 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
+import org.xml.sax.SAXException;
       
       
 public class UserDefinedSITest extends AbstractPsychoPathTest {
@@ -30,14 +35,16 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "myType:sizeType(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -50,6 +57,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       } catch (DynamicError ex) {
          actual = ex.code();
@@ -67,12 +75,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       List<String> expectedResult = Arrays.asList( "FORG0001", "XQST0009", "XPST0017" );
       
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -101,12 +111,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -138,12 +150,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -175,12 +189,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -212,12 +228,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -249,12 +267,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -286,12 +306,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -323,12 +345,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -360,12 +384,14 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/UserDefinedSI/user-defined-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -380,6 +406,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
+     	 ex.printStackTrace();
          actual = ex.code();
       } catch (DynamicError ex) {
          actual = ex.code();
@@ -390,5 +417,13 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
 
    }
 
+   private Schema loadSchema() throws SAXException {
+		String schemaFile = "/TestSources/userdefined.xsd";
+	      SchemaFactory schemaFactory = new XMLSchemaFactory();
+	      URL schemaURL = bundle.getEntry(schemaFile);
+	      Schema jaxpschema = schemaFactory.newSchema(schemaURL);
+		return jaxpschema;
+	}
+   
 }
       
