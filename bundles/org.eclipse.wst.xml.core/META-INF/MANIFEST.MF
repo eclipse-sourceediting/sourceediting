@@ -70,6 +70,7 @@ Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)";visibility:=ree
  org.eclipse.wst.common.emf;bundle-version="[1.1.300,1.3.0)";resolution:=optional,
  org.eclipse.emf.ecore.xmi;bundle-version="[2.4.0,3.0.0)";resolution:=optional,
  org.eclipse.wst.common.emfworkbench.integration;bundle-version="[1.1.300,1.3.0)";resolution:=optional,
- org.eclipse.wst.common.core;bundle-version="[1.1.201,1.3.0)"
+ org.eclipse.wst.common.core;bundle-version="[1.1.201,1.3.0)",
+ org.eclipse.osgi.services;bundle-version="[3.2.0,4.0.0)"
 Bundle-ActivationPolicy: lazy; exclude:="org.eclipse.wst.xml.core.internal.contenttype"
 Bundle-RequiredExecutionEnvironment: J2SE-1.4

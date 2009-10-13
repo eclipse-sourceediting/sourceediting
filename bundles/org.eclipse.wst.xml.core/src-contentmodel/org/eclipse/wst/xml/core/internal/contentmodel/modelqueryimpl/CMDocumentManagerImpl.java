@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.wst.sse.core.internal.util.AbstractMemoryListener;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -30,28 +31,33 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManag
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentReferenceProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
-
+import org.osgi.service.event.Event;
 
 /**
  *
  */
-public class CMDocumentManagerImpl implements CMDocumentManager
-{                                
-  protected CMDocumentCache cmDocumentCache;
-  protected CMDocumentReferenceProvider cmDocumentReferenceProvider;
-  protected List listenerList = new Vector(); 
-  protected Hashtable propertyTable = new Hashtable();
-  protected Hashtable publicIdTable = new Hashtable();
+public class CMDocumentManagerImpl implements CMDocumentManager {
+	protected CMDocumentCache cmDocumentCache;
+	protected CMDocumentReferenceProvider cmDocumentReferenceProvider;
+	protected List listenerList = new Vector();
+	protected Hashtable propertyTable = new Hashtable();
+	protected Hashtable publicIdTable = new Hashtable();
+	
+	/**
+	 * Used to keep the {@link Entry} cache clean when memory is low
+	 */
+	private MemoryListener fMemoryListener;
 
-       
-  public CMDocumentManagerImpl(CMDocumentCache cmDocumentCache, CMDocumentReferenceProvider cmDocumentReferenceProvider)
-  {                                                       
-    this.cmDocumentCache = cmDocumentCache;                                                                            
-    this.cmDocumentReferenceProvider = cmDocumentReferenceProvider;
-    setPropertyEnabled(PROPERTY_AUTO_LOAD, true);
-    setPropertyEnabled(PROPERTY_USE_CACHED_RESOLVED_URI, false);
-    setPropertyEnabled(PROPERTY_PERFORM_URI_RESOLUTION, true);
-  }         
+	public CMDocumentManagerImpl(CMDocumentCache cmDocumentCache, CMDocumentReferenceProvider cmDocumentReferenceProvider) {
+		this.cmDocumentCache = cmDocumentCache;
+		this.cmDocumentReferenceProvider = cmDocumentReferenceProvider;
+		setPropertyEnabled(PROPERTY_AUTO_LOAD, true);
+		setPropertyEnabled(PROPERTY_USE_CACHED_RESOLVED_URI, false);
+		setPropertyEnabled(PROPERTY_PERFORM_URI_RESOLUTION, true);
+		
+		fMemoryListener = new MemoryListener();
+		fMemoryListener.connect();
+	}        
 
        
   public CMDocumentCache getCMDocumentCache()
@@ -287,4 +293,42 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
     // TODO... initiate a timed release of the entries in the CMDocumentCache
     publicIdTable = new Hashtable();
   }
+  
+  /**
+	 * <p>A {@link AbstractMemoryListener} that clears the {@link CMDocumentCache} cache
+	 * whenever specific memory events are received.</p>
+	 * 
+	 * <p>Events:
+	 * <ul>
+	 * <li>{@link AbstractMemoryListener#SEV_SERIOUS}</li>
+	 * <li>{@link AbstractMemoryListener#SEV_CRITICAL}</li>
+	 * </ul>
+	 * </p>
+	 */
+	private class MemoryListener extends AbstractMemoryListener {
+		/**
+		 * <p>Constructor causes this listener to listen for specific memory events.</p>
+		 * <p>Events:
+		 * <ul>
+		 * <li>{@link AbstractMemoryListener#SEV_CRITICAL}</li>
+		 * </ul>
+		 * </p>
+		 */
+		MemoryListener() {
+			super(new String[] { SEV_CRITICAL });
+		}
+		
+		/**
+		 * On any memory event we handle clear out the project descriptions
+		 * 
+		 * @see org.eclipse.wst.sse.core.internal.util.AbstractMemoryListener#handleMemoryEvent(org.osgi.service.event.Event)
+		 */
+		protected void handleMemoryEvent(Event event) {
+			//we should only clear the cache if we are responsible for it
+			if (getPropertyEnabled(PROPERTY_AUTO_LOAD)) {
+				cmDocumentCache.clear();
+			}
+		}
+		
+	}
 }                                            
