@@ -7,8 +7,9 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     David Carver - bug 280972 - fix fn:lang implementation so it matches spec. 
+ *     David Carver (STAR) - bug 280972 - fix fn:lang implementation so it matches spec. 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     David Carver (STAR) - bug 262765 - correct invalidType to throw XPTY0004 instead of FORG0006
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -85,7 +86,7 @@ public class FnLang extends Function {
 		} else {
 			arg2 = (ResultSequence) citer.next();
 		}
-
+		
 		String lang = "";
 
 		if (!arg1.empty()) {
@@ -94,8 +95,9 @@ public class FnLang extends Function {
 
 		
 		if (!((AnyType)arg2.first() instanceof NodeType) ) {
-			throw DynamicError.throw_type_error();
+			throw DynamicError.invalidType();
 		}
+		
 		NodeType an = (NodeType) arg2.first();
 
 		rs.add(new XSBoolean(test_lang(an.node_value(), lang)));
