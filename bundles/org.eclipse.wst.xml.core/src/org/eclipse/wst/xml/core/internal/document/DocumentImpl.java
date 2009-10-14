@@ -21,13 +21,16 @@ package org.eclipse.wst.xml.core.internal.document;
 // for org.apache.xerces 3.2.1
 // import org.apache.xerces.utils.XMLCharacterProperties;
 // DMW modified for XML4J 4.0.1
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.xerces.dom.TreeWalkerImpl;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMEntityDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
@@ -118,6 +121,18 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 
 	}
 
+	private class LimitedCache extends LinkedHashMap {
+		private static final long serialVersionUID = 1L;
+		private static final int MAX_SIZE = 10;
+		public LimitedCache() {
+			super(0, 0.75f, true);
+		}
+
+		protected boolean removeEldestEntry(java.util.Map.Entry entry) {
+			return size() > MAX_SIZE;
+		}
+	}
+
 	// this is a constant just to give compile-time control over
 	// whether or not to use the cache. If, in future, its found that
 	// there are no (or few) "duplicate requests" ... then this cache
@@ -129,6 +144,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	private DOMModelImpl model = null;
 	private TagNameCache tagNameCache;
 
+	private Map fCMCache;
 	/**
 	 * DocumentImpl constructor
 	 */
@@ -137,6 +153,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 		if (usetagnamecache) {
 			tagNameCache = new TagNameCache();
 		}
+		fCMCache = Collections.synchronizedMap(new LimitedCache());
 	}
 
 	/**
@@ -150,6 +167,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 		if (usetagnamecache) {
 			tagNameCache = new TagNameCache();
 		}
+		fCMCache = Collections.synchronizedMap(new LimitedCache());
 	}
 
 	/**
@@ -1042,6 +1060,23 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 
 	protected void setModel(IDOMModel model) {
 		this.model = (DOMModelImpl) model;
+	}
+
+	/**
+	 * Provides an element's attribute declarations
+	 * @param element the element to retrieve the attribute map of
+	 * @return a <code>CMNamedNodeMap</code> of attributes if the declaration exists; null otherwise.
+	 */
+	CMNamedNodeMap getCMAttributes(Element element) {
+		CMNamedNodeMap map = (CMNamedNodeMap) fCMCache.get(element);
+		if (map == null) {
+			CMElementDeclaration decl = ModelQueryUtil.getModelQuery(this).getCMElementDeclaration(element);
+			if (decl != null) {
+				map = decl.getAttributes();
+				fCMCache.put(element, map);
+			}
+		}
+		return map;
 	}
 
 	/**

@@ -28,7 +28,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementAdapter;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
@@ -235,9 +238,23 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 */
 	public String getAttribute(String name) {
 		Attr attr = getAttributeNode(name);
-		if (attr == null)
-			return null;
-		return attr.getValue();
+		// In the absence of the attribute, get the default value
+		return (attr != null) ? attr.getValue() : getDefaultValue(name);
+	}
+
+	/**
+	 * get the default value for attribute <code>name</code>. Returns an empty string
+	 * @param name
+	 * @return
+	 */
+	private String getDefaultValue(String name) {
+		CMNamedNodeMap map = ((DocumentImpl) getOwnerDocument()).getCMAttributes(this);
+		if (map != null) {
+			CMNode attribute = map.getNamedItem(name);
+			if (attribute instanceof CMAttributeDeclaration)
+				return ((CMAttributeDeclaration) attribute).getAttrType().getImpliedValue();
+		}
+		return new String();
 	}
 
 	/**
@@ -303,9 +320,8 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 */
 	public String getAttributeNS(String uri, String name) {
 		Attr attr = getAttributeNodeNS(uri, name);
-		if (attr == null)
-			return null;
-		return attr.getValue();
+		// In the absence of the attribute, get the default value
+		return (attr != null) ? attr.getValue() : getDefaultValue(name);
 	}
 
 	/**
