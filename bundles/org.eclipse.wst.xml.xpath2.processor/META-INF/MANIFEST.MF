@@ -17,5 +17,6 @@ Export-Package: org.eclipse.wst.xml.xpath2.processor,
  org.eclipse.wst.xml.xpath2.processor.internal.ast;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.function;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.types;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.utils;x-internal:=true
 Bundle-Vendor: %provider
