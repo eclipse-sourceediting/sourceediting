@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -144,8 +145,7 @@ public class ContextCurrentDateFuncTest extends AbstractPsychoPathTest {
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDateFunc/fn-current-date-4.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDateFunc/fn-current-date-4.txt";
       String expectedResult = getExpectedResult(resultFile);
-      Date expectedDate = new Date();
-      DateFormat expectedFormat = new SimpleDateFormat("d");
+      Calendar cal = null;
 
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -161,6 +161,7 @@ public class ContextCurrentDateFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      cal = dc.current_date_time();
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
@@ -172,8 +173,7 @@ public class ContextCurrentDateFuncTest extends AbstractPsychoPathTest {
       } catch (DynamicError ex) {
          actual = ex.code();
       }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedFormat.format(expectedDate).toString(), actual);
+      assertEquals("XPath Result Error " + xqFile + ":", Integer.toString(cal.get(Calendar.DAY_OF_MONTH)), actual);
         
 
    }
