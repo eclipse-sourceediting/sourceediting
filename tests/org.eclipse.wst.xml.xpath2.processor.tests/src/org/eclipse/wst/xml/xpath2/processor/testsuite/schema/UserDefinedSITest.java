@@ -19,9 +19,20 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.jaxp.validation.XMLSchemaFactory;
+import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSModel;
+import org.apache.xerces.xs.XSNamedMap;
+import org.apache.xerces.xs.XSNamespaceItem;
+import org.apache.xerces.xs.XSObject;
+import org.apache.xerces.xs.XSSimpleTypeDefinition;
+import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.XercesFloatUserDefined;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.XercesIntegerUserDefined;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.XercesUserDefined;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
 import org.xml.sax.SAXException;
       
@@ -42,7 +53,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = "myType:sizeType(1)";
       String actual = null;
@@ -60,6 +71,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
     	 ex.printStackTrace();
          actual = ex.code();
       } catch (DynamicError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       }
 
@@ -82,9 +94,9 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "myType:sizeType(20)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -118,9 +130,9 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "myType:sizeType(1) + myType:sizeType(2)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -135,6 +147,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       } catch (StaticError ex) {
          actual = ex.code();
       } catch (DynamicError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       }
 
@@ -157,9 +170,9 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "myType:stringBased(\"valid value 4\")";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -196,7 +209,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -235,7 +248,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -274,7 +287,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -313,7 +326,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -352,7 +365,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -391,7 +404,7 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -413,7 +426,6 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
       }
 
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
 
    }
 
@@ -424,6 +436,40 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
 	      Schema jaxpschema = schemaFactory.newSchema(schemaURL);
 		return jaxpschema;
 	}
+   
+   void addUserDefinedSimpleTypes(XSModel schema, DynamicContext dc) {
+      XSNamedMap xstypes = schema.getComponents(XSConstants.TYPE_DEFINITION);
+      if (xstypes.getLength() == 0) {
+    	  return;
+      }
+      
+      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+      UserDefinedCtrLibrary udl = new UserDefinedCtrLibrary("http://www.w3.org/XQueryTest/userDefinedTypes");
+      
+      for (int i = 0; i < xstypes.getLength(); i++) {
+    	  XSObject xsobject = xstypes.item(i);
+    	  if ("http://www.w3.org/XQueryTest/userDefinedTypes".equals(xsobject.getNamespace())) {
+    		  if (xsobject instanceof XSSimpleTypeDefinition) {
+    			  if (((XSSimpleTypeDefinition) xsobject).getNumeric()) {
+    				  if (xsobject.getName().equals("floatBased")) {
+	    				  XercesFloatUserDefined fudt = new XercesFloatUserDefined(xsobject);
+	    				  udl.add_type(fudt);
+    					  
+    				  } else {
+	    				  XercesIntegerUserDefined iudt = new XercesIntegerUserDefined(xsobject);
+	    				  udl.add_type(iudt);
+    				  }
+    			  }  else {
+						XercesUserDefined udt = new XercesUserDefined(xsobject);
+						udl.add_type(udt);
+    			  }
+    		  }
+    	  }
+      }
+      
+      dc.add_function_library(udl);
+ 
+   }
    
 }
       
