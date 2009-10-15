@@ -249,6 +249,8 @@ public abstract class NodeType extends AnyType {
 			schemaTypeValue = XSDate.parse_date(string_value());
 		} else if ("boolean".equals(typeName)) {
 			schemaTypeValue = new XSBoolean(Boolean.valueOf(string_value()));
+		} else if ("NOTATION".equals(typeName)) {
+			schemaTypeValue = new XSString(string_value());
 		}
 		
 		return schemaTypeValue;
