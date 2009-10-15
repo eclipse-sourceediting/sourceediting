@@ -343,9 +343,11 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 				case SWT.CANCEL:
 					return false;
 				case SWT.YES:
+					storeValues();
 					ValidateJob job = new ValidateJob(HTMLUIMessages.Validation_jobName);
 					job.schedule();
 				case SWT.NO:
+					storeValues();
 				default:
 					return true;
 			}

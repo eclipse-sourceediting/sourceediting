@@ -250,17 +250,6 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		super.performDefaults();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractSettingsPage#performOk()
-	 */
-	public boolean performOk() {
-		boolean result = super.performOk();
-		storeValues();
-		return result;
-	}
-
 	protected boolean shouldRevalidateOnSettingsChange() {
 		return fOriginalValidateFragments != fValidateFragments.getSelection() || super.shouldRevalidateOnSettingsChange();
 	}
