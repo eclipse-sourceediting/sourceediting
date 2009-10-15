@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLCharEntity;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -243,6 +247,7 @@ public class SourceValidator {
 			return false; // error
 		String message = null;
 
+
 		// setup validation conditions
 		boolean acceptTag = false;
 		boolean acceptClose = false;
@@ -276,6 +281,10 @@ public class SourceValidator {
 					return false; // error
 				acceptTag = true;
 				acceptClose = true;
+			} else if(hasNestedRegion(text)) {
+				//there are cases (such as with EL) that the text is to complicated
+				//	to be verified by this validator
+				return true;
 			}
 		} else {
 			IDOMDocument document = null;
@@ -342,5 +351,38 @@ public class SourceValidator {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * True if the text has nested regions, meaning container is probably too
+	 * complicated (like EL regions) to validate with this validator.
+	 *
+	 * @param text
+	 * @return
+	 */
+	private boolean hasNestedRegion(TextImpl text) {
+		boolean done = false;
+
+		IStructuredDocumentRegion currRegion = text.getFirstStructuredDocumentRegion();
+		IStructuredDocumentRegion lastRegion = text.getLastStructuredDocumentRegion();
+
+		while(currRegion != null && !done) {
+			
+			ITextRegionList regions = currRegion.getRegions();
+			for(int i = 0; i < regions.size(); ++i) {
+				ITextRegion container = regions.get(i);
+				if ((container instanceof ITextRegionContainer)) {
+					ITextRegionList regions2 = ((ITextRegionContainer) container).getRegions();
+					if (regions2 != null) {
+						return true;
+					}
+				}
+			}
+
+			done = currRegion == lastRegion;
+			currRegion = currRegion.getNext();
+		}
+
+		return false;
 	}
 }
