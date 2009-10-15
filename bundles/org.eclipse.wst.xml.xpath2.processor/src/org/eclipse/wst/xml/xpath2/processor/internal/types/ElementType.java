@@ -11,15 +11,17 @@
  *                                  for attribute/element nodes
  *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
+ *     David Carver (STAR) - bug 289304 - fix schema awarness of types on elements
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.dom.PSVIElementNSImpl;
+import org.apache.xerces.xs.XSComplexTypeDefinition;
+import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,8 +36,6 @@ public class ElementType extends NodeType {
 
 	private String _string_value;
 
-	// constructor only usefull for string_type()
-	// XXX needs to be fixed in future
 	/**
 	 * Initialises to a null element
 	 */
@@ -57,10 +57,12 @@ public class ElementType extends NodeType {
 	}
 
 	/**
-	 * This deprecated and will be removed. Adopters need to use ElementType(Element)
+	 * This deprecated and will be removed. Adopters need to use
+	 * ElementType(Element)
+	 * 
 	 * @param v
 	 * @param nodePosition
-	 * @deprecated  Use ElementType(Element v) instead.
+	 * @deprecated Use ElementType(Element v) instead.
 	 */
 	@Deprecated
 	public ElementType(Element v, int nodePosition) {
@@ -112,22 +114,29 @@ public class ElementType extends NodeType {
 	 */
 	@Override
 	public ResultSequence typed_value() {
-		ResultSequence rs = ResultSequenceFactory.create_new();	
-		
-		PSVIElementNSImpl psviElem = (PSVIElementNSImpl)_value;
-		XSTypeDefinition typeDef = psviElem.getTypeDefinition();
-		
-		if (typeDef != null && XSCtrLibrary.XML_SCHEMA_NS.equals(typeDef.getNamespace())) {
-		  Object schemaTypeValue = getTypedValueForPrimitiveType(typeDef);
-		  if (schemaTypeValue != null) {
-			rs.add((AnyType)schemaTypeValue);  
-		  }
-		  else {
-			rs.add(new XSUntypedAtomic(string_value()));  
-		  }
-	    } else {
-		   rs.add(new XSUntypedAtomic(string_value()));	
-		}	
+		ResultSequence rs = ResultSequenceFactory.create_new();
+
+		PSVIElementNSImpl typeInfo = (PSVIElementNSImpl) _value;
+
+		XSTypeDefinition typeDef = typeInfo.getTypeDefinition();
+
+		if (typeDef != null) {
+			XSSimpleTypeDefinition simpType = null;
+			if (typeDef instanceof XSComplexTypeDefinition) {
+				XSComplexTypeDefinition complexTypeDefinition = (XSComplexTypeDefinition) typeDef;
+				simpType = complexTypeDefinition.getSimpleType();
+			} else {
+				simpType = (XSSimpleTypeDefinition) typeDef;
+			}
+			Object schemaTypeValue = getTypedValueForPrimitiveType(simpType);
+			if (schemaTypeValue != null) {
+				rs.add((AnyType) schemaTypeValue);
+			} else {
+				rs.add(new XSUntypedAtomic(string_value()));
+			}
+		} else {
+			rs.add(new XSUntypedAtomic(string_value()));
+		}
 
 		return rs;
 	}
@@ -167,8 +176,9 @@ public class ElementType extends NodeType {
 	 */
 	@Override
 	public QName node_name() {
-		QName name = new QName(_value.getPrefix(), _value.getLocalName(), _value.getNamespaceURI());
-		
+		QName name = new QName(_value.getPrefix(), _value.getLocalName(),
+				_value.getNamespaceURI());
+
 		return name;
 	}
 
@@ -176,7 +186,7 @@ public class ElementType extends NodeType {
 	public ResultSequence nilled() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		// XXX PSVI !!!
+		// FIXME PSVI !!!
 		rs.add(new XSBoolean(false));
 
 		return rs;
@@ -189,7 +199,7 @@ public class ElementType extends NodeType {
 	public boolean isID() {
 		return isElementType(SCHEMA_TYPE_ID);
 	}
-	
+
 	/**
 	 * @since 1.1
 	 */
@@ -197,7 +207,7 @@ public class ElementType extends NodeType {
 	public boolean isIDREF() {
 		return isElementType(SCHEMA_TYPE_IDREF);
 	}
-	
+
 	protected boolean isElementType(String typeName) {
 		TypeInfo typeInfo = _value.getSchemaTypeInfo();
 		return isType(typeInfo, typeName);

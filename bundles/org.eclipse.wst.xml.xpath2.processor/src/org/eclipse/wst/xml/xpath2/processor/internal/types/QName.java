@@ -113,10 +113,10 @@ public class QName extends CtrType implements CmpEq {
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-		if (!(aat instanceof XSString))
+		if (!(aat instanceof XSString) && !(aat instanceof QName))
 			DynamicError.throw_type_error();
-
-		String sarg = ((XSString) aat).value();
+		
+		String sarg = aat.string_value();
 
 		QName qname = parse_QName(sarg);
 		if (qname == null)

@@ -9,15 +9,17 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
  *                                 for attribute/element nodes
- *     David Carver - bug 277774 - XSDecimal returning wrong values.
+ *     David Carver (STAR)- bug 277774 - XSDecimal returning wrong values.
  *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
- *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
+ *     David Carver (STAR) - bug 281186 - implementation of fn:id and fn:idref
+ *     David Carver (STAR) - bug 289304 - fixed schema awareness on elements
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -215,27 +217,38 @@ public abstract class NodeType extends AnyType {
 
 	protected Object getTypedValueForPrimitiveType(XSTypeDefinition typeDef) {		
 		Object schemaTypeValue = null;
-		
-		if (typeDef.getName().equals("date")) {		
+		if (typeDef == null) {
+			return new XSUntypedAtomic(string_value());
+		}
+		String typeName = typeDef.getName();
+		if ("date".equals(typeName)) {		
 		   schemaTypeValue = XSDate.parse_date(string_value());
 		}
-		else if (typeDef.getName().equals("int")) {		
+		else if ("int".equals(typeName)) {		
 		   schemaTypeValue = new XSInt(new BigInteger(string_value()));
 		}
-		else if (typeDef.getName().equals("long")) {		
+		else if ("long".equals(typeName)) {		
 		  schemaTypeValue = new XSLong(new BigInteger(string_value()));
 	    }
-		else if (typeDef.getName().equals("integer")) {		
+		else if ("integer".equals(typeName)) {		
 		  schemaTypeValue = new XSInteger(new BigInteger(string_value()));
 		}
-		else if (typeDef.getName().equals("double")) {		
+		else if ("double".equals(typeName)) {		
 		  schemaTypeValue = new XSDouble(Double.parseDouble(string_value()));
 		}
-		else if (typeDef.getName().equals("float")) {		
+		else if ("float".equals(typeName)) {		
 		  schemaTypeValue = new XSFloat(Float.parseFloat(string_value()));
 	    }
-		else if (typeDef.getName().equals("decimal")) {		
+		else if ("decimal".equals(typeName)) {		
 		  schemaTypeValue = new XSDecimal(new BigDecimal(string_value()));
+		} else if ("dateTime".equals(typeName)) {
+		  schemaTypeValue = XSDateTime.parseDateTime(string_value());
+		} else if ("time".equals(typeName)) {
+			schemaTypeValue = XSTime.parse_time(string_value());
+		} else if ("date".equals(typeName)) {
+			schemaTypeValue = XSDate.parse_date(string_value());
+		} else if ("boolean".equals(typeName)) {
+			schemaTypeValue = new XSBoolean(Boolean.valueOf(string_value()));
 		}
 		
 		return schemaTypeValue;

@@ -12,11 +12,14 @@
  *     Jesper Moller - bug 281159 - we were missing out on qualified attributes
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
+ *     David Carver (STAR) - bug 289304 - fixe schema awarness of types on attributes
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.dom.PSVIAttrNSImpl;
+import org.apache.xerces.xs.XSComplexTypeDefinition;
+import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -82,8 +85,9 @@ public class AttrType extends NodeType {
 		PSVIAttrNSImpl psviAttr = (PSVIAttrNSImpl) _value;
 		XSTypeDefinition typeDef = psviAttr.getTypeDefinition();
 
-		if (typeDef != null && XSCtrLibrary.XML_SCHEMA_NS.equals(typeDef.getNamespace())) {
-			Object schemaTypeValue = getTypedValueForPrimitiveType(typeDef);
+		if (typeDef != null) {
+			XSSimpleTypeDefinition simpType = (XSSimpleTypeDefinition) typeDef;
+			Object schemaTypeValue = getTypedValueForPrimitiveType(simpType);
 			if (schemaTypeValue != null) {
 				rs.add((AnyType) schemaTypeValue);
 			} else {
