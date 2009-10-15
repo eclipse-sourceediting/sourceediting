@@ -15,7 +15,7 @@ Tree :
 
 b.name=x:b
 b.value=c
-a b=null
+a b=
 a x:b=c
 Source :
 <a x:b="c" d="e">f</a>
