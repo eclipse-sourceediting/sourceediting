@@ -24,6 +24,7 @@ public class AllPsychoPathTests {
 		suite.addTestSuite(Bug269833.class);
 		suite.addTest(AllW3CXPath20Tests.suite());
 		suite.addTest(AllW3CFunctionTests.suite());
+		suite.addTest(AllW3CSchemaTests.suite());
 		suite.addTestSuite(TestBugs.class);
 		suite.addTestSuite(XPathDecimalFormatTest.class);
 		suite.addTestSuite(LiteralUtilsTest.class);

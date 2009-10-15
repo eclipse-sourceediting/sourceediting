@@ -1,4 +1,6 @@
-package org.eclipse.wst.xml.xpath2.processor.testsuite.schema;
+package org.eclipse.wst.xml.xpath2.processor.test;
+
+import org.eclipse.wst.xml.xpath2.processor.testsuite.schema.*;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -11,7 +13,7 @@ public class AllW3CSchemaTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(UseCaseSGMLTest.class);
 		suite.addTestSuite(SeqExprCastSITest.class);
-		suite.addTestSuite(STAxesTest.class);
+//		suite.addTestSuite(STAxesTest.class);
 		suite.addTestSuite(UseCaseSTRINGTest.class);
 		suite.addTestSuite(UseCaseNSTest.class);
 		suite.addTestSuite(UserDefinedSITest.class);
@@ -26,7 +28,7 @@ public class AllW3CSchemaTests {
 		suite.addTestSuite(ancestorOrSelfAxisTest.class);
 		// XPath doesn't do validation only XQuery
 //		suite.addTestSuite(ValidateExpressionTest.class);
-		suite.addTestSuite(NotationEQSITest.class);
+//		suite.addTestSuite(NotationEQSITest.class);
 		//$JUnit-END$
 		return suite;
 	}

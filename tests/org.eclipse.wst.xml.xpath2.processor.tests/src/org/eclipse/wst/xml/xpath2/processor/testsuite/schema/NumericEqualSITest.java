@@ -13,10 +13,15 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.schema;
 
 import java.net.URL;
 
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
+import org.xml.sax.SAXException;
       
       
 public class NumericEqualSITest extends AbstractPsychoPathTest {
@@ -28,12 +33,14 @@ public class NumericEqualSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NumericEqualSI/value-comparison-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -65,12 +72,14 @@ public class NumericEqualSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NumericEqualSI/value-comparison-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -95,5 +104,13 @@ public class NumericEqualSITest extends AbstractPsychoPathTest {
 
    }
 
+   private Schema loadSchema() throws SAXException {
+		String schemaFile = "/TestSources/userdefined.xsd";
+	      SchemaFactory schemaFactory = new XMLSchemaFactory();
+	      URL schemaURL = bundle.getEntry(schemaFile);
+	      Schema jaxpschema = schemaFactory.newSchema(schemaURL);
+		return jaxpschema;
+	}
+   
 }
       

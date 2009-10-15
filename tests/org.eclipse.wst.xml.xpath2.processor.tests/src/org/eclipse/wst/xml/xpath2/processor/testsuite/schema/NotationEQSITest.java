@@ -13,10 +13,15 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.schema;
 
 import java.net.URL;
 
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
+import org.xml.sax.SAXException;
       
       
 public class NotationEQSITest extends AbstractPsychoPathTest {
@@ -62,15 +67,17 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
    public void test_Comp_notation_2() throws Exception {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-2.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-2.txt";
+      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notationalt-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -102,12 +109,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -139,12 +148,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -174,14 +185,16 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-5.xq";
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-5.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -213,12 +226,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -250,12 +265,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -285,14 +302,16 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-8.xq";
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-8.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -324,12 +343,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -359,14 +380,16 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-10.xq";
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-10.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "false";
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -396,14 +419,16 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-11.xq";
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-11.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -433,14 +458,16 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-12.xq";
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-12.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -470,14 +497,16 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-13.xq";
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-13.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "false";
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -507,14 +536,16 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-14.xq";
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-14.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "false"; 
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -546,12 +577,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -583,12 +616,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -620,12 +655,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -657,12 +694,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -694,12 +733,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -731,12 +772,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -768,12 +811,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -805,12 +850,14 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("myns", "http://www.example.com/notation");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -835,5 +882,13 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
 
    }
 
+   private Schema loadSchema() throws SAXException {
+		String schemaFile = "/TestSources/notationschema.xsd";
+	      SchemaFactory schemaFactory = new XMLSchemaFactory();
+	      URL schemaURL = bundle.getEntry(schemaFile);
+	      Schema jaxpschema = schemaFactory.newSchema(schemaURL);
+		return jaxpschema;
+	}
+   
 }
       

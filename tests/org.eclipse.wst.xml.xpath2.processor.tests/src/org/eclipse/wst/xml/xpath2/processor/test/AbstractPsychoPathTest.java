@@ -492,7 +492,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	    	  if ("http://www.w3.org/XQueryTest/userDefinedTypes".equals(xsobject.getNamespace())) {
 	    		  if (xsobject instanceof XSSimpleTypeDefinition) {
 	    			  if (((XSSimpleTypeDefinition) xsobject).getNumeric()) {
-	    				  if (xsobject.getName().equals("floatBased")) {
+	    				  if (xsobject.getName().equals("floatBased") || xsobject.getName().equals("shoesize")) {
 		    				  XercesFloatUserDefined fudt = new XercesFloatUserDefined(xsobject);
 		    				  udl.add_type(fudt);
 	    					  

@@ -25,7 +25,7 @@ public class ValidateExpressionTest extends AbstractPsychoPathTest {
    public void test_validateexpr_1() throws Exception {
       String inputFile = "/TestSources/orderData.xml";
       String xqFile = "/Queries/XQuery/SchemaValidation/ValidateExpression/validateexpr-1.xq";
-      String expectedResult = "XQTY0030";
+      String expectedResult = "XPST0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
