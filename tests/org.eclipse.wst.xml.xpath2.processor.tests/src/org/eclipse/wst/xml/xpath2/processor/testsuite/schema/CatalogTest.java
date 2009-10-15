@@ -35,7 +35,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "for $x in $input-context//*:input-file[count(@variable) = 0 and ./text() != \"emptydoc\"] return string($x/../@name)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -43,7 +43,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<missing-variable>" + buildXMLResultString(rs) + "</missing-variable>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -53,7 +53,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -72,7 +72,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context//*:test-case[@scenario = \"standard\"][fn:count(*:output-file) = 0]/@name/string()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -80,7 +80,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<standard-no-outputfile>" + buildXMLResultString(rs) + "</standard-no-outputfile>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -90,7 +90,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -109,7 +109,8 @@ public class CatalogTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = 
+    	  "$input-context//*:test-case[@scenario = \"runtime-error\" or @scenario = \"parse-error\"][fn:count(*:expected-error) = 0 and fn:count(*:output-file[@compare = \"Inspect\"]) = 0]/@name/string()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -117,7 +118,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<error-no-expected-error>" + buildXMLResultString(rs) + "</error-no-expected-error>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -127,7 +128,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }

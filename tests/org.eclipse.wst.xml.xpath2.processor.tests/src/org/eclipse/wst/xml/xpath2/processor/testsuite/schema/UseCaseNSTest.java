@@ -24,8 +24,10 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("music","http://www.example.org/music/records");
+      
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context//music:title";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -33,7 +35,7 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<Q2>" + buildXMLResultString(rs) + "</Q2>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -43,7 +45,7 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -61,8 +63,9 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("dt", "http://www.w3.org/2001/XMLSchema");
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context//*[@dt:*]";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -70,7 +73,7 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<Q3>" + buildXMLResultString(rs) + "</Q3>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -80,7 +83,7 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }

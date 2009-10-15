@@ -35,7 +35,7 @@ public class UseCaseTREETest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "count($input-context/book/section)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -43,7 +43,7 @@ public class UseCaseTREETest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<top_section_count>" + buildResultString(rs) + "</top_section_count>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
