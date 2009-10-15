@@ -43,7 +43,11 @@ import org.apache.xerces.xni.grammars.XMLGrammarDescription;
 import org.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.apache.xerces.xni.grammars.XSGrammar;
 import org.apache.xerces.xs.ElementPSVI;
+import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSModel;
+import org.apache.xerces.xs.XSNamedMap;
+import org.apache.xerces.xs.XSObject;
+import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
@@ -66,6 +70,11 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary;
+import org.eclipse.wst.xml.xpath2.processor.tesuite.userdefined.XercesFloatUserDefined;
+import org.eclipse.wst.xml.xpath2.processor.tesuite.userdefined.XercesIntegerUserDefined;
+import org.eclipse.wst.xml.xpath2.processor.tesuite.userdefined.XercesQNameUserDefined;
+import org.eclipse.wst.xml.xpath2.processor.tesuite.userdefined.XercesUserDefined;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -468,6 +477,45 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			throw new RuntimeException(e);
 		}
 	}
+
+	protected void addUserDefinedSimpleTypes(XSModel schema, DynamicContext dc) {
+	      XSNamedMap xstypes = schema.getComponents(XSConstants.TYPE_DEFINITION);
+	      if (xstypes.getLength() == 0) {
+	    	  return;
+	      }
+	      
+	      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+	      UserDefinedCtrLibrary udl = new UserDefinedCtrLibrary("http://www.w3.org/XQueryTest/userDefinedTypes");
+	      
+	      for (int i = 0; i < xstypes.getLength(); i++) {
+	    	  XSObject xsobject = xstypes.item(i);
+	    	  if ("http://www.w3.org/XQueryTest/userDefinedTypes".equals(xsobject.getNamespace())) {
+	    		  if (xsobject instanceof XSSimpleTypeDefinition) {
+	    			  if (((XSSimpleTypeDefinition) xsobject).getNumeric()) {
+	    				  if (xsobject.getName().equals("floatBased")) {
+		    				  XercesFloatUserDefined fudt = new XercesFloatUserDefined(xsobject);
+		    				  udl.add_type(fudt);
+	    					  
+	    				  } else {
+		    				  XercesIntegerUserDefined iudt = new XercesIntegerUserDefined(xsobject);
+		    				  udl.add_type(iudt);
+	    				  }
+	    			  }  else {
+	    				  if (xsobject.getName().equals("QNameBased")) {
+	    					  XercesQNameUserDefined qudt = new XercesQNameUserDefined(xsobject);
+	    					  udl.add_type(qudt);
+	    				  } else {
+							XercesUserDefined udt = new XercesUserDefined(xsobject);
+							udl.add_type(udt);
+	    				  }
+	    			  }
+	    		  }
+	    	  }
+	      }
+	      
+	      dc.add_function_library(udl);
+	 
+	   }
 
 
 }

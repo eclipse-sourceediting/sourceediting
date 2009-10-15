@@ -15,10 +15,15 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
+import org.xml.sax.SAXException;
       
       
 public class SeqExprCastSITest extends AbstractPsychoPathTest {
@@ -30,12 +35,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/value1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -67,14 +74,16 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/value1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema, dc);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "myType:QNameBased(\"value1\")";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -104,14 +113,16 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/value1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema, dc);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "myType:QNameBased(\"value1\") cast as myType:QNameBased";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -141,14 +152,16 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/value1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema, dc);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:QName(\"value1\") cast as myType:QNameBased";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -177,12 +190,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String xqFile = "/Queries/XQuery/SchemaImport/SeqExprCastSI/notation-cast-2.xq";
       List<String> expectedResult = Arrays.asList("XPST0080", "XPST0017");
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -212,12 +227,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/mytype-value1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema, dc);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -249,12 +266,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -286,12 +305,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/truevalue.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -323,12 +344,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -360,12 +383,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -397,12 +422,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -434,12 +461,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -471,12 +500,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -508,12 +539,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/truevalue.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -542,15 +575,17 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
    public void test_casthcds9() throws Exception {
       String inputFile = "/TestSources/atomic.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/SeqExprCastSI/casthcds9.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds9.txt";
+      String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds9alt.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -582,12 +617,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -619,12 +656,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -656,12 +695,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -693,12 +734,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -730,12 +773,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/truevalue.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -767,12 +812,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -804,12 +851,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -841,12 +890,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -878,12 +929,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -915,12 +968,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -952,12 +1007,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -974,6 +1031,7 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       } catch (StaticError ex) {
          actual = ex.code();
       } catch (DynamicError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       }
 
@@ -989,12 +1047,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1026,12 +1086,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1063,12 +1125,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/truevalue.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1100,12 +1164,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds24.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1137,12 +1203,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds25.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1174,12 +1242,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds26.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1211,12 +1281,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds27.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1248,12 +1320,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds28.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1285,12 +1359,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds29.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1322,12 +1398,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds30.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1359,12 +1437,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds31.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1396,12 +1476,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds32.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1433,12 +1515,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds33.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1470,12 +1554,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds34.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1507,12 +1593,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds35.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1544,12 +1632,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds36.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1581,12 +1671,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds37.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1618,12 +1710,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds38.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1655,12 +1749,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds39.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1692,12 +1788,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds40.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1729,12 +1827,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds41.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1766,12 +1866,14 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
       String resultFile = "/ExpectedTestResults/SchemaImport/SeqExprCastSI/casthcds42.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      Schema jaxpSchema = loadAtomicSchema();
+      loadDOMDocument(fileURL, jaxpSchema);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1795,6 +1897,23 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
         
 
    }
+
+   private Schema loadSchema() throws SAXException {
+		String schemaFile = "/TestSources/userdefined.xsd";
+	      SchemaFactory schemaFactory = new XMLSchemaFactory();
+	      URL schemaURL = bundle.getEntry(schemaFile);
+	      Schema jaxpschema = schemaFactory.newSchema(schemaURL);
+		return jaxpschema;
+	}
+   
+   private Schema loadAtomicSchema() throws SAXException {
+		String schemaFile = "/TestSources/atomic.xsd";
+	      SchemaFactory schemaFactory = new XMLSchemaFactory();
+	      URL schemaURL = bundle.getEntry(schemaFile);
+	      Schema jaxpschema = schemaFactory.newSchema(schemaURL);
+		return jaxpschema;
+	}
+   
 
 }
       
