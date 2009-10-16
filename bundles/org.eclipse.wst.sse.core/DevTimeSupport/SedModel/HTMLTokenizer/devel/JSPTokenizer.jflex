@@ -414,6 +414,8 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
  */
 private final String doScan(String searchString, boolean requireTailSeparator, boolean allowJSP, boolean allowCDATA, String searchContext, int exitState, int immediateFallbackState) throws IOException {
 	boolean stillSearching = true;
+	boolean wasBlockingEnabled = fIsBlockingEnabled;
+	try {
 	// Disable further block (probably)
 	fIsBlockingEnabled = false;
 	int searchStringLength = searchString.length();
@@ -623,6 +625,10 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 	if(yy_markedPos == yy_startRead)
 		return primGetNextToken();
 	return searchContext;
+	}
+	finally {
+		fIsBlockingEnabled = wasBlockingEnabled;
+	}
 }
 /**
  * user method 
