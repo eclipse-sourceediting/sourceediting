@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,9 @@ package org.eclipse.wst.css.core.internal.document;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
@@ -33,11 +35,11 @@ class CSSModelDeletionContext {
 	private int fNewStart = -1;
 	private int fNewLength = 0;
 	private int fLengthDifference = 0;
-	private IStructuredDocumentRegionList fOldStructuredDocumentRegions = null;
 	// private ICSSNode fRootNode = null;
 	private int fRemovedRangeBegin = -1;
 	private int fRemovedRangeEnd = -1;
 	private CSSNodeListImpl fNodesToBeRemoved = new CSSNodeListImpl();
+	private Set fOldRegionsList;
 
 	/**
 	 * CSSModelDeletionContext constructor comment.
@@ -224,15 +226,7 @@ class CSSModelDeletionContext {
 	 * 
 	 */
 	private boolean isOldNode(IStructuredDocumentRegion flatNode) {
-		if (fOldStructuredDocumentRegions != null) {
-			for (Enumeration e = fOldStructuredDocumentRegions.elements(); e.hasMoreElements();) {
-				if (e.nextElement() == flatNode) {
-					return true;
-				}
-			}
-		}
-
-		return false;
+		return fOldRegionsList.contains(flatNode);
 	}
 
 	/**
@@ -258,8 +252,12 @@ class CSSModelDeletionContext {
 			fRemovedRangeBegin = fRemovedRangeEnd = -1;
 		}
 		fLengthDifference = fNewLength - fOldLength;
-		fOldStructuredDocumentRegions = oldStructuredDocumentRegions;
 
+		fOldRegionsList = new HashSet(); 
+		final Enumeration elements = oldStructuredDocumentRegions.elements();
+		while (elements.hasMoreElements()) {
+			fOldRegionsList.add(elements.nextElement());
+		}
 		// cleanup nodes
 		while (0 < fNodesToBeRemoved.getLength()) {
 			fNodesToBeRemoved.removeNode(0);
