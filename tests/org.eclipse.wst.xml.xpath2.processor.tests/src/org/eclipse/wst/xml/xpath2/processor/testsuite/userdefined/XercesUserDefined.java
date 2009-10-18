@@ -8,7 +8,7 @@
  * Contributors:
  *     David Carver (STAR) - initial API and implementation 
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.tesuite.userdefined;
+package org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined;
 
 import org.apache.xerces.xs.XSObject;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;

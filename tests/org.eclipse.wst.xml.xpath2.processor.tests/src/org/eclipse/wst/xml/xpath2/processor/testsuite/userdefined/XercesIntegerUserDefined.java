@@ -8,8 +8,9 @@
  * Contributors:
  *     David Carver (STAR) - initial API and implementation 
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.tesuite.userdefined;
+package org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined;
 
+import java.math.BigInteger;
 
 import org.apache.xerces.xs.XSObject;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
@@ -17,19 +18,18 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
 
-
-public class XercesFloatUserDefined extends XSFloat {
+public class XercesIntegerUserDefined extends XSInteger {
 
 	private XSObject typeInfo;
-
-	public XercesFloatUserDefined(XSObject typeInfo) {
-		this.typeInfo = typeInfo;
+	
+	public XercesIntegerUserDefined(BigInteger x) {
+		super(x);
 	}
 	
-	public XercesFloatUserDefined(float x) {
-		super(x);
+	public XercesIntegerUserDefined(XSObject typeInfo) {
+		this.typeInfo = typeInfo;
 	}
 	
 	@Override
@@ -47,8 +47,8 @@ public class XercesFloatUserDefined extends XSFloat {
 			if (simpletype != null) {
 				if (simpletype.isDefinedFacet(XSSimpleTypeDefinition.FACET_MININCLUSIVE)) {
 					String minValue = simpletype.getLexicalFacetValue(XSSimpleTypeDefinition.FACET_MININCLUSIVE);
-					float iminValue = Float.parseFloat(minValue);
-					float actualValue = Float.parseFloat(aat.string_value());
+					int iminValue = Integer.parseInt(minValue);
+					int actualValue = Integer.parseInt(aat.string_value());
 	
 					if (actualValue < iminValue) {
 						throw DynamicError.invalidForCastConstructor();
@@ -57,15 +57,15 @@ public class XercesFloatUserDefined extends XSFloat {
 	
 				if (simpletype.isDefinedFacet(XSSimpleTypeDefinition.FACET_MAXINCLUSIVE)) {
 					String maxValue = simpletype.getLexicalFacetValue(XSSimpleTypeDefinition.FACET_MAXINCLUSIVE);
-					float imaxValue = Float.parseFloat(maxValue);
-					float actualValue = Float.parseFloat(aat.string_value());
+					int imaxValue = Integer.parseInt(maxValue);
+					int actualValue = Integer.parseInt(aat.string_value());
 					if (actualValue > imaxValue) {
 						throw DynamicError.invalidForCastConstructor();
 					}
 				}
 			}
 			
-			rs.add(new XercesFloatUserDefined(Float.parseFloat(aat.string_value())));
+			rs.add(new XercesIntegerUserDefined(new BigInteger(aat.string_value())));
 
 			return rs;
 	}	
