@@ -28,6 +28,9 @@ public abstract class AbstractRegExFunction extends Function {
 	
 	protected static boolean matches(String pattern, String flags, String src) {
 		boolean fnd = false;
+		if (pattern.contains("-[")) {
+			pattern = pattern.replace("-[", "&&[^");
+		}
 		Matcher m = compileAndExecute(pattern, flags, src);
 		while (m.find()) {
 			fnd = true;
