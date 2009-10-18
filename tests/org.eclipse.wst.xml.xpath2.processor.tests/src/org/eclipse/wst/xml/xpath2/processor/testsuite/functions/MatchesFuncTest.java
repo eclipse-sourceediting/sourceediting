@@ -1404,7 +1404,7 @@ public class MatchesFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "matches('K', '[A-Z]', 'i')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -1441,7 +1441,7 @@ public class MatchesFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "matches('K', '[a-z]', 'i')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -1478,7 +1478,8 @@ public class MatchesFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "matches('K', 'K', 'i')"; 
+    	  
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -1515,7 +1516,7 @@ public class MatchesFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "matches('K', 'k', 'i')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

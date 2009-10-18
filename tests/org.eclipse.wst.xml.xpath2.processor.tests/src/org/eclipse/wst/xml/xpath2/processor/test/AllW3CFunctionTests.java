@@ -36,7 +36,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(StartsWithFuncTest.class);
 		suite.addTestSuite(AdjDateToTimezoneFuncTest.class);
 		suite.addTestSuite(ContextCurrentDateFuncTest.class);
-//		suite.addTestSuite(StringLengthFuncTest.class);
+		suite.addTestSuite(StringLengthFuncTest.class);
 		suite.addTestSuite(CeilingFuncTest.class);
 		suite.addTestSuite(TrueFuncTest.class);
 //		suite.addTestSuite(NodeNumberFuncTest.class);
@@ -66,7 +66,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(NameFuncTest.class);
 		suite.addTestSuite(SecondsFromTimeFuncTest.class);
 		suite.addTestSuite(SeqCountFuncTest.class);
-//		suite.addTestSuite(SeqBooleanFuncTest.class);
+		suite.addTestSuite(SeqBooleanFuncTest.class);
 		suite.addTestSuite(ReplaceFuncTest.class);
 		suite.addTestSuite(NodeLocalNameFuncTest.class);
 		suite.addTestSuite(StringFuncTest.class);
@@ -80,7 +80,7 @@ public class AllW3CFunctionTests {
 //		suite.addTestSuite(SeqCollectionFuncTest.class);
 		suite.addTestSuite(LocalNameFromQNameFuncTest.class);
 		suite.addTestSuite(ContextCurrentTimeFuncTest.class);
-//		suite.addTestSuite(TraceFuncTest.class);
+		suite.addTestSuite(TraceFuncTest.class);
 		suite.addTestSuite(MonthFromDateTimeFuncTest.class);
 		suite.addTestSuite(TranslateFuncTest.class);
 //		suite.addTestSuite(SeqAVGFuncTest.class);
@@ -93,7 +93,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(MonthsFromDurationFuncTest.class);
 		suite.addTestSuite(SeqZeroOrOneFuncTest.class);
 		suite.addTestSuite(compareFuncTest.class);
-//		suite.addTestSuite(NodeLangFuncTest.class);
+		suite.addTestSuite(NodeLangFuncTest.class);
 		suite.addTestSuite(MinutesFromDateTimeFuncTest.class);
 		suite.addTestSuite(HoursFromTimeFuncTest.class);
 		suite.addTestSuite(SeqIDREFFuncTest.class);
@@ -108,9 +108,9 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(YearsFromDurationFuncTest.class);
 		suite.addTestSuite(NilledFuncTest.class);
 		suite.addTestSuite(DataFuncTest.class);
-//		suite.addTestSuite(NormalizeSpaceFuncTest.class);
+		suite.addTestSuite(NormalizeSpaceFuncTest.class);
 		suite.addTestSuite(DayFromDateTimeFuncTest.class);
-//		suite.addTestSuite(MatchesFuncTest.class);
+		suite.addTestSuite(MatchesFuncTest.class);
 		suite.addTestSuite(SeqDistinctValuesFuncTest.class);
 		suite.addTestSuite(SecondsFromDurationFuncTest.class);
 		suite.addTestSuite(SeqIDFuncTest.class);
