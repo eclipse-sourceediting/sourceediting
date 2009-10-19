@@ -215,7 +215,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 
 	/** debug flag */
 	protected static final boolean DEBUG;
-	private static final long UPDATE_DELAY = 750;
+	private static final long UPDATE_DELAY = 500;
 
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
@@ -263,6 +263,11 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * true if entire document needs to be reprocessed after rewrite session
 	 */
 	boolean fReprocessAfterRewrite = false;
+
+	/** The job should be reset because of document changes */
+	private boolean fReset = false;
+	private boolean fIsCanceled = false;
+	private Object LOCK = new Object();
 
 	/**
 	 * Creates a new StructuredRegionProcessor
@@ -615,9 +620,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		if (dr == null || !isInstalled())
 			return;
 
-		cancel();
 		addRequest(dr);
-		schedule(getDelay());
+		synchronized (LOCK) {
+			fReset = true;
+		}
 
 		if (DEBUG) {
 			System.out.println("added request for: [" + dr.getText() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -631,7 +637,17 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			return status;
 
 		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+		boolean processed = false;
 		try {
+			synchronized (LOCK) {
+				if (fReset) {
+					fReset = false;
+					return status;
+				}
+			}
+			if (fIsCanceled)
+				return status;
+			processed = true;
 			beginProcessing();
 
 			DirtyRegion[] toRefresh = getRequests();
@@ -652,7 +668,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 				Logger.logException("problem with reconciling", e); //$NON-NLS-1$
 		}
 		finally {
-			endProcessing();
+			if (processed)
+				endProcessing();
+			if (!fIsCanceled)
+				schedule(getDelay());
 
 			monitor.done();
 		}
@@ -727,6 +746,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 				DirtyRegion entireDocument = createDirtyRegion(0, document.getLength(), DirtyRegion.INSERT);
 				processDirtyRegion(entireDocument);
 			}
+			schedule(getDelay());
 		}
 	}
 
@@ -759,6 +779,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			// removes widget listener
 			getTextViewer().removeTextInputListener(fTextInputListener);
 			setInstalled(false);
+			cancel();
+			fIsCanceled = true;
 		}
 		fDirtyRegionQueue.clear();
 		setDocument(null);
