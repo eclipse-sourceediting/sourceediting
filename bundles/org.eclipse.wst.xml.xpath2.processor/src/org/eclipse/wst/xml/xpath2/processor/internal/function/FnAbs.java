@@ -75,6 +75,31 @@ public class FnAbs extends Function {
 		// empty arg
 		if (nt == null)
 			return rs;
+		
+		if (nt instanceof XSDouble) {
+			XSDouble dat = (XSDouble) nt;
+			if (dat.zero() || dat.negativeZero()) {
+				rs.add(new XSDouble("0"));
+				return rs;
+			}
+			if (dat.infinite()) {
+				rs.add(new XSDouble(Double.POSITIVE_INFINITY));
+				return rs;
+			}
+		}
+
+		if (nt instanceof XSFloat) {
+			XSFloat dat = (XSFloat) nt;
+			if (dat.zero() || dat.negativeZero()) {
+				rs.add(new XSFloat(Float.valueOf(0)));
+				return rs;
+			}
+			if (dat.infinite()) {
+				rs.add(new XSFloat(Float.POSITIVE_INFINITY));
+				return rs;
+			}
+		}
+
 
 		rs.add(nt.abs());
 		return rs;
@@ -101,8 +126,8 @@ public class FnAbs extends Function {
 		AnyType at = arg.first();
 
 		if (!(at instanceof NumericType))
-			DynamicError.throw_type_error();
-
+			throw DynamicError.invalidType();
+				
 		return (NumericType) at;
 	}
 

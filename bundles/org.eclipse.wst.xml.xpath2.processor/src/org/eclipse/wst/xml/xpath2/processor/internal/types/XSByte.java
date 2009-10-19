@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Mukul Gandhi - bug 277639 - implementation of xs:byte data type
+ *     David Carver - bug 262765 - fixed abs value tests.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -85,7 +86,7 @@ public class XSByte extends XSShort {
 
 			if (bigInt.compareTo(min) < 0 || bigInt.compareTo(max) > 0) {
 			   // invalid input
-			   DynamicError.throw_type_error();	
+			   throw DynamicError.cant_cast(null);	
 			}
 			
 			rs.add(new XSByte(bigInt));

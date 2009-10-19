@@ -8,11 +8,12 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
- *     David Carver - bug 277774 - XSDecimal returning wrong values.
- *     David Carver - bug 262765 - various numeric formatting fixes and calculations
+ *     David Carver (STAR) - bug 277774 - XSDecimal returning wrong values.
+ *     David Carver (STAR) - bug 262765 - various numeric formatting fixes and calculations
  *     David Carver (STAR) - bug 282223 - Can't Cast Exponential values to Decimal values.
  *     David Carver (STAR) - bug 262765 - fixed edge case where rounding was occuring when it shouldn't. 
  *     Jesper Steen Moller - bug 262765 - fix type tests
+ *     David Carver (STAR) - bug 262765 - fixed abs value tests.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -127,6 +128,10 @@ public class XSDecimal extends NumericType {
 			aat instanceof XSBase64Binary || aat instanceof XSHexBinary ||
 			aat instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
+		}
+		
+		if (aat.string_value().contains("-INF")) {
+			throw DynamicError.cant_cast(null);
 		}
 		
 		if (!isLexicalValue(aat.string_value())) {

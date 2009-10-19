@@ -8,6 +8,7 @@
  * Contributors:
  *     Mukul Gandhi - bug 277599 - Initial API and implementation, of xs:nonPositiveInteger
  *                                 data type.
+ *     David Carver (STAR) - bug 262765 - fixed abs value tests.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -87,7 +88,7 @@ public class XSNonPositiveInteger extends XSInteger {
 
 			if (bigInt.compareTo(max) > 0) {
 			   // invalid input
-			   DynamicError.throw_type_error();	
+			   throw DynamicError.cant_cast(null);	
 			}
 			
 			rs.add(new XSNonPositiveInteger(bigInt));
