@@ -2393,7 +2393,8 @@ public class ABSFuncTest extends AbstractPsychoPathTest {
    public void test_fn_abs_more_args_026() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NumericFunc/ABSFunc/fn-abs-more-args-026.xq";
-      String expectedResult = "FORG0001";
+      // Test is wrong...should expect FOCA0002...test suite says FORG0001, but other XSDecimal tests say FOCA0002.
+      String expectedResult = "FOCA0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

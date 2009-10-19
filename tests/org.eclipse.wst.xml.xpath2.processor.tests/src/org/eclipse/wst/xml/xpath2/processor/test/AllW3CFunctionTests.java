@@ -85,7 +85,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(TranslateFuncTest.class);
 //		suite.addTestSuite(SeqAVGFuncTest.class);
 		suite.addTestSuite(NodeNamespaceURIFuncTest.class);
-//		suite.addTestSuite(ABSFuncTest.class);
+		suite.addTestSuite(ABSFuncTest.class);
 		suite.addTestSuite(SeqDocFuncTest.class);
 		suite.addTestSuite(AdjDateTimeToTimezoneFuncTest.class);
 		suite.addTestSuite(FalseFuncTest.class);
