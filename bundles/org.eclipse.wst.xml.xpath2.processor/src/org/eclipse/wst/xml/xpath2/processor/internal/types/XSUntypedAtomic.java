@@ -60,6 +60,7 @@ public class XSUntypedAtomic extends CtrType {
 		return _value;
 	}
 
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -73,6 +74,7 @@ public class XSUntypedAtomic extends CtrType {
 		return rs;
 	}
 
+	@Override
 	public String type_name() {
 		return "untypedAtomic";
 	}

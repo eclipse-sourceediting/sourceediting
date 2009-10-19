@@ -122,7 +122,7 @@ public class FnTranslate extends Function {
 		for (int input = strIter.current(); input != CodePointIterator.DONE; input = strIter.next()) {
 			Integer inputCodepoint = Integer.valueOf(input);
 			if (replacements.containsKey(inputCodepoint)) {
-				Integer replaceWith = (Integer)replacements.get(inputCodepoint);
+				Integer replaceWith = replacements.get(inputCodepoint);
 				if (replaceWith != null) {
 					sb.appendCodePoint(replaceWith.intValue());
 				}					

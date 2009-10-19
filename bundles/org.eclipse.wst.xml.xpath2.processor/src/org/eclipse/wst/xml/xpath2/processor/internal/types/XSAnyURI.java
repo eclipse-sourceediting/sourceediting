@@ -16,9 +16,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -26,7 +23,6 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.FnCompare;
 
 /**
  * Represents a Universal Resource Identifier (URI) reference
@@ -100,7 +96,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 		if (arg.empty())
 			return rs;
 
-		AnyType aat = (AnyType) arg.first();
+		AnyType aat = arg.first();
 
 		if (!(aat.string_type().equals("xs:string")
 				|| aat.string_type().equals("xs:anyURI") || aat.string_type()

@@ -15,20 +15,24 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 
 public class XSNotation extends CtrType {
 
+	@Override
 	public String string_type() {
 		return "xs:NOTATION";
 	}
 
+	@Override
 	public String string_value() {
 		return null;
 	}
 
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		if (arg.empty())
 			DynamicError.throw_type_error();
 		throw new DynamicError("XPST0080", "Can't Cast to NOTATION");
 	}
 
+	@Override
 	public String type_name() {
 		return "NOTATION";
 	}

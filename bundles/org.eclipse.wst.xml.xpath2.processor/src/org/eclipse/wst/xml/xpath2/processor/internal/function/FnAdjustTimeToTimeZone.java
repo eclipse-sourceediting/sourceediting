@@ -15,7 +15,6 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -74,7 +73,7 @@ public class FnAdjustTimeToTimeZone extends Function {
 	public static ResultSequence adjustTime(Collection args,
 			DynamicContext dc) throws DynamicError {
 
-		XSDuration impTimeZone = (XSDuration) dc.tz();
+		XSDuration impTimeZone = dc.tz();
 
 		Collection cargs = Function.convert_arguments(args, expectedArgs());
 

@@ -28,8 +28,6 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.Function;
 
 /**
  * A representation of the Decimal datatype
@@ -198,6 +196,7 @@ public class XSDecimal extends NumericType {
 	 * @return The actual value of the number stored
 	 * @deprecated Use getValue() instead.
 	 */
+	@Deprecated
 	public double double_value() {
 		return _value.doubleValue();
 	}
@@ -372,7 +371,7 @@ public class XSDecimal extends NumericType {
 	public ResultSequence div(ResultSequence arg) throws DynamicError {
 		ResultSequence carg = convertResultSequence(arg);
 		
-		AnyType nanCheck = (AnyType) arg.first();
+		AnyType nanCheck = arg.first();
 		
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		if (val.zero()) {

@@ -22,6 +22,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
 
 public class NumericTypePromoter extends TypePromoter {
 
+	@Override
 	protected void checkCombination(Class<? extends AnyType> newType) {
 		// Note: Double or float will override everything
 		if (newType == XSDouble.class || getTargetType() == XSDouble.class) {

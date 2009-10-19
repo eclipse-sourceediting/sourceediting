@@ -142,7 +142,8 @@ public final class StringCodePointIterator implements CodePointIterator
      * @return true if the given obj is the same as this
      * StringCodePointIterator object; false otherwise.
      */
-    public boolean equals(Object obj)
+    @Override
+	public boolean equals(Object obj)
     {
         if (this == obj)
             return true;
@@ -164,7 +165,8 @@ public final class StringCodePointIterator implements CodePointIterator
      * Computes a hashcode for this iterator.
      * @return A hash code
      */
-    public int hashCode()
+    @Override
+	public int hashCode()
     {
         return text.hashCode() ^ pos ^ end;
     }
@@ -173,7 +175,8 @@ public final class StringCodePointIterator implements CodePointIterator
      * Creates a copy of this iterator.
      * @return A copy of this
      */
-    public Object clone()
+    @Override
+	public Object clone()
     {
         try {
             StringCodePointIterator other

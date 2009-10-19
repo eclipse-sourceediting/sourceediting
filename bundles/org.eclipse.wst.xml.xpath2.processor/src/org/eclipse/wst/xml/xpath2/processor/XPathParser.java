@@ -12,7 +12,6 @@
 package org.eclipse.wst.xml.xpath2.processor;
 
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 
 /**
  * This is an interface class for the XPath parser.

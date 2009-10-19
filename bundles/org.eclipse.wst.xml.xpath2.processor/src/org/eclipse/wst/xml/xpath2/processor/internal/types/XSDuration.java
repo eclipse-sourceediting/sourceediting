@@ -12,8 +12,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
-import java.math.BigInteger;
-
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -111,10 +109,12 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 		this(0, 0, 0, 0, 0, 0.0, false);
 	}
 
+	@Override
 	public String type_name() {
 		return "duration";
 	}
 
+	@Override
 	public String string_type() {
 		return "xs:duration";
 	}
@@ -124,6 +124,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 * 
 	 * @return String representation of the duration stored
 	 */
+	@Override
 	public String string_value() {
 		String ret = "";
 		boolean did_something = false;
@@ -320,6 +321,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 * @return New ResultSequence consisting of the time duration extracted
 	 * @throws DynamicError
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -464,6 +466,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 				negative);
 	}
 
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return new XSDuration(year(), month(), days(), hours(), minutes(),
 				seconds(), negative());

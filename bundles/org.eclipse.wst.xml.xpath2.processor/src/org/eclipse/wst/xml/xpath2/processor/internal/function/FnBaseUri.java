@@ -91,7 +91,7 @@ public class FnBaseUri extends Function {
 		else if (cargs.size() == 1) {
 	      // support for arity 1
 		  ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
-		  AnyType att = (AnyType) arg1.first();
+		  AnyType att = arg1.first();
 
 		  rs = getBaseUri(att);
 		}

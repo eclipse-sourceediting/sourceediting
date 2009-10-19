@@ -99,7 +99,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 		if (arg.empty())
 		  return rs;
 		
-		AnyType anyType = (AnyType)arg.first();
+		AnyType anyType = arg.first();
 		
 		if (anyType instanceof XSDuration || anyType instanceof CalendarType ||
 			anyType instanceof XSBase64Binary || anyType instanceof XSHexBinary ||

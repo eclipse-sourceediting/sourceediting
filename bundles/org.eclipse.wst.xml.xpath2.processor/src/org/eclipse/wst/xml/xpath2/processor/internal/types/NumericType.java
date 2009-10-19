@@ -11,11 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
-import java.math.BigInteger;
-
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 
 /**

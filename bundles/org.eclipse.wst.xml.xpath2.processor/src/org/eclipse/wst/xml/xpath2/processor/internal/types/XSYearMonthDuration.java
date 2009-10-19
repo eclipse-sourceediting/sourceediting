@@ -21,7 +21,6 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 
 /**
@@ -218,6 +217,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return True if this duration represents a backward passage through time.
 	 *         False otherwise
 	 */
+	@Override
 	public boolean negative() {
 		return _negative;
 	}
@@ -282,6 +282,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return True if they both represent the duration of time. False otherwise
 	 * @throws DynamicError
 	 */
+	@Override
 	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		if (arg instanceof XSDayTimeDuration) {
 			XSDayTimeDuration dayTimeDuration = (XSDayTimeDuration)arg;
@@ -304,6 +305,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 *         stored. False otherwise
 	 * @throws DynamicError
 	 */
+	@Override
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);
@@ -320,6 +322,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 *         stored. False otherwise
 	 * @throws DynamicError
 	 */
+	@Override
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);

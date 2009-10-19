@@ -74,7 +74,7 @@ public class FnIndexOf extends AbstractCollationEqualFunction {
 	private static CmpEq get_comparable(AnyType at) throws DynamicError {
 		if (at instanceof NodeType) {
 			XSString nodeString = new XSString(at.string_value());
-			return (CmpEq) nodeString;
+			return nodeString;
 		}
 		
 		if (!(at instanceof AnyAtomicType))

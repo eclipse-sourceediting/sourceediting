@@ -19,7 +19,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.CupError;
 import org.eclipse.wst.xml.xpath2.processor.internal.JFlexError;
 import org.eclipse.wst.xml.xpath2.processor.internal.XPathFlex;
 import org.eclipse.wst.xml.xpath2.processor.internal.XPathCup;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 
 /**
  * JFlexCupParser parses the xpath expression

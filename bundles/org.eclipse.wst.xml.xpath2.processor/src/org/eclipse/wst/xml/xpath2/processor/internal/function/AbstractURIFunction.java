@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -119,7 +118,7 @@ public abstract class AbstractURIFunction extends Function {
 			return rs;
 		}
 				
-		AnyType aat = (AnyType) arg1.first();
+		AnyType aat = arg1.first();
 		String str = aat.string_value();
 
 		ByteBuffer buffer = UTF_8.encode(str);

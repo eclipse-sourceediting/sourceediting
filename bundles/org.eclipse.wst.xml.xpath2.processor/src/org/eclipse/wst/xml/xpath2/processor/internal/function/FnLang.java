@@ -94,7 +94,7 @@ public class FnLang extends Function {
 		}
 
 		
-		if (!((AnyType)arg2.first() instanceof NodeType) ) {
+		if (!(arg2.first() instanceof NodeType) ) {
 			throw DynamicError.invalidType();
 		}
 		

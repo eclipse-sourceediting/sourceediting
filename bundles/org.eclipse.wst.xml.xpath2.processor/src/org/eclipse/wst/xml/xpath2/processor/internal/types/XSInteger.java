@@ -165,6 +165,7 @@ public class XSInteger extends XSDecimal {
 		return false;
 	}
 	
+	@Override
 	protected boolean isLexicalValue(String value) {
 		
 		try {
@@ -315,6 +316,7 @@ public class XSInteger extends XSDecimal {
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal#gt(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType)
 	 */
+	@Override
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
         XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);
@@ -324,6 +326,7 @@ public class XSInteger extends XSDecimal {
 		return compareResult > 0;
 	}
 	
+	@Override
 	protected AnyType convertArg(AnyType arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new(arg);
 		rs = constructor(rs);
@@ -335,6 +338,7 @@ public class XSInteger extends XSDecimal {
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal#lt(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType)
 	 */
+	@Override
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
         XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);

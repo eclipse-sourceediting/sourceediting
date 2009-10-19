@@ -24,7 +24,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
-import java.text.Collator;
 import java.util.*;
 
 import org.w3c.dom.*;
@@ -292,6 +291,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * Use focus().position() to retrieve the value.
 	 * @deprecated  This will be removed in a future version use focus().position().
 	 */
+	@Deprecated
 	public int node_position(Node node) {
 	  // unused parameter!
 	  return _focus.position();	

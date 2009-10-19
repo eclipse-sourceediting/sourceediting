@@ -171,6 +171,7 @@ public interface DynamicContext extends StaticContext {
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public int node_position(Node node);
 
 }
