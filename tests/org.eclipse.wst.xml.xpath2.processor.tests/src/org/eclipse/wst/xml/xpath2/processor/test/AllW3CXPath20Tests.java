@@ -27,10 +27,6 @@ public class AllW3CXPath20Tests {
 		//$JUnit-BEGIN$
 		suite.addTest(AllW3CNumericTests.suite());
 		suite.addTest(AllW3CCoreTests.suite());
-		suite.addTestSuite(YearMonthDurationSubtractTest.class);
-		suite.addTestSuite(DateTimeSubtractYMDTest.class);
-		suite.addTestSuite(YearMonthDurationAddDTTest.class);
-		suite.addTestSuite(DateAddYMDTest.class);
 		//$JUnit-END$
 		return suite;
 	}
