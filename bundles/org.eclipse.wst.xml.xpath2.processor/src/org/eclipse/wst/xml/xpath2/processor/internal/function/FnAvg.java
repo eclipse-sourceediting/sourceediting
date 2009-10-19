@@ -11,6 +11,7 @@
  *     David Carver - bug 262765 - fix issue with casting items to XSDouble cast
  *                                 needed to cast to Numeric so that evaluations
  *                                 and formatting occur correctly.
+ *                               - fix fn:avg casting issues and divide by zero issues.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -100,16 +101,27 @@ public class FnAvg extends Function {
 		if (avg instanceof XSDecimal) {
 			// Need to promote then divide
 			XSDecimal dec = new XSDecimal(((XSDecimal) avg).string_value());
-			res = dec.div(ResultSequenceFactory
-					.create_new(new XSDecimal(BigDecimal.valueOf(elems))));
+			if (dec.zero()) {
+				res = ResultSequenceFactory.create_new(new XSDecimal());
+			} else {
+				res = dec.div(ResultSequenceFactory
+						.create_new(new XSDecimal(BigDecimal.valueOf(elems))));
+			}
 		} else if (avg instanceof XSDouble) {
 			 XSDouble d = new XSDouble(((XSDouble) avg).string_value());
+			 if (d.zero()) {
+				 res = ResultSequenceFactory.create_new(new XSDouble());
+			 }
 			 res = d.div(ResultSequenceFactory
 					.create_new(new XSDouble(elems)));
 		} else if (avg instanceof XSFloat) {
 			XSFloat flt = new XSFloat(((XSFloat) avg).float_value());
-			res = avg.div(ResultSequenceFactory
-					.create_new(new XSFloat(elems)));
+			if (flt.zero()) {
+				res = ResultSequenceFactory.create_new(new XSFloat());
+			} else {
+				res = avg.div(ResultSequenceFactory
+						.create_new(new XSFloat(elems)));
+			}
 		} else if (avg instanceof XSDuration) {
 			res = avg.div(ResultSequenceFactory
 					.create_new(new XSDecimal(BigDecimal.valueOf(elems))));
@@ -168,7 +180,12 @@ public class FnAvg extends Function {
 			} else if (at instanceof NumericType) {
 				d = (NumericType) at;
 			} else if (at instanceof NodeType) {
-				d = new XSDecimal(at.string_value()); 
+				NodeType node = (NodeType) at;
+				try {
+					d = new XSDecimal(at.string_value());
+				} catch (NumberFormatException ex) {
+					throw DynamicError.throw_type_error(); 
+				}
 			} else
 				DynamicError.throw_type_error();
 
