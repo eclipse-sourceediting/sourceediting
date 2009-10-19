@@ -576,42 +576,6 @@ public class DayTimeDurationSubtractTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:subtract-dayTimeDurations" function, which is part of a div expression.
-   public void test_op_subtract_dayTimeDurations_11() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationSubtract/op-subtract-dayTimeDurations-11.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationSubtract/op-subtract-dayTimeDurations-11.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
 
    //Evaluates the "op:subtract-dayTimeDurations" function used in conjunction with a boolean expression and the "fn:true" function.
    public void test_op_subtract_dayTimeDurations_12() throws Exception {

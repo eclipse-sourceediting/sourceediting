@@ -2,6 +2,7 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite;
 
 import org.eclipse.wst.xml.xpath2.processor.testsuite.core.AllW3CCoreTests;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.AllW3CDateTests;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.DateEdgeCasesTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.functions.AllW3CFunctionTests;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.numeric.AllW3CNumericTests;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.schema.AllW3CSchemaTests;
@@ -20,6 +21,7 @@ public class AllW3CXPath20Tests {
 		suite.addTest(AllW3CFunctionTests.suite());
 		suite.addTest(AllW3CNumericTests.suite());
 		suite.addTest(AllW3CSchemaTests.suite());
+		suite.addTestSuite(DateEdgeCasesTest.class);
 		//$JUnit-END$
 		return suite;
 	}

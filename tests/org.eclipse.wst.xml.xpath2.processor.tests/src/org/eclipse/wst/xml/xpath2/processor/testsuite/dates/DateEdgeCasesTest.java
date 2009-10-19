@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
@@ -17,81 +16,239 @@ import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
-      
-      
+
 public class DateEdgeCasesTest extends AbstractPsychoPathTest {
 
-	   //Evaluates the "op:subtract-dateTimes-yielding-dayTimeDuration" operator that returns a negative value.
-	   public void test_op_subtract_dateTimes_yielding_DTD_8() throws Exception {
-	      String inputFile = "/TestSources/emptydoc.xml";
-	      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DateTimesSubtract/op-subtract-dateTimes-yielding-DTD-8.xq";
-	      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DateTimesSubtract/op-subtract-dateTimes-yielding-DTD-8.txt";
-	      String expectedResult = getExpectedResult(resultFile);
-	      URL fileURL = bundle.getEntry(inputFile);
-	      loadDOMDocument(fileURL);
-	      
-	      // Get XML Schema Information for the Document
-	      XSModel schema = getGrammar();
+	// Evaluates the "op:subtract-dateTimes-yielding-dayTimeDuration" operator
+	// that returns a negative value.
+	public void test_op_subtract_dateTimes_yielding_DTD_8() throws Exception {
+		String inputFile = "/TestSources/emptydoc.xml";
+		String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DateTimesSubtract/op-subtract-dateTimes-yielding-DTD-8.xq";
+		String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DateTimesSubtract/op-subtract-dateTimes-yielding-DTD-8.txt";
+		String expectedResult = getExpectedResult(resultFile);
+		URL fileURL = bundle.getEntry(inputFile);
+		loadDOMDocument(fileURL);
 
-	      DynamicContext dc = setupDynamicContext(schema);
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
 
-	      String xpath = extractXPathExpression(xqFile, inputFile);
-	      String actual = null;
-	      try {
-		   	  XPath path = compileXPath(dc, xpath);
-		
-		      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		      ResultSequence rs = eval.evaluate(path);
-	         
-	          actual = buildResultString(rs);
-		
-	      } catch (XPathParserException ex) {
-	    	 actual = ex.code();
-	      } catch (StaticError ex) {
-	         actual = ex.code();
-	      } catch (DynamicError ex) {
-	         actual = ex.code();
-	      }
+		DynamicContext dc = setupDynamicContext(schema);
 
-	      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+		String xpath = extractXPathExpression(xqFile, inputFile);
+		String actual = null;
+		try {
+			XPath path = compileXPath(dc, xpath);
 
-	   }
+			Evaluator eval = new DefaultEvaluator(dc, domDoc);
+			ResultSequence rs = eval.evaluate(path);
 
-	   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator that returns a negative value.
-	   public void test_op_subtract_dates_yielding_DTD_8() throws Exception {
-	      String inputFile = "/TestSources/emptydoc.xml";
-	      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-8.xq";
-	      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-8.txt";
-	      String expectedResult = getExpectedResult(resultFile);
-	      URL fileURL = bundle.getEntry(inputFile);
-	      loadDOMDocument(fileURL);
-	      
-	      // Get XML Schema Information for the Document
-	      XSModel schema = getGrammar();
+			actual = buildResultString(rs);
 
-	      DynamicContext dc = setupDynamicContext(schema);
+		} catch (XPathParserException ex) {
+			actual = ex.code();
+		} catch (StaticError ex) {
+			actual = ex.code();
+		} catch (DynamicError ex) {
+			actual = ex.code();
+		}
 
-	      String xpath = extractXPathExpression(xqFile, inputFile);
-	      String actual = null;
-	      try {
-		   	  XPath path = compileXPath(dc, xpath);
-		
-		      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		      ResultSequence rs = eval.evaluate(path);
-	         
-	          actual = buildResultString(rs);
-		
-	      } catch (XPathParserException ex) {
-	    	 actual = ex.code();
-	      } catch (StaticError ex) {
-	         actual = ex.code();
-	      } catch (DynamicError ex) {
-	         actual = ex.code();
-	      }
+		assertEquals("XPath Result Error " + xqFile + ":", expectedResult,
+				actual);
 
-	      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+	}
 
-	   }
-	   
+	// Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator that
+	// returns a negative value.
+	public void test_op_subtract_dates_yielding_DTD_8() throws Exception {
+		String inputFile = "/TestSources/emptydoc.xml";
+		String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-8.xq";
+		String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-8.txt";
+		String expectedResult = getExpectedResult(resultFile);
+		URL fileURL = bundle.getEntry(inputFile);
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = extractXPathExpression(xqFile, inputFile);
+		String actual = null;
+		try {
+			XPath path = compileXPath(dc, xpath);
+
+			Evaluator eval = new DefaultEvaluator(dc, domDoc);
+			ResultSequence rs = eval.evaluate(path);
+
+			actual = buildResultString(rs);
+
+		} catch (XPathParserException ex) {
+			actual = ex.code();
+		} catch (StaticError ex) {
+			actual = ex.code();
+		} catch (DynamicError ex) {
+			actual = ex.code();
+		}
+
+		assertEquals("XPath Result Error " + xqFile + ":", expectedResult,
+				actual);
+
+	}
+
+	// Evaluates the "op:subtract-dayTimeDurations" function, which is part of a
+	// div expression.
+	public void test_op_subtract_dayTimeDurations_11() throws Exception {
+		String inputFile = "/TestSources/emptydoc.xml";
+		String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationSubtract/op-subtract-dayTimeDurations-11.xq";
+		String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationSubtract/op-subtract-dayTimeDurations-11.txt";
+		String expectedResult = getExpectedResult(resultFile);
+		URL fileURL = bundle.getEntry(inputFile);
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = extractXPathExpression(xqFile, inputFile);
+		String actual = null;
+		try {
+			XPath path = compileXPath(dc, xpath);
+
+			Evaluator eval = new DefaultEvaluator(dc, domDoc);
+			ResultSequence rs = eval.evaluate(path);
+
+			actual = buildResultString(rs);
+
+		} catch (XPathParserException ex) {
+			actual = ex.code();
+		} catch (StaticError ex) {
+			actual = ex.code();
+		} catch (DynamicError ex) {
+			actual = ex.code();
+		}
+
+		assertEquals("XPath Result Error " + xqFile + ":", expectedResult,
+				actual);
+
+	}
+
+	// Evaluates the "op:divide-dayTimeDuration-by-dayTimeDuration" function,
+	// which is part of a div expression.
+	public void test_op_divide_dayTimeDuration_by_dTD_11() throws Exception {
+		String inputFile = "/TestSources/emptydoc.xml";
+		String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivideDTD/op-divide-dayTimeDuration-by-dTD-11.xq";
+		String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivideDTD/op-divide-dayTimeDuration-by-dTD-11.txt";
+		String expectedResult = getExpectedResult(resultFile);
+		URL fileURL = bundle.getEntry(inputFile);
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = extractXPathExpression(xqFile, inputFile);
+		String actual = null;
+		try {
+			XPath path = compileXPath(dc, xpath);
+
+			Evaluator eval = new DefaultEvaluator(dc, domDoc);
+			ResultSequence rs = eval.evaluate(path);
+
+			actual = buildResultString(rs);
+
+		} catch (XPathParserException ex) {
+			actual = ex.code();
+		} catch (StaticError ex) {
+			actual = ex.code();
+		} catch (DynamicError ex) {
+			actual = ex.code();
+		}
+
+		assertEquals("XPath Result Error " + xqFile + ":", expectedResult,
+				actual);
+
+	}
+
+	// Evaluates the "op:divide-dayTimeDuration-by-dayTimeDuration" operator
+	// with the arguments set as follows: $arg1 = xs:dayTimeDuration(mid range)
+	// $arg2 = xs:dayTimeDuration(lower bound).
+	public void test_op_divide_dayTimeDuration_by_dayTimeDuration2args_2()
+			throws Exception {
+		String inputFile = "/TestSources/emptydoc.xml";
+		String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivideDTD/op-divide-dayTimeDuration-by-dayTimeDuration2args-2.xq";
+		String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivideDTD/op-divide-dayTimeDuration-by-dayTimeDuration2args-2.txt";
+		String expectedResult = getExpectedResult(resultFile);
+		URL fileURL = bundle.getEntry(inputFile);
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = extractXPathExpression(xqFile, inputFile);
+		String actual = null;
+		try {
+			XPath path = compileXPath(dc, xpath);
+
+			Evaluator eval = new DefaultEvaluator(dc, domDoc);
+			ResultSequence rs = eval.evaluate(path);
+
+			actual = buildResultString(rs);
+
+		} catch (XPathParserException ex) {
+			actual = ex.code();
+		} catch (StaticError ex) {
+			actual = ex.code();
+		} catch (DynamicError ex) {
+			actual = ex.code();
+		}
+
+		assertEquals("XPath Result Error " + xqFile + ":", expectedResult,
+				actual);
+
+	}
+
+	// Evaluates the "op:divide-dayTimeDuration-by-dayTimeDuration" operator
+	// with the arguments set as follows: $arg1 = xs:dayTimeDuration(upper
+	// bound) $arg2 = xs:dayTimeDuration(lower bound).
+	public void test_op_divide_dayTimeDuration_by_dayTimeDuration2args_3()
+			throws Exception {
+		String inputFile = "/TestSources/emptydoc.xml";
+		String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivideDTD/op-divide-dayTimeDuration-by-dayTimeDuration2args-3.xq";
+		String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivideDTD/op-divide-dayTimeDuration-by-dayTimeDuration2args-3.txt";
+		String expectedResult = getExpectedResult(resultFile);
+		URL fileURL = bundle.getEntry(inputFile);
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = extractXPathExpression(xqFile, inputFile);
+		String actual = null;
+		try {
+			XPath path = compileXPath(dc, xpath);
+
+			Evaluator eval = new DefaultEvaluator(dc, domDoc);
+			ResultSequence rs = eval.evaluate(path);
+
+			actual = buildResultString(rs);
+
+		} catch (XPathParserException ex) {
+			actual = ex.code();
+		} catch (StaticError ex) {
+			actual = ex.code();
+		} catch (DynamicError ex) {
+			actual = ex.code();
+		}
+
+		assertEquals("XPath Result Error " + xqFile + ":", expectedResult,
+				actual);
+
+	}
+
 }
-      
