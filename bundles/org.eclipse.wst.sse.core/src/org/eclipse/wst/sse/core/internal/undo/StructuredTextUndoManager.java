@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,19 +72,11 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 				fTextCommand.setTextInserted(fTextCommand.getTextInserted().concat(textInserted));
 				fTextCommand.setTextEnd(textEnd);
 			}
-			else if (fTextCommand != null && textStart == fTextCommand.getTextStart() - (textEnd - textStart + 1) && textEnd <= fTextCommand.getTextEnd() - (textEnd - textStart + 1) && textDeleted.length() == 1 && textInserted.length() == 0) {
+			else if (fTextCommand != null && textStart == fTextCommand.getTextStart() - 1 && textEnd <= fTextCommand.getTextEnd() - 1 && textDeleted.length() == 1 && textInserted.length() == 0 && fTextCommand.getTextDeleted().length() > 0) {
 				// backspace pressed
-
-				// erase a character just inserted
-				if (fTextCommand.getTextInserted().length() > 0) {
-					fTextCommand.setTextInserted(fTextCommand.getTextInserted().substring(0, fTextCommand.getTextEnd() - fTextCommand.getTextStart() - 1));
-					fTextCommand.setTextEnd(textEnd);
-				}
 				// erase a character in the file
-				else {
-					fTextCommand.setTextDeleted(textDeleted.concat(fTextCommand.getTextDeleted()));
-					fTextCommand.setTextStart(textStart);
-				}
+				fTextCommand.setTextDeleted(textDeleted.concat(fTextCommand.getTextDeleted()));
+				fTextCommand.setTextStart(textStart);
 			}
 			else {
 				createNewTextCommand(textDeleted, textInserted, textStart, textEnd);
