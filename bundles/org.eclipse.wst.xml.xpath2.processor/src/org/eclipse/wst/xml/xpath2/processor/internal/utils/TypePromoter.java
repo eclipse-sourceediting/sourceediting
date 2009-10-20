@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
+ *     Jesper Steen Moller - bug 281028 - avg/min/max/sum work
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.utils;
@@ -31,16 +32,21 @@ public abstract class TypePromoter {
 	 */
 	abstract protected Class<? extends AnyType> substitute(Class<? extends AnyType> typeToConsider);	
 
-	abstract protected void checkCombination(Class<? extends AnyType> newType);
+	abstract protected boolean checkCombination(Class<? extends AnyType> newType);
 		
 	public void considerType(Class<? extends AnyType> typeToConsider) throws DynamicError {
 		Class<? extends AnyType> baseType = substitute(typeToConsider);
-		if (baseType == null) throw DynamicError.cant_cast(typeToConsider.getSimpleName());
+		
+		if (baseType == null) {
+			throw DynamicError.argument_type_error(typeToConsider);
+		}
 		
 		if (targetType == null) {
 			targetType = baseType;
 		} else {
-			checkCombination(baseType);
+			if (! checkCombination(baseType)) {
+				throw DynamicError.argument_type_error(typeToConsider);
+			}
 		}
 	}
 	

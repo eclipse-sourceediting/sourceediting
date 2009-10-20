@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
+ *     Jesper Steen Moller - bug 281028 - avg/min/max/sum work
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.utils;
@@ -19,11 +20,12 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
 
 public class NumericTypePromoter extends TypePromoter {
 
 	@Override
-	protected void checkCombination(Class<? extends AnyType> newType) {
+	protected boolean checkCombination(Class<? extends AnyType> newType) {
 		// Note: Double or float will override everything
 		if (newType == XSDouble.class || getTargetType() == XSDouble.class) {
 			setTargetType(XSDouble.class);
@@ -36,10 +38,14 @@ public class NumericTypePromoter extends TypePromoter {
 			// Otherwise, switch to decimals
 			setTargetType(XSDecimal.class);
 		}
+		return true;
 	}
 
 	@Override
 	public AnyType promote(AnyType value) {
+		// This is a short cut, really
+		if (value.getClass() == getTargetType()) return value;
+		
 		if (getTargetType() == XSFloat.class) {
 			return new XSFloat(new Float(value.string_value()));
 		} else if (getTargetType() == XSDouble.class) {
@@ -54,6 +60,7 @@ public class NumericTypePromoter extends TypePromoter {
 
 	@Override
 	protected Class<? extends AnyType> substitute(Class<? extends AnyType> typeToConsider) {
+		if (typeToConsider == XSUntypedAtomic.class) return XSDouble.class;
 		if (isDerivedFrom(typeToConsider, XSFloat.class)) return XSFloat.class;
 		if (isDerivedFrom(typeToConsider, XSDouble.class)) return XSDouble.class;
 		if (isDerivedFrom(typeToConsider, XSInteger.class)) return XSInteger.class;
