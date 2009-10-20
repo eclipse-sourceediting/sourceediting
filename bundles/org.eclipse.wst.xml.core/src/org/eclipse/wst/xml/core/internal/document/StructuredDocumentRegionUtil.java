@@ -75,6 +75,9 @@ class StructuredDocumentRegionUtil {
 	 * Returns the first region.
 	 */
 	static ITextRegion getFirstRegion(IStructuredDocumentRegion flatNode) {
+		if(flatNode instanceof StructuredDocumentRegionProxy) {
+			flatNode = ((StructuredDocumentRegionProxy)flatNode).getStructuredDocumentRegion();
+		}
 		if (flatNode == null)
 			return null;
 		ITextRegionList regions = flatNode.getRegions();
@@ -87,6 +90,9 @@ class StructuredDocumentRegionUtil {
 	 * Returns the type of the first region.
 	 */
 	static String getFirstRegionType(IStructuredDocumentRegion flatNode) {
+		if(flatNode instanceof StructuredDocumentRegionProxy) {
+			flatNode = ((StructuredDocumentRegionProxy)flatNode).getStructuredDocumentRegion();
+		}
 		if (flatNode == null)
 			return DOMRegionContext.UNDEFINED;
 		ITextRegionList regions = flatNode.getRegions();
@@ -114,6 +120,9 @@ class StructuredDocumentRegionUtil {
 	 * Returns the last region.
 	 */
 	static ITextRegion getLastRegion(IStructuredDocumentRegion flatNode) {
+		if(flatNode instanceof StructuredDocumentRegionProxy) {
+			flatNode = ((StructuredDocumentRegionProxy)flatNode).getStructuredDocumentRegion();
+		}
 		if (flatNode == null)
 			return null;
 		ITextRegionList regions = flatNode.getRegions();
@@ -126,6 +135,9 @@ class StructuredDocumentRegionUtil {
 	 * Returns the type of the first region.
 	 */
 	static String getLastRegionType(IStructuredDocumentRegion flatNode) {
+		if(flatNode instanceof StructuredDocumentRegionProxy) {
+			flatNode = ((StructuredDocumentRegionProxy)flatNode).getStructuredDocumentRegion();
+		}
 		if (flatNode == null)
 			return DOMRegionContext.UNDEFINED;
 		ITextRegionList regions = flatNode.getRegions();
