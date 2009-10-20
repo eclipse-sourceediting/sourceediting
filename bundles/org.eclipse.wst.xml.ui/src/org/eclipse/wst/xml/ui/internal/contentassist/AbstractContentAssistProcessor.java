@@ -1687,12 +1687,21 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	protected ContentAssistRequest computeTagOpenProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		ContentAssistRequest contentAssistRequest = null;
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
-		if (sdRegion != nodeAtOffset.getFirstStructuredDocumentRegion()) {
+		if (sdRegion != nodeAtOffset.getFirstStructuredDocumentRegion() || sdRegion.getPrevious() != null && sdRegion.getPrevious().getLastRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
 			// completing the *first* XML_TAG_OPEN in "<<tagname"
 			IDOMNode actualNode = (IDOMNode) node.getModel().getIndexedRegion(sdRegion.getStartOffset(completionRegion));
 			if (actualNode != null) {
-				contentAssistRequest = newContentAssistRequest(actualNode, actualNode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
-				addTagNameProposals(contentAssistRequest, getElementPositionForModelQuery(actualNode));
+				if(sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
+					contentAssistRequest = newContentAssistRequest(actualNode, actualNode, sdRegion, completionRegion, documentPosition, 0, matchString);
+					if(actualNode.hasChildNodes())
+						addTagNameProposals(contentAssistRequest, getElementPositionForModelQuery(actualNode.getLastChild()));
+					else
+						addTagNameProposals(contentAssistRequest, 0);
+				}
+				else {
+					contentAssistRequest = newContentAssistRequest(actualNode, actualNode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
+					addTagNameProposals(contentAssistRequest, getElementPositionForModelQuery(actualNode));
+				}
 				addEndTagProposals(contentAssistRequest); // (pa) 220850
 			}
 		}
@@ -1716,7 +1725,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				// (pa) ITextRegion refactor
 				// if (name != null && name.containsOffset(documentPosition))
 				// {
-				if ((name != null) && ((sdRegion.getStartOffset(name) <= documentPosition) && (sdRegion.getEndOffset(name) >= documentPosition))) {
+				if ((name != null) && ((sdRegion.getStartOffset(name) <= documentPosition) && (sdRegion.getEndOffset(name) >= documentPosition)) && (sdRegion.getLastRegion().getType() == DOMRegionContext.XML_TAG_CLOSE || sdRegion.getLastRegion().getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE)){ 
 					// replace the existing name
 					contentAssistRequest = newContentAssistRequest(node, node.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(name), name.getTextLength(), matchString);
 				}
