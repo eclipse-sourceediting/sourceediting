@@ -303,6 +303,46 @@ public class TestPartitionFormatterXML extends TestCase {
 		formatAndAssertEquals("testfiles/xml/xml-comment.xml", "testfiles/xml/xml-comment-newfmt.xml");
 	}
 	
+	public void testComments_short_NoText() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 258512
+		formatAndAssertEquals("testfiles/xml/xml-comment-short-NoText.xml", "testfiles/xml/xml-comment-short-NoText-formated.xml");
+	}
+	
+	public void testComments_short_InbetweenText() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 258512
+		formatAndAssertEquals("testfiles/xml/xml-comment-short-InbetweenText.xml", "testfiles/xml/xml-comment-short-InbetweenText-formated.xml");
+	}
+	
+	public void testComments_short_SameLineText() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 258512
+		formatAndAssertEquals("testfiles/xml/xml-comment-short-SameLineText.xml", "testfiles/xml/xml-comment-short-SameLineText-formated.xml");
+	}
+	
+	public void testComments_short_EverywhereText() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 258512
+		formatAndAssertEquals("testfiles/xml/xml-comment-short-EverywhereText.xml", "testfiles/xml/xml-comment-short-EverywhereText-formated.xml");
+	}
+	
+	public void testComments_long_NoText() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 258512
+		formatAndAssertEquals("testfiles/xml/xml-comment-long-NoText.xml", "testfiles/xml/xml-comment-long-NoText-formated.xml");
+	}
+	
+	public void testComments_long_InbetweenText() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 258512
+		formatAndAssertEquals("testfiles/xml/xml-comment-long-InbetweenText.xml", "testfiles/xml/xml-comment-long-InbetweenText-formated.xml");
+	}
+	
+	public void testComments_long_SameLineText() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 258512
+		formatAndAssertEquals("testfiles/xml/xml-comment-long-SameLineText.xml", "testfiles/xml/xml-comment-long-SameLineText-formated.xml");
+	}
+	
+	public void testComments_long_EverywhereText() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 258512
+		formatAndAssertEquals("testfiles/xml/xml-comment-long-EverywhereText.xml", "testfiles/xml/xml-comment-long-EverywhereText-formated.xml");
+	}
+	
 	public void testKeepEmptyLines() throws UnsupportedEncodingException, IOException, CoreException {
 		// Bug 228495
 		// Test that formatting keeps empty lines

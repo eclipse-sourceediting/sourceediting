@@ -3,8 +3,7 @@
 	<inner>
 		<another>
 			<else> <!-- Don't wrap -->
-			</else>
-			<!--
+			</else><!--
 				Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas
 				elit est, convallis id, congue in, posuere et, nunc. Sed ut lectus.
 				Nulla eu diam ac nulla placerat tincidunt. In vitae tellus.
