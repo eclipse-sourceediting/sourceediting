@@ -16,26 +16,35 @@ import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * Generic type promoter for handling subtype substitution and type promotions for functions and operators.
  */
 public abstract class TypePromoter {
-	private Class<? extends AnyType> targetType = null;
+	private Class<? extends AnyAtomicType> targetType = null;
 
-	abstract public AnyType promote(AnyType typeToConsider);	
+	abstract public AnyAtomicType doPromote(AnyAtomicType value);	
+
+	public final AnyAtomicType promote(AnyType value) {
+		// This is a short cut, really
+		if (value.getClass() == getTargetType()) return (AnyAtomicType)value;
+
+		return doPromote(atomize(value));
+	}
 
 	/**
 	 * @param typeToConsider The 
 	 * @return The supertype to treat it as (i.e. if a xs:nonNegativeInteger is treated as xs:number)
 	 */
-	abstract protected Class<? extends AnyType> substitute(Class<? extends AnyType> typeToConsider);	
+	abstract protected Class<? extends AnyAtomicType> substitute(Class<? extends AnyAtomicType> typeToConsider);	
 
-	abstract protected boolean checkCombination(Class<? extends AnyType> newType);
+	abstract protected boolean checkCombination(Class<? extends AnyAtomicType> newType);
 		
-	public void considerType(Class<? extends AnyType> typeToConsider) throws DynamicError {
-		Class<? extends AnyType> baseType = substitute(typeToConsider);
+	public void considerType(Class<? extends AnyAtomicType> typeToConsider) throws DynamicError {
+		Class<? extends AnyAtomicType> baseType = substitute(typeToConsider);
 		
 		if (baseType == null) {
 			throw DynamicError.argument_type_error(typeToConsider);
@@ -50,8 +59,8 @@ public abstract class TypePromoter {
 		}
 	}
 	
-	public void considerTypes(Collection<Class<? extends AnyType>> typesToConsider) throws DynamicError {
-		for (Class<? extends AnyType> type : typesToConsider) {
+	public void considerTypes(Collection<Class<? extends AnyAtomicType>> typesToConsider) throws DynamicError {
+		for (Class<? extends AnyAtomicType> type : typesToConsider) {
 			considerType(type);
 		}
 	}
@@ -59,16 +68,29 @@ public abstract class TypePromoter {
 	public void considerSequence(ResultSequence sequenceToConsider) throws DynamicError {
 		for (int i = 0; i < sequenceToConsider.size(); ++i) {
 			AnyType item = sequenceToConsider.get(i);
-			considerType(item.getClass());
+			considerValue(item);
 		}
 	}
 	
-	public Class<? extends AnyType> getTargetType() {
+	public Class<? extends AnyAtomicType> getTargetType() {
 		return targetType;
 	}
 	
-	protected void setTargetType(Class<? extends AnyType> class1) {
+	protected void setTargetType(Class<? extends AnyAtomicType> class1) {
 		this.targetType = class1;
+	}
+
+	public AnyAtomicType atomize(AnyType at) {
+		if (at instanceof NodeType) {
+			return (AnyAtomicType)((NodeType)at).typed_value().first();
+		}
+		else {
+			return (AnyAtomicType)at;
+		}
+	}
+	
+	public void considerValue(AnyType at) throws DynamicError {
+		considerType(atomize(at).getClass());
 	}
 
 

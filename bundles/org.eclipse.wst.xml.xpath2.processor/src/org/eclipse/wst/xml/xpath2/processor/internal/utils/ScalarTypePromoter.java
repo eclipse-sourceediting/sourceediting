@@ -11,16 +11,16 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.utils;
 
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
 
 public class ScalarTypePromoter extends NumericTypePromoter {
 
 	@Override
-	protected boolean checkCombination(Class<? extends AnyType> newType) {
+	protected boolean checkCombination(Class<? extends AnyAtomicType> newType) {
 
-		Class<? extends AnyType> targetType = getTargetType();
+		Class<? extends AnyAtomicType> targetType = getTargetType();
 		if (targetType == XSDayTimeDuration.class || targetType == XSYearMonthDuration.class) {
 			return targetType == newType;	
 		}
@@ -28,14 +28,7 @@ public class ScalarTypePromoter extends NumericTypePromoter {
 	}
 
 	@Override
-	public AnyType promote(AnyType value) {
-
-		if (value.getClass() == getTargetType()) return value;
-		return super.promote(value);
-	}
-
-	@Override
-	protected Class<? extends AnyType> substitute(Class<? extends AnyType> typeToConsider) {
+	protected Class<? extends AnyAtomicType> substitute(Class<? extends AnyAtomicType> typeToConsider) {
 		if (typeToConsider == XSDayTimeDuration.class || typeToConsider == XSYearMonthDuration.class) {
 			return typeToConsider;
 		}
