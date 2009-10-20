@@ -111,17 +111,4 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	protected void storeValuesForLoadingGroup() {
 		getModelPreferences().setValue(CommonEncodingPreferenceNames.INPUT_CODESET, fInputEncodingSettings.getIANATag());
 	}
-
-	protected void createContentsForCreatingGroup(Composite parent) {
-		super.createContentsForCreatingGroup(parent);
-		// Group creatingGroup = createGroup(parent, 2);
-		// creatingGroup.setText(HTMLUIMessages.Creating_files);
-		//		
-		// // Encoding..
-		// Label label = createLabel(creatingGroup,
-		// HTMLUIMessages.Encoding_desc);
-		// ((GridData)label.getLayoutData()).horizontalSpan = 2;
-		// fEncodingSettings = new EncodingSettings(creatingGroup);
-		// ((GridData)fEncodingSettings.getLayoutData()).horizontalSpan = 2;
-	}
 }

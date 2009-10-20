@@ -103,16 +103,6 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 		defaultCheckbox(fRemoveEndTag, XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
 	}
 	
-	private void initCheckbox(Button box, String key) {
-		if(box != null && key != null)
-			box.setSelection(getPreferenceStore().getBoolean(key));
-	}
-	
-	private void defaultCheckbox(Button box, String key) {
-		if(box != null && key != null)
-			box.setSelection(getPreferenceStore().getDefaultBoolean(key));
-	}
-	
 	protected void storeValues() {
 		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS, (fCloseComment != null) ? fCloseComment.getSelection() : false);
 		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS, (fCloseEndTag != null) ? fCloseEndTag.getSelection() : false);

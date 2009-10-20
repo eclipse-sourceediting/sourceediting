@@ -89,4 +89,6 @@ public class JSPUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String TYPING_COMPLETE_COMMENTS = "typingCompleteComments"; //$NON-NLS-1$
+
+	public static final String SUPPLY_JSP_SEARCH_RESULTS_TO_JAVA_SEARCH = "supplyJSPSearchResultsToJavaSearch"; //$NON-NLS-1$
 }

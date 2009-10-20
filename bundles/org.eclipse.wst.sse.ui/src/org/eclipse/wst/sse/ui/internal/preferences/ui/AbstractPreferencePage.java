@@ -58,6 +58,18 @@ public abstract class AbstractPreferencePage extends PreferencePage implements M
 
 		return button;
 	}
+	
+	protected void initCheckbox(Button box, String key) {
+		if(box != null && key != null) {
+			box.setSelection(getPreferenceStore().getBoolean(key));
+		}
+	}
+
+	protected void defaultCheckbox(Button box, String key) {
+		if(box != null && key != null) {
+			box.setSelection(getPreferenceStore().getDefaultBoolean(key));
+		}
+	}
 
 	protected Composite createComposite(Composite parent, int numColumns) {
 		Composite composite = new Composite(parent, SWT.NULL);

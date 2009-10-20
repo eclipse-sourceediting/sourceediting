@@ -24,7 +24,9 @@ import org.eclipse.jdt.ui.search.PatternQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.java.search.JSPSearchRequestor;
+import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 
 /**
  * @author pavery 
@@ -42,41 +44,43 @@ public class JSPQueryParticipant implements IQueryParticipant {
 	 */
 	public void search(ISearchRequestor requestor, QuerySpecification querySpecification, IProgressMonitor monitor) throws CoreException {
 		
-		//indexIfNeeded();
-		
-		// do search based on the particular Java query
-		if(querySpecification instanceof ElementQuerySpecification) {
-			// element search (eg. from global find references in Java file)
-			ElementQuerySpecification elementQuery = (ElementQuerySpecification)querySpecification;
-			IJavaElement element = elementQuery.getElement();
+		if(shouldSupplyJSPSearchResultsToJavaSearch()) {
+			//indexIfNeeded();
 			
-			if(DEBUG)
-				System.out.println("JSP Query Participant searching on ELEMENT: " + element); //$NON-NLS-1$
-			
-			SearchRequestor jspRequestor = new JSPSearchRequestor(requestor);
-			
-			// pa_TODO need to adapt JavaSearchScope to a JSPSearchScope
-			JSPSearchSupport.getInstance().search(element, new JSPSearchScope(), jspRequestor);
-			
-		}
-		else if(querySpecification instanceof PatternQuerySpecification) {
-			
-			// pattern search (eg. from Java search page)
-			PatternQuerySpecification patternQuery = (PatternQuerySpecification)querySpecification;
-			String pattern = patternQuery.getPattern();
-			
-			if(DEBUG)
-				System.out.println("JSP Query Participant searching on PATTERN: " + pattern); //$NON-NLS-1$
-			
-			SearchRequestor jspRequestor = new JSPSearchRequestor(requestor);
-			
-			JSPSearchSupport.getInstance().search(pattern, 
-													new JSPSearchScope(), 
-													patternQuery.getSearchFor(), 
-													patternQuery.getLimitTo(), 
-													SearchPattern.R_PATTERN_MATCH, 
-													false, 
-													jspRequestor);
+			// do search based on the particular Java query
+			if(querySpecification instanceof ElementQuerySpecification) {
+				// element search (eg. from global find references in Java file)
+				ElementQuerySpecification elementQuery = (ElementQuerySpecification)querySpecification;
+				IJavaElement element = elementQuery.getElement();
+				
+				if(DEBUG)
+					System.out.println("JSP Query Participant searching on ELEMENT: " + element); //$NON-NLS-1$
+				
+				SearchRequestor jspRequestor = new JSPSearchRequestor(requestor);
+				
+				// pa_TODO need to adapt JavaSearchScope to a JSPSearchScope
+				JSPSearchSupport.getInstance().search(element, new JSPSearchScope(), jspRequestor);
+				
+			}
+			else if(querySpecification instanceof PatternQuerySpecification) {
+				
+				// pattern search (eg. from Java search page)
+				PatternQuerySpecification patternQuery = (PatternQuerySpecification)querySpecification;
+				String pattern = patternQuery.getPattern();
+				
+				if(DEBUG)
+					System.out.println("JSP Query Participant searching on PATTERN: " + pattern); //$NON-NLS-1$
+				
+				SearchRequestor jspRequestor = new JSPSearchRequestor(requestor);
+				
+				JSPSearchSupport.getInstance().search(pattern, 
+														new JSPSearchScope(), 
+														patternQuery.getSearchFor(), 
+														patternQuery.getLimitTo(), 
+														SearchPattern.R_PATTERN_MATCH, 
+														false, 
+														jspRequestor);
+			}
 		}
 	}
 
@@ -93,6 +97,10 @@ public class JSPQueryParticipant implements IQueryParticipant {
 	 */
 	public IMatchPresentation getUIParticipant() {
 		return new JSPMatchPresentation();
+	}
+	
+	private boolean shouldSupplyJSPSearchResultsToJavaSearch() {
+		return JSPUIPlugin.getDefault().getPreferenceStore().getBoolean(JSPUIPreferenceNames.SUPPLY_JSP_SEARCH_RESULTS_TO_JAVA_SEARCH);
 	}
 
 }

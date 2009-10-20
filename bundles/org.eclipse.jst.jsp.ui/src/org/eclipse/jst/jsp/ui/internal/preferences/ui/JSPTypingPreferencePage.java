@@ -74,16 +74,6 @@ public class JSPTypingPreferencePage extends AbstractPreferencePage {
 		defaultCheckbox(fCloseComments, JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
 	}
 	
-	private void initCheckbox(Button box, String key) {
-		if(box != null && key != null)
-			box.setSelection(getPreferenceStore().getBoolean(key));
-	}
-	
-	private void defaultCheckbox(Button box, String key) {
-		if(box != null && key != null)
-			box.setSelection(getPreferenceStore().getDefaultBoolean(key));
-	}
-	
 	protected void storeValues() {
 		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES, (fCloseBraces != null) ? fCloseBraces.getSelection() : false);
 		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS, (fCloseScriptlets != null) ? fCloseScriptlets.getSelection() : false);

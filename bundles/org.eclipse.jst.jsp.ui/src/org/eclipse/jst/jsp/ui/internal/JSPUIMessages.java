@@ -180,4 +180,7 @@ public class JSPUIMessages extends NLS {
 	public static String TLDHyperlink_hyperlinkText;
 	public static String CustomTagHyperlink_hyperlinkText;
 	public static String TLDContentOutlineConfiguration_0;
+
+	public static String JSPFilesPreferencePage_Search_group;
+	public static String JSPFilesPreferencePage_Supply_JSP_search_to_Java_search;
 }
