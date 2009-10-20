@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Moller - bug 280555 - Add pluggable collation support
+ *     David Carver (STAR) - bug 262765 - fixed promotion issue 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -68,6 +69,7 @@ public class FnMax extends Function {
 
 		CmpGt max = null;
 
+		boolean doublesw = false;
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
@@ -75,6 +77,8 @@ public class FnMax extends Function {
 				DynamicError.throw_type_error();
 
 			CmpGt item = (CmpGt) at;
+			
+			doublesw = at instanceof XSDouble;
 
 			if (max == null)
 				max = item;
@@ -86,6 +90,11 @@ public class FnMax extends Function {
 			}
 		}
 
+		if (max instanceof NumericType && doublesw) {
+			AnyType at = (AnyType) max;
+			max = new XSDouble(at.string_value());
+		}
+		
 		return ResultSequenceFactory.create_new((AnyType) max);
 	}
 

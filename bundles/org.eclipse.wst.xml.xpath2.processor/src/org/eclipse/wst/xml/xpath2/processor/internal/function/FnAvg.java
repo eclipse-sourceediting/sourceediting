@@ -174,7 +174,7 @@ public class FnAvg extends Function {
 
 			NumericType d = null;
 			if (at instanceof XSUntypedAtomic) {
-				d = new XSDecimal(((XSUntypedAtomic) at).string_value());
+				d = new XSDouble(((XSUntypedAtomic) at).string_value());
 			} else if (at instanceof XSDouble) {
 				d = (XSDouble) at; 
 			} else if (at instanceof NumericType) {

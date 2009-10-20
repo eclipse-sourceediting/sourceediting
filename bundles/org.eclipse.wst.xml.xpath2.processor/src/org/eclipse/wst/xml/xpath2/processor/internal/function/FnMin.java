@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Moller - bug 280555 - Add pluggable collation support
+ *     David Carver (STAR) - bug 262765 - fixed promotion issue 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -68,6 +69,8 @@ public class FnMin extends Function {
 
 		CmpLt min = null;
 
+		boolean doublesw = false;
+		
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
@@ -75,6 +78,8 @@ public class FnMin extends Function {
 				DynamicError.throw_type_error();
 
 			CmpLt item = (CmpLt) at;
+			
+			doublesw = at instanceof XSDouble;
 
 			if (min == null)
 				min = item;
@@ -84,6 +89,11 @@ public class FnMin extends Function {
 				if (res)
 					min = item;
 			}
+		}
+		
+		if (min instanceof NumericType && doublesw) {
+			AnyType at = (AnyType) min;
+			min = new XSDouble(at.string_value());
 		}
 
 		return ResultSequenceFactory.create_new((AnyType) min);
