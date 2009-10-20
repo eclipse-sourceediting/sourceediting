@@ -29,7 +29,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(FloorFuncTest.class);
 		suite.addTestSuite(TimezoneFromDateFuncTest.class);
 		suite.addTestSuite(SeqSUMFuncTest.class);
-//		suite.addTestSuite(DateTimeFuncTest.class);
+		suite.addTestSuite(DateTimeFuncTest.class);
 		suite.addTestSuite(RoundFuncTest.class);
 		suite.addTestSuite(SubstringFuncTest.class);
 		suite.addTestSuite(StaticBaseURIFuncTest.class);
@@ -74,7 +74,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(ContextImplicitTimezoneFuncTest.class);
 		suite.addTestSuite(EscapeHTMLURIFuncTest.class);
 		suite.addTestSuite(SecondsFromDateTimeFuncTest.class);
-//		suite.addTestSuite(SeqMINFuncTest.class);
+		suite.addTestSuite(SeqMINFuncTest.class);
 		suite.addTestSuite(TimezoneFromTimeFuncTest.class);
 		suite.addTestSuite(ContextPositionFuncTest.class);
 //		suite.addTestSuite(SeqCollectionFuncTest.class);
@@ -83,7 +83,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(TraceFuncTest.class);
 		suite.addTestSuite(MonthFromDateTimeFuncTest.class);
 		suite.addTestSuite(TranslateFuncTest.class);
-//		suite.addTestSuite(SeqAVGFuncTest.class);
+		suite.addTestSuite(SeqAVGFuncTest.class);
 		suite.addTestSuite(NodeNamespaceURIFuncTest.class);
 		suite.addTestSuite(ABSFuncTest.class);
 		suite.addTestSuite(SeqDocFuncTest.class);
@@ -99,7 +99,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(SeqIDREFFuncTest.class);
 		suite.addTestSuite(NamespaceURIFromQNameFuncTest.class);
 		suite.addTestSuite(StringToCodepointFuncTest.class);
-//		suite.addTestSuite(SeqMAXFuncTest.class);
+		suite.addTestSuite(SeqMAXFuncTest.class);
 		suite.addTestSuite(AdjTimeToTimezoneFuncTest.class);
 		suite.addTestSuite(MinutesFromTimeFuncTest.class);
 		suite.addTestSuite(SubstringAfterFuncTest.class);

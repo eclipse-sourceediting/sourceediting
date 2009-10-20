@@ -3956,7 +3956,7 @@ public class SeqMINFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:min((xs:long(22),xs:short(10))) instance of xs:integer";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

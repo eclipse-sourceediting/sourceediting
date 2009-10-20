@@ -3956,7 +3956,7 @@ public class SeqMAXFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:max((xs:long(20),xs:short(13))) instance of xs:integer";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
