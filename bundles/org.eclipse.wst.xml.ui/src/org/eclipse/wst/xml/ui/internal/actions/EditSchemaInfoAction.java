@@ -146,7 +146,7 @@ public class EditSchemaInfoAction extends NodeAction {
 				if (dialog.getReturnCode() == Window.OK) {
 					List newInfoList = dialog.getNamespaceInfoList();
 					namespaceInfoManager.removeNamespaceInfo(element);
-					namespaceInfoManager.addNamespaceInfo(element, newInfoList, true);
+					namespaceInfoManager.addNamespaceInfo(element, newInfoList, false);
 	
 					// see if we need to rename any prefixes
 					Map prefixMapping = createPrefixMapping(oldNamespaceInfoList, namespaceInfoList);
