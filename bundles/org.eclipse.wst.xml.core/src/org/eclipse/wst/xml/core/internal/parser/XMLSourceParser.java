@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -483,18 +483,19 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		if (stringToCompare == null)
 			return false;
 
+		int ajustedOffset = fOffset + offset;
 		boolean result = false;
 		if (fCharSequenceSource != null && fCharSequenceSource instanceof IRegionComparible) {
-			result = ((IRegionComparible) fCharSequenceSource).regionMatches(offset, length, stringToCompare);
+			result = ((IRegionComparible) fCharSequenceSource).regionMatches(ajustedOffset, length, stringToCompare);
 		}
 		else {
 			// old fashioned ways
 			String test = null;
 			if (fCharSequenceSource != null) {
-				test = fCharSequenceSource.subSequence(offset, offset + length).toString();
+				test = fCharSequenceSource.subSequence(ajustedOffset, ajustedOffset + length).toString();
 			}
 			else if (fStringInput != null) {
-				test = fStringInput.substring(offset, offset + length);
+				test = fStringInput.substring(ajustedOffset, ajustedOffset + length);
 			}
 			result = stringToCompare.equals(test);
 		}
@@ -506,18 +507,19 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		if (stringToCompare == null)
 			return false;
 
+		int ajustedOffset = fOffset + offset;
 		boolean result = false;
 		if (fCharSequenceSource != null && fCharSequenceSource instanceof IRegionComparible) {
-			result = ((IRegionComparible) fCharSequenceSource).regionMatchesIgnoreCase(offset, length, stringToCompare);
+			result = ((IRegionComparible) fCharSequenceSource).regionMatchesIgnoreCase(ajustedOffset, length, stringToCompare);
 		}
 		else {
 			// old fashioned ways
 			String test = null;
 			if (fCharSequenceSource != null) {
-				test = fCharSequenceSource.subSequence(offset, offset + length).toString();
+				test = fCharSequenceSource.subSequence(ajustedOffset, ajustedOffset + length).toString();
 			}
 			else if (fStringInput != null) {
-				test = fStringInput.substring(offset, offset + length);
+				test = fStringInput.substring(ajustedOffset, ajustedOffset + length);
 			}
 			result = stringToCompare.equalsIgnoreCase(test);
 		}
