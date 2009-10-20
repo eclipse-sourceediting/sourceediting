@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.handlers.AbstractStructuredSelectHandler;
+import org.w3c.dom.css.CSSStyleDeclaration;
 
 public class StructuredSelectEnclosingHandler extends AbstractStructuredSelectHandler {
 	
@@ -36,6 +37,9 @@ public class StructuredSelectEnclosingHandler extends AbstractStructuredSelectHa
 			int currentEndOffset = currentOffset + textSelection.getLength();
 			if (cursorNodeRegion.getOffset() >= currentOffset && cursorNodeRegion.getOffset() <= currentEndOffset && cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() >= currentOffset && cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() <= currentEndOffset) {
 				ICSSNode newNode = cursorNode.getParentNode();
+				if(newNode instanceof CSSStyleDeclaration) {
+					newNode = newNode.getParentNode();
+				}
 
 				if (newNode instanceof IndexedRegion) {
 					IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
