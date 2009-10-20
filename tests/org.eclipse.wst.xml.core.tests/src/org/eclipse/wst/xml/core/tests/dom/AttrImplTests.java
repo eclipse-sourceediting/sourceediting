@@ -23,6 +23,7 @@ import org.w3c.dom.NamedNodeMap;
 public class AttrImplTests extends TestCase {
 
 	private static final String contents = "<elementName attrPrefix:local='lorem' />"; //$NON-NLS-1$
+	private static final String xmlNamespaceContents = "<elementName xml:space=\"preserve\"/>";
 
 	public AttrImplTests() {
 	}
@@ -77,4 +78,15 @@ public class AttrImplTests extends TestCase {
 			fail("Setting a null node value caused a NullPointerException.");
 		}
 	}
+
+	public void testGetAttributeNSForXMLNamespace() {
+		final String xmlns = "http://www.w3.org/XML/1998/namespace";
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(xmlNamespaceContents);
+
+		Element element = model.getDocument().getDocumentElement();
+		String value = element.getAttributeNS(xmlns, "space");
+		assertEquals("Did not find space attribute for XML Namespace", "preserve", value);
+	}
+
 }
