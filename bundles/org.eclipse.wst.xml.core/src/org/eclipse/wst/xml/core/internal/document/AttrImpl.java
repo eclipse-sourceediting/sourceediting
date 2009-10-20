@@ -212,6 +212,11 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 				// fixed URI
 				return IXMLNamespace.XMLNS_URI;
 			}
+			else if (prefix.equals(IXMLNamespace.XML)) {
+				// fixed URI
+				return IXMLNamespace.XML_URI;
+			}
+
 			nsAttrName = IXMLNamespace.XMLNS_PREFIX + prefix;
 		}
 		else {
