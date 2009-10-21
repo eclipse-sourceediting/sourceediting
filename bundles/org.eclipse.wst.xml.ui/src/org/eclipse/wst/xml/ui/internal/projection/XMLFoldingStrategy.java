@@ -15,6 +15,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
+import org.eclipse.wst.xml.core.internal.document.CommentImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 
@@ -33,36 +34,33 @@ public class XMLFoldingStrategy extends AbstractStructuredFoldingStrategy {
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * @see org.eclipse.wst.sse.ui.internal.projection.AbstractFoldingStrategy#calcNewFoldPosition(org.eclipse.wst.sse.core.internal.provisional.IndexedRegion)
 	 */
 	protected Position calcNewFoldPosition(IndexedRegion indexedRegion) {
 		Position retPos = null;
 		
-		if(indexedRegionValidType(indexedRegion)) {
+		//only want to fold regions of the valid type and with a valid range
+		if(indexedRegionValidType(indexedRegion) && indexedRegion.getStartOffset() >= 0 && indexedRegion.getLength() >= 0) {
 			IDOMNode node = (IDOMNode)indexedRegion;
 			IStructuredDocumentRegion startRegion = node.getStartStructuredDocumentRegion();
 			IStructuredDocumentRegion endRegion = node.getEndStructuredDocumentRegion();
 			
-			int start;
-			int length;
 			//if the node has an endRegion (end tag) then folding region is
 			//	between the start and end tag
+			//else if the region is a comment
 			//else if the region is only an open tag or an open/close tag then don't fold it
 			if(startRegion != null && endRegion != null) {
-				start = startRegion.getStartOffset();
-				length = endRegion.getStartOffset() - start;
-				
-				retPos = new Position(start, length);
-			} 
+				retPos = new XMLElementFoldingPosition(startRegion, endRegion);
+			} else if(startRegion != null && indexedRegion instanceof CommentImpl) {
+				retPos = new XMLCommentFoldingPosition(startRegion);
+			}
 		}
 		
 		return retPos;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * @see org.eclipse.wst.sse.ui.internal.projection.AbstractFoldingStrategy#indexedRegionValidType(org.eclipse.wst.sse.core.internal.provisional.IndexedRegion)
 	 */
 	protected boolean indexedRegionValidType(IndexedRegion indexedRegion) {

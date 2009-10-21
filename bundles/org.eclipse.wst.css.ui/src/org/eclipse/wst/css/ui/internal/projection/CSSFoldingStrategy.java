@@ -15,12 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.text.Position;
-import org.eclipse.wst.css.core.internal.document.CSSStructuredDocumentRegionContainer;
-import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
-import org.w3c.dom.css.CSSStyleRule;
-import org.w3c.dom.css.CSSStyleSheet;
 
 /**
  * A folding strategy for CSS structured documents.
@@ -36,29 +33,15 @@ public class CSSFoldingStrategy extends AbstractStructuredFoldingStrategy {
 		super();
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
 	 * @see org.eclipse.wst.sse.ui.internal.projection.AbstractFoldingStrategy#calcNewFoldPosition(org.eclipse.wst.sse.core.internal.provisional.IndexedRegion)
 	 */
 	protected Position calcNewFoldPosition(IndexedRegion indexedRegion) {
 		Position newPos = null;
-		//don't want a fold region for the entire sheet
-		if(indexedRegionValidType(indexedRegion)) {
-			CSSStructuredDocumentRegionContainer node = (CSSStructuredDocumentRegionContainer)indexedRegion;
-			
-			int start = node.getStartOffset();
-			//so that multi-line CSS selector text does not get folded
-			if(node instanceof CSSStyleRule) {
-				CSSStyleRule rule = (CSSStyleRule)node;
-				start += rule.getSelectorText().length();
-			}
-			
-			//-1 for the end brace
-			int length = node.getEndOffset()-start-1;
-
-			if(length >= 0) {
-				newPos = new Position(start,length);
-			}
+		
+		//only want to fold regions with a valid range
+		if(indexedRegionValidType(indexedRegion) && indexedRegion.getStartOffset() >= 0 && indexedRegion.getLength() >= 0) {
+			newPos = new CSSRuleFoldingPosition(indexedRegion);
 		}
 		return newPos;
 	}
@@ -96,11 +79,10 @@ public class CSSFoldingStrategy extends AbstractStructuredFoldingStrategy {
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
 	 * @see org.eclipse.wst.sse.ui.internal.projection.AbstractFoldingStrategy#indexedRegionValidType(org.eclipse.wst.sse.core.internal.provisional.IndexedRegion)
 	 */
 	protected boolean indexedRegionValidType(IndexedRegion indexedRegion) {
-		return (!(indexedRegion instanceof CSSStyleSheet || indexedRegion instanceof ICSSStyleDeclItem));
+		return (indexedRegion instanceof ICSSStyleRule);
 	}
 }

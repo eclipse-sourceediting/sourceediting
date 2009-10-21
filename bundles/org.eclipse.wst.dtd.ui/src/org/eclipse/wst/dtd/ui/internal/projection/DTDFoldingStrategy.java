@@ -12,10 +12,14 @@
 package org.eclipse.wst.dtd.ui.internal.projection;
 
 import org.eclipse.jface.text.Position;
+import org.eclipse.wst.dtd.core.internal.Comment;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.Unrecognized;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
+import org.eclipse.wst.xml.ui.internal.projection.XMLCommentFoldingPosition;
+import org.eclipse.wst.xml.ui.internal.projection.XMLElementFoldingPosition;
 
 
 /**
@@ -36,29 +40,31 @@ public class DTDFoldingStrategy extends AbstractStructuredFoldingStrategy {
 		super();
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
 	 * @see org.eclipse.wst.sse.ui.internal.projection.AbstractFoldingStrategy#calcNewFoldPosition(org.eclipse.wst.sse.core.internal.provisional.IndexedRegion)
 	 */
 	protected Position calcNewFoldPosition(IndexedRegion indexedRegion) {
 		Position newPos = null;
-		if(indexedRegionValidType(indexedRegion)) {
-			DTDNode node = (DTDNode)indexedRegion;
-			int start = node.getStartOffset();
-			int length = node.getEndOffset() - start;
-			
-			if(length > 0) {
-				newPos = new Position(start,length);
+		
+		//only want to fold regions with a valid range
+		if(indexedRegionValidType(indexedRegion) && indexedRegion.getStartOffset() >= 0 && indexedRegion.getLength() >= 0) {
+			IStructuredDocumentRegion structRegion = ((DTDNode) indexedRegion).getStructuredDTDDocumentRegion();
+			//if Comment then use comment folding position
+			//else use element folding position
+			if(indexedRegion instanceof Comment) {
+				newPos = new XMLCommentFoldingPosition(structRegion);
+			} else {
+				newPos = new XMLElementFoldingPosition(structRegion);
 			}
 		}
 		return newPos;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * @see org.eclipse.wst.sse.ui.internal.projection.AbstractFoldingStrategy#indexedRegionValidType(org.eclipse.wst.sse.core.internal.provisional.IndexedRegion)
 	 */
 	protected boolean indexedRegionValidType(IndexedRegion indexedRegion) {
-		return (!(indexedRegion instanceof Unrecognized));
+		//can only fold DTDNodes
+		return (indexedRegion instanceof DTDNode && !(indexedRegion instanceof Unrecognized));
 	}
 }
