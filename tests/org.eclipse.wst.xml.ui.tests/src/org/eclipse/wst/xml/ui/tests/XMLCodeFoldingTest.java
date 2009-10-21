@@ -17,7 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import junit.extensions.TestSetup;
+import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -32,15 +35,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.ui.internal.projection.XMLFoldingStrategy;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 /**
@@ -52,30 +49,20 @@ import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
  * @see org.eclipse.wst.dtd.ui.tests.viewer.DTDCodeFoldingTest Similar Test - DTD Code Folding Test
  */
 public class XMLCodeFoldingTest extends TestCase {
+	/**
+	 * The name of the reconciler job that adds the folding annotations to a <code>StructuredTextEditor</code>
+	 */
 	private static final String JOB_NAME_PROCESSING_DIRTY_REGIONS = "Processing Dirty Regions";
-	
-	private static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";
-	private String previousWTPAutoTestNonInteractivePropValue = null;
 	
 	/**
 	 * The name of the project that all of these tests will use
 	 */
-	private static final String PROJECT_NAME = "HTMLCodeFoldingTest";
+	private static final String PROJECT_NAME = "XMLCodeFoldingTest";
 	
 	/**
 	 * The location of the testing files
 	 */
 	private static final String PROJECT_FILES = "/testresources/folding";
-	
-	/**
-	 * the initial set up for these tests should only happen once
-	 */
-	private static boolean fIsSetup = false;
-	
-	/**
-	 * After the last test the project that all of the tests were using should be deleted
-	 */
-	private static boolean fIsLastTest = false;
 	
 	/**
 	 * The project that all of the tests use
@@ -92,7 +79,7 @@ public class XMLCodeFoldingTest extends TestCase {
 	 * Default constructor
 	 */
 	public XMLCodeFoldingTest() {
-		super("XMLCodeFoldingTest");
+		super("XML Code Folding Test");
 	}
 	
 	/**
@@ -105,139 +92,134 @@ public class XMLCodeFoldingTest extends TestCase {
 	}
 	
 	/**
-	 * This is run once before each test, some things should only happen once, others for each test
+	 * <p>Use this method to add these tests to a larger test suite so set up
+	 * and tear down can be performed</p>
 	 * 
-	 * @see junit.framework.TestCase#setUp()
+	 * @return a {@link TestSetup} that will run all of the tests in this class
+	 * with set up and tear down.
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		if(!fIsSetup) {
-			fIsSetup = true;
-			fIsLastTest = false;
-			initializeResources();
-		}
-		
-		String noninteractive = System.getProperty(WTP_AUTOTEST_NONINTERACTIVE);
-		
-		if (noninteractive != null) {
-			previousWTPAutoTestNonInteractivePropValue = noninteractive;
-		} else {
-			previousWTPAutoTestNonInteractivePropValue = "false";
-		}
-		System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, "true");
-	}
+	public static Test suite() {
+		TestSuite ts = new TestSuite(XMLCodeFoldingTest.class);
+		return new XMLCodeFoldingTestSetup(ts);
 
-	/**
-	 * <p>This is run once after each test, some things should happen after each test,
-	 * some only after the last test.</p>
-	 * 
-	 * <p><b>IMPORTANT:</b> Be sure that <code>fIsLastTest</code> is set to true at the end
-	 * of the last test</p>
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		
-		if(fIsLastTest) {
-			fIsLastTest = false;
-			fProject.delete(true, null);
-		}
-		
-		if (previousWTPAutoTestNonInteractivePropValue != null) {
-			System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonInteractivePropValue);
-		}
 	}
 	
 	/**
 	 * <p><b>TEST:</b> the initially placed folding annotations</p>
 	 */
-	public void testInitFolding() {
+	public void testInitFolding() throws Exception {
 		IFile file = getFile("XMLFoldingTest1.xml");
+		
 		StructuredTextEditor editor  = getEditor(file);
 		
-		String[] keyWords = {"root", "foo1", "foo2", "bar1", "bar2", "bar3"};
-		waitForReconcileThenVerify(editor, keyWords);
+		List expectedPositions = new ArrayList();
+		expectedPositions.add(new Position(142, 16));
+		expectedPositions.add(new Position(173, 36));
+		expectedPositions.add(new Position(39, 179));
+		expectedPositions.add(new Position(71, 13));
+		expectedPositions.add(new Position(62, 107));
+		expectedPositions.add(new Position(47, 13));
+		expectedPositions.add(new Position(87, 49));
+		
+		waitForReconcileThenVerify(editor.getTextViewer(), expectedPositions);
 	}
 	
 	/**
 	 * <p><b>TEST:</b> that folding annotations are updated after node is removed</p>
 	 */
-	public void testRemoveNode() {
+	public void testRemoveNode() throws Exception {
 		IFile file = getFile("XMLFoldingTest1.xml");
+		
 		StructuredTextEditor editor  = getEditor(file);
 		
 		try {
-			//find the position to remove
-			String[] initKeyWords = {"bar2"};
-			List initExpectedPositions = getExpectedPositions(editor, initKeyWords);
-			Position removalPos = (Position)initExpectedPositions.remove(0);
-			
-			//remove the postion
 			StructuredTextViewer viewer = editor.getTextViewer();
 			IDocument doc = viewer.getDocument();
-			doc.replace(removalPos.offset, removalPos.length, "");
+			doc.replace(87, 49, "");
 			editor.doSave(null);
 			
-			//verify
-			String[] keyWords = {"root", "foo1", "foo2", "bar1", "bar3"};
-			waitForReconcileThenVerify(editor, keyWords);
+			final List expectedPositions = new ArrayList();
+			expectedPositions.add(new Position(93, 16));
+			expectedPositions.add(new Position(124, 36));
+			expectedPositions.add(new Position(39, 130));
+			expectedPositions.add(new Position(71, 13));
+			expectedPositions.add(new Position(62, 58));
+			expectedPositions.add(new Position(47, 13));
+			
+			waitForReconcileThenVerify(viewer, expectedPositions);
 		} catch(BadLocationException e) {
-			fail("Test is broken, replace location is invalid.\n" + e.getMessage());
+			fail("Test is broken, replace location has become invalid.\n" + e.getMessage());
 		}
 	}
 	
 	/**
 	 * <p><b>TEST:</b> that folding annotations are updated after node is added</p>
 	 */
-	public void testAddNode() {
+	public void testAddNode() throws Exception {
 		IFile file = getFile("XMLFoldingTest2.xml");
+		
 		StructuredTextEditor editor  = getEditor(file);
 		
 		try {
-			//find the position to add the new node after
-			String[] initKeyWords = {"bar2"};
-			List initExpectedPositions = getExpectedPositions(editor, initKeyWords);
-			Position insertAfterPos = (Position)initExpectedPositions.get(0);
-			
-			//add the node
 			StructuredTextViewer viewer = editor.getTextViewer();
 			IDocument doc = viewer.getDocument();
-			String newNodeText = "\r\n<addMe>\r\n\r\n\r\n</addMe>";
-			doc.replace(insertAfterPos.offset, 0, newNodeText);
+			doc.replace(149, 0, "\n<addMe>\n\n\n</addMe>");
 			editor.doSave(null);
 			
-			//verify
-			String[] keyWords = {"root", "foo1", "foo2", "bar1", "bar2", "bar3", "addMe"};
-			waitForReconcileThenVerify(editor, keyWords);
+			List expectedPositions = new ArrayList();
+			expectedPositions.add(new Position(150, 18));
+			expectedPositions.add(new Position(62, 126));
+			expectedPositions.add(new Position(47, 13));
+			expectedPositions.add(new Position(39, 198));
+			expectedPositions.add(new Position(192, 36));
+			expectedPositions.add(new Position(71, 13));
+			expectedPositions.add(new Position(142, 35));
+			expectedPositions.add(new Position(87, 49));
+			
+			waitForReconcileThenVerify(viewer, expectedPositions);
 		} catch(BadLocationException e) {
-			fail("Test is broken, add location is invalid.\n" + e.getMessage());
+			fail("Test is broken, add location has become invalid.\n" + e.getMessage());
 		}
 	}
 	
 	/**
 	 * <p><b>TEST:</b> that even though .xsl documents do not have a specifically specified
-	 * folding strategy that by the power of hierarchical content types the XML folding
+	 * folding strategy that by the power of higheracical content types the XML folding
 	 * strategy is used for the XSLT document.
 	 */
-	public void testConfigTypeHiearchyExploration() {
+	public void testConfigTypeHeigheracryExploration() throws Exception{
 		IFile file = getFile("XSLFoldingTest1.xsl");
-		StructuredTextEditor editor  = getEditor(file);
 		
-		String[] keyWords = {"xsl:stylesheet", "xsl:template"};
-		waitForReconcileThenVerify(editor, keyWords);
+		StructuredTextEditor editor = getEditor(file);
 		
-		//TODO: move this to the last test in this file
-		fIsLastTest = true;
+		List expectedPositions = new ArrayList();
+		expectedPositions.add(new Position(120, 88));
+		expectedPositions.add(new Position(147, 44));
+		expectedPositions.add(new Position(39, 187));
+		
+		waitForReconcileThenVerify(editor.getTextViewer(), expectedPositions);
 	}
 	
 	/**
-	 * Set up the project and workbench, this should only be done once
+	 * <p><b>TEST:</b> test the folding of comments</p>
 	 */
-	private void initializeResources() {
-		fProject = ProjectUtil.createProject(PROJECT_NAME, null, null);
-		ProjectUtil.copyBundleEntriesIntoWorkspace(PROJECT_FILES, PROJECT_NAME);
+	public void testComments() throws Exception{
+		IFile file = getFile("XMLFoldingCommentTest.xml");
+		
+		StructuredTextEditor editor = getEditor(file);
+		
+		List expectedPositions = new ArrayList();
+		expectedPositions.add(new Position(275, 36));
+		expectedPositions.add(new Position(124, 49));
+		expectedPositions.add(new Position(179, 81));
+		expectedPositions.add(new Position(39, 281));
+		expectedPositions.add(new Position(191, 56));
+		expectedPositions.add(new Position(64, 31));
+		expectedPositions.add(new Position(99, 172));
+		expectedPositions.add(new Position(47, 13));
+		expectedPositions.add(new Position(108, 13));
+		
+		waitForReconcileThenVerify(editor.getTextViewer(), expectedPositions);
 	}
 	
 	/**
@@ -259,6 +241,9 @@ public class XMLCodeFoldingTest extends TestCase {
 	 * been retrieved for the given <code>file</code> then return the same already
 	 * open editor.</p>
 	 * 
+	 * <p>When opening the editor it will also standardized the line
+	 * endings to <code>\n</code></p>
+	 * 
 	 * @param file open and return an editor for this
 	 * @return <code>StructuredTextEditor</code> opened from the given <code>file</code>
 	 */
@@ -273,6 +258,7 @@ public class XMLCodeFoldingTest extends TestCase {
 				if(editorPart instanceof XMLMultiPageEditorPart) {
 					XMLMultiPageEditorPart xmlEditorPart = (XMLMultiPageEditorPart)editorPart;
 					editor = (StructuredTextEditor)xmlEditorPart.getAdapter(StructuredTextEditor.class);
+					standardizeLineEndings(editor);
 				} else if(editorPart instanceof StructuredTextEditor) {
 					editor = ((StructuredTextEditor)editorPart);
 				} else {
@@ -298,10 +284,14 @@ public class XMLCodeFoldingTest extends TestCase {
 	 * 
 	 * @param viewer check for annotations at the given <code>expectedPositions</code>
 	 * in here after the dirty region reconciler job has finished
-	 * @param keyWords check for annotations at the positions that these key words are in,
-	 * in the given <code>viewer</code> after the dirty region reconciler job has finished
+	 * @param expectedPositions check for annotations at these positions in the given <code>viewer</code>
+	 * after the dirty region reconciler job has finished
+	 * @throws InterruptedException 
 	 */
-	private void waitForReconcileThenVerify(StructuredTextEditor editor, String[] keyWords) {
+	private void waitForReconcileThenVerify(final StructuredTextViewer viewer, final List expectedPositions) throws Exception {
+		//*******************************************************************************
+		//START HACK: this is the only current way to wait for reconcile job to start and finish
+		Thread.sleep(1000);
 		Job[] jobs = Job.getJobManager().find(null);
 		Job job =  null;
 		for(int i = 0; i < jobs.length && job == null; ++i) {
@@ -315,10 +305,9 @@ public class XMLCodeFoldingTest extends TestCase {
 				//wait for dirty region reconciler job to finish before verifying annotations
 				job.join();
 			}
-			
-			//wait over, now verify
-			List expectedPositions = getExpectedPositions(editor, keyWords);
-			verifyAnnotationPositions(editor.getTextViewer(), expectedPositions);
+		//*******************************************************************************
+		
+			verifyAnnotationPositions(viewer, expectedPositions);
 		} catch (InterruptedException e) {
 			fail("Could not join job " + job + "\n" + e.getMessage());
 		}
@@ -335,6 +324,8 @@ public class XMLCodeFoldingTest extends TestCase {
 		ProjectionAnnotationModel projectionModel = viewer.getProjectionAnnotationModel();
 		Iterator annotationIter = projectionModel.getAnnotationIterator();
 		
+		List unexpectedPositions = new ArrayList();
+		
 		while(annotationIter.hasNext()) {
 			Object obj = annotationIter.next();
 			if(obj instanceof ProjectionAnnotation) {
@@ -342,88 +333,112 @@ public class XMLCodeFoldingTest extends TestCase {
 				Position pos = projectionModel.getPosition(annotation);
 				
 				boolean found = expectedPositions.remove(pos);
+				if(!found) {
+					unexpectedPositions.add(pos);
+				}
 				
-				assertTrue("Position " + pos + " is not one of the expected positions", found);
+			}
+		}
+		
+		String error = "";
+		if(unexpectedPositions.size() != 0) {
+			error  += "There were " + unexpectedPositions.size() + " unexpected positions that were found";
+			for(int i = 0; i < unexpectedPositions.size(); ++i) {
+				error += "\n\t" + unexpectedPositions.get(i);
 			}
 		}
 		
 		if(expectedPositions.size() != 0 ) {
-			Iterator iter = expectedPositions.iterator();
-			String message = "The following expected folding annotatinos could not be found:";
-			while(iter.hasNext()) {
-				message += "\n\t" + iter.next();
+			error += "\nThere were " + expectedPositions.size() + " expected positions that were not found";
+			for(int i = 0; i < expectedPositions.size(); ++i) {
+				error += "\n\t" + expectedPositions.get(i);
 			}
-			fail(message);
+		}
+		
+		if(error.length() != 0) {
+			fail(error);
 		}
 	}
 	
 	/**
-	 * <p>Searches the document associated with the given {@link StructuredTextEditor} for each
-	 * of the given <code>keyWords</code> and then uses the logic from the folding strategy
-	 * to determine the expected position of a folding annotation.</p>
+	 * <p>Line endings can be an issue when running tests on different OSs.
+	 * This function standardizes the line endings to use <code>\n</code></p>
 	 * 
-	 * <p><b>NOTE:</b> see {@link #calcFoldPosition(IndexedRegion)} for an important note</p>
+	 * <p>It will get the text from the given editor, change the line endings,
+	 * and then save the editor</p>
 	 * 
-	 * @param editor the {@link StructuredTextEditor} to search for the given <code>keyWords</code>
-	 * @param keyWords a list of text markers in regions that should have a folding annotations
-	 * 
-	 * @return the {@link Position}s that there should be folding annotations on based on the
-	 * given <code>keyWords</code>
+	 * @param editor standardize the line endings of the text presented in this
+	 * editor.
 	 */
-	private List getExpectedPositions(StructuredTextEditor editor, String[] keyWords) {
-		List expectedPositions = new ArrayList(keyWords.length);
-		
+	private void standardizeLineEndings(StructuredTextEditor editor) {
 		IDocument doc = editor.getTextViewer().getDocument();
-		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-		IStructuredDocument structuredDoc = model.getStructuredDocument();
-		String text = structuredDoc.getText();
-		
-		for(int i = 0; i < keyWords.length; ++i) {
-			int offsetOfKeyword = text.indexOf(keyWords[i]);
-			IndexedRegion indexedRegion = model.getIndexedRegion(offsetOfKeyword);
-
-			Position pos = calcFoldPosition(indexedRegion);
-
-			if(pos != null) {
-				expectedPositions.add(pos);
-			}
-		}
-		
-		return expectedPositions;
+		String contents = doc.get();
+		contents = StringUtils.replace(contents, "\r\n", "\n");
+		contents = StringUtils.replace(contents, "\r", "\n");
+		doc.set(contents);
 	}
 	
 	/**
-	 * <p>This is an almost exact copy of {@link XMLFoldingStrategy#calcNewFoldPosition}</p>
-	 * 
-	 * <p>This has to be done because these tests have to calculate the expected folding
-	 * locations on the fly because different OSs end up with different character counts
-	 * because of line endings</p>
-	 * 
-	 * <p>So unfortunately this logic is not really being tested by these tests, but the
-	 * more complicated and more likely to break logic of updating/adding/etc folding
-	 * locations is still being tested.</p>
-	 * 
-	 * @see XMLFoldingStrategy#calcNewFoldPosition
+	 * <p>This inner class is used to do set up and tear down before and
+	 * after (respectively) all tests in the inclosing class have run.</p>
 	 */
-	private Position calcFoldPosition(IndexedRegion indexedRegion) {
-		Position retPos = null;
+	private static class XMLCodeFoldingTestSetup extends TestSetup {
+		private static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";
+		private static String previousWTPAutoTestNonInteractivePropValue = null;
 		
-		IDOMNode node = (IDOMNode)indexedRegion;
-		IStructuredDocumentRegion startRegion = node.getStartStructuredDocumentRegion();
-		IStructuredDocumentRegion endRegion = node.getEndStructuredDocumentRegion();
-		
-		int start;
-		int length;
-		//if the node has an endRegion (end tag) then folding region is
-		//	between the start and end tag
-		//else if the region is only an open tag or an open/close tag then don't fold it
-		if(startRegion != null && endRegion != null) {
-			start = startRegion.getStartOffset();
-			length = endRegion.getStartOffset() - start;
+		/**
+		 * Default constructor
+		 * 
+		 * @param test do setup for the given test
+		 */
+		public XMLCodeFoldingTestSetup(Test test) {
+			super(test);
+		}
+
+		/**
+		 * <p>This is run once before all of the tests</p>
+		 * 
+		 * @see junit.extensions.TestSetup#setUp()
+		 */
+		public void setUp() throws Exception {
 			
-			retPos = new Position(start, length);
-		} 
+			initializeResources();
+			
+			String noninteractive = System.getProperty(WTP_AUTOTEST_NONINTERACTIVE);
+			
+			if (noninteractive != null) {
+				previousWTPAutoTestNonInteractivePropValue = noninteractive;
+			} else {
+				previousWTPAutoTestNonInteractivePropValue = "false";
+			}
+			System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, "true");
+		}
+
+		/**
+		 * <p>This is run once after all of the tests have been run</p>
+		 * 
+		 * @see junit.extensions.TestSetup#tearDown()
+		 */
+		public void tearDown() throws Exception {
+			//close out the editors
+			Iterator iter = fFileToEditorMap.values().iterator();
+			while(iter.hasNext()) {
+				StructuredTextEditor editor = (StructuredTextEditor)iter.next();
+				editor.doSave(null);
+				editor.close(false);
+			}
+			
+			if (previousWTPAutoTestNonInteractivePropValue != null) {
+				System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonInteractivePropValue);
+			}
+		}
 		
-		return retPos;
+		/**
+		 * Set up the project and workbench, this should only be done once
+		 */
+		private static void initializeResources() {
+			fProject = ProjectUtil.createProject(PROJECT_NAME, null, null);
+			ProjectUtil.copyBundleEntriesIntoWorkspace(PROJECT_FILES, PROJECT_NAME);
+		}
 	}
 }

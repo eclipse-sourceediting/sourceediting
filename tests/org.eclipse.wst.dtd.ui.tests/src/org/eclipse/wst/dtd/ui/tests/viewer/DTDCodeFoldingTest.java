@@ -17,7 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import junit.extensions.TestSetup;
+import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -32,13 +35,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.wst.dtd.core.internal.DTDNode;
-import org.eclipse.wst.dtd.ui.internal.projection.DTDFoldingStrategy;
 import org.eclipse.wst.dtd.ui.tests.ProjectUtil;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
@@ -56,9 +54,6 @@ public class DTDCodeFoldingTest extends TestCase {
 	 */
 	private static final String JOB_NAME_PROCESSING_DIRTY_REGIONS = "Processing Dirty Regions";
 	
-	private static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";
-	private String previousWTPAutoTestNonInteractivePropValue = null;
-	
 	/**
 	 * The name of the project that all of these tests will use
 	 */
@@ -68,16 +63,6 @@ public class DTDCodeFoldingTest extends TestCase {
 	 * The location of the testing files
 	 */
 	private static final String PROJECT_FILES = "/testresources/folding";
-	
-	/**
-	 * the initial set up for these tests should only happen once
-	 */
-	private static boolean fIsSetup = false;
-	
-	/**
-	 * After the last test the project that all of the tests were using should be deleted
-	 */
-	private static boolean fIsLastTest = false;
 	
 	/**
 	 * The project that all of the tests use
@@ -94,7 +79,7 @@ public class DTDCodeFoldingTest extends TestCase {
 	 * Default constructor
 	 */
 	public DTDCodeFoldingTest() {
-		super("DTDCodeFoldingTest");
+		super("DTD Code Folding Test");
 	}
 	
 	/**
@@ -107,132 +92,97 @@ public class DTDCodeFoldingTest extends TestCase {
 	}
 	
 	/**
-	 * This is run once before each test, some things should only happen once, others for each test
+	 * <p>Use this method to add these tests to a larger test suite so set up
+	 * and tear down can be performed</p>
 	 * 
-	 * @see junit.framework.TestCase#setUp()
+	 * @return a {@link TestSetup} that will run all of the tests in this class
+	 * with set up and tear down.
 	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		if(!fIsSetup) {
-			fIsSetup = true;
-			fIsLastTest = false;
-			initializeResources();
-		}
-		
-		String noninteractive = System.getProperty(WTP_AUTOTEST_NONINTERACTIVE);
-		
-		if (noninteractive != null) {
-			previousWTPAutoTestNonInteractivePropValue = noninteractive;
-		} else {
-			previousWTPAutoTestNonInteractivePropValue = "false";
-		}
-		System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, "true");
-	}
+	public static Test suite() {
+		TestSuite ts = new TestSuite(DTDCodeFoldingTest.class);
+		return new DTDCodeFoldingTestSetup(ts);
 
-	/**
-	 * <p>This is run once after each test, some things should happen after each test,
-	 * some only after the last test.</p>
-	 * 
-	 * <p><b>IMPORTANT:</b> Be sure that <code>fIsLastTest</code> is set to true at the end
-	 * of the last test</p>
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		
-		if(fIsLastTest) {
-			fIsLastTest = false;
-			fProject.delete(true, null);
-		}
-		
-		if (previousWTPAutoTestNonInteractivePropValue != null) {
-			System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonInteractivePropValue);
-		}
 	}
 	
 	/**
 	 * <p><b>TEST:</b> the initially placed folding annotations</p>
 	 */
-	public void testInitFolding() {
+	public void testInitFolding()throws Exception  {
 		IFile file = getFile("DTDFoldingTest1.dtd");
+		
 		StructuredTextEditor editor  = getEditor(file);
 		
-		String[] keyWords = {"entity1", "entity2", "entity3", "entity4", "entity5", "comment1"};
-		waitForReconcileThenVerify(editor, keyWords);
+		List expectedPositions = new ArrayList();
+		expectedPositions.add(new Position(1299, 234));
+		expectedPositions.add(new Position(39, 296));
+		expectedPositions.add(new Position(498, 751));
+		expectedPositions.add(new Position(1251, 17));
+		expectedPositions.add(new Position(1269, 28));
+		expectedPositions.add(new Position(337, 159));
+		
+		waitForReconcileThenVerify(editor.getTextViewer(), expectedPositions);
 	}
 	
 	/**
 	 * <p><b>TEST:</b> that folding annotations are updated after node is removed</p>
 	 */
-	public void testRemoveNode() {
+	public void testRemoveNode() throws Exception {
 		IFile file = getFile("DTDFoldingTest1.dtd");
 		
 		StructuredTextEditor editor  = getEditor(file);
 		
 		try {
-			//find the position to remove
-			String[] initKeyWords = {"entity1"};
-			List initExpectedPositions = getExpectedPositions(editor, initKeyWords);
-			Position removalPos = (Position)initExpectedPositions.remove(0);
-			
-			//remove the position
 			StructuredTextViewer viewer = editor.getTextViewer();
 			IDocument doc = viewer.getDocument();
-			doc.replace(removalPos.offset, removalPos.length, "");
+			doc.replace(337, 159, "");
 			editor.doSave(null);
 			
-			//verify
-			String[] keyWords = {"entity2", "entity3", "entity4", "entity5", "comment1"};
-			waitForReconcileThenVerify(editor, keyWords);
+			final List expectedPositions = new ArrayList();
+			expectedPositions.add(new Position(1110, 28));
+			expectedPositions.add(new Position(39, 296));
+			expectedPositions.add(new Position(1140, 234));
+			expectedPositions.add(new Position(339, 751));
+			expectedPositions.add(new Position(1092, 17));
+			expectedPositions.add(new Position(337, 0));
+			
+			waitForReconcileThenVerify(viewer, expectedPositions);
 		} catch(BadLocationException e) {
-			fail("Test is broken, replace location is invalid.\n" + e.getMessage());
+			fail("Test is broken, replace location has become invalid.\n" + e.getMessage());
 		}
 	}
 	
 	/**
 	 * <p><b>TEST:</b> that folding annotations are updated after node is added</p>
 	 */
-	public void testAddNode() {
+	public void testAddNode() throws Exception {
 		IFile file = getFile("DTDFoldingTest2.dtd");
+		
 		StructuredTextEditor editor  = getEditor(file);
 		
 		try {
-			//find the position to add the new node after
-			String[] initKeyWords = {"entity2"};
-			List initExpectedPositions = getExpectedPositions(editor, initKeyWords);
-			Position insertAfterPos = (Position)initExpectedPositions.get(0);
-			
-			//add the node
 			StructuredTextViewer viewer = editor.getTextViewer();
 			IDocument doc = viewer.getDocument();
 			String newNodeText =
-				"\r\n<!ATTLIST attlist1\r\n" +
-				"%coreattrs;\t\t\t\t-- id, class, style, title --\r\n" +
-				"lang\t%LanguageCode;\t#IMPLIED\t-- language code --\r\n" +
-				"dir\t(ltr|rtl)\t#REQUIRED\t-- directionality --\r\n" +
-				">\r\n";
-			doc.replace(insertAfterPos.offset, 0, newNodeText);
+				"<!ATTLIST BDO\n" +
+				"%coreattrs;\t\t\t\t-- id, class, style, title --\n" +
+				"lang\t%LanguageCode;\t#IMPLIED\t-- language code --\n" +
+				"dir\t(ltr|rtl)\t#REQUIRED\t-- directionality --\n" +
+				">\n";
+			doc.replace(597, 0, newNodeText);
 			editor.doSave(null);
 			
-			//verify
-			String[] keyWords = {"entity1", "entity2", "entity3", "entity4", "entity5", "comment1", "attlist1"};
-			waitForReconcileThenVerify(editor, keyWords);
+			List expectedPositions = new ArrayList();
+			expectedPositions.add(new Position(1454, 234));
+			expectedPositions.add(new Position(498, 906));
+			expectedPositions.add(new Position(39, 296));
+			expectedPositions.add(new Position(1406, 17));
+			expectedPositions.add(new Position(337, 159));
+			expectedPositions.add(new Position(1424, 28));
+			
+			waitForReconcileThenVerify(viewer, expectedPositions);
 		} catch(BadLocationException e) {
-			fail("Test is broken, add location is invalid.\n" + e.getMessage());
+			fail("Test is broken, add location has become invalid.\n" + e.getMessage());
 		}
-		
-		//TODO: move this to the last test in this file
-		fIsLastTest = true;
-	}
-	
-	/**
-	 * Set up the project and workbench, this should only be done once
-	 */
-	private void initializeResources() {
-		fProject = ProjectUtil.createProject(PROJECT_NAME, null, null);
-		ProjectUtil.copyBundleEntriesIntoWorkspace(PROJECT_FILES, PROJECT_NAME);
 	}
 	
 	/**
@@ -267,6 +217,7 @@ public class DTDCodeFoldingTest extends TestCase {
 				IEditorPart editorPart = IDE.openEditor(page, file, true, true);
 				if(editorPart instanceof StructuredTextEditor) {
 					editor = ((StructuredTextEditor)editorPart);
+					standardizeLineEndings(editor);
 				} else {
 					fail("Unable to open structured text editor");
 				}
@@ -290,10 +241,14 @@ public class DTDCodeFoldingTest extends TestCase {
 	 * 
 	 * @param viewer check for annotations at the given <code>expectedPositions</code>
 	 * in here after the dirty region reconciler job has finished
-	 * @param keyWords check for annotations at the positions that these key words are in,
-	 * in the given <code>viewer</code> after the dirty region reconciler job has finished
+	 * @param expectedPositions check for annotations at these positions in the given <code>viewer</code>
+	 * after the dirty region reconciler job has finished
+	 * @throws InterruptedException 
 	 */
-	private void waitForReconcileThenVerify(StructuredTextEditor editor, String[] keyWords) {
+	private void waitForReconcileThenVerify(final StructuredTextViewer viewer, final List expectedPositions) throws Exception {
+		//*******************************************************************************
+		//START HACK: this is the only current way to wait for reconcile job to start and finish
+		Thread.sleep(1000);
 		Job[] jobs = Job.getJobManager().find(null);
 		Job job =  null;
 		for(int i = 0; i < jobs.length && job == null; ++i) {
@@ -307,10 +262,9 @@ public class DTDCodeFoldingTest extends TestCase {
 				//wait for dirty region reconciler job to finish before verifying annotations
 				job.join();
 			}
-			
-			//wait over, now verify
-			List expectedPositions = getExpectedPositions(editor, keyWords);
-			verifyAnnotationPositions(editor.getTextViewer(), expectedPositions);
+		//*******************************************************************************
+		
+			verifyAnnotationPositions(viewer, expectedPositions);
 		} catch (InterruptedException e) {
 			fail("Could not join job " + job + "\n" + e.getMessage());
 		}
@@ -327,6 +281,8 @@ public class DTDCodeFoldingTest extends TestCase {
 		ProjectionAnnotationModel projectionModel = viewer.getProjectionAnnotationModel();
 		Iterator annotationIter = projectionModel.getAnnotationIterator();
 		
+		List unexpectedPositions = new ArrayList();
+		
 		while(annotationIter.hasNext()) {
 			Object obj = annotationIter.next();
 			if(obj instanceof ProjectionAnnotation) {
@@ -334,85 +290,112 @@ public class DTDCodeFoldingTest extends TestCase {
 				Position pos = projectionModel.getPosition(annotation);
 				
 				boolean found = expectedPositions.remove(pos);
+				if(!found) {
+					unexpectedPositions.add(pos);
+				}
 				
-				/**
-				 * Ignore folding regions with length of 0 because
-				 * there are still some issues with DTD folding that can
-				 * leave these behind when removed
-				 */
-				assertTrue("Position " + pos + " is not one of the expected positions", found || pos.length == 0);
+			}
+		}
+		
+		String error = "";
+		if(unexpectedPositions.size() != 0) {
+			error  += "There were " + unexpectedPositions.size() + " unexpected positions that were found";
+			for(int i = 0; i < unexpectedPositions.size(); ++i) {
+				error += "\n\t" + unexpectedPositions.get(i);
 			}
 		}
 		
 		if(expectedPositions.size() != 0 ) {
-			Iterator iter = expectedPositions.iterator();
-			String message = "The following expected folding annotatinos could not be found:";
-			while(iter.hasNext()) {
-				message += "\n\t" + iter.next();
+			error += "\nThere were " + expectedPositions.size() + " expected positions that were not found";
+			for(int i = 0; i < expectedPositions.size(); ++i) {
+				error += "\n\t" + expectedPositions.get(i);
 			}
-			fail(message);
+		}
+		
+		if(error.length() != 0) {
+			fail(error);
 		}
 	}
 	
 	/**
-	 * <p>Searches the document associated with the given {@link StructuredTextEditor} for each
-	 * of the given <code>keyWords</code> and then uses the logic from the folding strategy
-	 * to determine the expected position of a folding annotation.</p>
+	 * <p>Line endings can be an issue when running tests on different OSs.
+	 * This function standardizes the line endings to use <code>\n</code></p>
 	 * 
-	 * <p><b>NOTE:</b> see {@link #calcFoldPosition(IndexedRegion)} for an important note</p>
+	 * <p>It will get the text from the given editor, change the line endings,
+	 * and then save the editor</p>
 	 * 
-	 * @param editor the {@link StructuredTextEditor} to search for the given <code>keyWords</code>
-	 * @param keyWords a list of text markers in regions that should have a folding annotations
-	 * 
-	 * @return the {@link Position}s that there should be folding annotations on based on the
-	 * given <code>keyWords</code>
+	 * @param editor standardize the line endings of the text presented in this
+	 * editor.
 	 */
-	private List getExpectedPositions(StructuredTextEditor editor, String[] keyWords) {
-		List expectedPositions = new ArrayList(keyWords.length);
-		
+	private void standardizeLineEndings(StructuredTextEditor editor) {
 		IDocument doc = editor.getTextViewer().getDocument();
-		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-		IStructuredDocument structuredDoc = model.getStructuredDocument();
-		String text = structuredDoc.getText();
-		
-		for(int i = 0; i < keyWords.length; ++i) {
-			int offsetOfKeyword = text.indexOf(keyWords[i]);
-			IndexedRegion indexedRegion = model.getIndexedRegion(offsetOfKeyword);
-
-			Position pos = calcFoldPosition(indexedRegion);
-
-			if(pos != null) {
-				expectedPositions.add(pos);
-			}
-		}
-		
-		return expectedPositions;
+		String contents = doc.get();
+		contents = StringUtils.replace(contents, "\r\n", "\n");
+		contents = StringUtils.replace(contents, "\r", "\n");
+		doc.set(contents);
 	}
 	
 	/**
-	 * <p>This is an almost exact copy of {@link DTDFoldingStrategy#calcNewFoldPosition}</p>
-	 * 
-	 * <p>This has to be done because these tests have to calculate the expected folding
-	 * locations on the fly because different OSs end up with different character counts
-	 * because of line endings</p>
-	 * 
-	 * <p>So unfortunately this logic is not really being tested by these tests, but the
-	 * more complicated and more likely to break logic of updating/adding/etc folding
-	 * locations is still being tested.</p>
-	 * 
-	 * @see DTDFoldingStrategy#calcNewFoldPosition
+	 * <p>This inner class is used to do set up and tear down before and
+	 * after (respectively) all tests in the inclosing class have run.</p>
 	 */
-	private Position calcFoldPosition(IndexedRegion indexedRegion) {
-		Position newPos = null;
-
-		DTDNode node = (DTDNode)indexedRegion;
-		int start = node.getStartOffset();
-		int length = node.getEndOffset() - start;
+	private static class DTDCodeFoldingTestSetup extends TestSetup {
+		private static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";
+		private static String previousWTPAutoTestNonInteractivePropValue = null;
 		
-		if(length > 0) {
-			newPos = new Position(start,length);
+		/**
+		 * Default constructor
+		 * 
+		 * @param test do setup for the given test
+		 */
+		public DTDCodeFoldingTestSetup(Test test) {
+			super(test);
 		}
 
-		return newPos;
+		/**
+		 * <p>This is run once before all of the tests</p>
+		 * 
+		 * @see junit.extensions.TestSetup#setUp()
+		 */
+		public void setUp() throws Exception {
+			
+			initializeResources();
+			
+			String noninteractive = System.getProperty(WTP_AUTOTEST_NONINTERACTIVE);
+			
+			if (noninteractive != null) {
+				previousWTPAutoTestNonInteractivePropValue = noninteractive;
+			} else {
+				previousWTPAutoTestNonInteractivePropValue = "false";
+			}
+			System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, "true");
+		}
+
+		/**
+		 * <p>This is run once after all of the tests have been run</p>
+		 * 
+		 * @see junit.extensions.TestSetup#tearDown()
+		 */
+		public void tearDown() throws Exception {
+			//close out the editors
+			Iterator iter = fFileToEditorMap.values().iterator();
+			while(iter.hasNext()) {
+				StructuredTextEditor editor = (StructuredTextEditor)iter.next();
+				editor.doSave(null);
+				editor.close(false);
+			}
+			
+			if (previousWTPAutoTestNonInteractivePropValue != null) {
+				System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonInteractivePropValue);
+			}
+		}
+		
+		/**
+		 * Set up the project and workbench, this should only be done once
+		 */
+		private static void initializeResources() {
+			fProject = ProjectUtil.createProject(PROJECT_NAME, null, null);
+			ProjectUtil.copyBundleEntriesIntoWorkspace(PROJECT_FILES, PROJECT_NAME);
+		}
 	}
 }
