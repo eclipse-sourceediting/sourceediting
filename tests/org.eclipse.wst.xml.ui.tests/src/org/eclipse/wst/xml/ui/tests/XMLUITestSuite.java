@@ -28,7 +28,7 @@ public class XMLUITestSuite extends TestSuite {
 
 	public XMLUITestSuite() {
 		super("XML UI Test Suite");
-		addTest(new TestSuite(XMLCodeFoldingTest.class, "XML Code Folding Test"));
+//		addTest(new TestSuite(XMLCodeFoldingTest.class, "XML Code Folding Test"));
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		addTest(new TestSuite(XMLUIPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfigurationXML.class));

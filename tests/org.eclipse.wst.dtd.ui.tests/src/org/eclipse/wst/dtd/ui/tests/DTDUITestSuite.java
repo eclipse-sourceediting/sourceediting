@@ -14,7 +14,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.dtd.ui.tests.plugin.TestPluginXMLRequirements;
-import org.eclipse.wst.dtd.ui.tests.viewer.DTDCodeFoldingTest;
 import org.eclipse.wst.dtd.ui.tests.viewer.TestViewerConfigurationDTD;
 
 
@@ -31,6 +30,6 @@ public class DTDUITestSuite extends TestSuite {
 		addTest(new TestSuite(TestViewerConfigurationDTD.class));
 		addTest(new TestSuite(TestEditorConfigurationDTD.class));
 		addTestSuite(TestPluginXMLRequirements.class);
-		addTest(new TestSuite(DTDCodeFoldingTest.class, "DTD Code Folding Test"));
+//		addTest(new TestSuite(DTDCodeFoldingTest.class, "DTD Code Folding Test"));
 	}
 }
