@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -40,6 +42,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.Position;
@@ -63,7 +66,6 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
  * Translates a JSP/HTML document into its JavaScript pieces. 
  * 
- * @author childsb
  */
 public class JsTranslator extends Job implements IJsTranslator, IDocumentListener {
 	
@@ -74,7 +76,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	private static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
 //	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
 	private static final boolean REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE = false;
-	
+	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<%)>]+/?>"); //$NON-NLS-1$
 	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsjavamapping"); //$NON-NLS-1$
@@ -505,27 +507,100 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 //				}
 				else {
 					// fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
-					int index = -1;
-					int fromIndex = 0;
-					// find any instance of <portlet:nsamespace in the region text
-					while((index = regionText.indexOf("<portlet:namespace", fromIndex)) > -1) { //$NON-NLS-1$
-						// change the portlet tag to a valid variable name
-						String tempText = regionText.substring(0, index) + "_portlet_namespace"; //$NON-NLS-1$
-						// determine the length of the ending - add it to the tempText along with the rest of the region text
-						if(regionText.substring(index + 18).startsWith(" />")) { //$NON-NLS-1$
-							tempText = tempText + "___" + regionText.substring(index + 21); //$NON-NLS-1$
-							fromIndex = index + 21;
-						} else {
-							tempText = tempText + "__" + regionText.substring(index + 20); //$NON-NLS-1$
-							fromIndex = index + 20;
+					// last offset of content that was skipped
+					int validStart = 0;
+					// start of content to skip
+					int validEnd = 0;
+										
+					Matcher matcher = fClientSideTagPattern.matcher(regionText);
+					StringBuffer contents = new StringBuffer();
+					// find any instance of tags in the region text
+					int serverSideStart = regionText.indexOf("<%");
+					int clientMatchStart = matcher.find() ? matcher.start() : -1;
+					// contains server-side script
+					while (serverSideStart > -1 || clientMatchStart > -1) { //$NON-NLS-1$
+						validEnd = validStart;
+						boolean biasClient = false;
+						boolean biasServer = false;
+						// update the start of content to skip
+						if (clientMatchStart > -1 && serverSideStart > -1) {
+							validEnd = Math.min(clientMatchStart, serverSideStart);
+							biasClient = validEnd == clientMatchStart;
+							biasServer = validEnd == serverSideStart;
 						}
-						regionText = tempText;
+						else if (clientMatchStart > -1 && serverSideStart < 0) {
+							validEnd = clientMatchStart;
+							biasClient = true;
+						}
+						else if (clientMatchStart < 0 && serverSideStart > -1) {
+							validEnd = serverSideStart;
+							biasServer = true;
+						}
+						
+						// append if there's something we want to include
+						if (-1 < validStart && -1 < validEnd) {
+							// append what we want to include
+							contents.append(regionText.substring(validStart, validEnd));
+							
+							// change the skipped content to a valid variable name and append it as a placeholder
+							int startOffset = container.getStartOffset(region) + validEnd;
+
+							int serverSideEnd = (regionLength > validEnd + 2) ? regionText.indexOf("%>", validEnd + 2) : -1;
+							if (serverSideEnd > -1)
+								serverSideEnd += 2;
+							int clientMatchEnd = matcher.find(validEnd) ? matcher.end() : -1;
+							// update end of what we skipped
+							validStart = -1;
+							if (clientMatchEnd > validEnd && serverSideEnd > validEnd) {
+								if (biasClient)
+									validStart = clientMatchEnd;
+								else if (biasServer)
+									validStart = serverSideEnd;
+								else
+									validStart = Math.min(clientMatchEnd, serverSideEnd);
+							}
+							if (clientMatchEnd >= validEnd && serverSideEnd < 0)
+								validStart = matcher.end();
+							if (clientMatchEnd < 0 && serverSideEnd >= validEnd)
+								validStart = serverSideEnd;
+							int line = container.getParentDocument().getLineOfOffset(startOffset);
+							int column;
+							try {
+								column = startOffset - container.getParentDocument().getLineOffset(line);
+							}
+							catch (BadLocationException e) {
+								column = -1;
+							}
+							if (line >= 0 && column >= 0) {
+								// if the column looks wrong, note any leading tabs would make it non-obvious
+								contents.append("__tag_" + (line+1) + "$" + column + "_"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							}
+							else {
+								contents.append("__tag_" + startOffset + "_"); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+						}
+						// set up to end while if no end for valid
+						if (validStart > 0) {
+							serverSideStart = validStart < regionLength - 2 ? regionText.indexOf("<%", validStart) : -1;
+							clientMatchStart = validStart < regionLength ? (matcher.find(validStart + 1) ? matcher.start() : -1) : -1;
+						}
+						else {
+							serverSideStart = clientMatchStart = -1;
+						}
 					}
-					fScriptText.append(regionText);
+					if (validStart >= 0) {
+						contents.append(regionText.substring(validStart));
+					}
+					if (contents.length() != 0) {
+						fScriptText.append(contents.toString());
+					}
+					else {
+						fScriptText.append(regionText);
+					}
 					Position inHtml = new Position(scriptStart, scriptTextLength);
 					scriptLocationInHtml.add(inHtml);
 				}
-				
+								
 				scriptOffset = fScriptText.length();
 			}
 		}
@@ -557,7 +632,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		}
 	}
 
-	
+
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
