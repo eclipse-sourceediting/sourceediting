@@ -266,6 +266,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 
 	/** The job should be reset because of document changes */
 	private boolean fReset = false;
+	private boolean fIsCanceled = false;
 	private Object LOCK = new Object();
 
 	/**
@@ -641,10 +642,15 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 					return status;
 				}
 			}
-			processed = true;
-			beginProcessing();
+			if (fIsCanceled)
+				return status;
 
 			DirtyRegion[] toRefresh = getRequests();
+			if (toRefresh.length > 0) {
+				processed = true;
+				beginProcessing();
+			}
+
 			for (int i = 0; i < toRefresh.length; i++) {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();
@@ -664,7 +670,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		finally {
 			if (processed)
 				endProcessing();
-			schedule(getDelay());
+			if (!fIsCanceled)
+				schedule(getDelay());
 			monitor.done();
 		}
 		return status;
@@ -771,6 +778,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			// removes widget listener
 			getTextViewer().removeTextInputListener(fTextInputListener);
 			setInstalled(false);
+			cancel();
+			fIsCanceled = true;
 		}
 		setDocument(null);
 	}
