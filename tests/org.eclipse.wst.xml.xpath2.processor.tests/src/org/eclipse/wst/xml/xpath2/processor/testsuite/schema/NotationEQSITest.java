@@ -184,7 +184,6 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
    public void test_Comp_notation_5() throws Exception {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-5.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-5.txt";
       String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);
       Schema jaxpSchema = loadSchema();
@@ -301,7 +300,6 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
    public void test_Comp_notation_8() throws Exception {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-8.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-8.txt";
       String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);
       Schema jaxpSchema = loadSchema();
@@ -379,7 +377,6 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
    public void test_Comp_notation_10() throws Exception {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-10.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-10.txt";
       String expectedResult = "false";
       URL fileURL = bundle.getEntry(inputFile);
       Schema jaxpSchema = loadSchema();
@@ -418,7 +415,6 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
    public void test_Comp_notation_11() throws Exception {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-11.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-11.txt";
       String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);
       Schema jaxpSchema = loadSchema();
@@ -457,7 +453,6 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
    public void test_Comp_notation_12() throws Exception {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-12.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-12.txt";
       String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);
       Schema jaxpSchema = loadSchema();
@@ -496,7 +491,6 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
    public void test_Comp_notation_13() throws Exception {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-13.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-13.txt";
       String expectedResult = "false";
       URL fileURL = bundle.getEntry(inputFile);
       Schema jaxpSchema = loadSchema();
@@ -535,7 +529,6 @@ public class NotationEQSITest extends AbstractPsychoPathTest {
    public void test_Comp_notation_14() throws Exception {
       String inputFile = "/TestSources/notation.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/NotationEQSI/Comp-notation-14.xq";
-      String resultFile = "/ExpectedTestResults/SchemaImport/NotationEQSI/Comp-notation-14.txt";
       String expectedResult = "false"; 
       URL fileURL = bundle.getEntry(inputFile);
       Schema jaxpSchema = loadSchema();

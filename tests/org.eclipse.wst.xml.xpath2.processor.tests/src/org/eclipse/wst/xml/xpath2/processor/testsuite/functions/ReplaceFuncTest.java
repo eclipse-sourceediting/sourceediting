@@ -1351,13 +1351,13 @@ public class ReplaceFuncTest extends AbstractPsychoPathTest {
 
    //Test of "replace" with the pattern set to "\n" for an input string that contains the newline character.
    // Need to revisit.
-   public void test_fn_replace_27() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-27.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-27.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+//   public void test_fn_replace_27() throws Exception {
+//      String inputFile = "/TestSources/emptydoc.xml";
+//      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-27.xq";
+//      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-27.txt";
+//      String expectedResult = getExpectedResult(resultFile);
+//      URL fileURL = bundle.getEntry(inputFile);
+//      loadDOMDocument(fileURL);
       
       // Get XML Schema Information for the Document
 //      XSModel schema = getGrammar();
@@ -1385,7 +1385,7 @@ public class ReplaceFuncTest extends AbstractPsychoPathTest {
 //      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
-   }
+//   }
 
    //Evaluation of replace function with pattern set to "aa{1}" (exact quantity) for an input string that contains the "aa" string.
    public void test_fn_replace_28() throws Exception {

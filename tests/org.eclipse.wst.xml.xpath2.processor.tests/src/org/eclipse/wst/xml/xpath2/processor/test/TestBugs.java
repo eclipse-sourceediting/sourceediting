@@ -1031,6 +1031,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	private CollationProvider createLengthCollatorProvider() {
 		return new CollationProvider() {
+			@SuppressWarnings("unchecked")
 			public Comparator get_collation(String name) {
 				if (name.equals(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR)) {
 					return new Comparator<String>() {

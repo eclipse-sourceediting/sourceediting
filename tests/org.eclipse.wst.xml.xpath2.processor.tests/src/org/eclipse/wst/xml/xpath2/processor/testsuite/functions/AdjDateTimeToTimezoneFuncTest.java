@@ -840,7 +840,6 @@ public class AdjDateTimeToTimezoneFuncTest extends AbstractPsychoPathTest {
    public void test_fn_adjust_dateTime_to_timezone_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/TimezoneFunction/AdjDateTimeToTimezoneFunc/fn-adjust-dateTime-to-timezone-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/TimezoneFunction/AdjDateTimeToTimezoneFunc/";
       String expectedResult = "FODT0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -877,7 +876,6 @@ public class AdjDateTimeToTimezoneFuncTest extends AbstractPsychoPathTest {
    public void test_fn_adjust_dateTime_to_timezone_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/TimezoneFunction/AdjDateTimeToTimezoneFunc/fn-adjust-dateTime-to-timezone-23.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/TimezoneFunction/AdjDateTimeToTimezoneFunc/";
       String expectedResult = "FODT0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

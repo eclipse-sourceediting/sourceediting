@@ -11,13 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
-import java.math.BigDecimal;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Formatter;
-import java.util.Locale;
-
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;

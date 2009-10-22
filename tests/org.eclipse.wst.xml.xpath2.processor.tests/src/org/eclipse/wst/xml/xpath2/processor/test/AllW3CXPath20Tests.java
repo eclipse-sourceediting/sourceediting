@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
-import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.DateAddYMDTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.DateTimeSubtractYMDTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.YearMonthDurationAddDTTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.YearMonthDurationSubtractTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.numeric.AllW3CNumericTests;
 import org.eclipse.wst.xml.xpath2.processor.test.AllW3CCoreTests;
 import junit.framework.Test;

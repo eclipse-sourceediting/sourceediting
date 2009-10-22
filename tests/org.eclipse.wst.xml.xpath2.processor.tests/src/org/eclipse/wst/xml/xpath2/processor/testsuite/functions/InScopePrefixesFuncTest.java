@@ -25,7 +25,6 @@ public class InScopePrefixesFuncTest extends AbstractPsychoPathTest {
    public void test_fn_in_scope_prefixes_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/InScopePrefixesFunc/fn-in-scope-prefixes-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/InScopePrefixesFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

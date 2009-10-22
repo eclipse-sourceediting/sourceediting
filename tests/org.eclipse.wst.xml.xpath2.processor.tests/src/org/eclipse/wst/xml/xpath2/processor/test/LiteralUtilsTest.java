@@ -15,7 +15,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.xml.xpath2.processor.internal.utils.LiteralUtils;
 
-@SuppressWarnings("restriction")
 public class LiteralUtilsTest extends TestCase {
 
 	public void testUnquoteDouble() {

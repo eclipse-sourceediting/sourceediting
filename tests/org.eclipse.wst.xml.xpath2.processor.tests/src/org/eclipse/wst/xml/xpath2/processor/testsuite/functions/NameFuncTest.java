@@ -247,7 +247,6 @@ public class NameFuncTest extends AbstractPsychoPathTest {
    public void test_fn_name_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NameFunc/fn-name-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NameFunc/";
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -780,7 +779,7 @@ public class NameFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
-	      ResultSequence rs = eval.evaluate(path);	
+	      eval.evaluate(path);	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {

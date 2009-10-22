@@ -862,7 +862,6 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
    public void test_externalcontextitem_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-23.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/";
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

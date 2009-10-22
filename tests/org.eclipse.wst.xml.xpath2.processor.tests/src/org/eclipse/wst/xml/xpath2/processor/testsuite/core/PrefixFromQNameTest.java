@@ -25,7 +25,6 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
    public void test_fn_prefix_from_qname_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/fn-prefix-from-qname-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/";
       String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -62,7 +61,6 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
    public void test_fn_prefix_from_qname_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/fn-prefix-from-qname-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -286,7 +284,6 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
    public void test_fn_prefix_from_qname_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/fn-prefix-from-qname-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/";
       String expectedResult = "FONS0004";
       
       URL fileURL = bundle.getEntry(inputFile);

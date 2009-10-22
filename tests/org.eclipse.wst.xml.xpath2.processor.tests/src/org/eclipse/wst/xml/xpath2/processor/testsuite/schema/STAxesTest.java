@@ -25,7 +25,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes001() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes001.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -62,7 +61,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes002() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes002.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -99,7 +97,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes003() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes003.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -136,7 +133,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes004() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes004.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -173,7 +169,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes005() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes005.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -210,7 +205,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes006() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes006.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -247,7 +241,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes007() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes007.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -284,7 +277,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes008() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes008.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -321,7 +313,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes009() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes009.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -358,7 +349,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes010() throws Exception {
       String inputFile = "/TestSources/Tree1Text.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes010.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0010";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -395,7 +385,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes011() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes011.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -432,7 +421,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes012() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes012.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -469,7 +457,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes013() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes013.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -506,7 +493,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes014() throws Exception {
       String inputFile = "/TestSources/TreeCompass.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes014.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -543,7 +529,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_ST_Axes015() throws Exception {
       String inputFile = "/TestSources/TopMany.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/ST-Axes015.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPST0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -580,7 +565,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_statictypingaxis_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/statictypingaxis-1.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPTY0019";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -617,7 +601,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_statictypingaxis_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/statictypingaxis-2.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPTY0019";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -654,7 +637,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_statictypingaxis_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/statictypingaxis-3.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPTY0019";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -691,7 +673,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_statictypingaxis_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/statictypingaxis-4.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPTY0019";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -728,7 +709,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_statictypingaxis_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/statictypingaxis-5.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPTY0019";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -765,7 +745,6 @@ public class STAxesTest extends AbstractPsychoPathTest {
    public void test_statictypingaxis_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/StaticTyping/STPathExpr/STSteps/STAxes/statictypingaxis-6.xq";
-      String resultFile = "/ExpectedTestResults/StaticTyping/STPathExpr/STSteps/STAxes/";
       String expectedResult = "XPTY0019";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

@@ -26,8 +26,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-1.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -69,8 +67,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-2.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -112,8 +108,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-3.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -155,8 +149,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-4.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -238,48 +230,46 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    }
 
    //Evaluation of "fn:current-dateTime" function as part of an addition operation and a dayTimeDuration.
-   public void test_fn_current_dateTime_6() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-6.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
+//   public void test_fn_current_dateTime_6() throws Exception {
+//      String inputFile = "/TestSources/emptydoc.xml";
+//      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-6.xq";
+//      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-6.txt";
+//      String expectedResult = getExpectedResult(resultFile);
+//      URL fileURL = bundle.getEntry(inputFile);
+//      loadDOMDocument(fileURL);
+//      
+//      // Get XML Schema Information for the Document
+//      XSModel schema = getGrammar();
+//
+//      DynamicContext dc = setupDynamicContext(schema);
+//
+//      String xpath = extractXPathExpression(xqFile, inputFile);
+//      String actual = null;
+//      try {
+//	   	  XPath path = compileXPath(dc, xpath);
+//	
+//	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+//	      ResultSequence rs = eval.evaluate(path);
+//         
+//          actual = buildResultString(rs);
+//	
+//      } catch (XPathParserException ex) {
+//    	 actual = ex.code();
+//      } catch (StaticError ex) {
+//         actual = ex.code();
+//      } catch (DynamicError ex) {
+//         actual = ex.code();
+//      }
+//
 //      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
+//        
+//
+//   }
 
    //Evaluation of "fn:current-dateTime" function as part of a subtraction operation and a dayTimeDuration.
    public void test_fn_current_datetime_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-datetime-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-7.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -395,8 +385,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-10.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -438,8 +426,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-11.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -814,8 +800,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_21() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-21.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-21.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -857,8 +841,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-22.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -900,8 +882,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-23.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-23.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -943,8 +923,6 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_24() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-24.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-24.txt";
-      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

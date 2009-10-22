@@ -987,7 +987,6 @@ public class compareFuncTest extends AbstractPsychoPathTest {
    public void test_fn_compare_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/";
       String expectedResult = "FOCH0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

@@ -356,7 +356,6 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
    public void test_ReturnExpr014() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ReturnExpr/ReturnExpr014.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ReturnExpr/";
       String expectedResult = "XPST0008";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

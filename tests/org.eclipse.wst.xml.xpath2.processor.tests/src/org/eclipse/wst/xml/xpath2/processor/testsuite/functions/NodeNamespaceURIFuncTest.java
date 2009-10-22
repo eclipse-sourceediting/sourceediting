@@ -25,7 +25,6 @@ public class NodeNamespaceURIFuncTest extends AbstractPsychoPathTest {
    public void test_fn_namespace_uri_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeNamespaceURIFunc/fn-namespace-uri-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeNamespaceURIFunc/";
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -41,7 +40,7 @@ public class NodeNamespaceURIFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
-	      ResultSequence rs = eval.evaluate(path);
+	      eval.evaluate(path);
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -185,7 +184,7 @@ public class NodeNamespaceURIFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, null);
-	      ResultSequence rs = eval.evaluate(path);
+	      eval.evaluate(path);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();

@@ -22,7 +22,6 @@ import org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 import org.apache.xerces.xs.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.*;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
 import org.xml.sax.SAXException;
       
@@ -73,7 +72,6 @@ public class UserDefinedSITest extends AbstractPsychoPathTest {
    //Evaluation of simple constructor function violation for user defined data type derived from xs:integer.
    public void test_user_defined_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/SchemaImport/UserDefinedSI/user-defined-2.xq";
       List<String> expectedResult = Arrays.asList( "FORG0001", "XQST0009", "XPST0017" );
       
       URL fileURL = bundle.getEntry(inputFile);

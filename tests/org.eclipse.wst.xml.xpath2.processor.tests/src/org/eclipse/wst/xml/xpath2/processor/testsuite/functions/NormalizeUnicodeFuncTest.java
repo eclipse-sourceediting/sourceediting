@@ -13,8 +13,6 @@
  
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
@@ -251,7 +249,6 @@ public class NormalizeUnicodeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_normalize_unicode1args_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/fn-normalize-unicode1args-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -288,7 +285,6 @@ public class NormalizeUnicodeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_normalize_unicode1args_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/fn-normalize-unicode1args-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/";
       String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -473,7 +469,6 @@ public class NormalizeUnicodeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_normalize_unicode2args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/fn-normalize-unicode2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -510,7 +505,6 @@ public class NormalizeUnicodeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_normalize_unicode2args_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/fn-normalize-unicode2args-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -584,7 +578,6 @@ public class NormalizeUnicodeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_normalize_unicode_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/fn-normalize-unicode-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/NormalizeUnicodeFunc/";
       String expectedResult = "FOCH0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

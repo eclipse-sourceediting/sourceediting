@@ -2277,7 +2277,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    //Test the escaping of the ' (apostrophe) and " (quotation) characters as part of an XML text node constructor.
    public void test_Literals068() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals068.xq";
+      //String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals068.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals068-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
@@ -2313,7 +2313,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    //Test the escaping of the ' (apostrophe) and " (quotation) characters as part of an XML text node constructor.
    public void test_Literals069() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals069.xq";
+      //String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals069.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals069-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);

@@ -442,7 +442,8 @@ public class ParenExprTest extends AbstractPsychoPathTest {
    }
 
    //Sequence.
-   public void test_Parenexpr_14() throws Exception {
+   @SuppressWarnings("unchecked")
+public void test_Parenexpr_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/ParenExpr/Parenexpr-14.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/ParenExpr/Parenexpr-14.txt";

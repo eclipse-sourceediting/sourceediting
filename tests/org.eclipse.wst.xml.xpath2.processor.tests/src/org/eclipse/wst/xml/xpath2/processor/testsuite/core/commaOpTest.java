@@ -12,15 +12,10 @@
 package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
 import java.net.URL;
-import java.util.Iterator;
-
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
-import org.w3c.dom.Node;
       
       
 public class commaOpTest extends AbstractPsychoPathTest {

@@ -40,7 +40,7 @@ public class NodeLocalNameFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, null);
-	      ResultSequence rs = eval.evaluate(path);
+	      eval.evaluate(path);
          	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -96,7 +96,6 @@ public class NodeLocalNameFuncTest extends AbstractPsychoPathTest {
    public void test_fn_local_name_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeLocalNameFunc/fn-local-name-23.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeLocalNameFunc/";
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -112,7 +111,7 @@ public class NodeLocalNameFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, null);
-	      ResultSequence rs = eval.evaluate(path);
+	      eval.evaluate(path);
          
       } catch (XPathParserException ex) {
     	 actual = ex.code();

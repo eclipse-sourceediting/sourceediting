@@ -16,7 +16,6 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -63,7 +62,6 @@ public class ContextLastFuncTest extends AbstractPsychoPathTest {
    public void test_last_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextLastFunc/last-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextLastFunc/";
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

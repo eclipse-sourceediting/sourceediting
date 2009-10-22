@@ -25,7 +25,6 @@ public class ContextDefaultCollationFuncTest extends AbstractPsychoPathTest {
    public void test_fn_default_collation_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextDefaultCollationFunc/fn-default-collation-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextDefaultCollationFunc/";
       String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

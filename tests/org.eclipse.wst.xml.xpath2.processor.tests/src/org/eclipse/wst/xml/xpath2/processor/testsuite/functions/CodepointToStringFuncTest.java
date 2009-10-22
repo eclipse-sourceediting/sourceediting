@@ -99,7 +99,6 @@ public class CodepointToStringFuncTest extends AbstractPsychoPathTest {
    public void test_fn_codepoints_to_string1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/AssDisassStringFunc/CodepointToStringFunc/fn-codepoints-to-string1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/AssDisassStringFunc/CodepointToStringFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -136,7 +135,6 @@ public class CodepointToStringFuncTest extends AbstractPsychoPathTest {
    public void test_fn_codepoints_to_string1args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/AssDisassStringFunc/CodepointToStringFunc/fn-codepoints-to-string1args-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/AssDisassStringFunc/CodepointToStringFunc/";
       String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -173,7 +171,6 @@ public class CodepointToStringFuncTest extends AbstractPsychoPathTest {
    public void test_fn_codepoints_to_string_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/AssDisassStringFunc/CodepointToStringFunc/fn-codepoints-to-string-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/AssDisassStringFunc/CodepointToStringFunc/";
       String expectedResult = "FOCH0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -210,7 +207,6 @@ public class CodepointToStringFuncTest extends AbstractPsychoPathTest {
    public void test_fn_codepoints_to_string_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/AssDisassStringFunc/CodepointToStringFunc/fn-codepoints-to-string-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/AssDisassStringFunc/CodepointToStringFunc/";
       String expectedResult = "FOCH0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

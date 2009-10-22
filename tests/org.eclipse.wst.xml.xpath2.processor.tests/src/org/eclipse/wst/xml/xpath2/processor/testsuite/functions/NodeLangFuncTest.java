@@ -16,7 +16,6 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -137,7 +136,6 @@ public class NodeLangFuncTest extends AbstractPsychoPathTest {
    public void test_fn_lang_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeLangFunc/fn-lang-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeLangFunc/";
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -153,7 +151,7 @@ public class NodeLangFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
-	      ResultSequence rs = eval.evaluate(path);
+	      eval.evaluate(path);
          	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -926,7 +924,7 @@ public class NodeLangFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
-	      ResultSequence rs = eval.evaluate(path);
+	      eval.evaluate(path);
          
 	      // we cannot require that a context is always present
       } catch (XPathParserException ex) {

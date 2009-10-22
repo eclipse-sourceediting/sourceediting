@@ -67,7 +67,6 @@ import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary;
@@ -98,7 +97,6 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	private static final String S_COMMENT2 = ":)";
 	private static final String DECLARE_NAMESPACE = "declare namespace";
 	private static final String IMPORT_SCHEMA_NAMESPACE = "import schema namespace";
-	private static final String DECLARE_VARIABLE = "declare variable";
 	private static final String REGEX_DN = " namespace\\s+(\\w[-_\\w]*)\\s*=\\s*['\"]([^;]*)['\"];";
 
 	private static HashMap<String, String> inputMap = new HashMap<String, String>(
@@ -385,7 +383,6 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		
 		if (domDoc != null) {
 			AnyType docType = new DocType(domDoc);
-			ElementType elementType = new ElementType(domDoc.getDocumentElement());
 			dc.set_variable(new QName("input-context1"), docType);
 			dc.set_variable(new QName("input-context"), docType);
 			if (domDoc2 == null) {
@@ -397,6 +394,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return dc;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected String buildResultString(ResultSequence rs) {
 		String actual = new String();
 		Iterator<AnyType> iterator = rs.iterator();
@@ -409,6 +407,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return actual.trim();
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected String buildXMLResultString(ResultSequence rs) throws Exception {
         DOMImplementationLS domLS = (DOMImplementationLS) domDoc.getImplementation().getFeature("LS", "3.0");
         LSOutput outputText = domLS.createLSOutput();
