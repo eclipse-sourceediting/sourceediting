@@ -803,7 +803,6 @@ public class SeqIndexOfFuncTest extends AbstractPsychoPathTest {
    public void test_fn_indexof_mix_args_022() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqIndexOfFunc/fn-indexof-mix-args-022.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqIndexOfFunc/";
       String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

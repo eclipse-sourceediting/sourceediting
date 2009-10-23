@@ -3096,7 +3096,6 @@ public class SeqDeepEqualFuncTest extends AbstractPsychoPathTest {
    public void test_fn_deep_equal_mix_args_019() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/SeqDeepEqualFunc/fn-deep-equal-mix-args-019.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/SeqDeepEqualFunc/fn-deep-equal-mix-args-019.txt";
       // Is this a bug in the test as the two values returned are equal numerically???
       String expectedResult = "true";
       URL fileURL = bundle.getEntry(inputFile);

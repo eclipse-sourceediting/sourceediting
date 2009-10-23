@@ -28,7 +28,6 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
    public void test_fn_doc_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/";
       String expectedResult = "FODC0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -65,7 +64,6 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
    public void test_fn_doc_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/";
       String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -102,7 +100,6 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
    public void test_fn_doc_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/";
       String expectedResult = "FODC0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -368,7 +365,6 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
    public void test_fn_doc_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/";
       String expectedResult = "FODC0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

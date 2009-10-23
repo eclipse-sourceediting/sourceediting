@@ -247,7 +247,6 @@ public class StringToCodepointFuncTest extends AbstractPsychoPathTest {
    public void test_fn_string_to_codepoints1args_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/AssDisassStringFunc/StringToCodepointFunc/fn-string-to-codepoints1args-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/AssDisassStringFunc/StringToCodepointFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

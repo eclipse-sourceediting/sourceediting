@@ -2647,22 +2647,6 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
         
 
    }
-   
-   private boolean assertHasOneInstance(String value, String target) {
-	   boolean hasone = false;
-	   int index = target.indexOf(value);
-	   if (index != -1) {
-		   hasone = true;
-	   }
-	   if (index == -1) {
-		   return hasone;
-	   }
-	   index = target.substring(index).indexOf(value);
-	   if (index != -1) {
-		   hasone = false;
-	   }
-	   return hasone;
-   }
 
 }
       

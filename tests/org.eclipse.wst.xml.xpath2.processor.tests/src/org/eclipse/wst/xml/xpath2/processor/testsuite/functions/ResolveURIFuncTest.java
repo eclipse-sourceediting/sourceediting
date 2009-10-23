@@ -100,7 +100,6 @@ public class ResolveURIFuncTest extends AbstractPsychoPathTest {
    public void test_fn_resolve_uri_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/URIFunc/ResolveURIFunc/fn-resolve-uri-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/URIFunc/ResolveURIFunc/";
       String expectedResult = "FORG0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -137,7 +136,6 @@ public class ResolveURIFuncTest extends AbstractPsychoPathTest {
    public void test_fn_resolve_uri_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/URIFunc/ResolveURIFunc/fn-resolve-uri-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/URIFunc/ResolveURIFunc/";
       String expectedResult = "FORG0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

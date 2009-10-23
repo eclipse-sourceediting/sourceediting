@@ -163,7 +163,6 @@ public class TranslateFuncTest extends AbstractPsychoPathTest {
    public void test_fn_translate3args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/fn-translate3args-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -200,7 +199,6 @@ public class TranslateFuncTest extends AbstractPsychoPathTest {
    public void test_fn_translate3args_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/fn-translate3args-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -237,7 +235,6 @@ public class TranslateFuncTest extends AbstractPsychoPathTest {
    public void test_fn_translate3args_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/fn-translate3args-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/";
       String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -274,7 +271,6 @@ public class TranslateFuncTest extends AbstractPsychoPathTest {
    public void test_fn_translate3args_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/fn-translate3args-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/";
       String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
