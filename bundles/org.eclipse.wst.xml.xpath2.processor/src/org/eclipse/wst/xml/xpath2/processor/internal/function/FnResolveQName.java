@@ -76,10 +76,7 @@ public class FnResolveQName extends Function {
 			return rs;
 
 		String name = ((XSString) arg1.first()).value();
-		ResultSequence arg2 = (ResultSequence) argiter.next();
-		ElementType elem = (ElementType) arg2.first();
 
-		// XXX fix this to use real namespaces
 		QName qn = QName.parse_QName(name);
 
 		if (qn == null)

@@ -97,7 +97,6 @@ public class FnIDREF extends Function {
 			//throw DynamicError.noContextDoc();
 		}
 		
-		int itemcnt = 0;
 		if (hasID(ids, node)) {
 			ElementType element = new ElementType((Element) node);
 			rs.add(element);

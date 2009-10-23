@@ -13,8 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
 import java.util.*;
 
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
 /**
  * A filter expression consists simply of a primary expression followed by zero
  * or more predicates. The result of the filter expression consists of all the
@@ -29,7 +27,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 public class FilterExpr extends StepExpr {
 	private PrimaryExpr _pexpr;
 	private Collection _exprs;
-	private XSInteger _g_xsint;
 
 	/**
 	 * Constructor of FilterExpr.
@@ -37,13 +34,11 @@ public class FilterExpr extends StepExpr {
 	 * @param pexpr
 	 *            is copied to _pexpr.
 	 * @param exprs
-	 *            is copied to _exprs. g_xsint is created as a new XSInteger as
-	 *            a result.
+	 *            is copied to _exprs. 
 	 */
 	public FilterExpr(PrimaryExpr pexpr, Collection exprs) {
 		_pexpr = pexpr;
 		_exprs = exprs;
-		_g_xsint = new XSInteger();
 	}
 
 	/**

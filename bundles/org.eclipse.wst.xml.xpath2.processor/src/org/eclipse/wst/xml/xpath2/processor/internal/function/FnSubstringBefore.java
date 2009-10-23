@@ -80,7 +80,6 @@ public class FnSubstringBefore extends Function {
 			str2 = ((XSString) arg2.first()).value();
 		}
 
-		int str1len = str1.length();
 		int str2len = str2.length();
 
 		if (str2len == 0) {

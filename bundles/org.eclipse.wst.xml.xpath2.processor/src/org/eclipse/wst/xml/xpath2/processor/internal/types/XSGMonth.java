@@ -75,7 +75,6 @@ public class XSGMonth extends CalendarType implements CmpEq {
 
 		String startdate = "1972-";
 		String starttime = "T00:00:00";
-		boolean tz = false;
 
 		int index = str.lastIndexOf('+', str.length());
 		
@@ -113,7 +112,6 @@ public class XSGMonth extends CalendarType implements CmpEq {
 
 			if (zIndex != -1) {
 				startdate += str.substring(zIndex);
-				tz = true;
 			}
 		} else {
 			startdate += str + starttime;

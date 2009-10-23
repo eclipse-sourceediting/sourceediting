@@ -44,6 +44,31 @@ public class DefaultStaticContext implements StaticContext {
 	private XSAnyURI _base_uri;
 	private Map _documents;
 	private Map _collections;
+	
+	public String get_cntxt_item_type() {
+		return _cntxt_item_type;
+	}
+
+	public void set_cntxt_item_type(String cntxtItemType) {
+		_cntxt_item_type = cntxtItemType;
+	}
+
+	public Map get_collections() {
+		return _collections;
+	}
+
+	public void set_collections(Map collections) {
+		_collections = collections;
+	}
+
+	public String get_default_collection_type() {
+		return _default_collection_type;
+	}
+
+	public void set_default_collection_type(String defaultCollectionType) {
+		_default_collection_type = defaultCollectionType;
+	}
+
 	private String _default_collection_type;
 
 	// Variables are held like this:
@@ -588,5 +613,13 @@ public class DefaultStaticContext implements StaticContext {
 	 */
 	public void set_base_uri(String baseuri) {
 		_base_uri = new XSAnyURI(baseuri);
+	}
+
+	public void set_documents(Map _documents) {
+		this._documents = _documents;
+	}
+
+	public Map get_documents() {
+		return _documents;
 	}
 }

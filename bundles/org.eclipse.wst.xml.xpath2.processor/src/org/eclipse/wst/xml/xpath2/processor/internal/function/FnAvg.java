@@ -180,7 +180,6 @@ public class FnAvg extends Function {
 			} else if (at instanceof NumericType) {
 				d = (NumericType) at;
 			} else if (at instanceof NodeType) {
-				NodeType node = (NodeType) at;
 				try {
 					d = new XSDecimal(at.string_value());
 				} catch (NumberFormatException ex) {

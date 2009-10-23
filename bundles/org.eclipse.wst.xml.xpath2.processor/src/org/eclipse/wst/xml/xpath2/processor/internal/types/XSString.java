@@ -119,7 +119,6 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	// 666 indicates death [compare returned empty seq]
 	private int do_compare(AnyType arg, DynamicContext dc) throws DynamicError {
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
 		// XXX: This can't happen, I guess
 		if (arg == null) return 666;
 

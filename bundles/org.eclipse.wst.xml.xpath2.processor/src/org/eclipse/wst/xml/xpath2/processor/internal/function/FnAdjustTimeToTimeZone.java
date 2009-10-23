@@ -73,8 +73,6 @@ public class FnAdjustTimeToTimeZone extends Function {
 	public static ResultSequence adjustTime(Collection args,
 			DynamicContext dc) throws DynamicError {
 
-		XSDuration impTimeZone = dc.tz();
-
 		Collection cargs = Function.convert_arguments(args, expectedArgs());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();

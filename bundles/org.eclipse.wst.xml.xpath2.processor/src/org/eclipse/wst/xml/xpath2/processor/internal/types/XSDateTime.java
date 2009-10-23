@@ -473,14 +473,8 @@ Cloneable {
 			if (tz == null)
 				return null;
 
-			int mul = 1;
-			if (tz[0] > 0)
-				mul = -1;
-
 			tzd = new XSDayTimeDuration(0, tz[1], tz[2], 0.0, tz[0] < 0);
 
-//			cal.add(Calendar.HOUR_OF_DAY, mul * tz[1]);
-//			cal.add(Calendar.MINUTE, mul * tz[2]);
 		}
 
 		return new XSDateTime(cal, tzd);

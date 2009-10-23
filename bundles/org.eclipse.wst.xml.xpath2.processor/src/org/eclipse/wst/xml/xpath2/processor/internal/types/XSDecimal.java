@@ -370,9 +370,7 @@ public class XSDecimal extends NumericType {
 	 */
 	public ResultSequence div(ResultSequence arg) throws DynamicError {
 		ResultSequence carg = convertResultSequence(arg);
-		
-		AnyType nanCheck = arg.first();
-		
+			
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		if (val.zero()) {
 			return ResultSequenceFactory.create_new(new XSDouble(Double.NaN));
@@ -380,7 +378,6 @@ public class XSDecimal extends NumericType {
 		if (zero())
 			throw DynamicError.div_zero(null);
 		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_EVEN);
-//		BigDecimal result = BigDecimal.valueOf(double_value() / val.double_value());
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 

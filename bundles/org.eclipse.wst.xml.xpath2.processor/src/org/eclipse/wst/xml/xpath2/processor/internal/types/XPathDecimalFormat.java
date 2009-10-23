@@ -30,6 +30,10 @@ import java.util.Locale;
  */
 public class XPathDecimalFormat extends DecimalFormat {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8229885955864187400L;
 	private static final String NEG_INFINITY = "-INF";
 	private static final String POS_INFINITY = "INF";
 

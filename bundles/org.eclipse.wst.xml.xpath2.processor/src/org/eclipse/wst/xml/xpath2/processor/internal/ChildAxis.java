@@ -14,9 +14,6 @@
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import org.w3c.dom.*;
-import org.apache.xerces.xs.ElementPSVI;
-import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -37,7 +34,6 @@ public class ChildAxis extends ForwardAxis {
 	 * @return The context node's children.
 	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		DynamicContext tempDC = dc;
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		NodeList nl = null;
 		
@@ -57,15 +53,6 @@ public class ChildAxis extends ForwardAxis {
 				try {
 					n = NodeType.dom_to_xpath(dnode);
 				} catch (NullPointerException ex) {
-					// The node wasn't found, so try creating a dynamic context to look it up
-					// This happens when multiple variables are loaded with different docs so we create the context
-					// on the fly
-					XSModel model = null;
-					if (dnode instanceof ElementPSVI) {
-						ElementPSVI dnodePSVI = (ElementPSVI) dnode;
-						model = dnodePSVI.getSchemaInformation();
-					}
-					tempDC = new DefaultDynamicContext(model, dnode.getOwnerDocument());
 					n = NodeType.dom_to_xpath(dnode);
 				}
 

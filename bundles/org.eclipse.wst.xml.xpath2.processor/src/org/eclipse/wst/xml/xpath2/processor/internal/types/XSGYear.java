@@ -76,11 +76,8 @@ public class XSGYear extends CalendarType implements CmpEq {
 	public static XSGYear parse_gYear(String str) {
 
 
-		String lame = "";
-		String lame2 = "-01-01T00:00:00.0";
-		
-		boolean tz = false;
-		
+		String year = "";
+		String monthDaytime = "-01-01T00:00:00.0";
 		
 
 		int index = str.indexOf('+', 1);
@@ -89,15 +86,14 @@ public class XSGYear extends CalendarType implements CmpEq {
 		if (index == -1)
 			index = str.indexOf('Z', 1);
 		if (index != -1) {
-			lame = str.substring(0, index);
-			lame += lame2;
-			lame += str.substring(index, str.length());
-			tz = true;
+			year = str.substring(0, index);
+			year += monthDaytime;
+			year += str.substring(index, str.length());
 		} else {
-			lame = str + lame2;
+			year = str + monthDaytime;
 		}
 
-		XSDateTime dt = XSDateTime.parseDateTime(lame);
+		XSDateTime dt = XSDateTime.parseDateTime(year);
 		if (dt == null)
 			return null;
 

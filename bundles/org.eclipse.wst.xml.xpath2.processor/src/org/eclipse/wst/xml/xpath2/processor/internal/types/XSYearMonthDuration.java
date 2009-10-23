@@ -439,7 +439,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 			int ret = 0;
 			
 			if (!dt.zero())
-				ret = (int) Math.round(monthValue() / dt.double_value());
+				ret = (int) Math.round(monthValue() / dt.getValue().doubleValue());
 			
 			return ResultSequenceFactory.create_new(new XSYearMonthDuration(
 					ret));	

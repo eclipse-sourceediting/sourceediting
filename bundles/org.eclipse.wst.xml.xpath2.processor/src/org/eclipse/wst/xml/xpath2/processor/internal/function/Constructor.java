@@ -14,11 +14,9 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.CtrType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
@@ -61,17 +59,6 @@ public class Constructor extends Function {
 
 		if (arg.size() > 1)
 			DynamicError.throw_type_error();
-
-		for (Iterator i = arg.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			// we should not throw error here. the function conversion rules
-			// apply here also. ref: http://www.w3.org/TR/xpath20/#id-function-calls
-			/*
-			if (!(at instanceof CtrType))
-			  DynamicError.throw_type_error();
-			*/
-		}
 
 		// do it
 		return _atomic_type.constructor(arg);

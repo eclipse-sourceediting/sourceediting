@@ -102,19 +102,14 @@ Cloneable {
 	 * @return New XSTime representing the supplied time
 	 */
 	public static CalendarType parse_time(String str) {
-		// XXX fix this
 
 		String startdate = "1983-11-29T";
-		boolean tz = false;
 
 		int index = str.indexOf('+', 1);
 		if (index == -1)
 			index = str.indexOf('-', 1);
 		if (index == -1)
 			index = str.indexOf('Z', 1);
-		if (index != -1) {
-			tz = true;
-		}
 
 		// thus life
 		XSDateTime dt = XSDateTime.parseDateTime(startdate + str);
@@ -417,8 +412,6 @@ Cloneable {
 			XSDuration val = (XSDuration) at;
 
 			try {
-				double ms = val.value() * -1000.0;
-
 				XSTime res = (XSTime) clone();
 
 				try {

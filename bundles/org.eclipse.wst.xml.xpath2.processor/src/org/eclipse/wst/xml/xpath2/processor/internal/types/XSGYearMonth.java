@@ -75,9 +75,8 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	 */
 	public static XSGYearMonth parse_gYearMonth(String str) {
 
-		String lame = "";
-		String lame2 = "-01T00:00:00.0";
-		boolean tz = false;
+		String yearMonth = "";
+		String dayTime = "-01T00:00:00.0";
 
 		int index = str.indexOf('+', 1);
 		if (index == -1) {
@@ -89,15 +88,14 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 		if (index == -1)
 			index = str.indexOf('Z', 1);
 		if (index != -1) {
-			lame = str.substring(0, index);
-			lame += lame2;
-			lame += str.substring(index, str.length());
-			tz = true;
+			yearMonth = str.substring(0, index);
+			yearMonth += dayTime;
+			yearMonth += str.substring(index, str.length());
 		} else {
-			lame = str + lame2;
+			yearMonth = str + dayTime;
 		}
 
-		XSDateTime dt = XSDateTime.parseDateTime(lame);
+		XSDateTime dt = XSDateTime.parseDateTime(yearMonth);
 		if (dt == null)
 			return null;
 
