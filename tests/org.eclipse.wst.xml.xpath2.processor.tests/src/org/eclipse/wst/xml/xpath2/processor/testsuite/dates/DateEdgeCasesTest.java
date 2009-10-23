@@ -251,11 +251,11 @@ public class DateEdgeCasesTest extends AbstractPsychoPathTest {
 
 	}
 
-	   //Evaluates the "op:divide-dayTimeDuration" operator that returns a negative value.
-	   public void test_op_divide_dayTimeDuration_8() throws Exception {
+	   //Evaluates the "op:divide-dayTimeDuration-by-dayTimeDuration" operator that returns a negative value.
+	   public void test_op_divide_dayTimeDuration_by_dTD_8() throws Exception {
 	      String inputFile = "/TestSources/emptydoc.xml";
-	      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivide/op-divide-dayTimeDuration-8.xq";
-	      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivide/op-divide-dayTimeDuration-8.txt";
+	      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivideDTD/op-divide-dayTimeDuration-by-dTD-8.xq";
+	      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DayTimeDurationDivideDTD/op-divide-dayTimeDuration-by-dTD-8.txt";
 	      String expectedResult = getExpectedResult(resultFile);
 	      URL fileURL = bundle.getEntry(inputFile);
 	      loadDOMDocument(fileURL);
@@ -284,7 +284,6 @@ public class DateEdgeCasesTest extends AbstractPsychoPathTest {
 	      }
 
 	      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-	        
 
 	   }
 	
