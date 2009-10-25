@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Steen Moeller - bug 262765 - fixes float handling for fn:number 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
@@ -544,7 +545,7 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
    public void test_fn_numberflt1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeNumberFunc/fn-numberflt1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeNumberFunc/fn-numberflt1args-3.txt";
+      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeNumberFunc/fn-numberflt1argsalt1-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1173,7 +1174,7 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
    public void test_fn_numbernpi1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeNumberFunc/fn-numbernpi1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeNumberFunc/fn-numbernpi1args-2.txt";
+      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeNumberFunc/fn-numbernpi1argsalt1-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

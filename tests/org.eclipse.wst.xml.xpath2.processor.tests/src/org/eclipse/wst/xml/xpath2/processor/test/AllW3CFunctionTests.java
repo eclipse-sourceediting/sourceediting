@@ -39,7 +39,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(StringLengthFuncTest.class);
 		suite.addTestSuite(CeilingFuncTest.class);
 		suite.addTestSuite(TrueFuncTest.class);
-//		suite.addTestSuite(NodeNumberFuncTest.class);
+		suite.addTestSuite(NodeNumberFuncTest.class);
 		suite.addTestSuite(NormalizeUnicodeFuncTest.class);
 		suite.addTestSuite(NotFuncTest.class);
 		suite.addTestSuite(IRIToURIfuncTest.class);
