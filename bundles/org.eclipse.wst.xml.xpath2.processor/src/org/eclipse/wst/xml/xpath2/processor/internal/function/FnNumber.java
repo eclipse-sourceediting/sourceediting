@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moeller - bug 262765 - fixes float handling for fn:number 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -57,7 +58,9 @@ public class FnNumber extends Function {
 			argument = (ResultSequence) args.iterator().next();
 		}
 
-		return fn_number(argument, dynamic_context());
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		rs.add(fn_number(argument, dynamic_context()));
+		return rs;
 	}
 
 	/**
@@ -71,29 +74,37 @@ public class FnNumber extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:number operation.
 	 */
-	public static ResultSequence fn_number(ResultSequence arg, DynamicContext dc)
+	public static XSDouble fn_number(ResultSequence arg, DynamicContext dc)
 			throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if (arg.size() > 1)
-			throw new DynamicError(TypeError.invalid_type(null));
-
-		AnyType at = null;
-		if (arg.size() == 1) {
-			at = arg.first();
+		if (arg.size() > 1) {
+			throw new DynamicError(TypeError.invalid_type("bad argument passed to fn:number()"));
+		} else if (arg.size() == 1) {
+			AnyType at = arg.first();
 
 			if (!(at instanceof AnyAtomicType))
 				DynamicError.throw_type_error();
-
-			XSDouble d = XSDouble.parse_double(at.string_value());
-			if (d == null)
-				d = new XSDouble(Double.NaN);
-			rs.add(d);
+			
+			if ((at instanceof XSDouble)) {
+				return (XSDouble)at;
+			} else if ((at instanceof XSFloat)) {
+				float value = ((XSFloat)at).float_value();
+				if (value == Float.NaN) {
+					return new XSDouble(Double.NaN);
+				} else if (value == Float.NEGATIVE_INFINITY) {
+					return new XSDouble(Double.NEGATIVE_INFINITY);
+				} else if (value == Float.POSITIVE_INFINITY) {
+					return new XSDouble(Double.POSITIVE_INFINITY);
+				} else {
+					return new XSDouble((double)value); 
+				}
+			} else {
+				XSDouble d = XSDouble.parse_double(at.string_value());
+				return d != null ? d : new XSDouble(Double.NaN);
+			}
 		} else {
-			rs.add(new XSDouble(Double.NaN));
+			return new XSDouble(Double.NaN);
 		}
-
-		return rs;
 	}
 
 }
