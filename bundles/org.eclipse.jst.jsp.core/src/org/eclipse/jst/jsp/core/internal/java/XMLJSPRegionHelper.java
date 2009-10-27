@@ -185,6 +185,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				fTagname = null;
 			}
 			else if (isJSPStartRegion(sdRegion)) {
+				int illegalContent = hasIllegalContent(sdRegion);
+				if (illegalContent >= 0)
+					decodeRemainingRegions(sdRegion, illegalContent);
 				String nameStr = getRegionName(sdRegion);
 				if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
 					if (isPossibleCustomTag(nameStr)) {
@@ -265,6 +268,25 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 	}
 
+	private void decodeRemainingRegions(IStructuredDocumentRegion sdRegion, int start) {
+		ITextRegion region = sdRegion.getRegions().get(start);
+		String text = sdRegion.getFullText();
+		if (region.getStart() <= text.length())
+			fTranslator.decodeScriptBlock(text.substring(region.getStart(), text.length()), 0);
+	}
+
+	private int hasIllegalContent(IStructuredDocumentRegion sdRegion) {
+		ITextRegionList list = sdRegion.getRegions();
+		for (int i = 0; i < list.size(); i++) {
+			ITextRegion region = list.get(i);
+			String type = region.getType();
+			if (type == DOMRegionContext.UNDEFINED)
+				return i;
+			if (type == DOMRegionContext.XML_END_TAG_OPEN || type == DOMRegionContext.XML_EMPTY_TAG_CLOSE || type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE)
+				return -1;
+		}
+		return -1;
+	}
 
 	public void resetNodes() {
 		// do nothing
