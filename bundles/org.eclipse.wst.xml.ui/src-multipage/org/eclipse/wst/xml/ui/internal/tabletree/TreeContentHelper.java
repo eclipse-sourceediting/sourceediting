@@ -425,16 +425,27 @@ public class TreeContentHelper {
 	protected String getValueForTextContent(List list) {
 		String result = null;
 		if (list.size() > 0) {
-			IDOMNode first = (IDOMNode) list.get(0);
-			IDOMNode last = (IDOMNode) list.get(list.size() - 1);
-			IDOMModel model = first.getModel();
-			int start = first.getStartOffset();
-			int end = last.getEndOffset();
-			try {
-				result = model.getStructuredDocument().get(start, end - start);
+			if (list.get(0) instanceof IDOMNode) {
+				IDOMNode first = (IDOMNode) list.get(0);
+				IDOMNode last = (IDOMNode) list.get(list.size() - 1);
+				IDOMModel model = first.getModel();
+				int start = first.getStartOffset();
+				int end = last.getEndOffset();
+				try {
+					result = model.getStructuredDocument().get(start,
+							end - start);
+				} catch (Exception e) {
+
+				}
 			}
-			catch (Exception e) {
-			}
+			else
+			{
+				if (list.get(0) instanceof Node)
+				{
+					Node n = (Node) list.get(0);
+					result = n.getTextContent();
+				}
+			}	
 		}
 
 		// we trim the content so that it looks nice when viewed
@@ -453,11 +464,14 @@ public class TreeContentHelper {
 		// String oldValue = getValueForTextContent();
 		// we worry about preserving trimmed text
 		if (list.size() > 0) {
-			IDOMNode first = (IDOMNode) list.get(0);
-			IDOMNode last = (IDOMNode) list.get(list.size() - 1);
-			int start = first.getStartOffset();
-			int end = last.getEndOffset();
-			first.getModel().getStructuredDocument().replaceText(this, start, end - start, value);
+			if (list.get(0) instanceof IDOMNode) {
+				IDOMNode first = (IDOMNode) list.get(0);
+				IDOMNode last = (IDOMNode) list.get(list.size() - 1);
+				int start = first.getStartOffset();
+				int end = last.getEndOffset();
+				first.getModel().getStructuredDocument().replaceText(this,
+						start, end - start, value);
+			}
 		}
 	}
 
