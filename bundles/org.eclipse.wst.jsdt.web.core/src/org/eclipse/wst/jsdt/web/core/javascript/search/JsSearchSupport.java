@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,7 +96,7 @@ public class JsSearchSupport {
 
         int fMatchMode = SearchPattern.R_PATTERN_MATCH;
 
-        boolean fIsCaseSensitive = false;
+       // boolean fIsCaseSensitive = false;
 
         SearchRequestor fRequestor = null;
 
@@ -120,7 +120,7 @@ public class JsSearchSupport {
             this.fSearchFor = searchFor;
             this.fLimitTo = limitTo;
             this.fMatchMode = matchMode;
-            this.fIsCaseSensitive = isCaseSensitive;
+           // this.fIsCaseSensitive = isCaseSensitive;
             this.fRequestor = requestor;
         }
 
@@ -187,7 +187,7 @@ public class JsSearchSupport {
 
         int fMatchMode = SearchPattern.R_PATTERN_MATCH;
 
-        boolean fIsCaseSensitive = false;
+        //boolean fIsCaseSensitive = false;
 
         SearchRequestor fRequestor = null;
 
@@ -202,16 +202,16 @@ public class JsSearchSupport {
         }
 
         // constructor w/ search text
-        public SearchRunnable(String searchText, IJavaScriptSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
-
-            this.fSearchText = searchText;
-            this.fScope = scope;
-            this.fSearchFor = searchFor;
-            this.fLimitTo = limitTo;
-            this.fMatchMode = matchMode;
-            this.fIsCaseSensitive = isCaseSensitive;
-            this.fRequestor = requestor;
-        }
+//        public SearchRunnable(String searchText, IJavaScriptSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
+//
+//            this.fSearchText = searchText;
+//            this.fScope = scope;
+//            this.fSearchFor = searchFor;
+//            this.fLimitTo = limitTo;
+//            this.fMatchMode = matchMode;
+//            this.fIsCaseSensitive = isCaseSensitive;
+//            this.fRequestor = requestor;
+//        }
 
         public void run(IProgressMonitor monitor) throws CoreException {
 

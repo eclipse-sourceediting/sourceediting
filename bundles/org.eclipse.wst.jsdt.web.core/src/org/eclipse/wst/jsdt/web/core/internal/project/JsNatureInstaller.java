@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
@@ -43,7 +42,6 @@ public class JsNatureInstaller implements IDelegate {
 	public void installNature(IProject project, IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(Messages.getString("JsNatureInstaller.1"), 100); //$NON-NLS-1$
 		monitor.subTask(Messages.getString("JsNatureInstaller.2")); //$NON-NLS-1$
-		SubProgressMonitor sub = new SubProgressMonitor(monitor, 25);
 		try {
 			monitor.worked(20);
 			JsWebNature jsNature = new JsWebNature(project, monitor);

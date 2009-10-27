@@ -366,7 +366,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		// w/ScriptOffset:"
 		// + scriptOffset);
 		
-			NodeHelper nh = new NodeHelper(container);
+			//NodeHelper nh = new NodeHelper(container);
 			// System.out.println("inline js node looking at:\n" + nh);
 			/* start a function header.. will amend later */
 			ITextRegionList t = container.getRegions();
