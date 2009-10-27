@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,8 +37,7 @@ public class JSDTHtmlCompletionProcessor {
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		/* add </script if necisary */
 		ArrayList allProposals = new ArrayList();
-		IJsTranslation tran = getJSPTranslation(viewer);
-		int missingAtOffset = tran.getMissingTagStart();
+		getJSPTranslation(viewer);
 		
 		return (ICompletionProposal[])allProposals.toArray(new ICompletionProposal[allProposals.size()]);
 	}
@@ -57,7 +56,6 @@ public class JSDTHtmlCompletionProcessor {
 			String text = "</script>"; //$NON-NLS-1$
 			
 			int startInTag = -1;
-			int replaceLength =0;
 			
 			for(int i=0;i<text.length() && allText.length()>offset-1;i++) {
 				if(allText.charAt(offset-1)==text.charAt(i)) {

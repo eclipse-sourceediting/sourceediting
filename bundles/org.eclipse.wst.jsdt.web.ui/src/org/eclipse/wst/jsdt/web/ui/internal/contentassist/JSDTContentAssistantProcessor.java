@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,11 +33,10 @@ import org.osgi.framework.Bundle;
 * (repeatedly) as the API evolves.
 */
 public class JSDTContentAssistantProcessor extends AbstractContentAssistProcessor {
-	private static final boolean DEBUG;
 	private static final String JSDT_CORE_PLUGIN_ID = "org.eclipse.wst.jsdt.core"; //$NON-NLS-1$
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		//DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	protected String fErrorMessage = null;
 	protected int fJspSourcePosition, fJavaPosition;

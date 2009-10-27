@@ -32,7 +32,6 @@ import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -235,14 +234,14 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	private synchronized Object[] getJSElementsFromNode(Node node, boolean ensureConsistant) {
 				
-		int startOffset = 0;
-		int endOffset = 0;
-		int type = node.getNodeType();
+//		int startOffset = 0;
+//		int endOffset = 0;
+//		int type = node.getNodeType();
 		Object[] result = null;
-		JsTranslation translation = null;
+		//JsTranslation translation = null;
 		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
-			startOffset = ((NodeImpl) node).getStartOffset();
-			endOffset = ((NodeImpl) node).getEndOffset();
+//			startOffset = ((NodeImpl) node).getStartOffset();
+//			endOffset = ((NodeImpl) node).getEndOffset();
 			IJavaScriptUnit unit = getLazyCu(node);
 	        // Genuitec Begin Fix 6149: Exception opening external HTML file
 			if (unit == null) {

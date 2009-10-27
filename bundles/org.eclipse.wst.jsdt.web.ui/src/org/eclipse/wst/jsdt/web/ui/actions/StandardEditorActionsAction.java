@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -165,7 +165,6 @@ public class StandardEditorActionsAction implements IObjectActionDelegate {
 		if (nodes == null || nodes.length == 0) {
 			return;
 		}
-		StringBuffer text = new StringBuffer();
 		int startOfPaste = -1;
 		IStructuredDocument doc = null;
 		/* Figure out where to paste the content */

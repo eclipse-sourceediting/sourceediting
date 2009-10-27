@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ package org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline;
 
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
@@ -23,8 +22,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.internal.InternalHandlerUtil;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor;
 import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
@@ -63,9 +60,9 @@ public class JsMenuListener extends XMLNodeActionManager implements IMenuListene
 		return null;
 	}
 	
-	private IWorkbenchSite getWorkbenchSite() {
-		return InternalHandlerUtil.getActiveSite(fTreeViewer);
-	}
+//	private IWorkbenchSite getWorkbenchSite() {
+//		return InternalHandlerUtil.getActiveSite(fTreeViewer);
+//	}
 	
 	public void menuAboutToShow(IMenuManager manager) {
 		ISelection selection = fTreeViewer.getSelection();
@@ -78,7 +75,7 @@ public class JsMenuListener extends XMLNodeActionManager implements IMenuListene
 					javaCount++;
 				}
 			}
-			IContributionItem[] items = manager.getItems();
+			//IContributionItem[] items = manager.getItems();
 // manager.add(new Separator(IContextMenuConstants.GROUP_NEW));
 // menu.add(new GroupMarker(IContextMenuConstants.GROUP_GOTO));
 // menu.add(new Separator(IContextMenuConstants.GROUP_OPEN));
