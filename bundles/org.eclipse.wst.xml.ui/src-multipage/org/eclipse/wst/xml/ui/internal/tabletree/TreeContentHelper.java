@@ -443,7 +443,14 @@ public class TreeContentHelper {
 				if (list.get(0) instanceof Node)
 				{
 					Node n = (Node) list.get(0);
-					result = n.getTextContent();
+					for (Node node = n.getFirstChild(); node != null; node = node.getNextSibling()) {
+						if (node.getNodeType() == Node.TEXT_NODE) {
+							String text = node.getNodeValue();
+							if(!((text == null) || (text.trim().length() == 0))) {
+								result = text.trim();
+							}
+						}
+					}
 				}
 			}	
 		}
