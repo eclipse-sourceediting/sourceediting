@@ -34,10 +34,10 @@ import org.osgi.framework.Bundle;
 */
 public class JSDTContentAssistantProcessor extends AbstractContentAssistProcessor {
 	private static final String JSDT_CORE_PLUGIN_ID = "org.eclipse.wst.jsdt.core"; //$NON-NLS-1$
-	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
-		//DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
+//	static {
+//		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
+//		//DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+//	}
 	protected String fErrorMessage = null;
 	protected int fJspSourcePosition, fJavaPosition;
 	private JSDTProposalCollector fProposalCollector;
