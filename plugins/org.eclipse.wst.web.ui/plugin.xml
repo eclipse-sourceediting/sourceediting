@@ -59,6 +59,14 @@
   </extension>
   
 	<extension
+    point="org.eclipse.ui.ide.markerResolution">
+	<markerResolutionGenerator
+      markerType="org.eclipse.wst.common.modulecore.ModuleCoreValidatorMarker"
+      class="org.eclipse.wst.web.ui.internal.ModuleCoreValidatorMarkerResolutions">
+    </markerResolutionGenerator>
+  </extension>
+
+	<extension
          point="org.eclipse.ui.perspectives">
       <perspective
             name="%perspective.name"
