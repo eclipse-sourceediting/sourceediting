@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -263,19 +262,17 @@ public class JSPIndexManager {
 					}
 					IFile file = filesToBeProcessed[lastFileCursor];
 					try {
-						IProject project = file.getProject();
-						if (project != null) {
-							IJavaProject jproject = JavaCore.create(project);
-							if (jproject.exists()) {
-								ss.addJspFile(file);
-								if (DEBUG) {
-									System.out.println("JSPIndexManager Job added file: " + file.getName()); //$NON-NLS-1$
-								}
-							}
+						IJavaProject project = JavaCore.create(file.getProject());
+						if (project.exists()) {
+							ss.addJspFile(file);
 							// JSP Indexer processing n files
 							processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed.length - lastFileCursor))});
 							monitor.subTask(processingNFiles + " - " + file.getName()); //$NON-NLS-1$
 							monitor.worked(1);
+
+							if (DEBUG) {
+								System.out.println("JSPIndexManager Job added file: " + file.getName()); //$NON-NLS-1$
+							}
 						}
 					}
 					catch (Exception e) {
