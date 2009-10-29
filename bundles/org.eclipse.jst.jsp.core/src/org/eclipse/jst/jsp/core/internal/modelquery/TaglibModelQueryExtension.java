@@ -37,22 +37,26 @@ public class TaglibModelQueryExtension extends ModelQueryExtension {
 		CMNode[] nodes = EMPTY_CMNODE_ARRAY;
 		ArrayList nodeList = new ArrayList();
 		
+		//only returns anything if looking for child nodes
 		if(parentElement instanceof IDOMElement) {
 			//get the trackers
 			IDOMElement elem = (IDOMElement)parentElement;
 			IStructuredDocument structDoc = elem.getModel().getStructuredDocument();
 			TLDCMDocumentManager manager = TaglibController.getTLDCMDocumentManager(structDoc);
-			List trackers = manager.getCMDocumentTrackers(elem.getStartOffset());
-			
-			//for each tracker add each of its elements to the node list
-			for(int trackerIndex = 0; trackerIndex < trackers.size(); ++trackerIndex) {
-				CMNamedNodeMap elements = ((TaglibTracker)trackers.get(trackerIndex)).getElements();
-				for(int elementIndex = 0; elementIndex < elements.getLength(); ++elementIndex) {
-					nodeList.add(elements.item(elementIndex));
+
+			if(manager != null) {
+				List trackers = manager.getCMDocumentTrackers(elem.getStartOffset());
+				
+				//for each tracker add each of its elements to the node list
+				for(int trackerIndex = 0; trackerIndex < trackers.size(); ++trackerIndex) {
+					CMNamedNodeMap elements = ((TaglibTracker)trackers.get(trackerIndex)).getElements();
+					for(int elementIndex = 0; elementIndex < elements.getLength(); ++elementIndex) {
+						nodeList.add(elements.item(elementIndex));
+					}
 				}
+				
+				nodes = (CMNode[])nodeList.toArray(new CMNode[nodeList.size()]);
 			}
-			
-			nodes = (CMNode[])nodeList.toArray(new CMNode[nodeList.size()]);
 		}
 		
 		return nodes;
