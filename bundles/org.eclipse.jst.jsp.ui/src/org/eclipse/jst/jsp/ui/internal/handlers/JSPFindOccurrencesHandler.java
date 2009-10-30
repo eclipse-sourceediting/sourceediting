@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.ui.internal.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jst.jsp.ui.internal.java.search.JSPFindOccurrencesProcessor;
 import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesProcessor;
 import org.eclipse.wst.sse.ui.internal.handlers.FindOccurrencesHandler;
 
@@ -24,11 +25,8 @@ public class JSPFindOccurrencesHandler extends FindOccurrencesHandler {
 			fProcessors = new ArrayList();
 			HTMLFindOccurrencesProcessor htmlProcessor = new HTMLFindOccurrencesProcessor();
 			fProcessors.add(htmlProcessor);
-//			 temporary, workaround to disable function, since using the function 
-//			 can easily cause deadlock to occur.
-//					 See https://bugs.eclipse.org/bugs/show_bug.cgi?id=103662
-//			JSPFindOccurrencesProcessor jspProcessor = new JSPFindOccurrencesProcessor();
-//			fProcessors.add(jspProcessor);
+			JSPFindOccurrencesProcessor jspProcessor = new JSPFindOccurrencesProcessor();
+			fProcessors.add(jspProcessor);
 		}
 		return fProcessors;
 	}

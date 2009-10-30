@@ -12,10 +12,12 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.search;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorPart;
@@ -25,7 +27,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
 
@@ -55,8 +56,17 @@ public class OccurrencesSearchViewPage extends AbstractTextSearchViewPage {
 	 */
 	protected void configureTableViewer(TableViewer viewer) {
 
-		// pa_TODO need sorter?
-		viewer.setLabelProvider(new BasicSearchLabelProvider());
+		//sort results by line number, low to high
+		viewer.setComparator(new ViewerComparator() {
+			public int compare(Viewer v, Object obj1, Object obj2) {
+				BasicSearchMatchElement elem1= (BasicSearchMatchElement) obj1;
+				BasicSearchMatchElement elem2= (BasicSearchMatchElement) obj2;
+				return elem1.getLineNum() - elem2.getLineNum();
+			}
+		});
+		
+		//allow for formated labels
+		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new BasicSearchLabelProvider(this)));
 		this.fContentProvider = new OccurrencesContentProvider();
 		viewer.setContentProvider(this.fContentProvider);
 	}
@@ -91,50 +101,27 @@ public class OccurrencesSearchViewPage extends AbstractTextSearchViewPage {
 	}
 
 	/**
-	 * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#getDisplayedMatches(java.lang.Object)
+	 * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#showMatch(org.eclipse.search.ui.text.Match,
+	 *      int, int)
 	 */
-	public Match[] getDisplayedMatches(Object element) {
-		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=2640
-		// we only ever show one at a time, the element passed in is the match
-		// super was returning null
-		return new Match[]{(Match) element};
-	}
-
-	private void show(IMarker marker) {
-
-		IResource resource = marker.getResource();
-		if (resource == null || !resource.exists())
-			return;
-
+	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate) throws PartInitException {
+		BasicSearchMatchElement element = (BasicSearchMatchElement) match.getElement();
+		
 		IWorkbenchPage activePage = getActivePage();
 		try {
 			if (activePage != null) {
-
 				// open editor if needed
-				IDE.openEditor(getActivePage(), marker);
-
+				IDE.openEditor(getActivePage(), element.getFile());
+				//set the selection in the open editor
 				IEditorPart editor = activePage.getActiveEditor();
-				if (editor != null) {
-					IGotoMarker gotoMarker = (IGotoMarker) editor.getAdapter(IGotoMarker.class);
-					if (gotoMarker != null)
-						gotoMarker.gotoMarker(marker);
-				}
-
+				if (activate)
+					editor.getSite().getPage().activate(editor);
+				editor.getEditorSite().getSelectionProvider().setSelection(
+					new TextSelection(currentOffset, currentLength));
 			}
 		} catch (PartInitException e) {
 			// possible exception trying to open editor
 			Logger.logException(e);
-		}
-	}
-
-	/**
-	 * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#showMatch(org.eclipse.search.ui.text.Match,
-	 *      int, int)
-	 */
-	protected void showMatch(Match match, int currentOffset, int currentLength) throws PartInitException {
-		Object o = match.getElement();
-		if (o instanceof IMarker) {
-			show((IMarker) o);
 		}
 	}
 }

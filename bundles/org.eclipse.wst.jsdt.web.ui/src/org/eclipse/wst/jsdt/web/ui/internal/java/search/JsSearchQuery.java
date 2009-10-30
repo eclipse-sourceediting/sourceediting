@@ -56,7 +56,6 @@ public class JsSearchQuery extends BasicSearchQuery {
 	
 	
 	protected IStatus doQuery() {
-		clearMatches();
 		IStatus status = Status.OK_STATUS;
 		try {
 			JsSearchSupport support = JsSearchSupport.getInstance();

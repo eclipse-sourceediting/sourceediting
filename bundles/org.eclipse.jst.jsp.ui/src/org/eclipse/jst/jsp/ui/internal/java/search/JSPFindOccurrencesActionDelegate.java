@@ -29,11 +29,8 @@ public class JSPFindOccurrencesActionDelegate extends FindOccurrencesActionDeleg
 			fProcessors = new ArrayList();
 			HTMLFindOccurrencesProcessor htmlProcessor = new HTMLFindOccurrencesProcessor();
 			fProcessors.add(htmlProcessor);
-//			 temporary, workaround to disable function, since using the function 
-//			 can easily cause deadlock to occur.
-//					 See https://bugs.eclipse.org/bugs/show_bug.cgi?id=103662
-//			JSPFindOccurrencesProcessor jspProcessor = new JSPFindOccurrencesProcessor();
-//			fProcessors.add(jspProcessor);
+			JSPFindOccurrencesProcessor jspProcessor = new JSPFindOccurrencesProcessor();
+			fProcessors.add(jspProcessor);
 		}
 		return fProcessors;
 	}

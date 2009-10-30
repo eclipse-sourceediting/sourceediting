@@ -30,6 +30,6 @@ public class JsOccurrencesSearchResult extends OccurrencesSearchResult {
 	
 	
 	public Match[] getMatches() {
-		return ((JsSearchQuery) getQuery()).getMatches();
+		return super.getMatches();
 	}
 }

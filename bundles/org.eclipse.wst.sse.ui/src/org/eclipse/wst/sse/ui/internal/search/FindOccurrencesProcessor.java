@@ -76,7 +76,7 @@ abstract public class FindOccurrencesProcessor {
 	 * @return <code>true</code> if this action can operate on this region
 	 *         type (ITextRegion), otherwise false.
 	 */
-	private boolean enabledForRegionType(String regionType) {
+	protected boolean enabledForRegionType(String regionType) {
 
 		String[] accept = getRegionTypes();
 		for (int i = 0; i < accept.length; i++) {

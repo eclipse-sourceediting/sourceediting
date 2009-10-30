@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,51 +12,104 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.search;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
-import org.eclipse.search.ui.NewSearchUI;
+import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.Match;
-import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 /**
- * @author pavery
+ * Defines a basic search query.  This query does not do anything, it needs to be extended
+ * and the <code>{@link #doQuery()}</code> method needs to be overridden to make the query
+ * actually be functional.
+ *
  */
 public class BasicSearchQuery implements ISearchQuery {
-
-	/** attribute to identify markers added by find occurrences */
-	public static final String ATTR_OCCURRENCES_MARKER = "occurrences_marker"; //$NON-NLS-1$
-
-	private static int LINE_LENGTH_LIMIT = 200;
-
-	/** the file we're searching * */
+	/**
+	 * the file we're searching
+	 */
 	private IFile fFile = null;
-	/** occurrence search matches * */
-	private List fMatches = null;
+	
+	/**
+	 * The result of this query
+	 */
+	private AbstractTextSearchResult fResult = null;
 
+	/**
+	 * <p>Construct a new basic query.</p>
+	 * 
+	 * <p><b>IMPORTANT: </b>It is very important that after
+	 * creating the query and <b>before</b> running the query
+	 * that you call {@link #setResult(AbstractTextSearchResult)}.
+	 * This is not a parameter because typically a search result needs
+	 * a reference to its query and thus the query needs to be constructed
+	 * before its result object can be set.</p>
+	 * 
+	 * @param file the file this query will take place on
+	 */
 	public BasicSearchQuery(IFile file) {
 		this.fFile = file;
-		this.fMatches = new ArrayList();
+	}
+	
+	/**
+	 * Runs the query
+	 * 
+	 * @see org.eclipse.search.ui.ISearchQuery#run(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public IStatus run(IProgressMonitor monitor) {
+		return doQuery();
+	}
+	
+	/**
+	 * public to avoid synthetic method access from inner class
+	 *
+	 * @return
+	 */
+	public IFile getFile() {
+		return this.fFile;
 	}
 
+	/**
+	 * There is no default label for a basic query,
+	 * this should be overridden by implementing classes
+	 * 
+	 * @see org.eclipse.search.ui.ISearchQuery#getLabel()
+	 */
+	public String getLabel() {
+		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * <p>This will be <code>null</code> if {@link #setResult(AbstractTextSearchResult)}
+	 * has not been called yet.</p>
+	 * 
+	 * @see org.eclipse.search.ui.ISearchQuery#getSearchResult()
+	 */
+	public ISearchResult getSearchResult() {
+		return fResult;
+	}
+
+	/**
+	 * Adds a match to the results of this query.
+	 * 
+	 * <p><b>IMPORTANT: </b>It is very important that after
+	 * creating the query and <b>before</b> running the query
+	 * that you call {@link #setResult(AbstractTextSearchResult)}.
+	 * This is not a parameter because typically a search result needs
+	 * a reference to its query and thus the query needs to be constructed
+	 * before its result object can be set.</p>
+	 * 
+	 * @param document the document the match is being added too
+	 * @param matchStart the start character of the match
+	 * @param matchEnd the end character of the match
+	 */
 	public void addMatch(IDocument document, int matchStart, int matchEnd) {
 
 		try {
@@ -64,24 +117,21 @@ public class BasicSearchQuery implements ISearchQuery {
 			int lineStart = document.getLineOffset(lineNumber);
 			int lineLength = document.getLineLength(lineNumber);
 
-			String searchResultString = document.get().substring(lineStart, lineStart + lineLength).trim();
-
-			// create search marker (so annotations show up in editor)
-			IMarker marker = createSearchMarker(matchStart, matchEnd, lineNumber, searchResultString);
-
-			addMatch(new Match(marker, Match.UNIT_CHARACTER, matchStart, matchStart + matchEnd));
-
+			String elementMessage = document.get().substring(lineStart, lineStart + lineLength);
+			
+			//add the match to the result
+				BasicSearchMatchElement element = new BasicSearchMatchElement(fFile, lineNumber, lineStart, elementMessage);
+				fResult.addMatch(new Match(element, Match.UNIT_CHARACTER, matchStart, matchEnd - matchStart));
+			
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 	}
 
-	private void addMatch(Match match) {
-		if (match != null)
-			this.fMatches.add(match);
-	}
-
 	/**
+	 * <p><i>Note: </i> as of yet no testing has gone into whether this query
+	 * can be re-run or not or what that even entails.<p>
+	 * 
 	 * @see org.eclipse.search.ui.ISearchQuery#canRerun()
 	 */
 	public boolean canRerun() {
@@ -89,129 +139,48 @@ public class BasicSearchQuery implements ISearchQuery {
 	}
 
 	/**
+	 * <p>This query can be run in the background</p>
+	 * 
 	 * @see org.eclipse.search.ui.ISearchQuery#canRunInBackground()
 	 */
 	public boolean canRunInBackground() {
 		return true;
 	}
-
-	public void clearMatches() {
-		this.fMatches.clear();
-	}
-
-	protected IMarker createSearchMarker(int matchStart, int matchEnd, int lineNumber, String searchResultString) {
-
-		IMarker marker = null;
-		try {
-			if (getFile() != null) {
-
-				marker = getFile().createMarker(NewSearchUI.SEARCH_MARKER);
-				HashMap attributes = new HashMap(6);
-
-				MarkerUtilities.setCharStart(attributes, matchStart);
-				MarkerUtilities.setCharEnd(attributes, matchEnd);
-				MarkerUtilities.setLineNumber(attributes, lineNumber);
-
-				// this might be bad if line of text is VERY long?
-				if (searchResultString.length() > LINE_LENGTH_LIMIT)
-					searchResultString = searchResultString.substring(0, LINE_LENGTH_LIMIT) + "..."; //$NON-NLS-1$
-				MarkerUtilities.setMessage(attributes, searchResultString);
-
-				// so we can remove them later
-				attributes.put(ATTR_OCCURRENCES_MARKER, new Boolean(true));
-
-				marker.setAttributes(attributes);
-			}
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
-		return marker;
-	}
-
-	private void deleteOccurrencesMarkers() {
-
-		final List removals = new ArrayList();
-		try {
-			// clear all old find occurrences markers
-			IMarker[] searchMarkers = fFile.findMarkers(NewSearchUI.SEARCH_MARKER, false, IResource.DEPTH_ZERO);
-			for (int i = 0; i < searchMarkers.length; i++) {
-				Object o = searchMarkers[i].getAttribute(BasicSearchQuery.ATTR_OCCURRENCES_MARKER);
-				if (o != null && ((Boolean) o).booleanValue() == true)
-					removals.add(searchMarkers[i]);
-
-			}
-
-			if (removals.size() > 0) {
-				IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-					public void run(IProgressMonitor monitor) throws CoreException {
-						for (int i = 0; i < removals.size(); i++)
-							((IMarker) removals.get(i)).delete();
-					}
-				};
-				// BUG158846 - deadlock if lock up entire workspace, so only lock
-				// up the file we are searching on
-				ISchedulingRule markerRule = ResourcesPlugin.getWorkspace().getRuleFactory().markerRule(fFile);
-				ResourcesPlugin.getWorkspace().run(runnable, markerRule, IWorkspace.AVOID_UPDATE, null); 
-			}
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
-	}
-
+	
 	/**
-	 * The acutal work of the query. Will be run in a background Job
-	 * automatically if canRunInBackground(..) returns true.
+	 * <p>The actual work of the query, called by {@link #run(IProgressMonitor)}</p>
+	 * <p><i>Note: </i>This method should be overridden by implementers so that their query
+	 * will actually do something</p>
 	 * 
-	 * @return
+	 * @return the status of the query when it has finished
 	 */
 	protected IStatus doQuery() {
 		return Status.OK_STATUS;
 	}
-
-	/*
-	 * public to avoid synthetic method access from inner class
-	 */
-	public IFile getFile() {
-		return this.fFile;
-	}
-
+	
 	/**
-	 * @see org.eclipse.search.ui.ISearchQuery#getLabel()
+	 * @return the total number of matches this query found
 	 */
-	public String getLabel() {
-		return ""; //$NON-NLS-1$
+	protected int getMatchCount() {
+		return fResult.getMatchCount();
 	}
-
-	public Match[] getMatches() {
-		// get rid of the old markers
-		if(fFile.exists()) {
-			deleteOccurrencesMarkers();
-			doQuery();
-		}
-		return (Match[]) this.fMatches.toArray(new Match[this.fMatches.size()]);
-	}
-
+	
 	/**
-	 * @see org.eclipse.search.ui.ISearchQuery#getSearchResult()
-	 */
-	public ISearchResult getSearchResult() {
-		return null;
-	}
-
-	/**
-	 * used in search result display labels
+	 * <p>used in search result display labels, should be overridden by implementers</p>
 	 * 
 	 * @return
 	 */
 	protected String getSearchText() {
 		return ""; //$NON-NLS-1$
 	}
-
+	
 	/**
-	 * @see org.eclipse.search.ui.ISearchQuery#run(org.eclipse.core.runtime.IProgressMonitor)
+	 * <p>This <b>needs</b> to be called after constructing
+	 * the query but before running it, see note on {@link #BasicSearchQuery(IFile)}</p>
+	 * 
+	 * @param result the result this query will use to store its results
 	 */
-	public IStatus run(IProgressMonitor monitor) {
-		// defer to "get(...)"
-		return Status.OK_STATUS;
+	protected void setResult(AbstractTextSearchResult result) {
+		this.fResult = result;
 	}
 }

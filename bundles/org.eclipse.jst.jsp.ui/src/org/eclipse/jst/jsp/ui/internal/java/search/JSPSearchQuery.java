@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.java.search;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -18,8 +20,6 @@ import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
 
 /**
@@ -34,6 +34,7 @@ public class JSPSearchQuery extends BasicSearchQuery {
 	
 	public JSPSearchQuery(IFile file, IJavaElement element) {
 		super(file);
+		super.setResult(new JSPOccurrencesSearchResult(this));
 		this.fElement = element;
 	}
 	
@@ -47,9 +48,6 @@ public class JSPSearchQuery extends BasicSearchQuery {
 	}
 	
 	protected IStatus doQuery() {
-		
-		clearMatches();
-		
 		IStatus status = Status.OK_STATUS;
 		try {
 			JSPSearchSupport support = JSPSearchSupport.getInstance();
@@ -73,8 +71,9 @@ public class JSPSearchQuery extends BasicSearchQuery {
 	 * @see org.eclipse.search.ui.ISearchQuery#getLabel()
 	 */
 	public String getLabel() {
-		String[] args = {getSearchText(), getOccurrencesCountText(), getFilename()};
-		return NLS.bind(JSPUIMessages.OccurrencesSearchQuery_0, args);
+		String label = JSPUIMessages.OccurrencesSearchQuery_0; //$NON-NLS-1$
+		String[] args = {getSearchText(), "" + super.getMatchCount(), getFilename()};
+		return MessageFormat.format(label, args);
 	}
 
 	private String getFilename() {
@@ -83,15 +82,11 @@ public class JSPSearchQuery extends BasicSearchQuery {
 			filename = getFile().getName();
 		return filename;
 	}
-	
-	private String getOccurrencesCountText() {
-		String count = ""; //$NON-NLS-1$
-		// pa_TODO make dynamic
-		return count;
-	}
 
 	protected String getSearchText() {
-		return fElement.getElementName();
+		if(fElement != null)
+			return fElement.getElementName();
+		return "";
 	}
 	
 	public boolean canRerun() {
@@ -105,13 +100,4 @@ public class JSPSearchQuery extends BasicSearchQuery {
 	public boolean canRunInBackground() {
 		return true;
 	}
-
-	/**
-	 * @see org.eclipse.search.ui.ISearchQuery#getSearchResult()
-	 */
-	public ISearchResult getSearchResult() {
-		
-		return new JSPOccurrencesSearchResult(this);
-	}
-
 }

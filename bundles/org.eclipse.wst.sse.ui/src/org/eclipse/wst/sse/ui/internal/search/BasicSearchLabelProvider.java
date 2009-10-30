@@ -1,75 +1,154 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.search;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 
-
+import com.ibm.icu.text.MessageFormat;
 
 /**
- * Basic label provider that just provides an image and default text.
+ * <p>The label provider designed for use with <code>BasicSearchMatchElement</code><p>
  * 
- * @author pavery
+ * <p>Displays in the format of:<br/>
+ * lineNum: Message (# matches)</br>
+ * 1: <a></a> (2 matches)</p>
  */
-public class BasicSearchLabelProvider implements ILabelProvider {
-
-	public void addListener(ILabelProviderListener listener) {
-		// do nothing
+public class BasicSearchLabelProvider extends LabelProvider implements IStyledLabelProvider {
+	/**
+	 * ID of match highlighting background color
+	 */
+	private static final String MATCH_BG_ID = "org.eclipse.wst.sse.ui.search.MATCH_BG";
+	
+	//register the match highlighting background color once
+	static {
+		JFaceResources.getColorRegistry().put(MATCH_BG_ID, new RGB(206, 204, 247));
 	}
+	
+	/**
+	 * Match highlighting background color styler
+	 */
+	private static final Styler HIGHLIGHT_WRITE_STYLE= StyledString.createColorRegistryStyler(null, MATCH_BG_ID);
+	
+	
+	/**
+	 * Need the page if want to determine the number of matches, but this can be <code>null</code>
+	 */
+	private AbstractTextSearchViewPage fPage;
 
-	public void dispose() {
-		// do nothing
+	/**
+	 * <p>Construct the provider without a <code>AbstractTextSearchViewPage</code><p>
+	 * <p><b>NOTE:</b>If this constructor is used then the provider will not be able to determine
+	 * the number of matches that are all on the same line for a given element</p>
+	 */
+	public BasicSearchLabelProvider() {
+		this(null);
 	}
-
+	
+	/**
+	 * <p>Construct the provider with a <code>AbstractTextSearchViewPage</code> so that the
+	 * number of matches that are all on the same line for a given element can be determined.</p>
+	 * 
+	 * @param page Will be used to determine the number of matches that are all on the same line
+	 */
+	public BasicSearchLabelProvider(AbstractTextSearchViewPage page) {
+		fPage= page;
+	}
+	
+	/**
+	 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+	 */
 	public Image getImage(Object element) {
 		return EditorPluginImageHelper.getInstance().getImage(EditorPluginImages.IMG_OBJ_OCC_MATCH);
 	}
+	
+	/**
+	 * <p><b>Note:</b> Because this class implements <code>IStyledLabelProvider</code> the <code>getStyledText</code>
+	 * function should be being called and not this one, but better save then sorry</p>
+	 * 
+	 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+	 * @see org.eclipse.wst.sse.ui.internal.search.BasicSearchLabelProvider#getStyledText(Object)
+	 */
+	public final String getText(Object element) {
+		return getStyledText(element).getString();
+	}
+	
+	/**
+	 * <p>Given a <code>Match</code> object containing a <code>BasicSearchMatchElement</code> element
+	 * returns a <code>StyledString</code> in the form of:</p>
+	 * 
+	 * <p>lineNum: Message (# matches)</br>
+	 * 1: <a></a> (2 matches)</p>
+	 * 
+	 * @see org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider#getStyledText(java.lang.Object)
+	 */
+	public StyledString getStyledText(Object obj) {
+		StyledString styledText = new StyledString();
+		BasicSearchMatchElement element = null;
+		if (obj instanceof Match) {
+			Match match = (Match) obj;
 
-	public String getText(Object element) {
-
-		StringBuffer text = new StringBuffer();
-		if (element instanceof Match) {
-			Match m = (Match) element;
-
-			IMarker marker = (IMarker) m.getElement();
-			if (marker.exists()) {
-				String resultText = ""; //$NON-NLS-1$
-				try {
-					resultText = (String) marker.getAttribute(IMarker.MESSAGE);
-				} catch (CoreException e) {
-					Logger.logException(e);
-				}
-				text.append(resultText);
+			if(match.getElement() instanceof BasicSearchMatchElement) {
+				element = (BasicSearchMatchElement) match.getElement();
 			}
-		} else {
-			text.append(element.toString());
+		} else if(obj instanceof BasicSearchMatchElement) {
+			element = (BasicSearchMatchElement)obj;
 		}
-		return text.toString();
-	}
-
-	public boolean isLabelProperty(Object element, String property) {
-		return false;
-	}
-
-	public void removeListener(ILabelProviderListener listener) {
-		// do nothing
+		
+		//get the match count if possible
+		int matchCount = 0;
+		Match[] matches = new Match[0];
+		if(fPage != null) {
+			matches = fPage.getInput().getMatches(obj);
+			matchCount = matches.length;
+		}
+		
+		//if everything was of the right type create our formated message,
+		//else use the toString of the given object for the message
+		if(element != null) {
+			String message = element.getLine().trim(); //$NON-NLS-1$
+			int trimedAmount = element.getLine().indexOf(message);
+			String lineNum = element.getLineNum() + 1 + ": "; //$NON-NLS-1$
+			
+			styledText.append(lineNum, StyledString.QUALIFIER_STYLER);
+			styledText.append(message);
+			
+			//get the match count if possible
+			for(int i = 0; i < matchCount; ++i) {
+				int offset = matches[i].getOffset() - element.geLineOffset() + lineNum.length() - trimedAmount;
+				styledText.setStyle(offset, matches[i].getLength(), HIGHLIGHT_WRITE_STYLE);
+			}
+			
+		} else {
+			styledText.append(obj.toString());
+		}
+		
+		//append the match count if its worth appending
+		if (matchCount > 1) {
+			String matchesMsg = " " + MessageFormat.format(
+				SSEUIMessages.TextSearchLabelProvider_matchCountFormat,
+				new Object[] { new Integer(matchCount) });
+			styledText.append(matchesMsg, StyledString.COUNTER_STYLER);
+		}
+	
+		return styledText;
 	}
 }

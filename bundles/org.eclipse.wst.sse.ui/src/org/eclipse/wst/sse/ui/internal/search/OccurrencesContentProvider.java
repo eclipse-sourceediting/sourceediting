@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,8 +26,6 @@ public class OccurrencesContentProvider implements IStructuredContentProvider {
 	private TableViewer fTableViewer = null;
 
 	public void clear() {
-		if (this.fResult != null)
-			this.fResult.clearMatches();
 		if (this.fTableViewer != null)
 			this.fTableViewer.refresh();
 	}
@@ -67,7 +65,7 @@ public class OccurrencesContentProvider implements IStructuredContentProvider {
 	public Object[] getElements(Object inputElement) {
 
 		this.fResult = (OccurrencesSearchResult) inputElement;
-		return this.fResult.getMatches();
+		return this.fResult.getElements();
 	}
 
 	/**

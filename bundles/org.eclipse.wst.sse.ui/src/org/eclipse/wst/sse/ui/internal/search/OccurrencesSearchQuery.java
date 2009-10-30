@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -105,9 +104,7 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 				Logger.logException(e);
 			}
 		}
-	}
-
-	// end inner class FindRegions
+	}// end inner class FindRegions
 
 
 	private IStructuredDocument fDocument = null;
@@ -116,29 +113,39 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 
 	public OccurrencesSearchQuery(IFile file, IStructuredDocument document, String regionText, String regionType) {
 		super(file);
+		super.setResult(new OccurrencesSearchResult(this));
 		this.fDocument = document;
 		this.fRegionText = regionText;
 		this.fRegionType = regionType;
 	}
 
-	public boolean canRerun() {
-		return false;
-	}
-
+	/**
+	 * <p><i>Note: </i>Some investigation needs to be put into how to do this safely</p>
+	 * 
+	 * @see org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery#canRunInBackground()
+	 */
 	public boolean canRunInBackground() {
-		// pa_TODO investigate what is required to do this safely
 		return false;
 	}
+	
+	/**
+	 * <p>The label format is:<br/>
+	 * searchText - # occurrences in file</p>
+	 * 
+	 * @see org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery#getLabel()
+	 */
+	public String getLabel() {
+		String label = SSEUIMessages.OccurrencesSearchQuery_0; //$NON-NLS-1$
+		String[] args = {getSearchText(), "" + super.getMatchCount(), getFilename()};
+		return MessageFormat.format(label, args);
+	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * This query looks for all occurrences of the selected string
 	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery#doQuery()
 	 */
 	protected IStatus doQuery() {
-
-		clearMatches();
-
 		IStatus status = Status.OK_STATUS;
 		FindRegions findRegions = new FindRegions(this.fDocument, this.fRegionText, this.fRegionType);
 		try {
@@ -152,31 +159,14 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 		return status;
 	}
 
+	protected String getSearchText() {
+		return this.fRegionText;
+	}
+	
 	private String getFilename() {
 		String filename = SSEUIMessages.OccurrencesSearchQuery_2; //$NON-NLS-1$ "file"
 		if (getFile() != null)
 			filename = getFile().getName().toString();
 		return filename;
-	}
-
-	public String getLabel() {
-		String label = SSEUIMessages.OccurrencesSearchQuery_0; //$NON-NLS-1$
-		String[] args = {getSearchText(), getOccurrencesCountText(), getFilename()};
-		return MessageFormat.format(label, args);
-	}
-
-	/**
-	 * @return
-	 */
-	private String getOccurrencesCountText() {
-		return "" + this.getMatches().length; //$NON-NLS-1$
-	}
-
-	public ISearchResult getSearchResult() {
-		return new OccurrencesSearchResult(this);
-	}
-
-	protected String getSearchText() {
-		return this.fRegionText;
 	}
 }

@@ -24,6 +24,6 @@ public class JSPOccurrencesSearchResult extends OccurrencesSearchResult {
 	}
 	
 	public Match[] getMatches() {
-		return ((JSPSearchQuery)getQuery()).getMatches();
+		return super.getMatches();
 	}
 }
