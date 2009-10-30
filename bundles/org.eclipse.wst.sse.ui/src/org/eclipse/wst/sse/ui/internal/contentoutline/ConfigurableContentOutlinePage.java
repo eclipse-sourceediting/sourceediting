@@ -160,12 +160,14 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 				boolean isLinked = getConfiguration().isLinkedWithEditor(getTreeViewer());
 				if (isLinked) {
-					try {
-						fIsReceivingSelection = true;
-						getTreeViewer().setSelection(validContentSelection, true);
-					}
-					finally {
-						fIsReceivingSelection = false;
+					if (!getTreeViewer().getSelection().equals(validContentSelection)) {
+						try {
+							fIsReceivingSelection = true;
+							getTreeViewer().setSelection(validContentSelection, true);
+						}
+						finally {
+							fIsReceivingSelection = false;
+						}
 					}
 				}
 			}
