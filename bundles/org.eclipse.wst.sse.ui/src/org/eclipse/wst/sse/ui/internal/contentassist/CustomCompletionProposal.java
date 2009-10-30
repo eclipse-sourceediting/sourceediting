@@ -314,17 +314,6 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 			int newLength = offset - getReplacementOffset();
 			int delta = newLength - fOriginalReplacementLength;
 			fReplacementLength = delta + fOriginalReplacementLength;
-
-			// if it's an attribute value, replacement offset is
-			// going to be one off from the actual cursor offset...
-			try {
-				char firstChar = document.getChar(getReplacementOffset());
-				if (firstChar == '"' || firstChar == '\'')
-					fReplacementLength++;
-			}
-			catch (BadLocationException e) {
-				// just don't increment
-			}
 		}
 		return validated;
 	}
