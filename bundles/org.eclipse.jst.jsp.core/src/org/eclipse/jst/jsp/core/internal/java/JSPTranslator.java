@@ -1186,6 +1186,10 @@ public class JSPTranslator {
 			else if (type != null && (type == DOMRegionContext.XML_TAG_OPEN || type == DOMRegionContext.XML_END_TAG_OPEN)) {
 				translateXMLNode(containerRegion, regions);
 			}
+			else if(type != null && type == DOMRegionContext.XML_CONTENT && region instanceof ITextRegionContainer) {
+				//this case was put in to parse EL that is not in an attribute
+				translateXMLContent((ITextRegionContainer)region);
+			}
 		}
 		// }
 	}
@@ -1248,6 +1252,40 @@ public class JSPTranslator {
 		// other XML jsp tags
 	}
 
+	/**
+	 * This currently only detects EL content and translates it,
+	 * but if other cases arise later then they could be added in here
+	 * 
+	 * @param embeddedContainer the container that may contain EL
+	 */
+	protected void translateXMLContent(ITextRegionContainer embeddedContainer) {
+		ITextRegionList embeddedRegions = embeddedContainer.getRegions();
+		for (int i = 0; i < embeddedRegions.size(); i++) {
+			ITextRegion delim = embeddedRegions.get(i);
+			String type = delim.getType();
+			ITextRegion content = null;
+			
+			// check next region to see if it's EL content
+			if (i + 1 < embeddedRegions.size()) {
+				String regionType = embeddedRegions.get(i + 1).getType();
+				if (regionType == DOMJSPRegionContexts.JSP_EL_CONTENT || regionType == DOMJSPRegionContexts.JSP_VBL_CONTENT)
+					content = embeddedRegions.get(i + 1);
+			}
+			
+			//if found EL content
+			if(content != null) {
+				int contentStart = embeddedContainer.getStartOffset(content);
+				
+				//if the type is EL open then parse the EL
+				//else TODO other things to parse?
+				if (type == DOMJSPRegionContexts.JSP_EL_OPEN || type == DOMJSPRegionContexts.JSP_VBL_OPEN) {
+					fLastJSPType = EXPRESSION;
+					translateEL(embeddedContainer.getText(content), embeddedContainer.getText(delim), fCurrentNode, contentStart, content.getLength());
+				}
+			}
+		}
+	}
+	
 	/**
 	 * translates the various XMLJSP type nodes
 	 * 
