@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentPropertiesManager;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
@@ -66,6 +67,7 @@ public class JSPCorePlugin extends Plugin {
 		// listen for resource changes to update content properties keys
 		JSPFContentPropertiesManager.startup();
 
+		DeploymentDescriptorPropertyCache.start();
 	}
 
 	/*
@@ -74,6 +76,7 @@ public class JSPCorePlugin extends Plugin {
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		DeploymentDescriptorPropertyCache.stop();
 		// stop listenning for resource changes to update content properties
 		// keys
 		JSPFContentPropertiesManager.shutdown();
