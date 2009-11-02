@@ -195,7 +195,18 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 					// only add end tag if one does not already exist or if
 					// add '/' does not create one already
 					IStructuredDocumentRegion endTagStructuredDocumentRegion = parentNode.getEndStructuredDocumentRegion();
-					if (endTagStructuredDocumentRegion == null) {
+					IDOMNode ancestor = parentNode;
+					boolean smartInsertForEnd = false;
+					if(endTagStructuredDocumentRegion != null) {
+						// Look for ancestors by the same name that are missing end tags
+						while((ancestor = (IDOMNode) ancestor.getParentNode()) != null) {
+							if(ancestor.getEndStructuredDocumentRegion() == null && parentNode.getNodeName().equals(ancestor.getNodeName())) {
+								smartInsertForEnd = true;
+								break;
+							}
+						}
+					}
+					if (endTagStructuredDocumentRegion == null || smartInsertForEnd) {
 						StringBuffer toAdd = new StringBuffer(parentNode.getNodeName());
 						if (toAdd.length() > 0) {
 							toAdd.append(">"); //$NON-NLS-1$

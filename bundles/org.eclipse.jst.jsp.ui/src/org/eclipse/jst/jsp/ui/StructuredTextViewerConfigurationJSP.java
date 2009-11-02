@@ -131,7 +131,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
-		else if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.HTML_DECLARATION) {
+		else if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.HTML_DECLARATION || contentType == IJSPPartitions.JSP_DIRECTIVE) {
 			// html and jsp autoedit strategies
 			List allStrategies = new ArrayList(0);
 

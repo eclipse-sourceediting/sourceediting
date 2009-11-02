@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,9 +23,14 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.w3c.dom.Node;
 
 public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
@@ -39,6 +44,8 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 
 			if (model != null) {
 				if (command.text != null) {
+					smartInsertForEndTag(command, document, model);
+
 					if (command.text.equals("%") && isPreferenceEnabled(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS)) { //$NON-NLS-1$
 						// scriptlet - add end %>
 						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
@@ -105,6 +112,58 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 		catch (BadLocationException e) {
 			Logger.logException(e);
 			return false;
+		}
+	}
+	
+	private boolean isCommentNode(IDOMNode node) {
+		return ((node != null) && (node instanceof IDOMElement) && ((IDOMElement) node).isCommentTag());
+	}
+
+	private boolean isDocumentNode(IDOMNode node) {
+		return ((node != null) && (node.getNodeType() == Node.DOCUMENT_NODE));
+	}
+	
+	private void smartInsertForEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
+		try {
+			if (command.text.equals("/") && (document.getLength() >= 1) && document.get(command.offset - 1, 1).equals("<") && HTMLUIPlugin.getDefault().getPreferenceStore().getBoolean(HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
+				IDOMNode parentNode = (IDOMNode) ((IDOMNode) model.getIndexedRegion(command.offset - 1)).getParentNode();
+				if (isCommentNode(parentNode)) {
+					// loop and find non comment node parent
+					while ((parentNode != null) && isCommentNode(parentNode)) {
+						parentNode = (IDOMNode) parentNode.getParentNode();
+					}
+				}
+
+				if (!isDocumentNode(parentNode)) {
+					// only add end tag if one does not already exist or if
+					// add '/' does not create one already
+					IStructuredDocumentRegion endTagStructuredDocumentRegion = parentNode.getEndStructuredDocumentRegion();
+					IDOMNode ancestor = parentNode;
+					boolean smartInsertForEnd = false;
+					if(endTagStructuredDocumentRegion != null) {
+						// Look for ancestors by the same name that are missing end tags
+						while((ancestor = (IDOMNode) ancestor.getParentNode()) != null) {
+							if(ancestor.getEndStructuredDocumentRegion() == null && parentNode.getNodeName().equals(ancestor.getNodeName())) {
+								smartInsertForEnd = true;
+								break;
+							}
+						}
+					}
+					if (endTagStructuredDocumentRegion == null || smartInsertForEnd) {
+						StringBuffer toAdd = new StringBuffer(parentNode.getNodeName());
+						if (toAdd.length() > 0) {
+							toAdd.append(">"); //$NON-NLS-1$
+							String suffix = toAdd.toString();
+							if ((document.getLength() < command.offset + suffix.length()) || (!suffix.equals(document.get(command.offset, suffix.length())))) {
+								command.text += suffix;
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (BadLocationException e) {
+			Logger.logException(e);
 		}
 	}
 }
