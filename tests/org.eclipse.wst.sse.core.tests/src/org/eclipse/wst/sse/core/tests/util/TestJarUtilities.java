@@ -47,7 +47,7 @@ public class TestJarUtilities extends TestCase {
 
 	private static final String[] fExpectedNames = new String[]{".project", "about.html", "build.properties", "plugin.properties", "test.xml"};
 	private static final String TEST_JAR_UTILITIES_PROJECT = "TestJarUtilities";
-	private static final String TEST_JAR_UTILITIES_TESTFILE_JAR = "TestJarUtilities/testfile.jar";
+	private static final String TEST_JAR_UTILITIES_TESTFILE_JAR = "testfile.jar";
 	private static final String TESTFILE_BUNDLE_ENTRY = "resources/testfile.jar";
 
 	static IFile _copyBundleEntryIntoWorkspace(String entryname, String fullPath) throws Exception {
@@ -115,8 +115,6 @@ public class TestJarUtilities extends TestCase {
 		return project;
 	}
 
-	private int running = 0;
-
 	public TestJarUtilities() {
 		super("JarUtilities Tests");
 	}
@@ -155,29 +153,29 @@ public class TestJarUtilities extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(TEST_JAR_UTILITIES_PROJECT);
-		synchronized (TEST_JAR_UTILITIES_PROJECT) {
-			if (!project.isAccessible()) {
-				project = createSimpleProject(TEST_JAR_UTILITIES_PROJECT);
-				copyBundleEntryIntoWorkspace(TESTFILE_BUNDLE_ENTRY, TEST_JAR_UTILITIES_TESTFILE_JAR);
-			}
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(getName());
+		if (!project.isAccessible()) {
+			project = createSimpleProject(getName());
+			copyBundleEntryIntoWorkspace(TESTFILE_BUNDLE_ENTRY, getJarFile().getFullPath().toString());
 		}
-		running++;
 	}
 
+	private IFile getJarFile() {
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(getName());
+		return project.getFile(TEST_JAR_UTILITIES_TESTFILE_JAR);
+	}
+
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#tearDown()
+	 */
 	protected void tearDown() throws Exception {
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(getName());
+		project.delete(true, null);
 		super.tearDown();
-		running--;
-		if (running == 0) {
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(TEST_JAR_UTILITIES_PROJECT);
-			synchronized (TEST_JAR_UTILITIES_PROJECT) {
-				project.delete(true, true, null);
-			}
-		}
 	}
-
+	
 	public void testEntryCountFromFilesystem() {
-		String[] entryNames = JarUtilities.getEntryNames(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR)).getLocation().toString());
+		String[] entryNames = JarUtilities.getEntryNames(getJarFile().getLocation().toString());
 		assertEquals("incorrect number of entries", 5, entryNames.length);
 	}
 
@@ -189,17 +187,17 @@ public class TestJarUtilities extends TestCase {
 
 
 	public void testEntryCountFromWorkspace() {
-		String[] entryNames = JarUtilities.getEntryNames(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR)));
+		String[] entryNames = JarUtilities.getEntryNames(getJarFile());
 		assertEquals("incorrect number of entries", 5, entryNames.length);
 	}
 
 	public void testEntryCountWithDirectoriesFromFilesystem() {
-		String[] entryNames = JarUtilities.getEntryNames(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR)).getLocation().toString(), false);
+		String[] entryNames = JarUtilities.getEntryNames(getJarFile().getLocation().toString(), false);
 		assertEquals("incorrect number of entries", 6, entryNames.length);
 	}
 
 	public void testEntryNamesFromFilesystem() {
-		String[] entryNames = JarUtilities.getEntryNames(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR)).getLocation().toString());
+		String[] entryNames = JarUtilities.getEntryNames(getJarFile().getLocation().toString());
 		Collection names = new ArrayList(Arrays.asList(entryNames));
 
 		String[] expectedNames = new String[]{".project", "about.html", "build.properties", "plugin.properties", "test.xml"};
@@ -209,7 +207,7 @@ public class TestJarUtilities extends TestCase {
 	}
 
 	public void testEntryNamesFromWorkspace() {
-		String[] entryNames = JarUtilities.getEntryNames(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR)));
+		String[] entryNames = JarUtilities.getEntryNames(getJarFile());
 		Collection names = new ArrayList(Arrays.asList(entryNames));
 
 		for (int i = 0; i < fExpectedNames.length; i++) {
@@ -218,7 +216,7 @@ public class TestJarUtilities extends TestCase {
 	}
 
 	public void testEntryNamesWithDirectoriesFromFilesystem() {
-		String[] entryNames = JarUtilities.getEntryNames(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR)).getLocation().toString(), false);
+		String[] entryNames = JarUtilities.getEntryNames(getJarFile().getLocation().toString(), false);
 		Collection names = new ArrayList(Arrays.asList(entryNames));
 
 		String[] expectedNames = new String[]{".project", "about.html", "build.properties", "plugin.properties", "test.xml"};
@@ -229,7 +227,7 @@ public class TestJarUtilities extends TestCase {
 	}
 
 	public void testReadFromFilesystem() {
-		String location = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR)).getLocation().toString();
+		String location = getJarFile().getLocation().toString();
 		String contents = readContents(JarUtilities.getInputStream(location, "plugin.properties"));
 		assertNotNull("no contents loaded", contents);
 		assertTrue("not enough contents read", contents.length() > 40);
@@ -244,7 +242,7 @@ public class TestJarUtilities extends TestCase {
 	}
 
 	public void testReadFromSupportedURL() throws MalformedURLException {
-		String location = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR)).getLocation().toString();
+		String location = getJarFile().getLocation().toString();
 		String contents = readContents(JarUtilities.getInputStream(new URL("jar:file:" + location + "!/plugin.properties")));
 		assertNotNull("no contents loaded", contents);
 		assertTrue("not enough contents read", contents.length() > 0);
@@ -260,7 +258,7 @@ public class TestJarUtilities extends TestCase {
 	}
 
 	public void testReadFromWorkspace() {
-		IResource jar = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(TEST_JAR_UTILITIES_TESTFILE_JAR));
+		IResource jar = getJarFile();
 		String contents = readContents(JarUtilities.getInputStream(jar, "plugin.properties"));
 		assertNotNull("no contents loaded", contents);
 		assertTrue("not enough contents read", contents.length() > 40);
