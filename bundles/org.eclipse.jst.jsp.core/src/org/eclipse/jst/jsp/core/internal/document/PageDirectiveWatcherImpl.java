@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,11 @@ class PageDirectiveWatcherImpl implements PageDirectiveWatcher {
 			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
 			pageDirectiveAdapter.changedLanguage(((IndexedRegion) targetElement).getStartOffset(), languageValue);
 		}
-
+		if (target.hasAttribute("isELIgnored")) { //$NON-NLS-1$
+			String elIgnored = target.getAttribute("isELIgnored"); //$NON-NLS-1$
+			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
+			pageDirectiveAdapter.setElIgnored(elIgnored);
+		}
 
 	}
 

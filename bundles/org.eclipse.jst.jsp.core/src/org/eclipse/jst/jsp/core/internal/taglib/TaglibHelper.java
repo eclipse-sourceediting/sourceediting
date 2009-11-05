@@ -94,12 +94,22 @@ public class TaglibHelper {
 	private Map fTranslationProblems = null;
 	private Set fContainerEntries = null;
 	private IJavaProject fJavaProject;
+	
+	/**
+	 * A cache of class names that the class loader could not find.
+	 * Because the TaglibHelper is destroyed and recreated whenever
+	 * the classpath changes this cache will not become stale when the
+	 * classpath changes.
+	 * See Bug 293992.
+	 */
+	private Set fNotFoundClasses = null;
 
 	public TaglibHelper(IProject project) {
 		setProject(project);
 		fProjectEntries = new HashSet();
 		fContainerEntries = new HashSet();
 		fTranslationProblems = new HashMap();
+		fNotFoundClasses = new HashSet();
 	}
 
 	private boolean isIterationTag(TLDElementDeclaration elementDecl, IStructuredDocument document, ITextRegionCollection customTag, List problems) {
@@ -109,11 +119,19 @@ public class TaglibHelper {
 
 		Class tagClass;
 		try {
-			tagClass = Class.forName(className, true, getClassloader());
-			if (tagClass != null) {
-				return IterationTag.class.isInstance(tagClass.newInstance());
-			}
+			/* check to be sure the class name is not one that can not currently be found on
+			 * the class path.
+			 */
+			if(!fNotFoundClasses.contains(className)) {
+				tagClass = Class.forName(className, true, getClassloader());
+				if (tagClass != null) {
+					return IterationTag.class.isInstance(tagClass.newInstance());
+				}
+			} 
 		} catch (ClassNotFoundException e) {
+			//the class could not be found so add it to the cache
+			fNotFoundClasses.add(className);
+			
 			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, className, true);
 			if (createdProblem != null)
 				problems.add(createdProblem);
@@ -341,11 +359,15 @@ public class TaglibHelper {
 
 		Class teiClass = null;
 		try {
-			/*
-			 * JDT could tell us about it, but loading and calling it would
-			 * still take time
+			/* check to be sure the class name is not one that can not currently be found on
+			 * the class path.
 			 */
-			teiClass = Class.forName(teiClassname, true, loader);
+			if(!fNotFoundClasses.contains(teiClassname)) {
+				/* JDT could tell us about it, but loading and calling it would
+				 * still take time
+				 */
+				teiClass = Class.forName(teiClassname, true, loader);
+			}
 			if (teiClass != null) {
 				Object teiObject = teiClass.newInstance();
 				if (TagExtraInfo.class.isInstance(teiObject)) {
@@ -389,6 +411,9 @@ public class TaglibHelper {
 			}
 		}
 		catch (ClassNotFoundException e) {
+			//the class could not be found so add it to the cache
+			fNotFoundClasses.add(teiClassname);
+			
 			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotFound, JSPCoreMessages.TaglibHelper_0, teiClassname, true);
 			if (createdProblem != null) {
 				problems.add(createdProblem);
