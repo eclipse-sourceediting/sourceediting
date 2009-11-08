@@ -18,6 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.w3c.dom.Document;
 
 import java.util.*;
 
@@ -53,11 +54,11 @@ public class DefaultStaticContext implements StaticContext {
 		_cntxt_item_type = cntxtItemType;
 	}
 
-	public Map get_collections() {
+	public Map<String, List<Document>> get_collections() {
 		return _collections;
 	}
 
-	public void set_collections(Map collections) {
+	public void set_collections(Map<String, List<Document>> collections) {
 		_collections = collections;
 	}
 

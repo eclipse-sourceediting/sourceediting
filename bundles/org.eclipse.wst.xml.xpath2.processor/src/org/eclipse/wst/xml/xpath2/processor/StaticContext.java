@@ -12,9 +12,13 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.xerces.xs.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.w3c.dom.Document;
 
 /**
  * interface to static context
@@ -245,4 +249,15 @@ public interface StaticContext {
 	 * @since 1.1
 	 */
 	public void set_base_uri(String baseuri);
+	
+	/**
+	 * @since 1.1
+	 */
+	public Map<String, List<Document>> get_collections();
+	
+	/**
+	 * @since 1.1
+	 */
+	public void set_collections(Map<String, List<Document>> collections);
+	
 }

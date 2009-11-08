@@ -166,6 +166,7 @@ public class FnFunctionLibrary extends FunctionLibrary {
 
 		// XXX implement functions that generate sequences
 		add_function(new FnDoc());
+		add_function(new FnCollection());
 
 		// context functions
 		add_function(new FnPosition());

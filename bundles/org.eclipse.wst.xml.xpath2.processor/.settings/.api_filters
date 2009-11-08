@@ -164,7 +164,25 @@
         <filter id="403804204">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="get_collections()"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="set_collections(Map)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
                 <message_argument value="expand_elem_type_qname(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="set_collections(Map&lt;String,List&lt;Document&gt;&gt;)"/>
             </message_arguments>
         </filter>
         <filter id="403804204">
@@ -207,6 +225,12 @@
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
                 <message_argument value="element_type_definition(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="set_collections(Map&lt;String,List&gt;)"/>
             </message_arguments>
         </filter>
         <filter id="403804204">
@@ -335,6 +359,11 @@
                 <message_argument value="QName"/>
                 <message_argument value="StaticContext"/>
                 <message_argument value="type_defined(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="set_collections(Map)"/>
             </message_arguments>
         </filter>
         <filter id="1211105284">
