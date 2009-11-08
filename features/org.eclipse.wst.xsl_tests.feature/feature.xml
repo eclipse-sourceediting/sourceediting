@@ -75,14 +75,18 @@
          id="org.eclipse.wst.xsl.exslt.core.tests"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="true"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.wst.xsl.exslt.ui.tests"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="true"/>
+         version="0.0.0"/>
+
+   <plugin
+         id="org.w3c.xqts.testsuite"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
