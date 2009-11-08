@@ -106,7 +106,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		bundle = Platform
-				.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
+				.getBundle("org.w3c.xqts.testsuite");
 
 		if (bundle == null) {
 			System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
