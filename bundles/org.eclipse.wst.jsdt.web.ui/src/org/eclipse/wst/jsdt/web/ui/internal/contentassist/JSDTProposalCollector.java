@@ -60,21 +60,17 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 	 * 
 	 * @param proposal
 	 * @param completion
-	 * @param currentCursorOffset
 	 * @return
 	 */
-	private int calculatePositionAfter(CompletionProposal proposal, String completion, int currentCursorOffset) {
-		// calculate cursor position after
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=118398
-		// int positionAfter = currentCursorOffset+completion.length();
+	private int calculatePositionAfter(CompletionProposal proposal, String completion) {
 		int positionAfter = completion.length();
 		int kind = proposal.getKind();
 		// may need better logic here...
 		// put cursor inside parenthesis if there's params
 		// only checking for any kind of declaration
 		if (kind == CompletionProposal.ANONYMOUS_CLASS_DECLARATION || kind == CompletionProposal.METHOD_DECLARATION || kind == CompletionProposal.POTENTIAL_METHOD_DECLARATION || kind == CompletionProposal.METHOD_REF) {
-			String[] params = Signature.getParameterTypes(String.valueOf(proposal.getSignature()));
-			if (completion.length() > 0 && params.length > 0) {
+			int paramCount = Signature.getParameterCount(proposal.getSignature());
+			if (completion.length() > 0 && paramCount > 0) {
 				positionAfter--;
 			}
 		}
@@ -172,7 +168,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		int length = proposal.getReplaceEnd() - offset;
 		// translate offset from Java > JSP
 		// cursor position after must be calculated
-		int positionAfter = calculatePositionAfter(proposal, completion, offset);
+		int positionAfter = calculatePositionAfter(proposal, completion);
 		// from java proposal
 		IJavaCompletionProposal javaProposal = super.createJavaCompletionProposal(proposal);
 		proposal.getDeclarationSignature();
