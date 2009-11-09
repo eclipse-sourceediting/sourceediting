@@ -21,6 +21,19 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
+
+   <plugin
+         id="org.eclipse.wst.jsdt.web.core.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.wst.jsdt.web.ui.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
    <plugin
          id="org.eclipse.wst.css.core.tests"
          download-size="0"
