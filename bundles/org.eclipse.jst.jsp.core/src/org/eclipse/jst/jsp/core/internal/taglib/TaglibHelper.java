@@ -12,9 +12,11 @@ package org.eclipse.jst.jsp.core.internal.taglib;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
@@ -48,6 +50,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.util.AbstractMemoryListener;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -56,6 +59,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.osgi.service.event.Event;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -75,15 +79,30 @@ public class TaglibHelper {
 	private ClassLoader fLoader = null;
 
 	private IJavaProject fJavaProject;
+	
+	/**
+	 * A cache of class names that the class loader could not find.
+	 * Because the TaglibHelper is destroyed and recreated whenever
+	 * the classpath changes this cache will not become stale
+	 */
+	private Set fNotFoundClasses = null;
+
+	/**
+	 * Used to keep the {@link #fNotFoundClasses} cache clean when memory is low
+	 */
+	private MemoryListener fMemoryListener;
 
 	public TaglibHelper(IProject project) {
 		super();
 		setProject(project);
+		fMemoryListener = new MemoryListener();
+		fMemoryListener.connect();
+		fNotFoundClasses = new HashSet();
 	}
 
 	private boolean isIterationTag(TLDElementDeclaration elementDecl, IStructuredDocument document, ITextRegionCollection customTag, List problems) {
 		String className = elementDecl.getTagclass();
-		if (className == null || className.length() == 0 || fProject == null)
+		if (className == null || className.length() == 0 || fProject == null || fNotFoundClasses.contains(className))
 			return false;
 
 		try {
@@ -92,6 +111,9 @@ public class TaglibHelper {
 				return IterationTag.class.isInstance(tagClass.newInstance());
 			}
 		} catch (ClassNotFoundException e) {
+			//the class could not be found so add it to the cache
+			fNotFoundClasses.add(className);
+
 			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, className, true);
 			if (createdProblem != null)
 				problems.add(createdProblem);
@@ -308,7 +330,7 @@ public class TaglibHelper {
 	 */
 	private void addTEIVariables(IStructuredDocument document, ITextRegionCollection customTag, List results, TLDElementDeclaration decl, String prefix, String uri, List problems) {
 		String teiClassname = decl.getTeiclass();
-		if (teiClassname == null || teiClassname.length() == 0 || fJavaProject == null)
+		if (teiClassname == null || teiClassname.length() == 0 || fJavaProject == null || fNotFoundClasses.contains(teiClassname))
 			return;
 
 		ClassLoader loader = getClassloader();
@@ -363,6 +385,9 @@ public class TaglibHelper {
 			}
 		}
 		catch (ClassNotFoundException e) {
+			//the class could not be found so add it to the cache
+			fNotFoundClasses.add(teiClassname);
+
 			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotFound, JSPCoreMessages.TaglibHelper_0, teiClassname, true);
 			if (createdProblem != null) {
 				problems.add(createdProblem);
@@ -758,5 +783,49 @@ public class TaglibHelper {
 		fLoader = null;
 		fJavaProject = null;
 		fProject = null;
+		fNotFoundClasses = null;
+		fMemoryListener.disconnect();
+		fMemoryListener = null;
+	}
+
+	/**
+	 * <p>A {@link AbstractMemoryListener} that clears the {@link #fNotFoundClasses} cache
+	 * whenever specific memory events are received.</p>
+	 * 
+	 * <p>Events:
+	 * <ul>
+	 * <li>{@link AbstractMemoryListener#SEV_NORMAL}</li>
+	 * <li>{@link AbstractMemoryListener#SEV_SERIOUS}</li>
+	 * <li>{@link AbstractMemoryListener#SEV_CRITICAL}</li>
+	 * </ul>
+	 * </p>
+	 */
+	private class MemoryListener extends AbstractMemoryListener {
+		/**
+		 * <p>Constructor causes this listener to listen for specific memory events.</p>
+		 * <p>Events:
+		 * <ul>
+		 * <li>{@link AbstractMemoryListener#SEV_NORMAL}</li>
+		 * <li>{@link AbstractMemoryListener#SEV_SERIOUS}</li>
+		 * <li>{@link AbstractMemoryListener#SEV_CRITICAL}</li>
+		 * </ul>
+		 * </p>
+		 */
+		MemoryListener() {
+			super(new String[] { SEV_NORMAL, SEV_SERIOUS, SEV_CRITICAL });
+		}
+
+		/**
+		 * On any memory event we handle clear out the project descriptions
+		 * 
+		 * @see org.eclipse.jst.jsp.core.internal.util.AbstractMemoryListener#handleMemoryEvent(org.osgi.service.event.Event)
+		 */
+		protected void handleMemoryEvent(Event event) {
+			/* if running low on memory then this cache can be cleared
+			 * and rebuilt at the expense of processing time
+			 */
+			fNotFoundClasses.clear();
+		}
+
 	}
 }
