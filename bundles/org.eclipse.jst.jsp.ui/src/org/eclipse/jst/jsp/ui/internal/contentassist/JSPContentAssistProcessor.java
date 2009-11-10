@@ -88,6 +88,7 @@ import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.ProposalComparator;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistUtilities;
+import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentModelGenerator;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -1124,5 +1125,17 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.TAG);
 		//don't need to call super here because otherwise we duplicate what the HTMLCOntentAssistProcessor that is running is already doing
+	}
+
+	/**
+	 * Use the embedded content assist processor to determine the content generator
+	 * 
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor#getContentGenerator()
+	 */
+	public XMLContentModelGenerator getContentGenerator() {
+		if (fGenerator == null) {
+			fGenerator = ((AbstractContentAssistProcessor) fPartitionToProcessorMap.get(IHTMLPartitions.HTML_DEFAULT)).getContentGenerator();
+		}
+		return fGenerator;
 	}
 }
