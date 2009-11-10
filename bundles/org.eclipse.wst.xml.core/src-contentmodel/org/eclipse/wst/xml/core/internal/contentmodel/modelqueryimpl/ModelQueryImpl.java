@@ -679,17 +679,6 @@ public class ModelQueryImpl implements ModelQuery
             } 
           }
         }
-              
-        if (contentType == CMElementDeclaration.MIXED ||
-            contentType == CMElementDeclaration.PCDATA || 
-            contentType == CMElementDeclaration.ANY)
-        {
-          CMDataType dataType = rootElementDeclaration.getDataType();
-          if (dataType != null)
-          {
-            v.add(dataType);
-          }                                       
-        }
       }
       return v;
     }   
