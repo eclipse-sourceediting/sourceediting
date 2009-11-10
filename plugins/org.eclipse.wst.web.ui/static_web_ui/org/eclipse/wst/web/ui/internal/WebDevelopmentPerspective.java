@@ -14,6 +14,7 @@ import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.wst.project.facet.IProductConstants;
@@ -38,8 +39,12 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 		super();
 		//If preference exists for alternate view, replace.
 		String viewerID = ProductManager.getProperty(IProductConstants.ID_PERSPECTIVE_HIERARCHY_VIEW);
-		if (viewerID != null)
-			ID_PROJECT_EXPLORER = viewerID;
+		if (viewerID != null) {
+			// verify that the view actually exists
+			if (PlatformUI.getWorkbench().getViewRegistry().find(viewerID) != null){
+				ID_PROJECT_EXPLORER = viewerID;
+			}
+		}
 	}
 
 	/*
