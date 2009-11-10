@@ -12,10 +12,11 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Path;
@@ -275,8 +276,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 				}
 			}
 		}
-		
-		if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+		else if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			try {
 				// Create a new model for Content Assist to operate on. This
 				// will simulate
@@ -721,21 +721,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 			fTemplateContexts.clear();
 			jspResults = super.computeCompletionProposals(viewer, documentPosition);
 		}
-		if (useEmbeddedResults) {
-			if (embeddedResults != null && embeddedResults.length > 0) {
-				List results = new ArrayList();
-				for (int i = 0; i < embeddedResults.length; i++)
-					results.add(embeddedResults[i]);
-				if (jspResults != null) {
-					for (int i = 0; i < jspResults.length; i++)
-						results.add(jspResults[i]);
-				}
-				jspResults = new ICompletionProposal[results.size()];
-				Collections.sort(results, new ProposalComparator());
-				for (int i = 0; i < results.size(); i++)
-					jspResults[i] = (ICompletionProposal) results.get(i);
-
-			}
+		
+		//merge the embedded results
+		if (useEmbeddedResults && embeddedResults != null && embeddedResults.length > 0) {
+			jspResults = merge(jspResults, embeddedResults);
 		}
 		if (jspResults == null)
 			jspResults = EMPTY_PROPOSAL_SET;
@@ -793,22 +782,23 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	}
 
 	/**
-	 * Adds 2 arrays of ICompletionProposals and sorts them with a
-	 * ProposalComparator.
+	 * Adds 2 arrays of {@link ICompletionProposal}s to a {@link TreeSet}
+	 * eliminating duplicates and sorting with a {@link ProposalComparator}
+	 * then returning the new merged, filtered, sorted, array of {@link ICompletionProposal}s.
 	 * 
-	 * @param jspResults
-	 * @param htmlResults
-	 * @return
+	 * @param proposalsOne
+	 * @param proposalsTwo
+	 * @return a new merged, filtered, sorted array of {@link ICompletionProposal}s created from
+	 * the two given arrays of {@link ICompletionProposal}s.
 	 */
-	private ICompletionProposal[] merge(ICompletionProposal[] jspResults, ICompletionProposal[] htmlResults) {
-		List results = new ArrayList();
-		List jsps = Arrays.asList(jspResults);
-		List htmls = Arrays.asList(htmlResults);
+	private ICompletionProposal[] merge(ICompletionProposal[] proposalsOne, ICompletionProposal[] proposalsTwo) {
+		Set results = new TreeSet(new ProposalComparator());
+		List proposalsOneList = Arrays.asList(proposalsOne);
+		List proposalsTwoList = Arrays.asList(proposalsTwo);
 
-		results.addAll(jsps);
-		results.addAll(htmls);
+		results.addAll(proposalsOneList);
+		results.addAll(proposalsTwoList);
 
-		Collections.sort(results, new ProposalComparator());
 		return (ICompletionProposal[]) results.toArray(new ICompletionProposal[results.size()]);
 	}
 
