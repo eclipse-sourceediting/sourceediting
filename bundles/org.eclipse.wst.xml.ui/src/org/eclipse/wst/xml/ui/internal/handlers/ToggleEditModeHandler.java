@@ -100,7 +100,7 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 		ITextEditor textEditor = null;
 		if (editor instanceof ITextEditor)
 			textEditor = (ITextEditor) editor;
-		else {
+		else if (editor != null) {
 			Object o = editor.getAdapter(ITextEditor.class);
 			if (o != null)
 				textEditor = (ITextEditor) o;
