@@ -200,9 +200,8 @@ public class TestJarUtilities extends TestCase {
 		String[] entryNames = JarUtilities.getEntryNames(getJarFile().getLocation().toString());
 		Collection names = new ArrayList(Arrays.asList(entryNames));
 
-		String[] expectedNames = new String[]{".project", "about.html", "build.properties", "plugin.properties", "test.xml"};
-		for (int i = 0; i < expectedNames.length; i++) {
-			assertTrue("missing name of entry: " + entryNames[i], names.contains(entryNames[i]));
+		for (int i = 0; i < fExpectedNames.length; i++) {
+			assertTrue("missing name of entry: " + fExpectedNames[i], names.contains(fExpectedNames[i]));
 		}
 	}
 
@@ -211,7 +210,7 @@ public class TestJarUtilities extends TestCase {
 		Collection names = new ArrayList(Arrays.asList(entryNames));
 
 		for (int i = 0; i < fExpectedNames.length; i++) {
-			assertTrue("missing name of entry: " + entryNames[i], names.contains(entryNames[i]));
+			assertTrue("missing name of entry: " + fExpectedNames[i], names.contains(fExpectedNames[i]));
 		}
 	}
 
