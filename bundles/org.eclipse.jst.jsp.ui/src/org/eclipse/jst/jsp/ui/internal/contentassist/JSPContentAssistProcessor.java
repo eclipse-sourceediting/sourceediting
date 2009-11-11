@@ -11,7 +11,6 @@
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -794,11 +793,15 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	 */
 	private ICompletionProposal[] merge(ICompletionProposal[] proposalsOne, ICompletionProposal[] proposalsTwo) {
 		Set results = new TreeSet(new ProposalComparator());
-		List proposalsOneList = Arrays.asList(proposalsOne);
-		List proposalsTwoList = Arrays.asList(proposalsTwo);
 
-		results.addAll(proposalsOneList);
-		results.addAll(proposalsTwoList);
+		if (proposalsOne != null) {
+			for (int i = 0; i < proposalsOne.length; i++)
+				results.add(proposalsOne[i]);
+		}
+		if (proposalsTwo != null) {
+			for (int i = 0; i < proposalsTwo.length; i++)
+				results.add(proposalsTwo[i]);
+		}
 
 		return (ICompletionProposal[]) results.toArray(new ICompletionProposal[results.size()]);
 	}
