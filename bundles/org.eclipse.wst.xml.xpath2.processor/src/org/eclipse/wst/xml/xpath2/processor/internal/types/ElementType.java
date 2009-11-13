@@ -115,6 +115,11 @@ public class ElementType extends NodeType {
 	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		if (!(_value instanceof PSVIElementNSImpl)) {
+			rs.add(new XSUntypedAtomic(string_value()));
+			return rs;
+		}
 
 		PSVIElementNSImpl typeInfo = (PSVIElementNSImpl) _value;
 

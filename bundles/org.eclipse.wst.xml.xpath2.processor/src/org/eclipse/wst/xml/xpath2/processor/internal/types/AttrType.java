@@ -80,6 +80,11 @@ public class AttrType extends NodeType {
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
+		if (!(_value instanceof PSVIAttrNSImpl)) {
+			rs.add(new XSUntypedAtomic(string_value()));
+			return rs;
+		}
+		
 		PSVIAttrNSImpl psviAttr = (PSVIAttrNSImpl) _value;
 		XSTypeDefinition typeDef = psviAttr.getTypeDefinition();
 
