@@ -35,6 +35,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Comparator;
 
@@ -43,6 +47,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
+import org.eclipse.wst.xml.core.internal.modelhandler.ModelHandlerForXML;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.xpath2.processor.CollationProvider;
 import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
@@ -50,25 +62,27 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.osgi.framework.Bundle;
+import org.w3c.dom.Document;
 
 public class TestBugs extends AbstractPsychoPathTest {
-	
+
 	private static final String URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR = "urn:x-eclipse:xpath20:funky-collator";
-	
-	private Bundle bundle; 
-	
+
+	private Bundle bundle;
+
 	@Override
 	protected void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		super.setUp();
 		bundle = Platform
-		.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
+				.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
 
 	}
 
@@ -239,13 +253,13 @@ public class TestBugs extends AbstractPsychoPathTest {
 	public void testBaseUriBug() throws Exception {
 		// Bug 274725
 
-		//DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		//DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+		// DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		// DocumentBuilder docBuilder = dbf.newDocumentBuilder();
 		loadDOMDocument(new URL("http://www.w3schools.com/xml/note.xml"));
 
 		// for testing this bug, we read the XML document from the web.
 		// this ensures, that base-uri property of DOM is not null.
-		//domDoc = docBuilder.parse("http://www.w3schools.com/xml/note.xml");
+		// domDoc = docBuilder.parse("http://www.w3schools.com/xml/note.xml");
 
 		// we pass XSModel as null for this test case. Otherwise, we would
 		// get an exception.
@@ -369,8 +383,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testLongDataType() throws Exception {
 		// Bug 274952
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -396,8 +409,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testIntDataType() throws Exception {
 		// Bug 275105
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -474,9 +486,8 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSNonPositiveInteger() throws Exception {
 		// Bug 277599
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
-		
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -502,9 +513,8 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSNegativeInteger() throws Exception {
 		// Bug 277602
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
-		
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -530,8 +540,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSShort() throws Exception {
 		// Bug 277608
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -558,8 +567,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSNonNegativeInteger() throws Exception {
 		// Bug 277609
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -586,8 +594,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSUnsignedLong() throws Exception {
 		// Bug 277629
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -614,8 +621,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSPositiveInteger() throws Exception {
 		// Bug 277632
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -642,8 +648,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSByte() throws Exception {
 		// Bug 277639
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -670,8 +675,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSUnsignedInt() throws Exception {
 		// Bug 277642
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -698,8 +702,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testXSUnsignedShort() throws Exception {
 		// Bug 277645
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -722,11 +725,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
 	public void testXSYearMonthDurationMultiply() throws Exception {
 		// Bug 279373
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -747,11 +749,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("P6Y9M", actual);
 	}
-	
+
 	public void testXSYearMonthDurationDivide1() throws Exception {
 		// Bug 279376
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -772,11 +773,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("P1Y11M", actual);
 	}
-	
+
 	public void testXSYearMonthDurationDivide2() throws Exception {
 		// Bug 279376
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -797,11 +797,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("-2.5", actual);
 	}
-	
+
 	public void testXSDayTimeDurationMultiply() throws Exception {
 		// Bug 279377
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -822,11 +821,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("PT4H33M", actual);
 	}
-	
+
 	public void testXSDayTimeDurationDivide() throws Exception {
 		// Bug 279377
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -847,11 +845,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("PT17H40M7S", actual);
 	}
-	
+
 	public void testNegativeZeroDouble() throws Exception {
 		// Bug 279406
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -872,11 +869,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("-0", actual);
 	}
-	
+
 	public void testNegativeZeroFloat() throws Exception {
 		// Bug 279406
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -897,12 +893,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("-0", actual);
 	}
-	
 
 	public void testXSUnsignedByte() throws Exception {
 		// Bug 277650
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -925,11 +919,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
 	public void testXSBase64Binary() throws Exception {
 		// Bug 281046
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -950,11 +943,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
 	public void testXSHexBinary() throws Exception {
 		// Bug 281054
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -975,13 +967,14 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
 	public void testElementTypedValue() throws Exception {
 		// test for fix in ElementType.java, involving incorrectly computing
 		// typed value of element node, in case of validating element node,
 		// with a user defined simple XSD type.
 		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
-		URL schemaURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xsd");
+		URL schemaURL = bundle
+				.getEntry("/bugTestFiles/elementTypedValueBug.xsd");
 
 		loadDOMDocument(fileURL, schemaURL);
 
@@ -1004,10 +997,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	}
 
-	public void testBug286061_quoted_string_literals_no_normalize() throws Exception {
+	public void testBug286061_quoted_string_literals_no_normalize()
+			throws Exception {
 
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -1016,7 +1009,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 
-		String xpath = "'\"\"'"; // the expression '""' contains no escapes 
+		String xpath = "'\"\"'"; // the expression '""' contains no escapes
 
 		XPath path = compileXPath(dc, xpath);
 
@@ -1027,11 +1020,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("\"\"", resultValue);
 	}
-	
+
 	public void testBug286061_quoted_string_literals() throws Exception {
 
-		bundle = Platform
-		.getBundle("org.w3c.xqts.testsuite");
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -1064,22 +1056,23 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Evaluate once
 		XSBoolean bval = (XSBoolean) eval.evaluate(path).first();
 		assertTrue("'abc' < 'def' for normal collations", bval.value());
-		
+
 		// Evaluate again with the funny collator
 		dc.set_default_collation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
 		XSBoolean bval2 = (XSBoolean) eval.evaluate(path).first();
 		assertFalse("'abc' < 'def' for normal collations", bval2.value());
-    }
-	
+	}
+
 	public void testXPathDefaultNamespace() throws Exception {
 		// Test for the fix, for xpathDefaultNamespace
-		URL fileURL = bundle.getEntry("/bugTestFiles/xpathDefNamespaceTest.xml");
+		URL fileURL = bundle
+				.getEntry("/bugTestFiles/xpathDefNamespaceTest.xml");
 		loadDOMDocument(fileURL);
 
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		// set up XPath default namespace in Dynamic Context 
+		// set up XPath default namespace in Dynamic Context
 		DynamicContext dc = setupDynamicContext(schema);
 		addXPathDefaultNamespace("http://xyz");
 
@@ -1111,5 +1104,4 @@ public class TestBugs extends AbstractPsychoPathTest {
 			}
 		};
 	}
-
 }
