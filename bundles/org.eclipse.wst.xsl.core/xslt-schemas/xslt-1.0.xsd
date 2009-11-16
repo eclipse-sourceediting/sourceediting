@@ -16,6 +16,7 @@
  *         The original version may be found at http://www.w3.org/2007/schema-for-xslt20.xsd
  *         The original W3C copyright notice is included:
  *     David Carver - 20080330 - STAR - bug 224819 - changed procesContents from lax to skip
+ *     David Carver - STAR - bug 293902 - correct exclude-result-prefix to use prefix-list
  *******************************************************************************
  *******************************************************************************
  * W3C® SOFTWARE NOTICE AND LICENSE
@@ -1150,18 +1151,18 @@ of problems processing the schema using various tools
               </xs:documentation>
            </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="exclude-result-prefixes" type="xsl:prefixes" use="optional">
+      <xs:attribute name="exclude-result-prefixes" type="xsl:prefix-list" use="optional">
       	<xs:annotation>
       		<xs:documentation source="http:/www.w3.org/TR/xslt">
-      			Optional. A list of namespace prefixes to exclude from the result document.
+      			Optional. A list of namespace prefixes to exclude from the result document. #default excludes the default namespace.
       		</xs:documentation>
       	</xs:annotation>
       </xs:attribute>
-      <xs:attribute name="extension-element-prefixes" type="xsl:prefixes" use="optional">
+      <xs:attribute name="extension-element-prefixes" type="xsl:prefix-list" use="optional">
          <xs:annotation>
             <xs:documentation source="http:/www.w3.org/TR/xslt">
                Optional.  A list of extension namespace prefixes.  This is used to identify namespaces that
-               contain XSLT processor extensions.
+               contain XSLT processor extensions.  #default can be used to specify the default namespace.
             </xs:documentation>
          </xs:annotation>
       </xs:attribute>
