@@ -15,6 +15,7 @@ import org.eclipse.wst.css.core.tests.format.TestCleanupProcessorCSS;
 import org.eclipse.wst.css.core.tests.format.TestFormatProcessorCSS;
 import org.eclipse.wst.css.core.tests.model.CSSCharsetRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSFontFaceRuleTest;
+import org.eclipse.wst.css.core.tests.model.CSSFontFamilyTest;
 import org.eclipse.wst.css.core.tests.model.CSSImportRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSMediaRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSPageRuleTest;
@@ -56,6 +57,7 @@ public class CSSAllTests extends TestSuite {
 		suite.addTestSuite(CSSMediaRuleTest.class);
 		suite.addTestSuite(CSSPageRuleTest.class);
 		suite.addTestSuite(CSSFontFaceRuleTest.class);
+		suite.addTestSuite(CSSFontFamilyTest.class);
 		suite.addTestSuite(TestFormatProcessorCSS.class);
 		suite.addTestSuite(TestCleanupProcessorCSS.class);
 		suite.addTestSuite(TestCSSDecl.class);
