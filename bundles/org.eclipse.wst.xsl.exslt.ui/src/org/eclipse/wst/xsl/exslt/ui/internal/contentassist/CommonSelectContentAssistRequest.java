@@ -69,8 +69,10 @@ public class CommonSelectContentAssistRequest extends SelectAttributeContentAssi
 		NamespaceTable namespaceTable = new NamespaceTable(doc);
 		namespaceTable.addElement(doc.getDocumentElement());
 		prefix = namespaceTable.getPrefixForURI(EXSLTCore.EXSLT_COMMON_NAMESPACE);
-		addNodeSetProposal();
-		addObjectTypeProposal();
+		if (prefix != null) {
+			addNodeSetProposal();
+			addObjectTypeProposal();
+		}
 	}
 	
 	private void addNodeSetProposal() {
