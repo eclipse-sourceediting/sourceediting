@@ -41,8 +41,4 @@
          id="org.eclipse.wst.server_sdk.feature"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.wst.ws_sdk.feature"
-         version="0.0.0"/>
-
 </feature>

@@ -46,9 +46,6 @@
          id="org.eclipse.wst.xml_ui.feature"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.wst.ws_ui.feature"
-         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.wst.jsdt.web.core"
