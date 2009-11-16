@@ -77,7 +77,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(SeqMINFuncTest.class);
 		suite.addTestSuite(TimezoneFromTimeFuncTest.class);
 		suite.addTestSuite(ContextPositionFuncTest.class);
-//		suite.addTestSuite(SeqCollectionFuncTest.class);
+		suite.addTestSuite(SeqCollectionFuncTest.class);
 		suite.addTestSuite(LocalNameFromQNameFuncTest.class);
 		suite.addTestSuite(ContextCurrentTimeFuncTest.class);
 		suite.addTestSuite(TraceFuncTest.class);
