@@ -863,7 +863,9 @@ class CSSDeclarationItemParser {
 				bSpace = true;
 			}
 			else {
-				buf.append(getText(region));
+				// [274945] Multiple regions should have the spaces between collapsed
+				String text = i.hasNext() ? getCollapsedText(region) : getText(region);
+				buf.append(text);
 				bSpace = false;
 			}
 		}
@@ -1070,6 +1072,15 @@ class CSSDeclarationItemParser {
 				item.appendValue(value);
 			}
 		}
+	}
+
+	private String getCollapsedText(ITextRegion region) {
+		if (fParentRegion == null)
+			return ""; //$NON-NLS-1$
+		StringBuffer text = new StringBuffer(fParentRegion.getFullText(region));
+		if (region.getLength() > region.getTextLength())
+			text.replace(region.getTextLength(), region.getLength(), " "); //$NON-NLS-1$
+		return text.toString();
 	}
 
 	private String getText(ITextRegion region) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,20 +49,19 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 		for (int i = 0; i < regions.size(); i++) {
 			ITextRegion current = regions.get(i);
 			if (bIn) {
-				source.append(fParentRegion.getText(current));
+				source.append(fParentRegion.getFullText(current));
 				if (current == fLastRegion)
 					break;
 			}
 			else {
 				if (current == fFirstRegion) {
 					bIn = true;
-					source.append(fParentRegion.getText(current));
+					source.append(fParentRegion.getFullText(current));
 					if (current == fLastRegion)
 						break;
 				}
 			}
 		}
-
 		return source.toString();
 	}
 
