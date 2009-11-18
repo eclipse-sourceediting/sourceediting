@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IImportContainer;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.ui.text.java.ProposalContextInformation;
 import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
@@ -40,7 +41,8 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 
 	private JSPTranslation fTranslation;
 	private Comparator fComparator;
-	
+	private IImportContainer fImportContainer;
+
 	public JSPProposalCollector(ICompilationUnit cu, JSPTranslation translation) {
 		super(cu);
 	
@@ -48,6 +50,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 			throw new IllegalArgumentException("JSPTranslation cannot be null"); //$NON-NLS-1$
 		
 		fTranslation = translation;
+		fImportContainer = cu.getImportContainer();
 	}
 
 	/**
@@ -102,19 +105,26 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		return jspProposal;
 	}
 
-	
-	
+	/**
+	 * Retrieves the type name from the string <code>fullName</code>
+	 * @param fullName the fully qualified Java name
+	 * @return the type name
+	 */
+	private String getTypeName(String fullName) {
+		int index = fullName.lastIndexOf('.');
+		return (index != -1) ? fullName.substring(index + 1) : fullName;
+	}
+
 	private JSPCompletionProposal createAutoImportProposal(CompletionProposal proposal) {
 		
 		JSPCompletionProposal jspProposal = null;
 
-		String signature = new String(proposal.getDeclarationSignature());
 		String completion = new String(proposal.getCompletion());
 		
 		// it's fully qualified so we should
 		// add an import statement
 		// create an autoimport proposal
-		String newCompletion = completion.replaceAll(signature + "\\.", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		String newCompletion = getTypeName(completion);
 		
 		// java offset
 		int offset = proposal.getReplaceStart();
@@ -138,7 +148,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		
 		boolean updateLengthOnValidate = true;
 		
-		jspProposal = new AutoImportProposal(completion, newCompletion, offset, length, positionAfter, image, displayString, contextInformation, null, relevance, updateLengthOnValidate);
+		jspProposal = new AutoImportProposal(completion, fImportContainer, newCompletion, offset, length, positionAfter, image, displayString, contextInformation, null, relevance, updateLengthOnValidate);
 		
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
 		// set wrapped java proposal so additional info can be calculated on demand

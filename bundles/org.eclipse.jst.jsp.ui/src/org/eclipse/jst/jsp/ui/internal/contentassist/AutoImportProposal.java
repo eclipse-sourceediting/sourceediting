@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.jdt.core.IImportContainer;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -38,22 +39,29 @@ public class AutoImportProposal extends JSPCompletionProposal {
 	
 	// the import string, no quotes or colons
 	String fImportDeclaration;
-	
+	IImportContainer fImportContainer;
+
 	public AutoImportProposal(String importDeclaration, String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image, String displayString, IContextInformation contextInformation, String additionalProposalInfo, int relevance, boolean updateReplacementLengthOnValidate) {
 		super(replacementString, replacementOffset, replacementLength, cursorPosition, image, displayString, contextInformation, additionalProposalInfo, relevance, updateReplacementLengthOnValidate);
 		setImportDeclaration(importDeclaration);
 	}
-	
+
+	public AutoImportProposal(String importDeclaration, IImportContainer importContainer ,String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image, String displayString, IContextInformation contextInformation, String additionalProposalInfo, int relevance, boolean updateReplacementLengthOnValidate) {
+		this(importDeclaration, replacementString, replacementOffset, replacementLength, cursorPosition, image, displayString, contextInformation, additionalProposalInfo, relevance, updateReplacementLengthOnValidate);
+		fImportContainer = importContainer;
+	}
+
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		super.apply(viewer, trigger, stateMask, offset);
-		addImportDeclaration(viewer);
+		// if the import doesn't exist, add it
+		if (fImportContainer == null || !fImportContainer.getImport(getImportDeclaration()).exists())
+			addImportDeclaration(viewer);
 	}
 	/**
 	 * adds the import declaration to the document in the viewer in the appropriate position
 	 * @param viewer
 	 */
 	private void addImportDeclaration(ITextViewer viewer) {
-		
 		IDocument doc = viewer.getDocument();
 		
 		// calculate once and pass along
