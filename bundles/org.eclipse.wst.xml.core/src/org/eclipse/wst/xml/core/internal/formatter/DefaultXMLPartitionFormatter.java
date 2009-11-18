@@ -296,6 +296,9 @@ public class DefaultXMLPartitionFormatter {
 
 			// update available line width in constraints
 			parentConstraints.setAvailableLineWidth(availableLineWidth);
+			// A text node can contain multiple structured document regions - sync the documentRegion
+			// with the last region of the node since the text from all regions was formatted
+			currentDOMRegion.documentRegion = currentDOMRegion.domNode.getLastStructuredDocumentRegion();
 			return;
 		}
 
