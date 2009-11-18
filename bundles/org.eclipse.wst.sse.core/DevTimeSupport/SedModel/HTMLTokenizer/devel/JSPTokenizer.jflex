@@ -2317,6 +2317,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 	yybegin(ST_JSP_EL_DQUOTES);
 	return JSP_EL_DQUOTE;
 }
+<ST_JSP_EL_DQUOTES> \x22 {
+	yybegin(ST_JSP_EL);
+	return JSP_EL_DQUOTE;
+}
 <ST_JSP_EL_DQUOTES> [^\x22]+/\x22 {
 	yybegin(ST_JSP_EL_DQUOTES_END);
 	return JSP_EL_QUOTED_CONTENT;
@@ -2327,6 +2331,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 }
 <ST_JSP_EL> \x27 {
 	yybegin(ST_JSP_EL_SQUOTES);
+	return JSP_EL_SQUOTE;
+}
+<ST_JSP_EL_SQUOTES> \x27 {
+	yybegin(ST_JSP_EL);
 	return JSP_EL_SQUOTE;
 }
 <ST_JSP_EL_SQUOTES> [^\x27]+/\x27 {
@@ -2342,6 +2350,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 	yybegin(ST_JSP_VBL_DQUOTES);
 	return JSP_VBL_DQUOTE;
 }
+<ST_JSP_VBL_DQUOTES> \x22 {
+	yybegin(ST_JSP_VBL);
+	return JSP_VBL_DQUOTE;
+}
 <ST_JSP_VBL_DQUOTES> [^\x22]+/\x22 {
 	yybegin(ST_JSP_VBL_DQUOTES_END);
 	return JSP_VBL_QUOTED_CONTENT;
@@ -2352,6 +2364,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 }
 <ST_JSP_VBL> \x27 {
 	yybegin(ST_JSP_VBL_SQUOTES);
+	return JSP_VBL_SQUOTE;
+}
+<ST_JSP_VBL_SQUOTES> \x27 {
+	yybegin(ST_JSP_VBL);
 	return JSP_VBL_SQUOTE;
 }
 <ST_JSP_VBL_SQUOTES> [^\x27]+/\x27 {
