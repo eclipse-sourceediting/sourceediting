@@ -58,7 +58,7 @@ public class StyleTests extends TestCase {
 
 	public void testKeywordStyle() throws CoreException {
 		String projectName = getName();
-		String fileName = "snippet.html";
+		String fileName = projectName + ".html";
 		String contents = "<html><head><script> var params = \"someBadString\".substring(1,2,3,4);\nparahnas.shift();</script></head><body> </body></html>";
 
 		// Create the JavaScript project
