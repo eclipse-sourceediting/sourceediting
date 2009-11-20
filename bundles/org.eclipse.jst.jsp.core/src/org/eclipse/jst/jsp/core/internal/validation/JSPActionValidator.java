@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -30,15 +29,9 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDAttributeDeclaration;
-import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
-import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
-import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
-import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterImpl;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.html.core.internal.HTMLCoreMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -60,7 +53,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
@@ -86,7 +78,6 @@ public class JSPActionValidator extends JSPValidator {
 	private int fSeverityUnknownAttribute = IMessage.NORMAL_SEVERITY;
 
 	private HashSet fTaglibPrefixes = new HashSet();
-	private boolean fIsELIgnored = false;
 
 	public JSPActionValidator() {
 		this.fMessageOriginator = this;
@@ -109,48 +100,6 @@ public class JSPActionValidator extends JSPValidator {
 
 			reporter.addMessage(fMessageOriginator, message);
 		}
-	}
-
-	/**
-	 * Checks an attribute for runtime expressions
-	 * @param a The attribute to check for runtime expressions
-	 * @return true if the attribute contains a runtime expression, false otherwise
-	 */
-	private boolean checkRuntimeValue(IDOMAttr a) {
-		ITextRegion value = a.getValueRegion();
-		if (value instanceof ITextRegionContainer) {
-			Iterator it = ((ITextRegionContainer) value).getRegions().iterator();
-			while (it.hasNext()) {
-				String type = ((ITextRegion) it.next()).getType();
-				if (type == DOMJSPRegionContexts.JSP_EL_OPEN || type == DOMJSPRegionContexts.JSP_VBL_OPEN)
-					return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Determines if EL should be ignored. Checks
-	 * <ol>
-	 *  <li>JSP version</li>
-	 * 	<li>Page directive isELIgnored</li>
-	 *  <li>Deployment descriptor's el-ignored</li>
-	 * </ol>
-	 * @return true if EL should be ignored, false otherwise. If the JSP version is < 2.0, EL is ignored by default
-	 */
-	private boolean isElIgnored(IPath path, IStructuredModel model) {
-		if (DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(path) < 2.0f)
-			return true;
-		String directiveIsELIgnored = ((PageDirectiveAdapterImpl)(((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class))).getElIgnored();
-		// isELIgnored directive found
-		if (directiveIsELIgnored != null)
-			return Boolean.valueOf(directiveIsELIgnored).booleanValue();
-		// Check the deployment descriptor for el-ignored
-		PropertyGroup[] groups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(path);
-		if (groups.length > 0)
-			return groups[0].isELignored();
-		// JSP version >= 2.0 defaults to evaluating EL
-		return false;
 	}
 
 	private void checkRequiredAttributes(IDOMElement element, CMNamedNodeMap attrMap, IReporter reporter, IFile file, IStructuredDocument document, IStructuredDocumentRegion documentRegion) {
@@ -231,26 +180,6 @@ public class JSPActionValidator extends JSPValidator {
 				}
 				else {
 					foundjspattribute = true;
-				}
-			}
-			else {
-				if (adec instanceof TLDAttributeDeclaration) {
-					// The attribute cannot have a runtime evaluation of an expression
-					if (!Boolean.valueOf(((TLDAttributeDeclaration) adec).getRtexprvalue()).booleanValue()) {
-						IDOMAttr attr = (IDOMAttr) a;
-						if(checkRuntimeValue(attr) && !fIsELIgnored) {
-							String msg = NLS.bind(HTMLCoreMessages.Invalid_attribute___0____ERROR_, a.getName());
-							LocalizedMessage message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, msg, file);
-							ITextRegion region = attr.getValueRegion();
-							int start = attr.getValueRegionStartOffset();
-							int length = region != null ? region.getTextLength() : 0;
-							int lineNo = document.getLineOfOffset(start);
-							message.setLineNo(lineNo);
-							message.setOffset(start);
-							message.setLength(length);
-							reporter.addMessage(fMessageOriginator, message);
-						}
-					}
 				}
 			}
 		}
@@ -365,7 +294,7 @@ public class JSPActionValidator extends JSPValidator {
 	protected void performValidation(IFile f, IReporter reporter, IStructuredModel model, IRegion validateRegion) {
 		loadPreferences(f);
 		IStructuredDocument sDoc = model.getStructuredDocument();
-		fIsELIgnored = isElIgnored(f.getFullPath(), model);
+
 		// iterate all document regions
 		IStructuredDocumentRegion region = sDoc.getRegionAtCharacterOffset(validateRegion.getOffset());
 		while (region != null && !reporter.isCancelled() && (region.getStartOffset() <= (validateRegion.getOffset() + validateRegion.getLength()))) {
