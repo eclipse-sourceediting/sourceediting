@@ -50,6 +50,8 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	protected String fErrorMessage = null;
 	protected StructuredTextViewer fViewer = null;
 	private JSPTranslationAdapter fTranslationAdapter = null;
+	// translation adapter may be stale, check the model id
+	private String fModelId = null;
 
 	/**
 	 * Returns a list of completion proposals based on the specified location
@@ -95,8 +97,10 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
 
 			IDOMDocument xmlDoc = xmlModel.getDocument();
-			if (fTranslationAdapter == null)
+			if (fTranslationAdapter == null || xmlModel.getId() != fModelId) {
 				fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+				fModelId = xmlModel.getId();
+			}
 			if (fTranslationAdapter != null) {
 
 				JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
