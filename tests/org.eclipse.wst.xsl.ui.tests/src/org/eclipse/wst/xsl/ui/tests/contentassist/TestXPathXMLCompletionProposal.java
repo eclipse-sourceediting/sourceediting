@@ -106,4 +106,23 @@ public class TestXPathXMLCompletionProposal extends
 		fail("Did not find XPath proposals for the test attribute.");
 	}
 	
+	public void testCurlyBraceProposal() throws Exception {
+		fileName = "bug294079.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		try {
+			loadFileForTesting(xslFilePath);
+
+			ICompletionProposal[] proposals = getProposals(4,12);
+			assertNotNull("Did not find proposals.", proposals);
+
+			for (int i = 0; i < proposals.length; i++) {
+				if (proposals[i].getDisplayString().contains("document")) {
+					return;
+				}
+			}
+		} finally {
+			model.releaseFromEdit();
+		}
+		fail("Did not find XPath proposals for the test attribute.");
+	}
 }
