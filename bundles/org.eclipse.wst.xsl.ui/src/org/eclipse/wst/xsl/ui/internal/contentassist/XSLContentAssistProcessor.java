@@ -22,12 +22,16 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest;
+import org.w3c.dom.NamedNodeMap;
 
 /**
  * The XSL Content Assist Processor provides content assistance for various
@@ -38,9 +42,12 @@ import org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRe
  * @since 1.0
  */
 public class XSLContentAssistProcessor extends AbstractXSLContentAssistProcessor implements IContentAssistProcessor {
+	
+	private static final String attributeXpath = "{"; //$NON-NLS-1$
 
 	private ArrayList<ICompletionProposal> xslProposals;
 	private ArrayList<ICompletionProposal> additionalProposals;
+	private ArrayList<ICompletionProposal> attributeProposals;
 	private ArrayList<String> namespaces;
 	/**
 	 * Provides an XSL Content Assist Processor class that is XSL aware and XML
@@ -70,14 +77,19 @@ public class XSLContentAssistProcessor extends AbstractXSLContentAssistProcessor
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentPosition) {
 		initializeProposalVariables(textViewer, documentPosition);
+		
+		
 
 		additionalProposals = getAdditionalXSLElementProposals();
 
 		xslProposals = getXSLNamespaceProposals();
+		
+		attributeProposals = getAttributeProposals();
 
 		ArrayList<ICompletionProposal> proposalList = new ArrayList<ICompletionProposal>();
 		proposalList.addAll(additionalProposals);
 		proposalList.addAll(xslProposals);
+		proposalList.addAll(attributeProposals);
 
 		ICompletionProposal[] combinedProposals = combineProposals(proposalList);
 
@@ -108,6 +120,12 @@ public class XSLContentAssistProcessor extends AbstractXSLContentAssistProcessor
 					textViewer).getCompletionProposals();
 		}
 		return additionalProposals;
+	}
+	
+	private ArrayList<ICompletionProposal> getAttributeProposals() {
+		attributeProposals = new AttributeContentAssist(xmlNode,
+				sdRegion, completionRegion, cursorPosition, 0, matchString, textViewer).getCompletionProposals();
+		return attributeProposals;
 	}
 
 	private ICompletionProposal[] combineProposals(
@@ -159,4 +177,18 @@ public class XSLContentAssistProcessor extends AbstractXSLContentAssistProcessor
 		return null;
 	}
 
-}
+	protected boolean assistanceOnAttribute(IDOMNode node, ITextRegion aRegion) {
+		NamedNodeMap nodeMap = node.getAttributes();
+		for (int i = 0; i < nodeMap.getLength(); i++) {
+			IDOMAttr attrNode = (IDOMAttr) nodeMap.item(i);
+			if (attrNode.getValueRegion() != null &&
+				attrNode.getValueRegion().getStart() == aRegion.getStart()) {
+				if (attrNode.getValue().contains(attributeXpath)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}	
+

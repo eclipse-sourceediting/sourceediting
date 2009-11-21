@@ -165,7 +165,7 @@ public class SelectAttributeContentAssist extends
 	}
 
 	protected int getXPathSeperatorPos(int column, String nodeValue) {
-		char[] keyTokens = { '/', '[', ']', '(', ')', ',', ' ' };
+		char[] keyTokens = { '{', '/', '[', ']', '(', ')', ',', ' ', };
 
 		int seperatorPos = 0;
 

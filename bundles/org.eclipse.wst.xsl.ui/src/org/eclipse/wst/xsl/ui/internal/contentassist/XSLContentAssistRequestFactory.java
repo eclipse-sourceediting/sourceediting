@@ -149,11 +149,11 @@ public class XSLContentAssistRequestFactory {
 					textViewer);
 		}
 
-		if (hasAttributeAtTextRegion(ATTR_MATCH, nodeMap, completionRegion)) {
-			return new SelectAttributeContentAssist(xmlNode, sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-		}
+//		if (hasAttributeAtTextRegion(ATTR_MATCH, nodeMap, completionRegion)) {
+//			return new SelectAttributeContentAssist(xmlNode, sdRegion,
+//					completionRegion, documentPosition, 0, matchString,
+//					textViewer);
+//		}
 
 		if (hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
 			return new TestAttributeContentAssist(xmlNode, sdRegion,
