@@ -19,8 +19,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.ui.internal.contentassist.href.HrefContentAssistRequest;
 import org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest;
 import org.eclipse.wst.xsl.ui.provisional.contentassist.NullContentAssistRequest;
-import org.eclipse.wst.xsl.ui.provisional.contentassist.SelectAttributeContentAssist;
-import org.eclipse.wst.xsl.ui.provisional.contentassist.TestAttributeContentAssist;
 import org.w3c.dom.NamedNodeMap;
 
 /**

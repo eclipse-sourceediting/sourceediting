@@ -11,7 +11,7 @@
  *                                       position adjuster for matchString.
  *                          bug 281420 - fixed variable replacement offsets.
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.provisional.contentassist;
+package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +28,11 @@ import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.contentassist.XPathTemplateCompletionProcessor;
 import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
-import org.eclipse.wst.xsl.ui.internal.contentassist.XPathElementContentAssist;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXMLElementContentAssistRequest;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.CustomCompletionProposal;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

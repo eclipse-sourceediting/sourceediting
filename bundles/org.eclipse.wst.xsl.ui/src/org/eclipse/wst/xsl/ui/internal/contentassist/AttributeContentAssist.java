@@ -1,12 +1,12 @@
 /*******************************************************************************
- *Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ *Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
  *All rights reserved. This program and the accompanying materials
  *are made available under the terms of the Eclipse Public License v1.0
  *which accompanies this distribution, and is available at
  *http://www.eclipse.org/legal/epl-v10.html
  *
  *Contributors:
- *    David Carver (STAR) - bug 240170 - initial API and implementation
+ *    David Carver (STAR) - bug 294079 - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
@@ -17,8 +17,6 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xsl.ui.provisional.contentassist.SelectAttributeContentAssist;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -52,7 +50,7 @@ public class AttributeContentAssist extends SelectAttributeContentAssist {
 	
 	/** 
 	 * (non-Javadoc)
-	 * @see org.eclipse.wst.xsl.ui.provisional.contentassist.SelectAttributeContentAssist#getCompletionProposals()
+	 * @see org.eclipse.wst.xsl.ui.internal.contentassist.SelectAttributeContentAssist#getCompletionProposals()
 	 */
 	@Override
 	public ArrayList<ICompletionProposal> getCompletionProposals() {
@@ -76,6 +74,10 @@ public class AttributeContentAssist extends SelectAttributeContentAssist {
     }
 
 	private IDOMAttr getAttributeAtOffset(int offset) {
+		Node node = getNode();
+		if (node == null) {
+			return null;
+		}
 		NamedNodeMap nodeMap = getNode().getAttributes();
 		IDOMAttr attrNode = null;
 		

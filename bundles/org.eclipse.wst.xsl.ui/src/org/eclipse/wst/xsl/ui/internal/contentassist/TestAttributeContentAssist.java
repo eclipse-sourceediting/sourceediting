@@ -8,7 +8,7 @@
  *Contributors:
  *    David Carver (STAR) - bug 240170 - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.provisional.contentassist;
+package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import java.util.ArrayList;
 
@@ -51,7 +51,7 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 	
 	/** 
 	 * (non-Javadoc)
-	 * @see org.eclipse.wst.xsl.ui.provisional.contentassist.SelectAttributeContentAssist#getCompletionProposals()
+	 * @see org.eclipse.wst.xsl.ui.internal.contentassist.SelectAttributeContentAssist#getCompletionProposals()
 	 */
 	@Override
 	public ArrayList<ICompletionProposal> getCompletionProposals() {
