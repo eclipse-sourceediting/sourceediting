@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,7 +80,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 	/**
 	 * Default behavior for getting an adapter.
 	 */
-	public INodeAdapter getAdapterFor(Object type) {
+	public synchronized INodeAdapter getAdapterFor(Object type) {
 		// first, we'll see if we already have one
 		INodeAdapter result = getExistingAdapter(type);
 		// if we didn't find one in our list already,
@@ -108,7 +108,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 	 * Returns a shallow clone of list, since clients should not manipulate
 	 * our list directly. Instead, they should use add/removeAdapter.
 	 */
-	public Collection getAdapters() {
+	public synchronized Collection getAdapters() {
 		if (fAdapters != null) {
 			if (adapterCount == 0) {
 				fAdapters = null;
@@ -153,7 +153,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 		return criteria;
 	}
 
-	public INodeAdapter getExistingAdapter(Object type) {
+	public synchronized INodeAdapter getExistingAdapter(Object type) {
 		INodeAdapter result = null;
 		for (int i = 0; i < adapterCount; i++) {
 			INodeAdapter a = fAdapters[i];
@@ -171,49 +171,49 @@ public abstract class AbstractNotifier implements INodeNotifier {
 
 	public void notify(int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 
-		if (fAdapters != null) {
-			int localAdapterCount = 0;
-			INodeAdapter[] localAdapters = null;
+		int localAdapterCount = 0;
+		INodeAdapter[] localAdapters = null;
 
-			// lock object while making local assignments
-			synchronized (this) {
+		// lock object while making local assignments
+		synchronized (this) {
+			if (fAdapters != null) {
 				localAdapterCount = adapterCount;
 				localAdapters = new INodeAdapter[localAdapterCount];
 				System.arraycopy(fAdapters, 0, localAdapters, 0, localAdapterCount);
 			}
+		}
 
-			for (int i = 0; i < localAdapterCount; i++) {
-				INodeAdapter a = localAdapters[i];
+		for (int i = 0; i < localAdapterCount; i++) {
+			INodeAdapter a = localAdapters[i];
 
-				if (Logger.DEBUG_ADAPTERNOTIFICATIONTIME) {
-					long getAdapterTimeCriteria = getAdapterTimeCriteria();
-					long startTime = System.currentTimeMillis();
-					// ** keep this line identical with non-debug version!!
-					a.notifyChanged(this, eventType, changedFeature, oldValue, newValue, pos);
-					long notifyDuration = System.currentTimeMillis() - startTime;
-					if (getAdapterTimeCriteria >= 0 && notifyDuration > getAdapterTimeCriteria) {
-						System.out.println("adapter notifyDuration: " + notifyDuration + "  class: " + a.getClass()); //$NON-NLS-1$ //$NON-NLS-2$
-					}
+			if (Logger.DEBUG_ADAPTERNOTIFICATIONTIME) {
+				long getAdapterTimeCriteria = getAdapterTimeCriteria();
+				long startTime = System.currentTimeMillis();
+				// ** keep this line identical with non-debug version!!
+				a.notifyChanged(this, eventType, changedFeature, oldValue, newValue, pos);
+				long notifyDuration = System.currentTimeMillis() - startTime;
+				if (getAdapterTimeCriteria >= 0 && notifyDuration > getAdapterTimeCriteria) {
+					System.out.println("adapter notifyDuration: " + notifyDuration + "  class: " + a.getClass()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-				else {
-					try {
-						// ** keep this line identical with debug version!!
-						a.notifyChanged(this, eventType, changedFeature, oldValue, newValue, pos);
-					}
-					catch (Exception e) {
-						// Its important to "keep going", since notifications
-						// occur between an
-						// aboutToChange event and a changed event -- the
-						// changed event typically being require
-						// to restore state, etc. So, we just log message, do
-						// not re-throw it, but
-						// typically the exception does indicate a serious
-						// program error.
-						Logger.logException("A structured model client, " + a + " threw following exception during adapter notification (" + INodeNotifier.EVENT_TYPE_STRINGS[eventType] + " )", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					}
-				}
-
 			}
+			else {
+				try {
+					// ** keep this line identical with debug version!!
+					a.notifyChanged(this, eventType, changedFeature, oldValue, newValue, pos);
+				}
+				catch (Exception e) {
+					// Its important to "keep going", since notifications
+					// occur between an
+					// aboutToChange event and a changed event -- the
+					// changed event typically being require
+					// to restore state, etc. So, we just log message, do
+					// not re-throw it, but
+					// typically the exception does indicate a serious
+					// program error.
+					Logger.logException("A structured model client, " + a + " threw following exception during adapter notification (" + INodeNotifier.EVENT_TYPE_STRINGS[eventType] + " )", e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				}
+			}
+
 		}
 	}
 
