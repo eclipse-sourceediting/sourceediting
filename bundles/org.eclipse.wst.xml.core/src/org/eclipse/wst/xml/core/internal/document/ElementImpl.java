@@ -376,6 +376,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			tagName = null; // do not care
 		}
 
+		it.nextNode(); // skip the first node since it is the root from createNodeIterator
 		for (Node node = it.nextNode(); node != null; node = it.nextNode()) {
 			if (node.getNodeType() != ELEMENT_NODE)
 				continue;
@@ -411,6 +412,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			tagName = null; // do not care
 		}
 
+		it.nextNode(); // skip the first node since it is the root from createNodeIterator
 		for (Node node = it.nextNode(); node != null; node = it.nextNode()) {
 			if (node.getNodeType() != ELEMENT_NODE)
 				continue;
