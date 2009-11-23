@@ -16,12 +16,14 @@ import junit.framework.TestCase;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class ElementImplTests extends TestCase {
 
 	private static final String contents = "<elementPrefix:localName attrPrefix:local='lorem' xmlns:elementPrefix='urn:prefix' xmlns:attributePrefix='urn:attribute:prefix' />"; //$NON-NLS-1$
-
+	private static final String decl = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; //$NON-NLS-1$
 	public ElementImplTests() {
 	}
 
@@ -69,5 +71,94 @@ public class ElementImplTests extends TestCase {
 		assertEquals("attribute namespace URI was not as expected", "http://lorem.ipsum", element2.getNamespaceURI());
 		Element element3 = model.getDocument().createElementNS(null, "complex");
 		assertEquals("attribute namespace URI was not as expected", null, element3.getNamespaceURI());
+	}
+
+	public void testGetElementsByTagNameNoChildren() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(decl);
+
+		Document document = model.getDocument();
+		Element root = document.createElement("root");
+		document.appendChild(root);
+
+		NodeList children = root.getElementsByTagName("*");
+		assertEquals(0, children.getLength());
+	}
+
+	public void testGetElementsByTagNameChildren() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(decl);
+
+		Document document = model.getDocument();
+		Element root = document.createElement("root");
+		document.appendChild(root);
+		root.appendChild(document.createElement("child"));
+		root.appendChild(document.createElement("child"));
+
+		NodeList children = root.getElementsByTagName("*");
+		assertEquals(2, children.getLength());
+	}
+
+	public void testGetElementsByTagNameChildrenBySameName() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(decl);
+
+		Document document = model.getDocument();
+		Element root = document.createElement("child");
+		document.appendChild(root);
+		root.appendChild(document.createElement("child"));
+		root.appendChild(document.createElement("child"));
+
+		NodeList children = root.getElementsByTagName("child");
+		assertEquals(2, children.getLength());
+	}
+
+	public void testGetElementsByTagNameNS() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(decl);
+
+		Document document = model.getDocument();
+		Element root = document.createElement("test:root");
+		root.setAttribute("xmlns:test", "http://test");
+		document.appendChild(root);
+		root.appendChild(document.createElement("test:child"));
+		root.appendChild(document.createElement("test:child"));
+
+		NodeList children = root.getElementsByTagNameNS("http://test", "*");
+		assertEquals(2, children.getLength());
+	}
+
+	public void testGetElementsByTagNameNSTestNS() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(decl);
+
+		Document document = model.getDocument();
+		Element root = document.createElement("test:root");
+		root.setAttribute("xmlns:test", "http://test");
+		root.setAttribute("xmlns:test2", "http://test2");
+		document.appendChild(root);
+		root.appendChild(document.createElement("test:child"));
+		root.appendChild(document.createElement("test:child"));
+		root.appendChild(document.createElement("test2:child"));
+
+		NodeList children = root.getElementsByTagNameNS("http://test", "*");
+		assertEquals(2, children.getLength());
+	}
+
+	public void testGetElementsByTagNameNSAnyNS() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(decl);
+
+		Document document = model.getDocument();
+		Element root = document.createElement("test:root");
+		root.setAttribute("xmlns:test", "http://test");
+		root.setAttribute("xmlns:test2", "http://test2");
+		document.appendChild(root);
+		root.appendChild(document.createElement("test:child"));
+		root.appendChild(document.createElement("test:child"));
+		root.appendChild(document.createElement("test2:child"));
+
+		NodeList children = root.getElementsByTagNameNS("*", "*");
+		assertEquals(3, children.getLength());
 	}
 }
