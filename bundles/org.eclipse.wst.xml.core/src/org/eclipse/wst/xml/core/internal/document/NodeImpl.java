@@ -13,6 +13,8 @@
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
  *     
+ *     David Carver (STAR) - bug 295127 - implement isSameNode and compareDocumentPosition methods.
+ *                                        Unit Tests covered in wst.xsl XPath 2.0 tests.
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -833,11 +835,23 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		return result;
 	}
 
-	/**
-	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Node#compareDocumentPosition(org.w3c.dom.Node)
 	 */
 	public short compareDocumentPosition(Node other) throws DOMException {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
+		if (!(other instanceof IDOMNode))
+			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, new String());
+
+		int nodeStart = this.getStartOffset();
+		int otherStart = ((IDOMNode) other).getStartOffset();
+
+		if (otherStart > nodeStart) {
+			return Node.DOCUMENT_POSITION_FOLLOWING;
+		}
+		else if (otherStart < nodeStart) {
+			return Node.DOCUMENT_POSITION_PRECEDING;
+		}
+		return Node.DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC;
 	}
 
 	/**
@@ -868,18 +882,18 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
 	}
 
-	/**
-	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Node#isEqualNode(org.w3c.dom.Node)
 	 */
 	public boolean isEqualNode(Node arg) {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
+		return this.equals(arg);
 	}
 
-	/**
-	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Node#isSameNode(org.w3c.dom.Node)
 	 */
 	public boolean isSameNode(Node other) {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
+		return this == other;
 	}
 
 	/**
