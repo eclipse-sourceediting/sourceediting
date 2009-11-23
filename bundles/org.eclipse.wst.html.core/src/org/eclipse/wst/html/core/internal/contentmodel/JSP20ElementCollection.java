@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 /**
  * Factory for element declarations of JSP 1.1 and JSP 1.2.
  */
-final class JSP20ElementCollection extends JSPElementCollection implements JSP20Namespace.ElementName {
+class JSP20ElementCollection extends JSPElementCollection implements JSP20Namespace.ElementName {
 
 	// element IDs
 	private static class Ids20 extends Ids {
@@ -55,7 +55,7 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 	}
 
 	// attribute creater
-	private class JACreater20 extends JACreater {
+	class JACreater20 extends JACreater {
 		public JACreater20() {
 			super();
 		}
@@ -483,9 +483,13 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 		if (content != null)
 			decl.setContent(content);
 
-		JACreater20 creater = new JACreater20();
+		JACreater20 creater = getAttributeCreator();
 		decl.setAttributes(creater.getDeclarations(eid));
 
 		return decl;
+	}
+
+	protected JACreater20 getAttributeCreator() {
+		return new JACreater20();
 	}
 }

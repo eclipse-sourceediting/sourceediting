@@ -27,7 +27,7 @@ import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 public final class HTMLCMDocumentFactory {
 
 	private static Hashtable cmdocs = new Hashtable();
-	private static List supportedCMtypes = Arrays.asList(new Object[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE});
+	private static List supportedCMtypes = Arrays.asList(new Object[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE, CMDocType.JSP21_DOC_TYPE});
 
 	private static JCMDocImpl jsp11doc = null;
 
@@ -66,6 +66,12 @@ public final class HTMLCMDocumentFactory {
 			CMNamespaceImpl j20ns = new CMNamespaceImpl(JSP20Namespace.JSP20_URI, JSP11Namespace.JSP_TAG_PREFIX);
 			JCM20DocImpl jsp20doc = new JCM20DocImpl(CMDocType.JSP20_DOC_TYPE, j20ns);
 			return jsp20doc;
+		}
+
+		else if (CMDocType.JSP21_DOC_TYPE.equals(cmtype)) {
+			CMNamespaceImpl j21ns = new CMNamespaceImpl(JSP21Namespace.JSP21_URI, JSP11Namespace.JSP_TAG_PREFIX);
+			JCM21DocImpl jsp21doc = new JCM21DocImpl(CMDocType.JSP21_DOC_TYPE, j21ns);
+			return jsp21doc;
 		}
 
 		else if (CMDocType.TAG20_DOC_TYPE.equals(cmtype)) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,11 +40,13 @@ public final class JSPCMDocumentFactory {
 	}
 
 	public static CMDocument getCMDocument(float jspVersion) {
-		if (jspVersion >= 2)
+		if (jspVersion >= 2.1f)
+			return getCMDocument(CMDocType.JSP21_DOC_TYPE);
+		else if (jspVersion >= 2)
 			return getCMDocument(CMDocType.JSP20_DOC_TYPE);
-		if (jspVersion >= 1.2)
+		else if (jspVersion >= 1.2f)
 			return getCMDocument(CMDocType.JSP12_DOC_TYPE);
-		if (jspVersion >= 1)
+		else if (jspVersion >= 1)
 			return getCMDocument(CMDocType.JSP11_DOC_TYPE);
 		return getCMDocument();
 	}
