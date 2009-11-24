@@ -8,6 +8,8 @@
  ****************************************************************************/
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -279,8 +281,23 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 					event.feedback = DND.FEEDBACK_INSERT_BEFORE;
 				}
 				event.feedback |= DND.FEEDBACK_EXPAND | DND.FEEDBACK_SCROLL;
+				if ( getLocalNodeSelection(event) == null){
+					event.detail = DND.DROP_NONE;
+				}
 			}
 
+			private IStructuredSelection getLocalNodeSelection(DropTargetEvent event){
+				IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
+				if (selection != null && !selection.isEmpty() ) {
+					for (Iterator i = selection.iterator(); i.hasNext();) {
+						Object node = i.next();
+						if (node instanceof Node){
+							return selection;
+						}
+					}
+				}
+				return null;
+			}
 			private float getHeightInItem(DropTargetEvent event) {
 				if(event.item == null) return .5f;
 				if (event.item instanceof TreeItem) {

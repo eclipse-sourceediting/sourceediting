@@ -298,11 +298,13 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 		}
 
 		for (int i = list.size() - 1; i >= 0; i--) {
-			Node node = (Node) list.get(i);
-			for (Node parent = getParentOrOwner(node); parent != null; parent = getParentOrOwner(parent)) {
-				if (table.get(parent) != null) {
-					list.remove(i);
-					break;
+			Object node =  list.get(i); 
+			if (node instanceof Node){
+				for (Node parent = getParentOrOwner((Node)node); parent != null; parent = getParentOrOwner(parent)) {
+					if (table.get(parent) != null) {
+						list.remove(i);
+						break;
+					}
 				}
 			}
 		}
