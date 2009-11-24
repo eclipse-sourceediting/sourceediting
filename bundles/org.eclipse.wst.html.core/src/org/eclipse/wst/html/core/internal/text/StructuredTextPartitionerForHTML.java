@@ -51,7 +51,12 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		HTML40Namespace.ATTR_NAME_ONKEYPRESS,
 		HTML40Namespace.ATTR_NAME_ONKEYDOWN,
 		HTML40Namespace.ATTR_NAME_ONKEYUP,
-		HTML40Namespace.ATTR_NAME_ONHELP};
+		HTML40Namespace.ATTR_NAME_ONHELP,
+		HTML40Namespace.ATTR_NAME_ONBLUR,
+		HTML40Namespace.ATTR_NAME_ONFOCUS,
+		HTML40Namespace.ATTR_NAME_ONLOAD,
+		HTML40Namespace.ATTR_NAME_ONUNLOAD,
+		HTML40Namespace.ATTR_NAME_ONSUBMIT};
 	
 	public StructuredTextPartitionerForHTML() {
 		super();
