@@ -78,7 +78,7 @@ public class AttributeContentAssist extends SelectAttributeContentAssist {
 		if (node == null) {
 			return null;
 		}
-		NamedNodeMap nodeMap = getNode().getAttributes();
+		NamedNodeMap nodeMap = node.getAttributes();
 		IDOMAttr attrNode = null;
 		
 		for (int i = 0; i < nodeMap.getLength(); i++) {

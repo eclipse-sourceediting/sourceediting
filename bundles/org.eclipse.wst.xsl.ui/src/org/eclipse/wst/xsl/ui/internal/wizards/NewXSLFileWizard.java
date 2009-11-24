@@ -18,16 +18,20 @@ import java.io.OutputStreamWriter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xsl.ui.internal.Messages;
@@ -128,23 +132,49 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 
 	private void openEditor(final IFile file)
 	{
-		if (file != null)
-		{
-			getShell().getDisplay().asyncExec(new Runnable()
-			{
-				public void run()
-				{
-					try
-					{
-						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-						IDE.openEditor(page, file, true);
-					}
-					catch (PartInitException e)
-					{
-						XSLUIPlugin.log(e);
-					}
-				}
-			});
+		// Open editor on new file.
+		String editorId = null;
+		try {
+			IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getFullPath().toString(), file.getContentDescription().getContentType());
+			if (editor != null) {
+				editorId = editor.getId();
+			}
 		}
+		catch (CoreException e1) {
+			// editor id could not be retrieved, so we can not open editor
+			return;
+		}
+		IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		try {
+			if (dw != null) {
+				IWorkbenchPage page = dw.getActivePage();
+				if (page != null) {
+					page.openEditor(new FileEditorInput(file), editorId, true);
+				}
+			}
+		}
+		catch (PartInitException e) {
+			// editor can not open for some reason
+			return;
+		}
+		
+//		if (file != null)
+//		{
+//			getShell().getDisplay().asyncExec(new Runnable()
+//			{
+//				public void run()
+//				{
+//					try
+//					{
+//						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//						IDE.openEditor(page, file, true);
+//					}
+//					catch (PartInitException e)
+//					{
+//						XSLUIPlugin.log(e);
+//					}
+//				}
+//			});
+//		}
 	}
 }
