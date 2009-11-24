@@ -128,14 +128,17 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
     {
       Object []parms = {getValidatorID()};
       Collection files = (Collection) context.loadModel(GET_PROJECT_FILES, parms);
-      Iterator iter = files.iterator();
-      while (iter.hasNext() && !reporter.isCancelled()) 
-      {
-        IFile file = (IFile) iter.next();
-        if(shouldValidate(file))
-        {
-	      validate(file, null, null, reporter, nestedcontext);
-        }
+      // files can be null if they're outside of the workspace
+      if (files != null) {
+	      Iterator iter = files.iterator();
+	      while (iter.hasNext() && !reporter.isCancelled()) 
+	      {
+	        IFile file = (IFile) iter.next();
+	        if(shouldValidate(file))
+	        {
+		      validate(file, null, null, reporter, nestedcontext);
+	        }
+	      }
       }
     }
 	
