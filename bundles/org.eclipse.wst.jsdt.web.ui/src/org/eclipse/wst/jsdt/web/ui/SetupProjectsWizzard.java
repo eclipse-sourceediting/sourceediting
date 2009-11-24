@@ -25,8 +25,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
@@ -83,7 +85,16 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 		}
 
 		if (configured && openProperties) {
-			showPropertiesOn(project);
+			showPropertiesOn(project, monitor);
+		}
+	}
+	
+	private void doUninstall(IProject project, IProgressMonitor monitor) {
+		JsWebNature nature = new JsWebNature(project, monitor);
+		try {
+			nature.deconfigure();
+		} catch (CoreException ex) {
+			Logger.logException(ex);
 		}
 	}
 
@@ -167,7 +178,7 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 		fPart = targetPart;
 	}
 
-	private void showPropertiesOn(final IProject project) {
+	private void showPropertiesOn(final IProject project, final IProgressMonitor monitor) {
 		IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint("org.eclipse.ui.propertyPages").getExtensions(); //$NON-NLS-1$
 		final List pageIds = new ArrayList(8);
 		for (int i = 0; i < extensions.length; i++) {
@@ -190,7 +201,10 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 		if (finalShell != null) {
 			finalShell.getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					PreferencesUtil.createPropertyDialogOn(finalShell, project, "org.eclipse.wst.jsdt.ui.propertyPages.BuildPathsPropertyPage", (String[]) pageIds.toArray(new String[pageIds.size()]), null).open(); //$NON-NLS-1$
+					PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(finalShell, project, "org.eclipse.wst.jsdt.ui.propertyPages.BuildPathsPropertyPage", (String[]) pageIds.toArray(new String[pageIds.size()]), null); //$NON-NLS-1$
+					if (dialog.open() == Window.CANCEL) {
+						doUninstall(project, monitor);
+					}
 				}
 			});
 		}
