@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,46 +22,48 @@ package org.eclipse.wst.sse.core.internal.util;
 public abstract class Sorter {
 
 	/**
-	 * Returns true if elementTwo is 'greater than' elementOne This is the
-	 * 'ordering' method of the sort operation. Each subclass overides this
+	 * Returns true iff elementTwo is 'greater than' elementOne. This is the
+	 * 'ordering' method of the sort operation. Each subclass overrides this
 	 * method with the particular implementation of the 'greater than' concept
-	 * for the objects being sorted.
+	 * for the objects being sorted. If elementOne and elementTwo are
+	 * equivalent in terms of their sorting order, this method must return
+	 * 'false'.
 	 */
 	public abstract boolean compare(Object elementOne, Object elementTwo);
 
 	/**
-	 * Sort the objects in sorted collection and return that collection.
+	 * Sort the objects in the array and return the array.
 	 */
-	private Object[] quickSort(Object[] sortedCollection, int left, int right) {
+	private Object[] quickSort(Object[] array, int left, int right) {
 		int originalLeft = left;
 		int originalRight = right;
-		Object mid = sortedCollection[(left + right) / 2];
+		Object mid = array[(left + right) / 2];
 
 		do {
-			while (compare(sortedCollection[left], mid))
+			while (compare(array[left], mid))
 				left++;
-			while (compare(mid, sortedCollection[right]))
+			while (compare(mid, array[right]))
 				right--;
 			if (left <= right) {
-				Object tmp = sortedCollection[left];
-				sortedCollection[left] = sortedCollection[right];
-				sortedCollection[right] = tmp;
+				Object tmp = array[left];
+				array[left] = array[right];
+				array[right] = tmp;
 				left++;
 				right--;
 			}
 		} while (left <= right);
 
 		if (originalLeft < right)
-			sortedCollection = quickSort(sortedCollection, originalLeft, right);
+			array = quickSort(array, originalLeft, right);
 		if (left < originalRight)
-			sortedCollection = quickSort(sortedCollection, left, originalRight);
+			array = quickSort(array, left, originalRight);
 
-		return sortedCollection;
+		return array;
 	}
 
 	/**
-	 * Return a new sorted collection from this unsorted collection. Sort
-	 * using quick sort.
+	 * Return a new (quick)sorted array from this unsorted array. The original
+	 * array is not modified.
 	 */
 	public Object[] sort(Object[] unSortedCollection) {
 		int size = unSortedCollection.length;
