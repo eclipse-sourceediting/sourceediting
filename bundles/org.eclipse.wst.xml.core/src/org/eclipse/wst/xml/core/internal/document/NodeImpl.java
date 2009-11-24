@@ -50,6 +50,14 @@ import org.w3c.dom.UserDataHandler;
 public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNode {
 	// define one empty nodelist, for repeated use
 	private final static NodeList EMPTY_NODE_LIST = new NodeListImpl();
+	// DocumentPosition
+	//private final static short      DOCUMENT_POSITION_DISCONNECTED = 0x01;
+    private final static short      DOCUMENT_POSITION_PRECEDING    = 0x02;
+	private final static short      DOCUMENT_POSITION_FOLLOWING    = 0x04;
+    //private final static short      DOCUMENT_POSITION_CONTAINS     = 0x08;
+	//private final static short      DOCUMENT_POSITION_CONTAINED_BY = 0x10;
+	private final static short      DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20;
+
 
 	private boolean fDataEditable = true;
 	private IStructuredDocumentRegion flatNode = null;
@@ -846,12 +854,12 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		int otherStart = ((IDOMNode) other).getStartOffset();
 
 		if (otherStart > nodeStart) {
-			return Node.DOCUMENT_POSITION_FOLLOWING;
+			return DOCUMENT_POSITION_FOLLOWING;
 		}
 		else if (otherStart < nodeStart) {
-			return Node.DOCUMENT_POSITION_PRECEDING;
+			return DOCUMENT_POSITION_PRECEDING;
 		}
-		return Node.DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC;
+		return DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC;
 	}
 
 	/**
