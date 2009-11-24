@@ -250,7 +250,10 @@ public class TestJarUtilities extends TestCase {
 
 	public void testReadFromUnsupportedURL() {
 		URL entry = SSEModelTestsPlugin.getDefault().getBundle().getEntry("about.html");
-		String contents = readContents(JarUtilities.getInputStream(entry));
+		assertNotNull("null URL to about.html", entry);
+		InputStream inputStream = JarUtilities.getInputStream(entry);
+		assertNotNull("null input stream to "+entry, inputStream);
+		String contents = readContents(inputStream);
 		assertNotNull("no contents loaded", contents);
 		assertTrue("not enough contents read. Contents Length was " + contents.length() + " but expected more than 750.", contents.length() > 750);
 		assertTrue("contents not as expected" + contents.substring(0, 75), contents.indexOf("DOCTYPE") > 0);
