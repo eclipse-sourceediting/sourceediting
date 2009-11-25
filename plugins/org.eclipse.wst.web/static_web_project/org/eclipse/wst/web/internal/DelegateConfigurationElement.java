@@ -219,4 +219,16 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 		return delegateElement.getNamespaceIdentifier();
 	}
 
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=296122
+	public String getAttribute(String attrName, String locale) throws InvalidRegistryObjectException {
+		if (delegateElement == null) return null;
+		return delegateElement.getAttribute(attrName, locale);
+	}
+
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=296122
+	public String getValue(String locale) throws InvalidRegistryObjectException {
+		if (delegateElement == null) return null;
+		return delegateElement.getValue(locale);
+	}
+
 }
