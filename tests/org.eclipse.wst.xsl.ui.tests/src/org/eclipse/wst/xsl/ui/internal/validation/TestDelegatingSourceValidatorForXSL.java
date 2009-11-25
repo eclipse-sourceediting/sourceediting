@@ -68,11 +68,7 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName1);
 		
 		TestReporter reporter = new TestReporter();
-		try {
-			sourceValidator.validate(context, reporter);
-		} catch (ValidationException e) {
-			e.printStackTrace();
-		}
+		sourceValidator.validate(context, reporter);
 
 		assertFalse("Messages were reported on file with valid XPath 2.0",
 				reporter.isMessageReported());
@@ -83,11 +79,7 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName1);
 		
 		TestReporter reporter = new TestReporter();
-		try {
-			sourceValidator.validate(context, reporter);
-		} catch (ValidationException e) {
-			e.printStackTrace();
-		}
+		sourceValidator.validate(context, reporter);
 
 		assertFalse("Messages were reported on file with valid XSLT 2.0",
 				reporter.isMessageReported());
@@ -98,14 +90,18 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 		String fileName1 = "ListAllChangeRequests.xsl"; 
 		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName1);
 		TestReporter reporter = new TestReporter();
-		try {
-			sourceValidator.validate(context, reporter);
-		} catch (ValidationException e) {
-			e.printStackTrace();
-		}
+		sourceValidator.validate(context, reporter);
 
 		assertFalse("Messages were reported on " + fileName1 + ".", reporter
 				.isMessageReported());
+	}
+	
+	public void testXSLFunctionsWithParms() throws Exception {
+		String fileName = "bug290286.xsl";
+		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName);
+		TestReporter reporter = new TestReporter();
+		sourceValidator.validate(context, reporter);
+		assertFalse("Errors reported with XSLT 2.0 with Functions: " + fileName + ".", reporter.isMessageReported());
 	}
 
 	private class TestReporter implements IReporter {
