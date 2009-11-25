@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 290286 - Model loading of parameters not respecting functions. 
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.core.internal;
@@ -63,8 +64,7 @@ public class StylesheetParser {
 				currentTemplate = new Template(sf);
 				sf.addTemplate(currentTemplate);
 				xslEl = currentTemplate;
-			} else if ("param".equals(elName) && elementStack.size() == 2 && currentTemplate != null) //$NON-NLS-1$
-			{
+			} else if ("param".equals(elName) && parentEl.getModelType() != XSLModelObject.Type.STYLESHEET) { //$NON-NLS-1$
 				Parameter param = new Parameter(sf);
 				// determine whether param has a value
 				NodeList childNodes = element.getChildNodes();
@@ -75,7 +75,14 @@ public class StylesheetParser {
 						break;
 					}
 				}
-				currentTemplate.addParameter(param);
+				if (parentEl.getModelType() == XSLModelObject.Type.FUNCTION) {
+					Function function = (Function) parentEl;
+					function.addParameter(param);
+				} else if (parentEl.getModelType() == XSLModelObject.Type.TEMPLATE
+						&& elementStack.size() == 2 && currentTemplate != null) {
+					Template template = (Template) parentEl;
+					template.addParameter(param);
+				}
 				xslEl = param;
 			} else if ("call-template".equals(elName) && elementStack.size() >= 2) //$NON-NLS-1$
 			{
@@ -101,28 +108,26 @@ public class StylesheetParser {
 				xslEl = param;
 			} else if ("variable".equals(elName) || "param".equals(elName)) //$NON-NLS-1$ //$NON-NLS-2$
 			{
-				if (elementStack.size() == 1)
-				{// global variable
+				if (elementStack.size() == 1) {// global variable
 					Variable var = new Variable(sf);
 					sf.addGlobalVariable(var);
 					xslEl = var;
-				}
-				else if (elementStack.size() > 1 && currentTemplate != null)
-				{// local variable
+				} else if (elementStack.size() > 1 && currentTemplate != null) {// local
+																				// variable
 					Variable var = new Variable(sf);
 					currentTemplate.addVariable(var);
 					xslEl = var;
 				}
 			} else if ("function".equals(elName)) { //$NON-NLS-1$
+				currentTemplate = null;
 				Function function = new Function(sf);
 				functions.push(function);
 				sf.addFunction(function);
 				xslEl = function;
-			}
-			else {
+			} else {
 				xslEl = new XSLElement(sf);
 			}
-			if (xslEl!=null)
+			if (xslEl != null)
 				configure((IDOMNode) element, xslEl);
 		}
 		elementStack.push(element);
@@ -133,6 +138,7 @@ public class StylesheetParser {
 				recurse((Element) node);
 			}
 		}
+		
 		if (xslEl instanceof CallTemplate)
 			callTemplates.pop();
 		if (xslEl instanceof Function) {
@@ -157,15 +163,25 @@ public class StylesheetParser {
 		}
 		if (parentEl != null)
 			parentEl.addChild(element);
-		parentEl = element;
+		if (node.hasChildNodes()) {
+			NodeList nodeList = node.getChildNodes();
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node lnode = (Node) nodeList.item(i);
+				if (lnode.getNodeType() == Node.ELEMENT_NODE) {
+					parentEl = element; 
+					break;
+				}
+			}
+		}
+		//parentEl = element;
 	}
 
 	private static void setPositionInfo(IDOMNode node, XSLNode inc) {
 		try {
 			IStructuredDocument structuredDocument = node
 					.getStructuredDocument();
-			int line = structuredDocument.getLineOfOffset(node
-					.getStartOffset());
+			int line = structuredDocument
+					.getLineOfOffset(node.getStartOffset());
 			int lineOffset = structuredDocument.getLineOffset(line);
 			int col = node.getStartOffset() - lineOffset;
 			inc.setOffset(node.getStartOffset());

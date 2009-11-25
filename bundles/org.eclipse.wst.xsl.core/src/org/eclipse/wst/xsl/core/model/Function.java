@@ -21,6 +21,22 @@ public class Function extends XSLElement {
 	final List<Variable> variables = new ArrayList<Variable>();
 	final List<Parameter> parameters = new ArrayList<Parameter>();
 
+	/**
+	 * Return the variables defined in this function.
+	 * @return
+	 */
+	public List<Variable> getVariables() {
+		return variables;
+	}
+
+	/**
+	 * Return the parameters defined in this function.
+	 * @return
+	 */
+	public List<Parameter> getParameters() {
+		return parameters;
+	}
+
 	public Function(Stylesheet stylesheet) {
 		super(stylesheet);
 	}
