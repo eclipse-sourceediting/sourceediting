@@ -20,108 +20,84 @@ import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestXPathXMLCompletionProposal extends
-		AbstractSourceViewerTest {
-
-	public TestXPathXMLCompletionProposal() {
-	}
+public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 
 	public void testProposalsIncludeXSD() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
-		try {
-			loadFileForTesting(xslFilePath);
+		loadFileForTesting(xslFilePath);
 
-			ICompletionProposal[] proposals = getProposals(5,24);
-			assertNotNull("Did not find proposals.", proposals);
+		ICompletionProposal[] proposals = getProposals(5, 24);
+		assertNotNull("Did not find proposals.", proposals);
 
-			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].getDisplayString().contains("xsd:")) {
-					return;
-				}
+		for (int i = 0; i < proposals.length; i++) {
+			if (proposals[i].getDisplayString().contains("xsd:")) {
+				return;
 			}
-		} finally {
-			model.releaseFromEdit();
 		}
 		fail("Did not find XSD proposals.");
 	}
-	
+
 	public void testProposalsIncludeAfterColon() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
-		try {
-			loadFileForTesting(xslFilePath);
-			
-			ICompletionProposal[] proposals = getProposals(11,44);
-			assertNotNull("Did not find proposals.", proposals);
+		loadFileForTesting(xslFilePath);
 
-			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].getDisplayString().contains("xsd:")) {
-					return;
-				}
+		ICompletionProposal[] proposals = getProposals(11, 44);
+		assertNotNull("Did not find proposals.", proposals);
+
+		for (int i = 0; i < proposals.length; i++) {
+			if (proposals[i].getDisplayString().contains("xsd:")) {
+				return;
 			}
-		} finally {
-			model.releaseFromEdit();
 		}
 		fail("Did not find XSD proposals.");
 	}
-	
+
 	public void testProposalsIncludeXSDAfterForwardSlash() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
-		try {
-			loadFileForTesting(xslFilePath);
+		loadFileForTesting(xslFilePath);
 
-			ICompletionProposal[] proposals = getProposals(8,41);
-			assertNotNull("Did not find proposals.", proposals);
+		ICompletionProposal[] proposals = getProposals(8, 41);
+		assertNotNull("Did not find proposals.", proposals);
 
-			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].getDisplayString().contains("xsd:")) {
-					return;
-				}
+		for (int i = 0; i < proposals.length; i++) {
+			if (proposals[i].getDisplayString().contains("xsd:")) {
+				return;
 			}
-		} finally {
-			model.releaseFromEdit();
 		}
 		fail("Did not find XSD proposals.");
 	}
-	
+
 	public void testTestAttributeProposal() throws Exception {
 		fileName = "TestTestAttributeProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
-		try {
-			loadFileForTesting(xslFilePath);
+		loadFileForTesting(xslFilePath);
 
-			ICompletionProposal[] proposals = getProposals(4,28);
-			assertNotNull("Did not find proposals.", proposals);
+		ICompletionProposal[] proposals = getProposals(4, 28);
+		assertNotNull("Did not find proposals.", proposals);
 
-			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].getDisplayString().contains("document")) {
-					return;
-				}
+		for (int i = 0; i < proposals.length; i++) {
+			if (proposals[i].getDisplayString().contains("document")) {
+				return;
 			}
-		} finally {
-			model.releaseFromEdit();
 		}
 		fail("Did not find XPath proposals for the test attribute.");
 	}
-	
+
 	public void testCurlyBraceProposal() throws Exception {
 		fileName = "bug294079.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
-		try {
-			loadFileForTesting(xslFilePath);
+		loadFileForTesting(xslFilePath);
 
-			ICompletionProposal[] proposals = getProposals(4,12);
-			assertNotNull("Did not find proposals.", proposals);
+		ICompletionProposal[] proposals = getProposals(4, 12);
+		assertNotNull("Did not find proposals.", proposals);
 
-			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].getDisplayString().contains("document")) {
-					return;
-				}
+		for (int i = 0; i < proposals.length; i++) {
+			if (proposals[i].getDisplayString().contains("document")) {
+				return;
 			}
-		} finally {
-			model.releaseFromEdit();
 		}
 		fail("Did not find XPath proposals for the test attribute.");
 	}

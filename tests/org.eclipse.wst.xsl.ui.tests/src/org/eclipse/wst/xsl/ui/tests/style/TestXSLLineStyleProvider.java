@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
@@ -75,7 +76,6 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 	protected Shell shell = null;
 	protected Composite parent = null;
 
-
 	public TestXSLLineStyleProvider() {
 		// TODO Auto-generated constructor stub
 	}
@@ -107,7 +107,6 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 	protected void initializeSourceViewer() {
 		// some test environments might not have a "real" display
 		if (Display.getCurrent() != null) {
-
 
 			if (PlatformUI.isWorkbenchRunning()) {
 				shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -165,6 +164,9 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		parent.dispose();
+		if (model != null) {
+			model.releaseFromEdit();
+		}
 	}
 
 	private LineStyleProvider[] getLineStyleProviders() {
@@ -220,9 +222,11 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 			boolean handled = provider.prepareRegions(currentPartition,
 					currentPartition.getOffset(), currentPartition.getLength(),
 					holdStyleResults);
-			if (Debug.syntaxHighlighting && !handled) {
-				System.out
-						.println("Did not handle highlighting in Highlighter inner while"); //$NON-NLS-1$
+			if (Debug.syntaxHighlighting) {
+				if (!handled) {
+					System.out
+							.println("Did not handle highlighting in Highlighter inner while"); //$NON-NLS-1$
+				}
 			}
 		}
 	}
@@ -230,48 +234,39 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 	public void testHasLineStyleProvider() throws Exception {
 		setUpTest("utils.xsl");
 
-		try {
-			LineStyleProvider[] lineStyleProviders = getLineStyleProviders();
-			assertNotNull("No line style providers found.", lineStyleProviders);
-			assertEquals("Wrong number of providers", 1,
-					lineStyleProviders.length);
-		} finally {
-			model.releaseFromEdit();
-		}
+		LineStyleProvider[] lineStyleProviders = getLineStyleProviders();
+		assertNotNull("No line style providers found.", lineStyleProviders);
+		assertEquals("Wrong number of providers", 1, lineStyleProviders.length);
 	}
 
 	public void testInitializeLineStyleProvider() throws Exception {
 		setUpTest("utils.xsl");
-		try {
-			initializeProvider();
-		} finally {
-			model.releaseFromEdit();
-		}
+		initializeProvider();
 	}
 
 	public void testPrepareRegion() throws Exception {
 		setUpTest("utils.xsl");
-		try {
-			LineStyleProvider provider = initializeProvider();
-			int startOffset = document.getFirstStructuredDocumentRegion()
-					.getStartOffset();
-			int endLineLength = document.getLength();
+		LineStyleProvider provider = initializeProvider();
+		ITypedRegion[] partitions = setupPartitions();
 
-			IRegion styleRegion = getDocumentRangeFromWidgetRange(startOffset,
-					endLineLength);
-			ITypedRegion[] partitions = TextUtilities.computePartitioning(
-					document, Partitioning, styleRegion.getOffset(),
-					styleRegion.getLength(), false);
+		assertTrue("No Partitions found.", partitions.length > 0);
+		ArrayList holdStyleResults = new ArrayList();
+		applyStyles(provider, partitions, holdStyleResults);
+		assertFalse("No styles applied.", holdStyleResults.isEmpty());
+		assertEquals("Unexpected StyleRange size", 221, holdStyleResults.size());
+	}
 
-			assertTrue("No Partitions found.", partitions.length > 0);
-			ArrayList holdStyleResults = new ArrayList();
-			applyStyles(provider, partitions, holdStyleResults);
-			assertFalse("No styles applied.", holdStyleResults.isEmpty());
-			assertEquals("Unexpected StyleRange size", 221, holdStyleResults
-					.size());
-		} finally {
-			model.releaseFromEdit();
-		}
+	private ITypedRegion[] setupPartitions() throws BadLocationException {
+		int startOffset = document.getFirstStructuredDocumentRegion()
+				.getStartOffset();
+		int endLineLength = document.getLength();
+
+		IRegion styleRegion = getDocumentRangeFromWidgetRange(startOffset,
+				endLineLength);
+		ITypedRegion[] partitions = TextUtilities.computePartitioning(document,
+				Partitioning, styleRegion.getOffset(), styleRegion.getLength(),
+				false);
+		return partitions;
 	}
 
 }

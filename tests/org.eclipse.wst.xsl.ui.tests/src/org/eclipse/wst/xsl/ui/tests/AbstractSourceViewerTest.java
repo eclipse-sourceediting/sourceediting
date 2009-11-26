@@ -183,6 +183,9 @@ public class AbstractSourceViewerTest extends AbstractXSLUITest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		parent.dispose();
+		if (model != null) {
+			model.releaseFromEdit();
+		}
 	}
 	
 	

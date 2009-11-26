@@ -37,7 +37,6 @@ public class TestTemplateModeCompletionProposal extends
 		int chars = 36;
 		int line = 16;
 
-		try {
 			int offset = document.getLineOffset(line) + chars;
 			// assertEquals("Wrong offset returned", 471, offset);
 
@@ -49,9 +48,6 @@ public class TestTemplateModeCompletionProposal extends
 			proposals = getXMLProposals(offset);
 			assertProposalExists("\"#all\"", proposals);
 
-		} finally {
-			model.releaseFromEdit();
-		}
 	}
 
 	private void assertProposalExists(String expected,

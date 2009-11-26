@@ -33,15 +33,11 @@ public class TestHrefCompletionProposal extends AbstractSourceViewerTest {
 		int column = 25;
 		int line = 16;
 
-		try {
 			int offset = document.getLineOffset(line) + column;
 
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertTrue("Incorrect number of proposals", proposals.length > 3);
 			doCommonTests(proposals);
-		} finally {
-			model.releaseFromEdit();
-		}
 	}
 
 	private void doCommonTests(ICompletionProposal[] proposals) {

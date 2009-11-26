@@ -22,15 +22,10 @@ public class TestCallTemplateCompletionProposal extends
 		fileName = "calltemplateTest.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
-		int offset = 790;
 
-		try {
-			ICompletionProposal[] proposals = getProposals(16, 27);
-			
-			assertNotNull("Did not find proposals.", proposals);
-		} finally {
-			model.releaseFromEdit();
-		}
+		ICompletionProposal[] proposals = getProposals(16, 27);
+
+		assertNotNull("Did not find proposals.", proposals);
 	}
 
 	public void testUtilsProposalAvailable() throws Exception {
@@ -38,15 +33,11 @@ public class TestCallTemplateCompletionProposal extends
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		try {
-			ICompletionProposal[] proposals = getProposals(16,27);
-			assertNotNull("Did not find proposals.", proposals);
-			assertTrue("Empty proposals returned.", proposals.length > 0);
-			assertEquals("Wrong proposal found.", "long_date", proposals[0]
-					.getDisplayString());
-		} finally {
-			model.releaseFromEdit();
-		}
+		ICompletionProposal[] proposals = getProposals(16, 27);
+		assertNotNull("Did not find proposals.", proposals);
+		assertTrue("Empty proposals returned.", proposals.length > 0);
+		assertEquals("Wrong proposal found.", "long_date", proposals[0]
+				.getDisplayString());
 	}
 
 }

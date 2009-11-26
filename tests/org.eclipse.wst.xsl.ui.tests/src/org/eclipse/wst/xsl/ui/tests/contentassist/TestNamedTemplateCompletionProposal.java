@@ -31,12 +31,8 @@ public class TestNamedTemplateCompletionProposal extends
 	public void testXSLPropsoalAvailable() throws Exception {
 		setupTestFile("TestNamedTemplatesAssist.xsl");
 
-		try {
 			ICompletionProposal[] proposals = getProposals(30,51);
 			assertEquals("Missing Proposals", 3, proposals.length);
-		} finally {
-			model.releaseFromEdit();
-		}
 	}
 
 }

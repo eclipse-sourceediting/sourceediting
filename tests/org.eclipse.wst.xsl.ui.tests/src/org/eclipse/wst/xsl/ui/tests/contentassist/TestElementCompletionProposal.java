@@ -21,12 +21,7 @@ import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestElementCompletionProposal extends
-		AbstractSourceViewerTest {
-
-	public TestElementCompletionProposal() {
-		// TODO Auto-generated constructor stub
-	}
+public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 
 	public void testXSLPropsoalAvailable() throws Exception {
 		fileName = "testElementProposals.xsl";
@@ -38,14 +33,10 @@ public class TestElementCompletionProposal extends
 		int column = 16;
 		int line = 5;
 
-		try {
-			int offset = document.getLineOffset(line) + column;
+		int offset = document.getLineOffset(line) + column;
 
-			ICompletionProposal[] proposals = getProposals(offset);
-			assertNotNull("Did not find proposals.", proposals);
-		} finally {
-			model.releaseFromEdit();
-		}
+		ICompletionProposal[] proposals = getProposals(offset);
+		assertNotNull("Did not find proposals.", proposals);
 	}
 
 	public void testXSLApplyTemplatesPropsoalAvailable() throws Exception {
@@ -58,25 +49,20 @@ public class TestElementCompletionProposal extends
 		int column = 16;
 		int line = 5;
 
-		try {
-			int offset = document.getLineOffset(line) + column;
+		int offset = document.getLineOffset(line) + column;
 
-			ICompletionProposal[] proposals = getProposals(offset);
-			assertNotNull("Did not find proposals.", proposals);
+		ICompletionProposal[] proposals = getProposals(offset);
+		assertNotNull("Did not find proposals.", proposals);
 
-			String proposalName = "";
-			for (int cnt = 0; cnt < proposals.length; cnt++) {
-				if (proposals[cnt].getDisplayString().equals(
-						"xsl:apply-templates")) {
-					proposalName = proposals[cnt].getDisplayString();
-				}
+		String proposalName = "";
+		for (int cnt = 0; cnt < proposals.length; cnt++) {
+			if (proposals[cnt].getDisplayString().equals("xsl:apply-templates")) {
+				proposalName = proposals[cnt].getDisplayString();
 			}
-
-			assertEquals("Did not find expected proposal.",
-					"xsl:apply-templates", proposalName);
-		} finally {
-			model.releaseFromEdit();
 		}
+
+		assertEquals("Did not find expected proposal.", "xsl:apply-templates",
+				proposalName);
 	}
 
 	public void testXSLChoosePropsoalAvailable() throws Exception {
@@ -89,27 +75,20 @@ public class TestElementCompletionProposal extends
 		int column = 16;
 		int line = 5;
 
-		try {
-			int offset = document.getLineOffset(line) + column;
+		int offset = document.getLineOffset(line) + column;
 
-			ICompletionProposal[] proposals = getProposals(offset);
-			assertNotNull("Did not find proposals.", proposals);
+		ICompletionProposal[] proposals = getProposals(offset);
+		assertNotNull("Did not find proposals.", proposals);
 
-			String proposalName = "";
-			for (int cnt = 0; cnt < proposals.length; cnt++) {
-				if (proposals[cnt].getDisplayString().equals("xsl:choose")) {
-					proposalName = proposals[cnt].getDisplayString();
-				}
+		String proposalName = "";
+		for (int cnt = 0; cnt < proposals.length; cnt++) {
+			if (proposals[cnt].getDisplayString().equals("xsl:choose")) {
+				proposalName = proposals[cnt].getDisplayString();
 			}
-
-			assertEquals("Did not find expected proposal.", "xsl:choose",
-					proposalName);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
-		} finally {
-			model.releaseFromEdit();
 		}
+
+		assertEquals("Did not find expected proposal.", "xsl:choose",
+				proposalName);
 	}
 
 	public void testXSLWhenPropsoalNotAvailable() throws Exception {
@@ -122,24 +101,19 @@ public class TestElementCompletionProposal extends
 		int column = 16;
 		int line = 5;
 
-		try {
-			int offset = document.getLineOffset(line) + column;
+		int offset = document.getLineOffset(line) + column;
 
-			ICompletionProposal[] proposals = getProposals(offset);
-			assertNotNull("Did not find proposals.", proposals);
+		ICompletionProposal[] proposals = getProposals(offset);
+		assertNotNull("Did not find proposals.", proposals);
 
-			String proposalName = "";
-			for (int cnt = 0; cnt < proposals.length; cnt++) {
-				if (proposals[cnt].getDisplayString().equals("xsl:when")) {
-					proposalName = proposals[cnt].getDisplayString();
-				}
+		String proposalName = "";
+		for (int cnt = 0; cnt < proposals.length; cnt++) {
+			if (proposals[cnt].getDisplayString().equals("xsl:when")) {
+				proposalName = proposals[cnt].getDisplayString();
 			}
-
-			assertFalse("xsl:when proposal found when it shouldn't have been.",
-					proposalName.equals("xsl:when"));
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		}
+
+		assertFalse("xsl:when proposal found when it shouldn't have been.",
+				proposalName.equals("xsl:when"));
 	}
 }

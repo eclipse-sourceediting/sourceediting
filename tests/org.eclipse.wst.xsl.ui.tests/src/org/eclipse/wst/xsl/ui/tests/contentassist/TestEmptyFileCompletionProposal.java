@@ -15,8 +15,7 @@ import java.io.File;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
-public class TestEmptyFileCompletionProposal extends
-		AbstractSourceViewerTest {
+public class TestEmptyFileCompletionProposal extends AbstractSourceViewerTest {
 
 	public void testXSLPropsoalAvailable() throws Exception {
 		fileName = "EmptyXSLFile.xsl";
@@ -24,12 +23,8 @@ public class TestEmptyFileCompletionProposal extends
 		loadFileForTesting(xslFilePath);
 		int offset = 0;
 
-		try {
-			ICompletionProposal[] proposals = getProposals(offset);
-			assertNotNull("Did not find proposals.", proposals);
-		} finally {
-			model.releaseFromEdit();
-		}
+		ICompletionProposal[] proposals = getProposals(offset);
+		assertNotNull("Did not find proposals.", proposals);
 	}
 
 }
