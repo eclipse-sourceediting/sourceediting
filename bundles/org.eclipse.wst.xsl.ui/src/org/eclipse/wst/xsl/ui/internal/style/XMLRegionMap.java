@@ -35,6 +35,7 @@ public class XMLRegionMap {
 		regionMap.put(DOMRegionContext.XML_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
 		regionMap.put(DOMRegionContext.XML_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
 		regionMap.put(DOMRegionContext.XML_END_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
+		regionMap.put(DOMRegionContext.XML_EMPTY_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
 		regionMap.put(DOMRegionContext.XML_CDATA_OPEN, IStyleConstantsXML.CDATA_BORDER);
 		regionMap.put(DOMRegionContext.XML_CDATA_CLOSE, IStyleConstantsXML.CDATA_BORDER);
 		regionMap.put(DOMRegionContext.XML_CDATA_TEXT, IStyleConstantsXML.CDATA_TEXT);
