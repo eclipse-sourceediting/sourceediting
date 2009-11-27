@@ -23,6 +23,7 @@ Export-Package: org.eclipse.wst.xsl.core;uses:="org.eclipse.wst.xsl.core.interna
  org.eclipse.wst.xsl.core.internal;x-friends:="org.eclipse.wst.xsl.*",
  org.eclipse.wst.xsl.core.internal.ant;x-internal:=true,
  org.eclipse.wst.xsl.core.internal.encoding;x-friends:="org.eclipse.wst.xsl.*",
+ org.eclipse.wst.xsl.core.internal.model;x-internal:=true,
  org.eclipse.wst.xsl.core.internal.modelhandler;x-friends:="org.eclipse.wst.xsl.*",
  org.eclipse.wst.xsl.core.internal.parser;x-friends:="org.eclipse.wst.xsl.*",
  org.eclipse.wst.xsl.core.internal.parser.regions;x-friends:="org.eclipse.wst.xsl.*",

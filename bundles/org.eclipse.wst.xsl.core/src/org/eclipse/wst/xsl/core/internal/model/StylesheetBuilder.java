@@ -11,42 +11,21 @@
  *     David Carver (STAR) - add XSL Functions element support and refactored
  *                           StyleSheet Parser
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal;
+package org.eclipse.wst.xsl.core.internal.model;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Stack;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
-import org.eclipse.wst.xsl.core.model.CallTemplate;
-import org.eclipse.wst.xsl.core.model.Function;
-import org.eclipse.wst.xsl.core.model.Import;
-import org.eclipse.wst.xsl.core.model.Include;
-import org.eclipse.wst.xsl.core.model.Parameter;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
-import org.eclipse.wst.xsl.core.model.Template;
-import org.eclipse.wst.xsl.core.model.Variable;
-import org.eclipse.wst.xsl.core.model.XSLAttribute;
-import org.eclipse.wst.xsl.core.model.XSLElement;
-import org.eclipse.wst.xsl.core.model.XSLNode;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * A builder that creates and maintains a cache of <code>Stylesheet</code>'s.
@@ -152,9 +131,9 @@ public class StylesheetBuilder {
 		if (builtFiles.isEmpty()) {
 			return;
 		}
-		Iterator it = builtFiles.keySet().iterator();
+		Iterator<IFile> it = builtFiles.keySet().iterator();
 		while (it.hasNext()) {
-			IFile key = (IFile) it.next();
+			it.next();
 			it.remove();
 		}
 	}

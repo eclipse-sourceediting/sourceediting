@@ -63,6 +63,7 @@ public class Parameter extends Variable
 	/**
 	 * @since 1.1
 	 */
+	@Override
 	public String getAs() {
 		return getAttributeValue("as"); //$NON-NLS-1$
 	}

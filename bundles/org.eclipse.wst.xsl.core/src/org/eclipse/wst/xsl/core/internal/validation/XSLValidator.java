@@ -134,7 +134,7 @@ public class XSLValidator {
 		// template checks
 		checkTemplates(stylesheetComposed, report);
 		
-		if (stylesheetComposed.getStylesheet().getVersion().equals("2.0")) {
+		if (stylesheetComposed.getStylesheet().getVersion().equals("2.0")) { //$NON-NLS-1$
 			checkFunctions(stylesheetComposed, report);
 		}
 		// call-template checks

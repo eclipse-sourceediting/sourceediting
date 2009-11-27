@@ -185,6 +185,7 @@ public class Stylesheet extends XSLElement {
 	}
 	
 	/**
+	 * @param function 
 	 * @since 1.1
 	 */
 	public void addFunction(Function function) {
