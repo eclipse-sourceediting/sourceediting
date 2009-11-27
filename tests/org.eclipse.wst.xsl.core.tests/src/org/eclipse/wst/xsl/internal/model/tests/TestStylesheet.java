@@ -3,7 +3,7 @@ package org.eclipse.wst.xsl.internal.model.tests;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.wst.xsl.core.internal.StylesheetBuilder;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.model.Function;
 import org.eclipse.wst.xsl.core.model.Import;
 import org.eclipse.wst.xsl.core.model.Include;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.core.internal.StylesheetBuilder;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;

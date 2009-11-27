@@ -45,7 +45,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.core.internal.StylesheetBuilder;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
