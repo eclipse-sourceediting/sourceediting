@@ -133,8 +133,8 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		add_function(new FnName());
 		add_function(new FnLocalName());
 		add_function(new FnNamespaceUri());
-
 		add_function(new FnNumber());
+		add_function(new FnInScopePrefixes());
 
 		// node functs
 		add_function(new FnLang());
