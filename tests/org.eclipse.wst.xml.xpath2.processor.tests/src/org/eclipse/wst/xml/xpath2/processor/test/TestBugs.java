@@ -1088,6 +1088,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
+	
 
 	private CollationProvider createLengthCollatorProvider() {
 		return new CollationProvider() {
