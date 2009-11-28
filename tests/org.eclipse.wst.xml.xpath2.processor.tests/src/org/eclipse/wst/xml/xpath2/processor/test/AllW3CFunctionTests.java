@@ -44,7 +44,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(NotFuncTest.class);
 		suite.addTestSuite(IRIToURIfuncTest.class);
 		suite.addTestSuite(SeqExistsFuncTest.class);
-//		suite.addTestSuite(InScopePrefixesFuncTest.class);
+		suite.addTestSuite(InScopePrefixesFuncTest.class);
 		suite.addTestSuite(UpperCaseFuncTest.class);
 		suite.addTestSuite(HoursFromDurationFuncTest.class);
 		suite.addTestSuite(TimezoneFromDateTimeFuncTest.class);
