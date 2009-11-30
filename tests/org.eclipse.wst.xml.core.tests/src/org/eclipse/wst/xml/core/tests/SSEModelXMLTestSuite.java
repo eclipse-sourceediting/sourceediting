@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.xml.core.internal.document.test.NodeImplTestCase;
+import org.eclipse.wst.xml.core.tests.cleanup.TestCleanupProcessorXML;
 import org.eclipse.wst.xml.core.tests.contentmodel.CMValidatorValidationTest;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestAttributesOrder;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestCatalogRetrivalAndModelCreation;
@@ -66,7 +67,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(NodeImplTestCase.class));
 
 		addTest(new TestSuite(TestPartitionFormatterXML.class));
-
+		addTest(new TestSuite(TestCleanupProcessorXML.class));
 		addTest(new TestSuite(TestAttributesOrder.class));
 		
 		addTest(new TestSuite(CMValidatorValidationTest.class));
