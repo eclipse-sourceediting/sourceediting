@@ -135,6 +135,14 @@ public class XMLCorePreferenceNames {
 	public static final String QUOTE_ATTR_VALUES = "quoteAttrValues";//$NON-NLS-1$
 
 	/**
+	 * Indicates whether or not to insert missing XML declarations during cleanup.
+	 * <p>
+	 * Value is of type <code>Boolean</code>
+	 * </p>
+	 */
+	public static final String FIX_XML_DECLARATION = "fixXMLDeclaration"; //$NON-NLS-1$
+
+	/**
 	 * Indicates whether or not to convert all line delimiters during cleanup.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.

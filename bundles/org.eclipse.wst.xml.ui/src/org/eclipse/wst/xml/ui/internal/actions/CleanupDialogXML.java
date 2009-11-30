@@ -37,6 +37,7 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 	protected Button fCheckBoxInsertMissingTags;
 	protected Button fCheckBoxInsertRequiredAttrs;
 	protected Button fCheckBoxQuoteAttrValues;
+	protected Button fCheckBoxInsertXMLDeclaration;
 	protected IStructuredModel fModel = null;
 	protected Preferences fPreferences = null;
 	protected Button fRadioButtonAttrNameCaseAsis;
@@ -101,6 +102,10 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 		fCheckBoxFormatSource.setText(XMLUIMessages.Format_source_UI_);
 		fCheckBoxFormatSource.addSelectionListener(this);
 
+		fCheckBoxInsertXMLDeclaration = new Button(composite, SWT.CHECK);
+		fCheckBoxInsertXMLDeclaration.setText(XMLUIMessages.Insert_XML_decl);
+		fCheckBoxInsertXMLDeclaration.addSelectionListener(this);
+
 		// Convert EOL code
 		fCheckBoxConvertEOLCodes = new Button(composite, SWT.CHECK);
 		fCheckBoxConvertEOLCodes.setText(XMLUIMessages.Convert_EOL_codes_UI_);
@@ -144,6 +149,7 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 		fCheckBoxQuoteAttrValues.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.QUOTE_ATTR_VALUES));
 		fCheckBoxFormatSource.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.FORMAT_SOURCE));
 		fCheckBoxConvertEOLCodes.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.CONVERT_EOL_CODES));
+		fCheckBoxInsertXMLDeclaration.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.FIX_XML_DECLARATION));
 		String EOLCode = getModelPreferences().getString(XMLCorePreferenceNames.CLEANUP_EOL_CODE);
 		if (EOLCode.compareTo(CommonEncodingPreferenceNames.LF) == 0) {
 			fRadioButtonConvertEOLUnix.setSelection(true);
@@ -176,6 +182,7 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 		getModelPreferences().setValue(XMLCorePreferenceNames.QUOTE_ATTR_VALUES, fCheckBoxQuoteAttrValues.getSelection());
 		getModelPreferences().setValue(XMLCorePreferenceNames.FORMAT_SOURCE, fCheckBoxFormatSource.getSelection());
 		getModelPreferences().setValue(XMLCorePreferenceNames.CONVERT_EOL_CODES, fCheckBoxConvertEOLCodes.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.FIX_XML_DECLARATION, fCheckBoxInsertXMLDeclaration.getSelection());
 		if (fRadioButtonConvertEOLUnix.getSelection()) {
 			getModelPreferences().setValue(XMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.LF);
 		}

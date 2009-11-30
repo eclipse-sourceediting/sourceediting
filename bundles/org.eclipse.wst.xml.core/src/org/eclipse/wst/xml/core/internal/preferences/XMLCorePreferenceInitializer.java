@@ -47,6 +47,7 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putBoolean(XMLCorePreferenceNames.QUOTE_ATTR_VALUES, true);
 		node.putBoolean(XMLCorePreferenceNames.FORMAT_SOURCE, true);
 		node.putBoolean(XMLCorePreferenceNames.CONVERT_EOL_CODES, false);
+		node.putBoolean(XMLCorePreferenceNames.FIX_XML_DECLARATION, true);
 
 		node.put(CommonEncodingPreferenceNames.INPUT_CODESET, ""); //$NON-NLS-1$
 		node.put(CommonEncodingPreferenceNames.OUTPUT_CODESET, "UTF-8");//$NON-NLS-1$

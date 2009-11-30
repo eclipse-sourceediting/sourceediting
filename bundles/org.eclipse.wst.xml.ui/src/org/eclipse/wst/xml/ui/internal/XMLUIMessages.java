@@ -205,6 +205,7 @@ public class XMLUIMessages extends NLS {
 	public static String Quote_attribute_values_UI_;
 	public static String Format_source_UI_;
 	public static String Convert_EOL_codes_UI_;
+	public static String Insert_XML_decl;
 	public static String EOL_Windows_UI;
 	public static String EOL_Unix_UI;
 	public static String EOL_Mac_UI;
