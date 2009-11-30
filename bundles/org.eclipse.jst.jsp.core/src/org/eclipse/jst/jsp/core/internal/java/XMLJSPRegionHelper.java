@@ -23,6 +23,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
@@ -135,7 +136,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			 * translator for dealing with TEI variables
 			 */
 			try {
-				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f);
+				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f, false);
+				if (handler == null)
+					handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT);
 				document = (IStructuredDocument) handler.getDocumentLoader().createNewStructuredDocument();
 				contents = FileContentCache.getInstance().getContents(f.getFullPath());
 			}
