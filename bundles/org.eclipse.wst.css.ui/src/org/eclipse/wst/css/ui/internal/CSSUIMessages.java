@@ -89,6 +89,9 @@ public class CSSUIMessages extends NLS {
 	public static String UI_none;
 	public static String Cleanup_UI_;
 	public static String CSS_Cleanup_UI_;
+	public static String ToggleComment_tooltip;
+	public static String AddBlockComment_tooltip;
+	public static String RemoveBlockComment_tooltip;
 	public static String Identifier_case__UI_;
 	public static String Property_name_case__UI_;
 	public static String Property_value_case__UI_;

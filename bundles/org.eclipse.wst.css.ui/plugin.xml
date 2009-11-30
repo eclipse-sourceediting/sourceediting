@@ -242,6 +242,48 @@
 			</enabledWhen>
 		</handler>
 		<handler
+             class="org.eclipse.wst.css.ui.internal.handlers.ToggleCommentHandler"
+             commandId="org.eclipse.wst.sse.ui.toggle.comment">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition">
+             	</reference>
+             </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.css.ui.internal.handlers.AddBlockCommentHandler"
+             commandId="org.eclipse.wst.sse.ui.add.block.comment">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition">
+             	</reference>
+             </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.css.ui.internal.handlers.RemoveBlockCommentHandler"
+             commandId="org.eclipse.wst.sse.ui.remove.block.comment">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition">
+             	</reference>
+             </enabledWhen>
+       </handler>
+		<handler
 			class="org.eclipse.wst.css.ui.internal.handlers.StructuredSelectEnclosingHandler"
 			commandId="org.eclipse.wst.sse.ui.structure.select.enclosing">
 			<activeWhen>
@@ -282,6 +324,54 @@
 				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
 			</enabledWhen>
 		</handler>
+	</extension>
+
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+	       locationURI="popup:sourcePopupMenuId?before=sourceBegin">
+			<command commandId="org.eclipse.wst.sse.ui.toggle.comment" id="ToggleComment" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.add.block.comment" id="AddBlockComment" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition" />
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.remove.block.comment" id="RemoveBlockComment" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+
+		<menuContribution locationURI="menu:sourceMenuId?before=sourceBegin">
+			<command commandId="org.eclipse.wst.sse.ui.toggle.comment"
+			         id="ToggleComment"
+			         mnemonic="%command.toggle.comment.mnemonic"
+			         style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.add.block.comment"
+			         id="AddBlockComment"
+			         mnemonic="%command.add.block.comment.mnemonic"
+			         style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.remove.block.comment"
+			         id="RemoveBlockComment"
+			         mnemonic="%command.remove.block.comment.mnemonic"
+			         style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
 	</extension>
 	<!-- CSS editor actions -->
 	<extension point="org.eclipse.ui.editorActions">
