@@ -120,7 +120,7 @@ public class TestJarUtilities extends TestCase {
 	}
 
 	private String readContents(InputStream is) {
-		String charset = "utf8";
+		String charset = "iso-8859-1";
 
 		StringBuffer s = new StringBuffer();
 		Reader reader = null;
