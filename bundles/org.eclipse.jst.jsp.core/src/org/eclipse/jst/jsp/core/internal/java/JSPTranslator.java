@@ -124,7 +124,7 @@ public class JSPTranslator {
 	private String fSessionVariableDeclaration = "javax.servlet.http.HttpSession session = null;" + ENDL; //$NON-NLS-1$
 	private String fFooter = "}}"; //$NON-NLS-1$
 	private String fException = "Throwable exception = null;"; //$NON-NLS-1$
-	public static final String EXPRESSION_PREFIX = "out.print(\"\"+"; //$NON-NLS-1$
+	public static final String EXPRESSION_PREFIX = "out.print("; //$NON-NLS-1$
 	public static final String EXPRESSION_SUFFIX = ");"; //$NON-NLS-1$
 	String fSuperclass = null;
 
@@ -2082,8 +2082,8 @@ public class JSPTranslator {
 	}
 
 	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
-		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer);
-		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
+		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer, true);
+		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect, true);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, embeddedContainer);
 	}
 	
@@ -2094,7 +2094,7 @@ public class JSPTranslator {
 		}
 
 		//-- This is a quoted attribute. We need to unquote as per the JSP spec: JSP 2.0 page 1-36
-		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer);
+		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer, true);
 
 		int length = newText.length();
 		int runStart = 0;
@@ -2146,8 +2146,8 @@ public class JSPTranslator {
 	// <%= %>
 	protected void translateExpression(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, EXPRESSION);
-		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, region);
-		appendToBuffer(newText, fUserCode, true, region);
+		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, region, true);
+		appendToBuffer(newText, fUserCode, true, region, true);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, region);
 	}
 
@@ -2182,6 +2182,25 @@ public class JSPTranslator {
 			length = jspReferenceRegion.getLength();
 		}
 		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, start, length, false);
+	}
+	
+	/**
+	 * Append using a region, probably indirect mapping (eg. <%@page
+	 * include=""%>)
+	 * 
+	 * @param newText
+	 * @param buffer
+	 * @param addToMap
+	 * @param jspReferenceRegion
+	 * @param nonl
+	 */
+	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, boolean nonl) {
+		int start = 0, length = 0;
+		if (jspReferenceRegion != null) {
+			start = jspReferenceRegion.getStartOffset();
+			length = jspReferenceRegion.getLength();
+		}
+		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, start, length, false, nonl);
 	}
 	
 	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
