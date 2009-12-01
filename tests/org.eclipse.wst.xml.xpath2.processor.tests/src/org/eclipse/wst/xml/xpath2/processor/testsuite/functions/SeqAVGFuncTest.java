@@ -6316,7 +6316,7 @@ public class SeqAVGFuncTest extends AbstractPsychoPathTest {
    public void test_fn_avg_mix_args_066() throws Exception {
       String inputFile = "/TestSources/bib2.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/AggregateSeqFunc/SeqAVGFunc/fn-avg-mix-args-066.xq";
-      String expectedResult = "FORG0006";
+      String expectedResult = "FORG0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
