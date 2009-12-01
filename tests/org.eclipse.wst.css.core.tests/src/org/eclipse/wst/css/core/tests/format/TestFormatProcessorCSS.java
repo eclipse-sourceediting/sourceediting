@@ -161,4 +161,19 @@ public class TestFormatProcessorCSS extends TestCase {
 	public void testBUG196476selectorPseudoclassesFormat() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/bug196476-selector-pseudo-classes.css", "testfiles/bug196476-selector-pseudo-classes-fmt.css");
 	}
+	
+	/**
+	 * file should not change after format
+	 */
+	public void testBUG163315SlashBeforePrimative1() throws UnsupportedEncodingException, IOException, CoreException {
+		//
+		formatAndAssertEquals("testfiles/bug163315-slash_before_primative_1.css", "testfiles/bug163315-slash_before_primative_1.css");
+	}
+	
+	/**
+	 * space after / should be removed
+	 */
+	public void testBUG163315SlashBeforePrimative2() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/bug163315-slash_before_primative_2.css", "testfiles/bug163315-slash_before_primative_1.css");
+	}
 }
