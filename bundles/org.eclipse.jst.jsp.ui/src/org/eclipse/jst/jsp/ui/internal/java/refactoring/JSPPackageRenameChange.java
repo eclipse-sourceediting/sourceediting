@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,10 +20,16 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
 /**
- * @author pavery
+ * <p><b>Note:</b> This class is not used internally any longer and will
+ * be removed at some point.</p>
+ * 
+ * @deprecated
  */
 public class JSPPackageRenameChange extends Change {
 
+	/**
+	 * @deprecated
+	 */
 	public static Change[] createChangesFor(IPackageFragment pkg, String newName) {
 		JSPSearchSupport support = JSPSearchSupport.getInstance();
 		

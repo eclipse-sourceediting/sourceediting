@@ -357,8 +357,10 @@ public class JSPTranslationExtension extends JSPTranslation {
 		if (edits.length == 0)
 			return new MultiTextEdit();
 
-		IRegion region = TextEdit.getCoverage(edits);
-		MultiTextEdit multiEdit = new MultiTextEdit(region.getOffset(), region.getLength());
+		/* should not specify a limited region because other edits outside
+		 * these original edits might be added later.
+		 */
+		MultiTextEdit multiEdit = new MultiTextEdit();
 		for (int i = 0; i < edits.length; i++) {
 			addToMultiEdit(edits[i], multiEdit);
 		}

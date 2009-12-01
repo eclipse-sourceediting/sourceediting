@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,73 +10,52 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
-import org.eclipse.ltk.core.refactoring.Change;
-import org.eclipse.ltk.core.refactoring.CompositeChange;
-import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
-import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
 
 /**
- * @author pavery
+ * {@link JSPMoveParticipant} used to update JSP documents when a Java type is moved.
  */
-public class JSPTypeMoveParticipant extends MoveParticipant {
+public class JSPTypeMoveParticipant extends JSPMoveParticipant {
 	
-	IType fType = null;
-	
-	/* (non-Javadoc)
+	/**
+	 * Initializes the name of this participant to the name of the {@link IType}
+	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#initialize(java.lang.Object)
 	 */
 	protected boolean initialize(Object element) {
-		
+		boolean success = false;
 		if(element instanceof IType) {
-			this.fType = (IType)element;
-			return true;
+			super.fName =((IType)element).getElementName();
+			success = true;
 		}
-		return false;
+		return success;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#getName()
+	/**
+	 * @return a {@link JSPTypeMoveRequestor}
+	 * @see org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPMoveParticipant#getSearchRequestor(org.eclipse.jdt.core.IJavaElement, java.lang.String)
 	 */
-	public String getName() {
+	protected BasicRefactorSearchRequestor getSearchRequestor(
+			IJavaElement element, String newName) {
 		
-		String name = ""; //$NON-NLS-1$
-		if(this.fType != null)
-			name = this.fType.getElementName();
-		return name;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#checkConditions(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
-	 */
-	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#createChange(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public Change createChange(IProgressMonitor pm) throws CoreException {
+		BasicRefactorSearchRequestor searchRequestor = null;
 		
-		if(pm != null && pm.isCanceled())
-			return null;
-		
-		CompositeChange multiChange = null; 
-		Object dest = getArguments().getDestination();
-		
-		if(dest instanceof IPackageFragment) {		
-			Change[] changes = JSPTypeMoveChange.createChangesFor(fType, ((IPackageFragment)dest).getElementName());
-			if(changes.length > 0)
-				multiChange = new CompositeChange(JSPUIMessages.JSP_changes, changes); //$NON-NLS-1$
+		if(isLegalElementType(element)) {
+			searchRequestor = new JSPTypeMoveRequestor(element, newName);
 		}
-		return multiChange;
+		
+		return searchRequestor;
 	}
-	
+
+	/**
+	 * <p>Legal types are: 
+	 * <ul><li>{@link IType}</li></ul></p>
+	 * 
+	 * @see org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPRenameParticipant#isLegalElementType(org.eclipse.jdt.core.IJavaElement)
+	 */
+	protected boolean isLegalElementType(IJavaElement element) {
+		return (element instanceof IType);
+	}
 	
 }

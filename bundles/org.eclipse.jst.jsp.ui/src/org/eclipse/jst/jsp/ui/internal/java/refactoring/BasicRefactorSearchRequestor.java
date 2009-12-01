@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,235 +10,40 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ltk.core.refactoring.Change;
-import org.eclipse.ltk.core.refactoring.DocumentChange;
-import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.TextChange;
+import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.document.DocumentReader;
-import org.eclipse.wst.sse.core.internal.encoding.CodedStreamCreator;
+import org.eclipse.text.edits.TextEditGroup;
 
 /**
- * Creates document change(s) for an IJavaElement rename.
- * Changes are created for every type "match" in the workspace
- * @author pavery
+ * <p>After a search is run with this {@link SearchRequestor} {@link #getChanges(RefactoringParticipant)}
+ * can be called to get any new {@link Change}s that need to be created as a result of the search.  If
+ * {@link Change}s are already existing for the documents found then new {@link Change}s will not be
+ * created for them, but the needed {@link TextEdit}s will be added to the existing {@link Change}s.</p>
  */
 public class BasicRefactorSearchRequestor extends SearchRequestor {
-	
-	/**
-	 * Workspace operation to perform save on model for updated documents.
-	 * Should only be done on models not open in an editor.
-	 */
-	private class SaveJspFileOp extends WorkspaceModifyOperation {
-		
-		private IDocument fJSPDoc = null;
-		private IFile fJSPFile = null;
-		
-		public SaveJspFileOp(IFile jspFile, IDocument jspDoc) {
-			this.fJSPDoc = jspDoc;
-			this.fJSPFile = jspFile;
-		}
-		
-		protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
-			
-			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3765
-			// save file w/ no intermediate model creation
-			
-			CodedStreamCreator codedStreamCreator = new CodedStreamCreator();
-			Reader reader = new DocumentReader(this.fJSPDoc);
-			codedStreamCreator.set(this.fJSPFile, reader);
-			
-			ByteArrayOutputStream codedByteStream = null;
-			InputStream codedStream = null;
-			try {
-				codedByteStream = codedStreamCreator.getCodedByteArrayOutputStream();
-				codedStream = new ByteArrayInputStream(codedByteStream.toByteArray());
-				if (this.fJSPFile.exists())
-					this.fJSPFile.setContents(codedStream, true, true, null);
-				else
-					this.fJSPFile.create(codedStream, false, null);
-				
-			} catch (CoreException e) {
-				Logger.logException(e);
-			} catch (IOException e) {
-				Logger.logException(e);
-			}
-			finally {
-				try {
-					if(codedByteStream != null)
-						codedByteStream.close();
-					if(codedStream != null)
-						codedStream.close();
-				}
-				catch (IOException e){
-					// unlikely
-				}
-			}
-		}
-	}
-	// end inner class SaveJspFileOp
-	
-	/**
-	 * Change class that wraps a text edit on the jsp document
-	 */
-	private class RenameChange extends DocumentChange {
-
-		private TextEdit fEdit = null;
-		private IFile fJSPFile = null;
-		private IDocument fJSPDoc = null;
-		private String fDescription = JSPUIMessages.BasicRefactorSearchRequestor_0;
-		
-		public RenameChange(IFile jspFile, IDocument jspDoc, TextEdit edit, String description) {
-			super(JSPUIMessages.BasicRefactorSearchRequestor_6, jspDoc);
-			this.fEdit = edit;
-			this.fJSPFile = jspFile;
-			this.fJSPDoc = jspDoc;
-			this.fDescription = description;
-		}
-		
-		public RefactoringStatus isValid(IProgressMonitor pm)throws CoreException {
-			return new RefactoringStatus();
-		}
-		
-		public IDocument getPreviewDocument(IProgressMonitor pm) throws CoreException {
-			IDocument copyDoc = new Document(fJSPDoc.get());
-			try {
-				fEdit.apply(copyDoc);
-			}
-			catch (MalformedTreeException e) {
-				// ignore
-			}
-			catch (BadLocationException e) {
-				// ignore
-			}
-			return copyDoc;
-		}
-		
-		public Change perform(IProgressMonitor pm) throws CoreException {
-			RenameChange undoChange = null;
-			try {
-				
-				if(!isOpenInEditor(this.fJSPDoc)) {
-					// apply edit to JSP doc AND save model
-					undoChange = new RenameChange(this.fJSPFile, this.fJSPDoc, this.fEdit.apply(fJSPDoc), this.fDescription);
-					saveFile(this.fJSPFile, this.fJSPDoc);
-				}
-				else {
-					// just apply edit to JSP document
-					undoChange = new RenameChange(this.fJSPFile, this.fJSPDoc, this.fEdit.apply(fJSPDoc), this.fDescription);
-				}
-				
-			} catch (MalformedTreeException e) {
-				Logger.logException(e);
-			} catch (BadLocationException e) {
-				Logger.logException(e);
-			}
-			return undoChange;
-		}
-		
-		/**
-		 * Performed in an operation since it modifies resources in the workspace
-		 * @param jspDoc
-		 * @throws CoreException
-		 */
-		private void saveFile(IFile jspFile, IDocument jspDoc) {
-			
-			SaveJspFileOp op  = new SaveJspFileOp(jspFile, jspDoc);
-			
-			try {
-				op.run(JSPSearchSupport.getInstance().getProgressMonitor());
-			} catch (InvocationTargetException e) {
-				Logger.logException(e);
-			} catch (InterruptedException e) {
-				Logger.logException(e);
-			}
-		}
-
-		/**
-		 * Checks if a document is open in an editor
-		 * @param jspDoc
-		 * @return
-		 */
-		private boolean isOpenInEditor(IDocument jspDoc) {
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-			IWorkbenchWindow w = null;
-			for (int i = 0; i < windows.length; i++) {
-
-				w = windows[i];
-				IWorkbenchPage page = w.getActivePage();
-				if (page != null) {
-
-					IEditorReference[] references = page.getEditorReferences();
-					IEditorPart editor = null;
-					Object o = null;
-					IDocument doc = null;
-					for (int j = 0; j < references.length; j++) {
-
-						editor = references[j].getEditor(true);
-						// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3764
-						// use adapter to get ITextEditor (for things like
-						// page designer)
-						o = editor.getAdapter(ITextEditor.class);
-						if (o != null && o instanceof ITextEditor) {
-
-							doc = ((ITextEditor) o).getDocumentProvider().getDocument(editor.getEditorInput());
-							if (doc != null && doc.equals(jspDoc)) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-			return false;
-		}
-
-		public String getName() {
-			return this.fDescription;
-		}
-		
-		public Object getModifiedElement() {
-			return getElement();
-		}
-	}
-	// end inner class RenameChange
-	
-	
 	/** The type being renamed (the old type)*/
 	IJavaElement fElement = null;
 	/** The new name of the type being renamed*/
@@ -311,8 +116,17 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 	}
 	
 	/**
+	 * <p>This function is not safe because it does not check for existing {@link Change}s that
+	 * new {@link Change}s created by this method may conflict with.  These conflicts can
+	 * cause indeterminate results when applied to documents.  Long story short, don't
+	 * use this method any more.</p>
 	 * 
-	 * @return all JSP changes for the search matches for the given Type
+	 * @return all JSP changes for the search matches for the given Type, they may conflict
+	 * with already existing {@link Change}s
+	 * 
+	 * @see #getChanges(RefactoringParticipant)
+	 * 
+	 * @deprecated
 	 */
 	public Change[] getChanges() {
 		
@@ -336,6 +150,53 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		return (Change[])changes.toArray(new Change[changes.size()]);
 	}
 	
+	/**
+	 * Gets new {@link Change}s created as a result of this {@link SearchRequestor}.
+	 * Any existing {@link TextChange}s that had new edits added to them will not be
+	 * returned.
+	 * 
+	 * @param participant {@link RefactoringParticipant} to determine if there are already existing
+	 * {@link TextChange}s for the documents that this {@link SearchRequestor} found.
+	 * If existing
+	 * {@link TextChange}s are found then they will be used for any new edits, else new {@link TextChange}s
+	 * will be created.
+	 * 
+	 * @return Any new {@link TextChange}s created by this {@link SearchRequestor}.  If edits were
+	 * added to existing {@link TextChange}s then those existing {@link TextChange}s will not be
+	 * returned in this array.
+	 */
+	public Change[] getChanges(RefactoringParticipant participant) {
+		
+		JSPSearchSupport support = JSPSearchSupport.getInstance();
+		List changes = new ArrayList();
+		Iterator keys = fSearchDocPath2JavaEditMap.keySet().iterator();
+		String searchDocPath = null;
+		SearchDocument delegate = null;
+		
+		while(keys.hasNext()) {
+			// create on the fly
+			searchDocPath = (String)keys.next();
+			MultiTextEdit javaEdit = (MultiTextEdit)fSearchDocPath2JavaEditMap.get(searchDocPath);
+			delegate = support.getSearchDocument(searchDocPath);
+			
+			if(delegate != null && delegate instanceof JavaSearchDocumentDelegate) {
+				JavaSearchDocumentDelegate javaDelegate = (JavaSearchDocumentDelegate)delegate;
+				Change change = createChange(javaDelegate, javaDelegate.getJspTranslation().getJspEdit(javaEdit), participant);
+				changes.add(change);
+			}
+		}
+		return (Change[])changes.toArray(new Change[changes.size()]);
+	}
+	
+	/**
+	 * <p>This method is not safe because it does not take into consideration already existing
+	 * {@link Change}s and thus conflicts could occur that when applied create indeterminate
+	 * results in the target documents</p>
+	 * 
+	 * @see #createChange(JavaSearchDocumentDelegate, TextEdit, RefactoringParticipant)
+	 * 
+	 * @deprecated
+	 */
 	private Change createChange(JavaSearchDocumentDelegate searchDoc, TextEdit edit) {
 		
 		IDocument doc = searchDoc.getJspTranslation().getJspDocument();
@@ -349,7 +210,44 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		catch (BadLocationException e) {
 			Logger.logException(e);
 		}
-		return new RenameChange(searchDoc.getFile(), doc, edit, description);
+		return new JSPRenameChange(searchDoc.getFile(), doc, edit, description);
+	}
+	
+	/**
+	 * </p>If a {@link TextChange} does not already exist for the given {@link JavaSearchDocumentDelegate}
+	 * then a new one will be created with the given {@link TextEdit}.  Otherwise the given {@link TextEdit}
+	 * will be added to a new group and added to the existing change and <code>null</code> will be returned.</p>
+	 * 
+	 * @param searchDoc the {@link JavaSearchDocumentDelegate} that the <code>edit</code> will be applied to
+	 * @param edit the {@link TextEdit} that needs to be added to a new {@link TextChange} or appended to an
+	 * existing one
+	 * @param participant the {@link RefactoringParticipant} that knows about the existing {@link TextChange}s
+	 * @return a new {@link Change} if there was not one already existing for the document in question,
+	 * else <code>null</code>
+	 */
+	private Change createChange(JavaSearchDocumentDelegate searchDoc, TextEdit edit, RefactoringParticipant participant) {
+		IDocument doc = searchDoc.getJspTranslation().getJspDocument();
+		String description = getDescription();
+		
+		TextChange existingChange = participant.getTextChange(searchDoc.getFile());
+		TextChange change = null;
+		if(existingChange != null) {
+			try {
+				existingChange.addEdit(edit);
+			}catch (MalformedTreeException e) {
+				Logger.logException("MalformedTreeException while adding edit " + //$NON-NLS-1$
+						edit + " to existing change " + change, e); //$NON-NLS-1$
+			}
+			
+			TextEditGroup group = new TextEditGroup(description, edit);
+			existingChange.addTextEditGroup(group);
+		} else {
+			change = new JSPRenameChange(searchDoc.getFile(), doc, edit, searchDoc.getFile().getName());
+			TextEditGroup group = new TextEditGroup(description, edit);
+			change.addTextEditGroup(group);
+		}
+		
+		return change; 
 	}
 	
 	// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3205
