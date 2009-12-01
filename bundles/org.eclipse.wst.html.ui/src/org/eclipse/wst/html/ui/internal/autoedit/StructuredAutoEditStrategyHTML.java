@@ -104,10 +104,26 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 				if (node != null && !node.hasChildNodes()) {
 					IStructuredDocumentRegion region = node.getFirstStructuredDocumentRegion();
 					if(region.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN && command.offset <= region.getEnd()) {
-						region = node.getEndStructuredDocumentRegion();
-
-						if (region != null && region.isEnded())
-							document.replace(region.getStartOffset(), region.getLength(), ""); //$NON-NLS-1$
+						
+						/* if the region before the command offset is a an attribute value region
+						 * check to see if it has both and opening and closing quote
+						 */
+						ITextRegion prevTextRegion = region.getRegionAtCharacterOffset(command.offset-1);
+						boolean inUnclosedAttValueRegion = false;
+						if(prevTextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+							//get the text of the attribute value region
+							String prevText = region.getText(prevTextRegion);
+							inUnclosedAttValueRegion = (prevText.startsWith("'") && ((prevText.length() == 1) || !prevText.endsWith("'"))) ||
+								(prevText.startsWith("\"") && ((prevText.length() == 1) || !prevText.endsWith("\"")));
+						} 
+					
+						//if command offset is in an unclosed attribute value region then done remove the end tag
+						if(!inUnclosedAttValueRegion) {
+							region = node.getEndStructuredDocumentRegion();
+							if (region != null && region.isEnded()) {
+								document.replace(region.getStartOffset(), region.getLength(), ""); //$NON-NLS-1$
+							}
+						}
 					}
 				}
 			}
