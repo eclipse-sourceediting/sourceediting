@@ -8,6 +8,7 @@
  * Contributors:
  *     David Carver - initial API and implementation
  *     Mukul Ghandi - bug 273719
+ *     Jesper Moller - bug 281028 - Added test suites for min/max/sum/avg
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -28,6 +29,8 @@ public class AllPsychoPathTests {
 		suite.addTest(AllW3CDateTests.suite());
 		
 		suite.addTestSuite(TestBugs.class);
+		suite.addTestSuite(TestMinMax.class);
+		suite.addTestSuite(TestSumAvg.class);
 		suite.addTestSuite(XPathDecimalFormatTest.class);
 		suite.addTestSuite(LiteralUtilsTest.class);
 		//$JUnit-END$
