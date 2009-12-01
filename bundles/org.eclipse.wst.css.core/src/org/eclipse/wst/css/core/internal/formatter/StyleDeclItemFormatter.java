@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -155,14 +155,21 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 				// comments
 			}
 		}
-		if (child != null && child instanceof ICSSPrimitiveValue) {
-			if (((ICSSPrimitiveValue) child).getPrimitiveType() == ICSSPrimitiveValue.CSS_COMMA)
-				toAppend = ",";//$NON-NLS-1$
-			else if (((ICSSPrimitiveValue) child).getPrimitiveType() == ICSSPrimitiveValue.CSS_SLASH)
-				toAppend = "/";//$NON-NLS-1$
+		if(child != null) {
+			boolean append = true;
+			if (child instanceof ICSSPrimitiveValue) {
+				if (((ICSSPrimitiveValue) child).getPrimitiveType() == ICSSPrimitiveValue.CSS_COMMA)
+					toAppend = ",";//$NON-NLS-1$
+				else if (((ICSSPrimitiveValue) child).getPrimitiveType() == ICSSPrimitiveValue.CSS_SLASH)
+					toAppend = "/";//$NON-NLS-1$
+				ICSSNode prevSibling = child.getPreviousSibling();
+				if (prevSibling instanceof ICSSPrimitiveValue && ((ICSSPrimitiveValue)prevSibling).getPrimitiveType() == ICSSPrimitiveValue.CSS_SLASH)
+					append = false;
+			}
+			if (toAppend != null && !toAppend.equals(",") && !toAppend.equals("/") && append) {//$NON-NLS-1$ //$NON-NLS-2$
+				appendSpaceBefore(node, toAppend, source);
+			}
 		}
-		if (child != null && toAppend != null && !toAppend.equals(",") && !toAppend.equals("/")) //$NON-NLS-1$ //$NON-NLS-2$
-			appendSpaceBefore(node, toAppend, source);
 	}
 
 	/**
