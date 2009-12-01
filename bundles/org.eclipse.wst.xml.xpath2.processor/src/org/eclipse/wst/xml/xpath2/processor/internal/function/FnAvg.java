@@ -12,17 +12,32 @@
  *                                 needed to cast to Numeric so that evaluations
  *                                 and formatting occur correctly.
  *                               - fix fn:avg casting issues and divide by zero issues.
+ *     Jesper Moller - bug 281028 - fix promotion rules for fn:avg
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.math.BigDecimal;
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.ScalarTypePromoter;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.TypePromoter;
 
 /**
  * Returns the average of the values in the input sequence $arg, that is, the
@@ -61,7 +76,7 @@ public class FnAvg extends Function {
 	 */
 	public static ResultSequence avg(Collection args) throws DynamicError {
 
-		ResultSequence arg = get_arg(args);
+		ResultSequence arg = (ResultSequence)args.iterator().next();
 
 		if (arg.empty())
 			return ResultSequenceFactory.create_new();
@@ -69,130 +84,27 @@ public class FnAvg extends Function {
 		int elems = 0;
 
 		MathPlus total = null;
+
+		TypePromoter tp = new ScalarTypePromoter();
+		tp.considerSequence(arg);
+
 		for (Iterator i = arg.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			if (!(at instanceof MathPlus))
-				DynamicError.throw_type_error();
+			++elems;
+			AnyAtomicType conv = tp.promote((AnyType) i.next());
 			
-			if (at.string_value().equals("NaN")) {
-				ResultSequence res = ResultSequenceFactory.create_new();
-				res.add(at);
-				return res;
-			}		
-
-			if (total == null)
-				total = (MathPlus) at;
-			else {
-				ResultSequence res = total.plus(ResultSequenceFactory
-						.create_new(at));
-				assert res.size() == 1;
-
-				total = (MathPlus) res.first();
+			if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
+				return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
 			}
-			elems++;
+			if (total == null) {
+				total = (MathPlus)conv; 
+			} else {
+				total = (MathPlus)total.plus(ResultSequenceFactory.create_new(conv)).first();
+			}
 		}
 
 		if (!(total instanceof MathDiv))
 			DynamicError.throw_type_error();
 
-		MathDiv avg = (MathDiv) total;
-		ResultSequence res = null;
-		if (avg instanceof XSDecimal) {
-			// Need to promote then divide
-			XSDecimal dec = new XSDecimal(((XSDecimal) avg).string_value());
-			if (dec.zero()) {
-				res = ResultSequenceFactory.create_new(new XSDecimal());
-			} else {
-				res = dec.div(ResultSequenceFactory
-						.create_new(new XSDecimal(BigDecimal.valueOf(elems))));
-			}
-		} else if (avg instanceof XSDouble) {
-			 XSDouble d = new XSDouble(((XSDouble) avg).string_value());
-			 if (d.zero()) {
-				 res = ResultSequenceFactory.create_new(new XSDouble());
-			 }
-			 res = d.div(ResultSequenceFactory
-					.create_new(new XSDouble(elems)));
-		} else if (avg instanceof XSFloat) {
-			XSFloat flt = new XSFloat(((XSFloat) avg).float_value());
-			if (flt.zero()) {
-				res = ResultSequenceFactory.create_new(new XSFloat());
-			} else {
-				res = avg.div(ResultSequenceFactory
-						.create_new(new XSFloat(elems)));
-			}
-		} else if (avg instanceof XSDuration) {
-			res = avg.div(ResultSequenceFactory
-					.create_new(new XSDecimal(BigDecimal.valueOf(elems))));
-		}
-
-		return res;
-	}
-
-	/**
-	 * Obtain input argument for operation.
-	 * 
-	 * @param args
-	 *            input expressions.
-	 * @throws DynamicError
-	 *             Dynamic error.
-	 * @return Resulting expression from the operation.
-	 */
-	public static ResultSequence get_arg(Collection args) throws DynamicError {
-		assert args.size() == 1;
-
-		ResultSequence arg = (ResultSequence) args.iterator().next();
-
-		if (arg.empty())
-			return arg;
-
-		AnyType first = arg.first();
-
-		Class durtype = null;
-		if (first instanceof XSDayTimeDuration)
-			durtype = XSDayTimeDuration.class;
-		else if (first instanceof XSYearMonthDuration)
-			durtype = XSYearMonthDuration.class;
-		else
-			durtype = null;
-
-		// duration
-		if (durtype != null) {
-			for (Iterator i = arg.iterator(); i.hasNext();) {
-				AnyType at = (AnyType) i.next();
-
-				if (!durtype.isInstance(at))
-					DynamicError.throw_type_error();
-			}
-			return arg;
-		}
-
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		for (Iterator i = arg.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			NumericType d = null;
-			if (at instanceof XSUntypedAtomic) {
-				d = new XSDouble(((XSUntypedAtomic) at).string_value());
-			} else if (at instanceof XSDouble) {
-				d = (XSDouble) at; 
-			} else if (at instanceof NumericType) {
-				d = (NumericType) at;
-			} else if (at instanceof NodeType) {
-				try {
-					d = new XSDecimal(at.string_value());
-				} catch (NumberFormatException ex) {
-					throw DynamicError.throw_type_error(); 
-				}
-			} else
-				DynamicError.throw_type_error();
-
-			if (d == null)
-				throw DynamicError.cant_cast(null);
-
-			rs.add(d);
-		}
-		return rs;
+		return ((MathDiv)total).div(ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(elems))));
 	}
 }

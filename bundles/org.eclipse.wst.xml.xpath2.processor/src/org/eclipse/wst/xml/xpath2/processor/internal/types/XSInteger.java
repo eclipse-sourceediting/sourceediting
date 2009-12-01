@@ -12,6 +12,7 @@
  *     David Carver (STAR) - bug 262765 - fix comparision to zero.
  *     David Carver (STAR) - bug 282223 - fix casting issues.
  *     Jesper Steen Moller - bug 262765 - fix type tests
+ *     Jesper Steen Moller - bug 281028 - Added constructor from string
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -49,6 +50,17 @@ public class XSInteger extends XSDecimal {
 	public XSInteger(BigInteger x) {
 		super(new BigDecimal(x));
 		_value = x;
+	}
+
+	/**
+	 * Initializes a representation of the supplied integer
+	 * 
+	 * @param x
+	 *            Integer to be stored
+	 */
+	public XSInteger(String x) {
+		super(new BigDecimal(x));
+		_value = new BigInteger(x);
 	}
 
 	/**

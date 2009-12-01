@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
+ *     Jesper Moller - bug 281028 - fix promotion rules for fn:sum
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -15,7 +16,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.ScalarTypePromoter;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.TypePromoter;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -28,11 +32,14 @@ import java.util.*;
  * argument.
  */
 public class FnSum extends Function {
+
+	static private XSInteger ZERO = new XSInteger(BigInteger.ZERO);
+
 	/**
 	 * Constructor for FnSum.
 	 */
 	public FnSum() {
-		super(new QName("sum"), 1);
+		super(new QName("sum"), 1, 2);
 	}
 
 	/**
@@ -46,7 +53,18 @@ public class FnSum extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return sum(args);
+		Iterator argIterator = args.iterator();
+		ResultSequence argSequence = (ResultSequence)argIterator.next();
+		AnyAtomicType zero = ZERO;
+		if (argIterator.hasNext()) {
+			ResultSequence zeroSequence = (ResultSequence)argIterator.next();
+			if (zeroSequence.size() != 1)
+				throw new DynamicError(TypeError.invalid_type(null));
+			if (! (zeroSequence.first() instanceof AnyAtomicType))
+				throw new DynamicError(TypeError.invalid_type(zeroSequence.first().string_value()));
+			zero = (AnyAtomicType)zeroSequence.first();
+		}
+		return sum(argSequence, zero);
 	}
 
 	/**
@@ -58,31 +76,29 @@ public class FnSum extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:sum operation.
 	 */
-	public static ResultSequence sum(Collection args) throws DynamicError {
+	public static ResultSequence sum(ResultSequence arg, AnyAtomicType zero) throws DynamicError {
 
-		ResultSequence arg = FnAvg.get_arg(args);
 
 		if (arg.empty())
-			return ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(0)));
+			return ResultSequenceFactory.create_new(zero);
 
 		MathPlus total = null;
+
+		TypePromoter tp = new ScalarTypePromoter();
+		tp.considerSequence(arg);
+
 		for (Iterator i = arg.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			if (!(at instanceof MathPlus))
-				DynamicError.throw_type_error();
-
-			if (total == null)
-				total = (MathPlus) at;
-			else {
-				ResultSequence res = total.plus(ResultSequenceFactory
-						.create_new(at));
-				assert res.size() == 1;
-
-				total = (MathPlus) res.first();
+			AnyAtomicType conv = tp.promote((AnyType) i.next());
+			
+			if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
+				return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
+			}
+			if (total == null) {
+				total = (MathPlus)conv; 
+			} else {
+				total = (MathPlus)total.plus(ResultSequenceFactory.create_new(conv)).first();
 			}
 		}
-
 		return ResultSequenceFactory.create_new((AnyType) total);
 	}
 }

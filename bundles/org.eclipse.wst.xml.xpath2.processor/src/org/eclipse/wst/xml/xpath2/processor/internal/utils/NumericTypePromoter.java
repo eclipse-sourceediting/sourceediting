@@ -15,6 +15,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.utils;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
@@ -43,15 +44,15 @@ public class NumericTypePromoter extends TypePromoter {
 	}
 
 	@Override
-	public AnyAtomicType doPromote(AnyAtomicType value) {
+	public AnyAtomicType doPromote(AnyAtomicType value) throws DynamicError {
 		if (getTargetType() == XSFloat.class) {
-			return new XSFloat(new Float(value.string_value()));
+			return new XSFloat(value.string_value());
 		} else if (getTargetType() == XSDouble.class) {
-			return new XSDouble(new Double(value.string_value()));
+			return new XSDouble(value.string_value());
 		} else if (getTargetType() == XSInteger.class) {
-			return new XSInteger(new BigInteger(value.string_value()));
+			return new XSInteger(value.string_value());
 		} else if (getTargetType() == XSDecimal.class) {
-			return new XSDecimal(new BigDecimal(value.string_value()));
+			return new XSDecimal(value.string_value());
 		}
 		return null;
 	}

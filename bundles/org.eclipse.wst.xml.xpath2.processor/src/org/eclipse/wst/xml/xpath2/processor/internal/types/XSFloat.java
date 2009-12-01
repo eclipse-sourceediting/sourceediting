@@ -12,6 +12,7 @@
  *     David Carver - bug 262765 - fixed rounding errors.
  *     David Carver - bug 282223 - fixed casting errors.
  *     Jesper Steen Moller - Bug 286062 - Fix idiv error cases and increase precision  
+ *     Jesper Steen Moller - bug 281028 - Added constructor from string
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -49,6 +50,25 @@ public class XSFloat extends NumericType {
 		this(0);
 	}
 
+	/**
+	 * Initialises using a String represented number
+	 * 
+	 * @param init
+	 *            String representation of the number to be stored
+	 */
+	public XSFloat(String init) throws DynamicError {
+		try {
+			if (init.equals("-INF")) {
+				_value = Float.NEGATIVE_INFINITY;
+			} else if (init.equals("INF")) {
+				_value = Float.POSITIVE_INFINITY;
+			} else {
+				_value = new Float(init);
+			}
+		} catch (NumberFormatException e) {
+			throw DynamicError.cant_cast(null);
+		}
+	}
 	/**
 	 * Retrieves the datatype's full pathname
 	 * 

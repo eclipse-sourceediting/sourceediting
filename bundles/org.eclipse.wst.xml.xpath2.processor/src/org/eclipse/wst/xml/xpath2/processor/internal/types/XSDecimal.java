@@ -14,6 +14,7 @@
  *     David Carver (STAR) - bug 262765 - fixed edge case where rounding was occuring when it shouldn't. 
  *     Jesper Steen Moller - bug 262765 - fix type tests
  *     David Carver (STAR) - bug 262765 - fixed abs value tests.
+ *     Jesper Steen Moller - bug 281028 - fixed division of zero (no, not by)
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -373,10 +374,8 @@ public class XSDecimal extends NumericType {
 			
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		if (val.zero()) {
-			return ResultSequenceFactory.create_new(new XSDouble(Double.NaN));
-		}
-		if (zero())
 			throw DynamicError.div_zero(null);
+		}
 		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_EVEN);
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}

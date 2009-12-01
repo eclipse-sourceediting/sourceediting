@@ -8,18 +8,26 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Moller - bug 280555 - Add pluggable collation support
- *     David Carver (STAR) - bug 262765 - fixed promotion issue 
+ *     David Carver (STAR) - bug 262765 - fixed promotion issue
+ *     Jesper Moller - bug 281028 - fix promotion rules for fn:max
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.ComparableTypePromoter;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.TypePromoter;
 
 /**
  * Selects an item from the input sequence $arg whose value is greater than or
@@ -62,39 +70,25 @@ public class FnMax extends Function {
 	 */
 	public static ResultSequence max(Collection args, DynamicContext context) throws DynamicError {
 
-		// XXX fix this
 		ResultSequence arg = get_arg(args, CmpGt.class);
 		if (arg.empty())
 			return ResultSequenceFactory.create_new();
 
 		CmpGt max = null;
 
-		boolean doublesw = false;
+		TypePromoter tp = new ComparableTypePromoter();
+		tp.considerSequence(arg);
+
 		for (Iterator i = arg.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			if (!(at instanceof CmpGt))
-				DynamicError.throw_type_error();
-
-			CmpGt item = (CmpGt) at;
+			AnyAtomicType conv = tp.promote((AnyType) i.next());
 			
-			doublesw = at instanceof XSDouble;
-
-			if (max == null)
-				max = item;
-			else {
-				boolean res = item.gt((AnyType) max, context);
-
-				if (res)
-					max = item;
+			if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
+				return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
+			}
+			if (max == null || ((CmpGt)conv).gt((AnyType)max, context)) {
+				max = (CmpGt)conv;
 			}
 		}
-
-		if (max instanceof NumericType && doublesw) {
-			AnyType at = (AnyType) max;
-			max = new XSDouble(at.string_value());
-		}
-		
 		return ResultSequenceFactory.create_new((AnyType) max);
 	}
 
@@ -114,25 +108,6 @@ public class FnMax extends Function {
 		assert args.size() == 1;
 
 		ResultSequence arg = (ResultSequence) args.iterator().next();
-
-		if (arg.empty())
-			return arg;
-
-		AnyType at = arg.first();
-
-		// check for operator
-		// XXX ok this is wrong... [promotion, and other reasons]
-		if (op.isInstance(at) && !(at instanceof NumericType)) {
-			Class type = at.getClass();
-
-			for (Iterator i = arg.iterator(); i.hasNext();) {
-				at = (AnyType) i.next();
-				if (!(type.isInstance(at)))
-					DynamicError.throw_type_error();
-			}
-		} else {
-			arg = FnAvg.get_arg(args);
-		}
 
 		return arg;
 	}

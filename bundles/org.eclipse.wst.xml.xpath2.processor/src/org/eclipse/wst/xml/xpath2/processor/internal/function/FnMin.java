@@ -9,17 +9,25 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Moller - bug 280555 - Add pluggable collation support
  *     David Carver (STAR) - bug 262765 - fixed promotion issue 
+ *     Jesper Moller - bug 281028 - fix promotion rules for fn:min
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.ComparableTypePromoter;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.TypePromoter;
 
 /**
  * selects an item from the input sequence $arg whose value is less than or
@@ -60,42 +68,28 @@ public class FnMin extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:min operation.
 	 */
-	public static ResultSequence min(Collection args, DynamicContext dynamic) throws DynamicError {
+	public static ResultSequence min(Collection args, DynamicContext context) throws DynamicError {
 
-		// XXX fix this
 		ResultSequence arg = FnMax.get_arg(args, CmpLt.class);
 		if (arg.empty())
 			return ResultSequenceFactory.create_new();
 
-		CmpLt min = null;
+		CmpLt max = null;
 
-		boolean doublesw = false;
-		
+		TypePromoter tp = new ComparableTypePromoter();
+		tp.considerSequence(arg);
+
 		for (Iterator i = arg.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			if (!(at instanceof CmpLt))
-				DynamicError.throw_type_error();
-
-			CmpLt item = (CmpLt) at;
+			AnyAtomicType conv = tp.promote((AnyType) i.next());
 			
-			doublesw = at instanceof XSDouble;
-
-			if (min == null)
-				min = item;
-			else {
-				boolean res = item.lt((AnyType) min, dynamic);
-
-				if (res)
-					min = item;
+			if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
+				return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
+			}
+			if (max == null || ((CmpLt)conv).lt((AnyType)max, context)) {
+				max = (CmpLt)conv;
 			}
 		}
-		
-		if (min instanceof NumericType && doublesw) {
-			AnyType at = (AnyType) min;
-			min = new XSDouble(at.string_value());
-		}
-
-		return ResultSequenceFactory.create_new((AnyType) min);
+		return ResultSequenceFactory.create_new((AnyType) max);
 	}
+
 }

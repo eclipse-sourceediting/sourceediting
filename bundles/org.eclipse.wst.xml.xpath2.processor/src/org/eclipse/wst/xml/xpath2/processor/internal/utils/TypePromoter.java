@@ -26,9 +26,9 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 public abstract class TypePromoter {
 	private Class<? extends AnyAtomicType> targetType = null;
 
-	abstract public AnyAtomicType doPromote(AnyAtomicType value);	
+	abstract public AnyAtomicType doPromote(AnyAtomicType value) throws DynamicError;	
 
-	public final AnyAtomicType promote(AnyType value) {
+	public final AnyAtomicType promote(AnyType value) throws DynamicError {
 		// This is a short cut, really
 		if (value.getClass() == getTargetType()) return (AnyAtomicType)value;
 
