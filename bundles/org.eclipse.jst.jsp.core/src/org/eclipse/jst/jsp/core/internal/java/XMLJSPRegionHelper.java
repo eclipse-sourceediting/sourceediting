@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -185,6 +185,11 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				fTagname = null;
 			}
 			else if (isJSPStartRegion(sdRegion)) {
+				int illegalContent = hasIllegalContent(sdRegion);
+				// If illegal content was found, start decoding again after the region
+				if (illegalContent >= 0)
+					decodeRemainingRegions(sdRegion, illegalContent + 1);
+
 				String nameStr = getRegionName(sdRegion);
 				if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
 					if (isPossibleCustomTag(nameStr)) {
@@ -263,6 +268,26 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				// do nothing, since we're just ending
 			}
 		}
+	}
+
+	private void decodeRemainingRegions(IStructuredDocumentRegion sdRegion, int start) {
+		ITextRegion region = sdRegion.getRegions().get(start);
+		String text = sdRegion.getFullText();
+		if (region.getStart() <= text.length())
+			fTranslator.decodeScriptBlock(text.substring(region.getStart(), text.length()), 0);
+	}
+		
+	private int hasIllegalContent(IStructuredDocumentRegion sdRegion) {
+		ITextRegionList list = sdRegion.getRegions();
+		for (int i = 0; i < list.size(); i++) {
+			ITextRegion region = list.get(i);
+			String type = region.getType();
+			if (type == DOMRegionContext.UNDEFINED)
+				return i;
+			if (type == DOMRegionContext.XML_END_TAG_OPEN || type == DOMRegionContext.XML_EMPTY_TAG_CLOSE || type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE)
+				return -1;
+		}
+		return -1;
 	}
 
 
