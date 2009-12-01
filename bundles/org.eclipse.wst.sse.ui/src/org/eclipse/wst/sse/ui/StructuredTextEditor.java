@@ -32,11 +32,8 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.jface.action.Action;
@@ -118,7 +115,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
-import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
@@ -1632,30 +1628,24 @@ public class StructuredTextEditor extends TextEditor {
 			fStructuredModel.releaseFromEdit();
 		}
 
+		//attempt to get the model for the given input
 		super.doSetInput(input);
+		IStructuredModel model = tryToGetModel(input);
+		
+		/* if could not get the model prompt user to update content type
+		 * if preferences allow, then try to get model again
+		 */
+		if(model == null &&	SSEUIPlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
+			// display a dialog informing user of unknown content type giving them chance to update preferences
+			UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
+			dialog.open();
 
-		IDocument newDocument = getDocumentProvider().getDocument(input);
-		if (newDocument instanceof IExecutionDelegatable) {
-			((IExecutionDelegatable) newDocument).setExecutionDelegate(new EditorExecutionContext(this));
-		}
-
-		IStructuredModel model = null;
-		// if we have a Model provider, get the model from it
-		if (getDocumentProvider() instanceof IModelProvider) {
-			model = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
-			if (!model.isShared()) {
-				EditorModelUtil.addFactoriesTo(model);
-			}
-		}
-		else {
-			if (newDocument instanceof IStructuredDocument) {
-				// corresponding releaseFromEdit occurs in
-				// dispose()
-				model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) newDocument);
-				EditorModelUtil.addFactoriesTo(model);
-			}
-
-			else {
+			//try to get model again in hopes user updated preferences
+			super.doSetInput(input);
+			model = tryToGetModel(input);
+			
+			//still could not get the model to open this editor so log
+			if(model == null) {
 				logUnexpectedDocumentKind(input);
 			}
 		}
@@ -1673,6 +1663,38 @@ public class StructuredTextEditor extends TextEditor {
 
 		// start editor with smart insert mode
 		setInsertMode(SMART_INSERT);
+	}
+	
+	/**
+	 * <p>Attempts to get the {@link IStructuredModel} for the given {@link IEditorInput}</p>
+	 * 
+	 * @param input the {@link IEditorInput} to try and get the {@link IStructuredModel} for
+	 * 
+	 * @return The {@link IStructuredModel} associated with the given {@link IEditorInput} or
+	 * <code>null</code> if no associated {@link IStructuredModel} could be found.
+	 */
+	private IStructuredModel tryToGetModel(IEditorInput input) {
+		IStructuredModel model = null;
+		
+		IDocument newDocument = getDocumentProvider().getDocument(input);
+		if (newDocument instanceof IExecutionDelegatable) {
+			((IExecutionDelegatable) newDocument).setExecutionDelegate(new EditorExecutionContext(this));
+		}
+
+		// if we have a Model provider, get the model from it
+		if (getDocumentProvider() instanceof IModelProvider) {
+			model = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
+			if (!model.isShared()) {
+				EditorModelUtil.addFactoriesTo(model);
+			}
+		}
+		else if (newDocument instanceof IStructuredDocument) {
+			// corresponding releaseFromEdit occurs in dispose()
+			model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) newDocument);
+			EditorModelUtil.addFactoriesTo(model);
+		} 
+		
+		return model;
 	}
 
 	/**
@@ -2408,19 +2430,14 @@ public class StructuredTextEditor extends TextEditor {
 		return getPreferenceStore().getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 	}
 
+	/**
+	 * <p>Logs a warning about how this {@link StructuredTextEditor} just opened an {@link IEditorInput}
+	 * it was not designed to open.</p>
+	 * 
+	 * @param input the {@link IEditorInput} this {@link StructuredTextEditor} was not designed to open
+	 * to log the message about.
+	 */
 	private void logUnexpectedDocumentKind(IEditorInput input) {
-		// display a dialog informing user of uknown content type
-		if (SSEUIPlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
-			Job job = new UIJob(SSEUIMessages.StructuredTextEditor_0) {
-				public IStatus runInUIThread(IProgressMonitor monitor) {
-					UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
-					dialog.open();
-					return Status.OK_STATUS;
-				}
-			};
-			job.schedule();
-		}
-
 		Logger.log(Logger.WARNING, "StructuredTextEditor being used without StructuredDocument"); //$NON-NLS-1$
 		String name = null;
 		if (input != null) {
