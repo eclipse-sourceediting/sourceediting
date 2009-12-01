@@ -26,6 +26,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -48,6 +49,7 @@ import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
+import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
@@ -414,6 +416,35 @@ public class JSPDirectiveValidator extends JSPValidator {
 								}
 								catch (CoreException e) {
 									Logger.logException(e);
+								}
+							}
+								break;
+							case (ITaglibRecord.URL) : {
+								IURLRecord record = (IURLRecord) reference;
+								String baseLocation = record.getBaseLocation();
+								if (baseLocation != null && baseLocation.indexOf("://") < 0) {
+									IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(baseLocation, false);
+									if (found != null) {
+										try {
+											found.accept(new IResourceVisitor() {
+												public boolean visit(IResource resource) throws CoreException {
+													if (resource.getType() == IResource.FILE) {
+														addDependsOn(resource);
+													}
+													return true;
+												}
+											});
+										}
+										catch (CoreException e) {
+											Logger.logException(e);
+										}
+									}
+									else {
+										IFile externalJar = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(baseLocation));
+										if (externalJar != null) {
+											addDependsOn(externalJar);
+										}
+									}
 								}
 							}
 								break;
