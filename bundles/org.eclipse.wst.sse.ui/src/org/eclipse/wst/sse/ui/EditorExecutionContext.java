@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
@@ -35,7 +37,7 @@ class EditorExecutionContext implements IExecutionDelegate {
 	 */
 	private static class ReusableUIRunner implements Runnable, IRunnableWithProgress {
 		private StructuredTextEditor editor;
-		private Runnable fRunnable = null;
+		private ISafeRunnable fRunnable = null;
 
 		ReusableUIRunner(StructuredTextEditor part) {
 			super();
@@ -91,7 +93,7 @@ class EditorExecutionContext implements IExecutionDelegate {
 						 * Here's where the document update/modification
 						 * occurs
 						 */
-						fRunnable.run();
+						SafeRunner.run(fRunnable);
 					}
 					finally {
 						/*
@@ -115,10 +117,10 @@ class EditorExecutionContext implements IExecutionDelegate {
 		 */
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			if (fRunnable != null)
-				fRunnable.run();
+				SafeRunner.run(fRunnable);
 		}
 
-		void setRunnable(Runnable r) {
+		void setRunnable(ISafeRunnable r) {
 			fRunnable = r;
 		}
 	}
@@ -139,12 +141,12 @@ class EditorExecutionContext implements IExecutionDelegate {
 	 * org.eclipse.wst.sse.core.internal.IExecutionDelegate#execute(java.lang
 	 * .Runnable)
 	 */
-	public void execute(final Runnable runnable) {
+	public void execute(final ISafeRunnable runnable) {
 		IWorkbench workbench = SSEUIPlugin.getInstance().getWorkbench();
 		final Display display = workbench.getDisplay();
 		if (display.getThread() == Thread.currentThread()) {
 			// *If already in display thread, we can simply run, "as usual"*/
-			runnable.run();
+			SafeRunner.run(runnable);
 		}
 		else {
 			// *otherwise run through the reusable runner */

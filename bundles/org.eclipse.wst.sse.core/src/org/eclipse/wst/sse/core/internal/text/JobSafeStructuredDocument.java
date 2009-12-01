@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.wst.sse.core.internal.text;
 
 import java.util.Stack;
 
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
@@ -22,12 +23,28 @@ import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
 import org.eclipse.wst.sse.core.internal.ILockable;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 
-
-
+/**
+ * An IStructuredDocument that performs most of its computation and event
+ * notification through an IExecutionDelegate.
+ * 
+ * If the delegate has not been set, we execute on current thread, like
+ * "normal". This is the case for normal non-editor use (which should still,
+ * ultimately, be protected by a scheduling rule). For every operation, a
+ * runnable is created, even if later (in the execution delegate instance) it
+ * is decided nothing special is needed (that is, in fact being called from an
+ * editor's display thread, in which case its just executed) in the UI.
+ */
 public class JobSafeStructuredDocument extends BasicStructuredDocument implements IExecutionDelegatable, ILockable {
 
+	private static abstract class JobSafeRunnable implements ISafeRunnable {
+		public void handleException(Throwable exception) {
+			// logged in SafeRunner
+		}
+	}
+	
 	private Stack fExecutionDelegates = new Stack();
 	private ILock fLockable = Job.getJobManager().newLock();
 
@@ -81,15 +98,9 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 			super.replace(offset, length, text);
 		}
 		else {
-			final Object[] resultSlot = new Object[1];
-			Runnable runnable = new Runnable() {
-				public void run() {
-					try {
-						JobSafeStructuredDocument.super.replace(offset, length, text);
-					}
-					catch (Throwable e) {
-						resultSlot[0] = e;
-					}
+			JobSafeRunnable runnable = new JobSafeRunnable() {
+				public void run() throws Exception {
+					JobSafeStructuredDocument.super.replace(offset, length, text);
 				}
 			};
 			delegate.execute(runnable);
@@ -105,15 +116,9 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 			super.replace(offset, length, text, modificationStamp);
 		}
 		else {
-			final Object[] resultSlot = new Object[1];
-			Runnable runnable = new Runnable() {
-				public void run() {
-					try {
-						JobSafeStructuredDocument.super.replace(offset, length, text, modificationStamp);
-					}
-					catch (Throwable e) {
-						resultSlot[0] = e;
-					}
+			JobSafeRunnable runnable = new JobSafeRunnable() {
+				public void run() throws Exception {
+					JobSafeStructuredDocument.super.replace(offset, length, text, modificationStamp);
 				}
 			};
 			delegate.execute(runnable);
@@ -131,23 +136,13 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 		}
 		else {
 			final Object[] resultSlot = new Object[1];
-			Runnable runnable = new Runnable() {
-				public void run() {
-					try {
-						resultSlot[0] = JobSafeStructuredDocument.super.replaceText(requester, start, replacementLength, changes);
-					}
-					catch (Throwable e) {
-						resultSlot[0] = e;
-					}
+			JobSafeRunnable runnable = new JobSafeRunnable() {
+				public void run() throws Exception {
+					resultSlot[0] = JobSafeStructuredDocument.super.replaceText(requester, start, replacementLength, changes);
 				}
 			};
 			delegate.execute(runnable);
-			if (resultSlot[0] instanceof Throwable) {
-				throw new RuntimeException((Throwable) resultSlot[0]);
-			}
-			else {
-				event = (StructuredDocumentEvent) resultSlot[0];
-			}
+			event = (StructuredDocumentEvent) resultSlot[0];
 		}
 		return event;
 	}
@@ -159,49 +154,22 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 		StructuredDocumentEvent event = null;
 		IExecutionDelegate delegate = getExecutionDelegate();
 		if (delegate == null) {
-			// if the delegate has not been set, we execute on current
-			// thread, like "normal". This is the case for normal
-			// non-editor
-			// use (which should still, ultimately, be protected by
-			// a scheduling rule).
 			event = super.replaceText(requester, start, replacementLength, changes, ignoreReadOnlySettings);
 		}
 		else {
-			// If document is being used by an editor, a runnable is
-			// created,
-			// even if later (in the execution delegate instance) it is
-			// decided
-			// nothing special is needed (that is, in fact being called
-			// from
-			// editor's display thread, in which case its just executed)
 			final Object[] resultSlot = new Object[1];
-			Runnable runnable = new Runnable() {
-				public void run() {
-					try {
-						resultSlot[0] = JobSafeStructuredDocument.super.replaceText(requester, start, replacementLength, changes, ignoreReadOnlySettings);
-					}
-					catch (Throwable e) {
-						resultSlot[0] = e;
-					}
+			JobSafeRunnable runnable = new JobSafeRunnable() {
+				public void run() throws Exception {
+					resultSlot[0] = JobSafeStructuredDocument.super.replaceText(requester, start, replacementLength, changes, ignoreReadOnlySettings);
+				}
+
+				public void handleException(Throwable exception) {
+					resultSlot[0] = new NoChangeEvent(JobSafeStructuredDocument.this, requester, changes, start, replacementLength);
+					super.handleException(exception);
 				}
 			};
-			// strongly assumes synchronous call, to "wait" for
-			// results
-			// basically just routes to Display.synchExec(runnable),
-			// if not already running on display thread.
 			delegate.execute(runnable);
-
-			// this remembering and re-throwing of exception is just to
-			// get an
-			// exception that occurred on one thread, to be thrown on
-			// callers
-			// thread.
-			if (resultSlot[0] instanceof Throwable) {
-				throw new RuntimeException((Throwable) resultSlot[0]);
-			}
-			else {
-				event = (StructuredDocumentEvent) resultSlot[0];
-			}
+			event = (StructuredDocumentEvent) resultSlot[0];
 		}
 		return event;
 	}
@@ -217,49 +185,21 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 		StructuredDocumentEvent event = null;
 		IExecutionDelegate executionDelegate = getExecutionDelegate();
 		if (executionDelegate == null) {
-			// if the delegate has not been set, we execute on current
-			// thread, like "normal". This is the case for normal
-			// non-editor
-			// use (which should still, ultimately, be protected by
-			// a scheduling rule).
 			event = super.setText(requester, theString);
 		}
 		else {
-			// If document is being used by an editor, a runnable is
-			// created,
-			// even if later (in the execution delegate instance) it is
-			// decided
-			// nothing special is needed (that is, in fact being called
-			// from
-			// editor's display thread, in which case its just executed)
 			final Object[] resultSlot = new Object[1];
-			Runnable runnable = new Runnable() {
-				public void run() {
-					try {
-						resultSlot[0] = JobSafeStructuredDocument.super.setText(requester, theString);
-					}
-					catch (Throwable e) {
-						resultSlot[0] = e;
-					}
+			JobSafeRunnable runnable = new JobSafeRunnable() {
+				public void run() throws Exception {
+					resultSlot[0] = JobSafeStructuredDocument.super.setText(requester, theString);
+				}
+				public void handleException(Throwable exception) {
+					resultSlot[0] = new NoChangeEvent(JobSafeStructuredDocument.this, requester, theString, 0, 0);
+					super.handleException(exception);
 				}
 			};
-			// strongly assumes synchronous call, to "wait" for
-			// results
-			// basically just routes to Display.synchExec(runnable),
-			// if not already running on display thread.
 			executionDelegate.execute(runnable);
-
-			// this remembering and re-throwing of exception is just to
-			// get an
-			// exception that occurred on one thread, to be thrown on
-			// callers
-			// thread.
-			if (resultSlot[0] instanceof Throwable) {
-				throw new RuntimeException((Throwable) resultSlot[0]);
-			}
-			else {
-				event = (StructuredDocumentEvent) resultSlot[0];
-			}
+			event = (StructuredDocumentEvent) resultSlot[0];
 		}
 		return event;
 	}
@@ -268,45 +208,17 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 		DocumentRewriteSession session = null;
 		IExecutionDelegate executionDelegate = getExecutionDelegate();
 		if (executionDelegate == null) {
-			// if the delegate has not been set, we execute on current
-			// thread, like "normal". This is the case for normal
-			// non-editor
-			// use (which should still, ultimately, be protected by
-			// a scheduling rule).
 			session = internalStartRewriteSession(sessionType);
 		}
 		else {
-			// If document is being used by an editor, a runnable is
-			// created,
-			// even if later (in the execution delegate instance) it is
-			// decided
-			// nothing special is needed (that is, in fact being called
-			// from
-			// editor's display thread, in which case its just executed)
 			final Object[] resultSlot = new Object[1];
 			final DocumentRewriteSessionType finalSessionType = sessionType;
-			Runnable runnable = new Runnable() {
-				public void run() {
-					try {
-						resultSlot[0] = internalStartRewriteSession(finalSessionType);
-
-					}
-					catch (Throwable e) {
-						resultSlot[0] = e;
-					}
+			JobSafeRunnable runnable = new JobSafeRunnable() {
+				public void run() throws Exception {
+					resultSlot[0] = internalStartRewriteSession(finalSessionType);
 				}
 			};
-			// strongly assumes synchronous call, to "wait" for
-			// results
-			// basically just routes to Display.synchExec(runnable),
-			// if not already running on display thread.
 			executionDelegate.execute(runnable);
-
-			// this remembering and re-throwing of exception is just to
-			// get an
-			// exception that occurred on one thread, to be thrown on
-			// callers
-			// thread.
 			if (resultSlot[0] instanceof Throwable) {
 				throw new RuntimeException((Throwable) resultSlot[0]);
 			}
@@ -320,48 +232,16 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	public void stopRewriteSession(DocumentRewriteSession session) {
 		IExecutionDelegate executionDelegate = getExecutionDelegate();
 		if (executionDelegate == null) {
-			// if the delegate has not been set, we execute on current
-			// thread, like "normal". This is the case for normal
-			// non-editor
-			// use (which should still, ultimately, be protected by
-			// a scheduling rule).
 			internalStopRewriteSession(session);
 		}
 		else {
-			// If document is being used by an editor, a runnable is
-			// created,
-			// even if later (in the execution delegate instance) it is
-			// decided
-			// nothing special is needed (that is, in fact being called
-			// from
-			// editor's display thread, in which case its just executed)
-			final Object[] resultSlot = new Object[1];
 			final DocumentRewriteSession finalSession = session;
-			Runnable runnable = new Runnable() {
-				public void run() {
-					try {
-						internalStopRewriteSession(finalSession);
-
-					}
-					catch (Throwable e) {
-						resultSlot[0] = e;
-					}
+			JobSafeRunnable runnable = new JobSafeRunnable() {
+				public void run() throws Exception {
+					internalStopRewriteSession(finalSession);
 				}
 			};
-			// strongly assumes synchronous call, to "wait" for
-			// results
-			// basically just routes to Display.synchExec(runnable),
-			// if not already running on display thread.
 			executionDelegate.execute(runnable);
-
-			// this remembering and re-throwing of exception is just to
-			// get an
-			// exception that occurred on one thread, to be thrown on
-			// callers
-			// thread.
-			if (resultSlot[0] instanceof Throwable) {
-				throw new RuntimeException((Throwable) resultSlot[0]);
-			}
 		}
 	}
 
