@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Moller- bug 281159 - debugging convenience toString method 
+ *     David Carver (STAR) - bug 288886 - add unit tests and fix fn:resolve-qname function
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -84,12 +85,25 @@ public class QName extends CtrType implements CmpEq {
 	 * @return null
 	 */
 	public static QName parse_QName(String str) {
+		int occurs = 0;
+		for (Character ch : str.toCharArray()) {
+			if (ch == ':') {
+				occurs +=1;
+			}
+		}
+		
+		if (occurs > 1) {
+			return null;
+		}
+		
 		String[] tokens = str.split(":");
 
 		if (tokens.length == 1)
 			return new QName(tokens[0]);
-		if (tokens.length == 2)
-			return new QName(tokens[0], tokens[1]);
+		
+		if (tokens.length == 2) {
+				return new QName(tokens[0], tokens[1]);
+		}
 
 		return null;
 	}
@@ -285,7 +299,6 @@ public class QName extends CtrType implements CmpEq {
 		return true;
 	}
 
-	// XXX I DON'T KNOW ANYTHING ABOUT HASHING
 	/**
 	 * Calculates the hashcode for the full pathname
 	 * 

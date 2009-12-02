@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     David Carver (STAR) - bug 288886 - add unit tests and fix fn:resolve-qname function
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -17,6 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.w3c.dom.Element;
 
 import java.util.*;
 
@@ -74,6 +76,8 @@ public class FnResolveQName extends Function {
 
 		if (arg1.empty())
 			return rs;
+		
+		ResultSequence arg2 = (ResultSequence) argiter.next();
 
 		String name = ((XSString) arg1.first()).value();
 
@@ -81,6 +85,23 @@ public class FnResolveQName extends Function {
 
 		if (qn == null)
 			throw DynamicError.lexical_error(null);
+
+		ElementType xselement = (ElementType) arg2.first();
+		Element element = (Element) xselement.node_value();
+
+		if (qn.prefix() != null) {
+			String namespaceURI = element.lookupNamespaceURI(qn.prefix());
+			
+			if (namespaceURI == null) {
+				throw DynamicError.invalidPrefix();
+			}
+			qn.set_namespace(namespaceURI);
+		} else {
+			if (qn.local().equals(element.getLocalName()) && element.isDefaultNamespace(element.getNamespaceURI())) {
+				qn.set_namespace(element.getNamespaceURI());
+			}
+		}
+		
 
 		rs.add(qn);
 
