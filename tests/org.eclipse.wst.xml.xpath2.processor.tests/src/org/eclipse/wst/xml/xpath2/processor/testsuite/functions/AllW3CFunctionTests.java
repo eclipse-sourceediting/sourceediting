@@ -114,6 +114,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(SeqIDFuncTest.class);
 		suite.addTestSuite(DaysFromDurationFuncTest.class);
 		suite.addTestSuite(DocumentURIFuncTest.class);
+		suite.addTestSuite(ResolveQNameFuncTest.class);
 		//$JUnit-END$
 		return suite;
 	}
