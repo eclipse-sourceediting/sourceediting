@@ -37,17 +37,17 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.ModuleFile;
-import org.eclipse.wst.server.core.internal.ModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.util.ModuleFile;
+import org.eclipse.wst.server.core.util.ModuleFolder;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
 public abstract class ComponentDeployable extends ProjectModule {
 
 	protected IVirtualComponent component = null;
-	protected List members = new ArrayList();
+	protected List<IModuleResource> members = new ArrayList<IModuleResource>();
 	
 	public ComponentDeployable(IProject project) {
 		this(project,ComponentCore.createComponent(project));
@@ -72,7 +72,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 	 * @param ModuleFolder mf
 	 * @param IModuleResource[] mr
 	 */
-	private void addMembersToModuleFolder(ModuleFolder mf, IModuleResource[] mr) {
+	protected void addMembersToModuleFolder(ModuleFolder mf, IModuleResource[] mr) {
 		// If the folder is null or the resources to add are null or empty, bail and return
 		if (mf == null || mr == null || mr.length==0) 
 			return;
@@ -105,7 +105,7 @@ public abstract class ComponentDeployable extends ProjectModule {
     }
     
     public IModule[] getModules() {
-		List modules = new ArrayList();
+		List<IModule> modules = new ArrayList<IModule>();
 		if (component != null) {
 	    	IVirtualReference[] components = getReferences(component);
 	    	for (int i = 0; i < components.length; i++) {
@@ -118,7 +118,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 				}
 			}
 		}
-        return (IModule[]) modules.toArray(new IModule[modules.size()]);
+        return modules.toArray(new IModule[modules.size()]);
 	}
     
     protected IVirtualReference[] getReferences(IVirtualComponent aComponent) {
@@ -148,7 +148,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 	protected IModuleResource[] getMembers(IContainer cont, IPath path, IPath javaPath, IContainer[] javaCont) throws CoreException {
 		IResource[] res = cont.members();
 		int size2 = res.length;
-		List list = new ArrayList(size2);
+		List<IModuleFile> list = new ArrayList<IModuleFile>(size2);
 		for (int j = 0; j < size2; j++) {
 			if (res[j] instanceof IContainer) {
 				IContainer cc = (IContainer) res[j];
@@ -196,13 +196,13 @@ public abstract class ComponentDeployable extends ProjectModule {
 	}
 	
 	protected IModuleFile createModuleFile(final IFile file, final IPath path) {
-		return new ModuleFile(file, file.getName(), path, file.getModificationStamp() + file.getLocalTimeStamp());
+		return new ModuleFile(file, file.getName(), path);
 	}
 	
 	protected IModuleResource[] getMembers(IVirtualContainer cont, IPath path) throws CoreException {
 		IVirtualResource[] res = cont.members();
 		int size2 = res.length;
-		List list = new ArrayList(size2);
+		List<IModuleFile> list = new ArrayList<IModuleFile>(size2);
 		for (int j = 0; j < size2; j++) {
 			if (res[j] instanceof IVirtualContainer) {
 				IVirtualContainer cc = (IVirtualContainer) res[j];
