@@ -19,6 +19,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.w3c.dom.Element;
@@ -38,7 +39,7 @@ public class TaglibModelQueryExtension extends ModelQueryExtension {
 		ArrayList nodeList = new ArrayList();
 		
 		//only returns anything if looking for child nodes
-		if(parentElement instanceof IDOMElement) {
+		if(((includeOptions & ModelQuery.INCLUDE_CHILD_NODES) != 0) && parentElement instanceof IDOMElement) {
 			//get the trackers
 			IDOMElement elem = (IDOMElement)parentElement;
 			IStructuredDocument structDoc = elem.getModel().getStructuredDocument();

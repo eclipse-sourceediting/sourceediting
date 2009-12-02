@@ -25,6 +25,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -51,7 +52,8 @@ public class JSPModelQueryExtension extends ModelQueryExtension {
 		CMNode[] nodes = EMPTY_CMNODE_ARRAY;
 		ArrayList nodeList = new ArrayList();
 		
-		if(parentElement instanceof IDOMNode) {
+		//only returns anything if looking for child nodes
+		if(((includeOptions & ModelQuery.INCLUDE_CHILD_NODES) != 0) && parentElement instanceof IDOMNode) {
 			IDOMNode node = (IDOMNode)parentElement;
 			// get position dependent CMDocuments and insert their tags as
 			// proposals
@@ -68,8 +70,7 @@ public class JSPModelQueryExtension extends ModelQueryExtension {
 					CMDocument jcmdoc = getDefaultJSPCMDocument(node);
 					CMNamedNodeMap jspelements = jcmdoc.getElements();
 
-					/*
-					 * For a built-in JSP action the content model is properly
+					/* For a built-in JSP action the content model is properly
 					 * set up, so don't just blindly add the rest--unless this
 					 * will be a direct child of the document
 					 */
