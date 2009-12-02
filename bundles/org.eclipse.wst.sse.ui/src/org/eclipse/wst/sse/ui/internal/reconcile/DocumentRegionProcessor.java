@@ -14,8 +14,12 @@ package org.eclipse.wst.sse.ui.internal.reconcile;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
@@ -26,6 +30,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
@@ -45,7 +50,6 @@ import org.eclipse.wst.sse.ui.internal.spelling.SpellcheckStrategy;
  * validator strategies - DirtyRegion processing logic.
  */
 public class DocumentRegionProcessor extends DirtyRegionProcessor {
-
 	private static final boolean DEBUG_VALIDATORS = Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidators")); //$NON-NLS-1$
 
 	/**
@@ -59,6 +63,8 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	 * extension point
 	 */
 	private ValidatorStrategy fValidatorStrategy;
+
+	private ISourceReconcilingListener[] fReconcileListeners = new ISourceReconcilingListener[0];
 
 	private IReconcilingStrategy fSemanticHighlightingStrategy;
 	
@@ -74,12 +80,23 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	 * false otherwise
 	 */
 	private boolean fValidationEnabled;
-	
+
+	public void addReconcilingListener(ISourceReconcilingListener listener) {
+		Set listeners = new HashSet(Arrays.asList(fReconcileListeners));
+		listeners.add(listener);
+		fReconcileListeners = (ISourceReconcilingListener[]) listeners.toArray(new ISourceReconcilingListener[listeners.size()]);
+	}
+
 	protected void beginProcessing() {
 		super.beginProcessing();
 		ValidatorStrategy validatorStrategy = getValidatorStrategy();
 		if (validatorStrategy != null) {
 			validatorStrategy.beginProcessing();
+		}
+		if ((getTextViewer() instanceof ISourceViewer)) {
+			for (int i = 0; i < fReconcileListeners.length; i++) {
+				fReconcileListeners[i].aboutToBeReconciled();
+			}
 		}
 	}
 
@@ -100,6 +117,18 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		if (semanticHighlightingStrategy != null && document != null) {
 			semanticHighlightingStrategy.reconcile(new Region(0, document.getLength()));
 		}
+
+		if ((getTextViewer() instanceof ISourceViewer)) {
+			ISourceViewer sourceViewer = (ISourceViewer) getTextViewer();
+			IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
+			for (int i = 0; i < fReconcileListeners.length; i++) {
+				fReconcileListeners[i].reconciled(document, annotationModel, false, new NullProgressMonitor());
+			}
+		}
+	}
+
+	public void forceReconciling() {
+		super.forceReconciling();
 	}
 
 	protected String getContentType(IDocument doc) {
@@ -282,6 +311,13 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			getFoldingStrategy().reconcile(dirtyRegion, null);
 		}
 	}
+	
+	public void removeReconcilingListener(ISourceReconcilingListener listener) {
+		Set listeners = new HashSet(Arrays.asList(fReconcileListeners));
+		listeners.remove(listener);
+		fReconcileListeners = (ISourceReconcilingListener[]) listeners.toArray(new ISourceReconcilingListener[listeners.size()]);
+	}
+
 
 	public void setDocument(IDocument doc) {
 		super.setDocument(doc);
@@ -332,7 +368,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	 */
 	public void install(ITextViewer textViewer) {
 		super.install(textViewer);
-		
+
 		//determine if validation is enabled
 		this.fValidationEnabled = SSEUIPlugin.getInstance().getPreferenceStore().getBoolean(
 				CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
@@ -357,6 +393,8 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 				fSpellcheckStrategy.setDocument(null);
 				fSpellcheckStrategy = null;
 			}
+
+			fReconcileListeners = new ISourceReconcilingListener[0];
 		}
 		super.uninstall();
 	}

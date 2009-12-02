@@ -267,6 +267,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	/** The job should be reset because of document changes */
 	private boolean fReset = false;
 	private boolean fIsCanceled = false;
+	private boolean fHasReconciled = false;
 	private Object LOCK = new Object();
 
 	/**
@@ -636,6 +637,11 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		if (!PlatformUI.isWorkbenchRunning())
 			return status;
 
+		if (!fHasReconciled) {
+			initialReconcile();
+			fHasReconciled = true;
+		}
+
 		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		boolean processed = false;
 		try {
@@ -708,6 +714,12 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	}
 
 	/**
+	 * This method is called before the initial reconciling of the document. 
+	 */
+	protected void initialReconcile() {
+	}
+
+	/**
 	 * Sets the document partitioning for this reconciler.
 	 * 
 	 * @param partitioning
@@ -715,6 +727,16 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 */
 	public void setDocumentPartitioning(String partitioning) {
 		fPartitioning = partitioning;
+	}
+
+	/**
+	 * Forces reconciling of the entire document.
+	 */
+	protected void forceReconciling() {
+		if (!fHasReconciled)
+			return;
+
+		setEntireDocumentDirty(getDocument());
 	}
 
 	/**

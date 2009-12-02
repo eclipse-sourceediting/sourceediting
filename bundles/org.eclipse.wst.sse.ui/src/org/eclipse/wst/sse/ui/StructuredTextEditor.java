@@ -102,9 +102,11 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
@@ -181,6 +183,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingText
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
+import org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
@@ -803,6 +806,37 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	private class PartListener implements IPartListener {
+
+		private ITextEditor fEditor;
+
+		public PartListener(ITextEditor editor) {
+			fEditor = editor;
+		}
+
+		public void partActivated(IWorkbenchPart part) {
+			if (part.getAdapter(ITextEditor.class) == fEditor) {
+				IReconciler reconciler = getSourceViewerConfiguration().getReconciler(getSourceViewer());
+				if (reconciler instanceof DocumentRegionProcessor) {
+					((DocumentRegionProcessor) reconciler).forceReconciling();
+				}
+			}
+		}
+
+		public void partBroughtToTop(IWorkbenchPart part) {
+		}
+
+		public void partClosed(IWorkbenchPart part) {
+		}
+
+		public void partDeactivated(IWorkbenchPart part) {
+		}
+
+		public void partOpened(IWorkbenchPart part) {
+		}
+		
+	}
+
 	/**
 	 * Not API. May be removed in the future.
 	 */
@@ -855,7 +889,12 @@ public class StructuredTextEditor extends TextEditor {
 	private OutlinePageListener fOutlinePageListener = null;
 	/** This editor's projection support */
 	private ProjectionSupport fProjectionSupport;
+	
 	private IPropertySheetPage fPropertySheetPage;
+
+	private ISourceReconcilingListener[] fReconcilingListeners = new ISourceReconcilingListener[0]; 
+	private IPartListener fPartListener;
+
 	private String fRememberTitle;
 	/** The ruler context menu to be disposed. */
 	private Menu fRulerContextMenu;
@@ -1285,7 +1324,9 @@ public class StructuredTextEditor extends TextEditor {
 		fInformationPresenter = new InformationPresenter(informationControlCreator);
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
-
+		addReconcilingListeners(getSourceViewerConfiguration(), getTextViewer());
+		fPartListener = new PartListener(this);
+		getSite().getWorkbenchWindow().getPartService().addPartListener(fPartListener);
 		installSemanticHighlighting();
 		
 		
@@ -1529,7 +1570,12 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (fDropTarget != null)
 			fDropTarget.dispose();
-		
+
+		if (fPartListener != null) {
+			getSite().getWorkbenchWindow().getPartService().removePartListener(fPartListener);
+			fPartListener = null;
+		}
+
 		uninstallSemanticHighlighting();
 
 		setPreferenceStore(null);
@@ -2650,18 +2696,49 @@ public class StructuredTextEditor extends TextEditor {
 	 * that viewer configuration could be set after editor part was created.
 	 */
 	protected void setSourceViewerConfiguration(SourceViewerConfiguration config) {
+		SourceViewerConfiguration oldSourceViewerConfiguration = getSourceViewerConfiguration();
 		super.setSourceViewerConfiguration(config);
 		StructuredTextViewer stv = getTextViewer();
 		if (stv != null) {
-			// there should be no need to unconfigure
-			// before configure because
-			// configure will
-			// also unconfigure before configuring
+			/*
+			 * There should be no need to unconfigure before configure because
+			 * configure will also unconfigure before configuring
+			 */
+			removeReconcilingListeners(oldSourceViewerConfiguration, stv);
 			stv.unconfigure();
 			stv.configure(config);
+			addReconcilingListeners(config, stv);
 		}
 	}
 
+	private void removeReconcilingListeners(SourceViewerConfiguration config, StructuredTextViewer stv) {
+		IReconciler reconciler = config.getReconciler(stv);
+		if (reconciler instanceof DocumentRegionProcessor) {
+			for (int i = 0; i < fReconcilingListeners.length; i++) {
+				((DocumentRegionProcessor) reconciler).removeReconcilingListener(fReconcilingListeners[i]);
+			}
+		}
+	}
+
+	private void addReconcilingListeners(SourceViewerConfiguration config, StructuredTextViewer stv) {
+		try {
+			List reconcilingListeners = new ArrayList(fReconcilingListeners.length);
+			String[] ids = getConfigurationPoints();
+			for (int i = 0; i < ids.length; i++) {
+				reconcilingListeners.addAll(ExtendedConfigurationBuilder.getInstance().getConfigurations("sourceReconcilingListener", ids[i])); //$NON-NLS-1$
+			}
+			fReconcilingListeners = (ISourceReconcilingListener[]) reconcilingListeners.toArray(new ISourceReconcilingListener[reconcilingListeners.size()]);
+		}
+		catch (ClassCastException e) {
+			Logger.log(Logger.ERROR, "Configuration has a reconciling listener that does not implement ISourceReconcilingListener."); //$NON-NLS-1$
+		}
+
+		IReconciler reconciler = config.getReconciler(stv);
+		if (reconciler instanceof DocumentRegionProcessor) {
+			for (int i = 0; i < fReconcilingListeners.length; i++)
+				((DocumentRegionProcessor) reconciler).addReconcilingListener(fReconcilingListeners[i]);
+		}
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
