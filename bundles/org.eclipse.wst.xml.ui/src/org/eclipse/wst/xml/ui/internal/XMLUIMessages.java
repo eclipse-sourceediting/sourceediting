@@ -273,6 +273,8 @@ public class XMLUIMessages extends NLS {
 	public static String XMLTyping_Auto_Complete;
 	public static String XMLTyping_Auto_Remove;
 	public static String XMLTyping_Complete_Comments;
+	public static String XMLTyping_Close_Strings;
+	public static String XMLTyping_Close_Brackets;
 	public static String XMLTyping_Complete_End_Tags;
 	public static String XMLTyping_Complete_Elements;
 	public static String XMLTyping_Remove_End_Tags;

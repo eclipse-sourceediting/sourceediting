@@ -29,7 +29,9 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 	private Button fCloseEndTag;
 	private Button fRemoveEndTag;
 	private Button fCloseElement;
-	
+	private Button fCloseStrings;
+	private Button fCloseBrackets;
+
 	protected Control createContents(Composite parent) {
 		Composite composite = super.createComposite(parent, 1);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.XML_PREFWEBX_FILES_HELPID);
@@ -70,6 +72,12 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 		
 		fCloseComment = createCheckBox(group, XMLUIMessages.XMLTyping_Complete_Comments);
 		((GridData) fCloseComment.getLayoutData()).horizontalSpan = 2;
+
+		fCloseStrings = createCheckBox(group, XMLUIMessages.XMLTyping_Close_Strings);
+		((GridData) fCloseStrings.getLayoutData()).horizontalSpan = 2;
+
+		fCloseBrackets = createCheckBox(group, XMLUIMessages.XMLTyping_Close_Brackets);
+		((GridData) fCloseBrackets.getLayoutData()).horizontalSpan = 2;
 	}
 	
 	private void createAutoRemove(Composite parent) {
@@ -94,6 +102,8 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 		initCheckbox(fCloseEndTag, XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS);
 		initCheckbox(fCloseElement, XMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS);
 		initCheckbox(fRemoveEndTag, XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
+		initCheckbox(fCloseStrings, XMLUIPreferenceNames.TYPING_CLOSE_STRINGS);
+		initCheckbox(fCloseBrackets, XMLUIPreferenceNames.TYPING_CLOSE_BRACKETS);
 	}
 	
 	protected void performDefaults() {
@@ -101,6 +111,8 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 		defaultCheckbox(fCloseEndTag, XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS);
 		defaultCheckbox(fCloseElement, XMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS);
 		defaultCheckbox(fRemoveEndTag, XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
+		defaultCheckbox(fCloseStrings, XMLUIPreferenceNames.TYPING_CLOSE_STRINGS);
+		defaultCheckbox(fCloseBrackets, XMLUIPreferenceNames.TYPING_CLOSE_BRACKETS);
 	}
 	
 	protected void storeValues() {
@@ -108,6 +120,8 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS, (fCloseEndTag != null) ? fCloseEndTag.getSelection() : false);
 		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS, (fCloseElement != null) ? fCloseElement.getSelection() : false);
 		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, (fRemoveEndTag != null) ? fRemoveEndTag.getSelection() : false);
+		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_CLOSE_STRINGS, (fCloseStrings != null) ? fCloseStrings.getSelection() : false);
+		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_CLOSE_BRACKETS, (fCloseBrackets != null) ? fCloseBrackets.getSelection() : false);
 	}
 	
 	protected IPreferenceStore doGetPreferenceStore() {

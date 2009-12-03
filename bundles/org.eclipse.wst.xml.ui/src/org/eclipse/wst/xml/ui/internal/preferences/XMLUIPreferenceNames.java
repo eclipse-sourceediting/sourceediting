@@ -143,4 +143,22 @@ public class XMLUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String TYPING_REMOVE_END_TAGS = "removeEndTags"; //$NON-NLS-1$
+
+	/**
+	 * The key to store the option for auto-completing strings (" and ') while
+	 * typing.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_CLOSE_STRINGS = "closeStrings"; //$NON-NLS-1$
+
+	/**
+	 * The key to store the option for auto-completing brackets ([ and () while
+	 * typing.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_CLOSE_BRACKETS = "closeBrackets"; //$NON-NLS-1$
 }

@@ -29,6 +29,8 @@ public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 	private Button fCloseEndTag;
 	private Button fRemoveEndTag;
 	private Button fCloseElement;
+	private Button fCloseStrings;
+	private Button fCloseBrackets;
 	
 	protected Control createContents(Composite parent) {
 		Composite composite = super.createComposite(parent, 1);
@@ -69,6 +71,12 @@ public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 
 		fCloseComment = createCheckBox(group, HTMLUIMessages.HTMLTyping_Complete_Comments);
 		((GridData) fCloseComment.getLayoutData()).horizontalSpan = 2;
+
+		fCloseStrings = createCheckBox(group, HTMLUIMessages.HTMLTyping_Close_Strings);
+		((GridData) fCloseStrings.getLayoutData()).horizontalSpan = 2;
+
+		fCloseBrackets = createCheckBox(group, HTMLUIMessages.HTMLTyping_Close_Brackets);
+		((GridData) fCloseBrackets.getLayoutData()).horizontalSpan = 2;
 	}
 	
 	private void createAutoRemove(Composite parent) {
@@ -93,6 +101,8 @@ public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 		initCheckbox(fCloseEndTag, HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS);
 		initCheckbox(fCloseElement, HTMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS);
 		initCheckbox(fRemoveEndTag, HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
+		initCheckbox(fCloseStrings, HTMLUIPreferenceNames.TYPING_CLOSE_STRINGS);
+		initCheckbox(fCloseBrackets, HTMLUIPreferenceNames.TYPING_CLOSE_BRACKETS);
 	}
 	
 	protected void performDefaults() {
@@ -100,6 +110,8 @@ public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 		defaultCheckbox(fCloseEndTag, HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS);
 		defaultCheckbox(fCloseElement, HTMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS);
 		defaultCheckbox(fRemoveEndTag, HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
+		defaultCheckbox(fCloseStrings, HTMLUIPreferenceNames.TYPING_CLOSE_STRINGS);
+		defaultCheckbox(fCloseBrackets, HTMLUIPreferenceNames.TYPING_CLOSE_BRACKETS);
 	}
 	
 	protected void storeValues() {
@@ -107,6 +119,8 @@ public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS, (fCloseEndTag != null) ? fCloseEndTag.getSelection() : false);
 		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS, (fCloseElement != null) ? fCloseElement.getSelection() : false);
 		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, (fRemoveEndTag != null) ? fRemoveEndTag.getSelection() : false);
+		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_CLOSE_STRINGS, (fCloseStrings != null) ? fCloseStrings.getSelection() : false);
+		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_CLOSE_BRACKETS, (fCloseBrackets != null) ? fCloseBrackets.getSelection() : false);
 	}
 	
 	protected IPreferenceStore doGetPreferenceStore() {

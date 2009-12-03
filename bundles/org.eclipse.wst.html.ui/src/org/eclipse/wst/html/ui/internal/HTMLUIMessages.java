@@ -141,6 +141,8 @@ public class HTMLUIMessages extends NLS {
 	public static String HTMLTyping_Complete_Comments;
 	public static String HTMLTyping_Complete_End_Tags;
 	public static String HTMLTyping_Remove_End_Tags;
+	public static String HTMLTyping_Close_Strings;
+	public static String HTMLTyping_Close_Brackets;
 	
 	// below are the strings for the validation page
 	public static String Validation_description;

@@ -75,6 +75,8 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS, true);
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS, true);
 		store.setDefault(JSPUIPreferenceNames.SUPPLY_JSP_SEARCH_RESULTS_TO_JAVA_SEARCH, true);
+		store.setDefault(JSPUIPreferenceNames.TYPING_CLOSE_STRINGS, true);
+		store.setDefault(JSPUIPreferenceNames.TYPING_CLOSE_BRACKETS, true);
 		
 	}
 

@@ -90,5 +90,23 @@ public class JSPUIPreferenceNames {
 	 */
 	public static final String TYPING_COMPLETE_COMMENTS = "typingCompleteComments"; //$NON-NLS-1$
 
+	/**
+	 * The key to store the option for auto-completing strings (" and ') while
+	 * typing.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_CLOSE_STRINGS = "closeStrings"; //$NON-NLS-1$
+
+	/**
+	 * The key to store the option for auto-completing brackets ([ and () while
+	 * typing.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_CLOSE_BRACKETS = "closeBrackets"; //$NON-NLS-1$
+
 	public static final String SUPPLY_JSP_SEARCH_RESULTS_TO_JAVA_SEARCH = "supplyJSPSearchResultsToJavaSearch"; //$NON-NLS-1$
 }

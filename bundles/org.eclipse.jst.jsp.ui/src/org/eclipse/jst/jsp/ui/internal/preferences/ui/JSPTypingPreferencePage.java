@@ -27,12 +27,15 @@ public class JSPTypingPreferencePage extends AbstractPreferencePage {
 	private Button fCloseBraces;
 	private Button fCloseScriptlets;
 	private Button fCloseComments;
+	private Button fCloseStrings;
+	private Button fCloseBrackets;
 	
 	protected Control createContents(Composite parent) {
 		Composite composite = super.createComposite(parent, 1);
 		
 		createAutoComplete(composite);
-		
+		createJavaGroup(composite);
+
 		setSize(composite);
 		loadPreferences();
 		
@@ -53,7 +56,19 @@ public class JSPTypingPreferencePage extends AbstractPreferencePage {
 		fCloseScriptlets = createCheckBox(group, JSPUIMessages.JSPTyping_Complete_Scriptlets);
 		((GridData) fCloseScriptlets.getLayoutData()).horizontalSpan = 2;
 	}
-	
+
+	private void createJavaGroup(Composite parent) {
+		Group group = createGroup(parent, 2);
+
+		group.setText(JSPUIMessages.JSPTyping_Java_Code);
+
+		fCloseStrings = createCheckBox(group, JSPUIMessages.JSPTyping_Close_Strings);
+		((GridData) fCloseStrings.getLayoutData()).horizontalSpan = 2;
+
+		fCloseBrackets = createCheckBox(group, JSPUIMessages.JSPTyping_Close_Brackets);
+		((GridData) fCloseBrackets.getLayoutData()).horizontalSpan = 2;
+	}
+
 	public boolean performOk() {
 		boolean result = super.performOk();
 		
@@ -66,18 +81,24 @@ public class JSPTypingPreferencePage extends AbstractPreferencePage {
 		initCheckbox(fCloseBraces, JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES);
 		initCheckbox(fCloseScriptlets, JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS);
 		initCheckbox(fCloseComments, JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
+		initCheckbox(fCloseStrings, JSPUIPreferenceNames.TYPING_CLOSE_STRINGS);
+		initCheckbox(fCloseBrackets, JSPUIPreferenceNames.TYPING_CLOSE_BRACKETS);
 	}
 	
 	protected void performDefaults() {
 		defaultCheckbox(fCloseBraces, JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES);
 		defaultCheckbox(fCloseScriptlets, JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS);
 		defaultCheckbox(fCloseComments, JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
+		defaultCheckbox(fCloseStrings, JSPUIPreferenceNames.TYPING_CLOSE_STRINGS);
+		defaultCheckbox(fCloseBrackets, JSPUIPreferenceNames.TYPING_CLOSE_BRACKETS);
 	}
 	
 	protected void storeValues() {
 		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES, (fCloseBraces != null) ? fCloseBraces.getSelection() : false);
 		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS, (fCloseScriptlets != null) ? fCloseScriptlets.getSelection() : false);
 		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS, (fCloseComments != null) ? fCloseComments.getSelection() : false);
+		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_CLOSE_STRINGS, (fCloseStrings != null) ? fCloseStrings.getSelection() : false);
+		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_CLOSE_BRACKETS, (fCloseBrackets != null) ? fCloseBrackets.getSelection() : false);
 	}
 	
 	protected IPreferenceStore doGetPreferenceStore() {

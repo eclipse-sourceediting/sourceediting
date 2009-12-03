@@ -133,6 +133,8 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS, true);
 		store.setDefault(XMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS, true);
 		store.setDefault(XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, true);
+		store.setDefault(XMLUIPreferenceNames.TYPING_CLOSE_STRINGS, true);
+		store.setDefault(XMLUIPreferenceNames.TYPING_CLOSE_BRACKETS, true);
 	}
 
 }

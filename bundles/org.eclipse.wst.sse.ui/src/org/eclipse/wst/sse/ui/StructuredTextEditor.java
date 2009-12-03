@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,9 +32,14 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.jface.action.Action;
@@ -43,6 +49,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IBlockTextSelection;
 import org.eclipse.jface.text.IDocument;
@@ -57,6 +64,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.ITextViewerExtension5;
+import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -85,8 +93,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -182,6 +192,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.ConfigurationPoint
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.provisional.typing.AbstractCharacterPairInserter;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
@@ -806,6 +817,110 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	private class CharacterPairListener implements VerifyKeyListener {
+		private CharacterPairing[] fInserters = new CharacterPairing[0];
+
+		/**
+		 * Add the pairing to the list of inserters
+		 * @param pairing
+		 */
+		void addInserter(CharacterPairing pairing) {
+			List pairings = new ArrayList(Arrays.asList(fInserters));
+			pairings.add(pairing);
+			fInserters = (CharacterPairing[]) pairings.toArray(new CharacterPairing[pairings.size()]);
+		}
+
+		void prioritize() {
+			Arrays.sort(fInserters);
+		}
+
+		/**
+		 * Perform cleanup on the character pair inserters
+		 */
+		void dispose() {
+			for (int i = 0; i < fInserters.length; i++) {
+				final AbstractCharacterPairInserter inserter = fInserters[i].inserter;
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable exception) {
+						// rely on default logging
+					}
+
+					public void run() throws Exception {
+						inserter.dispose();
+					}
+				});
+			}
+		}
+
+		public void verifyKey(final VerifyEvent event) {
+			if (!event.doit || getInsertMode() != SMART_INSERT || isBlockSelectionModeEnabled() && isMultilineSelection())
+				return;
+			for (int i = 0; i < fInserters.length; i++) {
+				final CharacterPairing pairing = fInserters[i];
+				// use a SafeRunner -- this is a critical function (typing)
+				SafeRunner.run(new ISafeRunnable() {
+					public void run() throws Exception {
+						final AbstractCharacterPairInserter inserter = pairing.inserter;
+						if (inserter.hasPair(event.character)) {
+							if (pair(event, inserter, pairing.partitions))
+								return;
+						}
+					}
+
+					public void handleException(Throwable exception) {
+						// rely on default logging
+					}
+				});
+			}
+		}
+
+		private boolean pair(VerifyEvent event, AbstractCharacterPairInserter inserter, Set partitions) {
+			final ISourceViewer viewer = getSourceViewer();
+			final IDocument document = getSourceViewer().getDocument();
+			if (document != null) {
+				try {
+					final Point selection = viewer.getSelectedRange();
+					final int offset = selection.x;
+					final ITypedRegion partition = document.getPartition(offset);
+					if (partitions.contains(partition.getType())) {
+						// Don't modify if the editor input cannot be changed
+						if (!validateEditorInputState())
+							return false;
+						event.doit = !inserter.pair(viewer, event.character);
+						return true;
+					}
+				} catch (BadLocationException e) {
+				}
+			}
+			return false;
+		}
+
+		private boolean isMultilineSelection() {
+			ISelection selection = getSelectionProvider().getSelection();
+			if (selection instanceof ITextSelection) {
+				ITextSelection ts = (ITextSelection) selection;
+				return ts.getStartLine() != ts.getEndLine();
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * Representation of a character pairing that includes its priority based on
+	 * its content type and how close it is to the content type of the file
+	 * in the editor.
+	 */
+	private class CharacterPairing implements Comparable {
+		int priority;
+		AbstractCharacterPairInserter inserter;
+		Set partitions;
+		public int compareTo(Object o) {
+			if (o == this)
+				return 0;
+			return this.priority - ((CharacterPairing) o).priority;
+		}
+	}
+	
 	private class PartListener implements IPartListener {
 
 		private ITextEditor fEditor;
@@ -889,7 +1004,6 @@ public class StructuredTextEditor extends TextEditor {
 	private OutlinePageListener fOutlinePageListener = null;
 	/** This editor's projection support */
 	private ProjectionSupport fProjectionSupport;
-	
 	private IPropertySheetPage fPropertySheetPage;
 
 	private ISourceReconcilingListener[] fReconcilingListeners = new ISourceReconcilingListener[0]; 
@@ -930,6 +1044,8 @@ public class StructuredTextEditor extends TextEditor {
 	private SemanticHighlightingManager fSemanticManager;
 	
 	private boolean fSelectionChangedFromGoto = false;
+
+	private final CharacterPairListener fPairInserter = new CharacterPairListener();
 
 	/**
 	 * Creates a new Structured Text Editor.
@@ -1328,7 +1444,11 @@ public class StructuredTextEditor extends TextEditor {
 		fPartListener = new PartListener(this);
 		getSite().getWorkbenchWindow().getPartService().addPartListener(fPartListener);
 		installSemanticHighlighting();
-		
+
+		installCharacterPairing();
+		ISourceViewer viewer = getSourceViewer();
+		if (viewer instanceof ITextViewerExtension)
+			((ITextViewerExtension) viewer).appendVerifyKeyListener(fPairInserter);
 		
 	}
 
@@ -1492,6 +1612,10 @@ public class StructuredTextEditor extends TextEditor {
 			System.out.println("Average time per call: " + (adapterTime / adapterRequests)); //$NON-NLS-1$
 		}
 
+		ISourceViewer viewer = getSourceViewer();
+		if (viewer instanceof ITextViewerExtension)
+			((ITextViewerExtension) viewer).removeVerifyKeyListener(fPairInserter);
+
 		// dispose of information presenter
 		if (fInformationPresenter != null) {
 			fInformationPresenter.dispose();
@@ -1570,13 +1694,11 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (fDropTarget != null)
 			fDropTarget.dispose();
-
-		if (fPartListener != null) {
-			getSite().getWorkbenchWindow().getPartService().removePartListener(fPartListener);
-			fPartListener = null;
-		}
-
+		
 		uninstallSemanticHighlighting();
+
+		if (fPairInserter != null)
+			fPairInserter.dispose();
 
 		setPreferenceStore(null);
 
@@ -2710,7 +2832,7 @@ public class StructuredTextEditor extends TextEditor {
 			addReconcilingListeners(config, stv);
 		}
 	}
-
+	
 	private void removeReconcilingListeners(SourceViewerConfiguration config, StructuredTextViewer stv) {
 		IReconciler reconciler = config.getReconciler(stv);
 		if (reconciler instanceof DocumentRegionProcessor) {
@@ -2739,6 +2861,7 @@ public class StructuredTextEditor extends TextEditor {
 				((DocumentRegionProcessor) reconciler).addReconcilingListener(fReconcilingListeners[i]);
 		}
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -3277,7 +3400,77 @@ public class StructuredTextEditor extends TextEditor {
 		 * Squiggles strategy, even when the native problem underline was specified for annotations */
 		return super.getSourceViewerDecorationSupport(viewer);
 	}
-	
+
+	private void installCharacterPairing() {
+		IStructuredModel model = getInternalModel();
+		if (model != null) {
+			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(SSEUIPlugin.ID, "characterPairing"); //$NON-NLS-1$
+			IContentTypeManager mgr = Platform.getContentTypeManager();
+			IContentType type = mgr.getContentType(model.getContentTypeIdentifier());
+			if (type != null) {
+				for (int i = 0; i < elements.length; i++) {
+					// Create the inserter
+					IConfigurationElement element = elements[i];
+					try {
+						IConfigurationElement[] contentTypes = element.getChildren("contentTypeIdentifier");
+						for (int j = 0; j < contentTypes.length; j++) {
+							String id = contentTypes[j].getAttribute("id");
+							if (id != null) {
+								IContentType targetType = mgr.getContentType(id);
+								int priority = calculatePriority(type, targetType, 0);
+								if (priority >= 0) {
+									final CharacterPairing pairing = new CharacterPairing();
+									pairing.priority = priority;
+									String[] partitions = StringUtils.unpack(contentTypes[j].getAttribute("partitions"));
+									pairing.partitions = new HashSet(partitions.length);
+									// Only add the inserter if there is at least one partition for the content type
+									for (int k = 0; k < partitions.length; k++) {
+										pairing.partitions.add(partitions[k]);
+									}
+
+									pairing.inserter = (AbstractCharacterPairInserter) element.createExecutableExtension("class");
+									if (pairing.inserter != null && partitions.length > 0) {
+										fPairInserter.addInserter(pairing);
+										/* use a SafeRunner since this method is also invoked during Part creation */
+										SafeRunner.run(new ISafeRunnable() {
+											public void run() throws Exception {
+												pairing.inserter.initialize();
+											}
+
+											public void handleException(Throwable exception) {
+												// rely on default logging
+											}
+										});
+									}
+								}
+							}
+						}
+					} catch (CoreException e) {
+						Logger.logException(e);
+					}
+				}
+				fPairInserter.prioritize();
+			}
+		}
+	}
+
+	/**
+	 * Calculates the priority of the target content type. The closer <code>targetType</code>
+	 * is to <code>type</code> the higher its priority.
+	 * 
+	 * @param type
+	 * @param targetType
+	 * @param priority
+	 * @return
+	 */
+	private int calculatePriority(IContentType type, IContentType targetType, int priority) {
+		if (type == null)
+			return -1;
+		if (type.getId().equals(targetType.getId()))
+			return priority;
+		return calculatePriority(type.getBaseType(), targetType, ++priority);
+	}
+
 	/**
 	 * Installs semantic highlighting on the editor
 	 */

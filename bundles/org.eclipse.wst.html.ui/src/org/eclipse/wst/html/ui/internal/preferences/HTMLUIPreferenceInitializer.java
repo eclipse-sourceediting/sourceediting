@@ -113,6 +113,8 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS, true);
 		store.setDefault(HTMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS, true);
 		store.setDefault(HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, true);
+		store.setDefault(HTMLUIPreferenceNames.TYPING_CLOSE_STRINGS, true);
+		store.setDefault(HTMLUIPreferenceNames.TYPING_CLOSE_BRACKETS, true);
 	}
 
 }
