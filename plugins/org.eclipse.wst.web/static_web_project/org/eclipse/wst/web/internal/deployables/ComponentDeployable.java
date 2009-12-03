@@ -37,11 +37,11 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.ModuleFile;
+import org.eclipse.wst.server.core.internal.ModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
-import org.eclipse.wst.server.core.util.ModuleFile;
-import org.eclipse.wst.server.core.util.ModuleFolder;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
 public abstract class ComponentDeployable extends ProjectModule {
