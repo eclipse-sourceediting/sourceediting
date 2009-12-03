@@ -589,7 +589,8 @@ public class DefaultStaticContext implements StaticContext {
 			Map scope = (Map) i.next();
 
 			System.out.println("Scope level " + level);
-			for (Iterator j = scope.keySet().iterator(); j.hasNext();) {
+//			scope.entrySet().iterator();
+			for (Iterator j = scope.entrySet().iterator(); j.hasNext();) {
 				QName varname = (QName) j.next();
 
 				AnyType val = (AnyType) scope.get(varname);

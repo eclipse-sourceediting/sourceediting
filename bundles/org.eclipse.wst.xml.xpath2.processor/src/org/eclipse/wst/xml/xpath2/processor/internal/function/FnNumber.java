@@ -89,7 +89,7 @@ public class FnNumber extends Function {
 				return (XSDouble)at;
 			} else if ((at instanceof XSFloat)) {
 				float value = ((XSFloat)at).float_value();
-				if (value == Float.NaN) {
+				if (Float.isNaN(value)) {
 					return new XSDouble(Double.NaN);
 				} else if (value == Float.NEGATIVE_INFINITY) {
 					return new XSDouble(Double.NEGATIVE_INFINITY);

@@ -84,6 +84,7 @@ public class FnConcat extends Function {
 		String result = "";
 
 		// go through args
+		StringBuffer buf = new StringBuffer();
 		for (Iterator argi = args.iterator(); argi.hasNext();) {
 			ResultSequence arg = (ResultSequence) argi.next();
 
@@ -98,11 +99,12 @@ public class FnConcat extends Function {
 			}
 
 			AnyType at = arg.first();
-
-			result += at.string_value();
+			
+			buf.append(at.string_value());
 
 		}
-
+		result = buf.toString();
+		
 		rs.add(new XSString(result));
 
 		return rs;

@@ -642,10 +642,12 @@ Cloneable {
 			pad++;
 		}
 
-		for (int i = 0; i < pad; i++)
-			ret += "0";
-
-		ret += snum;
+		StringBuffer buf = new StringBuffer(ret);
+		for (int i = 0; i < pad; i++) {
+			buf.append("0");
+		}
+		buf.append(snum);
+		ret = buf.toString();
 		return ret;
 	}
 

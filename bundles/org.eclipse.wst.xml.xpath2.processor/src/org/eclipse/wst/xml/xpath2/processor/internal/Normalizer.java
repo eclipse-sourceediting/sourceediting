@@ -713,9 +713,7 @@ public class Normalizer implements XPathVisitor {
 	 *            is the reverse step.
 	 * @return e
 	 */
-	// XXX: normalize!
 	public Object visit(ReverseStep e) {
-		String name = "REVSTEP" + e.axis();
 
 		if (e.axis() == ReverseStep.DOTDOT) {
 			NodeTest nt = new AnyKindTest();
@@ -830,8 +828,6 @@ public class Normalizer implements XPathVisitor {
 	 * @return e
 	 */
 	public Object visit(SingleType e) {
-		String name = "SINGLETYPE" + (e.qmark() ? "?" : "");
-
 		return e;
 	}
 
@@ -841,7 +837,6 @@ public class Normalizer implements XPathVisitor {
 	 * @return e
 	 */
 	public Object visit(SequenceType e) {
-		String name = "SEQUENCETYPE" + e.occurrence();
 		ItemType it = e.item_type();
 
 		if (it != null)

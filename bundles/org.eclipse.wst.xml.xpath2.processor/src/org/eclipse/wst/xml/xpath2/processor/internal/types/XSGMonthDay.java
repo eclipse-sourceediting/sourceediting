@@ -104,10 +104,12 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 				String[] timesplit = split[4].split(":");
 				if (timesplit.length < 3) {
 					starttime = "T";
+					StringBuffer buf = new StringBuffer(starttime);
 					for (int cnt = 0; cnt < timesplit.length; cnt++) {
-						starttime += timesplit[cnt] + ":";
+						buf.append(timesplit[cnt] + ":");
 					}
-					starttime += "00";
+					buf.append("00");
+					starttime = buf.toString();
 				} else {
 					starttime += timesplit[0] + ":" + timesplit[1] + ":" + timesplit[2];
 				}

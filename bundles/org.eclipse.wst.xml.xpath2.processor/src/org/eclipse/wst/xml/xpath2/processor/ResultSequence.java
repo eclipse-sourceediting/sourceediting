@@ -97,12 +97,13 @@ public abstract class ResultSequence {
 		String result = "";
 		int num = 1;
 
+		StringBuffer buf = new StringBuffer();
 		for (Iterator i = iterator(); i.hasNext();) {
 			AnyType elem = (AnyType) i.next();
 
-			result += num + ") ";
+			buf.append(num + ") ");
 
-			result += elem.string_type() + ": ";
+			buf.append(elem.string_type() + ": ");
 
 			String value = elem.string_value();
 
@@ -112,10 +113,11 @@ public abstract class ResultSequence {
 				if (tmp != null)
 					value = tmp.expanded_name();
 			}
-			result += value + "\n";
+			buf.append(value + "\n");
 
 			num++;
 		}
+		result = buf.toString();
 		if (num == 1)
 			result = "Empty results\n";
 		return result;

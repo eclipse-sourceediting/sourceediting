@@ -84,18 +84,18 @@ public class FnStringJoin extends Function {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		String result = "";
-
 		String separator = ((XSString) arg2.first()).value();
 
+		StringBuffer buf = new StringBuffer();
 		for (Iterator i = arg1.iterator(); i.hasNext();) {
 			XSString item = (XSString) i.next();
-
-			result += item.value();
-
+			buf.append(item.value());
+			
 			if (i.hasNext())
-				result += separator;
+				buf.append(separator);
 		}
-
+		
+		result = buf.toString();
 		rs.add(new XSString(result));
 
 		return rs;

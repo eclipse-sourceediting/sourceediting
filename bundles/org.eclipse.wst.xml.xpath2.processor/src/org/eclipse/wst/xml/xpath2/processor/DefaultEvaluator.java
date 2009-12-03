@@ -1420,8 +1420,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return null
 	 */
 	public Object visit(SingleType e) {
-		String name = "SINGLETYPE" + (e.qmark() ? "?" : "");
-
 		return null;
 	}
 
@@ -1433,7 +1431,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return null
 	 */
 	public Object visit(SequenceType e) {
-		String name = "SEQUENCETYPE" + e.occurrence();
 		ItemType it = e.item_type();
 
 		if (it != null)

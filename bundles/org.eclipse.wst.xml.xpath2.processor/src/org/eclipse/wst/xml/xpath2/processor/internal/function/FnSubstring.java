@@ -104,7 +104,7 @@ public class FnSubstring extends Function {
 		double dstart = ((XSDouble) startPosArg.first()).double_value();
 		
 		// is start is NaN, no chars are returned
-		if (Double.NaN == dstart || Double.NEGATIVE_INFINITY == dstart) {
+		if (Double.isNaN(dstart) || Double.NEGATIVE_INFINITY == dstart) {
 			return emptyString(rs);
 		}
 		long istart = Math.round(dstart);
@@ -112,7 +112,7 @@ public class FnSubstring extends Function {
 		long ilength = Long.MAX_VALUE;
 		if (lengthArg != null) {
 			double dlength = ((XSDouble) lengthArg.first()).double_value();
-			if (Double.NaN == dlength)
+			if (Double.isNaN(dlength))
 				return emptyString(rs);
 			// Switch to the rounded kind
 			ilength = Math.round(dlength);

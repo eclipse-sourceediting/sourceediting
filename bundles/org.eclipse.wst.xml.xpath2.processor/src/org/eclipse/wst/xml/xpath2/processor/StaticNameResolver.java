@@ -97,7 +97,6 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	// does a for and a quantified expression
 	// takes the iterator for var expr paris
 	private void doForExpr(Iterator iter, Expr expr) {
-		Collection vars = new ArrayList();
 		int scopes = 0;
 
 		// add variables to scope and check the binding sequence
@@ -148,8 +147,6 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 * @return null.
 	 */
 	public Object visit(QuantifiedExpr qex) {
-		String qtype = "QUANTIFIED" + qex.type();
-
 		// lets cheat
 		doForExpr(qex.iterator(), qex.expr());
 
@@ -477,8 +474,6 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 * @return null.
 	 */
 	public Object visit(ForwardStep e) {
-		String name = "FWDSTEP" + e.axis();
-
 		e.node_test().accept(this);
 
 		return null;
@@ -492,7 +487,6 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 * @return null.
 	 */
 	public Object visit(ReverseStep e) {
-		String name = "REVSTEP" + e.axis();
 
 		NodeTest nt = e.node_test();
 		if (nt != null)
@@ -635,8 +629,6 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		if (!_sc.expand_elem_type_qname(type))
 			report_bad_prefix(type.prefix());
 
-		String name = "SINGLETYPE" + (e.qmark() ? "?" : "");
-
 		return null;
 	}
 
@@ -648,7 +640,6 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 * @return null.
 	 */
 	public Object visit(SequenceType e) {
-		String name = "SEQUENCETYPE" + e.occurrence();
 		ItemType it = e.item_type();
 
 		if (it != null)
