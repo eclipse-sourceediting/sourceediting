@@ -28,7 +28,7 @@ import java.util.*;
  * This class resolves static names.
  */
 public class StaticNameResolver implements XPathVisitor, StaticChecker {
-	private class DummyError extends Error {
+	static class DummyError extends Error {
 
 		/**
 		 * 

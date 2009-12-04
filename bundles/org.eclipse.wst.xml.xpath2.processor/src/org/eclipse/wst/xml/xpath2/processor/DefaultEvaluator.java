@@ -43,7 +43,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
  */
 public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
-	private class DummyError extends Error {
+	static class DummyError extends Error {
 		/**
 		 * 
 		 */
@@ -74,7 +74,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	// this thing is highly recursive]
 	private Object _param;
 
-	private class Pair {
+	static class Pair {
 		public Object _one;
 		public Object _two;
 
