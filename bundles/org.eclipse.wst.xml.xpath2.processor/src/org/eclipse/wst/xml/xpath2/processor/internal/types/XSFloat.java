@@ -227,8 +227,14 @@ public class XSFloat extends NumericType {
 			DynamicError.throw_type_error();
 
 		XSFloat f = (XSFloat) carg;
+		if (nan() && f.nan()) {
+			return false;
+		}
+		
+		Float thatvalue = new Float(f.float_value());
+		Float thisvalue = new Float(float_value());
 
-		return float_value() == f.float_value();
+		return thisvalue.equals(thatvalue);
 	}
 
 	/**

@@ -130,9 +130,30 @@ public abstract class AbstractCollationEqualFunction extends Function {
 
 	protected static boolean needsStringComparison(AnyAtomicType item,
 			AnyType at) {
-		return (at instanceof XSString
-				&& (!(item instanceof NumericType) || item instanceof XSUntypedAtomic) || ((at instanceof XSFloat || at instanceof XSDouble) && (item instanceof XSFloat || item instanceof XSDouble))
-				&& (!(item instanceof XSDateTime)));
+		if (item instanceof NumericType) {
+			if (at instanceof XSFloat) {
+				XSFloat f = (XSFloat) at;
+				if (f.nan()) {
+					return true;
+				}
+			}
+			
+			if (at instanceof XSDouble) {
+				XSDouble d = (XSDouble) at;
+				if (d.nan()) {
+					return true;
+				}
+			}
+		}
+
+		if (at instanceof XSString) {
+			return true;
+		}
+		
+		if (at instanceof XSUntypedAtomic) {
+			return true;
+		}
+		return false;
 	}
 
 	protected static boolean isDuration(AnyType item, AnyType at) {

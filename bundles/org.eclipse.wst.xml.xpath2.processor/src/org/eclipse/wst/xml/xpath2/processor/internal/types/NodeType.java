@@ -126,7 +126,7 @@ public abstract class NodeType extends AnyType {
 			if (added.containsKey(n))
 				i.remove();
 			else
-				added.put(n, new Boolean(true));
+				added.put(n, Boolean.TRUE);
 		}
 		return rs;
 	}

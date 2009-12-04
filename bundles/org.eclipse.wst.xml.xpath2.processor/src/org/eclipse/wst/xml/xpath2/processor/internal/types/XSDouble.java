@@ -265,8 +265,14 @@ public class XSDouble extends NumericType {
 		AnyType cat = crs.first();
 
 		XSDouble d = (XSDouble) cat;
-
-		return double_value() == d.double_value();
+		if (d.nan() && nan()) {
+			return false;
+		}
+		
+		Double thatvalue = new Double(d.double_value());
+		Double thisvalue = new Double(double_value());
+		
+		return thisvalue.equals(thatvalue);
 	}
 
 	/**

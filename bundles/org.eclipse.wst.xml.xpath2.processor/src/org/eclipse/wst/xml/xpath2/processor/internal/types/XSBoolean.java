@@ -116,10 +116,10 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 		Boolean b = null;
 		if (isFalse(str_value)) {
-		  b = new Boolean(false);	
+		  b = Boolean.FALSE;	
 		}
 		else {
-		  b = new Boolean(true);		
+		  b = Boolean.TRUE;		
 		}
 		
 		rs.add(new XSBoolean(b.booleanValue()));

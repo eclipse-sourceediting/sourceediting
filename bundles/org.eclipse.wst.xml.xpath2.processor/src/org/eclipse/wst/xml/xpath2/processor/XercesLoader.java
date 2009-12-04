@@ -77,14 +77,13 @@ public class XercesLoader implements DOMLoader {
 	 *             DOM loader exception.
 	 * @return The loaded document.
 	 */
-	// XXX: fix error reporting
 	public Document load(InputStream in) throws DOMLoaderException {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 		factory.setNamespaceAware(true);
 		factory.setAttribute(SCHEMA_VALIDATION_FEATURE,
-				new Boolean(_validating));
+				Boolean.valueOf(_validating));
 		factory.setAttribute(LOAD_EXTERNAL_DTD_FEATURE, true);
 		factory.setAttribute(NONVALIDATING_LOAD_DTD_GRAMMAR, true);
 		factory.setAttribute(DOCUMENT_IMPLEMENTATION_PROPERTY,
