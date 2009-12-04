@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
+ *     David Carver (STAR) - bug 296882 - fixed function that would always return false.
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
@@ -130,6 +131,28 @@ public abstract class AbstractCollationEqualFunction extends Function {
 
 	protected static boolean needsStringComparison(AnyAtomicType item,
 			AnyType at) {
+		AnyType anyItem = (AnyType) item;
+		return needsStringComparison(anyItem, at);
+	}
+
+	protected static boolean isDuration(AnyType item, AnyType at) {
+		return at instanceof XSDuration && item instanceof XSDuration;
+	}
+	
+	protected static boolean isDate(AnyType item, AnyType at) {
+		return at instanceof XSDateTime && item instanceof XSDateTime;
+	}
+	
+
+	protected static boolean isBoolean(AnyType cmptype, AnyType at) {
+		return at instanceof XSBoolean && cmptype instanceof XSBoolean;
+	}
+
+	protected static boolean isNumeric(AnyType item, AnyType at) {
+		return at instanceof NumericType && item instanceof NumericType;
+	}
+
+	protected static boolean needsStringComparison(AnyType item, AnyType at) {
 		if (item instanceof NumericType) {
 			if (at instanceof XSFloat) {
 				XSFloat f = (XSFloat) at;
@@ -154,29 +177,6 @@ public abstract class AbstractCollationEqualFunction extends Function {
 			return true;
 		}
 		return false;
-	}
-
-	protected static boolean isDuration(AnyType item, AnyType at) {
-		return at instanceof XSDuration && item instanceof XSDuration;
-	}
-	
-	protected static boolean isDate(AnyType item, AnyType at) {
-		return at instanceof XSDateTime && item instanceof XSDateTime;
-	}
-	
-
-	protected static boolean isBoolean(AnyType cmptype, AnyType at) {
-		return at instanceof XSBoolean && cmptype instanceof XSBoolean;
-	}
-
-	protected static boolean isNumeric(AnyType item, AnyType at) {
-		return at instanceof NumericType && item instanceof NumericType;
-	}
-
-	protected static boolean needsStringComparison(AnyType item, AnyType at) {
-		return (at instanceof XSString && (!(item instanceof NumericType) || item instanceof XSUntypedAtomic)
-			|| ((at instanceof XSFloat || at instanceof XSDouble) && (item instanceof XSFloat || item instanceof XSDouble))	
-			&& (!(item instanceof XSDateTime)));
 	}
 
 }
