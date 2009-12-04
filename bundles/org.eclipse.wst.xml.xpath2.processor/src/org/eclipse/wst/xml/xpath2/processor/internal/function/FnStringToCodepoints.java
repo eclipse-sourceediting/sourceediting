@@ -88,7 +88,7 @@ public class FnStringToCodepoints extends Function {
 	 * 
 	 * @return Result of operation.
 	 */
-	public static Collection expected_args() {
+	public synchronized static Collection expected_args() {
 		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_QMARK));

@@ -153,7 +153,7 @@ public class FnLang extends Function {
 	 * 
 	 * @return Result of operation.
 	 */
-	public static Collection expected_args() {
+	public synchronized static Collection expected_args() {
 		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 

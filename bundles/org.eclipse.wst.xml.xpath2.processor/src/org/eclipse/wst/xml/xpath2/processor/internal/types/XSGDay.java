@@ -243,26 +243,10 @@ public class XSGDay extends CalendarType implements CmpEq {
 		String ret = "---";
 
 		Calendar adjustFortimezone = calendar();
-		int tzHours = 0;
-		int tzMinutes = 0;
-		if (timezoned()) {
-		   adjustFortimezone = calendar();
-		   tzHours = tz().hours();
-		   tzMinutes = tz().minutes();
-		   if (tz().negative()) {
-			   tzHours = tzHours * -1;
-			   tzMinutes = tzMinutes * -1;
-		   }
-		}
-		
-		//adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
-		//adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
 		
 		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.DAY_OF_MONTH), 2);
 		
-		
 		if (timezoned()) {
-			
 			int hrs = tz().hours();
 			int min = tz().minutes();
 			double secs = tz().seconds();

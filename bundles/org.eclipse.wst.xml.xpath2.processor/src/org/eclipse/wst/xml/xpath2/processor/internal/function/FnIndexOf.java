@@ -176,7 +176,7 @@ public class FnIndexOf extends AbstractCollationEqualFunction {
 	 * 
 	 * @return Result of operation.
 	 */
-	public static Collection expected_args() {
+	public synchronized static Collection expected_args() {
 		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 			SeqType arg = new SeqType(AnyType.class, SeqType.OCC_STAR);

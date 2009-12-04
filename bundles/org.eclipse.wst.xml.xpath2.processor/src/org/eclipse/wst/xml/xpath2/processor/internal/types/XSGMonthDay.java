@@ -255,18 +255,6 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 		String ret = "--";
 
 		Calendar adjustFortimezone = calendar();
-		int tzHours = 0;
-		int tzMinutes = 0;
-		if (timezoned()) {
-		   adjustFortimezone = calendar();
-		   tzHours = tz().hours();
-		   tzMinutes = tz().minutes();
-		   if (tz().negative()) {
-			   tzHours = tzHours * -1;
-			   tzMinutes = tzMinutes * -1;
-		   }
-		}
-
 		
 		ret += XSDateTime.pad_int(month(), 2);
 

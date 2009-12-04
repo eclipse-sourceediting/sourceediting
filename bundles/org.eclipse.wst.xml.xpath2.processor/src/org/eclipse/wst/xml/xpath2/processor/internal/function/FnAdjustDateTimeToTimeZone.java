@@ -117,13 +117,8 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 		try {			
 			XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)dateTime.normalizeCalendar(dateTime.calendar(), dateTime.tz()));
 			
-			if (dateTime.tz().hours() == 0 && dateTime.tz().minutes() == 0) {
-				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
-				xmlCalendar.add(duration);
-			} else { 
-				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
-				xmlCalendar.add(duration);
-			}
+			Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
+			xmlCalendar.add(duration);
 
 			rs.add(new XSDateTime(xmlCalendar.toGregorianCalendar(), timezone));
 			
@@ -139,7 +134,7 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 	 * 
 	 * @return Result of operation.
 	 */
-	public static Collection expectedArgs() {
+	public synchronized static Collection expectedArgs() {
 		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 			_expected_args

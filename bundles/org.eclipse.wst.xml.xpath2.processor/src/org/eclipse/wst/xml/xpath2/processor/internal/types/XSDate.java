@@ -257,25 +257,10 @@ Cloneable {
 		String ret = "";
 
 		Calendar adjustFortimezone = calendar();
-		int tzHours = 0;
-		int tzMinutes = 0;
-		if (timezoned()) {
-		   adjustFortimezone = calendar();
-		   tzHours = tz().hours();
-		   tzMinutes = tz().minutes();
-		   if (tz().negative()) {
-			   tzHours = tzHours * -1;
-			   tzMinutes = tzMinutes * -1;
-		   }
-		}
 		
 		if (adjustFortimezone.get(Calendar.ERA) == GregorianCalendar.BC) {
 			ret +="-";
 		}
-		
-		//adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
-		//adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
-
 		
 		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.YEAR), 4);
 

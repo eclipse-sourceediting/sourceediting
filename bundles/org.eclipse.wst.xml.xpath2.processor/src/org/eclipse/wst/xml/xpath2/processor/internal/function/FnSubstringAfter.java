@@ -111,7 +111,7 @@ public class FnSubstringAfter extends Function {
 	 * 
 	 * @return Result of operation.
 	 */
-	public static Collection expected_args() {
+	public synchronized static Collection expected_args() {
 		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 			SeqType arg = new SeqType(new XSString(), SeqType.OCC_QMARK);

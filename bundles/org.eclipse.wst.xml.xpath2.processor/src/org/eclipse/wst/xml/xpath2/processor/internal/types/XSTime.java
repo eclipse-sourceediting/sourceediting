@@ -104,14 +104,7 @@ Cloneable {
 	public static CalendarType parse_time(String str) {
 
 		String startdate = "1983-11-29T";
-
-		int index = str.indexOf('+', 1);
-		if (index == -1)
-			index = str.indexOf('-', 1);
-		if (index == -1)
-			index = str.indexOf('Z', 1);
-
-		// thus life
+		
 		XSDateTime dt = XSDateTime.parseDateTime(startdate + str);
 		if (dt == null)
 			return null;
@@ -231,23 +224,9 @@ Cloneable {
 		String ret = "";
 		
 		Calendar adjustFortimezone = calendar();
-		int tzHours = 0;
-		int tzMinutes = 0;
-		if (timezoned()) {
-		   adjustFortimezone = calendar();
-		   tzHours = tz().hours();
-		   tzMinutes = tz().minutes();
-		   if (tz().negative()) {
-			   tzHours = tzHours * -1;
-			   tzMinutes = tzMinutes * -1;
-		   }
-		}
-		
-		//adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
 		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.HOUR_OF_DAY), 2);
 		
 		ret += ":";
-		//adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
 		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.MINUTE), 2);
 		
 
