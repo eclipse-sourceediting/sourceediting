@@ -27,7 +27,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
  * @since 1.1 This used to be an abstract class but was incorrectly implemented
  *        as such.
  */
-public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
+public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneable {
 
 	protected int _year;
 	protected int _month;

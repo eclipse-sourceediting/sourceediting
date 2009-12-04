@@ -499,10 +499,10 @@ Cloneable {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
-		if (aat instanceof NumericType || aat instanceof XSDuration ||
-			aat instanceof XSTime || isGDataType(aat) ||
-			aat instanceof XSBoolean || aat instanceof XSBase64Binary ||
-			aat instanceof XSHexBinary || aat instanceof XSAnyURI) {
+		if (aat instanceof NumericType || aat instanceof XSDuration
+				|| aat instanceof XSTime || isGDataType(aat)
+				|| aat instanceof XSBoolean || aat instanceof XSBase64Binary
+				|| aat instanceof XSHexBinary || aat instanceof XSAnyURI) {
 			throw DynamicError.invalidType();
 		}
 
@@ -838,57 +838,85 @@ Cloneable {
 			DynamicError.throw_type_error();
 
 		AnyType at = arg.first();
+
+		if (!(at instanceof XSDateTime) && !(at instanceof XSYearMonthDuration)
+				&& !(at instanceof XSDayTimeDuration)) {
+			DynamicError.throw_type_error();
+		}
+
+		if (at instanceof XSDateTime) {
+			return minusXSDateTime(arg);
+		}
+
+		if (at instanceof XSYearMonthDuration) {
+			return minusXSYearMonthDuration(at);
+		}
+
+		if (at instanceof XSDayTimeDuration) {
+			return minusXSDayTimeDuration(at);
+		}
+		return null; // unreach
+
+	}
+
+	private ResultSequence minusXSDateTime(ResultSequence arg)
+			throws DynamicError {
+		XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
+				XSDateTime.class);
+
+		Duration dtduration = null;
 		try {
-			if (at instanceof XSDateTime) {
-				XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
-						XSDateTime.class);
-				
-				Duration dtduration = null;
-				try {
-					Calendar thisCal = normalizeCalendar(calendar(), tz());
-					Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
-					long duration = thisCal.getTimeInMillis() - thatCal.getTimeInMillis();
-					dtduration = DatatypeFactory.newInstance().newDuration(duration);
+			Calendar thisCal = normalizeCalendar(calendar(), tz());
+			Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
+			long duration = thisCal.getTimeInMillis()
+					- thatCal.getTimeInMillis();
+			dtduration = DatatypeFactory.newInstance()
+					.newDuration(duration);
+			return ResultSequenceFactory.create_new(XSDayTimeDuration
+					.parseDTDuration(dtduration.toString()));
+		} catch (DatatypeConfigurationException ex) {
 
-				} catch (DatatypeConfigurationException ex) {
-					
-				}
-				return ResultSequenceFactory.create_new(XSDayTimeDuration.parseDTDuration(dtduration.toString()));
-				
-			} else if (at instanceof XSYearMonthDuration) {
-				XSYearMonthDuration val = (XSYearMonthDuration) at;
+		}
+		return null;
+	}
 
-				XSDateTime res = (XSDateTime) clone();
+	private ResultSequence minusXSDayTimeDuration(AnyType at) {
+		XSDuration val = (XSDuration) at;
 
-				res.calendar().add(Calendar.MONTH, val.monthValue() * -1);
-				return ResultSequenceFactory.create_new(res);
+		try {
+			XSDateTime res = (XSDateTime) clone();
 
-			} else if (at instanceof XSDayTimeDuration) {
-				XSDuration val = (XSDuration) at;
+			try {
+				XMLGregorianCalendar xmlCal = DatatypeFactory
+						.newInstance()
+						.newXMLGregorianCalendar((GregorianCalendar) calendar());
+				Duration dtduration = DatatypeFactory.newInstance()
+						.newDuration(val.string_value());
+				xmlCal.add(dtduration.negate());
+				res = new XSDateTime(xmlCal.toGregorianCalendar(), res.tz());
+			} catch (DatatypeConfigurationException ex) {
 
-				XSDateTime res = (XSDateTime) clone();
-
-				try {
-					XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)calendar());
-					Duration dtduration = DatatypeFactory.newInstance().newDuration(val.string_value());
-					xmlCal.add(dtduration.negate());
-					res = new XSDateTime(xmlCal.toGregorianCalendar(), res.tz());
-				} catch (DatatypeConfigurationException ex) {
-					
-				}
-				
-//				res.calendar().add(Calendar.MILLISECOND,
-//						(int) (val.value() * -1000.0));
-				return ResultSequenceFactory.create_new(res);
-			} else {
-				DynamicError.throw_type_error();
-				return null; // unreach
 			}
 
-		} catch (CloneNotSupportedException err) {
-			assert false;
-			return null;
+			return ResultSequenceFactory.create_new(res);
+		} catch (CloneNotSupportedException ex) {
+
 		}
+		return null;
+	}
+
+	private ResultSequence minusXSYearMonthDuration(AnyType at) {
+		XSYearMonthDuration val = (XSYearMonthDuration) at;
+
+		try {
+			XSDateTime res = (XSDateTime) clone();
+
+			res.calendar().add(Calendar.MONTH, val.monthValue() * -1);
+			return ResultSequenceFactory.create_new(res);
+		} catch (CloneNotSupportedException ex) {
+
+		}
+		return null;
 	}
 
 	/**
@@ -923,14 +951,17 @@ Cloneable {
 				XSDuration val = (XSDuration) at;
 
 				XSDateTime res = (XSDateTime) clone();
-				
+
 				try {
-					XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)calendar());
-					Duration dtduration = DatatypeFactory.newInstance().newDuration(val.string_value());
+					XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance()
+							.newXMLGregorianCalendar(
+									(GregorianCalendar) calendar());
+					Duration dtduration = DatatypeFactory.newInstance()
+							.newDuration(val.string_value());
 					xmlCal.add(dtduration);
 					res = new XSDateTime(xmlCal.toGregorianCalendar(), res.tz());
 				} catch (DatatypeConfigurationException ex) {
-					
+
 				}
 
 				return ResultSequenceFactory.create_new(res);

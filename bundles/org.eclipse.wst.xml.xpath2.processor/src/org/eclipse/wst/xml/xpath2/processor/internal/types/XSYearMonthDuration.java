@@ -379,15 +379,11 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
-
-		ResultSequence convertedRS = null;		
+		ResultSequence convertedRS = arg;		
 		if (arg.size() == 1) {
 			AnyType argValue = arg.first();
             if (argValue instanceof XSDecimal) {
             	convertedRS = ResultSequenceFactory.create_new(new XSDouble(argValue.string_value()));	
-            }
-            else {
-            	convertedRS = arg;	
             }
 		}
 		

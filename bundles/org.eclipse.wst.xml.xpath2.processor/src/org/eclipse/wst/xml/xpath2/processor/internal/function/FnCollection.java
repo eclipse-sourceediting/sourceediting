@@ -57,7 +57,7 @@ import java.util.*;
 public class FnCollection extends Function {
 	private static Collection _expected_args = null;
 	
-	public static String DEFAULT_COLLECTION_URI = "http://www.w3.org/2005/xpath-functions/collection/default";
+	public static final String DEFAULT_COLLECTION_URI = "http://www.w3.org/2005/xpath-functions/collection/default";
 
 	/**
 	 * Constructor for FnDoc.

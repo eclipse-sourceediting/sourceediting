@@ -87,6 +87,8 @@ public abstract class NodeType extends AnyType {
 
 	// a little factory for converting from DOM to our representation
 	public static NodeType dom_to_xpath(Node node) {
+		assert node != null;
+		
 		switch (node.getNodeType()) {
 		case Node.ELEMENT_NODE:
 			return new ElementType((Element) node);

@@ -373,43 +373,54 @@ Cloneable {
 			DynamicError.throw_type_error();
 
 		AnyType at = arg.first();
+		
+		if (!(at instanceof XSTime) && !(at instanceof XSDayTimeDuration)) {
+			throw DynamicError.throw_type_error();
+		}
 
 		if (at instanceof XSTime) {
-			XSTime val = (XSTime) at;
-			Duration dtduration = null;
-			try {
-				Calendar thisCal = normalizeCalendar(calendar(), tz());
-				Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
-				long duration = thisCal.getTimeInMillis() - thatCal.getTimeInMillis();
-				dtduration = DatatypeFactory.newInstance().newDuration(duration);
+			return minusXSTimeDuration(at);
+		}
+		
+		if (at instanceof XSDayTimeDuration) {
+			return minusXSDayTimeDuration(at);
+		}
+		return null; // unreach
+	}
 
-			} catch (DatatypeConfigurationException ex) {
-				
-			}
+	private ResultSequence minusXSDayTimeDuration(AnyType at) {
+		XSDuration val = (XSDuration) at;
+
+		XSTime res = null;
+		try {
+			res = (XSTime) clone();
+		} catch (CloneNotSupportedException err) {
+			return null;
+		}
+
+		try {
+			XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)calendar());
+			Duration dtduration = DatatypeFactory.newInstance().newDuration(val.string_value());
+			xmlCal.add(dtduration.negate());
+			res = new XSTime(xmlCal.toGregorianCalendar(), res.tz());
+		} catch (DatatypeConfigurationException ex) {
+			
+		}
+
+		return ResultSequenceFactory.create_new(res);
+	}
+
+	private ResultSequence minusXSTimeDuration(AnyType at) {
+		XSTime val = (XSTime) at;
+		Duration dtduration = null;
+		try {
+			Calendar thisCal = normalizeCalendar(calendar(), tz());
+			Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
+			long duration = thisCal.getTimeInMillis() - thatCal.getTimeInMillis();
+			dtduration = DatatypeFactory.newInstance().newDuration(duration);
 			return ResultSequenceFactory.create_new(XSDayTimeDuration.parseDTDuration(dtduration.toString()));
-		} else if (at instanceof XSDayTimeDuration) {
-			XSDuration val = (XSDuration) at;
-
-			try {
-				XSTime res = (XSTime) clone();
-
-				try {
-					XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)calendar());
-					Duration dtduration = DatatypeFactory.newInstance().newDuration(val.string_value());
-					xmlCal.add(dtduration.negate());
-					res = new XSTime(xmlCal.toGregorianCalendar(), res.tz());
-				} catch (DatatypeConfigurationException ex) {
-					
-				}
-
-				return ResultSequenceFactory.create_new(res);
-			} catch (CloneNotSupportedException err) {
-				assert false;
-				return null;
-			}
-		} else {
-			DynamicError.throw_type_error();
-			return null; // unreach
+		} catch (DatatypeConfigurationException ex) {
+			return null;
 		}
 	}
 
