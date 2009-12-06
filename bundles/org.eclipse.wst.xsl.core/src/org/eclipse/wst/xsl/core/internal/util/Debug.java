@@ -183,9 +183,11 @@ public final class Debug {
 	 */
 	private static String space(int depth) {
 		String result = "  "; //$NON-NLS-1$
+		StringBuffer buf = new StringBuffer(result);
 		for (int i = 0; i < depth; i++) {
-			result += "  "; //$NON-NLS-1$
+			buf.append("  "); //$NON-NLS-1$
 		}
+		result = buf.toString();
 		return result;
 	}
 

@@ -41,8 +41,6 @@ public class XSLCorePlugin extends Plugin {
 	
 	private SAXParserFactoryImpl saxParserFactory = null;
 
-	private BundleContext bundleContext;
-
 	/**
 	 * The constructor
 	 */
@@ -56,7 +54,6 @@ public class XSLCorePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		bundleContext = context;
 		plugin = this;
 	}
 

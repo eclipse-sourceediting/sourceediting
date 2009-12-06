@@ -26,7 +26,6 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
  * @since 1.1
  */
 public class XMLCatalog {
-    private CatalogSet catalogSet = new CatalogSet();
     
     protected ICatalog systemCatalog;
     
