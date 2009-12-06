@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
+ *     David Carver (STAR) - bug 297027 - compilation error on getTemplateStore()
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.templates;
 
@@ -83,8 +84,12 @@ public class XSLTemplatesPage extends AbstractTemplatesPage {
 		return PREFERENCE_STORE;
 	}
 
+	/**
+	 * 
+	 * @since 1.1 Changed due to platform change
+	 */
 	@Override
-	protected TemplateStore getTemplateStore() {
+	public TemplateStore getTemplateStore() {
 		return TEMPLATE_STORE;
 	}
 
