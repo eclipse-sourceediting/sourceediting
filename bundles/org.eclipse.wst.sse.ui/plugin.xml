@@ -70,9 +70,6 @@
 		<keyword
 			label="%preferenceKeywords.sseeditor"
 			id="org.eclipse.wst.sse.ui.sseeditor"/>
-		<keyword
-			label="%preferenceKeywords.ssetyping"
-			id="org.eclipse.wst.sse.ui.typing"/>
     </extension>
     
 	<extension point="org.eclipse.ui.preferencePages">
@@ -92,15 +89,6 @@
 			class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.tasktags">
 			<keywordReference id="org.eclipse.wst.sse.ui.todo"/>
-		</page>
-
-		<!-- SSE typing preference page under that-->
-		<page
-			name="%Typing_Preferences.name"
-			category="org.eclipse.wst.sse.ui.preferences.editor"
-			class="org.eclipse.wst.sse.ui.internal.preferences.ui.TypingPreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.typing">
-			<keywordReference id="org.eclipse.wst.sse.ui.typing"/>
 		</page>
 	</extension>
 	<!-- ================================================================================================ -->
