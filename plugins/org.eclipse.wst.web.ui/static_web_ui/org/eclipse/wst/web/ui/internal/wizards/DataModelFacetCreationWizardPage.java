@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
@@ -511,6 +512,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		serverTargetCombo = new Combo(group, SWT.BORDER | SWT.READ_ONLY);
 		serverTargetCombo.setLayoutData(gdhfill());
 		Button newServerTargetButton = new Button(group, SWT.NONE);
+		GridDataFactory.defaultsFor(newServerTargetButton).applyTo(newServerTargetButton);
 		newServerTargetButton.setText(ResourceHandler.NewDotDotDot);
 		newServerTargetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
