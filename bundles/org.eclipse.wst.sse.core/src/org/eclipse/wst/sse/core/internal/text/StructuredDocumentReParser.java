@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -582,6 +582,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		// doesn't do this.)
 		if ((fChanges != null) && (fDeletedText != null) && (fChanges.length() == fDeletedText.length()) && (fChanges.equals(fDeletedText))) {
 			result = new NoChangeEvent(fStructuredDocument, fRequester, fChanges, fStart, fLengthToReplace);
+			((NoChangeEvent)result).reason = NoChangeEvent.NO_CONTENT_CHANGE;
 		}
 		return result;
 	}

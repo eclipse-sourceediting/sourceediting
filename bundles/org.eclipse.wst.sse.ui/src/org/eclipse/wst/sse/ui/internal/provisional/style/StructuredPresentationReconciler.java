@@ -123,8 +123,9 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			if (_trace) {
 				time1 = System.currentTimeMillis();
 			}
-			if (structuredDocumentEvent.reason == NoChangeEvent.READ_ONLY_STATE_CHANGE) {
-				// fViewer.invalidateTextPresentation();
+			if (structuredDocumentEvent.reason == NoChangeEvent.NO_CONTENT_CHANGE ) {
+				IRegion damage = new Region(structuredDocumentEvent.fOffset, structuredDocumentEvent.fLength);
+				recordDamage(damage, structuredDocumentEvent.fDocument);
 			}
 			if (_trace && _traceTime) {
 				System.out.println("\n" + TRACE_PREFIX + "calculated damage for NoChangeEvent in " + (System.currentTimeMillis()-time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
