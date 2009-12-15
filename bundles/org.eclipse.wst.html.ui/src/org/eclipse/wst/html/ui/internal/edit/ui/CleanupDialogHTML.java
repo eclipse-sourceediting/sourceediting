@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -308,7 +308,7 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 		boolean tagNameCaseCheck = ((fRadioButtonTagNameCaseUpper != null && fRadioButtonTagNameCaseUpper.getSelection()) || fRadioButtonTagNameCaseLower.getSelection());
 		boolean attrNameCaseCheck = ((fRadioButtonAttrNameCaseUpper != null && fRadioButtonAttrNameCaseUpper.getSelection()) || fRadioButtonAttrNameCaseLower.getSelection());
 		boolean eolCheck = fCheckBoxConvertEOLCodes.getSelection() && (fRadioButtonConvertEOLUnix.getSelection() || fRadioButtonConvertEOLMac.getSelection() || fRadioButtonConvertEOLWindows.getSelection());
-		boolean buttonEnabled = tagNameCaseCheck || attrNameCaseCheck || fCheckBoxInsertMissingTags.getSelection() || fCheckBoxQuoteAttrValues.getSelection() || fCheckBoxFormatSource.getSelection() || eolCheck;
+		boolean buttonEnabled = tagNameCaseCheck || attrNameCaseCheck || fCheckBoxInsertRequiredAttrs.getSelection() || fCheckBoxInsertMissingTags.getSelection() || fCheckBoxQuoteAttrValues.getSelection() || fCheckBoxFormatSource.getSelection() || eolCheck;
 		getButton(IDialogConstants.OK_ID).setEnabled(buttonEnabled);
 	}
 
