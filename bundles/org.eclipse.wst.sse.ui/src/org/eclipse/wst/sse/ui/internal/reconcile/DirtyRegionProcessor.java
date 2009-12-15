@@ -331,27 +331,28 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	}
 
 	protected ITypedRegion[] computePartitioning(int drOffset, int drLength) {
-		IDocument doc = getDocument();
-		int docLength = doc.getLength();
-
 		ITypedRegion[] tr = new ITypedRegion[0];
-
-		if (drOffset > docLength) {
-			drOffset = docLength;
-			drLength = 0;
-		}
-		else if (drOffset + drLength > docLength) {
-			drLength = docLength - drOffset;
-		}
-
-		try {
-			// dirty region may span multiple partitions
-			tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), drOffset, drLength, true);
-		}
-		catch (BadLocationException e) {
-			String info = "dr: [" + drOffset + ":" + drLength + "] doc: [" + docLength + "] "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			Logger.logException(info, e);
-			tr = new ITypedRegion[0];
+		IDocument doc = getDocument();
+		if (doc != null){
+			int docLength = doc.getLength();
+	
+			if (drOffset > docLength) {
+				drOffset = docLength;
+				drLength = 0;
+			}
+			else if (drOffset + drLength > docLength) {
+				drLength = docLength - drOffset;
+			}
+	
+			try {
+				// dirty region may span multiple partitions
+				tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), drOffset, drLength, true);
+			}
+			catch (BadLocationException e) {
+				String info = "dr: [" + drOffset + ":" + drLength + "] doc: [" + docLength + "] "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				Logger.logException(info, e);
+				tr = new ITypedRegion[0];
+			}
 		}
 		return tr;
 	}
@@ -594,7 +595,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * @param dirtyRegion
 	 */
 	protected void process(DirtyRegion dirtyRegion) {
-		if (!isInstalled() || isInRewriteSession()) {
+		if (!isInstalled() || isInRewriteSession() || dirtyRegion == null || getDocument() == null) {
 			return;
 		}
 		/*

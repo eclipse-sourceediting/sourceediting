@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -201,7 +201,7 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	}
 
 	protected void process(DirtyRegion dirtyRegion) {
-		if (!isInstalled() || isInRewriteSession() || getDocument() == null)
+		if (!isInstalled() || isInRewriteSession() || dirtyRegion == null || getDocument() == null)
 			return;
 
 		// use structured model to determine area to process

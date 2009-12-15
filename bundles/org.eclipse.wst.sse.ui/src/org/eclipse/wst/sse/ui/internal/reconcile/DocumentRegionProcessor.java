@@ -285,7 +285,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	 * @param dirtyRegion
 	 */
 	protected void process(DirtyRegion dirtyRegion) {
-		if (!isInstalled() || isInRewriteSession())
+		if (!isInstalled() || isInRewriteSession() || dirtyRegion == null || getDocument() == null)
 			return;
 
 		super.process(dirtyRegion);
