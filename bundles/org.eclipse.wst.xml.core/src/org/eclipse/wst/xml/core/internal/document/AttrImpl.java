@@ -432,10 +432,11 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		// doesn't
 		// seem to hurt to simply return null in those cases. I saw this null
 		// case,
-		// when tryint go format an XML file.
+		// when trying go format an XML file.
 		if (this.ownerElement == null)
 			return null;
-		IStructuredDocumentRegion ownerRegion = this.ownerElement.getFirstStructuredDocumentRegion();
+		//attribute values will always be in the start region
+		IStructuredDocumentRegion ownerRegion = this.ownerElement.getStartStructuredDocumentRegion();
 		if (ownerRegion == null)
 			return null;
 		if (this.fValueRegion != null)

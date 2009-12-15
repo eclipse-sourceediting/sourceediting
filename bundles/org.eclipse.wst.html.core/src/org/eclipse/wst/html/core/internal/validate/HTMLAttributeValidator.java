@@ -71,9 +71,13 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			if (errorNode instanceof IDOMAttr) {
 				IDOMElement ownerElement = (IDOMElement) ((IDOMAttr) errorNode).getOwnerElement();
 				if (ownerElement != null) {
-					int regionStartOffset = ownerElement.getFirstStructuredDocumentRegion().getStartOffset(rgn);
-					int regionLength = rgn.getTextLength();
-					return new Segment(regionStartOffset, regionLength);
+					//if editor closed during validation this could be null
+					IStructuredDocumentRegion firstRegion = ownerElement.getFirstStructuredDocumentRegion();
+					if(firstRegion != null) {
+						int regionStartOffset = firstRegion.getStartOffset(rgn);
+						int regionLength = rgn.getTextLength();
+						return new Segment(regionStartOffset, regionLength);
+					}
 				}
 			}
 		}

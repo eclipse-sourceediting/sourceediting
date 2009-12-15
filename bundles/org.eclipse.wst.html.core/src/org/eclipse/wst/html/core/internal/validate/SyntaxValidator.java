@@ -211,7 +211,9 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		}
 		else {
 			if (info.isXHTML) { // XHTML
-				if (!info.target.isEmptyTag() && DOMRegionContext.XML_TAG_OPEN.equals(info.target.getStartStructuredDocumentRegion().getFirstRegion().getType())) {
+				//if editor closed during validation this could be null
+				IStructuredDocumentRegion structRegion = info.target.getStartStructuredDocumentRegion();
+				if (!info.target.isEmptyTag() && structRegion != null && DOMRegionContext.XML_TAG_OPEN.equals(structRegion.getFirstRegion().getType())) {
 					/*
 					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=248963 :
 					 * report empty tags not written as such, but only when

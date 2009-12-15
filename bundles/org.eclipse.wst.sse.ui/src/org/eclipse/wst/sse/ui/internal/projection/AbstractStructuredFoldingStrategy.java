@@ -184,8 +184,8 @@ public abstract class AbstractStructuredFoldingStrategy
 					List deletions = new ArrayList();
 					Map additions = new HashMap();
 					
-					//reconcile each effected region
-					for(int i = 0; i < structRegions.length; ++i) {
+					//reconcile each effected region and be sure project is still enabled
+					for(int i = 0; ((i < structRegions.length) && (fProjectionAnnotationModel != null)); ++i) {
 						IStructuredDocumentRegion structRegion = structRegions[i];
 						IndexedRegion indexedRegion = model.getIndexedRegion(structRegion.getStartOffset());
 						
@@ -201,10 +201,10 @@ public abstract class AbstractStructuredFoldingStrategy
 							// else if REMOVE add annotation to the deletion list
 							if(dirtyRegion.getType().equals(DirtyRegion.INSERT)) {
 								Iterator iter = getAnnotationIterator(indexedRegion, false);
-								
+								//if projection has been disabled the iter could be null
 								//if annotation does not already exist for this region create a new one
 								//else modify an old one, which could include deletion
-								if(!iter.hasNext()) {
+								if(iter != null && !iter.hasNext()) {
 									Position newPos = calcNewFoldPosition(indexedRegion);
 
 									if(newPos != null) {
@@ -224,16 +224,22 @@ public abstract class AbstractStructuredFoldingStrategy
 							 *  be updated correctly
 							 */	
 							Iterator iter = getAnnotationIterator(indexedRegion, false);
-							if(!iter.hasNext()) {
-								iter = getAnnotationIterator(indexedRegion, true);
+							//if projection has been disabled the iter could be null
+							if(iter != null) {
+								if(!iter.hasNext()) {
+									iter = getAnnotationIterator(indexedRegion, true);
+								}
+								
+								updateAnnotations(iter, indexedRegion, modifications, deletions);
 							}
-							
-							updateAnnotations(iter, indexedRegion, modifications, deletions);
 						}
 					}
 					
-					//send the calculated updates to the annotations to the annotation model
-					fProjectionAnnotationModel.modifyAnnotations((Annotation[])deletions.toArray(new Annotation[1]), additions, (Annotation[])modifications.toArray(new Annotation[0]));
+					//be sure projection has not been disabled
+					if(fProjectionAnnotationModel != null) {
+						//send the calculated updates to the annotations to the annotation model
+						fProjectionAnnotationModel.modifyAnnotations((Annotation[])deletions.toArray(new Annotation[1]), additions, (Annotation[])modifications.toArray(new Annotation[0]));
+					}
 				}
 			} finally {
 				if(model != null) {
@@ -436,9 +442,15 @@ public abstract class AbstractStructuredFoldingStrategy
 	 * the given IndexedRegion, false if the search must stay only within the indexed region.
 	 * 
 	 * @return an Iterator over the annotations in the given IndexedRegion.
-	 * The iterator could have no annotations in it.
+	 * The iterator could have no annotations in it. Or <code>null</code> if projection has
+	 * been disabled.
 	 */
 	private Iterator getAnnotationIterator(IndexedRegion indexedRegion, boolean canStartBefore) {
-		return fProjectionAnnotationModel.getAnnotationIterator(indexedRegion.getStartOffset(), indexedRegion.getEndOffset()-indexedRegion.getStartOffset(), canStartBefore, false);
+		Iterator annoIter = null;
+		//be sure project has not been disabled
+		if(fProjectionAnnotationModel != null) {
+			annoIter = fProjectionAnnotationModel.getAnnotationIterator(indexedRegion.getStartOffset(), indexedRegion.getEndOffset()-indexedRegion.getStartOffset(), canStartBefore, false);
+		}
+		return annoIter;
 	}
 }

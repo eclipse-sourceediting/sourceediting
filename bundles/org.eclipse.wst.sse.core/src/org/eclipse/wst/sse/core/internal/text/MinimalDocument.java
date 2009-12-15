@@ -141,7 +141,7 @@ public class MinimalDocument implements IStructuredDocument {
 		try {
 			result = data.get(offset, length);
 		} catch (StringIndexOutOfBoundsException e) {
-			throw new BadLocationException();
+			throw new BadLocationException("offset: " + offset + " length: " + length + "\ndocument length: " + data.getLength());
 		}
 		return result;
 	}
