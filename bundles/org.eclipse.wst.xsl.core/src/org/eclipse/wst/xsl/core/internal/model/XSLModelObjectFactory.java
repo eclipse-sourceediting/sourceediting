@@ -35,7 +35,7 @@ public class XSLModelObjectFactory {
 	private static final String IMPORT = "import"; //$NON-NLS-1$
 	private static final String INCLUDE = "include"; //$NON-NLS-1$
 	private static final String STYLESHEET = "stylesheet"; //$NON-NLS-1$
-	
+
 	private Element element;
 	private XSLElement xslEl;
 	private StylesheetParserData stylesheetParserData;
@@ -49,6 +49,7 @@ public class XSLModelObjectFactory {
 
 	/**
 	 * Creates an XSL Model Object of the appropriate type.
+	 * 
 	 * @return
 	 */
 	public XSLElement createXSLModelObject() {
@@ -60,27 +61,22 @@ public class XSLModelObjectFactory {
 			if (STYLESHEET.equals(elName)) {
 				xslEl = factory.createStyleSheet();
 			}
-		}else if (INCLUDE.equals(elName) && elementSize == 1)
-		{
+		} else if (INCLUDE.equals(elName) && elementSize == 1) {
 			xslEl = factory.createInclude();
-		} else if (IMPORT.equals(elName) && elementSize == 1)
-		{
+		} else if (IMPORT.equals(elName) && elementSize == 1) {
 			xslEl = factory.createImport();
-		} else if (TEMPLATE.equals(elName) && elementSize == 1)
-		{
+		} else if (TEMPLATE.equals(elName) && elementSize == 1) {
 			xslEl = factory.createTemplate();
 		} else if (PARAM.equals(elName) && notParentStylesheet()) {
 			xslEl = factory.createParamater();
-		} else if (CALL_TEMPLATE.equals(elName) && elementSize >= 2) 
-		{
+		} else if (CALL_TEMPLATE.equals(elName) && elementSize >= 2) {
 			xslEl = factory.createCallTemplate();
 		} else if (WITH_PARAM.equals(elName) && elementSize >= 3
-				&& stylesheetParserData.getCallTemplates().size() > 0) 
-		{
+				&& stylesheetParserData.getCallTemplates().size() > 0) {
 			xslEl = factory.createWithParamParm();
 		} else if (isVariable(elName)) {
 			xslEl = factory.createVariable(xslEl);
-		} else if (FUNCTION.equals(elName)) { 
+		} else if (FUNCTION.equals(elName)) {
 			xslEl = factory.createFunction();
 		} else {
 			xslEl = factory.createXSLElement();

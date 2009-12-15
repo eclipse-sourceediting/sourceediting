@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 287499 - add XML Catalog Resolution for a file.
  *******************************************************************************/
 package org.eclipse.wst.xsl.core;
 
@@ -25,6 +26,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.util.FileUtil;
+import org.eclipse.wst.xsl.core.internal.util.XMLCatalog;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.w3c.dom.Attr;
@@ -34,28 +36,28 @@ import org.w3c.dom.Node;
 /**
  * The interface to all aspects of the XSL core functionality.
  * <p>
- * This is responsible for building and maintaining the cache of built XSL models.
+ * This is responsible for building and maintaining the cache of built XSL
+ * models.
  * </p>
  * 
  * @author Doug Satchwell
  */
-public class XSLCore
-{
+public class XSLCore {
 	/**
 	 * The XSL namespace URI (= http://www.w3.org/1999/XSL/Transform)
 	 */
 	public static final String XSL_NAMESPACE_URI = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
-	
+
 	/**
 	 * The XSL content type (= org.eclipse.wst.xml.core.xslsource)
 	 */
 	public static final String XSL_CONTENT_TYPE = "org.eclipse.wst.xml.core.xslsource"; //$NON-NLS-1$
-	
+
 	private static XSLCore instance;
 	private Map<IFile, StylesheetModel> stylesheetsComposed = new HashMap<IFile, StylesheetModel>();
 
-	private XSLCore()
-	{}
+	private XSLCore() {
+	}
 
 	/**
 	 * Get the cached stylesheet, or build it if it has not yet been built.
@@ -64,8 +66,7 @@ public class XSLCore
 	 * @return source file, or null if could not be built
 	 * @since 1.0
 	 */
-	public synchronized StylesheetModel getStylesheet(IFile file)
-	{
+	public synchronized StylesheetModel getStylesheet(IFile file) {
 		StylesheetModel stylesheet = stylesheetsComposed.get(file);
 		if (stylesheet == null)
 			stylesheet = buildStylesheet(file);
@@ -79,30 +80,32 @@ public class XSLCore
 	 * @return the stylesheet model, or null if it could not be created.
 	 * @since 1.0
 	 */
-	public synchronized StylesheetModel buildStylesheet(IFile file)
-	{
-		Stylesheet stylesheet = StylesheetBuilder.getInstance().getStylesheet(file, true);
+	public synchronized StylesheetModel buildStylesheet(IFile file) {
+		Stylesheet stylesheet = StylesheetBuilder.getInstance().getStylesheet(
+				file, true);
 		if (stylesheet == null)
 			return null;
-		StylesheetModel stylesheetComposed = new StylesheetModel(stylesheet);			
+		StylesheetModel stylesheetComposed = new StylesheetModel(stylesheet);
 		stylesheetsComposed.put(file, stylesheetComposed);
 		stylesheetComposed.fix();
 		return stylesheetComposed;
 	}
-	
+
 	/**
 	 * Clean all of the stylesheets from the given project.
 	 * 
-	 * @param project the project to be cleaned
-	 * @param monitor a progress monitor to track the clean progress
+	 * @param project
+	 *            the project to be cleaned
+	 * @param monitor
+	 *            a progress monitor to track the clean progress
 	 */
-	public synchronized void clean(IProject project, IProgressMonitor monitor)
-	{
-		for (Iterator<StylesheetModel> iter = stylesheetsComposed.values().iterator(); iter.hasNext();)
-		{
+	public synchronized void clean(IProject project, IProgressMonitor monitor) {
+		for (Iterator<StylesheetModel> iter = stylesheetsComposed.values()
+				.iterator(); iter.hasNext();) {
 			StylesheetModel model = iter.next();
-			if (project == null || project.equals(model.getStylesheet().getFile().getProject()))
-			{
+			if (project == null
+					|| project.equals(model.getStylesheet().getFile()
+							.getProject())) {
 				iter.remove();
 			}
 		}
@@ -113,8 +116,7 @@ public class XSLCore
 	 * 
 	 * @return the <code>XSLCore</code> instance
 	 */
-	public static synchronized XSLCore getInstance()
-	{
+	public static synchronized XSLCore getInstance() {
 		if (instance == null)
 			instance = new XSLCore();
 		return instance;
@@ -123,48 +125,63 @@ public class XSLCore
 	/**
 	 * Locates a file for the given current file and URI.
 	 * 
-	 * @param currentFile the file to resolve relative to
-	 * @param uri the relative URI 
+	 * @param currentFile
+	 *            the file to resolve relative to
+	 * @param uri
+	 *            the relative URI
 	 * @return the file at the URI relative to this <code>currentFile</code>
 	 */
-	// TODO depends on how we resolve URIs		
-	public static IFile resolveFile(IFile currentFile, String uri)
-	{
+	public static IFile resolveFile(IFile currentFile, String uri) {		
 		if (uri == null || uri.trim().length() == 0)
 			return null;
+		XMLCatalog xmlCatalog = new XMLCatalog();
+		
 		IResource resource = currentFile.getParent().findMember(new Path(uri));
+		if (resource == null) {
+			if (xmlCatalog.exists(uri)) {
+				String resolvedURI = xmlCatalog.resolve(uri);
+				if (resolvedURI == null) {
+					return null;
+				}
+				resource = currentFile.getParent().findMember(new Path(uri));
+			}
+		}
 		if (resource == null || resource.getType() != IResource.FILE)
-			return null;		
-		return (IFile)resource;
+			return null;
+		return (IFile) resource;
 	}
+
 	/**
-	 * Determine whether the given file is an XML file by inspecting its content types.
+	 * Determine whether the given file is an XML file by inspecting its content
+	 * types.
 	 * 
-	 * @param file the file to inspect
+	 * @param file
+	 *            the file to inspect
 	 * @return true if this file is an XML file
 	 */
 
-	public static boolean isXMLFile(IFile file)
-	{
+	public static boolean isXMLFile(IFile file) {
 		return FileUtil.isXMLFile(file);
 	}
 
 	/**
-	 * Determine whether the given file is an XSL file by inspecting its content types.
+	 * Determine whether the given file is an XSL file by inspecting its content
+	 * types.
 	 * 
-	 * @param file the file to inspect
+	 * @param file
+	 *            the file to inspect
 	 * @return true if this file is an XSL file
 	 */
-	public static boolean isXSLFile(IFile file)
-	{
+	public static boolean isXSLFile(IFile file) {
 		return FileUtil.isXSLFile(file);
 	}
-	
-	
+
 	/**
-	 * Takes a given <code>Node</code> and returns whether it 
-	 * is part of the the XSLT Namespace.
-	 * @param node  The Node to be checked.
+	 * Takes a given <code>Node</code> and returns whether it is part of the the
+	 * XSLT Namespace.
+	 * 
+	 * @param node
+	 *            The Node to be checked.
 	 * @return True if part of the XSLT namespace, false otherwise.
 	 * @since 1.0
 	 */
@@ -176,33 +193,34 @@ public class XSLCore
 	}
 
 	/**
-	 * Determine if the Node that was passed has a Namespace.  If it
-	 * doesn't the node is either going to be false, or the call to the
-	 * getNamespace() method will return null.
+	 * Determine if the Node that was passed has a Namespace. If it doesn't the
+	 * node is either going to be false, or the call to the getNamespace()
+	 * method will return null.
+	 * 
 	 * @param node
 	 * @return
 	 */
 	private static boolean hasNamespace(Node node) {
 		return node == null || node.getNamespaceURI() == null;
 	}
-	
+
 	/**
-	 * Returns an Attr node for the current Node if one exits at the specified offset.
-	 * @param node 
-	 * @param offset 
+	 * Returns an Attr node for the current Node if one exits at the specified
+	 * offset.
+	 * 
+	 * @param node
+	 * @param offset
 	 * @return A w3c.dom.Attr
 	 * @since 1.0
 	 */
-	public static Attr getCurrentAttrNode(Node node, int offset)
-	{
-		if ((node instanceof IndexedRegion) && ((IndexedRegion) node).contains(offset) && (node.hasAttributes()))
-		{
+	public static Attr getCurrentAttrNode(Node node, int offset) {
+		if ((node instanceof IndexedRegion)
+				&& ((IndexedRegion) node).contains(offset)
+				&& (node.hasAttributes())) {
 			NamedNodeMap attrs = node.getAttributes();
-			for (int i = 0; i < attrs.getLength(); ++i)
-			{
+			for (int i = 0; i < attrs.getLength(); ++i) {
 				IndexedRegion attRegion = (IndexedRegion) attrs.item(i);
-				if (attRegion.contains(offset))
-				{
+				if (attRegion.contains(offset)) {
 					return (Attr) attrs.item(i);
 				}
 			}
@@ -213,33 +231,29 @@ public class XSLCore
 	/**
 	 * Returns the current Node at the specified offset.
 	 * 
-	 * @param document 
-	 * @param offset 
+	 * @param document
+	 * @param offset
 	 * @return an w3c.dom.Node
 	 * @since 1.0
 	 */
-	public static Node getCurrentNode(IDocument document, int offset)
-	{
+	public static Node getCurrentNode(IDocument document, int offset) {
 		IndexedRegion inode = null;
 		IStructuredModel sModel = null;
-		try
-		{
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+		try {
+			sModel = StructuredModelManager.getModelManager()
+					.getExistingModelForRead(document);
 			inode = sModel.getIndexedRegion(offset);
 			if (inode == null)
 				inode = sModel.getIndexedRegion(offset - 1);
-		}
-		finally
-		{
+		} finally {
 			if (sModel != null)
 				sModel.releaseFromRead();
 		}
 
-		if (inode instanceof Node)
-		{
+		if (inode instanceof Node) {
 			return (Node) inode;
 		}
 		return null;
 	}
-	
+
 }

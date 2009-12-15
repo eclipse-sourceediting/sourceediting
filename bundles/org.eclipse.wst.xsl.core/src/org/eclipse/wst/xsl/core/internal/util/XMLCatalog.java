@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Carver (STAR) - bug 258937 - initial API and implementation
+ *                         - bug 287499 - add XML Catalog retrieval.
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.util;
 
@@ -110,5 +111,25 @@ public class XMLCatalog {
 			  return location;
 		  }
 	  }
+	
+	public String resolve(String uri) {
+		String resolvedURI = null;
+		try {
+			resolvedURI = defaultCatalog.resolveURI(uri);
+			if (resolvedURI != null) {
+				return resolvedURI;
+			}
+			
+			resolvedURI = systemCatalog.resolveURI(uri);
+			
+			if (resolvedURI != null) {
+				return resolvedURI;
+			}
+			resolvedURI =  userCatalog.resolveURI(uri);
+		} catch (IOException ex) {
+			
+		}
+		return resolvedURI;
+	}
 	
 }
