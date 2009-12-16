@@ -128,38 +128,7 @@ public class XPathNavigator extends ViewPart {
 
 				final List<NamespaceInfo> namespaces = createNamespaceInfo(getSelectedDocument());
 				if (namespaces != null) {
-
-					newXPath.setNamespaceContext(new NamespaceContext() {
-
-						public String getNamespaceURI(String prefix) {
-							for (NamespaceInfo ni : namespaces) {
-								if (prefix.equals(ni.prefix)) {
-									return ni.uri;
-								}
-							}
-							return null;
-						}
-
-						public String getPrefix(String uri) {
-							// Should be same as getPrefixes(uri).get(0)
-							for (NamespaceInfo ni : namespaces) {
-								if (uri.equals(ni.uri)) {
-									return ni.prefix;
-								}
-							}
-							return null;
-						}
-
-						public Iterator<String> getPrefixes(String uri) {
-							List<String> prefixes = new LinkedList<String>();
-							for (NamespaceInfo ni : namespaces) {
-								if (uri.equals(ni.uri)) {
-									prefixes.add(ni.prefix);
-								}
-							}
-							return prefixes.iterator();
-						}
-					});
+					newXPath.setNamespaceContext(new DefaultNamespaceContext(namespaces));
 				}
 				XPathExpression xpExp = newXPath.compile(expr);
 

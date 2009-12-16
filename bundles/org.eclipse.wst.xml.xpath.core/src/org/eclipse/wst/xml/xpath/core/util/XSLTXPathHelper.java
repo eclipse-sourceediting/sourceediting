@@ -19,6 +19,7 @@ import org.apache.xml.utils.PrefixResolverDefault;
 import org.apache.xpath.XPath;
 import org.apache.xpath.XPathContext;
 import org.apache.xpath.compiler.FunctionTable;
+import org.apache.xpath.jaxp.JAXPPrefixResolver;
 import org.apache.xpath.objects.XObject;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -221,7 +222,7 @@ public class XSLTXPathHelper {
 		// element
 		// if it is a root node, or else the current context node (for lack of a
 		// better
-		// resolution space, given the simplicity of this sample code).
+		// resolution space, given the simplicity of this sample code).		
 		PrefixResolverDefault prefixResolver = new PrefixResolverDefault(
 				(namespaceNode.getNodeType() == Node.DOCUMENT_NODE) ? ((Document) namespaceNode)
 						.getDocumentElement()

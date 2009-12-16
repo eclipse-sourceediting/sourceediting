@@ -11,9 +11,18 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -21,8 +30,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.Messages;
+import org.eclipse.wst.xml.xpath.ui.views.DefaultNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -147,18 +159,58 @@ public class XPathComputer {
 	}
 
 	private IStatus executeXPath(String xp) {
+		IStatus status = Status.CANCEL_STATUS;
 		try {
 			if ((xp != null) && (node != null)) {
 				synchronized (XPATH_LOCK) {
-					this.nodeList = XSLTXPathHelper.selectNodeList(node, xp);
+				 status = evaluateXPath(xp);
 				}
 			}
-		} catch (TransformerException e) {
+		}  catch (XPathExpressionException e) {
+			return Status.CANCEL_STATUS;
+		}
+		return status;
+	}
+
+	private IStatus evaluateXPath(String xp) throws XPathExpressionException {
+		XPath newXPath = new XPathFactoryImpl().newXPath();
+		Document doc = null;
+		if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			doc = (Document) node;
+		} else {
+			doc = node.getOwnerDocument();
+		}
+		final List<NamespaceInfo> namespaces = createNamespaceInfo(doc);
+		if (namespaces != null) {
+			newXPath.setNamespaceContext(new DefaultNamespaceContext(namespaces));
+		}
+		XPathExpression xpExp = newXPath.compile(xp);
+
+		try {
+			this.nodeList = (NodeList) xpExp.evaluate(node, XPathConstants.NODESET);
+		} catch (XPathExpressionException xee) {
 			return Status.CANCEL_STATUS;
 		}
 		return Status.OK_STATUS;
 	}
 
+	@SuppressWarnings("unchecked")
+	private List<NamespaceInfo> createNamespaceInfo(Document document) {
+		List<NamespaceInfo> info = xpathView.namespaceInfo.get(document);
+		if (info == null) {
+			if (document.getDocumentElement() != null) {
+				info = new ArrayList<NamespaceInfo>();
+				NamespaceTable namespaceTable = new NamespaceTable(document);
+				namespaceTable.visitElement(document.getDocumentElement());
+				Collection<?> namespaces = namespaceTable
+						.getNamespaceInfoCollection();
+				info.addAll((Collection<NamespaceInfo>) namespaces);
+				xpathView.namespaceInfo.put(document, info);
+			}
+		}
+		return info;
+	}
+	
 	public void dispose() {
 		if (model != null) {
 			model.removeModelStateListener(modelStateListener);
