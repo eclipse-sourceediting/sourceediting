@@ -12,6 +12,7 @@
  *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *     David Carver (STAR) - bug 289304 - fix schema awarness of types on elements
+ *     Jesper Moller - bug 297958 - Fix fn:nilled for elements
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -193,8 +194,12 @@ public class ElementType extends NodeType {
 	public ResultSequence nilled() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		// FIXME PSVI !!!
-		rs.add(new XSBoolean(false));
+		if (_value instanceof PSVIElementNSImpl) {
+			PSVIElementNSImpl psviElement = (PSVIElementNSImpl) _value;
+			rs.add(new XSBoolean(psviElement.getNil()));
+		} else {
+			rs.add(new XSBoolean(false));
+		}
 
 		return rs;
 	}
