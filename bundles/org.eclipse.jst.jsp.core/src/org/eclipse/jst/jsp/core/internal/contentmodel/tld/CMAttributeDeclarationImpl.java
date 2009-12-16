@@ -137,7 +137,7 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 	 * 
 	 * @return java.lang.Object
 	 * 
-	 * Returns the object property desciped by the propertyName
+	 * Returns the object property described by the propertyName
 	 * 
 	 */
 	public Object getProperty(String propertyName) {
