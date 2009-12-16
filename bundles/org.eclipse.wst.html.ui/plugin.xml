@@ -126,7 +126,7 @@
 	</extension>
 	<!-- Web content settings -->
 	<extension point="org.eclipse.ui.propertyPages">
-		<!-- for j2ee web project -->
+		<!-- for dynamic web project -->
 		<page
 			name="%WebContentSettings.name"
 			class="org.eclipse.wst.html.ui.internal.contentproperties.ui.ProjectWebContentSettingsPropertyPage"
@@ -365,7 +365,7 @@
 		</wizard>
 	</extension>
 
-	<!-- Add new HTML wizard to J2EE Project Navigator -->
+	<!-- Add new HTML wizard to Common Navigator -->
 	<extension
 		id="org.eclipse.wst.html.commonWizard.newHTML"
 		point="org.eclipse.ui.navigator.navigatorContent">
