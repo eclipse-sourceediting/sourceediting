@@ -405,7 +405,7 @@ public class XPathView extends ViewPart {
 			child.putInteger("Index", entry.getKey()); //$NON-NLS-1$
 			child.putString("XPath", entry.getValue()); //$NON-NLS-1$
 		}
-		boolean link = xpathViewActions.linkWithEditor;
+		boolean link = xpathViewActions.isLinkWithEditor();
 		memento.putBoolean("LinkWithEditor", link);
 		super.saveState(memento);
 	}

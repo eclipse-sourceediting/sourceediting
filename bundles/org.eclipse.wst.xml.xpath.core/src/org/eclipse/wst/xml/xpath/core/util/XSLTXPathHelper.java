@@ -27,7 +27,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.traversal.NodeIterator;
 
 public class XSLTXPathHelper {
-	
 
 	/**
 	 * Use an XPath string to select a single node. XPath namespace prefixes are
@@ -216,7 +215,6 @@ public class XSLTXPathHelper {
 		// because XPathContext is weak in a number of areas... perhaps
 		// XPathContext should be done away with.)
 		XPathContext xpathSupport = new XPathContext();
-		
 
 		// Create an object to resolve namespace prefixes.
 		// XPath namespaces are resolved from the input context node's document
@@ -230,7 +228,8 @@ public class XSLTXPathHelper {
 						: namespaceNode);
 
 		// Create the XPath object.
-		XPath xpath = new XPath(str, null, prefixResolver, XPath.SELECT, null, getFunctionTable());
+		XPath xpath = new XPath(str, null, prefixResolver, XPath.SELECT, null,
+				getFunctionTable());
 
 		// Execute the XPath, and have it return the result
 		// return xpath.execute(xpathSupport, contextNode, prefixResolver);
@@ -274,7 +273,8 @@ public class XSLTXPathHelper {
 		// because XPathContext is weak in a number of areas... perhaps
 		// XPathContext should be done away with.)
 		// Create the XPath object.
-		XPath xpath = new XPath(str, null, prefixResolver, XPath.SELECT, null, getFunctionTable());
+		XPath xpath = new XPath(str, null, prefixResolver, XPath.SELECT, null,
+				getFunctionTable());
 
 		// Execute the XPath, and have it return the result
 		XPathContext xpathSupport = new XPathContext();
@@ -282,89 +282,95 @@ public class XSLTXPathHelper {
 
 		return xpath.execute(xpathSupport, ctxtNode, prefixResolver);
 	}
-	
-	public static void compile(String expression) throws XPathExpressionException {
-        try {
-            @SuppressWarnings("unused")
-			org.apache.xpath.XPath xpath = new XPath (expression, null,
-                    null, org.apache.xpath.XPath.SELECT, null, getFunctionTable());
-        } catch ( javax.xml.transform.TransformerException te ) {
-            throw new XPathExpressionException ( te ) ;
-        }
-		
+
+	public static void compile(String expression)
+			throws XPathExpressionException {
+		try {
+			new XPath(expression, null, null, org.apache.xpath.XPath.SELECT,
+					null, getFunctionTable());
+		} catch (javax.xml.transform.TransformerException te) {
+			throw new XPathExpressionException(te);
+		}
+
 	}
-	
+
 	protected static FunctionTable getFunctionTable() {
 		FunctionTable functionTable = new FunctionTable();
-		functionTable.installFunction("key", org.apache.xalan.templates.FuncKey.class);
-		functionTable.installFunction("format-number", org.apache.xalan.templates.FuncFormatNumb.class);
-		functionTable.installFunction("document", org.apache.xalan.templates.FuncDocument.class);
-		functionTable.installFunction("element-available", org.apache.xpath.functions.FuncExtElementAvailable.class);
-		functionTable.installFunction("function-available", org.apache.xpath.functions.FuncExtFunctionAvailable.class);
-		functionTable.installFunction("current", org.apache.xpath.functions.FuncCurrent.class);
-		functionTable.installFunction("unparsed-entity-string", org.apache.xpath.functions.FuncUnparsedEntityURI.class);
-		functionTable.installFunction("generate-id", org.apache.xpath.functions.FuncGenerateId.class);
-		functionTable.installFunction("system-property", org.apache.xpath.functions.FuncSystemProperty.class);
+		functionTable.installFunction("key",
+				org.apache.xalan.templates.FuncKey.class);
+		functionTable.installFunction("format-number",
+				org.apache.xalan.templates.FuncFormatNumb.class);
+		functionTable.installFunction("document",
+				org.apache.xalan.templates.FuncDocument.class);
+		functionTable.installFunction("element-available",
+				org.apache.xpath.functions.FuncExtElementAvailable.class);
+		functionTable.installFunction("function-available",
+				org.apache.xpath.functions.FuncExtFunctionAvailable.class);
+		functionTable.installFunction("current",
+				org.apache.xpath.functions.FuncCurrent.class);
+		functionTable.installFunction("unparsed-entity-string",
+				org.apache.xpath.functions.FuncUnparsedEntityURI.class);
+		functionTable.installFunction("generate-id",
+				org.apache.xpath.functions.FuncGenerateId.class);
+		functionTable.installFunction("system-property",
+				org.apache.xpath.functions.FuncSystemProperty.class);
 		return functionTable;
 	}
-	
+
 	/**
 	 * Returns a XPath expression given a DOM Node.
 	 * 
-	 * @param node The DOM Node to create the XPath expression.
+	 * @param node
+	 *            The DOM Node to create the XPath expression.
 	 * @since 1.0
 	 */
-	public static String calculateXPathToNode(Node node)
-	{
+	public static String calculateXPathToNode(Node node) {
+		Node xpathNode = node;
 		StringBuffer sb = new StringBuffer();
-		while (node != null)
-		{
-			switch (node.getNodeType())
-			{
-				case Node.ATTRIBUTE_NODE:
-					sb.insert(0, node.getNodeName());
-					sb.insert(0, "/@"); //$NON-NLS-1$
-					node = ((Attr)node).getOwnerElement();
-					break;
-				case Node.ELEMENT_NODE:
-					Node sibling = node;
-					int position = 1;
-					while ((sibling = sibling.getPreviousSibling()) != null)
-					{
-						if (sibling.getNodeType() == Node.ELEMENT_NODE && sibling.getNodeName().equals(node.getNodeName()))
-						{
-							++position;
-						}
+		while (xpathNode != null) {
+			switch (xpathNode.getNodeType()) {
+			case Node.ATTRIBUTE_NODE:
+				sb.insert(0, xpathNode.getNodeName());
+				sb.insert(0, "/@"); //$NON-NLS-1$
+				xpathNode = ((Attr) xpathNode).getOwnerElement();
+				break;
+			case Node.ELEMENT_NODE:
+				Node sibling = xpathNode;
+				int position = 1;
+				while ((sibling = sibling.getPreviousSibling()) != null) {
+					if (sibling.getNodeType() == Node.ELEMENT_NODE
+							&& sibling.getNodeName().equals(xpathNode.getNodeName())) {
+						++position;
 					}
-					if (position > 1)
-						sb.insert(0, "[" + position + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-					else
-					{
-						sibling = node;
-						boolean following = false;
-						while ((sibling = sibling.getNextSibling()) != null)
-						{
-							if (sibling.getNodeType() == Node.ELEMENT_NODE && sibling.getNodeName().equals(node.getNodeName()))
-							{
-								following = true;
-								break;
-							}
+				}
+				if (position > 1) {
+					sb.insert(0, "[" + position + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				else {
+					sibling = xpathNode.getNextSibling();
+					boolean following = false;
+					while (sibling != null) {
+						if (sibling.getNodeType() == Node.ELEMENT_NODE
+								&& sibling.getNodeName().equals(
+										xpathNode.getNodeName())) {
+							following = true;
+							break;
 						}
-						if (following)
-						{
-							sb.insert(0, "[1]"); //$NON-NLS-1$
-						}
+						sibling = sibling.getNextSibling();
 					}
-					sb.insert(0, node.getNodeName());
-					sb.insert(0, "/"); //$NON-NLS-1$
-					node = node.getParentNode();
-					break;
-				default:
-					node = node.getParentNode();
+					if (following) {
+						sb.insert(0, "[1]"); //$NON-NLS-1$
+					}
+				}
+				sb.insert(0, xpathNode.getNodeName());
+				sb.insert(0, "/"); //$NON-NLS-1$
+				xpathNode = xpathNode.getParentNode();
+				break;
+			default:
+				xpathNode = xpathNode.getParentNode();
 			}
 		}
 		return sb.toString();
 	}
-	
 
 }

@@ -16,7 +16,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @since 1.0
  */
-public class Messages extends NLS {
+public final class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.xpath.ui.internal.messages"; //$NON-NLS-1$
 	public static String XPathComputer_0;
 	public static String XPathComputer_5;

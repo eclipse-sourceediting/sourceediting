@@ -23,20 +23,20 @@ import org.eclipse.wst.xml.xpath.ui.internal.Messages;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 
 class XPathViewActions {
-	private ImageDescriptor COLLAPSE_D = AbstractUIPlugin
+	private static final ImageDescriptor COLLAPSE_D = AbstractUIPlugin
 			.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID,
 					"icons/full/dlcl16/collapseall.gif");
-	private ImageDescriptor COLLAPSE_E = AbstractUIPlugin
+	private static final ImageDescriptor COLLAPSE_E = AbstractUIPlugin
 			.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID,
 					"icons/full/elcl16/collapseall.gif");
-	private ImageDescriptor SYNCED_D = AbstractUIPlugin
+	private static final ImageDescriptor SYNCED_D = AbstractUIPlugin
 			.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID,
 					"icons/full/dlcl16/synced.gif");
-	private ImageDescriptor SYNCED_E = AbstractUIPlugin
+	private static final ImageDescriptor SYNCED_E = AbstractUIPlugin
 			.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID,
 					"icons/full/elcl16/synced.gif");
 
-	boolean linkWithEditor = false;
+	private boolean linkWithEditor = false;
 	private CollapseTreeAction collapseAction;
 	private ToggleLinkAction toggleAction;
 
@@ -47,7 +47,7 @@ class XPathViewActions {
 	protected IAction[] createToolbarContributions(TreeViewer viewer) {
 		this.collapseAction = new CollapseTreeAction(viewer);
 		this.toggleAction = new ToggleLinkAction();
-		toggleAction.setChecked(linkWithEditor);
+		toggleAction.setChecked(isLinkWithEditor());
 		return new IAction[] { collapseAction, toggleAction };
 	}
 
@@ -56,7 +56,7 @@ class XPathViewActions {
 	}
 
 	public boolean isLinkedWithEditor(TreeViewer treeViewer) {
-		return linkWithEditor;
+		return isLinkWithEditor();
 	}
 
 	void setLinkWithEditor(boolean isLinkWithEditor) {
@@ -69,15 +69,12 @@ class XPathViewActions {
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
-	// private static ImageDescriptor getImageDescriptor(String relativePath)
-	// {
-	// String iconPath = "icons/";
-	// return XMLUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.PLUGIN_ID,
-	// iconPath);
-	// }
+	public boolean isLinkWithEditor() {
+		return linkWithEditor;
+	}
 
 	private class CollapseTreeAction extends Action {
-		private TreeViewer fTreeViewer = null;
+		private final TreeViewer fTreeViewer;
 
 		public CollapseTreeAction(TreeViewer viewer) {
 			super(Messages.XPathViewActions_0, AS_PUSH_BUTTON);

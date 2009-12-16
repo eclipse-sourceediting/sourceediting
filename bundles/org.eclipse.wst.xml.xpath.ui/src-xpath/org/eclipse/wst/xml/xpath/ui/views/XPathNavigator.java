@@ -300,7 +300,7 @@ public class XPathNavigator extends ViewPart {
 		}
 	}
 
-	class ShowInSourceAction extends Action {
+	static class ShowInSourceAction extends Action {
 		public void run() {
 			// try
 			// {

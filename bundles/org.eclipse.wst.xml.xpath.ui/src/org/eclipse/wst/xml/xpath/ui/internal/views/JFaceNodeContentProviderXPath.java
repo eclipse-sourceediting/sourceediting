@@ -21,7 +21,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class JFaceNodeContentProviderXPath implements ITreeContentProvider {
-	FontRegistry registry = new FontRegistry();
 
 	protected IJFaceNodeAdapter getAdapter(Object adaptable) {
 		if (adaptable instanceof INodeNotifier) {

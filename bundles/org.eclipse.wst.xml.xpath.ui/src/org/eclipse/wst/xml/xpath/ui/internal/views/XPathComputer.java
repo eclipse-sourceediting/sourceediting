@@ -122,7 +122,7 @@ public class XPathComputer {
 		Job refresh = new Job(Messages.XPathComputer_5) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				if (xps[0] != expression) {
+				if (!xps[0].equals(expression)) {
 					return Status.CANCEL_STATUS;
 				}
 				return doCompute(xps[0]);
