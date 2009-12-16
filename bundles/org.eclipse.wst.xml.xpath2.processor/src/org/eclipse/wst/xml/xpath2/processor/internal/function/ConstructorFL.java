@@ -50,6 +50,19 @@ public class ConstructorFL extends FunctionLibrary {
 	}
 
 	/**
+	 * Adds a type into the functions library as an abstract type.
+	 * 
+	 * @param at
+	 *            input of any atomic type.
+	 */
+	public void add_abstract_type(String localName, AnyAtomicType at) {
+		QName name = new QName(localName);
+		name.set_namespace(namespace());
+
+		_types.put(name, at);
+	}
+	
+	/**
 	 * Support for QName interface.
 	 * 
 	 * @param name

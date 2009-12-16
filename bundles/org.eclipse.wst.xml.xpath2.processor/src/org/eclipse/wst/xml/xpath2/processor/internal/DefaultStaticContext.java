@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 277792 - add built in types to static context. 
+ *     Jesper Steen Moller - bug 297707 - Missing the empty-sequence() type
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -306,7 +307,7 @@ public class DefaultStaticContext implements StaticContext {
 	public boolean type_defined(QName qname) {
 		
 		if (_schema == null) {
-			return builtinTypes.function_exists(qname, 1);
+			return builtinTypes.atomic_type(qname) != null;
 		}
 
 		XSTypeDefinition td = _schema.getTypeDefinition(qname.local(), qname

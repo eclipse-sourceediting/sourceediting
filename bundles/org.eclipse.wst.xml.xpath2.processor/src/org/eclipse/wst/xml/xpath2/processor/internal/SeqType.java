@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - don't silently allow empty sequences always
+ *     Jesper Steen Moeller - bug 297707 - Missing the empty-sequence() type
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -31,6 +32,14 @@ public class SeqType {
 	public static final int OCC_STAR = 1;
 	public static final int OCC_PLUS = 2;
 	public static final int OCC_QMARK = 3;
+	public static final int OCC_EMPTY = 4;
+
+	/**
+	 * Path to w3.org XML Schema specification.
+	 */
+	public static final String XML_SCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
+
+	private static final QName ANY_ATOMIC_TYPE = new QName("xs", "anyAtomicType", XML_SCHEMA_NS);
 
 	private AnyType _type;
 	private int _occ;
@@ -92,7 +101,7 @@ public class SeqType {
 		// convert occurrence
 		switch (st.occurrence()) {
 		case SequenceType.EMPTY:
-			_occ = OCC_NONE;
+			_occ = OCC_EMPTY;
 			return;
 
 		case SequenceType.NONE:
@@ -129,7 +138,11 @@ public class SeqType {
 
 			assert aat != null;
 			_type = aat;
-			_type_class = _type.getClass();
+			if (item.qname().equals(ANY_ATOMIC_TYPE)) {
+				_type_class = AnyAtomicType.class;
+			} else {
+				_type_class = _type.getClass();
+			}
 			return;
 
 		case ItemType.KINDTEST:
@@ -145,6 +158,18 @@ public class SeqType {
 			_type_class = DocType.class;
 		else if (ktest instanceof ElementTest)
 			_type_class = ElementType.class;
+		else if (ktest instanceof TextTest)
+			_type_class = TextType.class;
+		else if (ktest instanceof AttributeTest)
+			_type_class = AttrType.class;
+		else if (ktest instanceof CommentTest)
+			_type_class = CommentType.class;
+		else if (ktest instanceof PITest)
+			_type_class = PIType.class;
+		else if (ktest instanceof AnyKindTest)
+			_type_class = NodeType.class;
+		else if (ktest instanceof CommentTest)
+			_type_class = CommentType.class;
 		else
 			assert false;
 	}
@@ -181,7 +206,13 @@ public class SeqType {
 	 * @return a result sequence
 	 */
 	public ResultSequence match(ResultSequence args) throws DynamicError {
+
+		int occurrence = occurence();
 		
+		// Check for empty sequence first
+		if (occurrence == OCC_EMPTY && ! args.empty())
+			throw new DynamicError(TypeError.invalid_type(null));
+
 		int arg_count = 0;
 
 		for (Iterator i = args.iterator(); i.hasNext();) {
@@ -195,7 +226,7 @@ public class SeqType {
 
 		}
 
-		switch (occurence()) {
+		switch (occurrence) {
 		case OCC_NONE:
 			if (arg_count != 1)
 				throw new DynamicError(TypeError.invalid_type(null));

@@ -12,14 +12,10 @@
 // *     David Carver - bug 280987 - fixed literal issues for integer and decimal
 // *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
 // *     Jesper S Moller - bug 286061   correct handling of quoted string 
-// *     Jesper Moller - bug 297707 - Missing the empty-sequence() type
 // *******************************************************************************/
 
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import java_cup.runtime.*;
 
@@ -30,7 +26,7 @@ import java_cup.runtime.*;
  * on 12/14/09 2:02 AM from the specification file
  * <tt>/Users/jesper/Documents/workspace-3.5M5/org.eclipse.wst.xml.xpath2.processor/grammars/xpath.lex</tt>
  */
-public class XPathFlex implements java_cup.runtime.Scanner {
+class XPathFlex implements java_cup.runtime.Scanner {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -574,7 +570,7 @@ public class XPathFlex implements java_cup.runtime.Scanner {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  public XPathFlex(java.io.Reader in) {
+  XPathFlex(java.io.Reader in) {
     this.zzReader = in;
   }
 
@@ -1306,7 +1302,7 @@ public class XPathFlex implements java_cup.runtime.Scanner {
           if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
             zzAtEOF = true;
             zzDoEOF();
-              { return new java_cup.runtime.Symbol(XpathSym.EOF); }
+              { return new java_cup.runtime.Symbol(sym.EOF); }
           } 
           else {
             zzScanError(ZZ_NO_MATCH);

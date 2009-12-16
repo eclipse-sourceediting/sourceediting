@@ -10,6 +10,7 @@
 // *     David Carver - bug 269833 - A work around for the keyword in node issue.
 // *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
 // *     David Carver (STAR) - bug 262765 - Fixed Wildcard and NCName issue. 
+// *     Jesper S Moller - bug 297707 - Missing the empty-sequence() type
 // *******************************************************************************/
 
 
@@ -59,7 +60,7 @@ terminal String FOR, IN, RETURN, SATISFIES, TO;
 terminal String SOME, EVERY;
 terminal String IF, THEN, ELSE;
 terminal String AND, OR;
-terminal EMPTY, ITEM, NODE, DOCUMENT_NODE, TEXT, COMMENT;
+terminal EMPTY_SEQUENCE, ITEM, NODE, DOCUMENT_NODE, TEXT, COMMENT;
 terminal PROCESSING_INSTRUCTION, SCHEMA_ATTRIBUTE, ELEMENT, SCHEMA_ELEMENT;
 // Unused in XPath 2, but reserved for compatibility with XQuery
 terminal TYPESWITCH;
@@ -504,7 +505,7 @@ SequenceType        ::= ItemType:t
 			{: RESULT = new SequenceType(SequenceType.NONE, t); :}
                       | ItemType:t OccurrenceIndicator:i
 			{: RESULT = new SequenceType(i.intValue(), t); :}
-                      | EMPTY LPAR RPAR
+                      | EMPTY_SEQUENCE LPAR RPAR
 			{: RESULT = new SequenceType(SequenceType.EMPTY, null); :}
 		      ;
 
@@ -701,7 +702,7 @@ NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  COMMENT:n {: RESULT = new String("comment"); :} |
 						  DOCUMENT_NODE:n {: RESULT = new String("document-node"); :} |
 						  ELEMENT:n {: RESULT = new String("element"); :} |
-						  EMPTY:n {: RESULT = new String("empty"); :} |
+						  EMPTY_SEQUENCE:n {: RESULT = new String("empty-sequence"); :} |
 						  ITEM:n {: RESULT = new String("item"); :} |
 						  NODE:n {: RESULT = new String("node"); :} |
 						  PROCESSING_INSTRUCTION:n {: RESULT = new String("processing-instruction"); :} |

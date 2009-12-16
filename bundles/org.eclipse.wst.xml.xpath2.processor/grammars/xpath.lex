@@ -10,6 +10,7 @@
 // *     David Carver - bug 280987 - fixed literal issues for integer and decimal
 // *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
 // *     Jesper S Moller - bug 286061   correct handling of quoted string 
+// *     Jesper Moller - bug 297707 - Missing the empty-sequence() type
 // *******************************************************************************/
 
 
@@ -145,7 +146,7 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 "and"				{ return symbol(XpathSym.AND); }
 "or"				{ return symbol(XpathSym.OR); }
 
-"empty"				{ return symbol(XpathSym.EMPTY); }
+"empty-sequence"	{ return symbol(XpathSym.EMPTY_SEQUENCE); }
 "item"				{ return symbol(XpathSym.ITEM); }
 "node"				{ return symbol(XpathSym.NODE); }
 "document\-node"		{ return symbol(XpathSym.DOCUMENT_NODE); }

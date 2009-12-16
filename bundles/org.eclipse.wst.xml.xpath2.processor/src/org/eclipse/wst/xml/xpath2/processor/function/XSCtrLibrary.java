@@ -22,7 +22,8 @@
  *     Mukul Gandhi - bug 277650 - implementation of xs:unsignedByte data type
  *     Mukul Gandhi - bug 281046 - implementation of xs:base64Binary data type
  *     David Carver - bug 282223 - implementation of xs:duration data type.
- *     David Carver - bug 262765 - implementation of xs:untypedAtomic data type. 
+ *     David Carver - bug 262765 - implementation of xs:untypedAtomic data type.
+ *     Jesper Moller - bug 297707 - Missing the empty-sequence() type
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -51,6 +52,17 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSUntypedAtomic());
 		add_type(new XSNotation());
 
+		add_abstract_type("anyAtomicType", new AnyAtomicType() {
+			@Override
+			public String string_type() {
+				return null;
+			}
+			@Override
+			public String string_value() {
+				return null;
+			}
+		});
+		
 		// numeric
 		add_type(new XSDecimal());
 		add_type(new XSFloat());
@@ -92,4 +104,5 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSBase64Binary());
 		add_type(new XSHexBinary());
 	}
+
 }
