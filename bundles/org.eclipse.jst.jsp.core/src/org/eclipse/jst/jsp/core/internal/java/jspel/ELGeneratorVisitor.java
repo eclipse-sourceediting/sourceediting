@@ -432,7 +432,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 				ASTValueSuffix suffix = (ASTValueSuffix) node.jjtGetChild(1);
 				//content assist can cause a null pointer here without the extra null check
 				if(prefix.firstToken.image.equals("pageContext") && suffix.getPropertyNameToken() != null && suffix.getPropertyNameToken().image.equals("request")) {
-					append("((HTTPServletRequest)");
+					append("((HttpServletRequest)");
 				}
 			}
 		}
