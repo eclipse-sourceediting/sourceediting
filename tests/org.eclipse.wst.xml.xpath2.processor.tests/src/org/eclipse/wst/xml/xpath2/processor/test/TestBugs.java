@@ -32,13 +32,10 @@
  *                    bug 281046   implementation of xs:base64Binary data type                                
  *  Jesper S Moller - bug 286061   correct handling of quoted string 
  *  Jesper S Moller - bug 280555 - Add pluggable collation support
+ *  Jesper S Moller - bug 297958   Fix fn:nilled for elements
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Comparator;
 
@@ -47,14 +44,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
-import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.util.Utilities;
-import org.eclipse.wst.xml.core.internal.modelhandler.ModelHandlerForXML;
-import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.xpath2.processor.CollationProvider;
 import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
@@ -62,14 +51,12 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.osgi.framework.Bundle;
-import org.w3c.dom.Document;
 
 public class TestBugs extends AbstractPsychoPathTest {
 
@@ -482,6 +469,40 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
+	}
+
+	public void testNilled() throws Exception {
+		// This is a terrible shortcoming in the test suite, I'd say
+		URL fileURL = bundle.getEntry("/bugTestFiles/bugNilled.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bugNilled.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		assertTrue(evaluateBoolean(dc, "empty( nilled( / ) )"));
+		assertTrue(evaluateBoolean(dc, "empty( nilled( /root/@attr1 ) )"));
+		assertTrue(evaluateBoolean(dc, "empty( nilled( /root/element1/text() ) )"));
+
+		assertFalse(evaluateBoolean(dc, "nilled(/root/element1)"));
+		assertTrue(evaluateBoolean(dc, "nilled(/root/element2)"));
+		assertFalse(evaluateBoolean(dc, "nilled(/root/element3)"));
+		assertFalse(evaluateBoolean(dc, "nilled(/root/element4)"));
+	}
+
+	// I can't stand to see so much duplicated code!!!
+	private boolean evaluateBoolean(DynamicContext dc, String xpath) throws Exception {
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		return result.value();
 	}
 
 	public void testXSNonPositiveInteger() throws Exception {
