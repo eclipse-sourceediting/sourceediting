@@ -73,7 +73,7 @@ class XPathViewActions {
 		return linkWithEditor;
 	}
 
-	private class CollapseTreeAction extends Action {
+	private static class CollapseTreeAction extends Action {
 		private final TreeViewer fTreeViewer;
 
 		public CollapseTreeAction(TreeViewer viewer) {
