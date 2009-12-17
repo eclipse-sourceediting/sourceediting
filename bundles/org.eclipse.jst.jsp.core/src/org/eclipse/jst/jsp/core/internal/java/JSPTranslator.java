@@ -1131,14 +1131,11 @@ public class JSPTranslator {
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
 		while (regions.hasNext()) {
-
 			region = (ITextRegion) regions.next();
-
 			String type = region.getType();
 
-			// content assist was not showing up in JSP inside a javascript
-			// region
-			if (DOMRegionContext.BLOCK_TEXT.equals(type)) {
+			// content assist was not showing up in JSP inside a javascript region
+			if (DOMRegionContext.BLOCK_TEXT == type) {
 				// check if it's nested jsp in a script tag...
 				if (region instanceof ITextRegionContainer) {
 					// pass in block text's container & iterator
@@ -1146,6 +1143,25 @@ public class JSPTranslator {
 					translateJSPNode(region, regionIterator, type, EMBEDDED_JSP);
 				}
 				else {
+					//be sure to combine all of the text from the block region
+					StringBuffer fullText = new StringBuffer(containerRegion.getFullText(region));
+					while(regions.hasNext()) {
+						region = (ITextRegion)regions.next();
+						if (region instanceof ITextRegionContainer) {
+							// pass in block text's container & iterator
+							Iterator regionIterator = ((ITextRegionCollection) region).getRegions().iterator();
+							translateJSPNode(region, regionIterator, type, EMBEDDED_JSP);
+						}
+						
+						if(region.getType() == DOMRegionContext.BLOCK_TEXT) {
+							fullText.append(containerRegion.getFullText(region));
+						} else {
+							//update type for when we exit if statement for BLOCK_TEXT
+							type = region.getType();
+							break;
+						}
+					}
+					
 					/**
 					 * LIMITATION - Normally the script content within a
 					 * script tag is a single document region with a single
@@ -1169,7 +1185,7 @@ public class JSPTranslator {
 					// PARTITIONING HAS
 					// SUPPORT FOR NESTED XML-JSP
 					// CMVC 241882
-					decodeScriptBlock(containerRegion.getFullText(region), containerRegion.getStartOffset());
+					decodeScriptBlock(fullText.toString(), containerRegion.getStartOffset());
 					// ////////////////////////////////////////////////////////////////////////////////
 				}
 			}
@@ -1191,7 +1207,6 @@ public class JSPTranslator {
 				translateXMLContent((ITextRegionContainer)region);
 			}
 		}
-		// }
 	}
 
 	/*
