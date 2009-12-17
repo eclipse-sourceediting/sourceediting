@@ -15,12 +15,10 @@ package org.eclipse.wst.xml.xpath.ui.views;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+
 import java.util.List;
 import java.util.WeakHashMap;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -85,6 +83,8 @@ import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.ui.internal.provisional.IDOMSourceEditingTextTools;
 import org.eclipse.wst.xml.xpath.ui.internal.Messages;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
+import org.eclipse.wst.xml.xpath.ui.internal.views.DefaultNamespaceContext;
+import org.eclipse.wst.xml.xpath.ui.internal.views.EditNamespacePrefixDialog;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -96,8 +96,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 
 /**
- * 
+ * @deprecated This view should no longer be used.  Use XPathView instead.
  */
+@Deprecated
 public class XPathNavigator extends ViewPart {
 	class XPathAction extends Action {
 		public void run() {

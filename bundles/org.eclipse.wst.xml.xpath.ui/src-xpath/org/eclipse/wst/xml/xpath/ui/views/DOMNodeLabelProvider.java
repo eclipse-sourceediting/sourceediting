@@ -29,7 +29,6 @@ import org.w3c.dom.Text;
 
 /**
  * 
- * @author dcarver
  * @deprecated
  */
 @Deprecated

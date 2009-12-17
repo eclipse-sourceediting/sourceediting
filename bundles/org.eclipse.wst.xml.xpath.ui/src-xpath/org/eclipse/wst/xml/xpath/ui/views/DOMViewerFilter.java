@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.w3c.dom.Text;
 
+@Deprecated
 public class DOMViewerFilter extends ViewerFilter {
 	/*
 	 * (non-Javadoc)

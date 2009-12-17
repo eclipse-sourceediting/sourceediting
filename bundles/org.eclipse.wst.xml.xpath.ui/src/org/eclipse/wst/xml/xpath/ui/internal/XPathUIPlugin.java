@@ -7,10 +7,17 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 261588 - Add Edit Namespace support for XPath view
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -20,7 +27,11 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.osgi.framework.BundleContext;
+import org.w3c.dom.Document;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -42,6 +53,9 @@ public class XPathUIPlugin extends AbstractUIPlugin {
 	 * The template context type registry for xpath.
 	 */
 	private ContributionContextTypeRegistry fXPathContextTypeRegistry;
+	
+	private Map<String, List<NamespaceInfo>> namespaceInfo = new ConcurrentHashMap<String, List<NamespaceInfo>>();
+	
 
 	/**
 	 * The constructor
@@ -128,4 +142,33 @@ public class XPathUIPlugin extends AbstractUIPlugin {
 		return fXPathContextTypeRegistry;
 	}
 
+	public void setNamespaceInfo(Map<String, List<NamespaceInfo>> namespaceInfo) {
+		this.namespaceInfo = namespaceInfo;
+	}
+
+	public Map<String, List<NamespaceInfo>> getNamespaceInfo() {
+		return namespaceInfo;
+	}
+
+	public List<NamespaceInfo> getNamespaceInfo(IDOMDocument document) {
+		XPathUIPlugin plugin = XPathUIPlugin.getDefault();
+		String modelID = document.getModel().getId();
+		Map<String, List<NamespaceInfo>> namespaceInfo = plugin.getNamespaceInfo();
+		List<NamespaceInfo> info = namespaceInfo.get(modelID);
+
+		if (info == null) {
+			if (document.getDocumentElement() != null) {
+				info = new ArrayList<NamespaceInfo>();
+				NamespaceTable namespaceTable = new NamespaceTable(document);
+				namespaceTable.visitElement(document.getDocumentElement());
+				Collection<?> namespaces = namespaceTable
+						.getNamespaceInfoCollection();
+				info.addAll((Collection<NamespaceInfo>) namespaces);
+				namespaceInfo.put(modelID, info);
+				plugin.setNamespaceInfo(namespaceInfo);
+			}
+		}
+		return info;
+	}
+	
 }
