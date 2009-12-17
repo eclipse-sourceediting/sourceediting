@@ -76,7 +76,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 			hasChildren=false;
 		}
 		removeAttributes();
-		me = (new JavaScriptElementLabelProvider()).getImage(originalElement);
+		me = (new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT|JavaScriptElementLabelProvider.SHOW_SMALL_ICONS)).getImage(originalElement);
 	}
 	
 	public Image getImage() {
