@@ -7,15 +7,12 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 261588 - Add Edit Namespace support for XPath view
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import javax.xml.xpath.XPathExpressionException;
 
@@ -69,12 +66,9 @@ import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.Messages;
-import org.eclipse.wst.xml.xpath.ui.views.EditNamespacePrefixDialog;
 import org.eclipse.wst.xml.xpath.ui.views.XPathNavigator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -82,7 +76,6 @@ import org.w3c.dom.NodeList;
 
 
 public class XPathView extends ViewPart {
-	protected Map<Document, List<NamespaceInfo>> namespaceInfo = new WeakHashMap<Document, List<NamespaceInfo>>();
 	
 	private boolean isFiringSelection = false;
 	private IPartListener2 partListener2 = new XPathPartListener();
@@ -137,10 +130,10 @@ public class XPathView extends ViewPart {
 		comp.setLayout(new GridLayout(1, false));
 		comp.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
-		Button namespaceButton = new Button(comp, SWT.PUSH);
-		namespaceButton.setText(Messages.XPathNavigator_Namespaces);
-		namespaceButton.setToolTipText(Messages.XPathNavigator_Namespaces_Tip);
-		namespaceButton.addSelectionListener(new NamespaceSelectionAdapter(namespaceInfo));
+//		Button namespaceButton = new Button(comp, SWT.PUSH);
+//		namespaceButton.setText(Messages.XPathNavigator_Namespaces);
+//		namespaceButton.setToolTipText(Messages.XPathNavigator_Namespaces_Tip);
+//		namespaceButton.addSelectionListener(new NamespaceSelectionAdapter(namespaceInfo));
 		
 		Label label = new Label(comp, SWT.NONE);
 		label.setText(Messages.XPathView_1);

@@ -25,7 +25,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.xpath.ui.views.EditNamespacePrefixDialog;
 import org.w3c.dom.Document;
 
 public class NamespaceSelectionAdapter extends SelectionAdapter {
@@ -70,7 +69,6 @@ public class NamespaceSelectionAdapter extends SelectionAdapter {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<NamespaceInfo> createNamespaceInfo(Document document) {
 		List<NamespaceInfo> info = namespaceInfo.get(document);
 		if (info == null) {

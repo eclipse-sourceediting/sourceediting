@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.xpath.ui.internal.views;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
@@ -32,9 +33,10 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.Messages;
-import org.eclipse.wst.xml.xpath.ui.views.DefaultNamespaceContext;
+import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -174,13 +176,13 @@ public class XPathComputer {
 
 	private IStatus evaluateXPath(String xp) throws XPathExpressionException {
 		XPath newXPath = new XPathFactoryImpl().newXPath();
-		Document doc = null;
+		IDOMDocument doc = null;
 		if (node.getNodeType() == Node.DOCUMENT_NODE) {
-			doc = (Document) node;
+			doc = (IDOMDocument) node;
 		} else {
-			doc = node.getOwnerDocument();
+			doc = (IDOMDocument)node.getOwnerDocument();
 		}
-		final List<NamespaceInfo> namespaces = createNamespaceInfo(doc);
+		final List<NamespaceInfo> namespaces = XPathUIPlugin.getDefault().getNamespaceInfo(doc);
 		if (namespaces != null) {
 			newXPath.setNamespaceContext(new DefaultNamespaceContext(namespaces));
 		}
@@ -194,22 +196,6 @@ public class XPathComputer {
 		return Status.OK_STATUS;
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<NamespaceInfo> createNamespaceInfo(Document document) {
-		List<NamespaceInfo> info = xpathView.namespaceInfo.get(document);
-		if (info == null) {
-			if (document.getDocumentElement() != null) {
-				info = new ArrayList<NamespaceInfo>();
-				NamespaceTable namespaceTable = new NamespaceTable(document);
-				namespaceTable.visitElement(document.getDocumentElement());
-				Collection<?> namespaces = namespaceTable
-						.getNamespaceInfoCollection();
-				info.addAll((Collection<NamespaceInfo>) namespaces);
-				xpathView.namespaceInfo.put(document, info);
-			}
-		}
-		return info;
-	}
 	
 	public void dispose() {
 		if (model != null) {

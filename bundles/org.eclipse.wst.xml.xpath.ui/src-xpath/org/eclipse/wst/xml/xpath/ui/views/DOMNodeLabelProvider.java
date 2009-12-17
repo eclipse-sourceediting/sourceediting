@@ -27,6 +27,12 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 
+/**
+ * 
+ * @author dcarver
+ * @deprecated
+ */
+@Deprecated
 public class DOMNodeLabelProvider extends LabelProvider {
 	/*
 	 * (non-Javadoc)

@@ -2,31 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.ui.views">
-      <category      
-            name="%xmlCategoryName"
-            id="org.eclipse.wst.xml"/>
-    <view
-          category="org.eclipse.wst.xml"
-          class="org.eclipse.wst.xml.xpath.ui.internal.views.XPathView"
-          icon="$nl$/icons/full/xpath.gif"
-          id="org.eclipse.wst.xml.views.XPathView"
-          name="%xpathViewName"/>
- </extension>
-
-   <extension
-         point="org.eclipse.ui.views">
-      <category      
-            name="%xmlCategoryName"
-            id="org.eclipse.wst.xml"/>
-    <view
-          category="org.eclipse.wst.xml"
-          class="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"
-          icon="$nl$/icons/full/xpath.gif"
-          id="org.eclipse.wst.xml.views.XPathNavigatorView"
-          name="XPathNavigator"/>
- </extension>
 
  <!-- Addition to the XML perspective -->
  <extension point="org.eclipse.ui.perspectiveExtensions">
@@ -82,5 +57,49 @@
 			name="%pagenameXPathTemplates">
 		</page>	
 	</extension>
-	   
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category      
+            name="%xmlCategoryName"
+            id="org.eclipse.wst.xml"/>
+    <view
+          category="org.eclipse.wst.xml"
+          class="org.eclipse.wst.xml.xpath.ui.internal.views.XPathView"
+          icon="$nl$/icons/full/xpath.gif"
+          id="org.eclipse.wst.xml.views.XPathView"
+          name="%xpathViewName"/>
+ </extension>
+	    
+<extension point="org.eclipse.ui.commands">
+    <category id="org.eclipse.wst.xml.views.XPathView"
+            name="%xpathViewName">
+    </category>
+    <command categoryId="org.eclipse.wst.xml.views.XPathView"
+            description=""
+            id="org.eclipse.wst.xml.views.XPathView.prefixes"
+            name="%xpathView.editnamespace">
+    </command>
+</extension>
+
+<extension point="org.eclipse.ui.handlers">
+	<handler commandId="org.eclipse.wst.xml.views.XPathView.prefixes"
+		class="org.eclipse.wst.xml.xpath.ui.internal.handler.PrefixHandler">
+		<activeWhen>
+			<with variable="activePartId">
+				<equals value="org.eclipse.wst.xml.views.XPathView"/>
+			</with>
+		</activeWhen>
+	</handler>
+</extension>
+
+<extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="menu:org.eclipse.wst.xml.views.XPathView">
+		<command
+        commandId="org.eclipse.wst.xml.views.XPathView.prefixes"
+        style="push">
+		</command>
+		<separator name="additions" visible="true" />
+	</menuContribution>
+</extension>
 </plugin>
