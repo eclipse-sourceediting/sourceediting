@@ -513,9 +513,7 @@ public class JsTranslation implements IJsTranslation {
 		if (cu != null) {
 			try {
 				synchronized (fLock) {
-					// if(false)
-					// cu.makeConsistent(getProgressMonitor());
-					cu.reconcile(IJavaScriptUnit.NO_AST, true, getWorkingCopyOwner(), getProgressMonitor());
+					cu.reconcile(IJavaScriptUnit.NO_AST, true, true, getWorkingCopyOwner(), getProgressMonitor());
 				}
 			}
 			catch (JavaScriptModelException e) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,13 +31,12 @@ class JsProblemRequestor implements IProblemRequestor {
 	
 	public void acceptProblem(IProblem problem) {
 		if (isActive()) {
-			fCollectedProblems.add(problem);
+			getCollectedProblems().add(problem);
 		}
 	}
 	
 	public void beginReporting() {
 		fIsRunning = true;
-		fCollectedProblems = new ArrayList();
 	}
 	
 	public void endReporting() {
@@ -48,11 +47,13 @@ class JsProblemRequestor implements IProblemRequestor {
 	 * @return the list of collected problems
 	 */
 	public List getCollectedProblems() {
+		if (fCollectedProblems == null)
+			fCollectedProblems = new ArrayList();
 		return fCollectedProblems;
 	}
 	
 	public boolean isActive() {
-		return fIsActive && fCollectedProblems != null;
+		return fIsActive;
 	}
 	
 	public boolean isRunning() {
@@ -66,21 +67,14 @@ class JsProblemRequestor implements IProblemRequestor {
 	 *            the state of this problem requestor
 	 */
 	public void setIsActive(boolean isActive) {
-		if (fIsActive != isActive) {
-			fIsActive = isActive;
-			if (fIsActive) {
-				startCollectingProblems();
-			} else {
-				stopCollectingProblems();
-			}
-		}
+		fIsActive = isActive;
 	}
 	
 	/**
 	 * Tells this annotation model to collect temporary problems from now on.
 	 */
 	private void startCollectingProblems() {
-		fCollectedProblems = new ArrayList();
+		getCollectedProblems().clear();
 	}
 	
 	/**

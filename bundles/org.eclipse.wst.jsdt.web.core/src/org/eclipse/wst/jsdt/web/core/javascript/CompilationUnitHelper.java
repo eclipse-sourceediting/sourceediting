@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.javascript;
 
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IProblemRequestor;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 
 /**
@@ -52,9 +54,15 @@ public class CompilationUnitHelper {
 	public WorkingCopyOwner getWorkingCopyOwner() {
 		if (fWorkingCopyOwner == null) {
 			fWorkingCopyOwner = new WorkingCopyOwner() {
+				/* (non-Javadoc)
+				 * @see org.eclipse.wst.jsdt.core.WorkingCopyOwner#getProblemRequestor(org.eclipse.wst.jsdt.core.IJavaScriptUnit)
+				 */
+				public IProblemRequestor getProblemRequestor(IJavaScriptUnit workingCopy) {
+					return CompilationUnitHelper.this.getProblemRequestor();
+				}
 				
 				public String toString() {
-					return "Client Script Working copy owner"; //$NON-NLS-1$
+					return "Client JavaScript WorkingCopyOwner"; //$NON-NLS-1$
 				}
 			};
 		}
