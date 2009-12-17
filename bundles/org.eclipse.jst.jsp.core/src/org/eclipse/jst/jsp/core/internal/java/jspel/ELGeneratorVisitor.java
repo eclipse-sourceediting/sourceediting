@@ -218,7 +218,10 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 				for(Iterator it = functions.iterator(); it.hasNext(); ) {
 					TLDFunction function = (TLDFunction)it.next();
 					if(function.getName().equals(functionName)) {
-						return function.getClassName() + "." + function.getName(); //$NON-NLS-1$
+						String javaFuncName = getFunctionNameFromSignature(function.getSignature());
+						if (javaFuncName == null)
+							javaFuncName = functionName;
+						return function.getClassName() + "." + javaFuncName; //$NON-NLS-1$
 					}
 				}
 			}
@@ -509,13 +512,34 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 */
 	public Object visit(ASTFunctionInvocation node, Object data) {
 		String functionTranslation = genFunction(node.getFullFunctionName());
-		if(null != functionTranslation)
-		{
-			append(functionTranslation + "(", node.getFirstToken()); //$NON-NLS-1$
-			for(int i = 0; i < node.children.length; i++) {
-				node.children[i].jjtAccept(this, data);
-				if( node.children.length - i > 1){
-					append(","); //$NON-NLS-1$
+		if(null != functionTranslation) {
+
+			//find the token representing the function name
+			Token jspFuncNameToken = getJSPFuncNameToken(node);
+			
+			/* if there is a dot in the function name then separate out the class path
+			 * from the function name and append.
+			 * else just append
+			 * in both cases use the jsp function name token as the mapped token
+			 */
+			int indexOfDot = functionTranslation.lastIndexOf('.');
+			if(indexOfDot != -1) {
+				String funcClass = functionTranslation.substring(0,indexOfDot+1);
+				String funcName = functionTranslation.substring(indexOfDot+1);
+				append(funcClass, jspFuncNameToken);
+				append(funcName, jspFuncNameToken);
+			} else {
+				append(functionTranslation, jspFuncNameToken);
+			}
+			
+			//append any parameters
+			append("(");
+			if(node.children != null) {
+				for(int i = 0; i < node.children.length; i++) {
+					node.children[i].jjtAccept(this, data);
+					if( node.children.length - i > 1){
+						append(","); //$NON-NLS-1$
+					}
 				}
 			}
 			append(")"); //$NON-NLS-1$
@@ -552,5 +576,60 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	private static boolean isSingleQuotedStringLiteral(ASTLiteral node) {
 		String content = node.firstToken.image;
 		return content.length() > 1 && content.startsWith("'") && content.endsWith("'"); //$NON-NLS-1$ // $NON-NLS-2$
+	}
+
+	/**
+	 * <p>Given a method signature parse out the method name and return it.
+	 * The method name in the signature is found by finding a word with
+	 * whitespace before it and a '<code>(</code>' after it.</p>
+	 * 
+	 * @param methodSignature the signature of the method to get the method name out of.
+	 * @return the method name from the given signature, or <code>null</code> if it
+	 * can not be found.
+	 */
+	private static String getFunctionNameFromSignature (String methodSignature) {
+		int length = methodSignature.length();
+		char c = 0;
+		int identifierStart = -1;
+		int whitespaceStart = -1;
+		// keep track of the index of the last identifier before the (
+		for (int i = 0; i < length; i++) {
+			c = methodSignature.charAt(i);
+			if (Character.isJavaIdentifierPart(c) && whitespaceStart >= identifierStart)
+				identifierStart = i;
+			else if (Character.isWhitespace(c))
+				whitespaceStart = i;
+			else if (c == '(') {
+				if (identifierStart >= 0) {
+					return methodSignature.substring(identifierStart, i).trim();
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the {@link Token} the represents the function name in
+	 * the {@link ASTFunctionInvocation}. This is designated as the
+	 * first token after the {@link Token} whose image is ":".
+	 * If such a token can not be found then the first token of the
+	 * {@link ASTFunctionInvocation} is returned.
+	 * 
+	 * @param funcInvo the {@link ASTFunctionInvocation} to find the function name {@link Token} in
+	 * @return the {@link Token} in the given {@link ASTFunctionInvocation} that represents the
+	 * function name, or if that can't be found the first {@link Token} in the {@link ASTFunctionInvocation}.
+	 */
+	private Token getJSPFuncNameToken(ASTFunctionInvocation funcInvo) {
+		Token funcNameToken = funcInvo.getFirstToken();
+		
+		Token temp = funcInvo.getFirstToken();
+		do {
+			if(temp.image.equals(":")) {
+				funcNameToken = temp.next;
+			}
+		} while(temp.next != null && funcNameToken == null);
+			
+		
+		return funcNameToken;
 	}
 }
