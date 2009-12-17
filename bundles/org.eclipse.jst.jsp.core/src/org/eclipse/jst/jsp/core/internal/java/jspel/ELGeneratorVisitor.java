@@ -15,6 +15,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java.jspel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,11 +28,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDFunction;
+import org.eclipse.jst.jsp.core.jspel.ELProblem;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
@@ -108,6 +112,8 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 
 	private boolean fUseParameterizedTypes;
 
+	private List fELProblems;
+
 	/**
 	 * Tranlsation of XML-style operators to java
 	 */
@@ -143,6 +149,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		fCurrentNode = currentNode;
 		fGeneratedFunctionStart = -1; //set when generating function definition
 		fUseParameterizedTypes = compilerSupportsParameterizedTypes();
+		fELProblems = new ArrayList();
 	}
 
 	/**
@@ -544,7 +551,26 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 			}
 			append(")"); //$NON-NLS-1$
 		}
+		else {
+			//column offsets are 1 based not 0 based, thus subtract one
+			final int problemOffset = fContentStart + node.getFirstToken().beginColumn - 1;
+			final int problemLength = node.getLastToken().endColumn - 1;
+
+			//could not find function translation so report error
+			fELProblems.add(new ELProblem(new Position(problemOffset, problemLength), NLS.bind(JSPCoreMessages.JSPELTranslator_0, node.getFullFunctionName())));
+			
+			//error message to be injected into translation purely for debugging purposes
+			String errorMsg = "\"Could not find function translation for: " + node.getFullFunctionName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+			append(errorMsg);
+ 		}
 		return null;
+	}
+
+	/**
+	 * @return the {@link ELProblem}s found by this visitor
+	 */
+	public List getELProblems() {
+		return fELProblems;
 	}
 
 	/**

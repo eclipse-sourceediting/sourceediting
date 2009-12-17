@@ -12,8 +12,10 @@
 
 package org.eclipse.jst.jsp.core.internal.java.jspel;
 
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jst.jsp.core.jspel.ELProblem;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
@@ -30,18 +32,25 @@ public final class ELGenerator {
     public ELGenerator() {
     } // constructor
 	
-
     /**
      * Check the netuiel AST and set diagnostics as necessary.
-     * @param translator TODO
-     * @param jspReferenceRegion TODO
-     * @param contentStart 
-     * @param contentLength 
+     * 
+     * @param root
+     * @param currentNode
+     * @param result
+     * @param codeMap
+     * @param document
+     * @param jspReferenceRegion
+     * @param contentStart
+     * @param contentLength
+     * @return a {@link List} of {@link ELProblem}s reported by the {@link ELGeneratorVisitor} this {@link ELGenerator} uses
      */
-    public void generate(ASTExpression root, IStructuredDocumentRegion currentNode, StringBuffer result, Map codeMap, IStructuredDocument document, ITextRegionCollection jspReferenceRegion, int contentStart, int contentLength) {
+    public List generate(ASTExpression root, IStructuredDocumentRegion currentNode, StringBuffer result, Map codeMap, IStructuredDocument document, ITextRegionCollection jspReferenceRegion, int contentStart, int contentLength) {
 		ELGeneratorVisitor visitor = new ELGeneratorVisitor(result, currentNode, codeMap, document, jspReferenceRegion, contentStart);
 		visitor.startFunctionDefinition(root.getFirstToken().beginColumn - 1);
 		root.jjtAccept(visitor, null);
 		visitor.endFunctionDefinition(root.getLastToken().endColumn - 1);
+		
+		return visitor.getELProblems();
     }
 }

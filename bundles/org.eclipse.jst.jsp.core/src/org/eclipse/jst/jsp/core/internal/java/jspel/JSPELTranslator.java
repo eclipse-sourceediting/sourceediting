@@ -47,7 +47,8 @@ public class JSPELTranslator implements IJSPELTranslator {
 			
 				ASTExpression expression = elParser.Expression();
 				ELGenerator gen = new ELGenerator();
-				gen.generate(expression, currentNode, fUserELExpressions, fUserELRanges, document, currentNode, contentStart, contentLength);
+				List generatorELProblems = gen.generate(expression, currentNode, fUserELExpressions, fUserELRanges, document, currentNode, contentStart, contentLength);
+				elProblems.addAll(generatorELProblems);
 			}
 		} catch (ParseException e) {
 			Token curTok = e.currentToken;

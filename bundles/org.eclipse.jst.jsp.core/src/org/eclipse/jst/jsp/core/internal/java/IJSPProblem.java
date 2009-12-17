@@ -28,7 +28,8 @@ public interface IJSPProblem extends IProblem {
 	int EndCustomTagMissing  = F_PROBLEM_ID_LITERAL + 10;
 	int UseBeanStartTagMissing  = F_PROBLEM_ID_LITERAL + 11;
 	int UseBeanEndTagMissing  = F_PROBLEM_ID_LITERAL + 12;
-	
+	int ELProblem = F_PROBLEM_ID_LITERAL + 13;
+
 	/**
 	 * @return the ID of this JSP problem
 	 */

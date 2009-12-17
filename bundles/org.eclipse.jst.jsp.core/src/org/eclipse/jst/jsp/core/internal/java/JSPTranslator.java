@@ -1634,7 +1634,8 @@ public class JSPTranslator {
 	private void translateEL(String elText, String delim, IStructuredDocumentRegion currentNode, int contentStart, int contentLength) {
 		IJSPELTranslator translator = getELTranslator();
 		if (null != translator) {
-			translator.translateEL(elText, delim, currentNode, contentStart, contentLength, fUserELExpressions, fUserELRanges, fStructuredDocument);
+			List elProblems = translator.translateEL(elText, delim, currentNode, contentStart, contentLength, fUserELExpressions, fUserELRanges, fStructuredDocument);
+			fTranslationProblems.addAll(elProblems);
 		}
 	}
 
