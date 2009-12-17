@@ -13,9 +13,11 @@ package org.eclipse.wst.sse.ui.internal.projection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -35,6 +37,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
@@ -177,60 +180,46 @@ public abstract class AbstractStructuredFoldingStrategy
 					//use the structured doc to get all of the regions effected by the given dirty region
 					IStructuredDocument structDoc = model.getStructuredDocument();
 					IStructuredDocumentRegion[] structRegions = structDoc.getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
-					
+					Set indexedRegions = getIndexedRegions(model, structRegions);
+
 					//these are what are passed off to the annotation model to
 					//actually create and maintain the annotations
 					List modifications = new ArrayList();
 					List deletions = new ArrayList();
 					Map additions = new HashMap();
+					boolean isInsert = dirtyRegion.getType().equals(DirtyRegion.INSERT);
+					boolean isRemove = dirtyRegion.getType().equals(DirtyRegion.REMOVE);
+
+					//find and mark all folding annotations with length 0 for deletion 
+					markInvalidAnnotationsForDeletion(dirtyRegion, deletions);
 					
-					//reconcile each effected region and be sure project is still enabled
-					for(int i = 0; ((i < structRegions.length) && (fProjectionAnnotationModel != null)); ++i) {
-						IStructuredDocumentRegion structRegion = structRegions[i];
-						IndexedRegion indexedRegion = model.getIndexedRegion(structRegion.getStartOffset());
-						
-						//if the region is not just white space determine if a new annotation needs to be added,
-						//	or if an update to an existing annotation needs to take place, or possibly delete an existing
-						//	annotation
-						//else the region is just white space so the only possibility is to update an existing
-						//	annotation, which could include deleting it
-						if(structRegion.getText().trim().length() > 0) {
+					//reconcile each effected indexed region
+					Iterator indexedRegionsIter = indexedRegions.iterator();
+					while(indexedRegionsIter.hasNext()) {
+						IndexedRegion indexedRegion = (IndexedRegion)indexedRegionsIter.next();
+					
+						//only try to create an annotation if the index region is a valid type
+						if(indexedRegionValidType(indexedRegion)) {
 							FoldingAnnotation annotation = new FoldingAnnotation(indexedRegion, false);
 							
 							// if INSERT calculate new addition position or modification
 							// else if REMOVE add annotation to the deletion list
-							if(dirtyRegion.getType().equals(DirtyRegion.INSERT)) {
-								Iterator iter = getAnnotationIterator(indexedRegion, false);
+							if(isInsert) {
+								Annotation existingAnno = getExistingAnnotation(indexedRegion);
 								//if projection has been disabled the iter could be null
 								//if annotation does not already exist for this region create a new one
 								//else modify an old one, which could include deletion
-								if(iter != null && !iter.hasNext()) {
+								if(existingAnno == null) {
 									Position newPos = calcNewFoldPosition(indexedRegion);
 
-									if(newPos != null) {
+									if(newPos != null && newPos.length > 0) {
 										additions.put(annotation, newPos);
 									}
 								} else {
-									updateAnnotations(iter, indexedRegion, modifications, deletions);
+									updateAnnotations(existingAnno, indexedRegion, additions, modifications, deletions);
 								}
-							} else if (dirtyRegion.getType().equals(DirtyRegion.REMOVE)) {
+							} else if (isRemove) {
 								deletions.add(annotation);
-							}
-						} else {
-							/*in the case where the original annotation length is 0
-							 *	the position of the annotation gets moved, if something
-							 *	causes the length to increase, such that without checking
-							 *	for tags that start previous the annotation will not
-							 *  be updated correctly
-							 */	
-							Iterator iter = getAnnotationIterator(indexedRegion, false);
-							//if projection has been disabled the iter could be null
-							if(iter != null) {
-								if(!iter.hasNext()) {
-									iter = getAnnotationIterator(indexedRegion, true);
-								}
-								
-								updateAnnotations(iter, indexedRegion, modifications, deletions);
 							}
 						}
 					}
@@ -270,30 +259,49 @@ public abstract class AbstractStructuredFoldingStrategy
 	 * @param modifications the list of annotations to be modified
 	 * @param deletions the list of annotations to be deleted
 	 */
-	protected void updateAnnotations(Iterator existingAnnotationsIter,
-			IndexedRegion dirtyRegion, List modifications, List deletions) {
-		
-		//for each effected existing annotation decide what to do
-		while(existingAnnotationsIter.hasNext()) {
-			Object obj = existingAnnotationsIter.next();
-			if(obj instanceof FoldingAnnotation) {
-				FoldingAnnotation annotation = (FoldingAnnotation)obj;
-				Position newPos = calcNewFoldPosition(annotation.getRegion());
-				
-				//if a new position can be calculated then update the position of the annotation,
-				//else the annotation needs to be deleted
-				if(newPos != null) {
-					Position oldPos = fProjectionAnnotationModel.getPosition(annotation);
+	protected void updateAnnotations(Annotation existingAnnotation, IndexedRegion dirtyRegion, Map additions, List modifications, List deletions) {
+		if(existingAnnotation instanceof FoldingAnnotation) {
+			FoldingAnnotation foldingAnnotation = (FoldingAnnotation)existingAnnotation;
+			Position newPos = calcNewFoldPosition(foldingAnnotation.getRegion());
+
+			//if a new position can be calculated then update the position of the annotation,
+			//else the annotation needs to be deleted
+			if(newPos != null && newPos.length > 0) {
+				Position oldPos = fProjectionAnnotationModel.getPosition(foldingAnnotation);
+				//only update the position if we have to
+				if(!newPos.equals(oldPos)) {
 					oldPos.setOffset(newPos.offset);
 					oldPos.setLength(newPos.length);
-					modifications.add(annotation);
-				} else {
-					deletions.add(annotation);
+					modifications.add(foldingAnnotation);
 				}
+			} else {
+				deletions.add(foldingAnnotation);
 			}
 		}
 	}
-	
+
+	/**
+	 * <p>Searches the given {@link DirtyRegion} for annotations that now have a length of 0.
+	 * This is caused when something that was being folded has been deleted.  These {@link FoldingAnnotation}s
+	 * are then added to the {@link List} of {@link FoldingAnnotation}s to be deleted</p>
+	 * 
+	 * @param dirtyRegion find the now invalid {@link FoldingAnnotation}s in this {@link DirtyRegion}
+	 * @param deletions the current list of {@link FoldingAnnotation}s marked for deletion that the
+	 * newly found invalid {@link FoldingAnnotation}s will be added to
+	 */
+	protected void markInvalidAnnotationsForDeletion(DirtyRegion dirtyRegion, List deletions) {
+		Iterator iter = getAnnotationIterator(dirtyRegion);
+		while(iter.hasNext()) {
+			Annotation anno = (Annotation)iter.next();
+			if(anno instanceof FoldingAnnotation) {
+				Position pos = fProjectionAnnotationModel.getPosition(anno);
+				if(pos.length == 0) {
+					deletions.add(anno);
+	 			}
+	 		}
+	 	}
+	}
+
 	/**
 	 * Should return true if the given IndexedRegion is one that this strategy pays attention to
 	 * when calculating new and updated annotations
@@ -357,6 +365,10 @@ public abstract class AbstractStructuredFoldingStrategy
 			return fRegion;
 		}
 
+		public void setRegion(IndexedRegion region) {
+			fRegion = region;
+		}
+
 		/**
 		 * Does not paint hidden annotations. Annotations are hidden when they
 		 * only span one line.
@@ -366,7 +378,6 @@ public abstract class AbstractStructuredFoldingStrategy
 		 *      org.eclipse.swt.graphics.Rectangle)
 		 */
 		public void paint(GC gc, Canvas canvas, Rectangle rectangle) {
-		
 			/* workaround for BUG85874 */
 			/*
 			 * only need to check annotations that are expanded because hidden
@@ -434,23 +445,61 @@ public abstract class AbstractStructuredFoldingStrategy
 	}
 	
 	/**
-	 * Given an IndexedRegion returns an Iterator of the already existing annotations in
-	 * that region.
+	 * Given a {@link DirtyRegion} returns an {@link Iterator} of the already existing
+	 * annotations in that region.
 	 * 
-	 * @param indexedRegion the IndexedRegion to check for existing annotations in
-	 * @param canStartBefore true if the search can start with annotations that start before
-	 * the given IndexedRegion, false if the search must stay only within the indexed region.
+	 * @param dirtyRegion the {@link DirtyRegion} to check for existing annotations in
 	 * 
-	 * @return an Iterator over the annotations in the given IndexedRegion.
+	 * @return an {@link Iterator} over the annotations in the given {@link DirtyRegion}.
 	 * The iterator could have no annotations in it. Or <code>null</code> if projection has
 	 * been disabled.
 	 */
-	private Iterator getAnnotationIterator(IndexedRegion indexedRegion, boolean canStartBefore) {
-		Iterator annoIter = null;
+	private Iterator getAnnotationIterator(DirtyRegion dirtyRegion) {
+		Iterator annoIter = null; 
 		//be sure project has not been disabled
 		if(fProjectionAnnotationModel != null) {
-			annoIter = fProjectionAnnotationModel.getAnnotationIterator(indexedRegion.getStartOffset(), indexedRegion.getEndOffset()-indexedRegion.getStartOffset(), canStartBefore, false);
+			annoIter = fProjectionAnnotationModel.getAnnotationIterator(dirtyRegion.getOffset(), dirtyRegion.getLength(), false, false);
 		}
 		return annoIter;
 	}
+
+	/**
+	 * <p>Gets the first {@link Annotation} at the start offset of the given {@link IndexedRegion}.</p>
+	 * 
+	 * @param indexedRegion get the first {@link Annotation} at this {@link IndexedRegion}
+	 * @return the first {@link Annotation} at the start offset of the given {@link IndexedRegion}
+	 */
+	private Annotation getExistingAnnotation(IndexedRegion indexedRegion) {
+		Iterator iter = fProjectionAnnotationModel.getAnnotationIterator(indexedRegion.getStartOffset(), 1, false, true);
+		Annotation anno = null;
+		if(iter.hasNext()) {
+			anno = (Annotation)iter.next();
+		}
+
+		return anno;
+	}
+
+	/**
+	 * <p>Gets all of the {@link IndexedRegion}s from the given {@link IStructuredModel} spand by the given
+	 * {@link IStructuredDocumentRegion}s.</p>
+	 * 
+	 * @param model the {@link IStructuredModel} used to get the {@link IndexedRegion}s
+	 * @param structRegions get the {@link IndexedRegion}s spanned by these {@link IStructuredDocumentRegion}s
+	 * @return the {@link Set} of {@link IndexedRegion}s from the given {@link IStructuredModel} spaned by the
+	 * given {@link IStructuredDocumentRegion}s.
+	 */
+	private Set getIndexedRegions(IStructuredModel model, IStructuredDocumentRegion[] structRegions) {
+		Set indexedRegions = new HashSet();
+
+		//for each text region in each struct doc region find the indexed region it spans/is in
+		for(int structRegionIndex = 0; structRegionIndex < structRegions.length; ++structRegionIndex) {
+			ITextRegionList textRegions = structRegions[structRegionIndex].getRegions();
+			for(int textRegionIndex = 0; textRegionIndex < textRegions.size(); ++textRegionIndex) {
+				int offset = structRegions[structRegionIndex].getStartOffset(textRegions.get(textRegionIndex));
+				indexedRegions.add(model.getIndexedRegion(offset));
+			}
+		}
+
+		return indexedRegions;
+	 }
 }
