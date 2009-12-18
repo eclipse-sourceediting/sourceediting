@@ -147,16 +147,18 @@ public class XalanVariable extends Variable implements Comparable {
 		String value = "";
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
-			int nodeType = node.getNodeType();
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				value = createElement(value, node);
-			}
-			if (nodeType == Node.COMMENT_NODE ) {
-				value = value + "<!-- " + node.getNodeValue() + " -->";
-			}
-			if (nodeType == Node.PROCESSING_INSTRUCTION_NODE) {
-				ProcessingInstruction pi = (ProcessingInstruction) node;
-				value = value + "<?" + pi.getData() + " ?>";
+			if (node != null) {
+				int nodeType = node.getNodeType();
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					value = createElement(value, node);
+				}
+				if (nodeType == Node.COMMENT_NODE ) {
+					value = value + "<!-- " + node.getNodeValue() + " -->";
+				}
+				if (nodeType == Node.PROCESSING_INSTRUCTION_NODE) {
+					ProcessingInstruction pi = (ProcessingInstruction) node;
+					value = value + "<?" + pi.getData() + " ?>";
+				}
 			}
 		}
 		return value;
