@@ -52,9 +52,9 @@ public class SeqType {
 	private static final QName ANY_ATOMIC_TYPE = new QName("xs",
 			"anyAtomicType", XML_SCHEMA_NS);
 
-	private AnyType _type;
-	private int _occ;
-	private Class _type_class;
+	private transient AnyType anytype = null;
+	private transient int occ;
+	private transient Class typeClass = null;
 
 	/**
 	 * sequence type
@@ -65,13 +65,13 @@ public class SeqType {
 	 *            is an integer in the sequence.
 	 */
 	public SeqType(AnyType t, int occ) {
-		_type = t;
-		_occ = occ;
+		anytype = t;
+		this.occ = occ;
 
 		if (t != null)
-			_type_class = t.getClass();
+			typeClass = t.getClass();
 		else
-			_type_class = null;
+			typeClass = null;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SeqType {
 	public SeqType(int occ) {
 		this((AnyType) null, occ);
 
-		_type_class = NodeType.class;
+		typeClass = NodeType.class;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class SeqType {
 	public SeqType(Class type_class, int occ) {
 		this((AnyType) null, occ);
 
-		_type_class = type_class;
+		this.typeClass = type_class;
 	}
 
 	/**
@@ -106,29 +106,26 @@ public class SeqType {
 	// XXX hack 2
 	public SeqType(SequenceType st, StaticContext sc) {
 
-		_type = null;
-		_type_class = null;
-
 		// convert occurrence
 		switch (st.occurrence()) {
 		case SequenceType.EMPTY:
-			_occ = OCC_EMPTY;
+			occ = OCC_EMPTY;
 			return;
 
 		case SequenceType.NONE:
-			_occ = OCC_NONE;
+			occ = OCC_NONE;
 			break;
 
 		case SequenceType.QUESTION:
-			_occ = OCC_QMARK;
+			occ = OCC_QMARK;
 			break;
 
 		case SequenceType.STAR:
-			_occ = OCC_STAR;
+			occ = OCC_STAR;
 			break;
 
 		case SequenceType.PLUS:
-			_occ = OCC_PLUS;
+			occ = OCC_PLUS;
 			break;
 
 		default:
@@ -136,23 +133,23 @@ public class SeqType {
 		}
 
 		// figure out the item is
-		ItemType item = st.item_type();
+		final ItemType item = st.item_type();
 		KindTest ktest = null;
 		switch (item.type()) {
 		case ItemType.ITEM:
-			_type_class = AnyType.class;
+			typeClass = AnyType.class;
 			return;
 
 			// XXX IMPLEMENT THIS
 		case ItemType.QNAME:
-			AnyAtomicType aat = sc.make_atomic(item.qname());
+			final AnyAtomicType aat = sc.make_atomic(item.qname());
 
 			assert aat != null;
-			_type = aat;
+			anytype = aat;
 			if (item.qname().equals(ANY_ATOMIC_TYPE)) {
-				_type_class = AnyAtomicType.class;
+				typeClass = AnyAtomicType.class;
 			} else {
-				_type_class = _type.getClass();
+				typeClass = anytype.getClass();
 			}
 			return;
 
@@ -162,50 +159,51 @@ public class SeqType {
 
 		}
 
-		if (ktest == null)
+		if (ktest == null) {
 			return;
+		}
 
 		if (ktest instanceof DocumentTest) {
-			_type_class = DocType.class;
+			typeClass = DocType.class;
 		} else if (ktest instanceof ElementTest) {
 			elementTest(sc, ktest);
 		} else if (ktest instanceof TextTest) {
-			_type_class = TextType.class;
+			typeClass = TextType.class;
 		} else if (ktest instanceof AttributeTest) {
-			_type_class = AttrType.class;
+			typeClass = AttrType.class;
 		} else if (ktest instanceof CommentTest) {
-			_type_class = CommentType.class;
+			typeClass = CommentType.class;
 		} else if (ktest instanceof PITest) {
-			_type_class = PIType.class;
+			typeClass = PIType.class;
 		} else if (ktest instanceof AnyKindTest) {
-			_type_class = NodeType.class;
+			typeClass = NodeType.class;
 		} else if (ktest instanceof CommentTest) {
-			_type_class = CommentType.class;
-		} else
+			typeClass = CommentType.class;
+		} else {
 			assert false;
+		}
 	}
 
 	private void elementTest(StaticContext sc, KindTest ktest) {
 		if (!(sc instanceof DefaultDynamicContext)) {
 			return;
 		}
-		
-		ElementTest elTest = (ElementTest) ktest;
-		_type_class = ElementType.class;
 
-		
-		QName elemName = elTest.name();
+		final ElementTest elTest = (ElementTest) ktest;
+		typeClass = ElementType.class;
+
+		final QName elemName = elTest.name();
 		if (elemName == null) {
 			return;
 		}
 
-		DynamicContext dc = (DynamicContext) sc;
+		final DynamicContext dc = (DynamicContext) sc;
 		AnyType at = dc.context_item();
 
 		if (!(at instanceof NodeType)) {
 			return;
 		}
-		QName xsdType = elTest.type();
+		final QName xsdType = elTest.type();
 
 		createElementType(elemName, xsdType, at);
 	}
@@ -219,8 +217,8 @@ public class SeqType {
 		} else {
 			doc = nodeType.node_value().getOwnerDocument();
 		}
-		NodeList nodeList = doc.getElementsByTagNameNS(elemName.namespace(), elemName
-				.local());
+		NodeList nodeList = doc.getElementsByTagNameNS(elemName.namespace(),
+				elemName.local());
 
 		if (nodeList.getLength() > 0) {
 			createElementForXSDType(xsdType, nodeList);
@@ -228,11 +226,11 @@ public class SeqType {
 	}
 
 	private void createElementForXSDType(QName xsdType, NodeList nodeList) {
-		_type = new ElementType();
+		anytype = new ElementType();
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Element element = (Element) nodeList.item(i);
 			if (xsdType == null || !(element instanceof ItemPSVI)) {
-				_type = new ElementType(element);
+				anytype = new ElementType(element);
 				break;
 			} else {
 				ElementPSVI elempsvi = (ElementPSVI) element;
@@ -241,7 +239,7 @@ public class SeqType {
 					if (typedef.getName().equals(xsdType.local())
 							&& typedef.getNamespace().equals(
 									xsdType.namespace())) {
-						_type = new ElementType(element);
+						anytype = new ElementType(element);
 						break;
 					}
 				}
@@ -261,14 +259,14 @@ public class SeqType {
 	 * @return an integer.
 	 */
 	public int occurence() {
-		return _occ;
+		return occ;
 	}
 
 	/**
 	 * @return a type.
 	 */
 	public AnyType type() {
-		return _type;
+		return anytype;
 	}
 
 	/**
@@ -285,8 +283,9 @@ public class SeqType {
 		int occurrence = occurence();
 
 		// Check for empty sequence first
-		if (occurrence == OCC_EMPTY && !args.empty())
+		if (occurrence == OCC_EMPTY && !args.empty()) {
 			throw new DynamicError(TypeError.invalid_type(null));
+		}
 
 		int arg_count = 0;
 
@@ -294,20 +293,19 @@ public class SeqType {
 			AnyType arg = (AnyType) i.next();
 
 			// make sure all args are the same type as expected type
-			if (!(_type_class.isInstance(arg)))
+			if (!(typeClass.isInstance(arg))) {
 				throw new DynamicError(TypeError.invalid_type(null));
+			}
 
-			if (_type != null) {
-				if (arg instanceof ElementType) {
-					ElementType nodeType = (ElementType) arg;
-					Node node = nodeType.node_value();
-					Node lnode = ((NodeType) _type).node_value();
-					if (lnode == null) {
-						throw new DynamicError(TypeError.invalid_type(null));
-					}
-					if (!lnode.isEqualNode(node)) {
-						throw new DynamicError(TypeError.invalid_type(null));
-					}
+			if (anytype != null && arg instanceof ElementType) {
+				ElementType nodeType = (ElementType) arg;
+				Node node = nodeType.node_value();
+				Node lnode = ((NodeType) anytype).node_value();
+				if (lnode == null) {
+					throw new DynamicError(TypeError.invalid_type(null));
+				}
+				if (!lnode.isEqualNode(node)) {
+					throw new DynamicError(TypeError.invalid_type(null));
 				}
 			}
 
@@ -317,21 +315,24 @@ public class SeqType {
 
 		switch (occurrence) {
 		case OCC_NONE:
-			if (arg_count != 1)
+			if (arg_count != 1) {
 				throw new DynamicError(TypeError.invalid_type(null));
+			}
 			break;
 
 		case OCC_PLUS:
-			if (arg_count == 0)
+			if (arg_count == 0) {
 				throw new DynamicError(TypeError.invalid_type(null));
+			}
 			break;
 
 		case OCC_STAR:
 			break;
 
 		case OCC_QMARK:
-			if (arg_count > 1)
+			if (arg_count > 1) {
 				throw new DynamicError(TypeError.invalid_type(null));
+			}
 			break;
 
 		default:
