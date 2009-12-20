@@ -421,8 +421,8 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 	
 	public void test_K_ResolveQnameConstructFunc_4() throws Exception {
 		String inputFile = "/TestSources/emptydoc.xml";
-		String xqFile = "/Queries/XQuery/Functions/URIFunc/ResolveURIFunc/fn-resolve-uri-1.xq";
-		String expectedResult = "XPTY0004";
+		String xqFile = "Queries/XQuery/ResolveQNameConstructFunc/K-ResolveQNameConstructFunc-4.xq";
+		String expectedResult = "true";
 		URL fileURL = bundle.getEntry(inputFile);
 		loadDOMDocument(fileURL);
 

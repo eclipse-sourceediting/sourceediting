@@ -6518,8 +6518,6 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       }
 
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
    }
 
 }
