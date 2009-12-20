@@ -9,15 +9,25 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - don't silently allow empty sequences always
  *     Jesper Steen Moeller - bug 297707 - Missing the empty-sequence() type
+ *     David Carver - bug 298267 - Correctly handle instof with elements.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
+import org.apache.xerces.xs.ElementPSVI;
+import org.apache.xerces.xs.ItemPSVI;
+import org.apache.xerces.xs.XSTypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.util.*;
 
@@ -39,7 +49,8 @@ public class SeqType {
 	 */
 	public static final String XML_SCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
 
-	private static final QName ANY_ATOMIC_TYPE = new QName("xs", "anyAtomicType", XML_SCHEMA_NS);
+	private static final QName ANY_ATOMIC_TYPE = new QName("xs",
+			"anyAtomicType", XML_SCHEMA_NS);
 
 	private AnyType _type;
 	private int _occ;
@@ -69,7 +80,7 @@ public class SeqType {
 	 */
 	// XXX hack to represent AnyNode...
 	public SeqType(int occ) {
-		this((AnyType)null, occ);
+		this((AnyType) null, occ);
 
 		_type_class = NodeType.class;
 	}
@@ -81,7 +92,7 @@ public class SeqType {
 	 *            is an integer in the sequence.
 	 */
 	public SeqType(Class type_class, int occ) {
-		this((AnyType)null, occ);
+		this((AnyType) null, occ);
 
 		_type_class = type_class;
 	}
@@ -154,24 +165,88 @@ public class SeqType {
 		if (ktest == null)
 			return;
 
-		if (ktest instanceof DocumentTest)
+		if (ktest instanceof DocumentTest) {
 			_type_class = DocType.class;
-		else if (ktest instanceof ElementTest)
-			_type_class = ElementType.class;
-		else if (ktest instanceof TextTest)
+		} else if (ktest instanceof ElementTest) {
+			elementTest(sc, ktest);
+		} else if (ktest instanceof TextTest) {
 			_type_class = TextType.class;
-		else if (ktest instanceof AttributeTest)
+		} else if (ktest instanceof AttributeTest) {
 			_type_class = AttrType.class;
-		else if (ktest instanceof CommentTest)
+		} else if (ktest instanceof CommentTest) {
 			_type_class = CommentType.class;
-		else if (ktest instanceof PITest)
+		} else if (ktest instanceof PITest) {
 			_type_class = PIType.class;
-		else if (ktest instanceof AnyKindTest)
+		} else if (ktest instanceof AnyKindTest) {
 			_type_class = NodeType.class;
-		else if (ktest instanceof CommentTest)
+		} else if (ktest instanceof CommentTest) {
 			_type_class = CommentType.class;
-		else
+		} else
 			assert false;
+	}
+
+	private void elementTest(StaticContext sc, KindTest ktest) {
+		if (!(sc instanceof DefaultDynamicContext)) {
+			return;
+		}
+		
+		ElementTest elTest = (ElementTest) ktest;
+		_type_class = ElementType.class;
+
+		
+		QName elemName = elTest.name();
+		if (elemName == null) {
+			return;
+		}
+
+		DynamicContext dc = (DynamicContext) sc;
+		AnyType at = dc.context_item();
+
+		if (!(at instanceof NodeType)) {
+			return;
+		}
+		QName xsdType = elTest.type();
+
+		createElementType(elemName, xsdType, at);
+	}
+
+	private void createElementType(QName elemName, QName xsdType, AnyType at) {
+		NodeType nodeType = (NodeType) at;
+		Node node = nodeType.node_value();
+		Document doc = null;
+		if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			doc = (Document) node;
+		} else {
+			doc = nodeType.node_value().getOwnerDocument();
+		}
+		NodeList nodeList = doc.getElementsByTagNameNS(elemName.namespace(), elemName
+				.local());
+
+		if (nodeList.getLength() > 0) {
+			createElementForXSDType(xsdType, nodeList);
+		}
+	}
+
+	private void createElementForXSDType(QName xsdType, NodeList nodeList) {
+		_type = new ElementType();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Element element = (Element) nodeList.item(i);
+			if (xsdType == null || !(element instanceof ItemPSVI)) {
+				_type = new ElementType(element);
+				break;
+			} else {
+				ElementPSVI elempsvi = (ElementPSVI) element;
+				XSTypeDefinition typedef = elempsvi.getTypeDefinition();
+				if (typedef != null) {
+					if (typedef.getName().equals(xsdType.local())
+							&& typedef.getNamespace().equals(
+									xsdType.namespace())) {
+						_type = new ElementType(element);
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -208,9 +283,9 @@ public class SeqType {
 	public ResultSequence match(ResultSequence args) throws DynamicError {
 
 		int occurrence = occurence();
-		
+
 		// Check for empty sequence first
-		if (occurrence == OCC_EMPTY && ! args.empty())
+		if (occurrence == OCC_EMPTY && !args.empty())
 			throw new DynamicError(TypeError.invalid_type(null));
 
 		int arg_count = 0;
@@ -221,6 +296,20 @@ public class SeqType {
 			// make sure all args are the same type as expected type
 			if (!(_type_class.isInstance(arg)))
 				throw new DynamicError(TypeError.invalid_type(null));
+
+			if (_type != null) {
+				if (arg instanceof ElementType) {
+					ElementType nodeType = (ElementType) arg;
+					Node node = nodeType.node_value();
+					Node lnode = ((NodeType) _type).node_value();
+					if (lnode == null) {
+						throw new DynamicError(TypeError.invalid_type(null));
+					}
+					if (!lnode.isEqualNode(node)) {
+						throw new DynamicError(TypeError.invalid_type(null));
+					}
+				}
+			}
 
 			arg_count++;
 

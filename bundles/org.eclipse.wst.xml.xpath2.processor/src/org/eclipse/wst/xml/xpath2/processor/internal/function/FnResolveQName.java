@@ -66,7 +66,8 @@ public class FnResolveQName extends Function {
 	public static ResultSequence resolve_QName(Collection args, StaticContext sc)
 			throws DynamicError {
 
-		Collection cargs = Function.convert_arguments(args, expected_args());
+		//Collection cargs = Function.convert_arguments(args, expected_args());
+		Collection cargs = args;
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 

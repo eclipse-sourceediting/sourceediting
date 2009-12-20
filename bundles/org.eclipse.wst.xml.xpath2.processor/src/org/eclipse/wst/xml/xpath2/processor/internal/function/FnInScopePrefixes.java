@@ -63,7 +63,8 @@ public class FnInScopePrefixes extends Function {
 	 */
 	public static ResultSequence inScopePrefixes(Collection args, DynamicContext dc) throws DynamicError {
 
-		Collection cargs = Function.convert_arguments(args, expected_args());
+//		Collection cargs = Function.convert_arguments(args, expected_args());
+		Collection cargs = args;
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -71,6 +72,11 @@ public class FnInScopePrefixes extends Function {
 
 		if (arg1.empty())
 		  return rs;
+		
+		AnyType anytype = arg1.first();
+		if (!(anytype instanceof ElementType)) {
+			throw new DynamicError(TypeError.invalid_type(null));
+		}
 
 		ElementType element = (ElementType) arg1.first();
 		List prefixList = lookupPrefixes(element);
