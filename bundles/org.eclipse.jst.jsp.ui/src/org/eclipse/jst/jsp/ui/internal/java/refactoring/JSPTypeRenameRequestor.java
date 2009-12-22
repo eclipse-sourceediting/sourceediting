@@ -12,6 +12,7 @@ package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 
 import java.text.MessageFormat;
 
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
@@ -38,13 +39,18 @@ public class JSPTypeRenameRequestor extends BasicRefactorSearchRequestor {
 		String renameText = getNewName();
 		
 		String pkg = getType().getPackageFragment().getElementName();
+		IJavaElement parent = getType().getParent();
+		String parentName = (parent != null) ? parent.getElementName() : null;
 		JSPTranslation trans = searchDoc.getJspTranslation();
 		String matchText = trans.getJavaText().substring(javaMatch.getOffset(), javaMatch.getOffset() + javaMatch.getLength());
 		
 		// if it's an import or jsp:useBean or fully qualified type, we need to add the package name as well
-		if(trans.isImport(javaMatch.getOffset()) || /*trans.isUseBean(javaMatch.getOffset()) ||*/ isFullyQualified(matchText)) {
+		// else if starts with parent name such as "MyClass.Enum" then need to add the parent name as well
+		if(trans.isImport(javaMatch.getOffset()) || isFullyQualified(matchText)) {
 			if(!pkg.equals("")) //$NON-NLS-1$
 				renameText = pkg + "." + renameText; //$NON-NLS-1$
+		} else if(parentName != null && matchText.startsWith(parentName)) {
+			renameText = parentName + "." + renameText; //$NON-NLS-1$
 		}
 		return renameText;
 	}
