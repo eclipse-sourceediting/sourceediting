@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.eclipse.wst.dtd.ui.tests
+Bundle-SymbolicName: org.eclipse.wst.dtd.ui.tests;singleton:=true
 Bundle-Version: 1.0.400.qualifier
 Bundle-ClassPath: dtduitests.jar
 Bundle-Activator: org.eclipse.wst.dtd.ui.tests.internal.DTDUITestsPlugin

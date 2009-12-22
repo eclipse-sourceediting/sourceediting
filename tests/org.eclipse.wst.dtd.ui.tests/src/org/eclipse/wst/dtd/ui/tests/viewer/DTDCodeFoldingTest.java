@@ -18,16 +18,19 @@ import java.util.List;
 import java.util.Map;
 
 import junit.extensions.TestSetup;
+import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.ui.IEditorPart;
@@ -39,6 +42,7 @@ import org.eclipse.wst.dtd.ui.tests.ProjectUtil;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener;
 
 /**
  * <p>Tests that code folding annotations are correctly added/removed from DTD Documents</p>
@@ -48,11 +52,12 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
  * @see org.eclipse.wst.css.ui.tests.viewer.CSSCodeFoldingTest Similar Test - CSS Code Folding Test
  * @see org.eclipse.wst.dtd.ui.tests.viewer.DTDCodeFoldingTest Similar Test - DTD Code Folding Test
  */
-public class DTDCodeFoldingTest extends TestCase {
-	/**
-	 * The name of the reconciler job that adds the folding annotations to a <code>StructuredTextEditor</code>
-	 */
-	private static final String JOB_NAME_PROCESSING_DIRTY_REGIONS = "Processing Dirty Regions";
+public class DTDCodeFoldingTest extends TestCase implements ISourceReconcilingListener {
+	/** max amount of time to wait for */
+	private static final int MAX_WAIT_TIME = 4000;
+	
+	/** amount of time to wait for */
+	private static final int WAIT_TIME = 200;
 	
 	/**
 	 * The name of the project that all of these tests will use
@@ -75,17 +80,26 @@ public class DTDCodeFoldingTest extends TestCase {
 	 */
 	private static Map fFileToEditorMap = new HashMap();
 	
+	/** the last {@link IDocument} to be reconciled */
+	private static IDocument fReconciledDoc = null;
+	
 	/**
-	 * Default constructor
+	 * <p>Default constructor<p>
+	 * <p>Use {@link #suite()}</p>
+	 * 
+	 * @see #suite()
 	 */
 	public DTDCodeFoldingTest() {
 		super("DTD Code Folding Test");
 	}
 	
 	/**
-	 * Constructor that takes a test name.
+	 * <p>Constructor that takes a test name.</p>
+	 * <p>Use {@link #suite()}</p>
 	 * 
 	 * @param name The name this test run should have.
+	 * 
+	 * @see #suite()
 	 */
 	public DTDCodeFoldingTest(String name) {
 		super(name);
@@ -99,9 +113,20 @@ public class DTDCodeFoldingTest extends TestCase {
 	 * with set up and tear down.
 	 */
 	public static Test suite() {
-		TestSuite ts = new TestSuite(DTDCodeFoldingTest.class);
+		TestSuite ts = new TestSuite(DTDCodeFoldingTest.class, "DTD Code Folding Test");
 		return new DTDCodeFoldingTestSetup(ts);
 
+	}
+	
+	/**
+	 * Reset the state between tests
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
+		super.setUp();
+		
+		fReconciledDoc = null;
 	}
 	
 	/**
@@ -246,27 +271,18 @@ public class DTDCodeFoldingTest extends TestCase {
 	 * @throws InterruptedException 
 	 */
 	private void waitForReconcileThenVerify(final StructuredTextViewer viewer, final List expectedPositions) throws Exception {
-		//*******************************************************************************
-		//START HACK: this is the only current way to wait for reconcile job to start and finish
-		Thread.sleep(1000);
-		Job[] jobs = Job.getJobManager().find(null);
-		Job job =  null;
-		for(int i = 0; i < jobs.length && job == null; ++i) {
-			if(jobs[i].getName().equals(JOB_NAME_PROCESSING_DIRTY_REGIONS)) {
-				job = jobs[i];
-			}
+		IDocument doc = viewer.getDocument();
+		int time = 0;
+		while(doc != fReconciledDoc && time <= MAX_WAIT_TIME) {
+			Thread.sleep(WAIT_TIME);
+			time += WAIT_TIME;
 		}
 		
-		try {
-			if(job != null) {
-				//wait for dirty region reconciler job to finish before verifying annotations
-				job.join();
-			}
-		//*******************************************************************************
-		
+		if(doc == fReconciledDoc) {
 			verifyAnnotationPositions(viewer, expectedPositions);
-		} catch (InterruptedException e) {
-			fail("Could not join job " + job + "\n" + e.getMessage());
+		} else {
+			Assert.fail("Document " + viewer.getDocument() + " was not reconciled with in " + MAX_WAIT_TIME +
+					" so gave up waiting and in turn could not validate folding anotations");
 		}
 	}
 	
@@ -388,6 +404,8 @@ public class DTDCodeFoldingTest extends TestCase {
 			if (previousWTPAutoTestNonInteractivePropValue != null) {
 				System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonInteractivePropValue);
 			}
+			
+			fProject.delete(true, new NullProgressMonitor());
 		}
 		
 		/**
@@ -397,5 +415,23 @@ public class DTDCodeFoldingTest extends TestCase {
 			fProject = ProjectUtil.createProject(PROJECT_NAME, null, null);
 			ProjectUtil.copyBundleEntriesIntoWorkspace(PROJECT_FILES, PROJECT_NAME);
 		}
+	}
+	
+	/**
+	 * ignore
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener#aboutToBeReconciled()
+	 */
+	public void aboutToBeReconciled() {
+		//ignore
+	}
+
+	/**
+	 * keep track of last document reconciled
+	 * 
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener#reconciled(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.source.IAnnotationModel, boolean, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public void reconciled(IDocument document, IAnnotationModel model,
+			boolean forced, IProgressMonitor progressMonitor) {
+		fReconciledDoc = document;
 	}
 }
