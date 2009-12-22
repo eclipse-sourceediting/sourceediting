@@ -42,6 +42,9 @@ public class StructuredMarkerAnnotation extends MarkerAnnotation implements IAnn
 	}
 
 	public final String getAnnotationType() {
+		if (fAnnotationType==null){
+			initAnnotationType();
+		}
 		return fAnnotationType;
 	}
 
@@ -53,13 +56,14 @@ public class StructuredMarkerAnnotation extends MarkerAnnotation implements IAnn
 	 */
 	protected Image getImage(Display display) {
 		Image image = null;
-		if (fAnnotationType == TemporaryAnnotation.ANNOT_ERROR) {
+		String annotationType = getAnnotationType();
+		if (annotationType == TemporaryAnnotation.ANNOT_ERROR) {
 			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
 		}
-		else if (fAnnotationType == TemporaryAnnotation.ANNOT_WARNING) {
+		else if (annotationType == TemporaryAnnotation.ANNOT_WARNING) {
 			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
 		}
-		else if (fAnnotationType == TemporaryAnnotation.ANNOT_INFO) {
+		else if (annotationType == TemporaryAnnotation.ANNOT_INFO) {
 			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
 		}
 
