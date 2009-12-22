@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xsd.core.tests
-Bundle-Version: 1.0.101.qualifier
+Bundle-Version: 1.0.201.qualifier
 Bundle-ClassPath: xsdcoretests.jar
 Bundle-Activator: org.eclipse.wst.xsd.core.tests.internal.XSDCoreTestsPlugin
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
- org.junit;bundle-version="[3.8.2,4.0.0)",
+ org.junit;bundle-version="3.8.0",
  org.eclipse.wst.xsd.core;bundle-version="[1.1.300,2.0.0)",
  org.eclipse.wst.xml.core;bundle-version="[1.1.300,2.0.0)",
  org.eclipse.xsd;bundle-version="[2.4.0,3.0.0)",

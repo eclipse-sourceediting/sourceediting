@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xsd.validation.tests
-Bundle-Version: 1.0.401.qualifier
+Bundle-Version: 1.0.501.qualifier
 Bundle-ClassPath: validatexsdtests.jar
 Bundle-Activator: org.eclipse.wst.xsd.validation.tests.internal.XSDValidationTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
