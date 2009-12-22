@@ -773,7 +773,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		importProposal.setDisplayString(newDisplay);
 
 		int newReplacementLength = importProposal.getReplacementLength() - 1;
-		importProposal.setReplacementLength(newReplacementLength);
+		if (newReplacementLength >= 0)
+			importProposal.setReplacementLength(newReplacementLength);
 
 		int newCursorPosition = importProposal.getCursorPosition() - 1;
 		importProposal.setCursorPosition(newCursorPosition);
