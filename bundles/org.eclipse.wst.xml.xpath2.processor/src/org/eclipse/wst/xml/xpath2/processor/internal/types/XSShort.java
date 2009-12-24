@@ -19,6 +19,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 public class XSShort extends XSInt {
 	
+	private static final String XS_SHORT = "xs:short";
+
 	/**
 	 * Initializes a representation of 0
 	 */
@@ -43,7 +45,7 @@ public class XSShort extends XSInt {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:short";
+		return XS_SHORT;
 	}
 	
 	/**

@@ -26,6 +26,7 @@ import java.util.*;
  */
 public class XSGMonth extends CalendarType implements CmpEq {
 
+	private static final String XS_G_MONTH = "xs:gMonth";
 	private Calendar _calendar;
 	private boolean _timezoned;
 	private XSDuration _tz;
@@ -274,7 +275,7 @@ public class XSGMonth extends CalendarType implements CmpEq {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:gMonth";
+		return XS_G_MONTH;
 	}
 
 	/**

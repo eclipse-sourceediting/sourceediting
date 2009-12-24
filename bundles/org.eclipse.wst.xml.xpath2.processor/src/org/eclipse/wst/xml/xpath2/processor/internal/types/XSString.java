@@ -30,6 +30,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.FnCompare;
  */
 public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 
+	private static final String XS_STRING = "xs:string";
 	private String _value;
 
 	/**
@@ -56,7 +57,7 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:string";
+		return XS_STRING;
 	}
 
 	/**

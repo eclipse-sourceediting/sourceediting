@@ -33,6 +33,8 @@ import org.w3c.dom.TypeInfo;
  * A representation of the ElementType datatype
  */
 public class ElementType extends NodeType {
+	private static final String ELEMENT = "element";
+
 	private Element _value;
 
 	private String _string_value;
@@ -89,7 +91,7 @@ public class ElementType extends NodeType {
 	 */
 	@Override
 	public String string_type() {
-		return "element";
+		return ELEMENT;
 	}
 
 	/**

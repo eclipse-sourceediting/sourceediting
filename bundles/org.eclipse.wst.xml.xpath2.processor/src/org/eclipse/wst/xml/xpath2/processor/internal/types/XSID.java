@@ -21,6 +21,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  */
 public class XSID extends XSNCName {
 
+	private static final String XS_ID = "xs:ID";
+
 	public XSID(String x) {
 		super(x);
 	}
@@ -31,7 +33,7 @@ public class XSID extends XSNCName {
 
 	@Override
 	public String string_type() {
-		return "xs:ID";
+		return XS_ID;
 	}
 	
 	@Override

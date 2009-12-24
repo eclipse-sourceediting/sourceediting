@@ -25,6 +25,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
  * A representation of a true or a false value.
  */
 public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
+	private static final String XS_BOOLEAN = "xs:boolean";
 	private boolean _value;
 
 	/**
@@ -51,7 +52,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:boolean";
+		return XS_BOOLEAN;
 	}
 
 	/**

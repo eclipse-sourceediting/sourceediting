@@ -31,6 +31,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  */
 public class XSFloat extends NumericType {
 
+	private static final String XS_FLOAT = "xs:float";
 	private Float _value;
 	private XPathDecimalFormat format = new XPathDecimalFormat("0.#######E0");
 	/**
@@ -76,7 +77,7 @@ public class XSFloat extends NumericType {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:float";
+		return XS_FLOAT;
 	}
 
 	/**

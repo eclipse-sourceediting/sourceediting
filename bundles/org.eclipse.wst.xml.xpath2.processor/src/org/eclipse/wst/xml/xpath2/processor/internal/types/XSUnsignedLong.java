@@ -21,6 +21,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 public class XSUnsignedLong extends XSNonNegativeInteger {
 	
+	private static final String XS_UNSIGNED_LONG = "xs:unsignedLong";
+
 	/**
 	 * Initializes a representation of 0
 	 */
@@ -45,7 +47,7 @@ public class XSUnsignedLong extends XSNonNegativeInteger {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:unsignedLong";
+		return XS_UNSIGNED_LONG;
 	}
 	
 	/**

@@ -21,6 +21,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  */
 public class XSIDREF extends XSNCName {
 
+	private static final String XS_IDREF = "xs:IDREF";
+
 	public XSIDREF(String x) {
 		super(x);
 	}
@@ -31,7 +33,7 @@ public class XSIDREF extends XSNCName {
 
 	@Override
 	public String string_type() {
-		return "xs:IDREF";
+		return XS_IDREF;
 	}
 	
 	@Override

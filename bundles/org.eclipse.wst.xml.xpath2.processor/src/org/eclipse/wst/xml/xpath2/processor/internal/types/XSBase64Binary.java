@@ -24,6 +24,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
  */
 public class XSBase64Binary extends CtrType implements CmpEq {
 
+	private static final String XS_BASE64_BINARY = "xs:base64Binary";
 	private String _value;
 
 	/**
@@ -50,7 +51,7 @@ public class XSBase64Binary extends CtrType implements CmpEq {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:base64Binary";
+		return XS_BASE64_BINARY;
 	}
 
 	/**

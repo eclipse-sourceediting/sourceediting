@@ -20,6 +20,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 public class XSLong extends XSInteger {
 	
+	private static final String XS_LONG = "xs:long";
+
 	/**
 	 * Initializes a representation of 0
 	 */
@@ -44,7 +46,7 @@ public class XSLong extends XSInteger {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:long";
+		return XS_LONG;
 	}
 	
 	/**

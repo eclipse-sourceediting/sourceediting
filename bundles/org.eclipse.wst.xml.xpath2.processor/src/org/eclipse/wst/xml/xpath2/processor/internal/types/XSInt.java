@@ -19,6 +19,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 public class XSInt extends XSLong {
 	
+	private static final String XS_INT = "xs:int";
+
 	/**
 	 * Initializes a representation of 0
 	 */
@@ -43,7 +45,7 @@ public class XSInt extends XSLong {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:int";
+		return XS_INT;
 	}
 	
 	/**

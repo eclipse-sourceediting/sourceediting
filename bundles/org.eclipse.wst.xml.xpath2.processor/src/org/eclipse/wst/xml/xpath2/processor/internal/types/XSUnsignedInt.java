@@ -21,6 +21,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 public class XSUnsignedInt extends XSUnsignedLong {
 	
+	private static final String XS_UNSIGNED_INT = "xs:unsignedInt";
+
 	/**
 	 * Initializes a representation of 0
 	 */
@@ -45,7 +47,7 @@ public class XSUnsignedInt extends XSUnsignedLong {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:unsignedInt";
+		return XS_UNSIGNED_INT;
 	}
 	
 	/**

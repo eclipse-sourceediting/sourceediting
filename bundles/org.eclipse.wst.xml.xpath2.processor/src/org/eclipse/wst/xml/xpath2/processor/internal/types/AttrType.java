@@ -29,6 +29,7 @@ import org.w3c.dom.TypeInfo;
  * A representation of the AttributeType datatype
  */
 public class AttrType extends NodeType {
+	private static final String ATTRIBUTE = "attribute";
 	private Attr _value;
 
 	// constructor only usefull for string_type()
@@ -58,7 +59,7 @@ public class AttrType extends NodeType {
 	 */
 	@Override
 	public String string_type() {
-		return "attribute";
+		return ATTRIBUTE;
 	}
 
 	/**

@@ -21,6 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  * A representation of the CommentType datatype
  */
 public class CommentType extends NodeType {
+	private static final String COMMENT = "comment";
 	private Comment _value;
 
 	/**
@@ -41,7 +42,7 @@ public class CommentType extends NodeType {
 	 */
 	@Override
 	public String string_type() {
-		return "comment";
+		return COMMENT;
 	}
 
 	/**

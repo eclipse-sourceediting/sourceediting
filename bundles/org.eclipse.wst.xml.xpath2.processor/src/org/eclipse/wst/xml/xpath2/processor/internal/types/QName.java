@@ -23,6 +23,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
  * A representation of a QName datatype (name of a node)
  */
 public class QName extends CtrType implements CmpEq {
+	private static final String XS_Q_NAME = "xs:QName";
 	private String _namespace;
 	private String _prefix;
 	private String _local_part;
@@ -157,7 +158,7 @@ public class QName extends CtrType implements CmpEq {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:QName";
+		return XS_Q_NAME;
 	}
 
 	/**

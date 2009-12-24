@@ -19,6 +19,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  * A representation of the NCName datatype
  */
 public class XSNCName extends XSString {
+	private static final String XS_NC_NAME = "xs:NCName";
+
 	/**
 	 * Initialises using the supplied String
 	 * 
@@ -43,7 +45,7 @@ public class XSNCName extends XSString {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:NCName";
+		return XS_NC_NAME;
 	}
 
 	/**

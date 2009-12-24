@@ -23,6 +23,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  */
 public class XSEntity extends XSNCName {
 	
+	private static final String XS_ENTITY = "xs:ENTITY";
+
 	public XSEntity() {
 		super();
 	}
@@ -33,7 +35,7 @@ public class XSEntity extends XSNCName {
 	
 	@Override
 	public String string_type() {
-		return "xs:ENTITY";
+		return XS_ENTITY;
 	}
 	
 	@Override

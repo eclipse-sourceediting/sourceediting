@@ -21,6 +21,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 public class XSNonNegativeInteger extends XSInteger {
 	
+	private static final String XS_NON_NEGATIVE_INTEGER = "xs:nonNegativeInteger";
+
 	/**
 	 * Initializes a representation of 0
 	 */
@@ -45,7 +47,7 @@ public class XSNonNegativeInteger extends XSInteger {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:nonNegativeInteger";
+		return XS_NON_NEGATIVE_INTEGER;
 	}
 	
 	/**

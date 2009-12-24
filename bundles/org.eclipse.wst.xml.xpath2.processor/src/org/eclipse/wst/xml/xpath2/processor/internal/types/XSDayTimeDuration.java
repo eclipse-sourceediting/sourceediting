@@ -37,6 +37,8 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 		Cloneable {
 
 
+	private static final String XS_DAY_TIME_DURATION = "xs:dayTimeDuration";
+
 	/**
 	 * Initialises to the supplied parameters. If more than 24 hours is
 	 * supplied, the number of days is adjusted acordingly. The same occurs for
@@ -239,7 +241,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 */
 	@Override
 	public String string_type() {
-		return "xs:dayTimeDuration";
+		return XS_DAY_TIME_DURATION;
 	}
 
 	/**

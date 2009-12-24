@@ -21,6 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  * A representation of the ProcessingInstruction datatype
  */
 public class PIType extends NodeType {
+	private static final String PROCESSING_INSTRUCTION = "processing instruction";
 	private ProcessingInstruction _value;
 
 	/**
@@ -52,7 +53,7 @@ public class PIType extends NodeType {
 	 */
 	@Override
 	public String string_type() {
-		return "processing instruction";
+		return PROCESSING_INSTRUCTION;
 	}
 
 	/**

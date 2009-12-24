@@ -15,9 +15,11 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 
 public class XSNotation extends CtrType {
 
+	private static final String XS_NOTATION = "xs:NOTATION";
+
 	@Override
 	public String string_type() {
-		return "xs:NOTATION";
+		return XS_NOTATION;
 	}
 
 	@Override

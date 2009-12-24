@@ -38,6 +38,7 @@ MathMinus, MathPlus,
 
 Cloneable {
 
+	private static final String XS_TIME = "xs:time";
 	private Calendar _calendar;
 	private boolean _timezoned;
 	private XSDuration _tz;
@@ -276,7 +277,7 @@ Cloneable {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:time";
+		return XS_TIME;
 	}
 
 	/**

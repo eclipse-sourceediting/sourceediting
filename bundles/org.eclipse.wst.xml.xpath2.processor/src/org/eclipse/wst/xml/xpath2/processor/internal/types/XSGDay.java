@@ -27,6 +27,7 @@ import java.util.*;
  */
 public class XSGDay extends CalendarType implements CmpEq {
 
+	private static final String XS_G_DAY = "xs:gDay";
 	private Calendar _calendar;
 	private boolean _timezoned;
 	private XSDuration _tz;
@@ -279,7 +280,7 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:gDay";
+		return XS_G_DAY;
 	}
 
 	/**

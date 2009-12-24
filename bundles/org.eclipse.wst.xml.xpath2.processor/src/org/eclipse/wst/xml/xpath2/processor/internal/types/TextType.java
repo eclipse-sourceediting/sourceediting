@@ -21,6 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  * A representation of the TextType datatype
  */
 public class TextType extends NodeType {
+	private static final String TEXT = "text";
 	private Text _value;
 
 	/**
@@ -41,7 +42,7 @@ public class TextType extends NodeType {
 	 */
 	@Override
 	public String string_type() {
-		return "text";
+		return TEXT;
 	}
 
 	/**

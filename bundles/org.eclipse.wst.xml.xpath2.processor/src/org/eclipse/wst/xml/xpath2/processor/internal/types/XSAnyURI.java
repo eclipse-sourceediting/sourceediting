@@ -29,6 +29,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
  */
 public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 
+	private static final String XS_ANY_URI = "xs:anyURI";
 	private String _value;
 
 	/**
@@ -55,7 +56,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:anyURI";
+		return XS_ANY_URI;
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 		AnyType aat = arg.first();
 
 		if (!(aat.string_type().equals("xs:string")
-				|| aat.string_type().equals("xs:anyURI") || aat.string_type()
+				|| aat.string_type().equals(XS_ANY_URI) || aat.string_type()
 				.equals("xs:untypedAtomic"))) {
 			throw DynamicError.invalidType();
 		}

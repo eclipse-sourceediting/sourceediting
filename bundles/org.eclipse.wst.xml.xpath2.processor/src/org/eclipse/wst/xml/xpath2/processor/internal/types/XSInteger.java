@@ -32,6 +32,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  */
 public class XSInteger extends XSDecimal {
 
+	private static final String XS_INTEGER = "xs:integer";
 	private BigInteger _value;
 
 	/**
@@ -70,7 +71,7 @@ public class XSInteger extends XSDecimal {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:integer";
+		return XS_INTEGER;
 	}
 
 	/**

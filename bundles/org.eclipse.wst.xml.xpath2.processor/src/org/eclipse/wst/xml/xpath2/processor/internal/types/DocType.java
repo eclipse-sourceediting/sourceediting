@@ -20,6 +20,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  * A representation of the DocumentType datatype
  */
 public class DocType extends NodeType {
+	private static final String DOCUMENT = "document";
 	private Document _value;
 	private String _string_value;
 
@@ -51,7 +52,7 @@ public class DocType extends NodeType {
 	 */
 	@Override
 	public String string_type() {
-		return "document";
+		return DOCUMENT;
 	}
 
 	/**

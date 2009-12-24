@@ -31,6 +31,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  */
 public class XSDouble extends NumericType {
 
+	private static final String XS_DOUBLE = "xs:double";
 	private Double _value;
 	private XPathDecimalFormat format = new XPathDecimalFormat(
 			"0.################E0");
@@ -162,7 +163,7 @@ public class XSDouble extends NumericType {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:double";
+		return XS_DOUBLE;
 	}
 
 	/**

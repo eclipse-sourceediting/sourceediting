@@ -35,6 +35,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  */
 public class XSDecimal extends NumericType {
 
+	private static final String XS_DECIMAL = "xs:decimal";
 	private BigDecimal _value;
 	private XPathDecimalFormat format = new XPathDecimalFormat("0.####################");
 
@@ -66,7 +67,7 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:decimal";
+		return XS_DECIMAL;
 	}
 
 	/**

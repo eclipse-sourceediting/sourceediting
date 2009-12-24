@@ -37,6 +37,7 @@ public class XSDateTime extends CalendarType implements CmpEq, CmpLt, CmpGt,
 MathMinus, MathPlus,
 
 Cloneable {
+	private static final String XS_DATE_TIME = "xs:dateTime";
 	private Calendar _calendar;
 	private boolean _timezoned;
 	private XSDuration _tz;
@@ -726,7 +727,7 @@ Cloneable {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:dateTime";
+		return XS_DATE_TIME;
 	}
 
 	/**

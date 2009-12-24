@@ -20,6 +20,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 public class XSByte extends XSShort {
 	
+	private static final String XS_BYTE = "xs:byte";
+
 	/**
 	 * Initializes a representation of 0
 	 */
@@ -44,7 +46,7 @@ public class XSByte extends XSShort {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:byte";
+		return XS_BYTE;
 	}
 	
 	/**

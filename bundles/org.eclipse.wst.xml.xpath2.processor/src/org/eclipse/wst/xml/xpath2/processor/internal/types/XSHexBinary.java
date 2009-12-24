@@ -25,6 +25,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
  */
 public class XSHexBinary extends CtrType implements CmpEq {
 
+	private static final String XS_HEX_BINARY = "xs:hexBinary";
 	private String _value;
 
 	/**
@@ -51,7 +52,7 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:hexBinary";
+		return XS_HEX_BINARY;
 	}
 
 	/**

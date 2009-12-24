@@ -30,6 +30,8 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		CmpGt, MathPlus, MathMinus, MathTimes, MathDiv {
 
 
+	private static final String XS_YEAR_MONTH_DURATION = "xs:yearMonthDuration";
+
 	/**
 	 * Initialises using the supplied parameters. If the number of months
 	 * supplied is more than 12, the number of years is adjusted accordingly.
@@ -257,7 +259,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 */
 	@Override
 	public String string_type() {
-		return "xs:yearMonthDuration";
+		return XS_YEAR_MONTH_DURATION;
 	}
 
 	/**

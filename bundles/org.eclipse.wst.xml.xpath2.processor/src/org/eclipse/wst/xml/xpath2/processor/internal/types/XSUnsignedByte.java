@@ -21,6 +21,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 public class XSUnsignedByte extends XSUnsignedShort {
 	
+	private static final String XS_UNSIGNED_BYTE = "xs:unsignedByte";
+
 	/**
 	 * Initializes a representation of 0
 	 */
@@ -45,7 +47,7 @@ public class XSUnsignedByte extends XSUnsignedShort {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:unsignedByte";
+		return XS_UNSIGNED_BYTE;
 	}
 	
 	/**

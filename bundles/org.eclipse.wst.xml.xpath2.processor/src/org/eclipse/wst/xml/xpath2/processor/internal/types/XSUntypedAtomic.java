@@ -21,6 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  * untyped atomic nodes.
  */
 public class XSUntypedAtomic extends CtrType {
+	private static final String XS_UNTYPED_ATOMIC = "xs:untypedAtomic";
 	private String _value;
 
 	
@@ -46,7 +47,7 @@ public class XSUntypedAtomic extends CtrType {
 	 */
 	@Override
 	public String string_type() {
-		return "xs:untypedAtomic";
+		return XS_UNTYPED_ATOMIC;
 	}
 
 	/**

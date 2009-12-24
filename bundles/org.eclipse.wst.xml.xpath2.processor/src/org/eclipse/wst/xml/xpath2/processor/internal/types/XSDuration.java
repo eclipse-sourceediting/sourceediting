@@ -29,6 +29,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
  */
 public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneable {
 
+	private static final String XS_DURATION = "xs:duration";
 	protected int _year;
 	protected int _month;
 	protected int _days;
@@ -116,7 +117,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 
 	@Override
 	public String string_type() {
-		return "xs:duration";
+		return XS_DURATION;
 	}
 
 	/**
