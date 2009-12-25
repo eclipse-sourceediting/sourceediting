@@ -9,6 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Jesper Steen Moeller - bug 262765 - fixes float handling for fn:number 
+ *     Mukul Gandhi - bug 298519 - improvements to fn:number implementation,
+ *                                 catering to node arguments. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -82,29 +84,40 @@ public class FnNumber extends Function {
 		} else if (arg.size() == 1) {
 			AnyType at = arg.first();
 
+			/*
 			if (!(at instanceof AnyAtomicType))
 				DynamicError.throw_type_error();
+			*/
 			
-			if ((at instanceof XSDouble)) {
-				return (XSDouble)at;
-			} else if ((at instanceof XSFloat)) {
-				float value = ((XSFloat)at).float_value();
-				if (Float.isNaN(value)) {
-					return new XSDouble(Double.NaN);
-				} else if (value == Float.NEGATIVE_INFINITY) {
-					return new XSDouble(Double.NEGATIVE_INFINITY);
-				} else if (value == Float.POSITIVE_INFINITY) {
-					return new XSDouble(Double.POSITIVE_INFINITY);
-				} else {
-					return new XSDouble((double)value); 
-				}
-			} else {
-				XSDouble d = XSDouble.parse_double(at.string_value());
+			if (at instanceof AnyAtomicType) {
+			  if ((at instanceof XSDouble)) {
+				 return (XSDouble)at;
+			  } else if ((at instanceof XSFloat)) {
+				  float value = ((XSFloat)at).float_value();
+				  if (Float.isNaN(value)) {
+					  return new XSDouble(Double.NaN);
+				  } else if (value == Float.NEGATIVE_INFINITY) {
+					  return new XSDouble(Double.NEGATIVE_INFINITY);
+				  } else if (value == Float.POSITIVE_INFINITY) {
+					  return new XSDouble(Double.POSITIVE_INFINITY);
+				  } else {
+					  return new XSDouble((double)value); 
+				  }
+			  } else {
+				 XSDouble d = XSDouble.parse_double(at.string_value());
+				 return d != null ? d : new XSDouble(Double.NaN);
+			  }
+			}
+			else if (at instanceof NodeType) {
+				XSDouble d = XSDouble.parse_double((FnData.atomize(at)).string_value());
 				return d != null ? d : new XSDouble(Double.NaN);
 			}
 		} else {
 			return new XSDouble(Double.NaN);
 		}
+		
+		// unreach
+		return null;
 	}
 
 }
