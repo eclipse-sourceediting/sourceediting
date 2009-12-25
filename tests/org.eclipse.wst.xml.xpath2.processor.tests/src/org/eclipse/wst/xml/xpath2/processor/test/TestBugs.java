@@ -33,6 +33,8 @@
  *  Jesper S Moller - bug 286061   correct handling of quoted string 
  *  Jesper S Moller - bug 280555 - Add pluggable collation support
  *  Jesper S Moller - bug 297958   Fix fn:nilled for elements
+ *  Mukul Gandhi    - bug 298519   improvements to fn:number implementation, catering
+ *                                 to node arguments.
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -1134,7 +1136,6 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
-
 	}
 	
 	public void testXPathInstanceOf2() throws Exception {
@@ -1161,7 +1162,6 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
-
 	}
 	
 	public void testXPathInstanceOf3() throws Exception {
@@ -1188,7 +1188,6 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("false", actual);
-
 	}
 	
 	public void testXPathInstanceOf4() throws Exception {
@@ -1215,7 +1214,55 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("false", actual);
+	}
+	
+	public void testFnNumber_Evaluation1() throws Exception {
+		// Bug 298519
+		URL fileURL = bundle.getEntry("/bugTestFiles/fnNumberBug.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/fnNumberBug.xsd");
 
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "number(Example/x) ge 18";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testFnNumber_Evaluation2() throws Exception {
+		// Bug 298519
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "number(xs:unsignedByte('20')) ge 18";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
 	}
 
 	private CollationProvider createLengthCollatorProvider() {
