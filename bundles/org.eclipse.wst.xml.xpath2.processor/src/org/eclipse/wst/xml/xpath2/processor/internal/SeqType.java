@@ -55,6 +55,7 @@ public class SeqType {
 	private transient AnyType anytype = null;
 	private transient int occ;
 	private transient Class typeClass = null;
+	private transient QName nodeName = null;
 
 	/**
 	 * sequence type
@@ -162,6 +163,7 @@ public class SeqType {
 		if (ktest == null) {
 			return;
 		}
+		
 
 		if (ktest instanceof DocumentTest) {
 			typeClass = DocType.class;
@@ -191,6 +193,8 @@ public class SeqType {
 
 		final ElementTest elTest = (ElementTest) ktest;
 		typeClass = ElementType.class;
+		anytype = new ElementType();
+		nodeName = elTest.name();
 
 		final QName elemName = elTest.name();
 		if (elemName == null) {
@@ -226,7 +230,6 @@ public class SeqType {
 	}
 
 	private void createElementForXSDType(QName xsdType, NodeList nodeList) {
-		anytype = new ElementType();
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Element element = (Element) nodeList.item(i);
 			if (xsdType == null || !(element instanceof ItemPSVI)) {
@@ -296,16 +299,19 @@ public class SeqType {
 			if (!(typeClass.isInstance(arg))) {
 				throw new DynamicError(TypeError.invalid_type(null));
 			}
+			
 
-			if (anytype != null && arg instanceof ElementType) {
-				ElementType nodeType = (ElementType) arg;
-				Node node = nodeType.node_value();
-				Node lnode = ((NodeType) anytype).node_value();
-				if (lnode == null) {
-					throw new DynamicError(TypeError.invalid_type(null));
-				}
-				if (!lnode.isEqualNode(node)) {
-					throw new DynamicError(TypeError.invalid_type(null));
+			if (anytype != null) {
+				if (nodeName != null && arg instanceof ElementType) {
+					ElementType nodeType = (ElementType) arg;
+					Node node = nodeType.node_value();
+					Node lnode = ((NodeType) anytype).node_value();
+					if (lnode == null) {
+						throw new DynamicError(TypeError.invalid_type(null));
+					}
+					if (!lnode.isEqualNode(node)) {
+						throw new DynamicError(TypeError.invalid_type(null));
+					}
 				}
 			}
 
