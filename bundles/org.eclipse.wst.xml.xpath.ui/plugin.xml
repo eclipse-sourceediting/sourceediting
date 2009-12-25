@@ -76,9 +76,23 @@
             name="%xpathViewName">
     </category>
     <command categoryId="org.eclipse.wst.xml.views.XPathView"
-            description=""
             id="org.eclipse.wst.xml.views.XPathView.prefixes"
             name="%xpathView.editnamespace">
+    </command>
+    <command categoryId="org.eclipse.wst.xml.views.XPathView"
+            id="org.eclipse.wst.xml.views.XPathView.processor.xpathprocessor"
+            name="XPath Processor"
+            defaultHandler="org.eclipse.wst.xml.xpath.ui.internal.handler.XPathProcessorHandler">
+           
+	   <commandParameter
+	         id="org.eclipse.ui.commands.radioStateParameter"
+	         name="State"
+	         optional="false">
+	   </commandParameter> 
+	   <state
+	         class="org.eclipse.ui.handlers.RadioState:xpath10"
+	         id="org.eclipse.ui.commands.radioState">
+	   </state>
     </command>
 </extension>
 
@@ -90,7 +104,7 @@
 				<equals value="org.eclipse.wst.xml.views.XPathView"/>
 			</with>
 		</activeWhen>
-	</handler>
+    </handler>
 </extension>
 
 <extension point="org.eclipse.ui.menus">
@@ -100,6 +114,26 @@
         style="push">
 		</command>
 		<separator name="additions" visible="true" />
+	  <menu label="Processors">
+	     <command
+	           commandId="org.eclipse.wst.xml.views.XPathView.processor.xpathprocessor"
+	           label="XPath 1.0"
+	           style="radio">
+	         <parameter
+	               name="org.eclipse.ui.commands.radioStateParameter"
+	               value="xpath10">
+	         </parameter> 	           
+	     </command>
+	     <command
+	           commandId="org.eclipse.wst.xml.views.XPathView.processor.xpathprocessor"
+	           label="XPath 2.0"
+	           style="radio">
+	         <parameter
+	               name="org.eclipse.ui.commands.radioStateParameter"
+	               value="xpath2">
+	         </parameter> 	           
+	     </command>
+	  </menu>
 	</menuContribution>
 </extension>
 </plugin>

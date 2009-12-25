@@ -452,9 +452,9 @@ public class XPathNavigator extends ViewPart {
 		resultTabs.setLayoutData(data);
 
 		viewer = new TreeViewer(resultTabs, SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setLabelProvider(new DOMNodeLabelProvider());
-		viewer.setContentProvider(new DOMTreeContentProvider());
-		viewer.addFilter(new DOMViewerFilter());
+//		viewer.setLabelProvider(new DOMNodeLabelProvider());
+//		viewer.setContentProvider(new DOMTreeContentProvider());
+//		viewer.addFilter(new DOMViewerFilter());
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			/*
 			 * (non-Javadoc)

@@ -11,18 +11,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -32,11 +25,25 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.xpath.core.XPathProcessorPreferences;
+import org.eclipse.wst.xml.xpath.core.util.NodeListImpl;
+import org.eclipse.wst.xml.xpath.core.util.XPath20Helper;
+import org.eclipse.wst.xml.xpath.core.util.XPathCoreHelper;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.Messages;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
+import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.Evaluator;
+import org.eclipse.wst.xml.xpath2.processor.JFlexCupParser;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticChecker;
+import org.eclipse.wst.xml.xpath2.processor.StaticNameResolver;
+import org.eclipse.wst.xml.xpath2.processor.XPathParser;
+import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -44,6 +51,7 @@ import org.w3c.dom.NodeList;
 public class XPathComputer {
 	private static final int UPDATE_DELAY = 500;
 	private static final byte[] XPATH_LOCK = new byte[0];
+	private boolean xpath20 = true;
 	private XPathView xpathView;
 	private IModelStateListener modelStateListener = new IModelStateListener() {
 
@@ -111,7 +119,11 @@ public class XPathComputer {
 	private void updateExpression() throws XPathExpressionException {
 		synchronized (XPATH_LOCK) {
 			if (text != null) {
-				XSLTXPathHelper.compile(text);
+				if (xpath20) {
+					XPath20Helper.compile(text);
+				} else {
+					XSLTXPathHelper.compile(text);
+				}
 				this.expression = text;
 			} else {
 				this.expression = null;
@@ -162,13 +174,19 @@ public class XPathComputer {
 
 	private IStatus executeXPath(String xp) {
 		IStatus status = Status.CANCEL_STATUS;
+		xpath20 = XPathCoreHelper.getPreferences().getBoolean(XPathProcessorPreferences.XPATH_2_0_PROCESSOR, false);
 		try {
 			if ((xp != null) && (node != null)) {
 				synchronized (XPATH_LOCK) {
-				 status = evaluateXPath(xp);
+					
+					if (xpath20) {
+						status = evaluateXPath2(xp);
+					} else {
+						status = evaluateXPath(xp);
+					}
 				}
 			}
-		}  catch (XPathExpressionException e) {
+		} catch (XPathExpressionException e) {
 			return Status.CANCEL_STATUS;
 		}
 		return status;
@@ -180,23 +198,79 @@ public class XPathComputer {
 		if (node.getNodeType() == Node.DOCUMENT_NODE) {
 			doc = (IDOMDocument) node;
 		} else {
-			doc = (IDOMDocument)node.getOwnerDocument();
+			doc = (IDOMDocument) node.getOwnerDocument();
 		}
-		final List<NamespaceInfo> namespaces = XPathUIPlugin.getDefault().getNamespaceInfo(doc);
+		final List<NamespaceInfo> namespaces = XPathUIPlugin.getDefault()
+				.getNamespaceInfo(doc);
 		if (namespaces != null) {
-			newXPath.setNamespaceContext(new DefaultNamespaceContext(namespaces));
+			newXPath
+					.setNamespaceContext(new DefaultNamespaceContext(namespaces));
 		}
 		XPathExpression xpExp = newXPath.compile(xp);
 
 		try {
-			this.nodeList = (NodeList) xpExp.evaluate(node, XPathConstants.NODESET);
+			this.nodeList = (NodeList) xpExp.evaluate(node,
+					XPathConstants.NODESET);
 		} catch (XPathExpressionException xee) {
 			return Status.CANCEL_STATUS;
 		}
 		return Status.OK_STATUS;
 	}
 
-	
+	protected IStatus evaluateXPath2(String xp) throws XPathExpressionException {
+
+		IDOMDocument doc;
+		if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			doc = (IDOMDocument) node;
+		} else {
+			doc = (IDOMDocument) node.getOwnerDocument();
+		}
+
+		// Initializing the DynamicContext.
+		DynamicContext dc = new DefaultDynamicContext(null, doc);
+		final List<NamespaceInfo> namespaces = XPathUIPlugin.getDefault()
+				.getNamespaceInfo(doc);
+		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
+
+		if (namespaces != null) {
+			// Add the defined namespaces
+			for (NamespaceInfo namespaceinfo : namespaces) {
+				dc.add_namespace(namespaceinfo.prefix, namespaceinfo.uri);
+			}
+		}
+
+		dc.add_function_library(new FnFunctionLibrary());
+		dc.add_function_library(new XSCtrLibrary());
+		
+		XPathParser xpp = new JFlexCupParser();
+		
+		 try {
+			 // Parses the XPath expression.
+			 org.eclipse.wst.xml.xpath2.processor.ast.XPath xpath = xpp.parse(xp);
+			 
+			 StaticChecker namecheck = new StaticNameResolver(dc);
+			 namecheck.check(xpath);
+			 
+			 // Static Checking the Xpath expression ’Hello World!’ namecheck.check(xp);
+			 /**
+			  * Evaluate the XPath 2.0 expression
+ 			  */
+			 
+			 // Initializing the evaluator with DynamicContext and the name
+			 // of the XML document XPexample.xml as parameters.
+			 Evaluator eval = new DefaultEvaluator(dc, doc);
+			 
+			 ResultSequence rs = eval.evaluate(xpath);
+			 
+			 this.nodeList = new NodeListImpl(rs);
+			 
+		 } catch (Exception ex) {
+			 throw new XPathExpressionException(ex);
+		 }
+
+		return Status.OK_STATUS;
+	}
+
 	public void dispose() {
 		if (model != null) {
 			model.removeModelStateListener(modelStateListener);
