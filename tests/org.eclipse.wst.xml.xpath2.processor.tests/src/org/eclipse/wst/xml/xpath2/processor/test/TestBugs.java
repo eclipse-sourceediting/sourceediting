@@ -1110,6 +1110,113 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
+	public void testXPathInstanceOf1() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
+		URL schemaURL = bundle
+				.getEntry("/bugTestFiles/elementTypedValueBug.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/Transportation/mode instance of element()";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+
+	}
+	
+	public void testXPathInstanceOf2() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
+		URL schemaURL = bundle
+				.getEntry("/bugTestFiles/elementTypedValueBug.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/Transportation/mode instance of element(mode)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+
+	}
+	
+	public void testXPathInstanceOf3() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
+		URL schemaURL = bundle
+				.getEntry("/bugTestFiles/elementTypedValueBug.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/Transportation/mode instance of element(x)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("false", actual);
+
+	}
+	
+	public void testXPathInstanceOf4() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
+		URL schemaURL = bundle
+				.getEntry("/bugTestFiles/elementTypedValueBug.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/Transportation/mode instance of element(mode, abc)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("false", actual);
+
+	}
 
 	private CollationProvider createLengthCollatorProvider() {
 		return new CollationProvider() {
