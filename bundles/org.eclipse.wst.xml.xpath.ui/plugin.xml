@@ -114,10 +114,10 @@
         style="push">
 		</command>
 		<separator name="additions" visible="true" />
-	  <menu label="Processors">
+	  <menu label="%xpathview.xpathprocessor">
 	     <command
 	           commandId="org.eclipse.wst.xml.views.XPathView.processor.xpathprocessor"
-	           label="XPath 1.0"
+	           label="%xpathview.xpathprocessor.name"
 	           style="radio">
 	         <parameter
 	               name="org.eclipse.ui.commands.radioStateParameter"
@@ -126,7 +126,7 @@
 	     </command>
 	     <command
 	           commandId="org.eclipse.wst.xml.views.XPathView.processor.xpathprocessor"
-	           label="XPath 2.0"
+	           label="%xpathview.xpath2processor.name"
 	           style="radio">
 	         <parameter
 	               name="org.eclipse.ui.commands.radioStateParameter"
