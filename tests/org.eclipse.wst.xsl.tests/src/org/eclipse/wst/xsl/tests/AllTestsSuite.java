@@ -13,6 +13,8 @@ package org.eclipse.wst.xsl.tests;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.xml.xpath.core.tests.XPathCoreTests;
+import org.eclipse.wst.xml.xpath.ui.internal.hander.tests.TestXPathProcessorHandler;
+import org.eclipse.wst.xml.xpath.ui.tests.XPathUITestPlugin;
 import org.eclipse.wst.xml.xpath2.processor.test.AllPsychoPathTests;
 import org.eclipse.wst.xsl.launching.tests.LaunchingSuite;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestSuite;
@@ -35,6 +37,7 @@ public class AllTestsSuite extends TestSuite {
 		addTest(LaunchingSuite.suite());
 		addTest(AllPsychoPathTests.suite());
 		addTest(EXSLTCoreTestSuite.suite());
+		addTestSuite(TestXPathProcessorHandler.class);
 	//	addTest(EXSLTUITestSuite.suite());
 	}
 
