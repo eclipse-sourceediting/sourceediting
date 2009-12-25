@@ -1164,7 +1164,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
-	public void testXPathInstanceOf3() throws Exception {
+	public void testXPathInstanceNonExistantElement() throws Exception {
 		// Bug 298267
 		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
 		URL schemaURL = bundle
