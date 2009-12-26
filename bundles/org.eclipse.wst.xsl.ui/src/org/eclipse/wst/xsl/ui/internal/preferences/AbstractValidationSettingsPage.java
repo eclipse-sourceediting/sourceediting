@@ -9,12 +9,14 @@
  *     David Carver (STAR) - bug 230072 - initial API and implementation
  *                                        based on org.eclipse.wst.html.ui class of
  *                                        the same name.
+ *    David Carver - bug 297714 - Values not being loaded from preferences.
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.preferences;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -68,8 +70,8 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 	
 	public AbstractValidationSettingsPage() {
 		super();
-		fCombos = new ArrayList();
-		fExpandables = new ArrayList();
+		fCombos = new CopyOnWriteArrayList<Combo>();
+		fExpandables = new CopyOnWriteArrayList<ExpandableComposite>();
 		fPreferencesService = Platform.getPreferencesService();
 		fValidation = ValidationFramework.getDefault();
 	}
@@ -287,6 +289,7 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 	
 	@Override
 	public boolean performOk() {
+		storeValues();
 		if(super.performOk() && shouldRevalidateOnSettingsChange()) {
 			MessageBox mb = new MessageBox(this.getShell(), SWT.APPLICATION_MODAL | SWT.YES | SWT.NO | SWT.CANCEL | SWT.ICON_INFORMATION | SWT.RIGHT);
 			mb.setText(Messages.AbstractValidationSettingsPageMbText);
