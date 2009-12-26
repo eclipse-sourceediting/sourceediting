@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
@@ -46,5 +47,27 @@ public class SchemaAttrTest extends KindTest {
 	 */
 	public QName arg() {
 		return _arg;
+	}
+
+	@Override
+	public AnyType createTestType(ResultSequence rs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public QName name() {
+		return _arg;
+	}
+
+	@Override
+	public boolean isWild() {
+		return false;
+	}
+
+	@Override
+	public Class getXDMClassType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

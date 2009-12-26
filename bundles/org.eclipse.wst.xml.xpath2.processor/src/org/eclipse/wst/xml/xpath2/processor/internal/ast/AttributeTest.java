@@ -11,12 +11,29 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
+import org.apache.xerces.xs.AttributePSVI;
+import org.apache.xerces.xs.ElementPSVI;
+import org.apache.xerces.xs.ItemPSVI;
+import org.apache.xerces.xs.XSTypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Class used to match an attribute node by its name and/or type.
  */
 public class AttributeTest extends AttrElemTest {
+
+	private AnyType anyType = null;
+
 	/**
 	 * Constructor for AttributeTest. This one takes in 3 inputs, Name, wildcard
 	 * test(true/false) and type.
@@ -61,4 +78,76 @@ public class AttributeTest extends AttrElemTest {
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
+	@Override
+	public AnyType createTestType(ResultSequence rs) {
+		if (name() == null && !wild()) {
+			return new AttrType();
+		}
+
+		AnyType at = rs.first();
+
+		if (!(at instanceof NodeType)) {
+			return new AttrType();
+		}
+
+		return createAttrType(at);
+	}
+
+	private AnyType createAttrType(AnyType at) {
+		anyType = new AttrType();
+		NodeType nodeType = (NodeType) at;
+		Node node = nodeType.node_value();
+		if (node == null) {
+			return anyType;
+		}
+
+		String nodeName = node.getLocalName();
+
+		if (wild()) {
+			if (type() != null) {
+				anyType = createAttrForXSDType(node);
+			}
+		} else if (nodeName.equals(name().local())) {
+			if (type() != null) {
+				anyType = createAttrForXSDType(node);
+			} else {
+				anyType = new AttrType((Attr) node);
+			}
+		}
+		return anyType;
+	}
+
+	private AnyType createAttrForXSDType(Node node) {
+		Attr attr = (Attr) node;
+		if (!(attr instanceof ItemPSVI)) {
+			anyType = new AttrType(attr);
+		} else {
+			AttributePSVI elempsvi = (AttributePSVI) attr;
+			XSTypeDefinition typedef = elempsvi.getTypeDefinition();
+			if (typedef != null) {
+				String typename = typedef.getName();
+				String localname = type().local();
+				String typens = typedef.getNamespace();
+				if (typedef.getName().equals(type().local())) {
+					if (typens == type().namespace()) {
+						anyType = new AttrType(attr);
+					}
+				}
+			}
+		}
+		return anyType;
+	}
+
+	@Override
+	public boolean isWild() {
+		return wild();
+	}
+
+	@Override
+	public Class getXDMClassType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

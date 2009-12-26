@@ -11,6 +11,11 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.w3c.dom.DocumentType;
+
 /**
  * Class for Document testing.
  */
@@ -99,6 +104,28 @@ public class DocumentTest extends KindTest {
 	 */
 	public SchemaElemTest schema_elem_test() {
 		return _schema_etest;
+	}
+
+	@Override
+	public AnyType createTestType(ResultSequence rs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public QName name() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isWild() {
+		return false;
+	}
+
+	@Override
+	public Class getXDMClassType() {
+		return DocumentType.class;
 	}
 
 }

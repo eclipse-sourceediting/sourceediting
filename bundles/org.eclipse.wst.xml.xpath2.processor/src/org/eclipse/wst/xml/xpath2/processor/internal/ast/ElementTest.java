@@ -11,13 +11,25 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
+import org.apache.xerces.xs.ElementPSVI;
+import org.apache.xerces.xs.ItemPSVI;
+import org.apache.xerces.xs.XSTypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Class for Element testing.
  */
 public class ElementTest extends AttrElemTest {
 	private boolean _qmark = false;
+
+	private AnyType anyType = null;
 
 	/**
 	 * Constructor for ElementTest. This takes in 4 inputs, Name, wildcard
@@ -90,4 +102,72 @@ public class ElementTest extends AttrElemTest {
 	public boolean qmark() {
 		return _qmark;
 	}
+
+	@Override
+	public AnyType createTestType(ResultSequence rs) {
+
+		if (name() == null && !wild()) {
+			return new ElementType();
+		}
+
+		AnyType at = rs.first();
+
+		if (!(at instanceof NodeType)) {
+			return new ElementType();
+		}
+
+		return createElementType(at);
+	}
+
+	private AnyType createElementType(AnyType at) {
+		anyType = new ElementType();
+		NodeType nodeType = (NodeType) at;
+		Node node = nodeType.node_value();
+		Document doc = null;
+		if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			doc = (Document) node;
+		} else {
+			doc = nodeType.node_value().getOwnerDocument();
+		}
+		NodeList nodeList = doc.getElementsByTagNameNS(name().namespace(),
+				name().local());
+
+		if (nodeList.getLength() > 0) {
+			anyType = createElementForXSDType(nodeList);
+		}
+		return anyType;
+	}
+
+	private AnyType createElementForXSDType(NodeList nodeList) {
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Element element = (Element) nodeList.item(i);
+			if (type() == null || !(element instanceof ItemPSVI)) {
+				anyType = new ElementType(element);
+				break;
+			} else {
+				ElementPSVI elempsvi = (ElementPSVI) element;
+				XSTypeDefinition typedef = elempsvi.getTypeDefinition();
+				if (typedef != null) {
+					if (typedef.getName().equals(type().local())
+							&& typedef.getNamespace().equals(
+									type().namespace())) {
+						anyType = new ElementType(element);
+						break;
+					}
+				}
+			}
+		}
+		return anyType;
+	}
+
+	@Override
+	public boolean isWild() {
+		return wild();
+	}
+
+	@Override
+	public Class getXDMClassType() {
+		return ElementType.class;
+	}
+
 }

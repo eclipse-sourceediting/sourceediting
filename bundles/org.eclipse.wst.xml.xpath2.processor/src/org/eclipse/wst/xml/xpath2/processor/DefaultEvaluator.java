@@ -736,15 +736,12 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a new function
 	 */
 	public Object visit(InstOfExpr ioexp) {
-		// XXX hack
-
 		// get the value
 		ResultSequence rs = (ResultSequence) ioexp.left().accept(this);
 
 		// get the sequence type
 		SequenceType seqt = (SequenceType) ioexp.right();
-		// lamely "convert" it
-		SeqType st = new SeqType(seqt, _dc);
+		SeqType st = new SeqType(seqt, _dc, rs);
 
 		// see if they match
 		try {
@@ -768,7 +765,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence rs = (ResultSequence) taexp.left().accept(this);
 
 		SequenceType seqt = (SequenceType) taexp.right();
-		SeqType st = new SeqType(seqt, _dc);
+		SeqType st = new SeqType(seqt, _dc, rs);
 
 		try {
 			st.match(rs);
@@ -787,10 +784,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a new function
 	 */
 	public Object visit(CastableExpr cexp) {
-
-		// ResultSequence rs = (ResultSequence) cexp.left().accept(this);
-
-		// XXX lame
 		boolean castable = false;
 		try {
 			CastExpr ce = new CastExpr((Expr) cexp.left(), (SingleType) cexp

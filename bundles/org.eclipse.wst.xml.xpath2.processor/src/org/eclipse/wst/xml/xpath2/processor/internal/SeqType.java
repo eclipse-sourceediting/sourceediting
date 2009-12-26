@@ -14,24 +14,15 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.apache.xerces.xs.ElementPSVI;
-import org.apache.xerces.xs.ItemPSVI;
-import org.apache.xerces.xs.XSTypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.util.*;
 
-// ok gotta figure out what to do with this, and the one inf the AST
 
 /**
  * represents a Sequence types used for matching expected arguments of functions
@@ -56,6 +47,7 @@ public class SeqType {
 	private transient int occ;
 	private transient Class typeClass = null;
 	private transient QName nodeName = null;
+	private transient boolean wild = false;
 
 	/**
 	 * sequence type
@@ -104,8 +96,7 @@ public class SeqType {
 	 * @param sc
 	 *            is a static context.
 	 */
-	// XXX hack 2
-	public SeqType(SequenceType st, StaticContext sc) {
+	public SeqType(SequenceType st, StaticContext sc, ResultSequence rs) {
 
 		// convert occurrence
 		switch (st.occurrence()) {
@@ -159,7 +150,7 @@ public class SeqType {
 			break;
 
 		}
-
+		
 		if (ktest == null) {
 			return;
 		}
@@ -168,11 +159,17 @@ public class SeqType {
 		if (ktest instanceof DocumentTest) {
 			typeClass = DocType.class;
 		} else if (ktest instanceof ElementTest) {
-			elementTest(sc, ktest);
+			typeClass = ElementType.class;
+			anytype = ktest.createTestType(rs);
+			nodeName = ktest.name();
+			wild = ktest.isWild();
 		} else if (ktest instanceof TextTest) {
 			typeClass = TextType.class;
 		} else if (ktest instanceof AttributeTest) {
 			typeClass = AttrType.class;
+			anytype = ktest.createTestType(rs);
+			nodeName = ktest.name();
+			wild = ktest.isWild();
 		} else if (ktest instanceof CommentTest) {
 			typeClass = CommentType.class;
 		} else if (ktest instanceof PITest) {
@@ -183,70 +180,6 @@ public class SeqType {
 			typeClass = CommentType.class;
 		} else {
 			assert false;
-		}
-	}
-
-	private void elementTest(StaticContext sc, KindTest ktest) {
-		if (!(sc instanceof DefaultDynamicContext)) {
-			return;
-		}
-
-		final ElementTest elTest = (ElementTest) ktest;
-		typeClass = ElementType.class;
-		anytype = new ElementType();
-		nodeName = elTest.name();
-
-		final QName elemName = elTest.name();
-		if (elemName == null) {
-			return;
-		}
-
-		final DynamicContext dc = (DynamicContext) sc;
-		AnyType at = dc.context_item();
-
-		if (!(at instanceof NodeType)) {
-			return;
-		}
-		final QName xsdType = elTest.type();
-
-		createElementType(elemName, xsdType, at);
-	}
-
-	private void createElementType(QName elemName, QName xsdType, AnyType at) {
-		NodeType nodeType = (NodeType) at;
-		Node node = nodeType.node_value();
-		Document doc = null;
-		if (node.getNodeType() == Node.DOCUMENT_NODE) {
-			doc = (Document) node;
-		} else {
-			doc = nodeType.node_value().getOwnerDocument();
-		}
-		NodeList nodeList = doc.getElementsByTagNameNS(elemName.namespace(),
-				elemName.local());
-
-		if (nodeList.getLength() > 0) {
-			createElementForXSDType(xsdType, nodeList);
-		}
-	}
-
-	private void createElementForXSDType(QName xsdType, NodeList nodeList) {
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			Element element = (Element) nodeList.item(i);
-			if (xsdType == null || !(element instanceof ItemPSVI)) {
-				anytype = new ElementType(element);
-				break;
-			} else {
-				ElementPSVI elempsvi = (ElementPSVI) element;
-				XSTypeDefinition typedef = elempsvi.getTypeDefinition();
-				if (typedef != null) {
-					if (typedef.getName().equals(xsdType.local())
-							&& typedef.getNamespace().equals(
-									xsdType.namespace())) {
-						anytype = new ElementType(element);
-						break;
-					}
-				}
-			}
 		}
 	}
 
@@ -301,9 +234,9 @@ public class SeqType {
 			}
 			
 
-			if (anytype != null) {
-				if (nodeName != null && arg instanceof ElementType) {
-					ElementType nodeType = (ElementType) arg;
+			if (anytype != null && occurrence != OCC_STAR) {
+				if ((nodeName != null || wild) && arg instanceof NodeType) {
+					NodeType nodeType = (NodeType) arg;
 					Node node = nodeType.node_value();
 					Node lnode = ((NodeType) anytype).node_value();
 					if (lnode == null) {

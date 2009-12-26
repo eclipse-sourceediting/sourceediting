@@ -11,6 +11,10 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+
 /**
  * Class to test a type of any kind. This matches any node in the expression.
  */
@@ -25,5 +29,28 @@ public class AnyKindTest extends KindTest {
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
+	@Override
+	public AnyType createTestType(ResultSequence rs) {
+		return null;
+	}
+
+	@Override
+	public QName name() {
+		return null;
+	}
+
+	@Override
+	public boolean isWild() {
+		return false;
+	}
+
+	@Override
+	public Class getXDMClassType() {
+		return null;
+	}
+	
+	
+
 
 }
