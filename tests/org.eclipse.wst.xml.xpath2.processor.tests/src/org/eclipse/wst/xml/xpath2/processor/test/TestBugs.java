@@ -1264,6 +1264,181 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
+	
+	public void testAttrNode_Test1() throws Exception {
+		// Bug ??
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x[1]/@mesg instance of attribute()";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testAttrNode_Test2() throws Exception {
+		// Bug ??
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x[1]/@mesg instance of attribute(xx)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("false", actual);
+	}
+	
+	public void testAttrNode_Test3() throws Exception {
+		// Bug ??
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x[1]/@mesg instance of attribute(*, mesg_Type)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testAttrNode_Test4() throws Exception {
+		// Bug ??
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x[1]/@mesg instance of attribute(*, abc)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("false", actual);
+	}
+	
+	public void testAttrNode_Test5() throws Exception {
+		// Bug ??
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x[1]/@mesg instance of attribute(mesg, mesg_Type)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testAttrNode_Test6() throws Exception {
+		// Bug ??
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x[1]/@mesg instance of attribute(mesg, abc)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("false", actual);
+	}
+	
+	public void testAttrNode_Test7() throws Exception {
+		// Bug ??
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x/@mesg instance of attribute(mesg, mesg_Type)*";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
 
 	private CollationProvider createLengthCollatorProvider() {
 		return new CollationProvider() {
