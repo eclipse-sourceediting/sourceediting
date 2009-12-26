@@ -1266,7 +1266,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 	
 	public void testAttrNode_Test1() throws Exception {
-		// Bug ??
+		// Bug 298535
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
 		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
 
@@ -1291,7 +1291,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 	
 	public void testAttrNode_Test2() throws Exception {
-		// Bug ??
+		// Bug 298535
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
 		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
 
@@ -1316,7 +1316,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 	
 	public void testAttrNode_Test3() throws Exception {
-		// Bug ??
+		// Bug 298535
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
 		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
 
@@ -1341,7 +1341,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 	
 	public void testAttrNode_Test4() throws Exception {
-		// Bug ??
+		// Bug 298535
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
 		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
 
@@ -1366,7 +1366,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 	
 	public void testAttrNode_Test5() throws Exception {
-		// Bug ??
+		// Bug 298535
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
 		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
 
@@ -1391,7 +1391,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 	
 	public void testAttrNode_Test6() throws Exception {
-		// Bug ??
+		// Bug 298535
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
 		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
 
@@ -1416,7 +1416,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 	
 	public void testAttrNode_Test7() throws Exception {
-		// Bug ??
+		// Bug 298535
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
 		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
 
