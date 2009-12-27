@@ -1164,7 +1164,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
-	public void testXPathInstanceNonExistantElement() throws Exception {
+	public void testXPathInstanceOf3() throws Exception {
 		// Bug 298267
 		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
 		URL schemaURL = bundle
@@ -1177,7 +1177,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 
-		String xpath = "Example/Transportation/mode instance of element(x)";
+		String xpath = "Example/Transportation/mode instance of element(mode, modeType)";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
@@ -1204,6 +1204,107 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(mode, abc)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("false", actual);
+	}
+	
+	public void testXPathInstanceOf5() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x instance of element(x, x_Type)*";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testXPathInstanceOf6() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x instance of element(*, x_Type)*";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testXPathInstanceOf7() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/x instance of element(x, x_Type)+";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testXPathInstanceNonExistantElement() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
+		URL schemaURL = bundle
+				.getEntry("/bugTestFiles/elementTypedValueBug.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/Transportation/mode instance of element(x)";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
