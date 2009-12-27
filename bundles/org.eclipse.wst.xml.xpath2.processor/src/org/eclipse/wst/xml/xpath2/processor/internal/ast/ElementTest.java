@@ -21,7 +21,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.TypeInfo;
 
 /**
  * Class for Element testing.
@@ -177,7 +176,7 @@ public class ElementTest extends AttrElemTest {
 		return ElementType.class;
 	}
 	
-	private class SingleItemNodeListImpl implements NodeList {
+	private static class SingleItemNodeListImpl implements NodeList {
 		private Node node;
 		public SingleItemNodeListImpl(Node node) {
 			this.node = node;
