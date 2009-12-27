@@ -6,15 +6,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - bug 298535 - Attribute instance of improvements 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
-import org.w3c.dom.DocumentType;
 
 /**
  * Class for Document testing.
@@ -125,7 +126,7 @@ public class DocumentTest extends KindTest {
 
 	@Override
 	public Class getXDMClassType() {
-		return DocumentType.class;
+		return DocType.class;
 	}
 
 }

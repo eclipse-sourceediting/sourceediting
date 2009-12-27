@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
- *******************************************************************************/
+ *     David Carver - bug 298535 - Attribute instance of improvements 
+ ******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**
@@ -47,7 +49,7 @@ public class AnyKindTest extends KindTest {
 
 	@Override
 	public Class getXDMClassType() {
-		return null;
+		return NodeType.class;
 	}
 	
 	

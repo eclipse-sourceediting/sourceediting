@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     David Carver - bug 298535 - Attribute instance of improvements 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;

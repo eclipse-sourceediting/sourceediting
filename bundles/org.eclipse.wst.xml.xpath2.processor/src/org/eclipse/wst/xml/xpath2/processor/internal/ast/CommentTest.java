@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     David Carver - bug 298535 - Attribute instance of improvements 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
@@ -32,13 +33,11 @@ public class CommentTest extends KindTest {
 
 	@Override
 	public AnyType createTestType(ResultSequence rs) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public QName name() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

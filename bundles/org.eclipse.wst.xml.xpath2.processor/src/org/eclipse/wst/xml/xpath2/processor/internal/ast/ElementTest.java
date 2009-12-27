@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     David Carver - bug 298535 - Attribute instance of improvements 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
@@ -14,8 +15,6 @@ package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 import org.apache.xerces.xs.ElementPSVI;
 import org.apache.xerces.xs.ItemPSVI;
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 import org.w3c.dom.Document;

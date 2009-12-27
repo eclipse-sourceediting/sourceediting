@@ -23,7 +23,6 @@ import org.w3c.dom.Node;
 
 import java.util.*;
 
-
 /**
  * represents a Sequence types used for matching expected arguments of functions
  */
@@ -150,37 +149,15 @@ public class SeqType {
 			break;
 
 		}
-		
+
 		if (ktest == null) {
 			return;
 		}
-		
 
-		if (ktest instanceof DocumentTest) {
-			typeClass = DocType.class;
-		} else if (ktest instanceof ElementTest) {
-			typeClass = ElementType.class;
-			anytype = ktest.createTestType(rs);
-			nodeName = ktest.name();
-			wild = ktest.isWild();
-		} else if (ktest instanceof TextTest) {
-			typeClass = TextType.class;
-		} else if (ktest instanceof AttributeTest) {
-			typeClass = AttrType.class;
-			anytype = ktest.createTestType(rs);
-			nodeName = ktest.name();
-			wild = ktest.isWild();
-		} else if (ktest instanceof CommentTest) {
-			typeClass = CommentType.class;
-		} else if (ktest instanceof PITest) {
-			typeClass = PIType.class;
-		} else if (ktest instanceof AnyKindTest) {
-			typeClass = NodeType.class;
-		} else if (ktest instanceof CommentTest) {
-			typeClass = CommentType.class;
-		} else {
-			assert false;
-		}
+		typeClass = NodeType.class;
+		anytype = ktest.createTestType(rs);
+		nodeName = ktest.name();
+		wild = ktest.isWild();
 	}
 
 	/**
@@ -232,7 +209,6 @@ public class SeqType {
 			if (!(typeClass.isInstance(arg))) {
 				throw new DynamicError(TypeError.invalid_type(null));
 			}
-			
 
 			if (anytype != null && occurrence != OCC_STAR) {
 				if ((nodeName != null || wild) && arg instanceof NodeType) {
