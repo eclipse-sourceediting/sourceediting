@@ -37,7 +37,7 @@ public class DocumentTest extends KindTest {
 	// XXX: polymorphism
 	private int _type;
 
-	private ElementTest _etest;
+	private AttrElemTest _etest;
 	private SchemaElemTest _schema_etest;
 
 	/**
@@ -55,7 +55,7 @@ public class DocumentTest extends KindTest {
 		_type = type;
 		switch (_type) {
 		case ELEMENT:
-			_etest = (ElementTest) arg;
+			_etest = (AttrElemTest) arg;
 			break;
 		case SCHEMA_ELEMENT:
 			_schema_etest = (SchemaElemTest) arg;
@@ -94,7 +94,7 @@ public class DocumentTest extends KindTest {
 	 * 
 	 * @return Element test.
 	 */
-	public ElementTest elem_test() {
+	public AttrElemTest elem_test() {
 		return _etest;
 	}
 

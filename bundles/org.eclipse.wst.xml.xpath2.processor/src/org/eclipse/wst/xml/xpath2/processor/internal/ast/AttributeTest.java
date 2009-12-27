@@ -119,11 +119,9 @@ public class AttributeTest extends AttrElemTest {
 			AttributePSVI elempsvi = (AttributePSVI) attr;
 			XSTypeDefinition typedef = elempsvi.getTypeDefinition();
 			if (typedef != null) {
-				String typens = typedef.getNamespace();
-				if (typedef.getName().equals(type().local())) {
-					if (typens == type().namespace()) {
-						anyType = new AttrType(attr);
-					}
+				if (typedef.derivedFrom(type().namespace(), type().local(),
+						getDerviationTypes())) {
+					anyType = new AttrType(attr);
 				}
 			}
 		}

@@ -21,6 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
 
 /**
  * Class for Element testing.
@@ -128,8 +129,14 @@ public class ElementTest extends AttrElemTest {
 		} else {
 			doc = nodeType.node_value().getOwnerDocument();
 		}
-		NodeList nodeList = doc.getElementsByTagNameNS(name().namespace(),
-				name().local());
+		
+		NodeList nodeList = null;		
+		if (!wild()) {
+			nodeList = doc.getElementsByTagNameNS(name().namespace(),
+					name().local());
+		} else {
+			nodeList = new SingleItemNodeListImpl(node);
+		}
 
 		if (nodeList.getLength() > 0) {
 			anyType = createElementForXSDType(nodeList);
@@ -146,14 +153,15 @@ public class ElementTest extends AttrElemTest {
 			} else {
 				ElementPSVI elempsvi = (ElementPSVI) element;
 				XSTypeDefinition typedef = elempsvi.getTypeDefinition();
-				if (typedef != null) {
-					if (typedef.getName().equals(type().local())
-							&& typedef.getNamespace().equals(
-									type().namespace())) {
-						anyType = new ElementType(element);
-						break;
-					}
+				if (typedef.derivedFrom(type().namespace(), type().local(),
+						getDerviationTypes())) {
+					anyType = new ElementType(element);
+					break;
 				}
+//				if (typedef.getName().equals(type().local()) && typedef.getNamespace() == type().namespace()) {
+//					anyType = new ElementType(element);
+//					break;
+//				}
 			}
 		}
 		return anyType;
@@ -167,6 +175,26 @@ public class ElementTest extends AttrElemTest {
 	@Override
 	public Class getXDMClassType() {
 		return ElementType.class;
+	}
+	
+	private class SingleItemNodeListImpl implements NodeList {
+		private Node node;
+		public SingleItemNodeListImpl(Node node) {
+			this.node = node;
+		}
+
+		public Node item(int index) {
+			return node;
+		}
+
+		public int getLength() {
+			if (node != null) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+		
 	}
 
 }

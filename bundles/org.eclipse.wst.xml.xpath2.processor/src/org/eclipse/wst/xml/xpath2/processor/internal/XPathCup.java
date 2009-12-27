@@ -4326,7 +4326,7 @@ class CUP$XPathCup$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 166: // ElementTest ::= ELEMENT LPAR ElementNameOrWildcard COMMA TypeName QUESTIONMARK RPAR 
             {
-              ElementTest RESULT = null;
+              AttrElemTest RESULT = null;
 		int eleft = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-4)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-4)).right;
 		QName e = (QName)((java_cup.runtime.Symbol) CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-4)).value;
@@ -4348,7 +4348,7 @@ class CUP$XPathCup$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 165: // ElementTest ::= ELEMENT LPAR ElementNameOrWildcard COMMA TypeName RPAR 
             {
-              ElementTest RESULT = null;
+              AttrElemTest RESULT = null;
 		int eleft = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-3)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-3)).right;
 		QName e = (QName)((java_cup.runtime.Symbol) CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-3)).value;
@@ -4370,7 +4370,7 @@ class CUP$XPathCup$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 164: // ElementTest ::= ELEMENT LPAR ElementNameOrWildcard RPAR 
             {
-              ElementTest RESULT = null;
+              AttrElemTest RESULT = null;
 		int eleft = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-1)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-1)).right;
 		QName e = (QName)((java_cup.runtime.Symbol) CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-1)).value;
@@ -4389,7 +4389,7 @@ class CUP$XPathCup$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 163: // ElementTest ::= ELEMENT LPAR RPAR 
             {
-              ElementTest RESULT = null;
+              AttrElemTest RESULT = null;
 		 RESULT = new ElementTest(); 
               CUP$XPathCup$result = new java_cup.runtime.Symbol(71/*ElementTest*/, ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-2)).left, ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-0)).right, RESULT);
             }
@@ -4559,7 +4559,7 @@ class CUP$XPathCup$actions {
               DocumentTest RESULT = null;
 		int eleft = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-1)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-1)).right;
-		ElementTest e = (ElementTest)((java_cup.runtime.Symbol) CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-1)).value;
+		AttrElemTest e = (AttrElemTest)((java_cup.runtime.Symbol) CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-1)).value;
 		 RESULT = new DocumentTest(DocumentTest.ELEMENT,e); 
               CUP$XPathCup$result = new java_cup.runtime.Symbol(65/*DocumentTest*/, ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-3)).left, ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-0)).right, RESULT);
             }
@@ -4673,7 +4673,7 @@ class CUP$XPathCup$actions {
               KindTest RESULT = null;
 		int nleft = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-0)).left;
 		int nright = ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-0)).right;
-		ElementTest n = (ElementTest)((java_cup.runtime.Symbol) CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-0)).value;
+		AttrElemTest n = (AttrElemTest)((java_cup.runtime.Symbol) CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-0)).value;
 		 RESULT = n; 
               CUP$XPathCup$result = new java_cup.runtime.Symbol(56/*KindTest*/, ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-0)).left, ((java_cup.runtime.Symbol)CUP$XPathCup$stack.elementAt(CUP$XPathCup$top-0)).right, RESULT);
             }
