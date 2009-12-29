@@ -154,7 +154,7 @@ public class SeqType {
 			return;
 		}
 
-		typeClass = NodeType.class;
+		typeClass = ktest.getXDMClassType();
 		anytype = ktest.createTestType(rs);
 		nodeName = ktest.name();
 		wild = ktest.isWild();
