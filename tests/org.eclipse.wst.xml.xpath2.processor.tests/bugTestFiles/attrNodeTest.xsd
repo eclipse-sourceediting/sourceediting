@@ -4,14 +4,14 @@
     <xs:element name="Example">
         <xs:complexType>
             <xs:sequence>
-               <xs:element name="x" maxOccurs="unbounded">
-                 <xs:complexType>
-                   <xs:attribute name="mesg" type="mesg_Type" />
-                 </xs:complexType>
-               </xs:element>
+               <xs:element name="x" type="x_Type" maxOccurs="unbounded" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    
+    <xs:complexType name="x_Type">
+      <xs:attribute name="mesg" type="mesg_Type" />
+    </xs:complexType>
     
     <xs:simpleType name="mesg_Type">
       <xs:restriction base="xs:string">
