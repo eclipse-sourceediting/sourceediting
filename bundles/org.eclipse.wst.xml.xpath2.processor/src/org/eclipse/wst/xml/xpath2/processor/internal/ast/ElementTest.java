@@ -157,10 +157,6 @@ public class ElementTest extends AttrElemTest {
 					anyType = new ElementType(element);
 					break;
 				}
-//				if (typedef.getName().equals(type().local()) && typedef.getNamespace() == type().namespace()) {
-//					anyType = new ElementType(element);
-//					break;
-//				}
 			}
 		}
 		return anyType;

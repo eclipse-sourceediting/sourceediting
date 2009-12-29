@@ -210,16 +210,18 @@ public class SeqType {
 				throw new DynamicError(TypeError.invalid_type(null));
 			}
 
-			if (anytype != null && occurrence != OCC_STAR) {
+			if (anytype != null) {
 				if ((nodeName != null || wild) && arg instanceof NodeType) {
 					NodeType nodeType = (NodeType) arg;
 					Node node = nodeType.node_value();
 					Node lnode = ((NodeType) anytype).node_value();
 					if (lnode == null) {
-						throw new DynamicError(TypeError.invalid_type(null));
+						//throw new DynamicError(TypeError.invalid_type(null));
+						continue;
 					}
 					if (!lnode.isEqualNode(node)) {
-						throw new DynamicError(TypeError.invalid_type(null));
+						//throw new DynamicError(TypeError.invalid_type(null));
+						continue;
 					}
 				}
 			}
