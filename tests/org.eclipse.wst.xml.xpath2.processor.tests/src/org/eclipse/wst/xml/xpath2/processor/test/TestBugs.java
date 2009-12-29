@@ -1288,7 +1288,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		String actual = result.string_value();
 
-		assertEquals("false", actual);
+		assertEquals("true", actual);
 	}
 	
 	public void testXPathInstanceNonExistantElement() throws Exception {
