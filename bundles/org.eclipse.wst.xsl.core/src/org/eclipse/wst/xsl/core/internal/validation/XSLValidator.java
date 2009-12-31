@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xml.xpath.core.util.XPath20Helper;
@@ -38,7 +39,6 @@ import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.Messages;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
-import org.eclipse.wst.xsl.core.internal.util.XMLCatalog;
 import org.eclipse.wst.xsl.core.model.CallTemplate;
 import org.eclipse.wst.xsl.core.model.Function;
 import org.eclipse.wst.xsl.core.model.Include;
@@ -130,7 +130,7 @@ public class XSLValidator {
 		// circular reference check
 		checkCircularRef(stylesheetComposed, report);
 		// include checks
-		checkIncludes(stylesheetComposed, report);
+		checkIncludesImports(stylesheetComposed, report);
 		// template checks
 		checkTemplates(stylesheetComposed, report);
 		
@@ -209,9 +209,46 @@ public class XSLValidator {
 					Messages.XSLValidator_2);
 	}
 
-	private void checkIncludes(StylesheetModel stylesheetComposed,
+	private void checkIncludesImports(StylesheetModel stylesheetComposed,
 			XSLValidationReport report) throws MaxErrorsExceededException {
 		// includes
+		checkIncludes(stylesheetComposed, report);
+		// imports
+		checkImports(stylesheetComposed, report);
+	}
+
+	private void checkImports(StylesheetModel stylesheetComposed,
+			XSLValidationReport report) throws MaxErrorsExceededException {
+		for (Include include : stylesheetComposed.getStylesheet().getImports()) {
+			IFile includedFile = include.getHrefAsFile();
+			if (includedFile == null || !includedFile.exists()) { // included
+																	// file does
+																	// not exist
+				XSLAttribute att = include.getAttribute("href"); //$NON-NLS-1$
+				if (att != null) {
+					String baseURI = include.getStylesheet().getFile().getLocationURI().toString();
+					
+					String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", att.getValue());
+					if (resolvedURI == null) {
+						createMarker(
+								report,
+								att,
+								getPreference(ValidationPreferences.MISSING_INCLUDE),
+								Messages.XSLValidator_4 + include.getHref());
+					}
+				}
+			} else if (includedFile.equals(include.getStylesheet().getFile())) { // stylesheet
+																					// including
+																					// itself!
+				createMarker(
+						report,
+						include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), Messages.XSLValidator_10); //$NON-NLS-1$
+			}
+		}
+	}
+
+	private void checkIncludes(StylesheetModel stylesheetComposed,
+			XSLValidationReport report) throws MaxErrorsExceededException {
 		for (Include include : stylesheetComposed.getStylesheet().getIncludes()) {
 			IFile includedFile = include.getHrefAsFile();
 			if (includedFile == null || !includedFile.exists()) { // included
@@ -219,10 +256,10 @@ public class XSLValidator {
 																	// not exist
 				XSLAttribute att = include.getAttribute("href"); //$NON-NLS-1$
 				if (att != null) {
-					XMLCatalog catalog = new XMLCatalog();
-					if (!catalog.exists(att.getValue())) {
-						// Do we want to try and get the file?
-						// If we do then there might be performance issues
+					String baseURI = include.getStylesheet().getFile().getLocationURI().toString();
+					
+					String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", att.getValue());
+					if (resolvedURI == null) {
 						createMarker(
 								report,
 								att,
@@ -242,31 +279,6 @@ public class XSLValidator {
 				createMarker(
 						report,
 						include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), Messages.XSLValidator_6); //$NON-NLS-1$
-			}
-		}
-		// imports
-		for (Include include : stylesheetComposed.getStylesheet().getImports()) {
-			IFile includedFile = include.getHrefAsFile();
-			if (includedFile == null || !includedFile.exists()) { // included
-																	// file does
-																	// not exist
-				XSLAttribute att = include.getAttribute("href"); //$NON-NLS-1$
-				if (att != null) {
-					XMLCatalog catalog = new XMLCatalog();
-					if (!catalog.exists(att.getValue())) {
-						createMarker(
-								report,
-								att,
-								getPreference(ValidationPreferences.MISSING_INCLUDE),
-								Messages.XSLValidator_4 + include.getHref());
-					}
-				}
-			} else if (includedFile.equals(include.getStylesheet().getFile())) { // stylesheet
-																					// including
-																					// itself!
-				createMarker(
-						report,
-						include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), Messages.XSLValidator_10); //$NON-NLS-1$
 			}
 		}
 	}

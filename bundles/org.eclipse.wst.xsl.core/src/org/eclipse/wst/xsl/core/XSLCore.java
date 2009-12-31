@@ -21,12 +21,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.util.FileUtil;
-import org.eclipse.wst.xsl.core.internal.util.XMLCatalog;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.w3c.dom.Attr;
@@ -133,16 +133,12 @@ public class XSLCore {
 	 */
 	public static IFile resolveFile(IFile currentFile, String uri) {		
 		if (uri == null || uri.trim().length() == 0)
-			return null;
-		XMLCatalog xmlCatalog = new XMLCatalog();
-		
+			return null;		
 		IResource resource = currentFile.getParent().findMember(new Path(uri));
 		if (resource == null) {
-			if (xmlCatalog.exists(uri)) {
-				String resolvedURI = xmlCatalog.resolve(uri);
-				if (resolvedURI == null) {
-					return null;
-				}
+			String baseURI = currentFile.getRawLocationURI().toString();
+			String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", uri);		 //$NON-NLS-1$
+			if (resolvedURI != null) {
 				resource = currentFile.getParent().findMember(new Path(uri));
 			}
 		}
