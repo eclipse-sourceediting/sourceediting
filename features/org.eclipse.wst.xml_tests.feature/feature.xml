@@ -52,12 +52,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.wst.sse.ui.tests.performance"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.wst.xml.core.tests"
          download-size="0"
          install-size="0"
@@ -71,12 +65,6 @@
 
    <plugin
          id="org.eclipse.wst.xml.ui.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.wst.xml.ui.tests.performance"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
