@@ -367,9 +367,9 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 	private void performRemove()
 	{
 		IStructuredSelection sel = (IStructuredSelection)tViewer.getSelection();
-		for (Iterator iterator = sel.iterator(); iterator.hasNext();)
+		for (Iterator<String> iterator = sel.iterator(); iterator.hasNext();)
 		{
-			String att = (String) iterator.next();
+			String att = iterator.next();
 			properties.removeProperty(att);
 		}
 		tViewer.refresh();

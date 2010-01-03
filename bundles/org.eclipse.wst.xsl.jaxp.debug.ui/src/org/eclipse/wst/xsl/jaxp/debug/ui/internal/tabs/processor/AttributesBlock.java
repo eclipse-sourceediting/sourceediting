@@ -356,9 +356,9 @@ public class AttributesBlock extends AbstractTableBlock
 	private void performRemove()
 	{
 		IStructuredSelection sel = (IStructuredSelection)tViewer.getSelection();
-		for (Iterator iterator = sel.iterator(); iterator.hasNext();)
+		for (Iterator<LaunchAttribute> iterator = sel.iterator(); iterator.hasNext();)
 		{
-			LaunchAttribute att = (LaunchAttribute) iterator.next();
+			LaunchAttribute att = iterator.next();
 			attributes.removeAtribute(att.uri);
 		}
 		tViewer.refresh();

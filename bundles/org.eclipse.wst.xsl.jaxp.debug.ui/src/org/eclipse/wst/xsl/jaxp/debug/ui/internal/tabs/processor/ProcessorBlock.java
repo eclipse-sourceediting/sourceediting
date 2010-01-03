@@ -345,7 +345,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		configuration.setAttribute(JAXPLaunchConfigurationConstants.ATTR_PROCESSOR, (String) null);
 	}
 
-	private class ComboContentProvider implements IStructuredContentProvider
+	private static class ComboContentProvider implements IStructuredContentProvider
 	{
 		public Object[] getElements(Object inputElement)
 		{
@@ -361,7 +361,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		}
 	}
 
-	private class ComboLabelProvider extends LabelProvider
+	private static class ComboLabelProvider extends LabelProvider
 	{
 		@Override
 		public String getText(Object element)

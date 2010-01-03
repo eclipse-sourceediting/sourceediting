@@ -613,7 +613,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		}
 	}
 
-	private class VMLabelProvider extends LabelProvider implements ITableLabelProvider
+	private static class VMLabelProvider extends LabelProvider implements ITableLabelProvider
 	{
 		public String getColumnText(Object element, int columnIndex)
 		{
