@@ -1,10 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2010 Intalio Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver (Intalio) - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.invoker.test;
 
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.xalan.templates.OutputProperties;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.TransformDefinition;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.TypedValue;
 
@@ -16,6 +25,11 @@ public class TransformDefinitonTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		tdef = new TransformDefinition();
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		tdef = null;
 	}
 	
 	public void testDefaultResolver() throws Exception {
@@ -68,6 +82,13 @@ public class TransformDefinitonTest extends TestCase {
 	
 	public void testNoOutputProperties() throws Exception {
 		assertEquals("Found output properties when there should be none.", 0, tdef.getOutputProperties().size());
+	}
+	
+	public void testRemoveOutputProperty() throws Exception {
+		tdef.setOutputProperty("output", "test");
+		Properties properties = tdef.getOutputProperties();
+		assertEquals(1,properties.size());
+		tdef.removeOutputProperty("output");
 	}
 
 	private TypedValue setupParameters() {
