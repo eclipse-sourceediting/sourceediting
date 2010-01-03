@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.invoker;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.wst.xsl.jaxp.debug.invoker.internal.CreationException;
 import org.w3c.dom.Document;
@@ -27,26 +27,30 @@ import org.w3c.dom.NodeList;
  * 
  * @author Doug Satchwell
  */
-public class TransformDefinition
-{
+public class TransformDefinition {
+	public static final String DEFAULT_CATALOG_RESOLVER = "org.apache.xml.resolver.tools.CatalogResolver"; //$NON-NLS-1$
 	private String stylesheetURL;
 	private String resolverClass;
 	private Properties outputProperties = new Properties();
-	private final Set parameters = new HashSet();
+	private final Set<TypedValue> parameters = new HashSet<TypedValue>();
+	
+	public TransformDefinition() {
+		this.resolverClass = DEFAULT_CATALOG_RESOLVER;
+	}
 
 	/**
-	 * Get the parameters as a map of name (<code>String</code>) v. value <code>TypedValue</code>.
+	 * Get the parameters as a map of name (<code>String</code>) v. value
+	 * <code>TypedValue</code>.
 	 * 
 	 * @return a map of names and values
-	 * @throws CreationException if an exception occurred during object creation
+	 * @throws CreationException
+	 *             if an exception occurred during object creation
 	 */
-	public Map getParametersAsMap() throws CreationException
-	{
-		Map m = new HashMap();
-		for (Iterator iter = parameters.iterator(); iter.hasNext();)
-		{
-			TypedValue tv = (TypedValue) iter.next();
-			String key = tv.uri;
+	public Map<String, Object> getParametersAsMap() throws CreationException {
+		Map<String, Object> m = new ConcurrentHashMap<String, Object>();
+		for (Iterator<TypedValue> iter = parameters.iterator(); iter.hasNext();) {
+			TypedValue tv = iter.next();
+			String key = tv.name;
 			Object value = tv.createValue();
 			m.put(key, value);
 		}
@@ -58,28 +62,27 @@ public class TransformDefinition
 	 * 
 	 * @return a set of <code>TypedValue</code>'s
 	 */
-	public Set getParameters()
-	{
+	public Set<TypedValue> getParameters() {
 		return parameters;
 	}
 
 	/**
 	 * Add a parameter to the set of parameters
 	 * 
-	 * @param parameter the parameter to add
+	 * @param parameter
+	 *            the parameter to add
 	 */
-	public void addParameter(TypedValue parameter)
-	{
+	public void addParameter(TypedValue parameter) {
 		parameters.add(parameter);
 	}
 
 	/**
 	 * Remove a parameter.
 	 * 
-	 * @param parameter the parameter to remove
+	 * @param parameter
+	 *            the parameter to remove
 	 */
-	public void removeParameter(TypedValue parameter)
-	{
+	public void removeParameter(TypedValue parameter) {
 		parameters.remove(parameter);
 	}
 
@@ -88,39 +91,40 @@ public class TransformDefinition
 	 * 
 	 * @return the output properties
 	 */
-	public Properties getOutputProperties()
-	{
+	public Properties getOutputProperties() {
 		return outputProperties;
 	}
 
 	/**
 	 * Set the output properties for this.
 	 * 
-	 * @param outputProperties the output properties to set
+	 * @param outputProperties
+	 *            the output properties to set
 	 */
-	public void setOutputProperties(Properties outputProperties)
-	{
+	public void setOutputProperties(Properties outputProperties) {
 		this.outputProperties = outputProperties;
 	}
 
 	/**
-	 * Set the value of a specific output property.
+	 * Set the value of a specific output property.  If the property
+	 * does not already exist, it will be created.
 	 * 
-	 * @param name the output property
-	 * @param value the value
+	 * @param name
+	 *            the output property
+	 * @param value
+	 *            the value
 	 */
-	public void setOutputProperty(String name, String value)
-	{
+	public void setOutputProperty(String name, String value) {
 		outputProperties.put(name, value);
 	}
 
 	/**
 	 * Remove an output property.
 	 * 
-	 * @param name the output property to remove
+	 * @param name
+	 *            the output property to remove
 	 */
-	public void removeOutputProperty(String name)
-	{
+	public void removeOutputProperty(String name) {
 		outputProperties.remove(name);
 	}
 
@@ -129,18 +133,17 @@ public class TransformDefinition
 	 * 
 	 * @return the resolver's class name
 	 */
-	public String getResolverClass()
-	{
+	public String getResolverClass() {
 		return resolverClass;
 	}
 
 	/**
 	 * Set the name of the <code>URIResolver</code> class to use.
 	 * 
-	 *  @param resolver the resolver's class name
+	 * @param resolver
+	 *            the resolver's class name
 	 */
-	public void setResolverClass(String resolver)
-	{
+	public void setResolverClass(String resolver) {
 		resolverClass = resolver;
 	}
 
@@ -149,38 +152,38 @@ public class TransformDefinition
 	 * 
 	 * @return the stylesheet URL
 	 */
-	public String getStylesheetURL()
-	{
+	public String getStylesheetURL() {
 		return stylesheetURL;
 	}
 
 	/**
 	 * Set the URL of the stylesheet.
 	 * 
-	 * @param stylesheet the stylesheet URL
+	 * @param stylesheet
+	 *            the stylesheet URL
 	 */
-	public void setStylesheetURL(String stylesheet)
-	{
+	public void setStylesheetURL(String stylesheet) {
 		stylesheetURL = stylesheet;
 	}
 
 	/**
 	 * Serialize this to a Document fragment.
 	 * 
-	 * @param doc the document to attach to
+	 * @param doc
+	 *            the document to attach to
 	 * @return the root element of the fragment
 	 */
-	public Element asXML(Document doc)
-	{
+	public Element asXML(Document doc) {
 		Element tdefEl = doc.createElement("Transform"); //$NON-NLS-1$
-		tdefEl.setAttribute(Messages.getString("TransformDefinition.1"), stylesheetURL); //$NON-NLS-1$
+		tdefEl.setAttribute(
+				Messages.getString("TransformDefinition.1"), stylesheetURL); //$NON-NLS-1$
 		if (resolverClass != null)
 			tdefEl.setAttribute("uriResolver", resolverClass); //$NON-NLS-1$
 		Element opEl = doc.createElement("OutputProperties"); //$NON-NLS-1$
 		tdefEl.appendChild(opEl);
-		for (Iterator iter = outputProperties.entrySet().iterator(); iter.hasNext();)
-		{
-			Map.Entry entry = (Map.Entry) iter.next();
+		for (Iterator<?> iter = outputProperties.entrySet().iterator(); iter
+				.hasNext();) {
+			Map.Entry<?, ?> entry = (Map.Entry<?, ?>) iter.next();
 			Element propEl = doc.createElement("Property"); //$NON-NLS-1$
 			propEl.setAttribute("name", (String) entry.getKey()); //$NON-NLS-1$
 			propEl.setAttribute("value", (String) entry.getValue()); //$NON-NLS-1$
@@ -188,11 +191,10 @@ public class TransformDefinition
 		}
 		Element paramsEl = doc.createElement("Parameters"); //$NON-NLS-1$
 		tdefEl.appendChild(paramsEl);
-		for (Iterator iter = parameters.iterator(); iter.hasNext();)
-		{
+		for (Iterator<TypedValue> iter = parameters.iterator(); iter.hasNext();) {
 			Element propEl = doc.createElement("Parameter"); //$NON-NLS-1$
-			TypedValue param = (TypedValue) iter.next();
-			propEl.setAttribute("name", param.uri); //$NON-NLS-1$
+			TypedValue param = iter.next();
+			propEl.setAttribute("name", param.name); //$NON-NLS-1$
 			propEl.setAttribute("type", param.type); //$NON-NLS-1$
 			propEl.setAttribute("value", param.value); //$NON-NLS-1$
 			paramsEl.appendChild(propEl);
@@ -203,23 +205,22 @@ public class TransformDefinition
 	/**
 	 * Create a new instance of this from its serialized form.
 	 * 
-	 * @param transformEl the element to create this from
+	 * @param transformEl
+	 *            the element to create this from
 	 * @return a new instance of this
 	 */
-	public static TransformDefinition fromXML(Element transformEl)
-	{
+	public static TransformDefinition fromXML(Element transformEl) {
 		TransformDefinition tdef = new TransformDefinition();
 		String url = transformEl.getAttribute("url"); //$NON-NLS-1$
 		tdef.setStylesheetURL(url);
 		String uriResolver = transformEl.getAttribute("uriResolver"); //$NON-NLS-1$
 		tdef.setResolverClass(uriResolver);
 
-		Element opEl = (Element) transformEl.getElementsByTagName("OutputProperties").item(0); //$NON-NLS-1$
-		if (opEl != null)
-		{
+		Element opEl = (Element) transformEl.getElementsByTagName(
+				"OutputProperties").item(0); //$NON-NLS-1$
+		if (opEl != null) {
 			NodeList propEls = opEl.getElementsByTagName("Property"); //$NON-NLS-1$
-			for (int i = 0; i < propEls.getLength(); i++)
-			{
+			for (int i = 0; i < propEls.getLength(); i++) {
 				Element propEl = (Element) propEls.item(i);
 				String name = propEl.getAttribute("name"); //$NON-NLS-1$
 				String value = propEl.getAttribute("value"); //$NON-NLS-1$
@@ -227,16 +228,19 @@ public class TransformDefinition
 			}
 		}
 
-		Element paramsEl = (Element) transformEl.getElementsByTagName(Messages.getString("TransformDefinition.18")).item(0); //$NON-NLS-1$
-		if (paramsEl != null)
-		{
-			NodeList paramEls = paramsEl.getElementsByTagName(Messages.getString("TransformDefinition.19")); //$NON-NLS-1$
-			for (int i = 0; i < paramEls.getLength(); i++)
-			{
+		Element paramsEl = (Element) transformEl.getElementsByTagName(
+				Messages.getString("TransformDefinition.18")).item(0); //$NON-NLS-1$
+		if (paramsEl != null) {
+			NodeList paramEls = paramsEl.getElementsByTagName(Messages
+					.getString("TransformDefinition.19")); //$NON-NLS-1$
+			for (int i = 0; i < paramEls.getLength(); i++) {
 				Element paramEl = (Element) paramEls.item(i);
-				String name = paramEl.getAttribute(Messages.getString("TransformDefinition.20")); //$NON-NLS-1$
-				String type = paramEl.getAttribute(Messages.getString("TransformDefinition.21")); //$NON-NLS-1$
-				String value = paramEl.getAttribute(Messages.getString("TransformDefinition.22")); //$NON-NLS-1$
+				String name = paramEl.getAttribute(Messages
+						.getString("TransformDefinition.20")); //$NON-NLS-1$
+				String type = paramEl.getAttribute(Messages
+						.getString("TransformDefinition.21")); //$NON-NLS-1$
+				String value = paramEl.getAttribute(Messages
+						.getString("TransformDefinition.22")); //$NON-NLS-1$
 				tdef.addParameter(new TypedValue(name, type, value));
 			}
 		}
