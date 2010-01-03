@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.xml.transform.TransformerException;
+
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -168,7 +170,10 @@ public abstract class AbstractXMLElementContentAssistRequest extends AbstractXSL
 		try {
 			ancestorNode = XSLTXPathHelper.selectSingleNode(getNode(),
 					XPATH_FIRST_XSLANCESTOR_NODE);
-		} catch (Exception ex) {
+		} catch (TransformerException ex) {
+			
+		}
+		if (ancestorNode == null) {
 			return;
 		}
 	

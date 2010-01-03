@@ -32,7 +32,8 @@ import org.eclipse.wst.xml.ui.internal.registry.AdapterFactoryProviderForXML;
 /**
  * 
  */
-public class AdapterFactoryProviderForXSL extends AdapterFactoryProviderForXML implements AdapterFactoryProvider {
+public class AdapterFactoryProviderForXSL extends AdapterFactoryProviderForXML
+		implements AdapterFactoryProvider {
 
 	/*
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)
@@ -45,7 +46,9 @@ public class AdapterFactoryProviderForXSL extends AdapterFactoryProviderForXML i
 
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
-		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
+		Assert
+				.isNotNull(factoryRegistry,
+						"Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
 
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
@@ -54,21 +57,27 @@ public class AdapterFactoryProviderForXSL extends AdapterFactoryProviderForXML i
 			factoryRegistry.addFactory(factory);
 		}
 
-		if (structuredModel != null) {
-			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(structuredModel);
-			if (modelQuery != null) {
-				CMDocumentManager documentManager = modelQuery.getCMDocumentManager();
-				if (documentManager != null) {
-					IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
-					boolean useInferredGrammar = (store != null) ? store.getBoolean(XMLUIPreferenceNames.USE_INFERRED_GRAMMAR) : true;
+		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(structuredModel);
+		if (modelQuery != null) {
+			CMDocumentManager documentManager = modelQuery
+					.getCMDocumentManager();
+			if (documentManager != null) {
+				IPreferenceStore store = XMLUIPlugin.getDefault()
+						.getPreferenceStore();
+				boolean useInferredGrammar = (store != null) ? store
+						.getBoolean(XMLUIPreferenceNames.USE_INFERRED_GRAMMAR)
+						: true;
 
-					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, true);
-					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, false);
-					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_USE_CACHED_RESOLVED_URI, true);
-					DOMObserver domObserver = new DOMObserver(structuredModel);
-					domObserver.setGrammarInferenceEnabled(useInferredGrammar);
-					domObserver.init();
-				}
+				documentManager.setPropertyEnabled(
+						CMDocumentManager.PROPERTY_ASYNC_LOAD, true);
+				documentManager.setPropertyEnabled(
+						CMDocumentManager.PROPERTY_AUTO_LOAD, false);
+				documentManager.setPropertyEnabled(
+						CMDocumentManager.PROPERTY_USE_CACHED_RESOLVED_URI,
+						true);
+				DOMObserver domObserver = new DOMObserver(structuredModel);
+				domObserver.setGrammarInferenceEnabled(useInferredGrammar);
+				domObserver.init();
 			}
 		}
 	}
@@ -76,7 +85,11 @@ public class AdapterFactoryProviderForXSL extends AdapterFactoryProviderForXML i
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider#isFor(org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler)
+	 * @see
+	 * org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider
+	 * #
+	 * isFor(org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler
+	 * )
 	 */
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
 		return (contentTypeDescription instanceof ModelHandlerForXSL);

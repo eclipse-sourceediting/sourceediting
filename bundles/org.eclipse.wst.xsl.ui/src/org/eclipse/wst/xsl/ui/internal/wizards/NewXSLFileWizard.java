@@ -16,8 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -42,7 +40,6 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 	private NewXSLFileWizardPage fNewFilePage;
 	private NewXSLFileTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
-	private IWorkbench workbench;
 
 	@Override
 	public void addPages()
@@ -60,7 +57,6 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection)
 	{
-		this.workbench = aWorkbench;
 		fSelection = aSelection;
 		setWindowTitle(Messages.NewXSLFilePageWindowTitle);
 	}
