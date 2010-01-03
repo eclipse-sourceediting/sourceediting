@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (Intalio) - cleanup findbug errors.
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.debugger;
 
@@ -22,7 +23,7 @@ public abstract class StyleFrame
 {
 	private static int nextId;
 	private final StyleFrame parent;
-	private final List children = new ArrayList();
+	private final List<StyleFrame> children = new ArrayList<StyleFrame>();
 	private final int id;
 
 	/**
@@ -74,7 +75,7 @@ public abstract class StyleFrame
 	 * 
 	 * @return the list of variables for this frame
 	 */
-	public abstract List getVariableStack();
+	public abstract List<?> getVariableStack();
 
 	/**
 	 * Get the parent of this.
@@ -111,7 +112,7 @@ public abstract class StyleFrame
 	 * 
 	 * @return a list of <code>StyleFrame</code>'s
 	 */
-	public List getChildren()
+	public List<StyleFrame> getChildren()
 	{
 		return children;
 	}
