@@ -20,7 +20,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 
-
 /**
  * Helper class to handle images provided by this plug-in.
  * 
@@ -50,8 +49,8 @@ public class XSLPluginImageHelper {
 	private final String PLUGINID = XSLDebugUIPlugin.PLUGIN_ID;
 
 	/**
-	 * Creates an image from the given resource and adds the image to the
-	 * image registry.
+	 * Creates an image from the given resource and adds the image to the image
+	 * registry.
 	 * 
 	 * @param resource
 	 * @return Image
@@ -73,9 +72,9 @@ public class XSLPluginImageHelper {
 
 	/**
 	 * Creates an image descriptor from the given imageFilePath and adds the
-	 * image descriptor to the image descriptor registry. If an image
-	 * descriptor could not be created, the default "missing" image descriptor
-	 * is returned but not added to the image descriptor registry.
+	 * image descriptor to the image descriptor registry. If an image descriptor
+	 * could not be created, the default "missing" image descriptor is returned
+	 * but not added to the image descriptor registry.
 	 * 
 	 * @param imageFilePath
 	 * @return ImageDescriptor image descriptor for imageFilePath or default
@@ -83,11 +82,11 @@ public class XSLPluginImageHelper {
 	 */
 	@SuppressWarnings("unchecked")
 	private ImageDescriptor createImageDescriptor(String imageFilePath) {
-		ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PLUGINID, imageFilePath);
+		ImageDescriptor imageDescriptor = AbstractUIPlugin
+				.imageDescriptorFromPlugin(PLUGINID, imageFilePath);
 		if (imageDescriptor != null) {
 			getImageDescriptorRegistry().put(imageFilePath, imageDescriptor);
-		}
-		else {
+		} else {
 			imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
 		}
 
@@ -95,14 +94,14 @@ public class XSLPluginImageHelper {
 	}
 
 	/**
-	 * Retrieves the image associated with resource from the image registry.
-	 * If the image cannot be retrieved, attempt to find and load the image at
-	 * the location specified in resource.
+	 * Retrieves the image associated with resource from the image registry. If
+	 * the image cannot be retrieved, attempt to find and load the image at the
+	 * location specified in resource.
 	 * 
 	 * @param resource
 	 *            the image to retrieve
-	 * @return Image the image associated with resource or null if one could
-	 *         not be found
+	 * @return Image the image associated with resource or null if one could not
+	 *         be found
 	 */
 	public Image getImage(String resource) {
 		Image image = getImageRegistry().get(resource);
@@ -115,15 +114,14 @@ public class XSLPluginImageHelper {
 
 	/**
 	 * Retrieves the image descriptor associated with resource from the image
-	 * descriptor registry. If the image descriptor cannot be retrieved,
-	 * attempt to find and load the image descriptor at the location specified
-	 * in resource.
+	 * descriptor registry. If the image descriptor cannot be retrieved, attempt
+	 * to find and load the image descriptor at the location specified in
+	 * resource.
 	 * 
 	 * @param resource
 	 *            the image descriptor to retrieve
 	 * @return ImageDescriptor the image descriptor assocated with resource or
-	 *         the default "missing" image descriptor if one could not be
-	 *         found
+	 *         the default "missing" image descriptor if one could not be found
 	 */
 	public ImageDescriptor getImageDescriptor(String resource) {
 		ImageDescriptor imageDescriptor = null;
@@ -131,8 +129,7 @@ public class XSLPluginImageHelper {
 		if (o == null) {
 			// create a descriptor
 			imageDescriptor = createImageDescriptor(resource);
-		}
-		else {
+		} else {
 			imageDescriptor = (ImageDescriptor) o;
 		}
 		return imageDescriptor;

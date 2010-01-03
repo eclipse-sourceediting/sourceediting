@@ -19,48 +19,48 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
  * 
  * @author Doug Satchwell
  */
-public class OpenDialogAction extends AbstractStylesheetAction
-{
+public class OpenDialogAction extends AbstractStylesheetAction {
 	protected static final String LAST_PATH_SETTING = "LAST_PATH_SETTING"; //$NON-NLS-1$
 	private String fPrefix = null;
 
 	/**
 	 * Create a new instance of this
 	 * 
-	 * @param label the dialog title
-	 * @param viewer a viewer that this dialog is associated with
-	 * @param dialogSettingsPrefix the prefix to use for saving dialog preferences
+	 * @param label
+	 *            the dialog title
+	 * @param viewer
+	 *            a viewer that this dialog is associated with
+	 * @param dialogSettingsPrefix
+	 *            the prefix to use for saving dialog preferences
 	 */
-	public OpenDialogAction(String label, StylesheetViewer viewer, String dialogSettingsPrefix)
-	{
+	public OpenDialogAction(String label, StylesheetViewer viewer,
+			String dialogSettingsPrefix) {
 		super(label, viewer);
 		fPrefix = dialogSettingsPrefix;
 	}
 
-	protected String getDialogSettingsPrefix()
-	{
+	protected String getDialogSettingsPrefix() {
 		return fPrefix;
 	}
 
-	protected String getDialogSetting(String settingName)
-	{
-		return getDialogSettings().get(getDialogSettingsPrefix() + "." + settingName); //$NON-NLS-1$
+	protected String getDialogSetting(String settingName) {
+		return getDialogSettings().get(
+				getDialogSettingsPrefix() + "." + settingName); //$NON-NLS-1$
 	}
 
-	protected void setDialogSetting(String settingName, String value)
-	{
-		getDialogSettings().put(getDialogSettingsPrefix() + "." + settingName, value); //$NON-NLS-1$
+	protected void setDialogSetting(String settingName, String value) {
+		getDialogSettings().put(
+				getDialogSettingsPrefix() + "." + settingName, value); //$NON-NLS-1$
 	}
 
-	protected IDialogSettings getDialogSettings()
-	{
-		IDialogSettings settings = XSLDebugUIPlugin.getDefault().getDialogSettings();
+	protected IDialogSettings getDialogSettings() {
+		IDialogSettings settings = XSLDebugUIPlugin.getDefault()
+				.getDialogSettings();
 		return settings;
 	}
 
 	@Override
-	protected int getActionType()
-	{
+	protected int getActionType() {
 		return ADD;
 	}
 }

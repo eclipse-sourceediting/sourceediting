@@ -17,10 +17,10 @@ package org.eclipse.wst.xsl.debug.internal.util;
 public class XSLDebugPluginImages {
 
 	/**
-	 * Path to the XSLT Processor  Images used for launch configurations
+	 * Path to the XSLT Processor Images used for launch configurations
 	 */
 	public static final String IMG_PROCESSOR_TAB = "icons/xslt_processor.gif"; //$NON-NLS-1$
-	
+
 	/**
 	 * Path to the XSLT Output Images used for launch configurations
 	 */
@@ -30,5 +30,5 @@ public class XSLDebugPluginImages {
 	 * Path to the XSLT Launch Images used for launch configurations
 	 */
 	public static final String IMG_MAIN_TAB = "icons/xslt_launch.gif"; //$NON-NLS-1$
-	
+
 }

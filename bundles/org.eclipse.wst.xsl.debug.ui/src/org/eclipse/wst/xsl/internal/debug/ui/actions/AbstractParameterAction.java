@@ -23,14 +23,12 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.ParameterViewer;
  * 
  * @author Doug Satchwell
  */
-public abstract class AbstractParameterAction extends SelectionListenerAction
-{
+public abstract class AbstractParameterAction extends SelectionListenerAction {
 	private ParameterViewer viewer;
 	private Button button;
 	private Shell shell;
 
-	protected AbstractParameterAction(String text, ParameterViewer viewer)
-	{
+	protected AbstractParameterAction(String text, ParameterViewer viewer) {
 		super(text);
 		setViewer(viewer);
 	}
@@ -38,40 +36,35 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 	/**
 	 * Set the viewer.
 	 * 
-	 * @param viewer the parametere viewer
+	 * @param viewer
+	 *            the parametere viewer
 	 */
-	public void setViewer(ParameterViewer viewer)
-	{
-		if (this.viewer != null)
-		{
+	public void setViewer(ParameterViewer viewer) {
+		if (this.viewer != null) {
 			this.viewer.getViewer().removeSelectionChangedListener(this);
 		}
 		this.viewer = viewer;
-		if (viewer != null)
-		{
+		if (viewer != null) {
 			viewer.getViewer().addSelectionChangedListener(this);
 			update();
 		}
 	}
 
-	protected ParameterViewer getViewer()
-	{
+	protected ParameterViewer getViewer() {
 		return viewer;
 	}
 
 	/**
 	 * Set the button associated with the action.
 	 * 
-	 * @param button the button
+	 * @param button
+	 *            the button
 	 */
-	public void setButton(Button button)
-	{
+	public void setButton(Button button) {
 		this.button = button;
-		button.addSelectionListener(new SelectionAdapter()
-		{
+		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent evt)
-			{
+			public void widgetSelected(SelectionEvent evt) {
 				run();
 			}
 		});
@@ -79,24 +72,20 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 	}
 
 	@Override
-	public void setEnabled(boolean enabled)
-	{
+	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
-		if (button != null)
-		{
+		if (button != null) {
 			button.setEnabled(enabled);
 		}
 	}
 
-	protected void update()
-	{
-		selectionChanged((IStructuredSelection) getViewer().getViewer().getSelection());
+	protected void update() {
+		selectionChanged((IStructuredSelection) getViewer().getViewer()
+				.getSelection());
 	}
 
-	protected Shell getShell()
-	{
-		if (shell == null)
-		{
+	protected Shell getShell() {
+		if (shell == null) {
 			shell = getViewer().getShell();
 		}
 		return shell;
@@ -105,21 +94,19 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 	/**
 	 * Set the shell that will be used for opening a dialog.
 	 * 
-	 * @param shell the shell to use
+	 * @param shell
+	 *            the shell to use
 	 */
-	public void setShell(Shell shell)
-	{
+	public void setShell(Shell shell) {
 		this.shell = shell;
 	}
 
 	@Override
-	protected boolean updateSelection(IStructuredSelection selection)
-	{
+	protected boolean updateSelection(IStructuredSelection selection) {
 		return getViewer().updateSelection(getActionType(), selection);
 	}
 
-	protected int getActionType()
-	{
+	protected int getActionType() {
 		return AbstractStylesheetAction.DEFAULT;
 	}
 }

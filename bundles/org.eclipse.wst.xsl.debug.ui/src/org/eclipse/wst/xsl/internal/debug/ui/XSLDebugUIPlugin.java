@@ -34,8 +34,7 @@ import org.osgi.framework.BundleContext;
  * @author Doug Satchwell
  * @since 1.0
  */
-public class XSLDebugUIPlugin extends AbstractUIPlugin
-{
+public class XSLDebugUIPlugin extends AbstractUIPlugin {
 	/**
 	 * The id of this.
 	 */
@@ -43,27 +42,24 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 
 	// The shared instance
 	private static XSLDebugUIPlugin plugin;
-	
+
 	private XSLDebugUILaunchListener launchListener = new XSLDebugUILaunchListener();
 
 	/**
 	 * Create a new instance of this.
 	 */
-	public XSLDebugUIPlugin()
-	{
+	public XSLDebugUIPlugin() {
 		plugin = this;
 	}
 
 	@Override
-	public void start(BundleContext context) throws Exception
-	{
+	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		launchListener.start();
 	}
 
 	@Override
-	public void stop(BundleContext context) throws Exception
-	{
+	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		launchListener.stop();
 		super.stop(context);
@@ -74,46 +70,45 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 	 * 
 	 * @return the singleton
 	 */
-	public static XSLDebugUIPlugin getDefault()
-	{
+	public static XSLDebugUIPlugin getDefault() {
 		return plugin;
 	}
 
 	/**
 	 * Get an ImageDescriptor from a path in this bundle.
 	 * 
-	 * @param path the path to the image
+	 * @param path
+	 *            the path to the image
 	 * @return the ImageDescriptor
 	 */
-	public static ImageDescriptor getImageDescriptor(String path)
-	{
+	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
 	/**
 	 * Convenience method for opening a given preference page.
 	 * 
-	 * @param id the id of the preference page
-	 * @param page the preference page to show
+	 * @param id
+	 *            the id of the preference page
+	 * @param page
+	 *            the preference page to show
 	 */
-	public static void showPreferencePage(String id, IPreferencePage page)
-	{
+	public static void showPreferencePage(String id, IPreferencePage page) {
 		final IPreferenceNode targetNode = new PreferenceNode(id, page);
 
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(XSLDebugUIPlugin.getActiveWorkbenchShell(), manager);
-		final boolean[] result = new boolean[]
-		{ false };
-		BusyIndicator.showWhile(XSLDebugUIPlugin.getStandardDisplay(), new Runnable()
-		{
-			public void run()
-			{
-				dialog.create();
-				dialog.setMessage(targetNode.getLabelText());
-				result[0] = (dialog.open() == Window.OK);
-			}
-		});
+		final PreferenceDialog dialog = new PreferenceDialog(XSLDebugUIPlugin
+				.getActiveWorkbenchShell(), manager);
+		final boolean[] result = new boolean[] { false };
+		BusyIndicator.showWhile(XSLDebugUIPlugin.getStandardDisplay(),
+				new Runnable() {
+					public void run() {
+						dialog.create();
+						dialog.setMessage(targetNode.getLabelText());
+						result[0] = (dialog.open() == Window.OK);
+					}
+				});
 	}
 
 	/**
@@ -121,8 +116,7 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 	 * 
 	 * @return the current or default Display
 	 */
-	public static Display getStandardDisplay()
-	{
+	public static Display getStandardDisplay() {
 		Display display;
 		display = Display.getCurrent();
 		if (display == null)
@@ -135,8 +129,7 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 	 * 
 	 * @return the active workbench window
 	 */
-	public static IWorkbenchWindow getActiveWorkbenchWindow()
-	{
+	public static IWorkbenchWindow getActiveWorkbenchWindow() {
 		return getDefault().getWorkbench().getActiveWorkbenchWindow();
 	}
 
@@ -145,11 +138,9 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 	 * 
 	 * @return the active workbench shell
 	 */
-	public static Shell getActiveWorkbenchShell()
-	{
+	public static Shell getActiveWorkbenchShell() {
 		IWorkbenchWindow window = getActiveWorkbenchWindow();
-		if (window != null)
-		{
+		if (window != null) {
 			return window.getShell();
 		}
 		return null;
@@ -160,11 +151,9 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 	 * 
 	 * @return the active page
 	 */
-	public static IWorkbenchPage getActivePage()
-	{
+	public static IWorkbenchPage getActivePage() {
 		IWorkbenchWindow w = getActiveWorkbenchWindow();
-		if (w != null)
-		{
+		if (w != null) {
 			return w.getActivePage();
 		}
 		return null;
@@ -173,20 +162,21 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 	/**
 	 * Log the given exception by creating a new Status.
 	 * 
-	 * @param e the exception to log
+	 * @param e
+	 *            the exception to log
 	 */
-	public static void log(Exception e)
-	{
-		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e)); //$NON-NLS-1$
+	public static void log(Exception e) {
+		getDefault().getLog().log(
+				new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e)); //$NON-NLS-1$
 	}
 
 	/**
 	 * Log the given core exception.
 	 * 
-	 * @param e the exception to log
+	 * @param e
+	 *            the exception to log
 	 */
-	public static void log(CoreException e)
-	{
+	public static void log(CoreException e) {
 		getDefault().getLog().log(e.getStatus());
 	}
 }

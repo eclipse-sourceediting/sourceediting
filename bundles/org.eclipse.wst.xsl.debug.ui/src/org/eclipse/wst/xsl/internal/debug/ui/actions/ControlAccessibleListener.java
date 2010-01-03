@@ -19,36 +19,34 @@ import org.eclipse.swt.widgets.Control;
  * 
  * @author Doug Satchwell
  */
-public class ControlAccessibleListener extends AccessibleAdapter
-{
+public class ControlAccessibleListener extends AccessibleAdapter {
 	private final String controlName;
 
-	private ControlAccessibleListener(String name)
-	{
+	private ControlAccessibleListener(String name) {
 		controlName = name;
 	}
 
 	@Override
-	public void getName(AccessibleEvent e)
-	{
+	public void getName(AccessibleEvent e) {
 		e.result = controlName;
 	}
 
 	/**
 	 * Helper for adding an instance of this to the given control.
 	 * 
-	 * @param comp the control to add this to
-	 * @param name the name for this
+	 * @param comp
+	 *            the control to add this to
+	 * @param name
+	 *            the name for this
 	 */
-	public static void addListener(Control comp, String name)
-	{
+	public static void addListener(Control comp, String name) {
 		// strip mnemonic
 		String[] strs = name.split("&"); //$NON-NLS-1$
 		StringBuffer stripped = new StringBuffer();
-		for (String element : strs)
-		{
+		for (String element : strs) {
 			stripped.append(element);
 		}
-		comp.getAccessible().addAccessibleListener(new ControlAccessibleListener(stripped.toString()));
+		comp.getAccessible().addAccessibleListener(
+				new ControlAccessibleListener(stripped.toString()));
 	}
 }

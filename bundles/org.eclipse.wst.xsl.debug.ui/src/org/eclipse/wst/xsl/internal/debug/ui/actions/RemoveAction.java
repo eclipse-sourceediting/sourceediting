@@ -21,39 +21,37 @@ import org.eclipse.wst.xsl.launching.config.LaunchTransform;
  * 
  * @author Doug Satchwell
  */
-public class RemoveAction extends AbstractStylesheetAction
-{
+public class RemoveAction extends AbstractStylesheetAction {
 	/**
 	 * Create a new instance of this.
 	 * 
-	 * @param viewer the viewer that will have its selection removed
+	 * @param viewer
+	 *            the viewer that will have its selection removed
 	 */
-	public RemoveAction(StylesheetViewer viewer)
-	{
+	public RemoveAction(StylesheetViewer viewer) {
 		super(Messages.RemoveAction_Text, viewer);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void run()
-	{
-		IStructuredSelection selection = (IStructuredSelection) getViewer().getViewer().getSelection();
-		getViewer().removeEntries((LaunchTransform[]) selection.toList().toArray(new LaunchTransform[0]));
+	public void run() {
+		IStructuredSelection selection = (IStructuredSelection) getViewer()
+				.getViewer().getSelection();
+		getViewer().removeEntries(
+				(LaunchTransform[]) selection.toList().toArray(
+						new LaunchTransform[0]));
 	}
 
 	@Override
-	protected boolean updateSelection(IStructuredSelection selection)
-	{
-		if (selection.isEmpty())
-		{
+	protected boolean updateSelection(IStructuredSelection selection) {
+		if (selection.isEmpty()) {
 			return false;
 		}
 		return getViewer().updateSelection(getActionType(), selection);
 	}
 
 	@Override
-	protected int getActionType()
-	{
+	protected int getActionType() {
 		return MOVE;
 	}
 }

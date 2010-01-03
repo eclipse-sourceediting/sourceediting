@@ -16,23 +16,29 @@ package org.eclipse.wst.xsl.internal.debug.ui;
  * @author Doug Satchwell
  * @since 1.0
  */
-public class XSLDebugUIConstants
-{
+public class XSLDebugUIConstants {
 	private static final String PREFIX = XSLDebugUIPlugin.PLUGIN_ID + '.';
 	/**
-	 * Constant used to store column setting preferences for the <code>InstalledProcessorsBlock</code>
+	 * Constant used to store column setting preferences for the
+	 * <code>InstalledProcessorsBlock</code>
 	 */
-	public static final String PROCESSOR_DETAILS_DIALOG = PREFIX + "PROCESSOR_DETAILS_DIALOG"; //$NON-NLS-1$
+	public static final String PROCESSOR_DETAILS_DIALOG = PREFIX
+			+ "PROCESSOR_DETAILS_DIALOG"; //$NON-NLS-1$
 	/**
-	 * Constant used to store column setting preferences for the <code>ParametersBlock</code>
+	 * Constant used to store column setting preferences for the
+	 * <code>ParametersBlock</code>
 	 */
-	public static final String MAIN_PARAMATERS_BLOCK = PREFIX + "MAIN_PARAMATERS_BLOCK"; //$NON-NLS-1$
+	public static final String MAIN_PARAMATERS_BLOCK = PREFIX
+			+ "MAIN_PARAMATERS_BLOCK"; //$NON-NLS-1$
 	/**
-	 * Constant used to store column setting preferences for the <code>TransformsBlock</code>
+	 * Constant used to store column setting preferences for the
+	 * <code>TransformsBlock</code>
 	 */
-	public static final String MAIN_TRANSFORMS_BLOCK = PREFIX + "MAIN_TRANSFORMS_BLOCK"; //$NON-NLS-1$
+	public static final String MAIN_TRANSFORMS_BLOCK = PREFIX
+			+ "MAIN_TRANSFORMS_BLOCK"; //$NON-NLS-1$
 	/**
-	 * Constant used to store column setting preferences for the <code>OutputBlock</code>
+	 * Constant used to store column setting preferences for the
+	 * <code>OutputBlock</code>
 	 */
 	public static final String OUTPUT_BLOCK = PREFIX + "OUTPUT_BLOCK"; //$NON-NLS-1$
 	/**

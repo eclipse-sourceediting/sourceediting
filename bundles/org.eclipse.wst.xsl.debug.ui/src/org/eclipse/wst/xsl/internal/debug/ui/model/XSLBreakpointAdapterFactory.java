@@ -20,19 +20,14 @@ import org.eclipse.wst.xsl.core.XSLCore;
 /**
  * Creates a toggle breakpoint adapter
  */
-public class XSLBreakpointAdapterFactory implements IAdapterFactory
-{
-	@SuppressWarnings("unchecked") 
-	public Object getAdapter(Object adaptableObject, Class adapterType)
-	{
-		if (adaptableObject instanceof ITextEditor)
-		{
+public class XSLBreakpointAdapterFactory implements IAdapterFactory {
+	public Object getAdapter(Object adaptableObject, Class adapterType) {
+		if (adaptableObject instanceof ITextEditor) {
 			ITextEditor editorPart = (ITextEditor) adaptableObject;
-			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
-			if (resource != null && resource instanceof IFile)
-			{
-				if (XSLCore.isXSLFile((IFile)resource))
-				{
+			IResource resource = (IResource) editorPart.getEditorInput()
+					.getAdapter(IResource.class);
+			if (resource != null && resource instanceof IFile) {
+				if (XSLCore.isXSLFile((IFile) resource)) {
 					return new XSLLineBreakpointAdapter();
 				}
 			}
@@ -40,10 +35,7 @@ public class XSLBreakpointAdapterFactory implements IAdapterFactory
 		return null;
 	}
 
-	@SuppressWarnings("unchecked") 
-	public Class[] getAdapterList()
-	{
-		return new Class[]
-		{ IToggleBreakpointsTarget.class };
+	public Class[] getAdapterList() {
+		return new Class[] { IToggleBreakpointsTarget.class };
 	}
 }

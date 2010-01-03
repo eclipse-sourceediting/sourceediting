@@ -20,40 +20,33 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
-public class StylesheetContentProvider implements IStructuredContentProvider
-{
+public class StylesheetContentProvider implements IStructuredContentProvider {
 	private TableViewer tableViewer;
 	private LaunchPipeline pipeline;
 
-	public StylesheetContentProvider()
-	{
+	public StylesheetContentProvider() {
 	}
 
-	public Object[] getElements(Object inputElement)
-	{
+	public Object[] getElements(Object inputElement) {
 		return pipeline.getTransformDefs().toArray(new LaunchTransform[0]);
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-	{
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		tableViewer = (TableViewer) viewer;
 		pipeline = (LaunchPipeline) newInput;
 	}
 
-	public void dispose()
-	{
+	public void dispose() {
 	}
 
-	public void setEntries(LaunchTransform[] transforms)
-	{
-		pipeline.setTransformDefs(new ArrayList<LaunchTransform>(Arrays.asList(transforms)));
+	public void setEntries(LaunchTransform[] transforms) {
+		pipeline.setTransformDefs(new ArrayList<LaunchTransform>(Arrays
+				.asList(transforms)));
 		tableViewer.refresh();
 	}
 
-	public void addEntries(LaunchTransform[] res, Object beforeElement)
-	{
-		for (LaunchTransform transform : res)
-		{
+	public void addEntries(LaunchTransform[] res, Object beforeElement) {
+		for (LaunchTransform transform : res) {
 			pipeline.addTransformDef(transform);
 		}
 		tableViewer.add(res);
@@ -61,10 +54,8 @@ public class StylesheetContentProvider implements IStructuredContentProvider
 		tableViewer.setSelection(new StructuredSelection(res[0]), true);
 	}
 
-	public void removeEntries(LaunchTransform[] res)
-	{
-		for (LaunchTransform transform : res)
-		{
+	public void removeEntries(LaunchTransform[] res) {
+		for (LaunchTransform transform : res) {
 			pipeline.removeTransformDef(transform);
 		}
 		tableViewer.refresh();

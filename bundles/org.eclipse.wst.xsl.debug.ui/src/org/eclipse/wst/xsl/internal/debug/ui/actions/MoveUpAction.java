@@ -24,40 +24,34 @@ import org.eclipse.wst.xsl.launching.config.LaunchTransform;
  * 
  * @author Doug Satchwell
  */
-public class MoveUpAction extends AbstractStylesheetAction
-{
+public class MoveUpAction extends AbstractStylesheetAction {
 	/**
 	 * Create a new instance of this.
 	 * 
 	 * @param viewer
 	 */
-	public MoveUpAction(StylesheetViewer viewer)
-	{
+	public MoveUpAction(StylesheetViewer viewer) {
 		super(Messages.MoveUpAction_Text, viewer);
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		List<?> targets = getOrderedSelection();
-		if (targets.isEmpty())
-		{
+		if (targets.isEmpty()) {
 			return;
 		}
 		int top = 0;
 		int index = 0;
 		List<LaunchTransform> list = getEntriesAsList();
 		Iterator<?> entries = targets.iterator();
-		while (entries.hasNext())
-		{
+		while (entries.hasNext()) {
 			Object target = entries.next();
 			index = list.indexOf(target);
-			if (index > top)
-			{
+			if (index > top) {
 				top = index - 1;
 				Object temp = list.get(top);
-				list.set(top, (LaunchTransform)target);
-				list.set(index, (LaunchTransform)temp);
+				list.set(top, (LaunchTransform) target);
+				list.set(index, (LaunchTransform) temp);
 			}
 			top = index;
 		}
@@ -65,18 +59,16 @@ public class MoveUpAction extends AbstractStylesheetAction
 	}
 
 	@Override
-	protected boolean updateSelection(IStructuredSelection selection)
-	{
-		if (selection.isEmpty())
-		{
+	protected boolean updateSelection(IStructuredSelection selection) {
+		if (selection.isEmpty()) {
 			return false;
 		}
-		return getViewer().updateSelection(getActionType(), selection) && !isIndexSelected(selection, 0);
+		return getViewer().updateSelection(getActionType(), selection)
+				&& !isIndexSelected(selection, 0);
 	}
 
 	@Override
-	protected int getActionType()
-	{
+	protected int getActionType() {
 		return MOVE;
 	}
 }

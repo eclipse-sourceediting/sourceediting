@@ -38,19 +38,17 @@ import org.eclipse.wst.xsl.internal.debug.ui.actions.MoveUpAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.RemoveAction;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 
-public class TransformsBlock extends AbstractTableBlock implements IStylesheetEntriesChangedListener
-{
-	protected static final String DIALOG_SETTINGS_PREFIX = "TransformsBlock";  //$NON-NLS-1$
+public class TransformsBlock extends AbstractTableBlock implements
+		IStylesheetEntriesChangedListener {
+	protected static final String DIALOG_SETTINGS_PREFIX = "TransformsBlock"; //$NON-NLS-1$
 	private StylesheetViewer stylesheetViewer;
 	private LaunchPipeline pipeline;
 
-	public TransformsBlock()
-	{
+	public TransformsBlock() {
 		super();
 	}
 
-	public void createControl(Composite parent)
-	{
+	public void createControl(Composite parent) {
 		Font font = parent.getFont();
 
 		Group group = new Group(parent, SWT.NONE);
@@ -69,18 +67,21 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 		stylesheetViewer.getViewer().getTable().setLayoutData(gd);
 		stylesheetViewer.addEntriesChangedListener(this);
 		stylesheetViewer.getViewer().getControl().setFont(font);
-		stylesheetViewer.getViewer().setLabelProvider(new StylesheetLabelProvider());
-		stylesheetViewer.getViewer().setContentProvider(new StylesheetContentProvider());
-		stylesheetViewer.getViewer().getTable().addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent event) {
-				if (event.character == SWT.DEL && event.stateMask == 0) {
-					RemoveAction ra = new RemoveAction(stylesheetViewer);
-					ra.run();
-					updateLaunchConfigurationDialog();
-				}
-			}
-		});
+		stylesheetViewer.getViewer().setLabelProvider(
+				new StylesheetLabelProvider());
+		stylesheetViewer.getViewer().setContentProvider(
+				new StylesheetContentProvider());
+		stylesheetViewer.getViewer().getTable().addKeyListener(
+				new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent event) {
+						if (event.character == SWT.DEL && event.stateMask == 0) {
+							RemoveAction ra = new RemoveAction(stylesheetViewer);
+							ra.run();
+							updateLaunchConfigurationDialog();
+						}
+					}
+				});
 
 		Composite upDownButtonComp = new Composite(group, SWT.NONE);
 		GridLayout upDownButtonLayout = new GridLayout();
@@ -91,33 +92,37 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 		upDownButtonComp.setLayoutData(gd);
 		upDownButtonComp.setFont(font);
 
-		createArrowButton(upDownButtonComp, new MoveUpAction(stylesheetViewer), SWT.UP);
+		createArrowButton(upDownButtonComp, new MoveUpAction(stylesheetViewer),
+				SWT.UP);
 		Label spacer = new Label(upDownButtonComp, SWT.NONE);
 		gd = new GridData(SWT.NONE, SWT.FILL, false, true);
 		spacer.setLayoutData(gd);
-		createArrowButton(upDownButtonComp, new MoveDownAction(stylesheetViewer), SWT.DOWN);
+		createArrowButton(upDownButtonComp,
+				new MoveDownAction(stylesheetViewer), SWT.DOWN);
 
 		Composite pathButtonComp = new Composite(group, SWT.NONE);
 		GridLayout pathButtonLayout = new GridLayout();
 		pathButtonLayout.marginHeight = 0;
 		pathButtonLayout.marginWidth = 0;
 		pathButtonComp.setLayout(pathButtonLayout);
-		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_FILL);
+		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING
+				| GridData.HORIZONTAL_ALIGN_FILL);
 		pathButtonComp.setLayoutData(gd);
 		pathButtonComp.setFont(font);
 
-		createButton(pathButtonComp, new AddWorkspaceFileAction(stylesheetViewer));
-		createButton(pathButtonComp, new AddExternalFileAction(stylesheetViewer, DIALOG_SETTINGS_PREFIX));
+		createButton(pathButtonComp, new AddWorkspaceFileAction(
+				stylesheetViewer));
+		createButton(pathButtonComp, new AddExternalFileAction(
+				stylesheetViewer, DIALOG_SETTINGS_PREFIX));
 		createButton(pathButtonComp, new RemoveAction(stylesheetViewer));
 	}
 
-	public Viewer getStylesheetViewer()
-	{
+	public Viewer getStylesheetViewer() {
 		return stylesheetViewer == null ? null : stylesheetViewer.getViewer();
 	}
 
-	protected Button createArrowButton(Composite pathButtonComp, AbstractStylesheetAction action, int updown)
-	{
+	protected Button createArrowButton(Composite pathButtonComp,
+			AbstractStylesheetAction action, int updown) {
 		Button b = new Button(pathButtonComp, SWT.ARROW | updown);
 		GridData gd = new GridData();
 		b.setLayoutData(gd);
@@ -125,51 +130,45 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 		return b;
 	}
 
-	protected Button createButton(Composite pathButtonComp, AbstractStylesheetAction action)
-	{
+	protected Button createButton(Composite pathButtonComp,
+			AbstractStylesheetAction action) {
 		Button button = createPushButton(pathButtonComp, action.getText(), null);
 		action.setButton(button);
 		return button;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return Messages.TransformsBlock_Name;
 	}
 
-	public void setPipeline(LaunchPipeline pipeline)
-	{
+	public void setPipeline(LaunchPipeline pipeline) {
 		this.pipeline = pipeline;
 	}
 
-	public void initializeFrom(ILaunchConfiguration configuration)
-	{
+	public void initializeFrom(ILaunchConfiguration configuration) {
 		stylesheetViewer.getViewer().setInput(pipeline);
-		if (pipeline.getTransformDefs().size() > 0)
-		{
-			stylesheetViewer.getViewer().setSelection(new StructuredSelection(pipeline.getTransformDefs().get(0)));
+		if (pipeline.getTransformDefs().size() > 0) {
+			stylesheetViewer.getViewer()
+					.setSelection(
+							new StructuredSelection(pipeline.getTransformDefs()
+									.get(0)));
 		}
 	}
 
-	public void performApply(ILaunchConfigurationWorkingCopy configuration)
-	{
+	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 	}
 
-	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
-	{
+	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 	}
 
-	public void entriesChanged(StylesheetViewer viewer)
-	{
+	public void entriesChanged(StylesheetViewer viewer) {
 		setDirty(true);
 		updateLaunchConfigurationDialog();
 	}
 
 	@Override
-	protected void setSortColumn(int column)
-	{
-		switch (column)
-		{
+	protected void setSortColumn(int column) {
+		switch (column) {
 		// case 1:
 		// sortByName();
 		// break;
@@ -181,26 +180,23 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 	}
 
 	@Override
-	protected Table getTable()
-	{
-		return stylesheetViewer == null ? null : stylesheetViewer.getViewer().getTable();
+	protected Table getTable() {
+		return stylesheetViewer == null ? null : stylesheetViewer.getViewer()
+				.getTable();
 	}
 
 	@Override
-	protected IDialogSettings getDialogSettings()
-	{
+	protected IDialogSettings getDialogSettings() {
 		return XSLDebugUIPlugin.getDefault().getDialogSettings();
 	}
 
 	@Override
-	protected String getQualifier()
-	{
+	protected String getQualifier() {
 		return XSLDebugUIConstants.MAIN_TRANSFORMS_BLOCK;
 	}
 
 	@Override
-	public void dispose()
-	{
+	public void dispose() {
 		if (stylesheetViewer != null)
 			stylesheetViewer.removeEntriesChangedListener(this);
 		super.dispose();

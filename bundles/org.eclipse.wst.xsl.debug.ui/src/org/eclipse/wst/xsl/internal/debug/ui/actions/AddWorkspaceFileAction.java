@@ -33,65 +33,61 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
 /**
- * An action that opens a dialog to allow the user to select a file in the workspace.
+ * An action that opens a dialog to allow the user to select a file in the
+ * workspace.
  * 
  * @author Doug Satchwell
  */
-public class AddWorkspaceFileAction extends AbstractStylesheetAction
-{
-	private final ISelectionStatusValidator validator = new ISelectionStatusValidator()
-	{
-		public IStatus validate(Object[] selection)
-		{
-			if (selection.length == 0)
-			{
-				return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
+public class AddWorkspaceFileAction extends AbstractStylesheetAction {
+	private final ISelectionStatusValidator validator = new ISelectionStatusValidator() {
+		public IStatus validate(Object[] selection) {
+			if (selection.length == 0) {
+				return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0,
+						"", null); //$NON-NLS-1$
 			}
-			for (int i = 0; i < selection.length; i++)
-			{
-				if (!(selection[i] instanceof IFile))
-				{
-					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
+			for (int i = 0; i < selection.length; i++) {
+				if (!(selection[i] instanceof IFile)) {
+					return new Status(IStatus.ERROR,
+							XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 				}
 			}
-			return new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
+			return new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, 0,
+					"", null); //$NON-NLS-1$
 		}
 	};
 
 	/**
 	 * Create a new instance of this.
 	 * 
-	 * @param viewer the viewer
+	 * @param viewer
+	 *            the viewer
 	 */
-	public AddWorkspaceFileAction(StylesheetViewer viewer)
-	{
+	public AddWorkspaceFileAction(StylesheetViewer viewer) {
 		super(Messages.AddWorkspaceFileAction_Text, viewer);
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 
 		// ViewerFilter filter= new StylesheetFilter(getSelectedJars());
 
 		ILabelProvider lp = new WorkbenchLabelProvider();
 		ITreeContentProvider cp = new WorkbenchContentProvider();
 
-		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), lp, cp);
+		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
+				getShell(), lp, cp);
 		dialog.setValidator(validator);
 		dialog.setTitle(Messages.AddWorkspaceFileAction_DialogTitle);
 		dialog.setMessage(Messages.AddWorkspaceFileAction_DialogMessage);
-		dialog.addFilter(new ViewerFilter()
-		{
+		dialog.addFilter(new ViewerFilter() {
 			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element)
-			{
+			public boolean select(Viewer viewer, Object parentElement,
+					Object element) {
 				if (!(element instanceof IResource))
 					return false;
-				IResource resource = (IResource)element;
-				if (resource.getType() == IResource.FILE)
-				{
-					if (!XSLCore.isXSLFile((IFile)resource))
+				IResource resource = (IResource) element;
+				if (resource.getType() == IResource.FILE) {
+					if (!XSLCore.isXSLFile((IFile) resource))
 						return false;
 				}
 				return true;
@@ -100,22 +96,20 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 		dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
 		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
-		if (dialog.open() == Window.OK)
-		{
+		if (dialog.open() == Window.OK) {
 			Object[] elements = dialog.getResult();
 			LaunchTransform[] res = new LaunchTransform[elements.length];
-			for (int i = 0; i < res.length; i++)
-			{
+			for (int i = 0; i < res.length; i++) {
 				IResource elem = (IResource) elements[i];
-				res[i] = new LaunchTransform(elem.getFullPath().toPortableString(), LaunchTransform.RESOURCE_TYPE);
+				res[i] = new LaunchTransform(elem.getFullPath()
+						.toPortableString(), LaunchTransform.RESOURCE_TYPE);
 			}
 			addTransforms(res);
 		}
 	}
 
 	@Override
-	protected int getActionType()
-	{
+	protected int getActionType() {
 		return ADD;
 	}
 }

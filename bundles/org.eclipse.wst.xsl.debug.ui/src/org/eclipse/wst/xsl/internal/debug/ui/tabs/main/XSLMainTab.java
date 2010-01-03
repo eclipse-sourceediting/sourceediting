@@ -40,8 +40,7 @@ import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
-public class XSLMainTab extends XSLLaunchConfigurationTab
-{
+public class XSLMainTab extends XSLLaunchConfigurationTab {
 	private final InputFileBlock inputFileBlock;
 	private final TransformsBlock transformsBlock;
 	private final ParametersBlock parametersBlock;
@@ -50,8 +49,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 	// private RenderBlock renderBlock;
 	// private OutputBlock outputBlock;
 
-	public XSLMainTab()
-	{
+	public XSLMainTab() {
 		IResource[] resourceContext = getContext();
 		IFile inputFile = getXMLInput(resourceContext);
 
@@ -61,13 +59,12 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 		// renderBlock = new RenderBlock();
 		// outputBlock = new OutputBlock();
 
-		setBlocks(new ILaunchConfigurationTab[]
-		{ inputFileBlock, transformsBlock, parametersBlock }); // ,renderBlock,outputBlock});
+		setBlocks(new ILaunchConfigurationTab[] { inputFileBlock,
+				transformsBlock, parametersBlock }); // ,renderBlock,outputBlock});
 	}
 
 	@Override
-	public void createControl(Composite parent)
-	{
+	public void createControl(Composite parent) {
 		super.createControl(parent);
 		Composite comp = (Composite) getControl();
 		GridLayout layout = new GridLayout(1, false);
@@ -81,14 +78,13 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 	}
 
 	@Override
-	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
-	{
+	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		LaunchPipeline lp = new LaunchPipeline();
 		IResource[] resourceContext = getContext();
 		IFile[] stylesheets = getXSLStylesheets(resourceContext);
-		for (IFile file : stylesheets)
-		{
-			LaunchTransform lt = new LaunchTransform(file.getFullPath().toPortableString(), LaunchTransform.RESOURCE_TYPE);
+		for (IFile file : stylesheets) {
+			LaunchTransform lt = new LaunchTransform(file.getFullPath()
+					.toPortableString(), LaunchTransform.RESOURCE_TYPE);
 			lp.addTransformDef(lt);
 		}
 		savePipeline(configuration, lp);
@@ -96,24 +92,20 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 	}
 
 	@Override
-	public void initializeFrom(ILaunchConfiguration configuration)
-	{
+	public void initializeFrom(ILaunchConfiguration configuration) {
 		pipeline = null;
-		try
-		{
-			String s = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PIPELINE, (String) null);
-			if (s != null && s.length() > 0)
-			{
-				ByteArrayInputStream inputStream = new ByteArrayInputStream(s.getBytes());
+		try {
+			String s = configuration.getAttribute(
+					XSLLaunchConfigurationConstants.ATTR_PIPELINE,
+					(String) null);
+			if (s != null && s.length() > 0) {
+				ByteArrayInputStream inputStream = new ByteArrayInputStream(s
+						.getBytes());
 				pipeline = LaunchPipeline.fromXML(inputStream);
-			}
-			else
-			{
+			} else {
 				pipeline = new LaunchPipeline();
 			}
-		}
-		catch (CoreException e)
-		{
+		} catch (CoreException e) {
 			XSLDebugUIPlugin.log(e);
 		}
 		transformsBlock.setPipeline(pipeline);
@@ -121,31 +113,27 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 	}
 
 	@Override
-	public void performApply(ILaunchConfigurationWorkingCopy configuration)
-	{
+	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		super.performApply(configuration);
 		savePipeline(configuration, pipeline);
 	}
 
-	private void savePipeline(ILaunchConfigurationWorkingCopy configuration, LaunchPipeline pipeline)
-	{
-		try
-		{
-			configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_PIPELINE, pipeline.toXML());
-		}
-		catch (CoreException e)
-		{
+	private void savePipeline(ILaunchConfigurationWorkingCopy configuration,
+			LaunchPipeline pipeline) {
+		try {
+			configuration.setAttribute(
+					XSLLaunchConfigurationConstants.ATTR_PIPELINE, pipeline
+							.toXML());
+		} catch (CoreException e) {
 			XSLDebugUIPlugin.log(e);
 		}
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return Messages.XSLMainTab_TabName;
 	}
 
-	private static IResource[] getContext()
-	{
+	private static IResource[] getContext() {
 
 		// IProject[] projects =
 		// ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -165,15 +153,13 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 
 		IWorkbenchPage page = XSLDebugUIPlugin.getActivePage();
 		List<Object> resources = new ArrayList<Object>();
-		if (page != null)
-		{
+		if (page != null) {
 			// use selections to find the project
 			ISelection selection = page.getSelection();
-			if (selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection)
-			{
+			if (selection != null && !selection.isEmpty()
+					&& selection instanceof IStructuredSelection) {
 				IStructuredSelection ss = (IStructuredSelection) selection;
-				for (Iterator<?> iter = ss.iterator(); iter.hasNext();)
-				{
+				for (Iterator<?> iter = ss.iterator(); iter.hasNext();) {
 					Object element = iter.next();
 					if (element instanceof IResource)
 						resources.add(element);
@@ -182,42 +168,39 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 			}
 			// use current editor to find the project
 			IEditorPart part = page.getActiveEditor();
-			if (part != null)
-			{
+			if (part != null) {
 				IEditorInput input = part.getEditorInput();
 				IFile file = (IFile) input.getAdapter(IFile.class);
 				if (file != null)
-					return new IResource[]
-					{ file };
+					return new IResource[] { file };
 			}
 		}
 		return new IResource[0];
 	}
 
-	private IFile getXMLInput(IResource[] context)
-	{
-		for (IResource resource : context)
-		{
-			if (resource instanceof IFile && ("xml".equalsIgnoreCase(resource.getFileExtension()) || "xhtml".equalsIgnoreCase(resource.getFileExtension()))) //$NON-NLS-1$ //$NON-NLS-2$
+	private IFile getXMLInput(IResource[] context) {
+		for (IResource resource : context) {
+			if (resource instanceof IFile
+					&& ("xml".equalsIgnoreCase(resource.getFileExtension()) || "xhtml".equalsIgnoreCase(resource.getFileExtension()))) //$NON-NLS-1$ //$NON-NLS-2$
 				return (IFile) resource;
 		}
 		return null;
 	}
 
-	private IFile[] getXSLStylesheets(IResource[] context)
-	{
+	private IFile[] getXSLStylesheets(IResource[] context) {
 		List<IResource> stylesheets = new ArrayList<IResource>();
-		for (IResource resource : context)
-		{
-			if (resource instanceof IFile && XSLCore.isXSLFile((IFile)resource)) 
+		for (IResource resource : context) {
+			if (resource instanceof IFile
+					&& XSLCore.isXSLFile((IFile) resource))
 				stylesheets.add(resource);
 		}
 		return stylesheets.toArray(new IFile[0]);
 
 	}
-	
+
 	@Override
 	public Image getImage() {
-		return XSLPluginImageHelper.getInstance().getImage(XSLDebugPluginImages.IMG_MAIN_TAB);
+		return XSLPluginImageHelper.getInstance().getImage(
+				XSLDebugPluginImages.IMG_MAIN_TAB);
 	}
 }

@@ -41,19 +41,18 @@ import org.eclipse.wst.xsl.internal.debug.ui.actions.RemoveParameterAction;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
-public class ParametersBlock extends AbstractTableBlock
-{
+public class ParametersBlock extends AbstractTableBlock {
 	private ParameterViewer parametersViewer;
 	private Button addParameterButton;
 	private Button removeParameterButton;
 	private final TransformsBlock transformsBlock;
-	private final ISelectionChangedListener selectionListener = new ISelectionChangedListener()
-	{
-		public void selectionChanged(SelectionChangedEvent event)
-		{
-			IStructuredSelection stylesheetSelection = (IStructuredSelection) event.getSelection();
+	private final ISelectionChangedListener selectionListener = new ISelectionChangedListener() {
+		public void selectionChanged(SelectionChangedEvent event) {
+			IStructuredSelection stylesheetSelection = (IStructuredSelection) event
+					.getSelection();
 			if (stylesheetSelection.size() == 1)
-				setTransform((LaunchTransform) stylesheetSelection.getFirstElement());
+				setTransform((LaunchTransform) stylesheetSelection
+						.getFirstElement());
 			else
 				setTransform(null);
 			updateEnabled();
@@ -61,29 +60,28 @@ public class ParametersBlock extends AbstractTableBlock
 	};
 	private Table fTable;
 
-	public ParametersBlock(TransformsBlock transformsBlock)
-	{
+	public ParametersBlock(TransformsBlock transformsBlock) {
 		super();
 		this.transformsBlock = transformsBlock;
 	}
 
-	protected void setTransform(LaunchTransform transform)
-	{
+	protected void setTransform(LaunchTransform transform) {
 		parametersViewer.getViewer().setInput(transform);
 	}
 
-	protected void updateEnabled()
-	{
-		IStructuredSelection stylesheetSelection = (IStructuredSelection) transformsBlock.getStylesheetViewer().getSelection();
+	protected void updateEnabled() {
+		IStructuredSelection stylesheetSelection = (IStructuredSelection) transformsBlock
+				.getStylesheetViewer().getSelection();
 		boolean enabled = stylesheetSelection.size() == 1;
 		parametersViewer.getViewer().getTable().setEnabled(enabled);
 		addParameterButton.setEnabled(enabled);
-		IStructuredSelection parametersSelection = (IStructuredSelection) parametersViewer.getViewer().getSelection();
-		removeParameterButton.setEnabled(enabled && !parametersSelection.isEmpty());
+		IStructuredSelection parametersSelection = (IStructuredSelection) parametersViewer
+				.getViewer().getSelection();
+		removeParameterButton.setEnabled(enabled
+				&& !parametersSelection.isEmpty());
 	}
 
-	public void createControl(Composite parent)
-	{
+	public void createControl(Composite parent) {
 		Font font = parent.getFont();
 
 		Group group = new Group(parent, SWT.NONE);
@@ -110,56 +108,54 @@ public class ParametersBlock extends AbstractTableBlock
 		TableColumn column1 = new TableColumn(fTable, SWT.NONE);
 		column1.setWidth(150);
 		column1.setResizable(true);
-		column1.setText(Messages.ParametersBlock_0); 
+		column1.setText(Messages.ParametersBlock_0);
 
 		TableColumn column3 = new TableColumn(fTable, SWT.NONE);
 		column3.setWidth(250);
 		column3.setResizable(true);
-		column3.setText(Messages.ParametersBlock_2); 
+		column3.setText(Messages.ParametersBlock_2);
 
 		parametersViewer = new ParameterViewer(fTable);
-		parametersViewer.getViewer().setLabelProvider(new ParametersLabelProvider());
-		parametersViewer.getViewer().setContentProvider(new ParametersContentProvider());
-		parametersViewer.addParametersChangedListener(new IParametersChangedListener()
-		{
+		parametersViewer.getViewer().setLabelProvider(
+				new ParametersLabelProvider());
+		parametersViewer.getViewer().setContentProvider(
+				new ParametersContentProvider());
+		parametersViewer
+				.addParametersChangedListener(new IParametersChangedListener() {
 
-			public void parametersChanged(ParameterViewer viewer)
-			{
-				updateLaunchConfigurationDialog();
-			}
-		});
-		parametersViewer.getViewer().getTable().addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent event) {
-				if (event.character == SWT.DEL && event.stateMask == 0) {
-					RemoveParameterAction ra = new RemoveParameterAction(parametersViewer);
-					ra.run();
-					updateLaunchConfigurationDialog();
-				}
-			}
-		});
+					public void parametersChanged(ParameterViewer viewer) {
+						updateLaunchConfigurationDialog();
+					}
+				});
+		parametersViewer.getViewer().getTable().addKeyListener(
+				new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent event) {
+						if (event.character == SWT.DEL && event.stateMask == 0) {
+							RemoveParameterAction ra = new RemoveParameterAction(
+									parametersViewer);
+							ra.run();
+							updateLaunchConfigurationDialog();
+						}
+					}
+				});
 
-		parametersViewer.getViewer().setColumnProperties(new String[]
-		{ "name", "value" }); //$NON-NLS-1$ //$NON-NLS-2$
+		parametersViewer.getViewer().setColumnProperties(
+				new String[] { "name", "value" }); //$NON-NLS-1$ //$NON-NLS-2$
 		TextCellEditor textEditor = new TextCellEditor(fTable);
-		CellEditor[] editors = new CellEditor[]
-		{ null, textEditor };
+		CellEditor[] editors = new CellEditor[] { null, textEditor };
 		parametersViewer.getViewer().setCellEditors(editors);
-		parametersViewer.getViewer().setCellModifier(new ICellModifier()
-		{
-			public boolean canModify(Object element, String property)
-			{
+		parametersViewer.getViewer().setCellModifier(new ICellModifier() {
+			public boolean canModify(Object element, String property) {
 				return "value".equals(property); //$NON-NLS-1$ 
 			}
 
-			public Object getValue(Object element, String property)
-			{
+			public Object getValue(Object element, String property) {
 				LaunchAttribute att = (LaunchAttribute) element;
 				return att.value == null ? "" : att.value; //$NON-NLS-1$
 			}
 
-			public void modify(Object element, String property, Object value)
-			{
+			public void modify(Object element, String property, Object value) {
 				Item item = (Item) element;
 				LaunchAttribute att = (LaunchAttribute) item.getData();
 				att.value = (String) value;
@@ -173,70 +169,67 @@ public class ParametersBlock extends AbstractTableBlock
 		parameterButtonCompLayout.marginHeight = 0;
 		parameterButtonCompLayout.marginWidth = 0;
 		parameterButtonComp.setLayout(parameterButtonCompLayout);
-		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_FILL);
+		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING
+				| GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = 2;
 		parameterButtonComp.setLayoutData(gd);
 		parameterButtonComp.setFont(font);
 
-		addParameterButton = createButton(parameterButtonComp, new AddParameterAction(parametersViewer));
-		removeParameterButton = createButton(parameterButtonComp, new RemoveParameterAction(parametersViewer));
+		addParameterButton = createButton(parameterButtonComp,
+				new AddParameterAction(parametersViewer));
+		removeParameterButton = createButton(parameterButtonComp,
+				new RemoveParameterAction(parametersViewer));
 
-		transformsBlock.getStylesheetViewer().addSelectionChangedListener(selectionListener);
+		transformsBlock.getStylesheetViewer().addSelectionChangedListener(
+				selectionListener);
 
 		restoreColumnSettings();
 	}
 
-	protected Button createButton(Composite pathButtonComp, AbstractParameterAction action)
-	{
+	protected Button createButton(Composite pathButtonComp,
+			AbstractParameterAction action) {
 		Button button = createPushButton(pathButtonComp, action.getText(), null);
 		action.setButton(button);
 		return button;
 	}
 
 	@Override
-	protected Table getTable()
-	{
+	protected Table getTable() {
 		return fTable;
 	}
 
 	@Override
-	protected IDialogSettings getDialogSettings()
-	{
+	protected IDialogSettings getDialogSettings() {
 		return XSLDebugUIPlugin.getDefault().getDialogSettings();
 	}
 
 	@Override
-	protected String getQualifier()
-	{
+	protected String getQualifier() {
 		return XSLDebugUIConstants.MAIN_PARAMATERS_BLOCK;
 	}
 
-	public String getName()
-	{
-		return Messages.ParametersBlock_9; 
+	public String getName() {
+		return Messages.ParametersBlock_9;
 	}
 
-	public void initializeFrom(ILaunchConfiguration configuration)
-	{
+	public void initializeFrom(ILaunchConfiguration configuration) {
 		// handled by the Tab
 		updateEnabled();
 	}
 
-	public void performApply(ILaunchConfigurationWorkingCopy configuration)
-	{
+	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		// handled by the Tab
 	}
 
-	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
-	{
+	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		// handled by the Tab
 	}
 
 	@Override
-	public void dispose()
-	{
+	public void dispose() {
 		if (transformsBlock.getStylesheetViewer() != null)
-			transformsBlock.getStylesheetViewer().removeSelectionChangedListener(selectionListener);
+			transformsBlock.getStylesheetViewer()
+					.removeSelectionChangedListener(selectionListener);
 		super.dispose();
 	}
 }

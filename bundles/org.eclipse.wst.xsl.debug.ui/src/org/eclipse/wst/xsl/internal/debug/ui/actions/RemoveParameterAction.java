@@ -23,28 +23,24 @@ import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
  * 
  * @author Doug Satchwell
  */
-public class RemoveParameterAction extends AbstractParameterAction
-{
+public class RemoveParameterAction extends AbstractParameterAction {
 	/**
 	 * Create a new instance of this.
 	 * 
-	 * @param viewer the viewer that will have its selection removed
+	 * @param viewer
+	 *            the viewer that will have its selection removed
 	 */
-	public RemoveParameterAction(ParameterViewer viewer)
-	{
+	public RemoveParameterAction(ParameterViewer viewer) {
 		super(Messages.RemoveParameterAction, viewer);
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		IStructuredSelection sel = getStructuredSelection();
-		if (sel.size() > 0)
-		{
+		if (sel.size() > 0) {
 			LaunchAttribute[] entries = new LaunchAttribute[sel.size()];
 			int i = 0;
-			for (Iterator<?> iter = sel.iterator(); iter.hasNext(); i++)
-			{
+			for (Iterator<?> iter = sel.iterator(); iter.hasNext(); i++) {
 				LaunchAttribute att = (LaunchAttribute) iter.next();
 				entries[i] = att;
 			}

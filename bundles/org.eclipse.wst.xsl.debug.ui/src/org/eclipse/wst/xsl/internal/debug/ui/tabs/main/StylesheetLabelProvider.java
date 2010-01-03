@@ -21,63 +21,53 @@ import org.eclipse.wst.xsl.internal.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
-public class StylesheetLabelProvider extends LabelProvider
-{
-	private Image image = XSLDebugUIPlugin.getImageDescriptor("icons/xslt_launch.gif").createImage(); //$NON-NLS-1$
-	
+public class StylesheetLabelProvider extends LabelProvider {
+	private Image image = XSLDebugUIPlugin.getImageDescriptor(
+			"icons/xslt_launch.gif").createImage(); //$NON-NLS-1$
+
 	@Override
-	public Image getImage(Object element)
-	{
+	public Image getImage(Object element) {
 		return image;
 	}
 
 	@Override
-	public String getText(Object element)
-	{
+	public String getText(Object element) {
 		LaunchTransform lt = (LaunchTransform) element;
 		int index = lt.getPipeline().getTransformDefs().indexOf(lt);
 
 		IPath path;
-		try
-		{
+		try {
 			path = lt.getPath();
-		}
-		catch (CoreException e)
-		{
-			return MessageFormat.format(Messages.StylesheetEntryLabelProvider_Invalid_path, new Object[]
-			{ "null" }); //$NON-NLS-1$
+		} catch (CoreException e) {
+			return MessageFormat.format(
+					Messages.StylesheetEntryLabelProvider_Invalid_path,
+					new Object[] { "null" }); //$NON-NLS-1$
 		}
 
-		if (path == null)
-		{
-			return MessageFormat.format(Messages.StylesheetEntryLabelProvider_Invalid_path, new Object[]
-			{ "null" }); //$NON-NLS-1$
-		}
-		else if (!path.isAbsolute() || !path.isValidPath(path.toString()))
-		{
-			return MessageFormat.format(Messages.StylesheetEntryLabelProvider_Invalid_path, new Object[]
-			{ path.toString() });
+		if (path == null) {
+			return MessageFormat.format(
+					Messages.StylesheetEntryLabelProvider_Invalid_path,
+					new Object[] { "null" }); //$NON-NLS-1$
+		} else if (!path.isAbsolute() || !path.isValidPath(path.toString())) {
+			return MessageFormat.format(
+					Messages.StylesheetEntryLabelProvider_Invalid_path,
+					new Object[] { path.toString() });
 		}
 
 		String[] segments = path.segments();
 		StringBuffer displayPath = new StringBuffer();
-		if (segments.length > 0)
-		{
+		if (segments.length > 0) {
 			displayPath.append(segments[segments.length - 1]);
 			displayPath.append(" - "); //$NON-NLS-1$
 			String device = path.getDevice();
-			if (device != null)
-			{
+			if (device != null) {
 				displayPath.append(device);
 			}
 			displayPath.append(File.separator);
-			for (int i = 0; i < segments.length - 1; i++)
-			{
+			for (int i = 0; i < segments.length - 1; i++) {
 				displayPath.append(segments[i]).append(File.separator);
 			}
-		}
-		else
-		{
+		} else {
 			displayPath.append(path.toString());
 		}
 		return (index + 1) + ") " + displayPath.toString(); //$NON-NLS-1$

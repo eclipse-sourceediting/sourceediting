@@ -19,40 +19,39 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.XSLMainTab;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.output.OutputTab;
 
 /**
- *The tab group for the XSL tabs.
+ * The tab group for the XSL tabs.
  * 
  * @author Doug Satchwell
  * @since 1.0
  */
-public class XSLTTabGroup extends AbstractLaunchConfigurationTabGroup
-{
+public class XSLTTabGroup extends AbstractLaunchConfigurationTabGroup {
 	/**
 	 * Create a new instance of this.
 	 */
-	public XSLTTabGroup()
-	{
+	public XSLTTabGroup() {
 	}
 
-	public void createTabs(ILaunchConfigurationDialog dialog, String mode)
-	{
+	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		XSLMainTab main = new XSLMainTab();
-		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] { main, new OutputTab(main) };
-		tabs = addTabs(tabs, new ILaunchConfigurationTab[] { new SourceLookupTab(), new CommonTab() });
+		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] { main,
+				new OutputTab(main) };
+		tabs = addTabs(tabs, new ILaunchConfigurationTab[] {
+				new SourceLookupTab(), new CommonTab() });
 
 		setTabs(tabs);
 	}
 
-	private ILaunchConfigurationTab[] addTabs(ILaunchConfigurationTab[] tabs1, ILaunchConfigurationTab[] tabs2)
-	{
-		ILaunchConfigurationTab[] newTabs = new ILaunchConfigurationTab[tabs1.length + tabs2.length];
+	private ILaunchConfigurationTab[] addTabs(ILaunchConfigurationTab[] tabs1,
+			ILaunchConfigurationTab[] tabs2) {
+		ILaunchConfigurationTab[] newTabs = new ILaunchConfigurationTab[tabs1.length
+				+ tabs2.length];
 		System.arraycopy(tabs1, 0, newTabs, 0, tabs1.length);
 		System.arraycopy(tabs2, 0, newTabs, tabs1.length, tabs2.length);
 		return newTabs;
 	}
 
 	@Override
-	public void setTabs(ILaunchConfigurationTab[] tabs)
-	{
+	public void setTabs(ILaunchConfigurationTab[] tabs) {
 		// TODO Auto-generated method stub
 		super.setTabs(tabs);
 	}

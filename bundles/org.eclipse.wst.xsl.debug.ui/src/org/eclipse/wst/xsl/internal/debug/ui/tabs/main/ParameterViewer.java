@@ -18,88 +18,75 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AbstractStylesheetAction;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 
-public class ParameterViewer
-{
+public class ParameterViewer {
 	private final TableViewer viewer;
 	private final ListenerList fListeners = new ListenerList();
 
-	public ParameterViewer(Table table)
-	{
+	public ParameterViewer(Table table) {
 		viewer = new TableViewer(table);
 	}
-	
-	public TableViewer getViewer()
-	{
+
+	public TableViewer getViewer() {
 		return viewer;
 	}
 
-	private ParametersContentProvider getParametersContentProvider()
-	{
+	private ParametersContentProvider getParametersContentProvider() {
 		return (ParametersContentProvider) viewer.getContentProvider();
 	}
 
-	public Shell getShell()
-	{
+	public Shell getShell() {
 		return viewer.getControl().getShell();
 	}
 
-	public boolean isEnabled()
-	{
+	public boolean isEnabled() {
 		return true;
 	}
 
-	public boolean updateSelection(int actionType, IStructuredSelection selection)
-	{
-		switch (actionType)
-		{
-			case AbstractStylesheetAction.ADD:
-				return true;
-			case AbstractStylesheetAction.REMOVE:
-			case AbstractStylesheetAction.MOVE:
-			default:
-				break;
+	public boolean updateSelection(int actionType,
+			IStructuredSelection selection) {
+		switch (actionType) {
+		case AbstractStylesheetAction.ADD:
+			return true;
+		case AbstractStylesheetAction.REMOVE:
+		case AbstractStylesheetAction.MOVE:
+		default:
+			break;
 		}
 		return selection.size() > 0;
 	}
 
-	public IStructuredSelection getSelectedEntries()
-	{
-		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+	public IStructuredSelection getSelectedEntries() {
+		IStructuredSelection selection = (IStructuredSelection) viewer
+				.getSelection();
 		return selection;
 	}
 
-	public void addParameter(LaunchAttribute parameter)
-	{
+	public void addParameter(LaunchAttribute parameter) {
 		getParametersContentProvider().addParameter(parameter);
 		notifyChanged();
 	}
 
-	public void removeEntries(LaunchAttribute[] entries)
-	{
+	public void removeEntries(LaunchAttribute[] entries) {
 		getParametersContentProvider().removeParameters(entries);
 		notifyChanged();
 	}
 
-	public LaunchAttribute[] getParameters()
-	{
+	public LaunchAttribute[] getParameters() {
 		return getParametersContentProvider().getParameters();
 	}
 
-	public void addParametersChangedListener(IParametersChangedListener listener)
-	{
+	public void addParametersChangedListener(IParametersChangedListener listener) {
 		fListeners.add(listener);
 	}
 
-	public void removeParametersChangedListener(IParametersChangedListener listener)
-	{
+	public void removeParametersChangedListener(
+			IParametersChangedListener listener) {
 		fListeners.remove(listener);
 	}
 
-	private void notifyChanged()
-	{
+	private void notifyChanged() {
 		Object[] listeners = fListeners.getListeners();
-		for (Object element : listeners)
-		{
+		for (Object element : listeners) {
 			((IParametersChangedListener) element).parametersChanged(this);
 		}
 	}

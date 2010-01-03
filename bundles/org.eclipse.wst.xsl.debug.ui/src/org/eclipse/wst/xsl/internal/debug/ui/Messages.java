@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui;
 
-
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -126,9 +125,9 @@ public class Messages extends NLS {
 	public static String InputFileBlock_FILE_SYSTEM_BUTTON;
 
 	public static String InputFileBlock_WORKSPACE_BUTTON;
-	
+
 	public static String InputFileBlock_OPENFILES_BUTTON;
-	
+
 	public static String InputFileBlock_OPENFILES_DIALOG;
 
 	public static String InputFileBlock_Name;
@@ -237,15 +236,13 @@ public class Messages extends NLS {
 	public static String OutputFOFileBlock_WORKSPACE_DIALOG_TITLE;
 
 	public static String OutputFOFileBlock_Exception_occurred_saving_configuration;
-	
+
 	public static String ResourceSelectionBlock_0;
-    public static String XSLLaunchShortcut_0;
+	public static String XSLLaunchShortcut_0;
 	public static String XSLLaunchShortcut_1;
 	public static String XSLLaunchShortcut_2;
 	public static String XSLLaunchShortcut_6;
 	public static String XSLSelectExisting;
-	
-	
 
 	private Messages() {
 	}

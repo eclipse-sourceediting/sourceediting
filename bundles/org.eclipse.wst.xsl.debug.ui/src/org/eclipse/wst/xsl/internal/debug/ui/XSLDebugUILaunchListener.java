@@ -33,118 +33,104 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 
 /**
- * A listener to XSL launches. When an XSL launch is terminated, this performs the UI parts of the 
- * XSL launching - such as open the editor on the output file, and format it.
+ * A listener to XSL launches. When an XSL launch is terminated, this performs
+ * the UI parts of the XSL launching - such as open the editor on the output
+ * file, and format it.
  * 
  * @author Doug Satchwell
  * @since 1.0
  */
-public class XSLDebugUILaunchListener implements ILaunchesListener2
-{
+public class XSLDebugUILaunchListener implements ILaunchesListener2 {
 	public static final String XSL_LAUNCH_CONFIGURATION_TYPE = "org.eclipse.wst.xsl.launching.launchConfigurationType"; //$NON-NLS-1$
 
 	/**
 	 * Starts the launch listening
 	 */
-	public void start()
-	{
+	public void start() {
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(this);
 	}
-	
+
 	/**
 	 * Stops the launch listening
 	 */
-	public void stop()
-	{
+	public void stop() {
 		DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(this);
 	}
-	
-	public void launchesTerminated(ILaunch[] launches)
-	{
-		for (ILaunch launch : launches)
-		{
+
+	public void launchesTerminated(ILaunch[] launches) {
+		for (ILaunch launch : launches) {
 			ILaunchConfigurationType configType = null;
-			try
-			{
+			try {
 				configType = launch.getLaunchConfiguration().getType();
-			}
-			catch (CoreException e)
-			{
+			} catch (CoreException e) {
 				// do nothing
 			}
-			if (configType != null && XSL_LAUNCH_CONFIGURATION_TYPE.equals(configType.getIdentifier()))
-			{
-				try
-				{
-					BaseLaunchHelper launchHelper = new BaseLaunchHelper(launch.getLaunchConfiguration());
+			if (configType != null
+					&& XSL_LAUNCH_CONFIGURATION_TYPE.equals(configType
+							.getIdentifier())) {
+				try {
+					BaseLaunchHelper launchHelper = new BaseLaunchHelper(launch
+							.getLaunchConfiguration());
 					File file = launchHelper.getTarget();
-					IFile ifile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(file.getAbsolutePath()));
-					if (ifile != null)
-					{// refresh this workspace file..
-						try
-						{
-							ifile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
-						}
-						catch (CoreException e)
-						{
+					IFile ifile = ResourcesPlugin.getWorkspace().getRoot()
+							.getFileForLocation(
+									new Path(file.getAbsolutePath()));
+					if (ifile != null) {// refresh this workspace file..
+						try {
+							ifile.refreshLocal(IResource.DEPTH_ZERO,
+									new NullProgressMonitor());
+						} catch (CoreException e) {
 							XSLDebugUIPlugin.log(e);
 						}
 					}
 					openFileIfRequired(launchHelper);
-				}
-				catch (CoreException e)
-				{
+				} catch (CoreException e) {
 					XSLDebugUIPlugin.log(e);
 				}
 			}
 		}
 	}
 
-	public void launchesAdded(ILaunch[] launches)
-	{
+	public void launchesAdded(ILaunch[] launches) {
 		// do nothing
 	}
 
-	public void launchesChanged(ILaunch[] launches)
-	{
+	public void launchesChanged(ILaunch[] launches) {
 		// do nothing
 	}
 
-	public void launchesRemoved(ILaunch[] launches)
-	{
+	public void launchesRemoved(ILaunch[] launches) {
 		// do nothing
 	}
-	
-	private void openFileIfRequired(final BaseLaunchHelper launchHelper)
-	{
-		if (launchHelper.getOpenFileOnCompletion())
-		{
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
-			{
-				public void run()
-				{
-					try
-					{
+
+	private void openFileIfRequired(final BaseLaunchHelper launchHelper) {
+		if (launchHelper.getOpenFileOnCompletion()) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					try {
 						// Open editor on new file.
-						IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						IWorkbenchWindow dw = PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow();
 						File file = launchHelper.getTarget();
 						Path path = new Path(file.getAbsolutePath());
-						IFileStore filestore = EFS.getLocalFileSystem().getStore(path);
-						IDE.openEditorOnFileStore(dw.getActivePage(), filestore);
-						
-						if (launchHelper.getFormatFileOnCompletion())
-						{
+						IFileStore filestore = EFS.getLocalFileSystem()
+								.getStore(path);
+						IDE
+								.openEditorOnFileStore(dw.getActivePage(),
+										filestore);
+
+						if (launchHelper.getFormatFileOnCompletion()) {
 							// format the editor contents
-							IHandlerService p = (IHandlerService)PlatformUI.getWorkbench().getService(IHandlerService.class);
-							p.executeCommand("org.eclipse.wst.sse.ui.format.document", null); //$NON-NLS-1$
+							IHandlerService p = (IHandlerService) PlatformUI
+									.getWorkbench().getService(
+											IHandlerService.class);
+							p
+									.executeCommand(
+											"org.eclipse.wst.sse.ui.format.document", null); //$NON-NLS-1$
 						}
-					}
-					catch (PartInitException e)
-					{
+					} catch (PartInitException e) {
 						XSLDebugUIPlugin.log(e);
-					}
-					catch (CommandException e)
-					{
+					} catch (CommandException e) {
 						XSLDebugUIPlugin.log(e);
 					}
 				}

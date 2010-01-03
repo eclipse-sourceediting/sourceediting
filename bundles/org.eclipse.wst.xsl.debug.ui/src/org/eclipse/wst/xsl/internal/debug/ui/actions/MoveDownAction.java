@@ -18,43 +18,38 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
 /**
- * The action for moving a stylesheet further down in the transformation pipeline.
+ * The action for moving a stylesheet further down in the transformation
+ * pipeline.
  * 
  * @author Doug Satchwell
  */
-public class MoveDownAction extends AbstractStylesheetAction
-{
+public class MoveDownAction extends AbstractStylesheetAction {
 	/**
 	 * Create a new instance of this.
 	 * 
 	 * @param viewer
 	 */
-	public MoveDownAction(StylesheetViewer viewer)
-	{
+	public MoveDownAction(StylesheetViewer viewer) {
 		super(Messages.MoveDownAction_Text, viewer);
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		List<?> targets = getOrderedSelection();
-		if (targets.isEmpty())
-		{
+		if (targets.isEmpty()) {
 			return;
 		}
 		List<LaunchTransform> list = getEntriesAsList();
 		int bottom = list.size() - 1;
 		int index = 0;
-		for (int i = targets.size() - 1; i >= 0; i--)
-		{
+		for (int i = targets.size() - 1; i >= 0; i--) {
 			Object target = targets.get(i);
 			index = list.indexOf(target);
-			if (index < bottom)
-			{
+			if (index < bottom) {
 				bottom = index + 1;
 				Object temp = list.get(bottom);
-				list.set(bottom, (LaunchTransform)target);
-				list.set(index, (LaunchTransform)temp);
+				list.set(bottom, (LaunchTransform) target);
+				list.set(index, (LaunchTransform) temp);
 			}
 			bottom = index;
 		}
@@ -62,18 +57,16 @@ public class MoveDownAction extends AbstractStylesheetAction
 	}
 
 	@Override
-	protected boolean updateSelection(IStructuredSelection selection)
-	{
-		if (selection.isEmpty())
-		{
+	protected boolean updateSelection(IStructuredSelection selection) {
+		if (selection.isEmpty()) {
 			return false;
 		}
-		return getViewer().updateSelection(getActionType(), selection) && !isIndexSelected(selection, getEntriesAsList().size() - 1);
+		return getViewer().updateSelection(getActionType(), selection)
+				&& !isIndexSelected(selection, getEntriesAsList().size() - 1);
 	}
 
 	@Override
-	protected int getActionType()
-	{
+	protected int getActionType() {
 		return MOVE;
 	}
 }

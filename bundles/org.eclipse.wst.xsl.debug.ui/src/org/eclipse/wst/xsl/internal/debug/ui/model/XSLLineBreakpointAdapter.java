@@ -30,23 +30,21 @@ import org.eclipse.wst.xsl.launching.model.XSLLineBreakpoint;
  * 
  * @author Doug Satchwell
  */
-public class XSLLineBreakpointAdapter implements IToggleBreakpointsTarget
-{
-	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException
-	{
+public class XSLLineBreakpointAdapter implements IToggleBreakpointsTarget {
+	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection)
+			throws CoreException {
 		ITextEditor textEditor = getEditor(part);
-		if (textEditor != null)
-		{
-			IResource resource = (IResource) textEditor.getEditorInput().getAdapter(IResource.class);
+		if (textEditor != null) {
+			IResource resource = (IResource) textEditor.getEditorInput()
+					.getAdapter(IResource.class);
 			ITextSelection textSelection = (ITextSelection) selection;
 			int lineNumber = textSelection.getStartLine();
-			IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IXSLConstants.ID_XSL_DEBUG_MODEL);
-			for (IBreakpoint breakpoint : breakpoints)
-			{
-				if (resource.equals(breakpoint.getMarker().getResource()))
-				{
-					if (((ILineBreakpoint) breakpoint).getLineNumber() == (lineNumber + 1))
-					{
+			IBreakpoint[] breakpoints = DebugPlugin.getDefault()
+					.getBreakpointManager().getBreakpoints(
+							IXSLConstants.ID_XSL_DEBUG_MODEL);
+			for (IBreakpoint breakpoint : breakpoints) {
+				if (resource.equals(breakpoint.getMarker().getResource())) {
+					if (((ILineBreakpoint) breakpoint).getLineNumber() == (lineNumber + 1)) {
 						// remove
 						breakpoint.delete();
 						return;
@@ -54,13 +52,15 @@ public class XSLLineBreakpointAdapter implements IToggleBreakpointsTarget
 				}
 			}
 			// create line breakpoint (doc line numbers start at 0)
-			XSLLineBreakpoint lineBreakpoint = new XSLLineBreakpoint(resource, lineNumber + 1, 1, 1);
-			DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(lineBreakpoint);
+			XSLLineBreakpoint lineBreakpoint = new XSLLineBreakpoint(resource,
+					lineNumber + 1, 1, 1);
+			DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(
+					lineBreakpoint);
 		}
 	}
 
-	public boolean canToggleLineBreakpoints(IWorkbenchPart part, ISelection selection)
-	{
+	public boolean canToggleLineBreakpoints(IWorkbenchPart part,
+			ISelection selection) {
 		return getEditor(part) != null;
 	}
 
@@ -68,16 +68,13 @@ public class XSLLineBreakpointAdapter implements IToggleBreakpointsTarget
 	 * Returns the editor being used to edit a XSL file, associated with the
 	 * given part, or <code>null</code> if none.
 	 */
-	private ITextEditor getEditor(IWorkbenchPart part)
-	{
-		if (part instanceof ITextEditor)
-		{
+	private ITextEditor getEditor(IWorkbenchPart part) {
+		if (part instanceof ITextEditor) {
 			ITextEditor editorPart = (ITextEditor) part;
-			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
-			if (resource != null && resource.getType() == IResource.FILE)
-			{
-				if (XSLCore.isXSLFile((IFile)resource))
-				{
+			IResource resource = (IResource) editorPart.getEditorInput()
+					.getAdapter(IResource.class);
+			if (resource != null && resource.getType() == IResource.FILE) {
+				if (XSLCore.isXSLFile((IFile) resource)) {
 					return editorPart;
 				}
 			}
@@ -85,21 +82,21 @@ public class XSLLineBreakpointAdapter implements IToggleBreakpointsTarget
 		return null;
 	}
 
-	public void toggleMethodBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException
-	{
+	public void toggleMethodBreakpoints(IWorkbenchPart part,
+			ISelection selection) throws CoreException {
 	}
 
-	public boolean canToggleMethodBreakpoints(IWorkbenchPart part, ISelection selection)
-	{
+	public boolean canToggleMethodBreakpoints(IWorkbenchPart part,
+			ISelection selection) {
 		return false;
 	}
 
-	public void toggleWatchpoints(IWorkbenchPart part, ISelection selection) throws CoreException
-	{
+	public void toggleWatchpoints(IWorkbenchPart part, ISelection selection)
+			throws CoreException {
 	}
 
-	public boolean canToggleWatchpoints(IWorkbenchPart part, ISelection selection)
-	{
+	public boolean canToggleWatchpoints(IWorkbenchPart part,
+			ISelection selection) {
 		return false;
 	}
 }

@@ -33,8 +33,7 @@ import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
-public class OutputFileBlock extends ResourceSelectionBlock
-{
+public class OutputFileBlock extends ResourceSelectionBlock {
 	private Button openFileCheckButton;
 	private Button formatFileCheckButton;
 	private String inputFilename;
@@ -42,48 +41,44 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	private String defaultOutputFileName;
 	private String outputFileName;
 
-	public OutputFileBlock()
-	{
+	public OutputFileBlock() {
 		super(IResource.FOLDER, true, true, false);
 	}
 
 	@Override
-	protected String getMessage(int type)
-	{
-		switch (type)
-		{
-			case ERROR_DIRECTORY_NOT_SPECIFIED:
-				return Messages.OutputFOFileBlock_DIRECTORY_NOT_SPECIFIED;
-			case ERROR_DIRECTORY_DOES_NOT_EXIST:
-				return Messages.OutputFOFileBlock_DIRECTORY_DOES_NOT_EXIST;
-			case GROUP_NAME:
-				return getName();
-			case USE_DEFAULT_RADIO:
-				return Messages.OutputFileBlock_0;
-			case USE_OTHER_RADIO:
-				return Messages.OutputFOFileBlock_OTHER_RADIO;
-			case DIRECTORY_DIALOG_MESSAGE:
-				return Messages.OutputFOFileBlock_DIALOG_MESSAGE;
-			case WORKSPACE_DIALOG_MESSAGE:
-				return Messages.OutputFOFileBlock_WORKSPACE_DIALOG_MESSAGE;
-			case VARIABLES_BUTTON:
-				return Messages.OutputFOFileBlock_VARIABLES_BUTTON;
-			case FILE_SYSTEM_BUTTON:
-				return Messages.OutputFOFileBlock_FILE_SYSTEM_BUTTON;
-			case WORKSPACE_BUTTON:
-				return Messages.OutputFOFileBlock_WORKSPACE_BUTTON;
-			case WORKSPACE_DIALOG_TITLE:
-				return Messages.OutputFOFileBlock_WORKSPACE_DIALOG_TITLE;
+	protected String getMessage(int type) {
+		switch (type) {
+		case ERROR_DIRECTORY_NOT_SPECIFIED:
+			return Messages.OutputFOFileBlock_DIRECTORY_NOT_SPECIFIED;
+		case ERROR_DIRECTORY_DOES_NOT_EXIST:
+			return Messages.OutputFOFileBlock_DIRECTORY_DOES_NOT_EXIST;
+		case GROUP_NAME:
+			return getName();
+		case USE_DEFAULT_RADIO:
+			return Messages.OutputFileBlock_0;
+		case USE_OTHER_RADIO:
+			return Messages.OutputFOFileBlock_OTHER_RADIO;
+		case DIRECTORY_DIALOG_MESSAGE:
+			return Messages.OutputFOFileBlock_DIALOG_MESSAGE;
+		case WORKSPACE_DIALOG_MESSAGE:
+			return Messages.OutputFOFileBlock_WORKSPACE_DIALOG_MESSAGE;
+		case VARIABLES_BUTTON:
+			return Messages.OutputFOFileBlock_VARIABLES_BUTTON;
+		case FILE_SYSTEM_BUTTON:
+			return Messages.OutputFOFileBlock_FILE_SYSTEM_BUTTON;
+		case WORKSPACE_BUTTON:
+			return Messages.OutputFOFileBlock_WORKSPACE_BUTTON;
+		case WORKSPACE_DIALOG_TITLE:
+			return Messages.OutputFOFileBlock_WORKSPACE_DIALOG_TITLE;
 		}
 		return "" + type; //$NON-NLS-1$
 	}
 
 	@Override
-	protected void createCheckboxAndText(Composite parent)
-	{
-		if (showDefault)
-		{
-			useDefaultCheckButton = createCheckButton(parent, getMessage(USE_DEFAULT_RADIO));
+	protected void createCheckboxAndText(Composite parent) {
+		if (showDefault) {
+			useDefaultCheckButton = createCheckButton(parent,
+					getMessage(USE_DEFAULT_RADIO));
 			GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 			gd.horizontalSpan = 2;
 			useDefaultCheckButton.setLayoutData(gd);
@@ -113,8 +108,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		fileNameText.setFont(parent.getFont());
 		fileNameText.addModifyListener(widgetListener);
 
-		if (showDefault)
-		{
+		if (showDefault) {
 			label = new Label(specificFileComp, SWT.NONE);
 			label.setText(Messages.OutputFileBlock_7);
 		}
@@ -128,53 +122,46 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	}
 
 	@Override
-	protected void createButtons(Composite parent)
-	{
-		Composite checkComposite = new Composite(parent,SWT.NONE);
-		checkComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+	protected void createButtons(Composite parent) {
+		Composite checkComposite = new Composite(parent, SWT.NONE);
+		checkComposite.setLayoutData(new GridData(
+				GridData.HORIZONTAL_ALIGN_BEGINNING));
 		GridLayout gl = new GridLayout();
 		gl.marginWidth = 0;
 		checkComposite.setLayout(gl);
-		
-		openFileCheckButton = createCheckButton(checkComposite, Messages.OutputFileBlock_8);
+
+		openFileCheckButton = createCheckButton(checkComposite,
+				Messages.OutputFileBlock_8);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 1;
 		openFileCheckButton.setLayoutData(gd);
-		openFileCheckButton.addSelectionListener(new SelectionListener()
-		{
+		openFileCheckButton.addSelectionListener(new SelectionListener() {
 
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
+			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
-			public void widgetSelected(SelectionEvent e)
-			{
-				if (openFileCheckButton.getSelection())
-				{
+			public void widgetSelected(SelectionEvent e) {
+				if (openFileCheckButton.getSelection()) {
 					formatFileCheckButton.setEnabled(true);
 					updateLaunchConfigurationDialog();
-				}
-				else
-				{
+				} else {
 					formatFileCheckButton.setEnabled(false);
 					formatFileCheckButton.setSelection(false);
 				}
 			}
 		});
 
-		formatFileCheckButton = createCheckButton(checkComposite, Messages.OutputFileBlock_2);
+		formatFileCheckButton = createCheckButton(checkComposite,
+				Messages.OutputFileBlock_2);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 1;
 		formatFileCheckButton.setLayoutData(gd);
-		formatFileCheckButton.addSelectionListener(new SelectionListener()
-		{
+		formatFileCheckButton.addSelectionListener(new SelectionListener() {
 
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
+			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
-			public void widgetSelected(SelectionEvent e)
-			{
+			public void widgetSelected(SelectionEvent e) {
 				updateLaunchConfigurationDialog();
 			}
 		});
@@ -184,114 +171,134 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		buttonComp.setLayout(layout);
-		gd = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_BEGINNING);
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_END
+				| GridData.VERTICAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 1;
 		buttonComp.setLayoutData(gd);
 		buttonComp.setFont(parent.getFont());
 
-		fWorkspaceButton = createPushButton(buttonComp, getMessage(WORKSPACE_BUTTON), null);
+		fWorkspaceButton = createPushButton(buttonComp,
+				getMessage(WORKSPACE_BUTTON), null);
 		fWorkspaceButton.addSelectionListener(widgetListener);
 
-		fFileSystemButton = createPushButton(buttonComp, getMessage(FILE_SYSTEM_BUTTON), null);
+		fFileSystemButton = createPushButton(buttonComp,
+				getMessage(FILE_SYSTEM_BUTTON), null);
 		fFileSystemButton.addSelectionListener(widgetListener);
 
-		fVariablesButton = createPushButton(buttonComp, getMessage(VARIABLES_BUTTON), null);
+		fVariablesButton = createPushButton(buttonComp,
+				getMessage(VARIABLES_BUTTON), null);
 		fVariablesButton.addSelectionListener(widgetListener);
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return Messages.OutputFileBlock_9;
 	}
 
-	public void initializeFrom(ILaunchConfiguration configuration)
-	{
-		try
-		{
-			inputFilename = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, ""); //$NON-NLS-1$
+	public void initializeFrom(ILaunchConfiguration configuration) {
+		try {
+			inputFilename = configuration.getAttribute(
+					XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, ""); //$NON-NLS-1$
 			updateDefaultOutputFile();
 
-			boolean useDefault = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
+			boolean useDefault = configuration
+					.getAttribute(
+							XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE,
+							true);
 			useDefaultCheckButton.setSelection(useDefault);
 
-			outputFileName = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME, defaultOutputFileName);
-			resource = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER, defaultResource);
+			outputFileName = configuration.getAttribute(
+					XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME,
+					defaultOutputFileName);
+			resource = configuration.getAttribute(
+					XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER,
+					defaultResource);
 
 			updateResourceText(useDefault);
 
-			boolean openFileOnCompletion = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
+			boolean openFileOnCompletion = configuration.getAttribute(
+					XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
 			openFileCheckButton.setSelection(openFileOnCompletion);
-			
-			boolean formatFileOnCompletion = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, false);
+
+			boolean formatFileOnCompletion = configuration.getAttribute(
+					XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, false);
 			formatFileCheckButton.setSelection(formatFileOnCompletion);
-		}
-		catch (CoreException e)
-		{
+		} catch (CoreException e) {
 			XSLDebugUIPlugin.log(e);
 		}
 	}
 
-	public void performApply(ILaunchConfigurationWorkingCopy configuration)
-	{
+	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		boolean useDefault = useDefaultCheckButton.getSelection();
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, useDefault);
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE,
+				useDefault);
 
 		String outputFile = resourceText.getText();
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER, outputFile);
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER, outputFile);
 
 		String outputFileName = fileNameText.getText();
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME, outputFileName);
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME,
+				outputFileName);
 
 		boolean openFileOnCompletion = openFileCheckButton.getSelection();
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, openFileOnCompletion);
-		
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_OPEN_FILE,
+				openFileOnCompletion);
+
 		boolean formatFileOnCompletion = formatFileCheckButton.getSelection();
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, formatFileOnCompletion);
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE,
+				formatFileOnCompletion);
 	}
 
-	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
-	{
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER, (String)null);
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME, (String)null);
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, false);
+	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE,
+				true);
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER,
+				(String) null);
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME,
+				(String) null);
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
+		configuration.setAttribute(
+				XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, false);
 	}
-	
+
 	@Override
-	protected void updateResourceText(boolean useDefault)
-	{
+	protected void updateResourceText(boolean useDefault) {
 		fileNameText.setEnabled(!useDefault);
 		if (useDefault)
-			fileNameText.setText(defaultOutputFileName == null ? "" : defaultOutputFileName); //$NON-NLS-1$
+			fileNameText
+					.setText(defaultOutputFileName == null ? "" : defaultOutputFileName); //$NON-NLS-1$
 		else
-			fileNameText.setText(outputFileName == null ? defaultOutputFileName : outputFileName); 
+			fileNameText.setText(outputFileName == null ? defaultOutputFileName
+					: outputFileName);
 		super.updateResourceText(useDefault);
 	}
 
-	private void updateDefaultOutputFile()
-	{
-		try
-		{
-			IPath path = XSLTRuntime.defaultOutputFileForInputFile(inputFilename);
+	private void updateDefaultOutputFile() {
+		try {
+			IPath path = XSLTRuntime
+					.defaultOutputFileForInputFile(inputFilename);
 			// determine whether this path exists in the workspace
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(path);
-			if (files.length > 0)
-			{// inside workspace
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
+					.findFilesForLocation(path);
+			if (files.length > 0) {// inside workspace
 				IPath p = new Path(files[0].getProject().getName());
 				p.append(files[0].getParent().getProjectRelativePath());
-				defaultResource = "${workspace_loc:/"+p.toString()+"}";  //$NON-NLS-1$//$NON-NLS-2$
-			}
-			else
-			{// outside workspace
+				defaultResource = "${workspace_loc:/" + p.toString() + "}"; //$NON-NLS-1$//$NON-NLS-2$
+			} else {// outside workspace
 				IPath p = path.removeLastSegments(1);
 				defaultResource = p.toOSString();
 			}
 			defaultOutputFileName = path.lastSegment();
-		}
-		catch (CoreException e)
-		{
-			// do nothing			
+		} catch (CoreException e) {
+			// do nothing
 		}
 	}
 }

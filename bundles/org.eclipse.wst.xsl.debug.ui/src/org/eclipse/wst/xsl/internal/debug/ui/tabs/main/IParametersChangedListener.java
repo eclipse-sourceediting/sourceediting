@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.main;
 
-public interface IParametersChangedListener
-{
+public interface IParametersChangedListener {
 	void parametersChanged(ParameterViewer viewer);
 }

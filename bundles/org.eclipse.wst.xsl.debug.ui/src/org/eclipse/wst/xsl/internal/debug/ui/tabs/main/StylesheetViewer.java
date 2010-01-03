@@ -18,68 +18,60 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AbstractStylesheetAction;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
-public class StylesheetViewer
-{
+public class StylesheetViewer {
 	private TableViewer viewer;
 	private final ListenerList listenerList = new ListenerList();
 
-	public StylesheetViewer(Composite parent)
-	{
+	public StylesheetViewer(Composite parent) {
 		viewer = new TableViewer(parent);
 	}
-	
-	public TableViewer getViewer(){
+
+	public TableViewer getViewer() {
 		return viewer;
 	}
 
-	private StylesheetContentProvider getStylesheetContentProvider()
-	{
+	private StylesheetContentProvider getStylesheetContentProvider() {
 		return (StylesheetContentProvider) viewer.getContentProvider();
 	}
 
-	public void setEntries(LaunchTransform[] transforms)
-	{
+	public void setEntries(LaunchTransform[] transforms) {
 		getStylesheetContentProvider().setEntries(transforms);
 		notifyChanged();
 	}
 
-	public LaunchTransform[] getEntries()
-	{
-		return (LaunchTransform[]) getStylesheetContentProvider().getElements(null);
+	public LaunchTransform[] getEntries() {
+		return (LaunchTransform[]) getStylesheetContentProvider().getElements(
+				null);
 	}
 
-	public Shell getShell()
-	{
+	public Shell getShell() {
 		return viewer.getControl().getShell();
 	}
 
-	public boolean isEnabled()
-	{
+	public boolean isEnabled() {
 		return true;
 	}
 
-	public boolean updateSelection(int actionType, IStructuredSelection selection)
-	{
-		switch (actionType)
-		{
-			case AbstractStylesheetAction.ADD:
-				return true;
-			case AbstractStylesheetAction.REMOVE:
-			case AbstractStylesheetAction.MOVE:
-			default:
-				break;
+	public boolean updateSelection(int actionType,
+			IStructuredSelection selection) {
+		switch (actionType) {
+		case AbstractStylesheetAction.ADD:
+			return true;
+		case AbstractStylesheetAction.REMOVE:
+		case AbstractStylesheetAction.MOVE:
+		default:
+			break;
 		}
 		return selection.size() > 0;
 	}
 
-	public IStructuredSelection getSelectedEntries()
-	{
-		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+	public IStructuredSelection getSelectedEntries() {
+		IStructuredSelection selection = (IStructuredSelection) viewer
+				.getSelection();
 		return selection;
 	}
 
-	public void addTransforms(LaunchTransform[] res)
-	{
+	public void addTransforms(LaunchTransform[] res) {
 		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 		Object beforeElement = sel.getFirstElement();
 		if (getEntries().length > 1 && beforeElement == null)
@@ -88,27 +80,24 @@ public class StylesheetViewer
 		notifyChanged();
 	}
 
-	public void removeEntries(LaunchTransform[] entries)
-	{
+	public void removeEntries(LaunchTransform[] entries) {
 		getStylesheetContentProvider().removeEntries(entries);
 		notifyChanged();
 	}
 
-	public void addEntriesChangedListener(IStylesheetEntriesChangedListener listener)
-	{
+	public void addEntriesChangedListener(
+			IStylesheetEntriesChangedListener listener) {
 		listenerList.add(listener);
 	}
 
-	public void removeEntriesChangedListener(IStylesheetEntriesChangedListener listener)
-	{
+	public void removeEntriesChangedListener(
+			IStylesheetEntriesChangedListener listener) {
 		listenerList.remove(listener);
 	}
 
-	private void notifyChanged()
-	{
+	private void notifyChanged() {
 		Object[] listeners = listenerList.getListeners();
-		for (Object element : listeners)
-		{
+		for (Object element : listeners) {
 			((IStylesheetEntriesChangedListener) element).entriesChanged(this);
 		}
 	}

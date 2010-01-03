@@ -17,34 +17,33 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.ParameterViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 
 /**
- * An action that opens a dialog to allow the user to add a parameter to a transform.
+ * An action that opens a dialog to allow the user to add a parameter to a
+ * transform.
  * 
  * @author Doug Satchwell
  */
-public class AddParameterAction extends AbstractParameterAction
-{
+public class AddParameterAction extends AbstractParameterAction {
 	/**
 	 * Create a new instance of this.
 	 * 
-	 * @param viewer teh viewer
+	 * @param viewer
+	 *            teh viewer
 	 */
-	public AddParameterAction(ParameterViewer viewer)
-	{
+	public AddParameterAction(ParameterViewer viewer) {
 		super(Messages.AddParameterAction, viewer);
 	}
 
 	@Override
-	public void run()
-	{
-		MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.AddParameterAction_Dialog);
+	public void run() {
+		MultipleInputDialog dialog = new MultipleInputDialog(getShell(),
+				Messages.AddParameterAction_Dialog);
 		String namelabel = Messages.AddParameterAction_Dialog_Name;
 		dialog.addTextField(namelabel, null, false);
 		String variableslabel = Messages.AddParameterAction_Dialog_Value;
 		dialog.addVariablesField(variableslabel, null, false);
 		dialog.open();
 
-		if (dialog.getReturnCode() == Window.OK)
-		{
+		if (dialog.getReturnCode() == Window.OK) {
 			String name = dialog.getStringValue(namelabel);
 			String value = dialog.getStringValue(variableslabel);
 			LaunchAttribute parameter = null;
@@ -57,8 +56,7 @@ public class AddParameterAction extends AbstractParameterAction
 	}
 
 	@Override
-	public void setEnabled(boolean enabled)
-	{
+	public void setEnabled(boolean enabled) {
 		// do nothing
 	}
 

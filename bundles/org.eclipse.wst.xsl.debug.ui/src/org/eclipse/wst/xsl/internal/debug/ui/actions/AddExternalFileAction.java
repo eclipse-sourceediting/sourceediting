@@ -23,58 +23,59 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 import org.eclipse.wst.xsl.core.XSLCore;
 
-
 /**
- * An action that opens a dialog to allow the user to select a file from the file system.
+ * An action that opens a dialog to allow the user to select a file from the
+ * file system.
  * 
  * @author Doug Satchwell
  */
-public class AddExternalFileAction extends OpenDialogAction
-{
+public class AddExternalFileAction extends OpenDialogAction {
 	/**
 	 * Create a new instance of this.
 	 * 
-	 * @param viewer the stylesheet viewer
-	 * @param dialogSettingsPrefix a prefix to use for saving dialog preferences
+	 * @param viewer
+	 *            the stylesheet viewer
+	 * @param dialogSettingsPrefix
+	 *            a prefix to use for saving dialog preferences
 	 */
-	public AddExternalFileAction(StylesheetViewer viewer, String dialogSettingsPrefix)
-	{
+	public AddExternalFileAction(StylesheetViewer viewer,
+			String dialogSettingsPrefix) {
 		super(Messages.AddExternalFileAction_Text, viewer, dialogSettingsPrefix);
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		String lastUsedPath = getDialogSetting(LAST_PATH_SETTING);
-		if (lastUsedPath == null)
-		{
+		if (lastUsedPath == null) {
 			lastUsedPath = ""; //$NON-NLS-1$
 		}
 		FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
 		dialog.setText(Messages.AddExternalFileAction_Selection_3);
 		dialog.setFilterPath(lastUsedPath);
-		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
-		IContentType contentType = contentTypeManager.getContentType(XSLCore.XSL_CONTENT_TYPE);
-		String[] xslContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-		
+		IContentTypeManager contentTypeManager = Platform
+				.getContentTypeManager();
+		IContentType contentType = contentTypeManager
+				.getContentType(XSLCore.XSL_CONTENT_TYPE);
+		String[] xslContentTypes = contentType
+				.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+
 		// add *. to front
-		for (int i = 0; i < xslContentTypes.length; i++)
-		{
+		for (int i = 0; i < xslContentTypes.length; i++) {
 			String string = xslContentTypes[i];
-			xslContentTypes[i] = "*."+string; //$NON-NLS-1$
+			xslContentTypes[i] = "*." + string; //$NON-NLS-1$
 		}
 
 		dialog.setFilterExtensions(xslContentTypes);
 		String res = dialog.open();
-		if (res == null)
-		{
+		if (res == null) {
 			return;
 		}
 
 		IPath filterPath = new Path(dialog.getFilterPath());
 		LaunchTransform[] lts = new LaunchTransform[1];
 		IPath path = new Path(res).makeAbsolute();
-		lts[0] = new LaunchTransform(path.toPortableString(), LaunchTransform.EXTERNAL_TYPE);
+		lts[0] = new LaunchTransform(path.toPortableString(),
+				LaunchTransform.EXTERNAL_TYPE);
 
 		setDialogSetting(LAST_PATH_SETTING, filterPath.toOSString());
 

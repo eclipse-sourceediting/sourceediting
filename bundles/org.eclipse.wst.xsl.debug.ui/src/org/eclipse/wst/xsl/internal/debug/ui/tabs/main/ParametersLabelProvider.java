@@ -15,40 +15,32 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 
-public class ParametersLabelProvider implements ITableLabelProvider
-{
-	public String getColumnText(Object element, int columnIndex)
-	{
+public class ParametersLabelProvider implements ITableLabelProvider {
+	public String getColumnText(Object element, int columnIndex) {
 		LaunchAttribute p = (LaunchAttribute) element;
-		switch (columnIndex)
-		{
-			case 0:
-				return p.uri;
-			case 1:
-				return p.value;
+		switch (columnIndex) {
+		case 0:
+			return p.uri;
+		case 1:
+			return p.value;
 		}
 		return "!"; //$NON-NLS-1$
 	}
 
-	public Image getColumnImage(Object element, int columnIndex)
-	{
+	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
 	}
 
-	public void addListener(ILabelProviderListener listener)
-	{
+	public void addListener(ILabelProviderListener listener) {
 	}
 
-	public void dispose()
-	{
+	public void dispose() {
 	}
 
-	public boolean isLabelProperty(Object element, String property)
-	{
+	public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}
 
-	public void removeListener(ILabelProviderListener listener)
-	{
+	public void removeListener(ILabelProviderListener listener) {
 	}
 }

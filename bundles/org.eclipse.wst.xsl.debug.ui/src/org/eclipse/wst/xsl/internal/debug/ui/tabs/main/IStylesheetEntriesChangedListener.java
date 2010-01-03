@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.main;
 
-public interface IStylesheetEntriesChangedListener
-{
+public interface IStylesheetEntriesChangedListener {
 	void entriesChanged(StylesheetViewer viewer);
 }
