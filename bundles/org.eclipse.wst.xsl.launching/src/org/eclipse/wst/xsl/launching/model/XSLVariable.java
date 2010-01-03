@@ -14,7 +14,6 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
-import org.w3c.dom.NodeList;
 
 public class XSLVariable extends XSLDebugElement implements IVariable
 {
@@ -25,8 +24,6 @@ public class XSLVariable extends XSLDebugElement implements IVariable
 	private final int id;
 	private String fName;
 	private String scope;
-	private String type;
-	private NodeList nodeList;
 
 	public XSLVariable(IDebugTarget target, int id)
 	{

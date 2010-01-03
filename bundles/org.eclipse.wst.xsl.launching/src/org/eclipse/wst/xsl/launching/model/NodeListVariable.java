@@ -52,11 +52,6 @@ public class NodeListVariable extends XSLDebugElement implements IVariable {
 	}
 
 	public IValue getValue() throws DebugException {
-		String nodeValue = ""; //$NON-NLS-1$
-		if (node.getNodeValue() != null) {
-		   nodeValue = node.getNodeValue();
-		}
-		//IValue value = new XSLValue(debugTarget, "string", nodeValue);
 		IValue value = new XSLValue(debugTarget, "string", node); //$NON-NLS-1$
 		return value;
 	}

@@ -120,7 +120,6 @@ public class XSLValue extends XSLDebugElement implements IValue
 	}
 	private List<IVariable> getNodeListVariables(NodeList nodeList) {
 		List<IVariable> variableList = new ArrayList<IVariable>();
-		IVariable[] returnVars = new IVariable[nodeList.getLength()];
 		if (nodeList != null) {
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node node = nodeList.item(i);

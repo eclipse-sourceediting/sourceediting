@@ -28,7 +28,6 @@ public abstract class XSLDebugElement extends DebugElement implements IDisconnec
 		return IXSLConstants.ID_XSL_DEBUG_MODEL;
 	}
 	
-	@SuppressWarnings("unchecked") 
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter == ITerminate.class) {
