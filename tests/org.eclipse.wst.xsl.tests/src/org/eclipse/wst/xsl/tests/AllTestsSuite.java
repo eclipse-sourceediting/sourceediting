@@ -16,6 +16,7 @@ import org.eclipse.wst.xml.xpath.core.tests.XPathCoreTests;
 import org.eclipse.wst.xml.xpath.ui.internal.hander.tests.TestXPathProcessorHandler;
 import org.eclipse.wst.xml.xpath.ui.tests.XPathUITestPlugin;
 import org.eclipse.wst.xml.xpath2.processor.test.AllPsychoPathTests;
+import org.eclipse.wst.xsl.jaxp.debug.test.AllJAXPDebugTests;
 import org.eclipse.wst.xsl.launching.tests.LaunchingSuite;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestSuite;
 import org.eclipse.wst.xsl.core.tests.XSLCoreTestSuite;
@@ -35,6 +36,7 @@ public class AllTestsSuite extends TestSuite {
 		addTest(XSLCoreTestSuite.suite());
 		addTest(XPathCoreTests.suite());
 		addTest(LaunchingSuite.suite());
+		addTest(AllJAXPDebugTests.suite());
 		addTest(AllPsychoPathTests.suite());
 		addTest(EXSLTCoreTestSuite.suite());
 		addTestSuite(TestXPathProcessorHandler.class);

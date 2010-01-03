@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xsl_tests.feature"
       label="%featureName"
-      version="1.1.100.qualifier"
+      version="1.1.200.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -91,6 +91,13 @@
 
    <plugin
          id="org.eclipse.wst.xml.xpath.ui.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.xsl.jaxp.debug.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
