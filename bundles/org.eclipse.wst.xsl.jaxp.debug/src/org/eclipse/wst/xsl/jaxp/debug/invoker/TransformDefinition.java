@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007,2010 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (Intalio) - bug 213776 - URI Resolver
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.invoker;
 

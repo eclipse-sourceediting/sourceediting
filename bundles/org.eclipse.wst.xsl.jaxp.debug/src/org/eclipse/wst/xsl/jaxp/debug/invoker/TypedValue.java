@@ -91,7 +91,7 @@ public class TypedValue {
 			}
 		} else if (TYPE_OBJECT.equals(type)) {
 			try {
-				Class c = Class.forName(value);
+				Class<?> c = Class.forName(value);
 				o = c.newInstance();
 			} catch (ClassNotFoundException e) {
 				throw new CreationException(

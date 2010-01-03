@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (Intalio) - bug 213776 - URI Resolver
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.invoker;
 
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -54,8 +54,8 @@ public class PipelineDefinition {
 	private String sourceURL;
 	private String targetFile;
 
-	private final List transformDefs = new ArrayList();
-	private final Set attributes = new HashSet();
+	private final List<TransformDefinition> transformDefs = new ArrayList<TransformDefinition>();
+	private final Set<TypedValue> attributes = new HashSet<TypedValue>();
 	private boolean useEmbedded;
 
 	/**
@@ -129,9 +129,9 @@ public class PipelineDefinition {
 	 */
 	public void configure(IProcessorInvoker invoker)
 			throws ConfigurationException {
-		Map attVals = new ConcurrentHashMap();
-		for (Iterator iter = attributes.iterator(); iter.hasNext();) {
-			TypedValue att = (TypedValue) iter.next();
+		Map<String, Object> attVals = new ConcurrentHashMap<String, Object>();
+		for (Iterator<TypedValue> iter = attributes.iterator(); iter.hasNext();) {
+			TypedValue att = iter.next();
 			Object value;
 			try {
 				value = att.createValue();
@@ -142,9 +142,9 @@ public class PipelineDefinition {
 		}
 		invoker.setAttributes(attVals);
 
-		for (Iterator iter = transformDefs.iterator(); iter.hasNext();) {
-			TransformDefinition tdef = (TransformDefinition) iter.next();
-			Map params = null;
+		for (Iterator<TransformDefinition> iter = transformDefs.iterator(); iter.hasNext();) {
+			TransformDefinition tdef = iter.next();
+			Map<String, Object> params = null;
 			try {
 				params = tdef.getParametersAsMap();
 			} catch (CreationException e) {
@@ -191,7 +191,7 @@ public class PipelineDefinition {
 	 * 
 	 * @return the set of attributes
 	 */
-	public Set getAttributes() {
+	public Set<TypedValue> getAttributes() {
 		return attributes;
 	}
 
@@ -220,7 +220,7 @@ public class PipelineDefinition {
 	 * 
 	 * @return the list of transform definitions
 	 */
-	public List getTransformDefs() {
+	public List<TransformDefinition> getTransformDefs() {
 		return transformDefs;
 	}
 
@@ -279,7 +279,7 @@ public class PipelineDefinition {
 
 		Element attributesEl = doc.createElement("Attributes"); //$NON-NLS-1$
 		rootEl.appendChild(attributesEl);
-		for (Iterator iter = attributes.iterator(); iter.hasNext();) {
+		for (Iterator<TypedValue> iter = attributes.iterator(); iter.hasNext();) {
 			TypedValue attribute = (TypedValue) iter.next();
 			Element attributeEl = doc.createElement("Attribute"); //$NON-NLS-1$
 			attributeEl.setAttribute("name", attribute.name); //$NON-NLS-1$
@@ -292,7 +292,7 @@ public class PipelineDefinition {
 		if (!useEmbedded) {
 			Element transformsEl = doc.createElement("Transforms"); //$NON-NLS-1$
 			rootEl.appendChild(transformsEl);
-			for (Iterator iter = transformDefs.iterator(); iter.hasNext();) {
+			for (Iterator<TransformDefinition> iter = transformDefs.iterator(); iter.hasNext();) {
 				TransformDefinition tdef = (TransformDefinition) iter.next();
 				Element tdefEl = tdef.asXML(doc);
 				transformsEl.appendChild(tdefEl);
