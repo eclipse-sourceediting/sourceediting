@@ -18,47 +18,39 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorJar;
 
-public class ProcessorJar implements IProcessorJar
-{
+public class ProcessorJar implements IProcessorJar {
 	private final IPath path;
 
-	public ProcessorJar(IPath path)
-	{
+	public ProcessorJar(IPath path) {
 		this.path = path;
 	}
 
-	public URL asURL()
-	{
+	public URL asURL() {
 		URL url = null;
-		try
-		{
+		try {
 			// first try to resolve as workspace-relative path
-			IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+			IPath rootPath = ResourcesPlugin.getWorkspace().getRoot()
+					.getLocation();
 			File file = new File(rootPath.append(path).toOSString());
 			if (file.exists())
-				url = file.toURL();
-			else
-			{
+				url = file.toURI().toURL();
+			else {
 				// now try to resolve as an absolute path
 				file = new File(path.toOSString());
-				url = file.toURL();
+				url = file.toURI().toURL();
 			}
-		}
-		catch (MalformedURLException e)
-		{
+		} catch (MalformedURLException e) {
 			JAXPLaunchingPlugin.log(e);
 		}
 		return url;
 	}
 
-	public IPath getPath()
-	{
+	public IPath getPath() {
 		return path;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return path.toString();
 	}
 }

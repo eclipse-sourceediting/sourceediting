@@ -14,87 +14,69 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xsl.jaxp.launching.IAttribute;
 
-public class Attribute implements IAttribute, Comparable<Object>
-{
+public class Attribute implements IAttribute, Comparable<Object> {
 	private final String uri;
 	private final String description;
 	private final String type;
 
-	public Attribute(String uri, String type, String description)
-	{
+	public Attribute(String uri, String type, String description) {
 		this.uri = uri;
 		this.type = type;
 		this.description = description;
 	}
 
-	public String getDescription()
-	{
+	public String getDescription() {
 		return description;
 	}
 
-	public String getType()
-	{
+	public String getType() {
 		return type;
 	}
 
-	public String getURI()
-	{
+	public String getURI() {
 		return uri;
 	}
 
-	public IStatus validateValue(String value)
-	{
+	public IStatus validateValue(String value) {
 		IStatus status = null;
-		if (TYPE_BOOLEAN.equals(type))
-		{
+		if (TYPE_BOOLEAN.equals(type)) {
 			boolean valid = "true".equals(value) || "false".equals(value); //$NON-NLS-1$ //$NON-NLS-2$
 			if (!valid)
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_2, null); 
-		}
-		else if (TYPE_INT.equals(type))
-		{
-			try
-			{
+				status = new Status(IStatus.ERROR,
+						JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_2,
+						null);
+		} else if (TYPE_INT.equals(type)) {
+			try {
 				Integer.parseInt(value);
+			} catch (NumberFormatException e) {
+				status = new Status(IStatus.ERROR,
+						JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_1,
+						null);
 			}
-			catch (NumberFormatException e)
-			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_1, null); 
-			}
-		}
-		else if (TYPE_DOUBLE.equals(type))
-		{
-			try
-			{
+		} else if (TYPE_DOUBLE.equals(type)) {
+			try {
 				Double.parseDouble(value);
+			} catch (NumberFormatException e) {
+				status = new Status(IStatus.ERROR,
+						JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_0,
+						null);
 			}
-			catch (NumberFormatException e)
-			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_0, null); 
-			}
-		}
-		else if (TYPE_FLOAT.equals(type))
-		{
-			try
-			{
+		} else if (TYPE_FLOAT.equals(type)) {
+			try {
 				Float.parseFloat(value);
+			} catch (NumberFormatException e) {
+				status = new Status(IStatus.ERROR,
+						JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_5,
+						null);
 			}
-			catch (NumberFormatException e)
-			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_5, null); 
-			}
-		}
-		else if (TYPE_CLASS.equals(type) || TYPE_OBJECT.equals(type))
-		{
-			//status = JavaConventions.validateJavaTypeName(value);
+		} else if (TYPE_CLASS.equals(type) || TYPE_OBJECT.equals(type)) {
+			// status = JavaConventions.validateJavaTypeName(value);
 		}
 		return status;
 	}
 
-	public int compareTo(Object o)
-	{
-		if (o instanceof IAttribute)
-		{
+	public int compareTo(Object o) {
+		if (o instanceof IAttribute) {
 			IAttribute f = (IAttribute) o;
 			return f.getURI().compareTo(getURI());
 		}

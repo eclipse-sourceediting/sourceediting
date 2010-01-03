@@ -60,8 +60,8 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 	private final byte[] VALUE_MAP_LOCK = new byte[0];
 	private final byte[] WRITE_LOCK = new byte[0];
 
-	private final int CONNECT_ATTEMPTS = 60;
-	private final int CONNECT_WAIT = 1000;
+	private static final int CONNECT_ATTEMPTS = 60;
+	private static final int CONNECT_WAIT = 1000;
 
 	private final IProcess process;
 	private final ILaunch launch;

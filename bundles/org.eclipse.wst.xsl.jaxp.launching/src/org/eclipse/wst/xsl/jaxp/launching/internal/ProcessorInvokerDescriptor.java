@@ -20,62 +20,53 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInvoker;
 
-public class ProcessorInvokerDescriptor implements IProcessorInvoker
-{
+public class ProcessorInvokerDescriptor implements IProcessorInvoker {
 
 	private final String invokerClass;
 	private final String[] classpath;
 	private final String id;
 	private final String bundleId;
 
-	public ProcessorInvokerDescriptor(String id, String bundleId, String invokerClass, String[] classpath)
-	{
+	public ProcessorInvokerDescriptor(String id, String bundleId,
+			String invokerClass, String[] classpath) {
 		this.id = id;
 		this.bundleId = bundleId;
 		this.invokerClass = invokerClass;
 		this.classpath = classpath;
 	}
 
-	public String[] getClasspathEntries()
-	{
-		return createEntries(bundleId,classpath);
+	public String[] getClasspathEntries() {
+		return createEntries(bundleId, classpath);
 	}
-	
-	public static String[] createEntries(String bundleId, String[] classpath)
-	{
+
+	public static String[] createEntries(String bundleId, String[] classpath) {
 		List<String> entries = new ArrayList<String>();
 		try {
 			// if in dev mode, use the bin dir
 			if (Platform.inDevelopmentMode())
 				entries.add(Utils.getFileLocation(bundleId, "/bin")); //$NON-NLS-1$
-			for (String jar : classpath)
-			{
+			for (String jar : classpath) {
 				String entry = null;
 				if (jar.startsWith("${eclipse_orbit:") && jar.endsWith("}")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
 					jar = jar.substring("${eclipse_orbit:".length()); //$NON-NLS-1$
-					jar = jar.substring(0,jar.length()-1);
-					try
-					{
-						File bundleFile = FileLocator.getBundleFile(Platform.getBundle(jar));
+					jar = jar.substring(0, jar.length() - 1);
+					try {
+						File bundleFile = FileLocator.getBundleFile(Platform
+								.getBundle(jar));
 						if (bundleFile.isDirectory())
 							entry = Utils.getPluginLocation(jar) + "/bin"; //$NON-NLS-1$
 						else
 							entry = Utils.getPluginLocation(jar);
+					} catch (IOException e) {
 					}
-					catch (IOException e)
-					{}
+				} else {
+					entry = Utils.getFileLocation(bundleId, jar);
 				}
-				else
-				{
-					entry = Utils.getFileLocation(bundleId,jar);
-				}
-				if (entry!=null)
+				if (entry != null)
 					entries.add(entry);
 			}
-		} 
-		catch (CoreException e) 
-		{
+		} catch (CoreException e) {
 			JAXPLaunchingPlugin.log(e);
 		}
 		return entries.toArray(new String[0]);
@@ -84,13 +75,11 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 	/**
 	 * The name of the class that implements IProcessorInvoker
 	 */
-	public String getInvokerClassName()
-	{
+	public String getInvokerClassName() {
 		return invokerClass;
 	}
 
-	public String getId()
-	{
+	public String getId() {
 		return id;
 	}
 }

@@ -28,8 +28,7 @@ import org.eclipse.wst.xsl.jaxp.launching.IProcessorType;
 import org.eclipse.wst.xsl.jaxp.launching.ITransformerFactory;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
 
-public class ProcessorType implements IProcessorType
-{
+public class ProcessorType implements IProcessorType {
 	private static final String DESC_SUFFIX = ".DESC"; //$NON-NLS-1$
 	private static final String TYPE_SUFFIX = ".TYPE"; //$NON-NLS-1$
 
@@ -44,8 +43,10 @@ public class ProcessorType implements IProcessorType
 	private Map<String, String> outputPropertyValues;
 	private Map<String, String> attributeValues;
 
-	public ProcessorType(String id, String name, URL attributePropertiesURL, URL outputPropertiesURL, Map<String, String> attributeValues, Map<String, String> outputPropertyValues, ITransformerFactory[] transformerFactories)
-	{
+	public ProcessorType(String id, String name, URL attributePropertiesURL,
+			URL outputPropertiesURL, Map<String, String> attributeValues,
+			Map<String, String> outputPropertyValues,
+			ITransformerFactory[] transformerFactories) {
 		this.id = id;
 		this.name = name;
 		this.attributePropertiesURL = attributePropertiesURL;
@@ -55,25 +56,20 @@ public class ProcessorType implements IProcessorType
 		this.outputPropertyValues = outputPropertyValues;
 	}
 
-	public String getId()
-	{
+	public String getId() {
 		return id;
 	}
 
-	public String getLabel()
-	{
+	public String getLabel() {
 		return name;
 	}
 
-	public Map<String, String> getAttributeValues()
-	{
+	public Map<String, String> getAttributeValues() {
 		return attributeValues;
 	}
 
-	public IAttribute[] getAttributes()
-	{
-		if (attributes == null)
-		{
+	public IAttribute[] getAttributes() {
+		if (attributes == null) {
 			if (attributePropertiesURL != null)
 				attributes = loadAttributes();
 			else
@@ -82,32 +78,26 @@ public class ProcessorType implements IProcessorType
 		return attributes;
 	}
 
-	public Map<String,String> getOutputPropertyValues()
-	{
+	public Map<String, String> getOutputPropertyValues() {
 		return outputPropertyValues;
 	}
 
-	public boolean isJREDefault()
-	{
+	public boolean isJREDefault() {
 		return JAXPRuntime.JRE_DEFAULT_PROCESSOR_TYPE_ID.equals(id);
 	}
 
-	public ITransformerFactory[] getTransformerFactories()
-	{
+	public ITransformerFactory[] getTransformerFactories() {
 		return transformerFactories;
 	}
-	
-	public ITransformerFactory getDefaultTransformerFactory()
-	{
+
+	public ITransformerFactory getDefaultTransformerFactory() {
 		if (transformerFactories.length > 0)
 			return transformerFactories[0];
 		return null;
 	}
 
-	public IOutputProperty[] getOutputProperties()
-	{
-		if (outputProperties == null)
-		{
+	public IOutputProperty[] getOutputProperties() {
+		if (outputProperties == null) {
 			if (outputPropertiesURL != null)
 				outputProperties = loadOutputProperties();
 			else
@@ -116,51 +106,39 @@ public class ProcessorType implements IProcessorType
 		return outputProperties;
 	}
 
-	private IOutputProperty[] loadOutputProperties()
-	{
+	private IOutputProperty[] loadOutputProperties() {
 		BufferedInputStream is = null;
 		List<OutputProperty> outputs = new ArrayList<OutputProperty>();
 		Properties props = new Properties();
-		try
-		{
+		try {
 
 			is = new BufferedInputStream(outputPropertiesURL.openStream());
 			props.load(is);
-			for (Object element : props.keySet())
-			{
+			for (Object element : props.keySet()) {
 				String key = (String) element;
-				if (!key.endsWith(DESC_SUFFIX))
-				{
+				if (!key.endsWith(DESC_SUFFIX)) {
 					String name = key;
 					String uri = props.getProperty(key);
 					String desc = props.getProperty(key + DESC_SUFFIX);
-					if (uri != null && name != null && desc != null)
-					{
-						OutputProperty prop = new OutputProperty(uri.trim(), desc);
+					if (uri != null && name != null && desc != null) {
+						OutputProperty prop = new OutputProperty(uri.trim(),
+								desc);
 						outputs.add(prop);
-					}
-					else
-					{
-						JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID, Messages.ProcessorType_2 + outputPropertiesURL 
-								+ Messages.ProcessorType_3 + key))); 
+					} else {
+						JAXPLaunchingPlugin.log(new CoreException(new Status(
+								IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID,
+								Messages.ProcessorType_2 + outputPropertiesURL
+										+ Messages.ProcessorType_3 + key)));
 					}
 				}
 			}
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			JAXPLaunchingPlugin.log(e);
-		}
-		finally
-		{
-			if (is != null)
-			{
-				try
-				{
+		} finally {
+			if (is != null) {
+				try {
 					is.close();
-				}
-				catch (IOException e)
-				{
+				} catch (IOException e) {
 					JAXPLaunchingPlugin.log(e);
 				}
 			}
@@ -168,52 +146,41 @@ public class ProcessorType implements IProcessorType
 		return outputs.toArray(new IOutputProperty[0]);
 	}
 
-	private IAttribute[] loadAttributes()
-	{
+	private IAttribute[] loadAttributes() {
 		BufferedInputStream is = null;
 		List<Attribute> attributesList = new ArrayList<Attribute>();
-		try
-		{
+		try {
 			is = new BufferedInputStream(attributePropertiesURL.openStream());
 			Properties props = new Properties();
 			props.load(is);
 
-			for (Object element : props.keySet())
-			{
+			for (Object element : props.keySet()) {
 				String key = (String) element;
-				if (!key.endsWith(DESC_SUFFIX) && !key.endsWith(TYPE_SUFFIX))
-				{
+				if (!key.endsWith(DESC_SUFFIX) && !key.endsWith(TYPE_SUFFIX)) {
 					String uri = props.getProperty(key);
 					String type = props.getProperty(key + TYPE_SUFFIX);
 					String desc = props.getProperty(key + DESC_SUFFIX);
-					if (uri != null && type != null && desc != null)
-					{
-						Attribute attribute = new Attribute(uri.trim(), type.trim(), desc);
+					if (uri != null && type != null && desc != null) {
+						Attribute attribute = new Attribute(uri.trim(), type
+								.trim(), desc);
 						attributesList.add(attribute);
-					}
-					else
-					{
-						JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID, Messages.ProcessorType_4 + attributePropertiesURL
-								+ Messages.ProcessorType_5 + key))); 
+					} else {
+						JAXPLaunchingPlugin.log(new CoreException(new Status(
+								IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID,
+								Messages.ProcessorType_4
+										+ attributePropertiesURL
+										+ Messages.ProcessorType_5 + key)));
 					}
 				}
 			}
 
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			JAXPLaunchingPlugin.log(e);
-		}
-		finally
-		{
-			if (is != null)
-			{
-				try
-				{
+		} finally {
+			if (is != null) {
+				try {
 					is.close();
-				}
-				catch (IOException e)
-				{
+				} catch (IOException e) {
 					JAXPLaunchingPlugin.log(e);
 				}
 			}
