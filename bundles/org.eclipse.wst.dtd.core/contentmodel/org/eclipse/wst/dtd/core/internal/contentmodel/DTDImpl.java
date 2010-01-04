@@ -135,7 +135,7 @@ public class DTDImpl {
 			return result;
 		}
 
-		public Adapter adapt(Notifier target) {
+		public synchronized Adapter adapt(Notifier target) {
 			return adapt(target, this);
 		}
 	}
