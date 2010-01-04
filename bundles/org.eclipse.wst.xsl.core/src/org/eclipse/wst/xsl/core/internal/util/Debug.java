@@ -104,7 +104,7 @@ public final class Debug {
 		ITextRegionCollection flatNode = null;
 		System.out.println("Dump of structuredDocument:"); //$NON-NLS-1$
 		IStructuredDocumentRegionList flatNodes = structuredDocument.getRegionList();
-		Enumeration structuredDocumentRegions = flatNodes.elements();
+		Enumeration<?> structuredDocumentRegions = flatNodes.elements();
 		while (structuredDocumentRegions.hasMoreElements()) {
 			flatNode = (ITextRegionCollection) structuredDocumentRegions.nextElement();
 			if (!verbose) {

@@ -228,7 +228,7 @@ public class XSLValidator {
 				if (att != null) {
 					String baseURI = include.getStylesheet().getFile().getLocationURI().toString();
 					
-					String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", att.getValue());
+					String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", att.getValue()); //$NON-NLS-1$
 					if (resolvedURI == null) {
 						createMarker(
 								report,
@@ -258,7 +258,7 @@ public class XSLValidator {
 				if (att != null) {
 					String baseURI = include.getStylesheet().getFile().getLocationURI().toString();
 					
-					String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", att.getValue());
+					String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", att.getValue()); //$NON-NLS-1$
 					if (resolvedURI == null) {
 						createMarker(
 								report,

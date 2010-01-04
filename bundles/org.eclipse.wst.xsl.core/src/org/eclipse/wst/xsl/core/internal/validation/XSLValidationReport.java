@@ -145,8 +145,7 @@ public class XSLValidationReport implements ValidationReport
 	 * 
 	 * @return null
 	 */
-	@SuppressWarnings("unchecked")
-	public HashMap getNestedMessages()
+	public HashMap<?, ?> getNestedMessages()
 	{
 		return null;
 	}

@@ -62,7 +62,7 @@ public class XMLContentType {
 	
 	private IContentType[] getAllXMLContentTypes() {
 		ArrayList<IContentType> arrayList = new ArrayList<IContentType>(Arrays.asList(contentTypeManager.getAllContentTypes()));
-		ArrayList<IContentType> copyContents = (ArrayList)arrayList.clone();
+		ArrayList<IContentType> copyContents = (ArrayList<IContentType>)arrayList.clone();
 	
 		for(IContentType contentType : arrayList) {
 			if (!isXMLContentType(contentType)) {

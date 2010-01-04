@@ -29,10 +29,9 @@ public class XSLValidationReport implements ValidationReport {
 		return uri;
 	}
 
-	@SuppressWarnings("unchecked")
-	public HashMap getNestedMessages()
+	public HashMap<?, ?> getNestedMessages()
 	{
-		return new HashMap();
+		return new HashMap<Object, Object>();
 	}
 
 	public ValidationMessage[] getValidationMessages()
