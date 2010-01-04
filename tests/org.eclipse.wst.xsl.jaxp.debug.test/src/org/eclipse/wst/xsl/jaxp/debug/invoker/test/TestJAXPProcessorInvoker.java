@@ -23,7 +23,7 @@ public class TestJAXPProcessorInvoker extends TestCase {
 		invoker = new JAXPSAXProcessorInvoker();
 	}
 	
-	public synchronized void testSimpleTransform() throws Exception {
+	public void testSimpleTransform() throws Exception {
 		URL surl = TestJAXPProcessorInvoker.class.getResource("1-input.xml");
 		URL xslt = TestJAXPProcessorInvoker.class.getResource("1-transform.xsl");
 		
@@ -39,5 +39,4 @@ public class TestJAXPProcessorInvoker extends TestCase {
 		assertNotNull("Did not get a result document.", node);
 		assertEquals("Missing root-out node name.", "root-out", node.getDocumentElement().getLocalName());
 	}
-
 }
