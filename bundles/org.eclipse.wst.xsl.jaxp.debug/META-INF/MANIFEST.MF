@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.eclipse.wst.xsl.jaxp.debug
 Bundle-Version: 1.0.100.qualifier
 Bundle-Vendor: %vendorName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.apache.commons.logging;bundle-version="1.0.4";visibility:=reexport
+Require-Bundle: org.apache.commons.logging;bundle-version="1.0.4";visibility:=reexport,
+ org.apache.xml.resolver;bundle-version="1.1.0";resolution:=optional
 Export-Package: org.eclipse.wst.xsl.jaxp.debug.debugger,
  org.eclipse.wst.xsl.jaxp.debug.invoker,
  org.eclipse.wst.xsl.jaxp.debug.invoker.internal;x-internal:=true

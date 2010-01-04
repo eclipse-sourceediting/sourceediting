@@ -142,48 +142,71 @@ public class PipelineDefinition {
 		}
 		invoker.setAttributes(attVals);
 
-		for (Iterator<TransformDefinition> iter = transformDefs.iterator(); iter.hasNext();) {
+		for (Iterator<TransformDefinition> iter = transformDefs.iterator(); iter
+				.hasNext();) {
 			TransformDefinition tdef = iter.next();
-			Map<String, Object> params = null;
-			try {
-				params = tdef.getParametersAsMap();
-			} catch (CreationException e) {
-				throw new ConfigurationException(Messages
-						.getString("PipelineDefinition.8"), e); //$NON-NLS-1$
-			}
-			URL url = null;
-			try {
-				url = new URL(tdef.getStylesheetURL());
-			} catch (MalformedURLException e) {
-				throw new ConfigurationException(
-						Messages.getString("PipelineDefinition.9") + tdef.getStylesheetURL(), e); //$NON-NLS-1$
-			}
+			Map<String, Object> params = setParams(tdef);
+			URL url = getStyleSheetURL(tdef);
 			Properties properties = tdef.getOutputProperties();
-			URIResolver resolver = null;
+			URIResolver resolver = getResolver(tdef);
+			addStyleSheet(invoker, tdef, params, url, properties, resolver);
+		}
+	}
 
-//			if (tdef.getResolverClass() != null) {
-//				try {
-//					resolver = (URIResolver) Class.forName(
-//							tdef.getResolverClass()).newInstance();
-//				} catch (InstantiationException e) {
-//					throw new ConfigurationException(
-//							Messages.getString("PipelineDefinition.10") + tdef.getResolverClass(), null); //$NON-NLS-1$
-//				} catch (IllegalAccessException e) {
-//					throw new ConfigurationException(
-//							Messages.getString("PipelineDefinition.10") + tdef.getResolverClass(), null); //$NON-NLS-1$
-//				} catch (ClassNotFoundException e) {
-//					throw new ConfigurationException(
-//							Messages.getString("PipelineDefinition.10") + tdef.getResolverClass(), null); //$NON-NLS-1$
-//				}
-//			}
+	private void addStyleSheet(IProcessorInvoker invoker,
+			TransformDefinition tdef, Map<String, Object> params, URL url,
+			Properties properties, URIResolver resolver)
+			throws ConfigurationException {
+		try {
+			invoker.addStylesheet(url, params, properties, resolver);
+		} catch (TransformerConfigurationException e) {
+			throw new ConfigurationException(
+					Messages.getString("PipelineDefinition.10") + tdef.getStylesheetURL(), null); //$NON-NLS-1$
+		}
+	}
 
+	private URIResolver getResolver(TransformDefinition tdef)
+			throws ConfigurationException {
+		URIResolver resolver = null;
+
+		if (tdef.getResolverClass() != null) {
 			try {
-				invoker.addStylesheet(url, params, properties, resolver);
-			} catch (TransformerConfigurationException e) {
+				Class resolverClass = Class.forName(tdef.getResolverClass());
+				resolver = (URIResolver) resolverClass.newInstance();
+			} catch (InstantiationException e) {
+				
+			} catch (IllegalAccessException e) {
 				throw new ConfigurationException(
-						Messages.getString("PipelineDefinition.10") + tdef.getStylesheetURL(), null); //$NON-NLS-1$
+						Messages.getString("PipelineDefinition.10") + tdef.getResolverClass(), null); //$NON-NLS-1$
+			} catch (ClassNotFoundException e) {
+				
 			}
 		}
+		return resolver;
+	}
+
+	private URL getStyleSheetURL(TransformDefinition tdef)
+			throws ConfigurationException {
+		URL url = null;
+		try {
+			url = new URL(tdef.getStylesheetURL());
+		} catch (MalformedURLException e) {
+			throw new ConfigurationException(
+					Messages.getString("PipelineDefinition.9") + tdef.getStylesheetURL(), e); //$NON-NLS-1$
+		}
+		return url;
+	}
+
+	private Map<String, Object> setParams(TransformDefinition tdef)
+			throws ConfigurationException {
+		Map<String, Object> params = null;
+		try {
+			params = tdef.getParametersAsMap();
+		} catch (CreationException e) {
+			throw new ConfigurationException(Messages
+					.getString("PipelineDefinition.8"), e); //$NON-NLS-1$
+		}
+		return params;
 	}
 
 	/**
@@ -292,7 +315,8 @@ public class PipelineDefinition {
 		if (!useEmbedded) {
 			Element transformsEl = doc.createElement("Transforms"); //$NON-NLS-1$
 			rootEl.appendChild(transformsEl);
-			for (Iterator<TransformDefinition> iter = transformDefs.iterator(); iter.hasNext();) {
+			for (Iterator<TransformDefinition> iter = transformDefs.iterator(); iter
+					.hasNext();) {
 				TransformDefinition tdef = (TransformDefinition) iter.next();
 				Element tdefEl = tdef.asXML(doc);
 				transformsEl.appendChild(tdefEl);
