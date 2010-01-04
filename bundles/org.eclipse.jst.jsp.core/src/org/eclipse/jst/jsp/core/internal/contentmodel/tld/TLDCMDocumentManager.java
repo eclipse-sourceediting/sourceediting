@@ -802,7 +802,18 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				}
 					break;
 				case (ITaglibRecord.URL) : {
-					modificationStamp = IResource.NULL_STAMP;
+                    String loc = ((IURLRecord) record).getBaseLocation();
+                    if (loc != null && loc.endsWith(".jar")) { //$NON-NLS-1$
+                        File jarfile = new File(loc);
+                        if (jarfile.exists()) {
+                            try {
+                                modificationStamp = jarfile.lastModified();
+                            }
+                            catch (SecurityException e) {
+                                modificationStamp = IResource.NULL_STAMP;
+                            }
+                        }
+                    }
 				}
 					break;
 				default :
