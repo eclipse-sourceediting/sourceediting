@@ -18,29 +18,25 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 
 public class XSLValidationReport implements ValidationReport {
-    private String uri;
-	
+	private String uri;
+
 	public XSLValidationReport(String uri) {
 		this.uri = uri;
 	}
-	
-	public String getFileURI()
-	{
+
+	public String getFileURI() {
 		return uri;
 	}
 
-	public HashMap<?, ?> getNestedMessages()
-	{
+	public HashMap<?, ?> getNestedMessages() {
 		return new HashMap<Object, Object>();
 	}
 
-	public ValidationMessage[] getValidationMessages()
-	{
+	public ValidationMessage[] getValidationMessages() {
 		return new ValidationMessage[0];
 	}
 
-	public boolean isValid()
-	{
+	public boolean isValid() {
 		return true;
-	}	
+	}
 }
