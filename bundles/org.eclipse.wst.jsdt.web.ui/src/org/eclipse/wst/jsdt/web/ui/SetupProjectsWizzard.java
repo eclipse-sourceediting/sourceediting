@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.jsdt.web.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -72,11 +73,17 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 				catch (JavaScriptModelException ex1) {
 					Logger.log(Logger.ERROR_DEBUG, null, ex1);
 				}
-				IIncludePathEntry[] newEntries = new IIncludePathEntry[oldEntries.length + 1];
-				System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+				
 				IPath projectPath = project.getFullPath();
-				newEntries[oldEntries.length] = JavaScriptCore.newSourceEntry(projectPath);
-				jp.setRawIncludepath(newEntries, monitor);
+				IIncludePathEntry projectPathEntry = JavaScriptCore.newSourceEntry(projectPath);
+				
+				if (! Arrays.asList(oldEntries).contains(projectPathEntry)) {
+					IIncludePathEntry[] newEntries = new IIncludePathEntry[oldEntries.length + 1];
+					System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+					
+					newEntries[oldEntries.length] = projectPathEntry;
+					jp.setRawIncludepath(newEntries, monitor);
+				}
 			}
 			configured = true;
 		}
