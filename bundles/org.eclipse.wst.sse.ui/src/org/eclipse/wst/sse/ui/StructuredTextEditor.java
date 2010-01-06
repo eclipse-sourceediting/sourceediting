@@ -1694,11 +1694,17 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (fDropTarget != null)
 			fDropTarget.dispose();
-		
+
+		if (fPartListener != null) {
+			getSite().getWorkbenchWindow().getPartService().removePartListener(fPartListener);
+			fPartListener = null;
+		}
+
 		uninstallSemanticHighlighting();
 
 		if (fPairInserter != null)
 			fPairInserter.dispose();
+
 
 		setPreferenceStore(null);
 
