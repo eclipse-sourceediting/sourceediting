@@ -22,7 +22,7 @@ Export-Package: org.eclipse.jst.jsp.core.tests,
  org.eclipse.jst.jsp.css.core.tests.source,
  org.eclipse.jst.jsp.css.core.tests.testfiles,
  org.eclipse.jst.jsp.css.core.tests.testfiles.results
-Require-Bundle: org.junit;bundle-version="[3.8.0,4.0.0)",
+Require-Bundle: org.junit;bundle-version=3.8.2,
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.sse.core,

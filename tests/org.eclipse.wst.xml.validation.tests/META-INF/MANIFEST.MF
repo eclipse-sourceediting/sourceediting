@@ -11,7 +11,7 @@ Export-Package: org.eclipse.wst.xml.core.internal.validation;x-internal:=true,
  org.eclipse.wst.xml.core.internal.validation.eclipse;x-internal:=true,
  org.eclipse.wst.xml.core.internal.validation.errorcustomization;x-internal:=true,
  org.eclipse.wst.xml.validation.tests.internal;x-internal:=true
-Require-Bundle: org.junit;bundle-version="[3.8.0,4.0.0)",
+Require-Bundle: org.junit;bundle-version=3.8.2,
  org.eclipse.core.runtime,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.xml.ui,

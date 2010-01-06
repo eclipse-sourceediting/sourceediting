@@ -31,11 +31,11 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * 
  */
 public class JSTranslationEditorInput implements IStorageEditorInput {
-	private class JSPTranslationStorage implements IStorage {
+	private class JSTranslationStorage implements IStorage {
 		/**
 		 * 
 		 */
-		public JSPTranslationStorage(IDOMModel jspModel) {
+		public JSTranslationStorage(IDOMModel jspModel) {
 			fModel = jspModel;
 		}
 
@@ -82,19 +82,19 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#isReadOnly()
 		 */
 		public boolean isReadOnly() {
-			return true;
+			return false;
 		}
 	}
 
 	IDOMModel fModel;
 
-	private JSPTranslationStorage fStorage;
+	private JSTranslationStorage fStorage;
 
 	/**
 	 * 
 	 */
 	public JSTranslationEditorInput(IDOMModel model) {
-		fStorage = new JSPTranslationStorage(model);
+		fStorage = new JSTranslationStorage(model);
 	}
 
 	/*

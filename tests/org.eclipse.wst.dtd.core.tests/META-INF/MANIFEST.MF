@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.xml.core,
  org.eclipse.ui,
- org.junit;bundle-version="[3.8.0,4.0.0)",
+ org.junit;bundle-version=3.8.2,
  com.ibm.icu,
  org.eclipse.emf.ecore
 Eclipse-LazyStart: true

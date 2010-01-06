@@ -17,7 +17,7 @@ Export-Package: org.eclipse.wst.html.core.tests,
  org.eclipse.wst.html.core.tests.text,
  org.eclipse.wst.html.core.tests.text.testfiles.html,
  org.eclipse.wst.html.core.tests.utils
-Require-Bundle: org.junit;bundle-version="[3.8.0,4.0.0)",
+Require-Bundle: org.junit;bundle-version=3.8.2,
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.sse.core,
