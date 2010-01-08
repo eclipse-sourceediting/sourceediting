@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,6 +52,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 // nakamori_TODO: check and remove CSS formatting
 
@@ -105,10 +106,12 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		// there are any
 		// insertMissingTags() will return the new missing start tag if one is
 		// missing
+		// then compress any empty element tags
 		// applyTagNameCase() will return the renamed node.
 		// The renamed/new node will be saved and returned to caller when all
 		// cleanup is done.
 		renamedNode = insertMissingTags(renamedNode);
+		renamedNode = compressEmptyElementTag(renamedNode);
 		renamedNode = insertRequiredAttrs(renamedNode);
 		renamedNode = applyTagNameCase(renamedNode);
 		applyAttrNameCase(renamedNode);
@@ -691,5 +694,52 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		}
 
 		return result;
+	}
+
+	/**
+	 * <p>Compress empty element tags if the prefence is set to do so</p>
+	 * 
+	 * @copyof org.eclipse.wst.xml.core.internal.cleanup.ElementNodeCleanupHandler#compressEmptyElementTag
+	 * 
+	 * @param node the {@link IDOMNode} to possible compress
+	 * @return the compressed node if the given node should be compressed, else the node as it was given
+	 */
+	private IDOMNode compressEmptyElementTag(IDOMNode node) {
+		boolean compressEmptyElementTags = getCleanupPreferences().getCompressEmptyElementTags();
+		IDOMNode newNode = node;
+
+		IStructuredDocumentRegion startTagStructuredDocumentRegion = newNode.getFirstStructuredDocumentRegion();
+		IStructuredDocumentRegion endTagStructuredDocumentRegion = newNode.getLastStructuredDocumentRegion();
+
+		//only compress tags if they are empty
+		if ((compressEmptyElementTags && startTagStructuredDocumentRegion != endTagStructuredDocumentRegion &&
+				startTagStructuredDocumentRegion != null)) {
+
+			//only compress end tags if its XHTML or not a container
+			if(isXMLTag((IDOMElement)newNode) || !newNode.isContainer()) {
+				ITextRegionList regions = startTagStructuredDocumentRegion.getRegions();
+				ITextRegion lastRegion = regions.get(regions.size() - 1);
+				// format children and end tag if not empty element tag
+				if (lastRegion.getType() != DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
+					NodeList childNodes = newNode.getChildNodes();
+					if (childNodes == null || childNodes.getLength() == 0 || (childNodes.getLength() == 1 && (childNodes.item(0)).getNodeType() == Node.TEXT_NODE && ((childNodes.item(0)).getNodeValue().trim().length() == 0))) {
+						IDOMModel structuredModel = newNode.getModel();
+						IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
+
+						int startTagStartOffset = newNode.getStartOffset();
+						int offset = endTagStructuredDocumentRegion.getStart();
+						int length = endTagStructuredDocumentRegion.getLength();
+						structuredDocument.replaceText(structuredDocument, offset, length, ""); //$NON-NLS-1$
+						newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+
+						offset = startTagStructuredDocumentRegion.getStart() + lastRegion.getStart();
+						structuredDocument.replaceText(structuredDocument, offset, 0, "/"); //$NON-NLS-1$
+						newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+					}
+				}
+			}
+		}
+
+		return newNode;
 	}
 }

@@ -28,6 +28,7 @@ import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class CleanupDialogHTML extends Dialog implements SelectionListener {
 
@@ -37,6 +38,7 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 	protected Button fRadioButtonAttrNameCaseAsis;
 	protected Button fRadioButtonAttrNameCaseLower;
 	protected Button fRadioButtonAttrNameCaseUpper;
+	protected Button fCheckBoxCompressEmptyElementTags;
 	protected Button fCheckBoxInsertRequiredAttrs;
 	protected Button fCheckBoxInsertMissingTags;
 	protected Button fCheckBoxQuoteAttrValues;
@@ -118,6 +120,11 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 		layout.makeColumnsEqualWidth = true;
 		composite.setLayout(layout);
 
+		// Compress empty element tags
+		fCheckBoxCompressEmptyElementTags = new Button(composite, SWT.CHECK);
+		fCheckBoxCompressEmptyElementTags.setText(XMLUIMessages.Compress_empty_element_tags_UI_);
+		fCheckBoxCompressEmptyElementTags.addSelectionListener(this);
+
 		// Insert missing required attrs
 		fCheckBoxInsertRequiredAttrs = new Button(composite, SWT.CHECK);
 		fCheckBoxInsertRequiredAttrs.setText(HTMLUIMessages.Insert_required_attributes_UI_);
@@ -196,6 +203,7 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 	protected void initializeOptions() {
 		initializeOptionsForHTML();
 
+		fCheckBoxCompressEmptyElementTags.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS));
 		fCheckBoxInsertRequiredAttrs.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.INSERT_REQUIRED_ATTRS));
 		fCheckBoxInsertMissingTags.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.INSERT_MISSING_TAGS));
 		fCheckBoxQuoteAttrValues.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.QUOTE_ATTR_VALUES));
@@ -235,6 +243,7 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 	protected void storeOptions() {
 		storeOptionsForHTML();
 
+		getModelPreferences().setValue(HTMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS, fCheckBoxCompressEmptyElementTags.getSelection());
 		getModelPreferences().setValue(HTMLCorePreferenceNames.INSERT_REQUIRED_ATTRS, fCheckBoxInsertRequiredAttrs.getSelection());
 		getModelPreferences().setValue(HTMLCorePreferenceNames.INSERT_MISSING_TAGS, fCheckBoxInsertMissingTags.getSelection());
 		getModelPreferences().setValue(HTMLCorePreferenceNames.QUOTE_ATTR_VALUES, fCheckBoxQuoteAttrValues.getSelection());
