@@ -180,6 +180,31 @@ public class JSPTokenizerTest extends TestCase {
 		}
 	}
 	
+	/**
+	 * <p>This test is to protect against regression of 299146 where &#160 was being
+	 * broken up into & #1 60 and then when a ; was typed could not be recognized
+	 * as a Unicode character reference.  It should be detected as & #160 which is
+	 * what is tested for here.</p>
+	 */
+	public void test299146() {
+		String input = "<root>&#160</root>";
+		try {
+			reset(new StringReader(input));
+			ITextRegion region = null;
+			for(int i = 0; i < 5; ++i) {
+				region = tokenizer.getNextToken();
+			}
+			assertNotNull("This region should exist", region);
+			assertEquals("The region did not have the expected start location", 7, region.getStart());
+			assertEquals("The region did not have the expected length", 4, region.getLength());
+		}
+		catch (IOException e) {
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
+		}
+	}
+	
 	// Need to simulate typing characters into the document to cause the stack overflow.
 	// Test is irrelevant due to changes in [280496]
 	/*public void test265380() throws Exception {
