@@ -2757,7 +2757,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 }
 // end DECLARATION handling
 
-<YYINITIAL> ([^<&%\x24\x23]*|\x23+|\x24+|[&%]{S}+{Name}[^&%<]*|[\x24\x23][^\x7b<&%]|\\[\x24\x23][\x7b]|[&%]{Name}([^;&%<]*|{S}+;*)) {
+<YYINITIAL> ([^<&%\x24\x23]*|\x23+|\x24+|[&%]{S}+{Name}[^&%<]*|[\x24\x23][^\x7b<&%][^<&%\x24\x23]*|\\[\x24\x23][\x7b]|[&%]{Name}([^;&%<]*|{S}+;*)) {
 	if(Debug.debugTokenizer)
 		dump("\nXML content");//$NON-NLS-1$
 	return XML_CONTENT;
