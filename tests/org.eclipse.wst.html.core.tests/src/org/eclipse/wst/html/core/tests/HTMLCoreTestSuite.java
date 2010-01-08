@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.html.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.html.core.tests.cleanup.TestHTMLCleanupProcessor;
 import org.eclipse.wst.html.core.tests.format.TestFormatProcessorHTML;
 import org.eclipse.wst.html.core.tests.misc.HTMLCorePreferencesTest;
 import org.eclipse.wst.html.core.tests.misc.HTMLTagInfoTest;
@@ -47,5 +48,6 @@ public class HTMLCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(BUG124835SetStyleAttributeValueTest.class));
 		addTest(new TestSuite(TestFormatProcessorHTML.class));
 		addTest(new TestSuite(TestCatalogContentModels.class));
+		addTest(TestHTMLCleanupProcessor.suite());
 	}
 }
