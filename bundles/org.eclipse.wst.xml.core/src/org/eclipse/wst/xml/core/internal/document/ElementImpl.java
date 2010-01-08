@@ -1454,7 +1454,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 *            java.lang.String
 	 */
 	protected void setTagName(String tagName) {
-		this.fTagName = tagName.toCharArray();
+		this.fTagName = CharacterStringPool.getCharString(tagName);
 	}
 
 	/**

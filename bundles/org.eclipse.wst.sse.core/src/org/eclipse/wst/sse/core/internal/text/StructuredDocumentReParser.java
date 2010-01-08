@@ -718,6 +718,8 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		isParsing = false;
 		dirtyStart = null;
 		dirtyEnd = null;
+		fChanges = null;
+		fDeletedText = null;
 	}
 
 	protected IStructuredDocumentRegion findDirtyEnd(int end) {

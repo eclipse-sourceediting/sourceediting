@@ -67,8 +67,6 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	private NodeImpl parentNode = null;
 	private NodeImpl previousSibling = null;
 	
-	private Map userDataTable=null;
-
 	/**
 	 * NodeImpl constructor
 	 */
@@ -951,7 +949,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	public Object getUserData(String key) {
 		
 		if (key==null) return null;
-		
+		Map userDataTable = UserData.getInstance().getUserDataTable(this);
 		if (userDataTable!=null) {
 			UserDataAndHandler userDataAndHandler = (UserDataAndHandler) userDataTable.get(key);
 			if (userDataAndHandler!=null) {
@@ -978,7 +976,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		
 		//return immediately for null keys
 		if (key ==null) return null;
-		
+		Map userDataTable = UserData.getInstance().getUserDataTable(this);
 		//remove association for the key if data is null
 		if (data==null) {
 			if (userDataTable==null) return null;
@@ -1028,7 +1026,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 				& operation!=UserDataHandler.NODE_IMPORTED
 				& operation!=UserDataHandler.NODE_RENAMED)
 			return; 
-			
+		Map userDataTable = UserData.getInstance().getUserDataTable(this);	
 		if (userDataTable!=null) {
 			Iterator entries =userDataTable.entrySet().iterator();
 			while (entries.hasNext()) {
