@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (STAR) - bug 297005 - Some static constants not made final.
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.internal.util;
 
@@ -34,7 +34,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.CMVisitor;
 
 public class CMValidator
 {
-  protected static StringElementContentComparator stringContentComparitor = new StringElementContentComparator();
+  protected static final StringElementContentComparator stringContentComparitor = new StringElementContentComparator();
   protected Hashtable graphNodeTable = new Hashtable();
 
   /**

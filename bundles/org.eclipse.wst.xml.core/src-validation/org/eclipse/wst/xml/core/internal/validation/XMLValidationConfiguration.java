@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver (STAR) - bug 297005 - Some static constants not made final.
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.validation;
 
@@ -22,10 +23,10 @@ public class XMLValidationConfiguration
   /**
    * @deprecated
    */
-  public static String WARN_NO_GRAMMAR = "WARN_NO_GRAMMAR"; //$NON-NLS-1$
-  public static String INDICATE_NO_GRAMMAR = "INDICATE_NO_GRAMMAR"; //$NON-NLS-1$
-  public static String USE_XINCLUDE = "USE_XINCLUDE"; //$NON-NLS-1$
-  public static String HONOUR_ALL_SCHEMA_LOCATIONS = "HONOUR_ALL_SCHEMA_LOCATIONS"; //$NON-NLS-1$
+  public static final String WARN_NO_GRAMMAR = "WARN_NO_GRAMMAR"; //$NON-NLS-1$
+  public static final String INDICATE_NO_GRAMMAR = "INDICATE_NO_GRAMMAR"; //$NON-NLS-1$
+  public static final String USE_XINCLUDE = "USE_XINCLUDE"; //$NON-NLS-1$
+  public static final String HONOUR_ALL_SCHEMA_LOCATIONS = "HONOUR_ALL_SCHEMA_LOCATIONS"; //$NON-NLS-1$
 
   private boolean warn_no_grammar_value = false;
   private int indicate_no_grammar_value = 1;

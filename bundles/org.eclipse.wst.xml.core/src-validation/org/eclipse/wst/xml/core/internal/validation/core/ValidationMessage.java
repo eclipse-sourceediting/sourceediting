@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver (STAR) - bug 297005 - Some static constants not made final.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.core.internal.validation.core;
@@ -34,9 +35,9 @@ public class ValidationMessage
   protected Object[] messageArguments;
   protected int startOffset;
   protected int severity = IMessage.NORMAL_SEVERITY;
-  public static int SEV_HIGH = IMessage.HIGH_SEVERITY;
-  public static int SEV_NORMAL = IMessage.NORMAL_SEVERITY;
-  public static int SEV_LOW = IMessage.LOW_SEVERITY;
+  public static final int SEV_HIGH = IMessage.HIGH_SEVERITY;
+  public static final int SEV_NORMAL = IMessage.NORMAL_SEVERITY;
+  public static final int SEV_LOW = IMessage.LOW_SEVERITY;
 
   /**
    * Constructor.

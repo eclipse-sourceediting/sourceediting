@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver (STAR) - bug 297005 - Some static constants not made final.
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.validation.core;
 
@@ -27,8 +28,8 @@ import org.eclipse.wst.xml.core.internal.validation.XMLValidationMessages;
 public class ValidationInfo implements ValidationReport
 {
   private boolean WRAPPER_ERROR_SUPPORT_ENABLED = true;
-  public static int SEV_ERROR = 0;
-  public static int SEV_WARNING = 1;
+  public static final int  SEV_ERROR = 0;
+  public static final int SEV_WARNING = 1;
   
   private String validating_file_uri = null;
   private URL validating_file_url = null;
