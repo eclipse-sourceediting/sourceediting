@@ -30,5 +30,4 @@ Export-Package: org.eclipse.wst.xml.xpath.ui.internal;x-friends:="org.eclipse.ws
  org.eclipse.wst.xml.xpath.ui.internal.preferences;x-friends:="org.eclipse.wst.xsl.*",
  org.eclipse.wst.xml.xpath.ui.internal.templates;x-friends:="org.eclipse.wst.xsl.*",
  org.eclipse.wst.xml.xpath.ui.internal.util;x-friends:="org.eclipse.wst.xsl.*",
- org.eclipse.wst.xml.xpath.ui.internal.views;x-friends:="org.eclipse.wst.xsl.*",
- org.eclipse.wst.xml.xpath.ui.views
+ org.eclipse.wst.xml.xpath.ui.internal.views;x-friends:="org.eclipse.wst.xsl.*"
