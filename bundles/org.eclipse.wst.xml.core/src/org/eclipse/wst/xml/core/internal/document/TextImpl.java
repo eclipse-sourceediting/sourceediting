@@ -12,7 +12,7 @@
  *     
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -90,7 +90,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 			return;
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String newSource = getSource(arg);
@@ -140,7 +140,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 			return;
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		TextImpl text = (TextImpl) newText;
@@ -179,15 +179,15 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		if (count == 0)
 			return;
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 		if (count < 0 || offset < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String source = getSource();
 		if (source == null || source.length() == 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		StringPair pair = substringSourceExcluded(source, offset, count);
 		if (pair == null)
@@ -204,7 +204,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 				source = second;
 		}
 		if (source == null)
-			source = new String(); // delete all
+			source = NodeImpl.EMPTY_STRING; // delete all
 		setTextSource(source);
 	}
 
@@ -226,7 +226,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 */
 	private String getData(IStructuredDocumentRegion flatNode) {
 		if (flatNode == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 
 		if (flatNode instanceof StructuredDocumentRegionContainer) {
 			StructuredDocumentRegionContainer container = (StructuredDocumentRegionContainer) flatNode;
@@ -430,16 +430,16 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		if (arg == null || arg.length() == 0)
 			return;
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 		if (offset < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String source = getSource();
 		if (source == null || source.length() == 0) {
 			if (offset > 0) {
-				throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+				throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 			}
 			source = getSource(arg);
 			if (source != null)
@@ -511,20 +511,20 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		if (newText == null)
 			return;
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 		TextImpl text = (TextImpl) newText;
 		String newSource = text.getSource();
 		if (newSource == null || newSource.length() == 0)
 			return;
 		if (offset < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String source = getSource();
 		if (source == null || source.length() == 0) {
 			if (offset > 0) {
-				throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+				throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 			}
 			setTextSource(newSource);
 			return;
@@ -737,7 +737,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 */
 	public void replaceData(int offset, int count, String arg) throws DOMException {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 		if (arg == null || arg.length() == 0) {
 			deleteData(offset, count);
@@ -748,12 +748,12 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 			return;
 		}
 		if (offset < 0 || count < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String source = getSource();
 		if (source == null || source.length() == 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		StringPair pair = substringSourceExcluded(source, offset, count);
@@ -852,7 +852,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 */
 	public void setData(String data) throws DOMException {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		this.fSource = null;
@@ -863,7 +863,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 */
 	public void setSource(String source) throws InvalidCharacterException {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		SourceValidator validator = new SourceValidator(this);
@@ -883,7 +883,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 */
 	public void setTextSource(String source) {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		this.fSource = source;
@@ -895,7 +895,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 */
 	public void setValueSource(String source) {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		SourceValidator validator = new SourceValidator(this);
@@ -911,14 +911,14 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 */
 	public Text splitText(int offset) throws DOMException {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 		if (offset < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		int length = getLength();
 		if (offset > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		Document document = getOwnerDocument();
 		if (document == null)
@@ -1005,17 +1005,17 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	private String substringData(String data, int offset, int count) throws DOMException {
 		// sure offset and count are non-negative
 		if (count == 0)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		if (data == null) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		int length = data.length();
 		if (offset > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		int end = offset + count;
 		if (end > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		return data.substring(offset, end);
 	}
@@ -1033,7 +1033,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		if (data != null && data.length() > 0) {
 			data = substringData(data, offset, count);
 			if (data == null)
-				return new String();
+				return NodeImpl.EMPTY_STRING;
 			String source = getSource(data);
 			if (source != null)
 				return source;
@@ -1049,9 +1049,9 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	private String substringSource(String source, int offset, int count) throws DOMException {
 		// sure offset and count are non-negative
 		if (count == 0)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		if (source == null) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		int length = source.length();
@@ -1079,7 +1079,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		}
 
 		if (offset > length || end > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		return source.substring(offset, end);
@@ -1094,7 +1094,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		if (source == null) {
 			if (offset == 0 && count == 0)
 				return new StringPair(null, null);
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		int length = source.length();
@@ -1122,7 +1122,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		}
 
 		if (offset > length || end > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String first = (offset > 0 ? source.substring(0, offset) : null);

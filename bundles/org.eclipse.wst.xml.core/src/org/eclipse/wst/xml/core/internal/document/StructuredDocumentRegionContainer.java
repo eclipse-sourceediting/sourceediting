@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -238,7 +238,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	public String getText() {
 		int size = this.flatNodes.size();
 		if (size == 0)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < size; i++) {
 			IStructuredDocumentRegion flatNode = (IStructuredDocumentRegion) this.flatNodes.elementAt(i);

@@ -12,6 +12,8 @@
  *     
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
+ *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -44,6 +46,7 @@ import org.w3c.dom.UserDataHandler;
  * AttrImpl class
  */
 public class AttrImpl extends NodeImpl implements IDOMAttr {
+
 	private ITextRegion equalRegion = null;
 
 	private char[] fName = null;
@@ -151,7 +154,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 */
 	public String getName() {
 		if (this.fName == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		return new String(this.fName);
 	}
 
@@ -346,7 +349,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 */
 	private String getValue(String source) {
 		if (source == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		if (source.length() == 0)
 			return source;
 		StringBuffer buffer = null;
@@ -441,7 +444,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 			return null;
 		if (this.fValueRegion != null)
 			return StructuredDocumentRegionUtil.getAttrValue(ownerRegion, this.fValueRegion);
-		return new String();
+		return NodeImpl.EMPTY_STRING;
 	}
 
 	private String getValueSource(ElementImpl ownerElement) {
@@ -454,7 +457,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		// the flatnode that this.valueRegion belongs to.
 		if (this.fValueRegion != null)
 			return StructuredDocumentRegionUtil.getAttrValue(ownerElement.getStructuredDocumentRegion(), this.fValueRegion);
-		return new String();
+		return NodeImpl.EMPTY_STRING;
 	}
 
 	/**
@@ -705,7 +708,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 */
 	public void setPrefix(String prefix) throws DOMException {
 		if (this.ownerElement != null && !this.ownerElement.isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 		int prefixLength = (prefix != null ? prefix.length() : 0);
 		String localName = getLocalName();
@@ -714,7 +717,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 			return;
 		}
 		if (localName == null)
-			localName = new String();
+			localName = NodeImpl.EMPTY_STRING;
 		int localLength = localName.length();
 		StringBuffer buffer = new StringBuffer(prefixLength + 1 + localLength);
 		buffer.append(prefix);
@@ -757,7 +760,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 
 	public void setValueSource(String source) {
 		if (this.ownerElement != null && !this.ownerElement.isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 		this.fValueSource = (source != null) ? source.toCharArray() : null;
 

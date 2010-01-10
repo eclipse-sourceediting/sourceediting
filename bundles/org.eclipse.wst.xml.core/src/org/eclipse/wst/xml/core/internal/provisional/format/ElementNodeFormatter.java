@@ -404,7 +404,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 	}
 
 	protected String getUndefinedRegions(IDOMNode node, int startOffset, int length) {
-		String result = new String();
+		String result = NodeFormatter.EMPTY_STRING;
 
 		IStructuredDocumentRegion flatNode = node.getFirstStructuredDocumentRegion();
 		ITextRegionList regions = flatNode.getRegions();

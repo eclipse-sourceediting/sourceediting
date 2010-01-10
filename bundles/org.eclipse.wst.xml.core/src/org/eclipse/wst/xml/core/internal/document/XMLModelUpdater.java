@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -82,7 +82,7 @@ public class XMLModelUpdater {
 
 		String name = attr.getName();
 		if (name == null)
-			name = new String();
+			name = NodeImpl.EMPTY_STRING;
 		ITextRegion nameRegion = attr.getNameRegion();
 		if (nameRegion == null)
 			return; // error
@@ -140,7 +140,7 @@ public class XMLModelUpdater {
 
 			value = this.generator.generateAttrValue(attr, quote);
 			if (value == null) {
-				value = new String();
+				value = NodeImpl.EMPTY_STRING;
 				// remove equal too
 				ITextRegion equalRegion = attr.getEqualRegion();
 				if (equalRegion != null)
@@ -160,7 +160,7 @@ public class XMLModelUpdater {
 			if (value == null) {
 				if (equalRegion == null)
 					return; // nothng to do
-				value = new String();
+				value = NodeImpl.EMPTY_STRING;
 				// remove equal
 				start += equalRegion.getStart();
 				end += equalRegion.getTextEnd();
@@ -525,7 +525,7 @@ public class XMLModelUpdater {
 
 		String source = this.generator.generateSource(text);
 		if (source == null)
-			source = new String();
+			source = NodeImpl.EMPTY_STRING;
 		int length = source.length();
 
 		TextImpl impl = (TextImpl) text;
@@ -607,7 +607,7 @@ public class XMLModelUpdater {
 
 		String source = this.generator.generateSource(node);
 		if (source == null)
-			source = new String();
+			source = NodeImpl.EMPTY_STRING;
 		int length = source.length();
 
 		NodeImpl impl = (NodeImpl) node;
@@ -1488,7 +1488,7 @@ public class XMLModelUpdater {
 				else {
 					String content = this.generator.generateSource(node);
 					if (content == null)
-						content = new String();
+						content = NodeImpl.EMPTY_STRING;
 					int length = content.length();
 					IStructuredDocumentRegion flatNode = null;
 					if (length > 0) {
@@ -1590,7 +1590,7 @@ public class XMLModelUpdater {
 	private void replaceSource(String source, int start, int end) {
 		int inserted = 0;
 		if (source == null)
-			source = new String();
+			source = NodeImpl.EMPTY_STRING;
 		else
 			inserted = source.length();
 		int removed = end - start;

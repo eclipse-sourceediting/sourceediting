@@ -12,7 +12,7 @@
  *     
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -335,7 +335,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	public Element createCommentElement(String tagName, boolean isJSPTag) throws DOMException {
 		Element result = null;
 		if (!isJSPType() && isJSPTag) {
-			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, new String());
+			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, NodeImpl.EMPTY_STRING);
 		}
 		ElementImpl element = (ElementImpl) createElement(tagName);
 		element.setJSPTag(isJSPTag);
@@ -344,7 +344,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 			result = element;
 		}
 		else {
-			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, new String());
+			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, NodeImpl.EMPTY_STRING);
 		}
 		return result;
 	}
@@ -394,7 +394,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	 */
 	public Element createElementNS(String uri, String tagName) throws DOMException {
 		if (!isValidName(tagName)) {
-			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, new String());
+			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		ElementImpl element = (ElementImpl) createElement(tagName);
@@ -425,7 +425,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	 */
 	public EntityReference createEntityReference(String name) throws DOMException {
 		if (!isXMLType()) {
-			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, new String());
+			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		EntityReferenceImpl ref = new EntityReferenceImpl();

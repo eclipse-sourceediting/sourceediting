@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.provisional.format;
 
@@ -23,7 +23,7 @@ public class CommentNodeFormatter extends NodeFormatter {
 	static private final String LF = "\n"; //$NON-NLS-1$
 
 	protected String adjustIndentations(String aString, String lineIndent, String singleIndent) {
-		String result = new String();
+		String result = NodeFormatter.EMPTY_STRING;
 
 		int indexOfLineDelimiter = StringUtils.indexOfLineDelimiter(aString);
 		result = aString.substring(0, indexOfLineDelimiter);

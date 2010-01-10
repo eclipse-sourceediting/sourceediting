@@ -14,7 +14,7 @@
  *     
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -174,7 +174,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return null;
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (this.attrNodes == null)
@@ -241,7 +241,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		// In the absence of the attribute, get the default value
 		if (attr == null) {
 			String defaultValue = getDefaultValue(name);
-			return (defaultValue != null) ? defaultValue : new String();
+			return (defaultValue != null) ? defaultValue : NodeImpl.EMPTY_STRING;
 		}
 		return attr.getValue();
 	}
@@ -258,7 +258,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			if (attribute instanceof CMAttributeDeclaration)
 				return ((CMAttributeDeclaration) attribute).getAttrType().getImpliedValue();
 		}
-		return new String();
+		return NodeImpl.EMPTY_STRING;
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		// In the absence of the attribute, get the default value
 		if (attr == null) {
 			String defaultValue = getDefaultValue(name);
-			return (defaultValue != null) ? defaultValue : new String();
+			return (defaultValue != null) ? defaultValue : NodeImpl.EMPTY_STRING;
 		}
 		return attr.getValue();
 	}
@@ -614,7 +614,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 */
 	public String getTagName() {
 		if (this.fTagName == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		return new String(fTagName);
 	}
 
@@ -706,13 +706,13 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (newChild == null)
 			return null;
 		if (!isContainer()) { // never be container
-			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
+			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
 		}
 		if (newChild.getNodeType() != TEXT_NODE) {
 			if (isJSPContainer() || isCDATAContainer()) { // accepts only
 				// Text
 				// child
-				throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
+				throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
 			}
 		}
 		return super.insertBefore(newChild, refChild);
@@ -1017,11 +1017,11 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return null; // invalid parameter
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (this.attrNodes == null) { // no attribute
-			throw new DOMException(DOMException.NOT_FOUND_ERR, new String());
+			throw new DOMException(DOMException.NOT_FOUND_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		int length = this.attrNodes.getLength();
@@ -1039,7 +1039,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		}
 
 		// not found
-		throw new DOMException(DOMException.NOT_FOUND_ERR, new String());
+		throw new DOMException(DOMException.NOT_FOUND_ERR, NodeImpl.EMPTY_STRING);
 	}
 
 	/**
@@ -1056,7 +1056,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return null; // no attribute
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		int length = this.attrNodes.getLength();
@@ -1087,7 +1087,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return null; // no attribute
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		int length = this.attrNodes.getLength();
@@ -1133,7 +1133,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return;
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		int length = this.attrNodes.getLength();
@@ -1210,7 +1210,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return;
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		Attr attr = getAttributeNode(name);
@@ -1242,7 +1242,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return null; // nothing to do
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		AttrImpl attr = (AttrImpl) newAttr;
@@ -1250,7 +1250,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (owner != null) {
 			if (owner == this)
 				return null; // nothing to do
-			throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, new String());
+			throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		Attr oldAttr = removeAttributeNode(newAttr.getName());
@@ -1265,7 +1265,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return null; // nothing to do
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		AttrImpl attr = (AttrImpl) newAttr;
@@ -1273,7 +1273,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (owner != null) {
 			if (owner == this)
 				return null; // nothing to do
-			throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, new String());
+			throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String name = newAttr.getLocalName();
@@ -1291,7 +1291,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return;
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=139552
@@ -1322,7 +1322,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	public void setCommentTag(boolean isCommentTag) {
 		IDOMNode parent = (IDOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (isCommentTag)
@@ -1340,7 +1340,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	public void setEmptyTag(boolean isEmptyTag) {
 		IDOMNode parent = (IDOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (isEmptyTag)
@@ -1372,7 +1372,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	public void setJSPTag(boolean isJSPTag) {
 		IDOMNode parent = (IDOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (isJSPTag)
@@ -1410,7 +1410,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	public void setPrefix(String prefix) throws DOMException {
 		IDOMNode parent = (IDOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		int prefixLength = (prefix != null ? prefix.length() : 0);

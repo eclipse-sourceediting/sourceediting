@@ -12,7 +12,7 @@
  *     
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -82,7 +82,7 @@ public class CommentImpl extends CharacterDataImpl implements Comment {
 			String sdata = getData(getStructuredDocumentRegion());
 			if (sdata != null)
 				return sdata;
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		}
 		return new String(data);
 	}
@@ -185,7 +185,7 @@ public class CommentImpl extends CharacterDataImpl implements Comment {
 			return;
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		DocumentImpl document = (DocumentImpl) getOwnerDocument();

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -78,33 +78,33 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 		if (count == 0)
 			return;
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (count < 0 || offset < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String data = getData();
 		if (data == null) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		int length = data.length();
 		if (offset > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		if (offset == 0) {
 			if (count > length) {
-				throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+				throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 			}
 			if (count == length)
-				data = new String();
+				data = NodeImpl.EMPTY_STRING;
 			else
 				data = data.substring(count);
 		} else {
 			int end = offset + count;
 			if (end > length) {
-				throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+				throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 			}
 			if (end == length)
 				data = data.substring(0, offset);
@@ -166,17 +166,17 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 			return;
 
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (offset < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String data = getData();
 		if (data == null) {
 			if (offset > 0) {
-				throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+				throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 			}
 			data = arg;
 		} else if (offset == 0) {
@@ -184,7 +184,7 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 		} else {
 			int length = data.length();
 			if (offset > length) {
-				throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+				throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 			}
 			if (offset == length)
 				data += arg;
@@ -219,7 +219,7 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 	 */
 	public void replaceData(int offset, int count, String arg) throws DOMException {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (arg == null) {
@@ -231,16 +231,16 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 			return;
 		}
 		if (offset < 0 || count < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String data = getData();
 		if (data == null) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		} else if (offset == 0) {
 			int length = data.length();
 			if (count > length) {
-				throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+				throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 			}
 			if (count == length)
 				data = arg;
@@ -250,7 +250,7 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 			int length = data.length();
 			int end = offset + count;
 			if (end > length) {
-				throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+				throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 			}
 			if (end == length)
 				data = data.substring(0, offset) + arg;
@@ -275,7 +275,7 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 	 */
 	public void setData(String data) throws DOMException {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		this.data = (data != null ? data.toCharArray() : null);
@@ -312,24 +312,24 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 	 */
 	public String substringData(int offset, int count) throws DOMException {
 		if (count == 0)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		if (offset < 0 || count < 0) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		String data = getData();
 		if (data == null) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		int length = data.length();
 		if (offset == 0 && count == length)
 			return data;
 		if (offset > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		int end = offset + count;
 		if (end > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, new String());
+			throw new DOMException(DOMException.INDEX_SIZE_ERR, NodeImpl.EMPTY_STRING);
 		}
 		return data.substring(offset, end);
 	}

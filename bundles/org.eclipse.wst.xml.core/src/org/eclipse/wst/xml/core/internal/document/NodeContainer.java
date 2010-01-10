@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -245,16 +245,16 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		if (newChild == null)
 			return null; // nothing to do
 		if (refChild != null && refChild.getParentNode() != this) {
-			throw new DOMException(DOMException.NOT_FOUND_ERR, new String());
+			throw new DOMException(DOMException.NOT_FOUND_ERR, NodeImpl.EMPTY_STRING);
 		}
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 		if (newChild == refChild)
 			return newChild; // nothing to do
 		//new child can not be a parent of this, would cause cycle
 		if(isParent(newChild)) {
-			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
+			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (newChild.getNodeType() == DOCUMENT_FRAGMENT_NODE) {
@@ -372,11 +372,11 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		if (oldChild == null)
 			return null;
 		if (oldChild.getParentNode() != this) {
-			throw new DOMException(DOMException.NOT_FOUND_ERR, new String());
+			throw new DOMException(DOMException.NOT_FOUND_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		// synchronized in case another thread is getting item, or length
@@ -412,7 +412,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 	 */
 	public void removeChildNodes() {
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		Node nextChild = null;
@@ -435,7 +435,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		if (!hasChildNodes())
 			return null;
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		Document document = null;
@@ -476,7 +476,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 	 */
 	public Node replaceChild(Node newChild, Node oldChild) throws DOMException {
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		if (oldChild == null)

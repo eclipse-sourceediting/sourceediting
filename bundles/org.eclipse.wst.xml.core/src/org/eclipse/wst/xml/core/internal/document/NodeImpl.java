@@ -15,6 +15,7 @@
  *     
  *     David Carver (STAR) - bug 295127 - implement isSameNode and compareDocumentPosition methods.
  *                                        Unit Tests covered in wst.xsl XPath 2.0 tests.
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -66,6 +67,8 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	private DocumentImpl ownerDocument = null;
 	private NodeImpl parentNode = null;
 	private NodeImpl previousSibling = null;
+	// define one empty String constant for repeated use
+	static final String EMPTY_STRING = "";
 	
 	/**
 	 * NodeImpl constructor
@@ -94,7 +97,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 *            org.w3c.dom.Node
 	 */
 	public Node appendChild(Node newChild) throws DOMException {
-		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
+		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
 	}
 
 	/**
@@ -420,7 +423,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 */
 	public String getSource() {
 		if (this.flatNode == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		return this.flatNode.getText();
 	}
 
@@ -517,7 +520,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 *            org.w3c.dom.Node
 	 */
 	public Node insertBefore(Node newChild, Node refChild) throws DOMException {
-		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
+		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
 	}
 
 	public boolean isChildEditable() {
@@ -573,7 +576,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 				break;
 
 			default :
-				result = new String();
+				result = NodeImpl.EMPTY_STRING;
 				break;
 		}
 		return result;
@@ -644,7 +647,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 *            org.w3c.dom.Node
 	 */
 	public Node removeChild(Node oldChild) throws DOMException {
-		throw new DOMException(DOMException.NOT_FOUND_ERR, new String());
+		throw new DOMException(DOMException.NOT_FOUND_ERR, NodeImpl.EMPTY_STRING);
 	}
 
 	/**
@@ -676,7 +679,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 *            org.w3c.dom.Node
 	 */
 	public Node replaceChild(Node newChild, Node oldChild) throws DOMException {
-		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
+		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
 	}
 
 	/**
@@ -846,7 +849,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 */
 	public short compareDocumentPosition(Node other) throws DOMException {
 		if (!(other instanceof IDOMNode))
-			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, new String());
+			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, NodeImpl.EMPTY_STRING);
 
 		int nodeStart = this.getStartOffset();
 		int otherStart = ((IDOMNode) other).getStartOffset();

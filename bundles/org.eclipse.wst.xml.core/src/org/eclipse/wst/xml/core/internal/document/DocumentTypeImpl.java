@@ -12,7 +12,7 @@
  *     
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -93,7 +93,7 @@ public class DocumentTypeImpl extends NodeImpl implements IDOMDocumentType {
 	 */
 	public String getName() {
 		if (this.name == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		return this.name;
 	}
 
@@ -156,7 +156,7 @@ public class DocumentTypeImpl extends NodeImpl implements IDOMDocumentType {
 	 */
 	public void setInternalSubset(String internalSubset) {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		this.internalSubset = internalSubset;
@@ -180,7 +180,7 @@ public class DocumentTypeImpl extends NodeImpl implements IDOMDocumentType {
 	 */
 	public void setPublicId(String publicId) {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		this.publicId = publicId;
@@ -196,7 +196,7 @@ public class DocumentTypeImpl extends NodeImpl implements IDOMDocumentType {
 	 */
 	public void setSystemId(String systemId) {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		this.systemId = systemId;

@@ -12,7 +12,7 @@
  *     
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -84,10 +84,10 @@ public class ProcessingInstructionImpl extends NodeImpl implements ProcessingIns
 
 		IStructuredDocumentRegion flatNode = getFirstStructuredDocumentRegion();
 		if (flatNode == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		ITextRegionList regions = flatNode.getRegions();
 		if (regions == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 
 		ITextRegion targetRegion = null;
 		ITextRegion dataRegion = null;
@@ -109,7 +109,7 @@ public class ProcessingInstructionImpl extends NodeImpl implements ProcessingIns
 			}
 		}
 		if (dataRegion == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		int offset = dataRegion.getStart();
 		int end = flatNode.getLength();
 		if (closeRegion != null)
@@ -152,7 +152,7 @@ public class ProcessingInstructionImpl extends NodeImpl implements ProcessingIns
 	 */
 	public String getTarget() {
 		if (this.target == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		return this.target;
 	}
 
@@ -181,7 +181,7 @@ public class ProcessingInstructionImpl extends NodeImpl implements ProcessingIns
 	 */
 	public void setData(String data) throws DOMException {
 		if (!isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
 		}
 
 		this.data = data;

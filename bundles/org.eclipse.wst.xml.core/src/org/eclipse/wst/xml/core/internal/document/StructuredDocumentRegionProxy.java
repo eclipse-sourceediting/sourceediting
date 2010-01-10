@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -216,10 +216,10 @@ class StructuredDocumentRegionProxy implements IStructuredDocumentRegion {
 	 */
 	public String getText() {
 		if (this.flatNode == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		String text = this.flatNode.getText();
 		if (text == null)
-			return new String();
+			return NodeImpl.EMPTY_STRING;
 		int end = this.offset + this.length;
 		return text.substring(this.offset, end);
 	}
