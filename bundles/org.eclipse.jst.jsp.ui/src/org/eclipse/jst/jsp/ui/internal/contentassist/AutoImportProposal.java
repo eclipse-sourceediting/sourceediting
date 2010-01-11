@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,11 +29,11 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class AutoImportProposal extends JSPCompletionProposal {
 	
@@ -83,6 +83,16 @@ public class AutoImportProposal extends JSPCompletionProposal {
 		// make sure the cursor position after is correct
 		setCursorPosition(getCursorPosition() + insertText.length());
 	}
+	
+ 	private Node getInsertNode(IDOMDocument documentNode) {
+		NodeList childNodes = documentNode.getChildNodes();
+		for (int i = 0; i < childNodes.getLength(); i++) {
+			if (childNodes.item(i).getNodeType() == Node.ELEMENT_NODE)
+				return childNodes.item(i);
+		}
+		return documentNode.getFirstChild();
+	}
+	
 	/**
 	 * 
 	 * @param doc
@@ -96,17 +106,40 @@ public class AutoImportProposal extends JSPCompletionProposal {
 			if (sModel != null) {
 				if (sModel instanceof IDOMModel) {
 					IDOMDocument documentNode = ((IDOMModel) sModel).getDocument();
-					Node docElement = documentNode.getDocumentElement();
-					if (docElement != null && docElement instanceof IDOMElement) {
-						IStructuredDocumentRegion sdRegion = ((IDOMElement) docElement).getFirstStructuredDocumentRegion();
+					/*
+					 * document element must be sole Element child of Document
+					 * to remain valid
+					 */
+					Node targetElement = null;
+					if (isXml) {
+						targetElement = documentNode.getDocumentElement();
+					}
+					if (targetElement == null)
+						targetElement = getInsertNode(documentNode);
+					if (targetElement != null) {
+						IStructuredDocumentRegion sdRegion = ((IDOMNode) targetElement).getFirstStructuredDocumentRegion();
 						if (isXml) {
-							// insert right after document element
+							/*
+							 * document Element must be sole Element child of
+							 * Document to remain valid, so insert after
+							 */
 							pos = sdRegion.getEndOffset();
+							try {
+								while (pos < doc.getLength() && (doc.getChar(pos) == '\r' || doc.getChar(pos) == '\n')) {
+									pos++;
+								}
+							}
+							catch (BadLocationException e) {
+								// not important, use pos as determined earlier
+							}
 						}
 						else {
-							// insert before document element
+							// insert before target element
 							pos = sdRegion.getStartOffset();
 						}
+					}
+					else {
+						pos = 0;
 					}
 				}
 			}
@@ -118,7 +151,7 @@ public class AutoImportProposal extends JSPCompletionProposal {
 		return pos;
 	}
 	
- 	// Genuitec bug #6227,
+	// Genuitec bug #6227,
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=203303
 	private boolean isCustomTagDocument(IDocument doc) {
 		boolean isTag = false;
