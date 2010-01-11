@@ -613,10 +613,10 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 			case DOMException.SYNTAX_ERR :
 				result = DOMMessages.SYNTAX_ERR;
 				break;
-			case DOMException.TYPE_MISMATCH_ERR :
+			case 17:// DOMException.TYPE_MISMATCH_ERR :
 				result = DOMMessages.TYPE_MISMATCH_ERR;
 				break;
-			case DOMException.VALIDATION_ERR :
+			case 16:// DOMException.VALIDATION_ERR :
 				result = DOMMessages.VALIDATION_ERR;
 				break;
 			case DOMException.WRONG_DOCUMENT_ERR :
