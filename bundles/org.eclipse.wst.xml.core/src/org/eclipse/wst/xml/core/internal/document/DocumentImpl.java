@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -335,7 +335,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	public Element createCommentElement(String tagName, boolean isJSPTag) throws DOMException {
 		Element result = null;
 		if (!isJSPType() && isJSPTag) {
-			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, DOMMessages.INVALID_MODIFICATION_ERR);
 		}
 		ElementImpl element = (ElementImpl) createElement(tagName);
 		element.setJSPTag(isJSPTag);
@@ -344,7 +344,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 			result = element;
 		}
 		else {
-			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, DOMMessages.INVALID_CHARACTER_ERR);
 		}
 		return result;
 	}
@@ -394,7 +394,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	 */
 	public Element createElementNS(String uri, String tagName) throws DOMException {
 		if (!isValidName(tagName)) {
-			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, DOMMessages.INVALID_CHARACTER_ERR);
 		}
 
 		ElementImpl element = (ElementImpl) createElement(tagName);
@@ -425,7 +425,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	 */
 	public EntityReference createEntityReference(String name) throws DOMException {
 		if (!isXMLType()) {
-			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, DOMMessages.NOT_SUPPORTED_ERR);
 		}
 
 		EntityReferenceImpl ref = new EntityReferenceImpl();
@@ -505,7 +505,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	 */
 	public TreeWalker createTreeWalker(Node root, int whatToShow, NodeFilter filter, boolean entityReferenceExpansion) {
 		if (root == null) {
-			String msg = "Program Error: root node can not be null for TreeWalker";
+			String msg = DOMMessages.NOT_SUPPORTED_ERR + " - Program Error: root node can not be null for TreeWalker";
 			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, msg);
 		}
 		// ISSUE: we just use Xerces implementation for now, but longer term,
@@ -1129,76 +1129,76 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public String getInputEncoding() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public String getXmlEncoding() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public boolean getXmlStandalone() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public void setXmlStandalone(boolean xmlStandalone) throws DOMException {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public String getXmlVersion() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public void setXmlVersion(String xmlVersion) throws DOMException {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public String getDocumentURI() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public void setDocumentURI(String documentURI) {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public DOMConfiguration getDomConfig() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public void normalizeDocument() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 
 	/**
 	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
 	 */
 	public Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version"); //$NON-NLS-1$
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version"); //$NON-NLS-1$
 	}
 }

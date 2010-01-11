@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -245,16 +245,16 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		if (newChild == null)
 			return null; // nothing to do
 		if (refChild != null && refChild.getParentNode() != this) {
-			throw new DOMException(DOMException.NOT_FOUND_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NOT_FOUND_ERR, DOMMessages.NOT_FOUND_ERR);
 		}
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 		if (newChild == refChild)
 			return newChild; // nothing to do
 		//new child can not be a parent of this, would cause cycle
 		if(isParent(newChild)) {
-			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, DOMMessages.HIERARCHY_REQUEST_ERR);
 		}
 
 		if (newChild.getNodeType() == DOCUMENT_FRAGMENT_NODE) {
@@ -372,11 +372,11 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		if (oldChild == null)
 			return null;
 		if (oldChild.getParentNode() != this) {
-			throw new DOMException(DOMException.NOT_FOUND_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NOT_FOUND_ERR, DOMMessages.NOT_FOUND_ERR);
 		}
 
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 
 		// synchronized in case another thread is getting item, or length
@@ -412,7 +412,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 	 */
 	public void removeChildNodes() {
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 
 		Node nextChild = null;
@@ -435,7 +435,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		if (!hasChildNodes())
 			return null;
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 
 		Document document = null;
@@ -476,7 +476,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 	 */
 	public Node replaceChild(Node newChild, Node oldChild) throws DOMException {
 		if (!isChildEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 
 		if (oldChild == null)

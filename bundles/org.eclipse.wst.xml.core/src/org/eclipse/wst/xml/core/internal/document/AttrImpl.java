@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -708,7 +708,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 */
 	public void setPrefix(String prefix) throws DOMException {
 		if (this.ownerElement != null && !this.ownerElement.isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 		int prefixLength = (prefix != null ? prefix.length() : 0);
 		String localName = getLocalName();
@@ -760,7 +760,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 
 	public void setValueSource(String source) {
 		if (this.ownerElement != null && !this.ownerElement.isDataEditable()) {
-			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 		this.fValueSource = (source != null) ? source.toCharArray() : null;
 

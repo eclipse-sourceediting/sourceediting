@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,7 +97,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 *            org.w3c.dom.Node
 	 */
 	public Node appendChild(Node newChild) throws DOMException {
-		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
+		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, DOMMessages.HIERARCHY_REQUEST_ERR);
 	}
 
 	/**
@@ -520,7 +520,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 *            org.w3c.dom.Node
 	 */
 	public Node insertBefore(Node newChild, Node refChild) throws DOMException {
-		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
+		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, DOMMessages.HIERARCHY_REQUEST_ERR);
 	}
 
 	public boolean isChildEditable() {
@@ -571,10 +571,57 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		// TODO: make localized version
 		String result = null;
 		switch (s) {
-			case DOMException.INVALID_CHARACTER_ERR :
-				result = "INVALID_CHARACTER_ERR"; //$NON-NLS-1$
+			case DOMException.DOMSTRING_SIZE_ERR :
+				result = DOMMessages.DOMSTRING_SIZE_ERR;
 				break;
-
+			case DOMException.HIERARCHY_REQUEST_ERR :
+				result = DOMMessages.HIERARCHY_REQUEST_ERR;
+				break;
+			case DOMException.INDEX_SIZE_ERR :
+				result = DOMMessages.INDEX_SIZE_ERR;
+				break;
+			case DOMException.INUSE_ATTRIBUTE_ERR :
+				result = DOMMessages.INUSE_ATTRIBUTE_ERR;
+				break;
+			case DOMException.INVALID_ACCESS_ERR :
+				result = DOMMessages.INVALID_ACCESS_ERR;
+				break;
+			case DOMException.INVALID_CHARACTER_ERR :
+				result = DOMMessages.INVALID_CHARACTER_ERR;
+				break;
+			case DOMException.INVALID_MODIFICATION_ERR :
+				result = DOMMessages.INVALID_MODIFICATION_ERR;
+				break;
+			case DOMException.INVALID_STATE_ERR :
+				result = DOMMessages.INVALID_STATE_ERR;
+				break;
+			case DOMException.NAMESPACE_ERR :
+				result = DOMMessages.NAMESPACE_ERR;
+				break;
+			case DOMException.NO_DATA_ALLOWED_ERR :
+				result = DOMMessages.NO_DATA_ALLOWED_ERR;
+				break;
+			case DOMException.NO_MODIFICATION_ALLOWED_ERR :
+				result = DOMMessages.NO_MODIFICATION_ALLOWED_ERR;
+				break;
+			case DOMException.NOT_FOUND_ERR :
+				result = DOMMessages.NOT_FOUND_ERR;
+				break;
+			case DOMException.NOT_SUPPORTED_ERR :
+				result = DOMMessages.NOT_SUPPORTED_ERR;
+				break;
+			case DOMException.SYNTAX_ERR :
+				result = DOMMessages.SYNTAX_ERR;
+				break;
+			case DOMException.TYPE_MISMATCH_ERR :
+				result = DOMMessages.TYPE_MISMATCH_ERR;
+				break;
+			case DOMException.VALIDATION_ERR :
+				result = DOMMessages.VALIDATION_ERR;
+				break;
+			case DOMException.WRONG_DOCUMENT_ERR :
+				result = DOMMessages.WRONG_DOCUMENT_ERR;
+				break;
 			default :
 				result = NodeImpl.EMPTY_STRING;
 				break;
@@ -647,7 +694,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 *            org.w3c.dom.Node
 	 */
 	public Node removeChild(Node oldChild) throws DOMException {
-		throw new DOMException(DOMException.NOT_FOUND_ERR, NodeImpl.EMPTY_STRING);
+		throw new DOMException(DOMException.NOT_FOUND_ERR, DOMMessages.NOT_FOUND_ERR);
 	}
 
 	/**
@@ -679,7 +726,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 *            org.w3c.dom.Node
 	 */
 	public Node replaceChild(Node newChild, Node oldChild) throws DOMException {
-		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NodeImpl.EMPTY_STRING);
+		throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, DOMMessages.HIERARCHY_REQUEST_ERR);
 	}
 
 	/**
@@ -849,7 +896,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 */
 	public short compareDocumentPosition(Node other) throws DOMException {
 		if (!(other instanceof IDOMNode))
-			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, NodeImpl.EMPTY_STRING);
+			throw new DOMException(DOMException.NOT_SUPPORTED_ERR, DOMMessages.NOT_SUPPORTED_ERR);
 
 		int nodeStart = this.getStartOffset();
 		int otherStart = ((IDOMNode) other).getStartOffset();
