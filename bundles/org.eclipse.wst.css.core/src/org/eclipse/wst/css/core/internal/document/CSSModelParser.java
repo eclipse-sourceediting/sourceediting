@@ -1038,7 +1038,14 @@ public class CSSModelParser {
 		}
 
 		if (newStructuredDocumentRegions != null && 0 < newStructuredDocumentRegions.getLength()) {
-			setupCreationContext(newStructuredDocumentRegions.item(0));
+			/* when removing old nodes the creation context should be set up based on them
+			 * else creation context is that of the new nodes
+			 */
+			if( oldStructuredDocumentRegions != null && oldStructuredDocumentRegions.getLength() < 0) {
+				setupCreationContext(oldStructuredDocumentRegions.item(0));
+			} else {
+				setupCreationContext(newStructuredDocumentRegions.item(0));
+			}
 			insertStructuredDocumentRegions(newStructuredDocumentRegions);
 		}
 
@@ -1134,9 +1141,6 @@ public class CSSModelParser {
 			// BBBBBBBBBB cursorNode:A , node:B -> target is A
 			if (bOverOpenBrace && cursorNode instanceof CSSRuleDeclContainer) {
 				targetNode = (CSSNodeImpl) ((CSSRuleDeclContainer) cursorNode).getStyle();
-			}
-			else if(cursorPos == newStructuredDocumentRegion.getStartOffset() && cursorNode.getParentNode() != null) {
-				targetNode = (CSSNodeImpl) cursorNode.getParentNode();
 			}
 			else {
 				targetNode = cursorNode;
