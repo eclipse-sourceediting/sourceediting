@@ -26,6 +26,9 @@
             <uri
                 name="http://java.sun.com/xml/ns/javaee/application_5.xsd"
                 uri="dtdsAndSchemas/application_5.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/application_6.xsd"
+                uri="dtdsAndSchemas/application_6.xsd" />
 
 
             <public
@@ -42,6 +45,9 @@
             <uri
                 name="http://java.sun.com/xml/ns/javaee/application-client_5.xsd"
                 uri="dtdsAndSchemas/application-client_5.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/application-client_6.xsd"
+                uri="dtdsAndSchemas/application-client_6.xsd" />
 
 
             <public
@@ -51,6 +57,9 @@
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
                 uri="dtdsAndSchemas/connector_1_5.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/j2ee/connector_1_6.xsd"
+                uri="dtdsAndSchemas/connector_1_6.xsd" />
 
 
             <public
@@ -67,6 +76,9 @@
             <uri
                 name="http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
                 uri="dtdsAndSchemas/ejb-jar_3_0.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+                uri="dtdsAndSchemas/ejb-jar_3_1.xsd" />
 
 
             <uri
@@ -98,14 +110,23 @@
             <uri
                 name="http://java.sun.com/xml/ns/javaee/javaee_5.xsd"
                 uri="dtdsAndSchemas/javaee_5.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/javaee_6.xsd"
+                uri="dtdsAndSchemas/javaee_6.xsd" />
 
 
             <uri
                 name="http://java.sun.com/xml/ns/javaee/javaee_web_services_1_2.xsd"
                 uri="dtdsAndSchemas/javaee_web_services_1_2.xsd" />
             <uri
+                name="http://java.sun.com/xml/ns/javaee/javaee_web_services_1_3.xsd"
+                uri="dtdsAndSchemas/javaee_web_services_1_3.xsd" />
+            <uri
                 name="http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_2.xsd"
                 uri="dtdsAndSchemas/javaee_web_services_client_1_2.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_3.xsd"
+                uri="dtdsAndSchemas/javaee_web_services_client_1_3.xsd" />
 
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/jsp_2_0.xsd"
@@ -113,6 +134,9 @@
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/jsp_2_1.xsd"
                 uri="dtdsAndSchemas/jsp_2_1.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/j2ee/jsp_2_2.xsd"
+                uri="dtdsAndSchemas/jsp_2_2.xsd" />
 
 
             <public
@@ -132,6 +156,15 @@
             <uri
                 name="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
                 uri="dtdsAndSchemas/web-app_2_5.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+                uri="dtdsAndSchemas/web-app_3_0.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-common_3_0.xsd"
+                uri="dtdsAndSchemas/web-common_3_0.xsd" />
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+                uri="dtdsAndSchemas/web-fragment_3_0.xsd" />
 
 
             <public
