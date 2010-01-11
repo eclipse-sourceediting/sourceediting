@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,10 +89,12 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		getTokenizer().addBlockMarker(marker);
 	}
 
-	public void addStructuredDocumentRegionHandler(StructuredDocumentRegionHandler handler) {
+	public synchronized void addStructuredDocumentRegionHandler(StructuredDocumentRegionHandler handler) {
 		if (fStructuredDocumentRegionHandlers == null)
 			fStructuredDocumentRegionHandlers = new ArrayList();
-		fStructuredDocumentRegionHandlers.add(handler);
+		synchronized (fStructuredDocumentRegionHandlers) {
+			fStructuredDocumentRegionHandlers.add(handler);
+		}
 	}
 
 	public void beginBlockScan(String newTagName) {
@@ -120,10 +122,17 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		 * 
 		 * Protect the user's data above everything.
 		 */
-		if (fCurrentNode != null && fStructuredDocumentRegionHandlers != null) {
-			for (int i = 0; i < fStructuredDocumentRegionHandlers.size(); i++) {
+		Object[] handlers = null;
+		synchronized (fStructuredDocumentRegionHandlers) {
+			if (fStructuredDocumentRegionHandlers == null)
+				return;
+
+			handlers = fStructuredDocumentRegionHandlers.toArray();
+		}
+		if (fCurrentNode != null && handlers != null) {
+			for (int i = 0; i < handlers.length; i++) {
 				try {
-					((StructuredDocumentRegionHandler) fStructuredDocumentRegionHandlers.get(i)).nodeParsed(fCurrentNode);
+					((StructuredDocumentRegionHandler) handlers[i]).nodeParsed(fCurrentNode);
 				}
 				catch (Exception e) {
 					Logger.log(Logger.ERROR, "Error occurred while firing Node Parsed event", e); //$NON-NLS-1$
@@ -537,8 +546,9 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	public void removeStructuredDocumentRegionHandler(StructuredDocumentRegionHandler handler) {
 		if (fStructuredDocumentRegionHandlers == null)
 			return;
-		if (fStructuredDocumentRegionHandlers.contains(handler))
+		synchronized (fStructuredDocumentRegionHandlers) {
 			fStructuredDocumentRegionHandlers.remove(handler);
+		}
 	}
 
 	/**
@@ -602,10 +612,20 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	}
 
 	public void resetHandlers() {
-		if (fStructuredDocumentRegionHandlers != null) {
-			int size = fStructuredDocumentRegionHandlers.size();
-			for (int i = 0; i < size; i++)
-				((StructuredDocumentRegionHandler) fStructuredDocumentRegionHandlers.get(i)).resetNodes();
+		Object[] handlers = null;
+		synchronized (fStructuredDocumentRegionHandlers) {
+			if (fStructuredDocumentRegionHandlers == null)
+				return;
+
+			handlers = fStructuredDocumentRegionHandlers.toArray();
+		}
+		for (int i = 0; i < handlers.length; i++) {
+			try {
+				((StructuredDocumentRegionHandler) handlers[i]).resetNodes();
+			}
+			catch (Exception e) {
+				Logger.log(Logger.ERROR, "Error occurred while resetting handlers", e); //$NON-NLS-1$
+			}
 		}
 	}
 
