@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,7 +49,7 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 					if (command.text.equals("%") && isPreferenceEnabled(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS)) { //$NON-NLS-1$
 						// scriptlet - add end %>
 						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
-						if (prefixedWith(document, command.offset, "<") && !node.getSource().endsWith("%>")) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (node != null && prefixedWith(document, command.offset, "<") && !node.getSource().endsWith("%>")) { //$NON-NLS-1$ //$NON-NLS-2$
 							command.text += " %>"; //$NON-NLS-1$
 							command.shiftsCaret = false;
 							command.caretOffset = command.offset + 1;
@@ -58,7 +58,7 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 					}
 					if (command.text.equals("{") && isPreferenceEnabled(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES)) { //$NON-NLS-1$
 						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
-						if ((prefixedWith(document, command.offset, "$") || prefixedWith(document, command.offset, "#")) && //$NON-NLS-1$ //$NON-NLS-2$
+						if (node != null && (prefixedWith(document, command.offset, "$") || prefixedWith(document, command.offset, "#")) && //$NON-NLS-1$ //$NON-NLS-2$
 									!node.getSource().endsWith("}")) { //$NON-NLS-1$ //$NON-NLS-2$
 							command.text += " }"; //$NON-NLS-1$
 							command.shiftsCaret = false;
