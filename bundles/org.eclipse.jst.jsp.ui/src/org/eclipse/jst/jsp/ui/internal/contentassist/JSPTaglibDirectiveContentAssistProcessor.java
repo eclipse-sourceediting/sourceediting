@@ -163,7 +163,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 							IPath location = ((IJarRecord) taglibRecord).getLocation();
 							IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(location);
 							IPath localContextRoot = FacetModuleCoreSupport.computeWebContentRootPath(basePath);
-							for (int fileNumber = 0; fileNumber < files.length; fileNumber++) {
+							for (int fileNumber = 0; localContextRoot != null && fileNumber < files.length; fileNumber++) {
 								if (localContextRoot.isPrefixOf(files[fileNumber].getFullPath())) {
 									uri = IPath.SEPARATOR + files[fileNumber].getFullPath().removeFirstSegments(localContextRoot.segmentCount()).toString();
 									uriToRecords.put(uri, taglibRecord);
