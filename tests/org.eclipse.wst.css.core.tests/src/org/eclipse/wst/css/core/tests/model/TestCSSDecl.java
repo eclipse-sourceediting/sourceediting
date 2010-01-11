@@ -18,10 +18,12 @@ import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
 import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.core.internal.util.CSSStyleDeclarationFactory;
 import org.eclipse.wst.css.core.internal.util.declaration.CSSPropertyContext;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
@@ -109,6 +111,41 @@ public class TestCSSDecl extends TestCase {
 			}
 		}
 
+	}
+	
+	/**
+	 * To test https://bugs.eclipse.org/298111
+	 */
+	public void testInsertPropertyInExistingRule() {
+		ICSSModel model = FileUtil.createModel();
+		try {
+			String originalDocument = 
+				"@CHARSET \"ISO-8859-1\";\r\n" +
+				".test {\r\n" +
+				"}";
+			IStructuredDocument structuredDocument = model.getStructuredDocument();
+			structuredDocument.set(originalDocument);
+
+			IndexedRegion indexedRegion = model.getIndexedRegion(28);
+			assertTrue("Indexed region should be an ICSSStyleRule", indexedRegion instanceof ICSSStyleRule);
+			ICSSStyleRule rule = (ICSSStyleRule)indexedRegion;
+			ICSSStyleDeclaration declaration = (ICSSStyleDeclaration)rule.getStyle();
+			declaration.setProperty("color", "#008040", null);
+			CSSPropertyContext context = new CSSPropertyContext(declaration);
+			context.applyModified(declaration);
+			String newDocument = structuredDocument.get();
+			String expectedNewDocument = 
+				"@CHARSET \"ISO-8859-1\";\r\n" +
+				".test {\r\n" +
+				"\tcolor: #008040\r\n" +
+				"}";
+			
+			assertEquals("The updated CSS document does not equal the expected", expectedNewDocument, newDocument);
+		} finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 
 	private String getHTMLDocumentText() {
