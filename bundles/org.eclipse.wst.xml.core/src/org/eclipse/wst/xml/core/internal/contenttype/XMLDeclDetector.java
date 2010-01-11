@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (STAR) - bug 297006 - String Comparison
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contenttype;
 
@@ -32,13 +32,13 @@ public class XMLDeclDetector {
 
 	private boolean canHandleAsUnicodeStream(String tokenType) {
 		boolean canHandleAsUnicodeStream = false;
-		if (tokenType == EncodingParserConstants.UTF83ByteBOM) {
+		if (EncodingParserConstants.UTF83ByteBOM.equals(tokenType)) {
 			canHandleAsUnicodeStream = true;
 			//fUnicode = "UTF-8"; //$NON-NLS-1$
-		} else if (tokenType == EncodingParserConstants.UTF16BE) {
+		} else if (EncodingParserConstants.UTF16BE.equals(tokenType)) {
 			canHandleAsUnicodeStream = true;
 			//fUnicode = "UTF-16BE"; //$NON-NLS-1$
-		} else if (tokenType == EncodingParserConstants.UTF16LE) {
+		} else if (EncodingParserConstants.UTF16LE.equals(tokenType)) {
 			canHandleAsUnicodeStream = true;
 			//fUnicode = "UTF-16"; //$NON-NLS-1$
 		}
@@ -95,7 +95,7 @@ public class XMLDeclDetector {
 				//fReader = new InputStreamReader(fReader, fUnicode);
 				// parseInput();
 			} else {
-				if (tokenType == XMLHeadTokenizerConstants.XMLDelEncoding) {
+				if (XMLHeadTokenizerConstants.XMLDelEncoding.equals(tokenType)) {
 					fIsXML = true;
 				}
 			}

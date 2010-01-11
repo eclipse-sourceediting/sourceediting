@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver (STAR) - bug 297006 - String Comparison
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.formatter;
 
@@ -181,7 +182,7 @@ public class DefaultXMLPartitionFormatter {
 				XMLFormattingConstraints parentConstraints = getRegionConstraints(currentDOMNode);
 				
 				/* if the whitespace strategy is declared as default, get it from the preferences */
-				if(parentConstraints.getWhitespaceStrategy() == XMLFormattingConstraints.DEFAULT)
+				if(XMLFormattingConstraints.DEFAULT.equals(parentConstraints.getWhitespaceStrategy()))
 					parentConstraints.setWhitespaceStrategy(preferences.getElementWhitespaceStrategy());
 				
 				// TODO: initialize indentLevel
@@ -243,7 +244,7 @@ public class DefaultXMLPartitionFormatter {
 			}
 			
 			/* A parent who has defined a specific whitespace strategy was found */
-			if(XMLFormattingConstraints.PRESERVE == result.getWhitespaceStrategy() || XMLFormattingConstraints.DEFAULT == result.getWhitespaceStrategy())
+			if(XMLFormattingConstraints.PRESERVE.equals(result.getWhitespaceStrategy()) || XMLFormattingConstraints.DEFAULT.equals(result.getWhitespaceStrategy()))
 				return result;
 		}
 		
@@ -290,7 +291,7 @@ public class DefaultXMLPartitionFormatter {
 		// check if in preserve space mode, if so, don't touch anything but
 		// make sure to update available line width
 		String whitespaceMode = parentConstraints.getWhitespaceStrategy();
-		if (whitespaceMode == XMLFormattingConstraints.PRESERVE) {
+		if (XMLFormattingConstraints.PRESERVE.equals(whitespaceMode)) {
 			int availableLineWidth = parentConstraints.getAvailableLineWidth();
 			availableLineWidth = updateLineWidthWithLastLine(fullText, availableLineWidth);
 
@@ -314,19 +315,19 @@ public class DefaultXMLPartitionFormatter {
 		}
 
 		// special handling if text follows an entity or cdata region
-		if (whitespaceMode != XMLFormattingConstraints.COLLAPSE && previousRegion != null) {
+		if (!XMLFormattingConstraints.COLLAPSE.equals(whitespaceMode) && previousRegion != null) {
 			String previouRegionType = previousRegion.getType();
-			if (previouRegionType == DOMRegionContext.XML_ENTITY_REFERENCE || previouRegionType == DOMRegionContext.XML_CDATA_TEXT)
+			if (DOMRegionContext.XML_ENTITY_REFERENCE.equals(previouRegionType) || DOMRegionContext.XML_CDATA_TEXT.equals(previouRegionType))
 				whitespaceMode = XMLFormattingConstraints.COLLAPSE;
 		}
 		// also, special handling if text is before an entity or cdata region
-		if (whitespaceMode != XMLFormattingConstraints.COLLAPSE) {
+		if (!XMLFormattingConstraints.COLLAPSE.equals(whitespaceMode)) {
 			// get next document region if dont already have it
 			if (nextDocumentRegion == null)
 				nextDocumentRegion = currentRegion.getNext();
 			if (nextDocumentRegion != null) {
 				String nextRegionType = nextDocumentRegion.getType();
-				if (nextRegionType == DOMRegionContext.XML_ENTITY_REFERENCE || nextRegionType == DOMRegionContext.XML_CDATA_TEXT)
+				if (DOMRegionContext.XML_ENTITY_REFERENCE.equals(nextRegionType) || DOMRegionContext.XML_CDATA_TEXT.equals(nextRegionType))
 					whitespaceMode = XMLFormattingConstraints.COLLAPSE;
 			}
 		}
@@ -350,7 +351,7 @@ public class DefaultXMLPartitionFormatter {
 		}
 		availableLineWidth -= tagNameLineWidth;
 
-		if (indentStrategy == XMLFormattingConstraints.INLINE) {
+		if (XMLFormattingConstraints.INLINE.equals(indentStrategy)) {
 			// if was inlining, need to check if out of available line
 			// width
 			if (availableLineWidth < 0) {
@@ -366,7 +367,7 @@ public class DefaultXMLPartitionFormatter {
 				// no need to indent
 				// just make sure to delete previous whitespace if
 				// needed
-				if ((previousDocumentRegion.getType() == DOMRegionContext.XML_CONTENT) && (previousDocumentRegion.getFullText().trim().length() == 0)) {
+				if ((DOMRegionContext.XML_CONTENT.equals(previousDocumentRegion.getType())) && (previousDocumentRegion.getFullText().trim().length() == 0)) {
 					availableLineWidth = collapseSpaces(textEdit, previousDocumentRegion.getStartOffset(), availableLineWidth, previousDocumentRegion.getFullText());
 				}
 			}
@@ -402,7 +403,7 @@ public class DefaultXMLPartitionFormatter {
 		// do not format space before start tag if preserving spaces
 		if (whitespaceStrategy != XMLFormattingConstraints.PRESERVE) {
 			// format like indent strategy says
-			if (indentStrategy == XMLFormattingConstraints.INDENT || indentStrategy == XMLFormattingConstraints.NEW_LINE) {
+			if (XMLFormattingConstraints.INDENT.equals(indentStrategy) || XMLFormattingConstraints.NEW_LINE.equals(indentStrategy)) {
 				int availableLineWidth = indentIfPossible(textEdit, constraints, currentDocumentRegion, previousDocumentRegion, whitespaceStrategy, indentStrategy, false);
 				constraints.setAvailableLineWidth(availableLineWidth);
 			}
@@ -429,20 +430,20 @@ public class DefaultXMLPartitionFormatter {
 	private DOMRegion formatRegion(TextEdit edit, Position formatRange, XMLFormattingConstraints parentConstraints, DOMRegion domRegion, IStructuredDocumentRegion previousRegion) {
 		IStructuredDocumentRegion currentRegion = domRegion.documentRegion;
 		String regionType = currentRegion.getType();
-		if (regionType == DOMRegionContext.XML_TAG_NAME) {
+		if (DOMRegionContext.XML_TAG_NAME.equals(regionType)) {
 			ITextRegion textRegion = currentRegion.getFirstRegion();
 			String textRegionType = textRegion.getType();
-			if (textRegionType == DOMRegionContext.XML_TAG_OPEN) {
+			if (DOMRegionContext.XML_TAG_OPEN.equals(textRegionType)) {
 				domRegion = formatStartTag(edit, formatRange, parentConstraints, domRegion, previousRegion);
 			}
-			else if (textRegionType == DOMRegionContext.XML_END_TAG_OPEN) {
+			else if (DOMRegionContext.XML_END_TAG_OPEN.equals(textRegionType)) {
 				formatEndTag(edit, formatRange, parentConstraints, domRegion, previousRegion);
 			}
 		}
-		else if (regionType == DOMRegionContext.XML_CONTENT || domRegion.domNode.getNodeType() == Node.TEXT_NODE) {
+		else if (DOMRegionContext.XML_CONTENT.equals(regionType) || domRegion.domNode.getNodeType() == Node.TEXT_NODE) {
 			formatContent(edit, formatRange, parentConstraints, domRegion, previousRegion);
 		}
-		else if (regionType == DOMRegionContext.XML_COMMENT_TEXT) {
+		else if (DOMRegionContext.XML_COMMENT_TEXT.equals(regionType)) {
 			formatComment(edit, formatRange, parentConstraints, domRegion, previousRegion);
 		}
 		else {
@@ -473,7 +474,7 @@ public class DefaultXMLPartitionFormatter {
 
 			// need to make sure current document region and current
 			// dom node match up
-			if (currentRegion == currentDOMNode.getFirstStructuredDocumentRegion()) {
+			if (currentDOMNode.getFirstStructuredDocumentRegion().equals(currentRegion)) {
 				// format this document region/node, formatRegion will
 				// return the last node/region formatted
 				domRegion = formatRegion(edit, formatRange, parentConstraints, domRegion, previousRegion);
@@ -510,7 +511,7 @@ public class DefaultXMLPartitionFormatter {
 		XMLFormattingConstraints childrenConstraints = new XMLFormattingConstraints();
 		updateFormattingConstraints(parentConstraints, thisConstraints, childrenConstraints, currentDOMRegion);
 
-		if(childrenConstraints.getWhitespaceStrategy() == XMLFormattingConstraints.DEFAULT)
+		if(XMLFormattingConstraints.DEFAULT.equals(childrenConstraints.getWhitespaceStrategy()))
 			childrenConstraints.setWhitespaceStrategy((new XMLFormattingPreferences()).getElementWhitespaceStrategy());
 			
 		String whitespaceStrategy = thisConstraints.getWhitespaceStrategy();
@@ -519,9 +520,9 @@ public class DefaultXMLPartitionFormatter {
 
 		// format space before start tag
 		// do not format space before start tag if preserving spaces
-		if (whitespaceStrategy != XMLFormattingConstraints.PRESERVE) {
+		if (!XMLFormattingConstraints.PRESERVE.equals(whitespaceStrategy)) {
 			// format like indent strategy says
-			if (indentStrategy == XMLFormattingConstraints.INDENT || indentStrategy == XMLFormattingConstraints.NEW_LINE) {
+			if (XMLFormattingConstraints.INDENT.equals(indentStrategy) || XMLFormattingConstraints.NEW_LINE.equals(indentStrategy)) {
 				availableLineWidth = indentIfPossible(textEdit, thisConstraints, currentDocumentRegion, previousDocumentRegion, whitespaceStrategy, indentStrategy, true);
 				if (availableLineWidth > 0)
 					thisConstraints.setAvailableLineWidth(availableLineWidth);
@@ -547,7 +548,7 @@ public class DefaultXMLPartitionFormatter {
 					DOMRegion childDOMRegion = new DOMRegion();
 					childDOMRegion.documentRegion = nextRegion;
 					childDOMRegion.domNode = childDOMNode;
-					if (nextRegion == childDOMNode.getFirstStructuredDocumentRegion()) {
+					if (childDOMNode.getFirstStructuredDocumentRegion().equals(nextRegion)) {
 						// format children. pass in child constraints
 						childDOMRegion = formatRegion(textEdit, formatRange, childrenConstraints, childDOMRegion, previousDocumentRegion);
 					}
@@ -588,9 +589,9 @@ public class DefaultXMLPartitionFormatter {
 					ITextRegionList rs = nextRegion.getRegions();
 					if (rs.size() > 1) {
 						ITextRegion r = rs.get(0);
-						if (r != null && r.getType() == DOMRegionContext.XML_END_TAG_OPEN) {
+						if (r != null && DOMRegionContext.XML_END_TAG_OPEN.equals(r.getType())) {
 							r = rs.get(1);
-							if (r != null && r.getType() == DOMRegionContext.XML_TAG_NAME) {
+							if (r != null && DOMRegionContext.XML_TAG_NAME.equals(r.getType())) {
 								String tagName = nextRegion.getText(r);
 								if (tagName != null && tagName.equals(currentDOMNode.getNodeName()))
 									formatEndTag = true;
@@ -629,7 +630,7 @@ public class DefaultXMLPartitionFormatter {
 		int tagNameLineWidth = currentTextRegion.getTextLength() + 2;
 		availableLineWidth -= tagNameLineWidth;
 
-		if (indentStrategy == XMLFormattingConstraints.INLINE) {
+		if (XMLFormattingConstraints.INLINE.equals(indentStrategy)) {
 			// if was inlining, need to check if out of available line
 			// width
 			if (availableLineWidth < 0) {
@@ -646,7 +647,7 @@ public class DefaultXMLPartitionFormatter {
 				// just make sure to delete previous whitespace if
 				// needed
 				if (previousDocumentRegion != null) {
-					if (previousDocumentRegion.getType() == DOMRegionContext.XML_CONTENT) {
+					if (DOMRegionContext.XML_CONTENT.equals(previousDocumentRegion.getType())) {
 						String previousDocumentRegionText = previousDocumentRegion.getFullText();
 						if (previousDocumentRegionText.trim().length() == 0) {
 							availableLineWidth = collapseSpaces(textEdit, previousDocumentRegion.getStartOffset(), availableLineWidth, previousDocumentRegionText);
@@ -679,10 +680,10 @@ public class DefaultXMLPartitionFormatter {
 		boolean forceInitialIndent = false;
 		int indentLevel = parentConstraints.getIndentLevel() + 1;
 		String indentMode = parentConstraints.getIndentStrategy();
-		if (indentMode == XMLFormattingConstraints.INDENT) {
+		if (XMLFormattingConstraints.INDENT.equals(indentMode)) {
 			forceInitialIndent = true;
 		}
-		if (indentMode == XMLFormattingConstraints.NEW_LINE) {
+		if (XMLFormattingConstraints.NEW_LINE.equals(indentMode)) {
 			indentLevel = parentConstraints.getIndentLevel();
 			forceInitialIndent = true;
 		}
@@ -716,12 +717,12 @@ public class DefaultXMLPartitionFormatter {
 					}
 					else {
 						// just collapse spaces, but adjust for any indenting that may result from preserving line delimiters
-						if (whitespaceStart == 0 && whitespaceMode == XMLFormattingConstraints.IGNOREANDTRIM) {
+						if (whitespaceStart == 0 && XMLFormattingConstraints.IGNOREANDTRIM.equals(whitespaceMode)) {
 							// if ignore, trim
 							DeleteEdit deleteTrailing = new DeleteEdit(startOffset, whitespaceRun.length());
 							textEdit.addChild(deleteTrailing);
 						}
-						else if(whitespaceMode == XMLFormattingConstraints.REPLACE)
+						else if(XMLFormattingConstraints.REPLACE.equals(whitespaceMode))
 							availableLineWidth = replaceSpaces(textEdit, startOffset, availableLineWidth, whitespaceRun);
 						else
 							availableLineWidth = collapseAndIndent(textEdit, startOffset, availableLineWidth, indentLevel, whitespaceRun, currentRegion);
@@ -732,15 +733,15 @@ public class DefaultXMLPartitionFormatter {
 				else {
 					// handle trailing whitespace
 					int whitespaceOffset = currentRegion.getStartOffset() + whitespaceStart;
-					if (whitespaceMode == XMLFormattingConstraints.REPLACE)
+					if (XMLFormattingConstraints.REPLACE.equals(whitespaceMode))
 						availableLineWidth = replaceSpaces(textEdit, whitespaceOffset, availableLineWidth, whitespaceRun);
-					else if (whitespaceMode == XMLFormattingConstraints.IGNOREANDTRIM) {
+					else if (XMLFormattingConstraints.IGNOREANDTRIM.equals(whitespaceMode)) {
 						// always trim
 						DeleteEdit deleteTrailing = new DeleteEdit(whitespaceOffset, whitespaceRun.length());
 						textEdit.addChild(deleteTrailing);
 					}
 					else if(getFormattingPreferences().getClearAllBlankLines()) {
-						if (whitespaceMode == XMLFormattingConstraints.IGNORE) {
+						if (XMLFormattingConstraints.IGNORE.equals(whitespaceMode)) {
 							// if ignore, trim
 							DeleteEdit deleteTrailing = new DeleteEdit(whitespaceOffset, whitespaceRun.length());
 							textEdit.addChild(deleteTrailing);
@@ -763,7 +764,7 @@ public class DefaultXMLPartitionFormatter {
 					// indent
 					// [243091] - characterRunLength should only be subtracted once or text formatting wraps prematurely
 					// availableLineWidth = availableLineWidth - characterRunLength;
-					if ((whitespaceMode == XMLFormattingConstraints.IGNORE || whitespaceMode == XMLFormattingConstraints.IGNOREANDTRIM) && (forceInitialIndent || (availableLineWidth <= 0))) {
+					if ((XMLFormattingConstraints.IGNORE.equals(whitespaceMode) || XMLFormattingConstraints.IGNOREANDTRIM.equals(whitespaceMode)) && (forceInitialIndent || (availableLineWidth <= 0))) {
 						// indent if not already indented
 						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, currentRegion.getStartOffset(), whitespaceRun);
 						// remember to subtract word length
@@ -793,18 +794,18 @@ public class DefaultXMLPartitionFormatter {
 		ITextRegion currentTextRegion = textRegions.get(currentTextRegionIndex);
 		String currentType = currentTextRegion.getType();
 		// tag name should always be the first text region
-		if (currentType == DOMRegionContext.XML_TAG_NAME) {
+		if (DOMRegionContext.XML_TAG_NAME.equals(currentType)) {
 			ITextRegion nextTextRegion = textRegions.get(currentTextRegionIndex + 1);
 			// Bug 221279 - Some non well-formed documents will not contribute a next region
-			if (nextTextRegion != null && nextTextRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) {
+			if (nextTextRegion != null && DOMRegionContext.XML_TAG_CLOSE.equals(nextTextRegion.getType())) {
 				// calculate available line width
 				int tagNameLineWidth = currentTextRegion.getTextLength() + 3;
 				availableLineWidth -= tagNameLineWidth;
 
-				if (indentStrategy == XMLFormattingConstraints.INLINE) {
+				if (XMLFormattingConstraints.INLINE.equals(indentStrategy)) {
 					// if was inlining, need to check if out of available line
 					// width - Whitespace may have been corrected in the text content
-					if (availableLineWidth < 0 && whitespaceStrategy == XMLFormattingConstraints.IGNORE) {
+					if (availableLineWidth < 0 && XMLFormattingConstraints.IGNORE.equals(whitespaceStrategy)) {
 						// need to deindent if possible
 						int lineWidth = indentIfPossible(textEdit, constraints, currentDocumentRegion, previousDocumentRegion, whitespaceStrategy, indentStrategy, false);
 						// update available line width
@@ -816,7 +817,7 @@ public class DefaultXMLPartitionFormatter {
 						// just make sure to delete previous whitespace if
 						// needed
 						if (previousDocumentRegion != null) {
-							if (previousDocumentRegion.getType() == DOMRegionContext.XML_CONTENT) {
+							if (DOMRegionContext.XML_CONTENT.equals(previousDocumentRegion.getType())) {
 								String previousDocumentRegionText = previousDocumentRegion.getFullText();
 								if (previousDocumentRegionText.trim().length() == 0) {
 									availableLineWidth = collapseSpaces(textEdit, previousDocumentRegion.getStartOffset(), availableLineWidth, previousDocumentRegionText);
@@ -857,15 +858,15 @@ public class DefaultXMLPartitionFormatter {
 		ITextRegion currentTextRegion = textRegions.get(currentTextRegionIndex);
 		String currentType = currentTextRegion.getType();
 		// tag name should always be the first text region
-		if (currentType == DOMRegionContext.XML_TAG_NAME) {
+		if (DOMRegionContext.XML_TAG_NAME.equals(currentType)) {
 			ITextRegion nextTextRegion = textRegions.get(currentTextRegionIndex + 1);
 			String nextType = (nextTextRegion != null) ? nextTextRegion.getType() : null;
-			if (nextType == DOMRegionContext.XML_TAG_CLOSE) {
+			if (DOMRegionContext.XML_TAG_CLOSE.equals(nextType)) {
 				// already at tag close
 				formatStartTagWithNoAttr(textEdit, constraints, currentDocumentRegion, previousDocumentRegion, availableLineWidth, indentStrategy, whitespaceStrategy, currentTextRegion);
 				return false;
 			}
-			else if (nextType == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
+			else if (DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(nextType)) {
 				// already at empty tag close
 				formatEmptyStartTagWithNoAttr(textEdit, constraints, currentDocumentRegion, previousDocumentRegion, availableLineWidth, indentStrategy, whitespaceStrategy, currentTextRegion);
 				return true;
@@ -883,7 +884,7 @@ public class DefaultXMLPartitionFormatter {
 					int attributesCount = 0;
 					int i = 2;
 					while (i < textRegions.size() && attributesCount < 2) {
-						if (textRegions.get(i).getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
+						if (DOMRegionContext.XML_TAG_ATTRIBUTE_NAME.equals(textRegions.get(i).getType()))
 							++attributesCount;
 					}
 					indentAllAttributes = (attributesCount > 1);
@@ -892,7 +893,7 @@ public class DefaultXMLPartitionFormatter {
 				while ((currentTextRegionIndex + 1) < textRegions.size()) {
 					nextTextRegion = textRegions.get(currentTextRegionIndex + 1);
 					nextType = nextTextRegion.getType();
-					if (nextType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+					if (DOMRegionContext.XML_TAG_ATTRIBUTE_NAME.equals(nextType)) {
 						boolean indentAttribute = indentAllAttributes;
 						if (!indentAttribute)
 							indentAttribute = shouldIndentBeforeAttribute(constraints, textRegions, availableLineWidth, currentTextRegionIndex, currentTextRegion, nextTextRegion);
@@ -907,7 +908,7 @@ public class DefaultXMLPartitionFormatter {
 							availableLineWidth -= (currentTextRegion.getTextLength() + 1);
 						}
 					}
-					else if (nextType == DOMRegionContext.XML_TAG_CLOSE) {
+					else if (DOMRegionContext.XML_TAG_CLOSE.equals(nextType)) {
 						// if need to align bracket on next line, indent
 						if (alignFinalBracket && spanMoreThan1Line) {
 							availableLineWidth = indentIfNotAlreadyIndented(textEdit, indentLevel, currentDocumentRegion, currentTextRegion);
@@ -924,7 +925,7 @@ public class DefaultXMLPartitionFormatter {
 						constraints.setAvailableLineWidth(availableLineWidth);
 						return false;
 					}
-					else if (nextType == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
+					else if (DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(nextType)) {
 						int textLength = currentTextRegion.getTextLength();
 						int regionLength = currentTextRegion.getLength();
 
@@ -944,14 +945,14 @@ public class DefaultXMLPartitionFormatter {
 						return true;
 					}
 					else {
-						if (currentType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && nextType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+						if (DOMRegionContext.XML_TAG_ATTRIBUTE_NAME.equals(currentType) && DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(nextType)) {
 							if (currentTextRegion.getTextLength() < currentTextRegion.getLength()) {
 								deleteTrailingSpaces(textEdit, currentTextRegion, currentDocumentRegion);
 							}
 							// update available width
 							availableLineWidth -= currentTextRegion.getTextLength();
 						}
-						else if (currentType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS && nextType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+						else if (DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(currentType) && DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE.equals(nextType)) {
 							if (currentTextRegion.getTextLength() < currentTextRegion.getLength()) {
 								deleteTrailingSpaces(textEdit, currentTextRegion, currentDocumentRegion);
 							}
@@ -984,7 +985,7 @@ public class DefaultXMLPartitionFormatter {
 		int lineWidth = parentConstraints.getAvailableLineWidth() - currentRegion.getFullText().length();
 		// Don't format if we're not exceeding the available line width, or if the whitespace
 		// strategy is to preserve whitespace - But update line width.
-		if(currentRegion == null ||	parentConstraints.getWhitespaceStrategy() == XMLFormattingConstraints.PRESERVE) {
+		if(currentRegion == null ||	XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
 			parentConstraints.setAvailableLineWidth(lineWidth);
 		} else {
 			// If there is enough room, format the start of the comment tag if it is on its own line
@@ -1025,7 +1026,7 @@ public class DefaultXMLPartitionFormatter {
 		boolean initialIndent = false;
 		
 		// Indent the text of the comment an additional level
-		if(region.getType() == DOMRegionContext.XML_COMMENT_TEXT) {
+		if(DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType())) {
 			indentLevel++;
 			initialIndent = true;
 		}
@@ -1041,7 +1042,7 @@ public class DefaultXMLPartitionFormatter {
 			
 			// If the region is a comment opening, the whitespace would actually come from the
 			// previous document region
-			if(region.getType() == DOMRegionContext.XML_COMMENT_OPEN && currentRegion.getPrevious() != null) {
+			if(DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType()) && currentRegion.getPrevious() != null) {
 				currLineWhitespaceRun = getTrailingWhitespace(preRegionLineText);
 			} else {
 				currLineWhitespaceRun = getCharacterRun(fullTextArray, fullTextOffset, true);
@@ -1051,7 +1052,7 @@ public class DefaultXMLPartitionFormatter {
 				// offset where whitespace starts
 				int whitespaceStart = fullTextOffset;
 				// update current offset in fullText for non comment-opening regions
-				if(region.getType() != DOMRegionContext.XML_COMMENT_OPEN)
+				if(!DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType()))
 					fullTextOffset += currLineWhitespaceRun.length();
 
 				// gather following word
@@ -1065,14 +1066,14 @@ public class DefaultXMLPartitionFormatter {
 					// this occurs in the previous document region
 					int startOffset = 0;
 
-					if(region.getType() == DOMRegionContext.XML_COMMENT_OPEN && currentRegion.getPrevious() != null) {
+					if(DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType()) && currentRegion.getPrevious() != null) {
 						startOffset = currentLineInfo.getOffset();
 					} else {
 						startOffset = currentRegion.getStartOffset(region) + whitespaceStart;
 					}
 					
 					//format before the comment open
-					if((isWhitespace(preRegionLineText) && region.getType() == DOMRegionContext.XML_COMMENT_OPEN)) {
+					if((isWhitespace(preRegionLineText) && DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType()))) {
 						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, startOffset, currLineWhitespaceRun, false);
 					}
 					//format the rest of the lines of the comment
@@ -1111,11 +1112,11 @@ public class DefaultXMLPartitionFormatter {
 					availableLineWidth = availableLineWidth - characterRunLength;
 
 					//format before the comment open
-					if(isWhitespace(preRegionLineText) && region.getType() == DOMRegionContext.XML_COMMENT_OPEN) {
+					if(isWhitespace(preRegionLineText) && DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType())) {
 						availableLineWidth= indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, currentRegion.getStartOffset(region), currLineWhitespaceRun, false);
 					}
 					//format the rest of the lines of the comment
-					else if ((region.getType() == DOMRegionContext.XML_COMMENT_CLOSE) || initialIndent || (region.getType() == DOMRegionContext.XML_COMMENT_TEXT && availableLineWidth <= 0)) {
+					else if ((DOMRegionContext.XML_COMMENT_CLOSE.equals(region.getType())) || initialIndent || (DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType()) && availableLineWidth <= 0)) {
 						// indent if not already indented
 						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, currentRegion.getStartOffset(region), currLineWhitespaceRun);
 						// remember to subtract word length
@@ -1201,7 +1202,7 @@ public class DefaultXMLPartitionFormatter {
 			//if previous region is all whitespace then we need to format it
 			//else only need to format on this line
 			IStructuredDocumentRegion previousRegion = currentRegion.getPrevious();
-			if(previousRegion.getType() == DOMRegionContext.XML_CONTENT && isWhitespace(previousRegion.getFullText())) {
+			if(DOMRegionContext.XML_CONTENT.equals(previousRegion.getType()) && isWhitespace(previousRegion.getFullText())) {
 				String delimiters = extractLineDelimiters(previousRegion.getFullText(), previousRegion);
 				
 				// keep blank lines preceding comment but remove any other whitespace from them
@@ -1378,19 +1379,19 @@ public class DefaultXMLPartitionFormatter {
 		String previousRegionFullText = null;
 		String previousRegionType = null;
 
-		if ((whitespaceStrategy == XMLFormattingConstraints.IGNORE) || whitespaceStrategy == XMLFormattingConstraints.IGNOREANDTRIM) {
+		if ((XMLFormattingConstraints.IGNORE.equals(whitespaceStrategy)) || XMLFormattingConstraints.IGNOREANDTRIM.equals(whitespaceStrategy)) {
 			// if ignoring, need to check if previous region was cdata
 			previousRegionType = previousDocumentRegion.getType();
-			if (previousRegionType == DOMRegionContext.XML_CDATA_TEXT)
+			if (DOMRegionContext.XML_CDATA_TEXT.equals(previousRegionType))
 				canIndent = false;
 			else
 				canIndent = true;
 		}
-		else if (whitespaceStrategy == XMLFormattingConstraints.COLLAPSE) {
+		else if (XMLFormattingConstraints.COLLAPSE.equals(whitespaceStrategy)) {
 			// if collapsing, need to check if previous region ended in a
 			// whitespace
 			previousRegionType = previousDocumentRegion.getType();
-			if (previousRegionType == DOMRegionContext.XML_CONTENT) {
+			if (DOMRegionContext.XML_CONTENT.equals(previousRegionType)) {
 				previousRegionFullText = previousDocumentRegion.getFullText();
 				int length = previousRegionFullText.length();
 				if (length > 1)
@@ -1406,7 +1407,7 @@ public class DefaultXMLPartitionFormatter {
 				previousRegionType = previousDocumentRegion.getType();
 
 			// get previous region's text if it was not previously retrieved
-			if (previousRegionFullText == null && previousRegionType == DOMRegionContext.XML_CONTENT)
+			if (previousRegionFullText == null && DOMRegionContext.XML_CONTENT.equals(previousRegionType))
 				previousRegionFullText = previousDocumentRegion.getFullText();
 
 			// if previous region was only whitespace, this may
@@ -1421,7 +1422,7 @@ public class DefaultXMLPartitionFormatter {
 			}
 
 			int indentLevel = thisConstraints.getIndentLevel();
-			if (addIndent && indentStrategy == XMLFormattingConstraints.INDENT) {
+			if (addIndent && XMLFormattingConstraints.INDENT.equals(indentStrategy)) {
 				++indentLevel;
 				thisConstraints.setIndentLevel(indentLevel);
 			}
@@ -1472,7 +1473,7 @@ public class DefaultXMLPartitionFormatter {
 				// still okay, so try next region
 				// something attrName=
 				ITextRegion textRegion = textRegions.get(currentTextRegionIndex + 2);
-				if (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+				if (DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(textRegion.getType())) {
 					++currentWidth;
 					if (currentWidth > availableLineWidth)
 						indentAttribute = true;
@@ -1481,7 +1482,7 @@ public class DefaultXMLPartitionFormatter {
 							// still okay, so try next region
 							// something attrName=attrValue
 							textRegion = textRegions.get(currentTextRegionIndex + 3);
-							if (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+							if (DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE.equals(textRegion.getType())) {
 								currentWidth = +textRegion.getTextLength();
 								if (currentWidth > availableLineWidth)
 									indentAttribute = true;
@@ -1569,13 +1570,13 @@ public class DefaultXMLPartitionFormatter {
 					boolean preserveFound = false;
 					while (i < textRegions.size() && !xmlSpaceFound) {
 						ITextRegion textRegion = textRegions.get(i);
-						if (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+						if (DOMRegionContext.XML_TAG_ATTRIBUTE_NAME.equals(textRegion.getType())) {
 							String regionText = currentRegion.getText(textRegion);
 							if (XML_SPACE.equals(regionText)) {
 								if ((i + 1) < textRegions.size()) {
 									++i;
 									textRegion = textRegions.get(i);
-									if (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS && ((i + 1) < textRegions.size())) {
+									if (DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(textRegion.getType()) && ((i + 1) < textRegions.size())) {
 										++i;
 										textRegion = textRegions.get(i);
 										regionText = currentRegion.getText(textRegion);
