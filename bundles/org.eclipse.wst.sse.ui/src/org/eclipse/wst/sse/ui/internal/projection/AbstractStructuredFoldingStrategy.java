@@ -458,7 +458,12 @@ public abstract class AbstractStructuredFoldingStrategy
 		Iterator annoIter = null; 
 		//be sure project has not been disabled
 		if(fProjectionAnnotationModel != null) {
-			annoIter = fProjectionAnnotationModel.getAnnotationIterator(dirtyRegion.getOffset(), dirtyRegion.getLength(), false, false);
+			//workaround for Platform Bug 299416
+			int offset = dirtyRegion.getOffset();
+			if(offset > 0) {
+				offset--;
+			}
+			annoIter = fProjectionAnnotationModel.getAnnotationIterator(offset, dirtyRegion.getLength(), false, false);
 		}
 		return annoIter;
 	}
