@@ -47,7 +47,11 @@ class PageDirectiveWatcherImpl implements PageDirectiveWatcher {
 			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
 			pageDirectiveAdapter.changedLanguage(((IndexedRegion) targetElement).getStartOffset(), languageValue);
 		}
-
+		if (target.hasAttribute("isELIgnored")) { //$NON-NLS-1$
+			String elIgnored = target.getAttribute("isELIgnored"); //$NON-NLS-1$
+			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
+			pageDirectiveAdapter.setElIgnored(elIgnored);
+		}
 
 	}
 

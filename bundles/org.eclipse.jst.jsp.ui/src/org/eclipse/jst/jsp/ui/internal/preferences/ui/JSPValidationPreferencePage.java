@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -156,6 +156,7 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		section = createStyleSectionWithContentComposite(composite, JSPUIMessages.VALIDATION_HEADER_CUSTOM_ACTIONS, nColumns);
 		addComboBox(section, JSPUIMessages.VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE, JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE, JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE, SEVERITIES, errorWarningIgnoreLabels, 0);
+		addComboBox(section, JSPUIMessages.VALIDATION_ACTIONS_SEVERITY_UNEXPECTED_RTEXPRVALUE, JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_UNEXPECTED_RTEXPRVALUE, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_ACTIONS_SEVERITY_NON_EMPTY_INLINE_TAG, JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_NON_EMPTY_INLINE_TAG, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_TRANSLATION_TEI_VALIDATION_MESSAGE, JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_VALIDATION_MESSAGE, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_TRANSLATION_TEI_CLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_CLASS_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabels, 0);

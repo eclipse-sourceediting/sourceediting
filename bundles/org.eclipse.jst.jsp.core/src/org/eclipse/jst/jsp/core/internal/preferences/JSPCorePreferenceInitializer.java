@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,7 @@ public class JSPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putInt(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE, ValidationMessage.ERROR);
 		node.putInt(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE, ValidationMessage.WARNING);
 		node.putInt(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_NON_EMPTY_INLINE_TAG, ValidationMessage.WARNING);
+		node.putInt(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_UNEXPECTED_RTEXPRVALUE, ValidationMessage.WARNING);
 
 		node.putInt(JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_VALIDATION_MESSAGE, ValidationMessage.ERROR);
 		node.putInt(JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_CLASS_NOT_FOUND, ValidationMessage.WARNING);

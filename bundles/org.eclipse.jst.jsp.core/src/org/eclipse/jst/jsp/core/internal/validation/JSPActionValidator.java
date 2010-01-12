@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -29,7 +30,12 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDAttributeDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterImpl;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.osgi.util.NLS;
@@ -55,6 +61,7 @@ import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
@@ -78,8 +85,10 @@ public class JSPActionValidator extends JSPValidator {
 	private int fSeverityMissingRequiredAttribute = IMessage.HIGH_SEVERITY;
 	private int fSeverityNonEmptyInlineTag = IMessage.NORMAL_SEVERITY;
 	private int fSeverityUnknownAttribute = IMessage.NORMAL_SEVERITY;
+	private int fSeverityUnexpectedRuntimeExpression = IMessage.NORMAL_SEVERITY;
 
 	private HashSet fTaglibPrefixes = new HashSet();
+	private boolean fIsELIgnored = false;
 
 	public JSPActionValidator() {
 		this.fMessageOriginator = this;
@@ -102,6 +111,48 @@ public class JSPActionValidator extends JSPValidator {
 
 			reporter.addMessage(fMessageOriginator, message);
 		}
+	}
+
+	/**
+	 * Checks an attribute for runtime expressions
+	 * @param a The attribute to check for runtime expressions
+	 * @return true if the attribute contains a runtime expression, false otherwise
+	 */
+	private boolean checkRuntimeValue(IDOMAttr a) {
+		ITextRegion value = a.getValueRegion();
+		if (value instanceof ITextRegionContainer) {
+			Iterator it = ((ITextRegionContainer) value).getRegions().iterator();
+			while (it.hasNext()) {
+				String type = ((ITextRegion) it.next()).getType();
+				if (type == DOMJSPRegionContexts.JSP_EL_OPEN)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Determines if EL should be ignored. Checks
+	 * <ol>
+	 *  <li>JSP version</li>
+	 * 	<li>Page directive isELIgnored</li>
+	 *  <li>Deployment descriptor's el-ignored</li>
+	 * </ol>
+	 * @return true if EL should be ignored, false otherwise. If the JSP version is < 2.0, EL is ignored by default
+	 */
+	private boolean isElIgnored(IPath path, IStructuredModel model) {
+		if (DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(path) < 2.0f)
+			return true;
+		String directiveIsELIgnored = ((PageDirectiveAdapterImpl)(((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class))).getElIgnored();
+		// isELIgnored directive found
+		if (directiveIsELIgnored != null)
+			return Boolean.valueOf(directiveIsELIgnored).booleanValue();
+		// Check the deployment descriptor for el-ignored
+		PropertyGroup[] groups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(path);
+		if (groups.length > 0)
+			return groups[0].isELignored();
+		// JSP version >= 2.0 defaults to evaluating EL
+		return false;
 	}
 
 	private void checkRequiredAttributes(IDOMElement element, CMNamedNodeMap attrMap, IReporter reporter, IFile file, IStructuredDocument document, IStructuredDocumentRegion documentRegion) {
@@ -194,6 +245,26 @@ public class JSPActionValidator extends JSPValidator {
 				}
 				else {
 					foundjspattribute = true;
+				}
+			}
+			else {
+				if (fSeverityUnexpectedRuntimeExpression != ValidationMessage.IGNORE && adec instanceof TLDAttributeDeclaration) {
+					// The attribute cannot have a runtime evaluation of an expression
+					if (!Boolean.valueOf(((TLDAttributeDeclaration) adec).getRtexprvalue()).booleanValue()) {
+						IDOMAttr attr = (IDOMAttr) a;
+						if(checkRuntimeValue(attr) && !fIsELIgnored) {
+							String msg = NLS.bind(JSPCoreMessages.JSPActionValidator_1, a.getName());
+							LocalizedMessage message = new LocalizedMessage(fSeverityUnexpectedRuntimeExpression, msg, file);
+							ITextRegion region = attr.getValueRegion();
+							int start = attr.getValueRegionStartOffset();
+							int length = region != null ? region.getTextLength() : 0;
+							int lineNo = document.getLineOfOffset(start);
+							message.setLineNo(lineNo);
+							message.setOffset(start);
+							message.setLength(length);
+							reporter.addMessage(fMessageOriginator, message);
+						}
+					}
 				}
 			}
 		}
@@ -297,6 +368,7 @@ public class JSPActionValidator extends JSPValidator {
 		fSeverityMissingRequiredAttribute = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE);
 		fSeverityNonEmptyInlineTag = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_NON_EMPTY_INLINE_TAG);
 		fSeverityUnknownAttribute = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE);
+		fSeverityUnexpectedRuntimeExpression = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_UNEXPECTED_RTEXPRVALUE);
 	}
 
 	void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
@@ -309,6 +381,7 @@ public class JSPActionValidator extends JSPValidator {
 		loadPreferences(f);
 		IStructuredDocument sDoc = model.getStructuredDocument();
 
+		fIsELIgnored = isElIgnored(f.getFullPath(), model);
 		// iterate all document regions
 		IStructuredDocumentRegion region = sDoc.getRegionAtCharacterOffset(validateRegion.getOffset());
 		while (region != null && !reporter.isCancelled() && (region.getStartOffset() <= (validateRegion.getOffset() + validateRegion.getLength()))) {

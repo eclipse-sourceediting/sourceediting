@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,6 +69,7 @@ public class JSPCorePreferenceNames {
 
 	public static final String VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE = "validation.actions-missing-required-attribute";
 	public static final String VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE = "validation.actions-unknown-attribute";
+	public static final String VALIDATION_ACTIONS_SEVERITY_UNEXPECTED_RTEXPRVALUE = "validation.actions-unexpected-rtexprvalue";
 	public static final String VALIDATION_ACTIONS_SEVERITY_NON_EMPTY_INLINE_TAG = "validation.actions-non-empty-inline-tag";
 	
 	public static final String VALIDATION_TRANSLATION_TEI_VALIDATION_MESSAGE = "validation.translation-tei-message";

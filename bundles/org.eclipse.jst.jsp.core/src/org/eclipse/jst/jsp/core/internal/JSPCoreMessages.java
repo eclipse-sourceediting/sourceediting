@@ -33,6 +33,8 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPDirectiveValidator_10;
 	public static String JSPDirectiveValidator_11;
 	public static String JSPActionValidator_0;
+
+	public static String JSPActionValidator_1;
 	public static String JSPIndexManager_0;
 	public static String JSPIndexManager_2;
 	public static String JSP_Search;

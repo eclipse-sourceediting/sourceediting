@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,6 +144,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	private String cachedLanguage;
 	private String cachedContentType;
 	private INodeNotifier notifierAtCreation;
+	private String elIgnored = null;
 
 	private int firstLanguagePosition = -1;
 	private int firstContentTypePosition = -1;
@@ -699,5 +700,13 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 			}
 		}
 		return desc;
+	}
+
+	public String getElIgnored() {
+		return elIgnored;
+	}
+
+	public void setElIgnored(String ignored) {
+		elIgnored = ignored;
 	}
 }
