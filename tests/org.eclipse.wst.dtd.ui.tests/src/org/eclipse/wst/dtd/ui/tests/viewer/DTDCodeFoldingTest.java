@@ -168,7 +168,6 @@ public class DTDCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 			expectedPositions.add(new Position(1140, 234));
 			expectedPositions.add(new Position(339, 751));
 			expectedPositions.add(new Position(1092, 17));
-			expectedPositions.add(new Position(337, 0));
 			
 			waitForReconcileThenVerify(viewer, expectedPositions);
 		} catch(BadLocationException e) {
