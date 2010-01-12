@@ -125,10 +125,13 @@ public class TestFormatProcessorHTML extends TestCase {
 	}
 
 	protected void formatAndAssertEquals(String beforePath, String afterPath) throws UnsupportedEncodingException, IOException, CoreException {
-		formatAndAssertEquals(beforePath, afterPath, true);
+		formatAndAssertEquals(beforePath, afterPath, true, 1);
 	}
 
 	private void formatAndAssertEquals(String beforePath, String afterPath, boolean resetPreferences) throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals(beforePath, afterPath, resetPreferences, 1);
+	}
+	private void formatAndAssertEquals(String beforePath, String afterPath, boolean resetPreferences, int formatCycles) throws UnsupportedEncodingException, IOException, CoreException {
 		IStructuredModel beforeModel = null, afterModel = null;
 		try {
 			beforeModel = getModelForEdit(beforePath);
@@ -141,7 +144,10 @@ public class TestFormatProcessorHTML extends TestCase {
 				resetPreferencesToDefault();
 
 			((AbstractStructuredFormatProcessor) formatProcessor).refreshFormatPreferences = false;
-			formatProcessor.formatModel(beforeModel);
+			for(int i=0; i < formatCycles; i++)
+			{
+				formatProcessor.formatModel(beforeModel);
+			}
 			((AbstractStructuredFormatProcessor) formatProcessor).refreshFormatPreferences = true;
 
 			ByteArrayOutputStream formattedBytes = new ByteArrayOutputStream();
@@ -186,5 +192,10 @@ public class TestFormatProcessorHTML extends TestCase {
 		((StructuredFormatPreferencesXML) formatPreferences).setSplitMultiAttrs(true);
 		((StructuredFormatPreferencesXML) formatPreferences).setAlignEndBracket(true);
 		formatAndAssertEquals("testfiles/html/attributesformat.html", "testfiles/html/attributesformat-fmt.html", false);
+	}
+	
+	public void testScriptFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		//BUG128813
+		formatAndAssertEquals("testfiles/html/scriptformat.html", "testfiles/html/scriptformat-fmt.html", true, 3);
 	}
 }
