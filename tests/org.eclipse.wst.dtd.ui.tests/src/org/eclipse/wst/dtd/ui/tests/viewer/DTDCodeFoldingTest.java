@@ -292,7 +292,7 @@ public class DTDCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 	 * @param viewer check for annotations at the given <code>expectedPositions</code> in here 
 	 * @param expectedPositions check for annotations at these positions in the given <code>viewer</code>
 	 */
-	private void verifyAnnotationPositions(StructuredTextViewer viewer, List expectedPositions) {
+	private void verifyAnnotationPositions(StructuredTextViewer viewer, List expectedPositions) throws Exception{
 		ProjectionAnnotationModel projectionModel = viewer.getProjectionAnnotationModel();
 		Iterator annotationIter = projectionModel.getAnnotationIterator();
 		
@@ -314,9 +314,11 @@ public class DTDCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 		
 		String error = "";
 		if(unexpectedPositions.size() != 0) {
-			error  += "There were " + unexpectedPositions.size() + " unexpected positions that were found";
+			error += "There were " + unexpectedPositions.size() + " unexpected positions that were found";
 			for(int i = 0; i < unexpectedPositions.size(); ++i) {
-				error += "\n\t" + unexpectedPositions.get(i);
+				Position pos = (Position) unexpectedPositions.get(i);
+				error += "\n\t" + pos;
+				error += "\n(" + fReconciledDoc.get(pos.offset, pos.length) + ")";
 			}
 		}
 		
@@ -325,6 +327,10 @@ public class DTDCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 			for(int i = 0; i < expectedPositions.size(); ++i) {
 				error += "\n\t" + expectedPositions.get(i);
 			}
+		}
+		
+		if(expectedPositions.size() != 0 || unexpectedPositions.size() != 0) {
+			error += "\nFull Document:\n(" + fReconciledDoc.get() +")";
 		}
 		
 		if(error.length() != 0) {
