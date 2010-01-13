@@ -298,7 +298,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         for (int i=0; i < quickPicks.length; i++)
         {
           ComponentSpecification componentSpecification = quickPicks[i];
-          if (value.equals(componentSpecification.getName()))
+          if (value !=null && componentSpecification!=null && value.equals(componentSpecification.getName()))
           {
             return componentSpecification;
           }                
