@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -513,6 +514,22 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
     connectionFeedbackFigure = null;
     super.removeFeedback();
     getFieldFigure().removeSelectionFeedback();
+  }
+  public String getReaderText()
+  {
+	  IFieldFigure fieldFigure = getFieldFigure();
+	  
+	  String name="";
+	  if (fieldFigure.getNameLabel() !=null&& fieldFigure.getNameLabel().getText().trim().length() > 0)
+		  name +=fieldFigure.getNameLabel().getText();
+	  if (fieldFigure.getNameAnnotationLabel() !=null && fieldFigure.getNameAnnotationLabel().getText().trim().length() > 0)
+		  name += " "+fieldFigure.getNameAnnotationLabel().getText();
+	  if (fieldFigure.getTypeLabel() !=null && fieldFigure.getTypeLabel().getText().trim().length() > 0)
+		  name += " type "+fieldFigure.getTypeLabel().getText();
+	  if (fieldFigure.getTypeAnnotationLabel() !=null && fieldFigure.getTypeAnnotationLabel().getText().trim().length() >0)
+		  name += " "+fieldFigure.getTypeAnnotationLabel().getText();
+	  return name;
+
   }
 }
 

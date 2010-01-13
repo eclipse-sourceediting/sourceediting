@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
@@ -22,12 +23,15 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CenteredConnectionAnchor;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDAttributeUse;
 
 public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
 {
+	ReferenceConnection figure;
+	GenericGroupFigure groupFigure; 
   public AttributeGroupDefinitionEditPart()
   {
     super();
@@ -50,10 +54,13 @@ public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
 
   protected IFigure createFigure()
   {
-    GenericGroupFigure figure = new GenericGroupFigure();
+	groupFigure = new GenericGroupFigure();
     XSDAttributeGroupDefinitionAdapter adapter = (XSDAttributeGroupDefinitionAdapter) getModel();
-    figure.getIconFigure().image = adapter.getImage();
-    return figure;
+    groupFigure.getIconFigure().image = adapter.getImage();
+    Label toolTipsLabel = new Label();
+    toolTipsLabel.setText(XSDEditorPlugin.getXSDString("_UI_PAGE_HEADING_ATTRIBUTEGROUP_REF"));
+    groupFigure.setToolTip(toolTipsLabel);
+    return groupFigure;
   }
 
   protected List getModelChildren()
@@ -108,7 +115,14 @@ public class AttributeGroupDefinitionEditPart extends ConnectableEditPart
     }
 
     connectionFigure.setHighlight(false);
+    figure = connectionFigure;
     return connectionFigure;
+  }
+  
+  public String getReaderText()
+  {
+	String text = ((Label) groupFigure.getToolTip()).getText();
+	return text;
   }
 
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.GraphicalViewer;
@@ -24,6 +25,7 @@ import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
@@ -49,6 +51,7 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
   protected boolean isSelected = false;
   protected boolean hasFocus = false;
   protected static boolean isHighContrast = Display.getDefault().getHighContrast();
+  protected AccessibleEditPart accessiblePart;
   
   public IFigureFactory getFigureFactory()
   {
@@ -290,4 +293,21 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
     }
     return font;
   }
+  protected AccessibleEditPart getAccessibleEditPart() {
+		
+	  if (accessiblePart ==null)
+	  {
+		  accessiblePart = new AccessibleGraphicalEditPart(){
+		
+			public void getName(AccessibleEvent e) {		 
+				e.result = getReaderText();
+			}
+		};
+	  }
+	  return accessiblePart;
+	}
+public String getReaderText()
+{
+	  return "";
+}
 }

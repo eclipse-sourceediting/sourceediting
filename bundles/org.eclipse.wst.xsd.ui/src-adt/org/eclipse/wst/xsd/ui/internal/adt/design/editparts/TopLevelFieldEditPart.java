@@ -107,7 +107,11 @@ public class TopLevelFieldEditPart extends BoxEditPart implements INamedEditPart
   {
    
   }
-  
+  public String getReaderText()
+  {
+	  return  getNameLabelFigure().getText();
+  }
+
   public void performRequest(Request request)
   {  
     if (request.getType() == RequestConstants.REQ_DIRECT_EDIT||

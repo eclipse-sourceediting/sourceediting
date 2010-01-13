@@ -457,4 +457,10 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   {
     return new GraphNodeDragTracker(this);
   }
+
+  public String getReaderText()
+  {
+	  return getNameLabelFigure().getText();
+  }
+
 }
