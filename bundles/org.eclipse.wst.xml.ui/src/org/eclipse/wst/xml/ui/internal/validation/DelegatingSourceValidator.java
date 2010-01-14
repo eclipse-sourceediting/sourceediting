@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -39,6 +40,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -201,7 +203,13 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		if (delta.length > 0) {
 			// get the file, model and document:
 			IFile file = getFile(delta[0]);
-			IDOMModel xmlModel = getModelForResource(file);
+			IDOMModel xmlModel = null;
+			if (file != null)
+				xmlModel = getModelForResource(file);
+			// some problem occurred, abort
+			if (xmlModel == null)
+				return;
+			
 			try {
 				IDOMDocument document = xmlModel.getDocument();
 
@@ -293,9 +301,12 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	 * @return the IFile
 	 */
 	public IFile getFile(String delta) {
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
-		if (file != null && file.exists())
-		  return file;
+		IPath path = new Path(delta);
+		if (path.segmentCount() > 1) {
+		  IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		  if (file != null && file.exists())
+		    return file;
+		}
 		return null;
 	}
 
@@ -303,7 +314,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	 * 
 	 * @param file
 	 *            the file to get the model for
-	 * @return the file's XMLModel
+	 * @return the file's XMLModel or null
 	 */
 	protected IDOMModel getModelForResource(IFile file) {
 		IStructuredModel model = null;
@@ -314,10 +325,14 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			// TODO.. HTML validator tries again to get a model a 2nd way
 		}
 		catch (Exception e) {
-			// e.printStackTrace();
+			Logger.log(Logger.ERROR_DEBUG, file.getFullPath().toString(), e);
 		}
 
-		return model instanceof IDOMModel ? (IDOMModel) model : null;
+		if (model instanceof IDOMModel)
+			return (IDOMModel) model;
+		if (model != null)
+			model.releaseFromRead();
+		return null;
 	}
 
 	/**
