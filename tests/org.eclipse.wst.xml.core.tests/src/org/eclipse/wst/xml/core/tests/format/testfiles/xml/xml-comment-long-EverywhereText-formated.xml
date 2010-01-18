@@ -3,24 +3,18 @@
 
 	test
 
-	test<!--
-		comment 16 alkdjfali;jfeklaj alkdfja akldjfoie dhgfliahge dkfioeafn
-		asdifjavne adjkfaen avhauioehajdnf adofjnanvaeiuw adnfaijen
-	-->
+	test<!-- comment 16 alkdjfali;jfeklaj alkdfja akldjfoie dhgfliahge dkfioeafn 
+		asdifjavne adjkfaen avhauioehajdnf adofjnanvaeiuw adnfaijen -->
 
 	test
 
-	test <!--
-		comment 17 alkdjfali;jfeklaj alkdfja akldjfoie dhgfliahge dkfioeafn
-		asdifjavne adjkfaen avhauioehajdnf adofjnanvaeiuw adnfaijen
-	-->
+	test	<!-- comment 17 alkdjfali;jfeklaj alkdfja akldjfoie dhgfliahge dkfioeafn 
+		asdifjavne adjkfaen avhauioehajdnf adofjnanvaeiuw adnfaijen -->
 
 	test
 
-	test <!--
-		comment 18 alkdjfali;jfeklaj alkdfja akldjfoie dhgfliahge dkfioeafn
-		asdifjavne adjkfaen avhauioehajdnf adofjnanvaeiuw adnfaijen
-	-->
+	test <!-- comment 18 alkdjfali;jfeklaj alkdfja akldjfoie dhgfliahge dkfioeafn 
+		asdifjavne adjkfaen avhauioehajdnf adofjnanvaeiuw adnfaijen -->
 
 	test
 

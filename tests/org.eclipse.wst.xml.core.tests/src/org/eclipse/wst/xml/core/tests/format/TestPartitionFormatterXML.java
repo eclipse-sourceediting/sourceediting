@@ -370,4 +370,16 @@ public class TestPartitionFormatterXML extends TestCase {
 		// Test that text content that is split into multiple document regions does not stop the formatter
 		formatAndAssertEquals("testfiles/xml/xml-229135.xml", "testfiles/xml/xml-229135-fmt.xml");
 	}
+
+	public void testFormatCommentsJoinLinesDisabled() throws UnsupportedEncodingException, IOException, CoreException {
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setJoinCommentLines(false);
+		formatAndAssertEquals("testfiles/xml/xml-join-lines-disabled.xml", "testfiles/xml/xml-join-lines-disabled-fmt.xml", prefs);
+	}
+
+	public void testFormatCommentsDisabled() throws UnsupportedEncodingException, IOException, CoreException {
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setFormatCommentText(false);
+		formatAndAssertEquals("testfiles/xml/xml-format-comments-disabled.xml", "testfiles/xml/xml-format-comments-disabled-fmt.xml", prefs);
+	}
 }
