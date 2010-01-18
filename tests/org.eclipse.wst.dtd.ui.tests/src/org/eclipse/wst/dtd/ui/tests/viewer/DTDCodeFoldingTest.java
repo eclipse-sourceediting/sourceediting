@@ -26,7 +26,6 @@ import junit.framework.TestSuite;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
@@ -411,8 +410,6 @@ public class DTDCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 			if (previousWTPAutoTestNonInteractivePropValue != null) {
 				System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonInteractivePropValue);
 			}
-			
-			fProject.delete(true, new NullProgressMonitor());
 		}
 		
 		/**
