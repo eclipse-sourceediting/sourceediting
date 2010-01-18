@@ -62,6 +62,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	private Spinner fIndentationSize;
 	private Button fPreservePCDATAContent;
 	private Button fAlignEndBracket;
+	private Button fFormatComments;
+	private Button fFormatCommentsJoinLines;
 	// BUG195264 - Support for removing/adding a space before empty close tags
 	private Button fSpaceBeforeEmptyCloseTag;
 
@@ -125,6 +127,14 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		((GridData) fPreservePCDATAContent.getLayoutData()).horizontalSpan = 2;
 		fClearAllBlankLines = createCheckBox(formattingGroup, XMLUIMessages.Clear_all_blank_lines_UI_);
 		((GridData) fClearAllBlankLines.getLayoutData()).horizontalSpan = 2;
+		// formatting comments
+		fFormatComments = createCheckBox(formattingGroup, XMLUIMessages.Format_comments);
+		((GridData) fFormatComments.getLayoutData()).horizontalSpan = 2;
+		fFormatComments.addSelectionListener(this);
+		fFormatCommentsJoinLines = createCheckBox(formattingGroup, XMLUIMessages.Format_comments_join_lines);
+		((GridData) fFormatCommentsJoinLines.getLayoutData()).horizontalSpan = 2;
+		((GridData) fFormatCommentsJoinLines.getLayoutData()).horizontalIndent = 20;
+		// end formatting comments
 		fSpaceBeforeEmptyCloseTag = createCheckBox(formattingGroup, XMLUIMessages.Space_before_empty_close_tag);
 		((GridData) fSpaceBeforeEmptyCloseTag.getLayoutData()).horizontalSpan = 2;
 
@@ -180,6 +190,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 				fAutoProposeText.setEnabled(false);
 			}
 		}
+		if (fFormatComments != null && fFormatCommentsJoinLines != null) {
+			fFormatCommentsJoinLines.setEnabled(fFormatComments.getSelection());
+		}
 	}
 
 	protected Preferences getModelPreferences() {
@@ -226,7 +239,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		fClearAllBlankLines.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 		fPreservePCDATAContent.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 		fSpaceBeforeEmptyCloseTag.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.SPACE_BEFORE_EMPTY_CLOSE_TAG));
-		
+		fFormatComments.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.FORMAT_COMMENT_TEXT));
+		fFormatCommentsJoinLines.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.FORMAT_COMMENT_JOIN_LINES));
+
 		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
 			fIndentUsingSpaces.setSelection(false);
@@ -276,7 +291,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		fPreservePCDATAContent.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
 		// BUG195264 - Support for removing/adding a space before empty close tags
 		fSpaceBeforeEmptyCloseTag.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.SPACE_BEFORE_EMPTY_CLOSE_TAG));
-		
+		fFormatComments.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.FORMAT_COMMENT_TEXT));
+		fFormatCommentsJoinLines.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.FORMAT_COMMENT_JOIN_LINES));
+
 		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getDefaultString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
 			fIndentUsingSpaces.setSelection(false);
@@ -338,7 +355,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		getModelPreferences().setValue(XMLCorePreferenceNames.PRESERVE_CDATACONTENT, fPreservePCDATAContent.getSelection());
 		// BUG195264 - Support for removing/adding a space before empty close tags
 		getModelPreferences().setValue(XMLCorePreferenceNames.SPACE_BEFORE_EMPTY_CLOSE_TAG, fSpaceBeforeEmptyCloseTag.getSelection());
-		
+		getModelPreferences().setValue(XMLCorePreferenceNames.FORMAT_COMMENT_TEXT, fFormatComments.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.FORMAT_COMMENT_JOIN_LINES, fFormatCommentsJoinLines.getSelection());
+
 		if (fIndentUsingTabs.getSelection()) {
 			getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.TAB);
 		}

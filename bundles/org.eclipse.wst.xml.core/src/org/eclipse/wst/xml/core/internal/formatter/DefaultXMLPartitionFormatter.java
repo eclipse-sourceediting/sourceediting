@@ -63,6 +63,7 @@ public class DefaultXMLPartitionFormatter {
 	static private final String XSL_ATTRIBUTE = "attribute"; //$NON-NLS-1$
 	static private final String XSL_TEXT = "text"; //$NON-NLS-1$
 	static private final String SPACE = " "; //$NON-NLS-1$
+	static private final String EMPTY = ""; //$NON-NLS-1$
 	static private final String PROPERTY_WHITESPACE_FACET = "org.eclipse.wst.xsd.cm.properties/whitespace"; //$NON-NLS-1$
 
 	private XMLFormattingPreferences fPreferences = null;
@@ -985,155 +986,135 @@ public class DefaultXMLPartitionFormatter {
 		int lineWidth = parentConstraints.getAvailableLineWidth() - currentRegion.getFullText().length();
 		// Don't format if we're not exceeding the available line width, or if the whitespace
 		// strategy is to preserve whitespace - But update line width.
-		if(currentRegion == null ||	XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
+		if(currentRegion == null ||	XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy()) || !fPreferences.getFormatCommentText()) {
 			parentConstraints.setAvailableLineWidth(lineWidth);
-		} else {
-			// If there is enough room, format the start of the comment tag if it is on its own line
-			// else comment must be made into multi line and formated
-			if(lineWidth >= 0) {
-				parentConstraints.setAvailableLineWidth(lineWidth);
-				TextEdit indentEdit = this.getIndentEdit( currentRegion, parentConstraints.getIndentLevel()+1);
-				
-				if(indentEdit != null) {
-					textEdit.addChild(indentEdit);
-				}
-			} else {
-				// Iterate over each text region of the comment
-				Iterator it = currentRegion.getRegions().iterator();
-				while(it.hasNext()) {
-					ITextRegion text = (ITextRegion) it.next();
-					formatCommentTag(textEdit, parentConstraints, currentRegion, text);
-				}
+			return;
+		}
+
+		Iterator it = currentRegion.getRegions().iterator();
+		ITextRegion previous = null;
+		if (previousRegion == null)
+			previousRegion = currentRegion.getPrevious();
+		// Iterate over each text region of the comment
+		Node parent = currentDOMRegion.domNode.getParentNode();
+		while(it.hasNext()) {
+			ITextRegion text = (ITextRegion) it.next();
+			String type = text.getType();
+			if (type == DOMRegionContext.XML_COMMENT_OPEN) {
+				int indentLevel = (parent != null && parent.getNodeType() == Node.DOCUMENT_NODE) ? 0 : 1;
+				int width = formatCommentStart(textEdit, parentConstraints, indentLevel, currentRegion, previousRegion, text);
+				parentConstraints.setAvailableLineWidth(width);
 			}
+			else if (type == DOMRegionContext.XML_COMMENT_TEXT) {
+				int indentLevel = (parent != null && parent.getNodeType() == Node.DOCUMENT_NODE) ? -1 : parentConstraints.getIndentLevel();
+				formatCommentContent(textEdit, parentConstraints, indentLevel, currentRegion, previous, text);
+			}
+			previous = text;
 		}
 	}
-	
-	/**
-	 * Handles formatting various portions of an XML comment. Because the XML
-	 * Comment is considered its own document region, there are cases where
-	 * the previous region must be referred to for proper indentation
-	 * consideration. Because of this, most of the special cases are
-	 * catering to the opening text region of the document region.
-	 * 
-	 * @param textEdit
-	 * @param parentConstraints
-	 * @param currentRegion
-	 * @param region
-	 */
-	private void formatCommentTag(TextEdit textEdit, XMLFormattingConstraints parentConstraints, IStructuredDocumentRegion currentRegion, ITextRegion region) {
-		int availableLineWidth = parentConstraints.getAvailableLineWidth();
-		int indentLevel = parentConstraints.getIndentLevel() + 1;
-		boolean initialIndent = false;
-		
-		// Indent the text of the comment an additional level
-		if(DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType())) {
-			indentLevel++;
-			initialIndent = true;
-		}
-		
-		int fullTextOffset = 0;
-		char[] fullTextArray = currentRegion.getFullText(region).toCharArray();
-		while (fullTextOffset < fullTextArray.length) {
-			// gather all whitespaces
-			String currLineWhitespaceRun = null;
 
-			IRegion currentLineInfo = getCurrentLineInfo(currentRegion);
-			String preRegionLineText = getPreRegionLineText(currentRegion, currentLineInfo);
-			
-			// If the region is a comment opening, the whitespace would actually come from the
-			// previous document region
-			if(DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType()) && currentRegion.getPrevious() != null) {
-				currLineWhitespaceRun = getTrailingWhitespace(preRegionLineText);
-			} else {
-				currLineWhitespaceRun = getCharacterRun(fullTextArray, fullTextOffset, true);
-			}
-			
-			if (currLineWhitespaceRun.length() > 0) {
-				// offset where whitespace starts
-				int whitespaceStart = fullTextOffset;
-				// update current offset in fullText for non comment-opening regions
-				if(!DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType()))
-					fullTextOffset += currLineWhitespaceRun.length();
+	private void formatCommentContent(TextEdit textEdit, XMLFormattingConstraints parentConstraints, int indentLevel, IStructuredDocumentRegion currentRegion, ITextRegion previous, ITextRegion region) {
+		int lineWidth = parentConstraints.getAvailableLineWidth() - currentRegion.getFullText(previous).length();
+		// If there's more text than line width available, format
+		String text = currentRegion.getFullText(region);
+		compressContent(textEdit, currentRegion, currentRegion.getStartOffset(region), indentLevel + 1, lineWidth, text);
+	}
 
-				// gather following word
-				String characterRun = getCharacterRun(fullTextArray, fullTextOffset, false);
-				int characterRunLength = characterRun.length();
-				if (characterRunLength > 0) {
-					// indent if word is too long or forcing initial
-					// indent
-					availableLineWidth -= characterRunLength;
-					// offset where indent/collapse will happen - for comment-opening regions,
-					// this occurs in the previous document region
-					int startOffset = 0;
+	private void compressContent(TextEdit textEdit, IStructuredDocumentRegion region, int startOffset, int indentLevel, int lineWidth, String text) {
+		int length = text.length();
+		int start = 0, end = 0;
+		char c = 0;
+		int resultLength = 0;
+		boolean joinLines = fPreferences.getJoinCommentLines();
+		boolean onOwnLine = false;
 
-					if(DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType()) && currentRegion.getPrevious() != null) {
-						startOffset = currentLineInfo.getOffset();
-					} else {
-						startOffset = currentRegion.getStartOffset(region) + whitespaceStart;
+		String indent = getIndentString(indentLevel + 1);
+
+		for (int i = 0; i < length; i++) {
+			c = text.charAt(i);
+			// Compress whitespace unless its a line delimiter and formatting does not permit joining lines
+			if (Character.isWhitespace(c)) {
+				if ((c != '\r' && c!= '\n') || joinLines) {
+					// Just came off of a word
+					if (start == end) {
+						start = end = i;
 					}
-					
-					//format before the comment open
-					if((isWhitespace(preRegionLineText) && DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType()))) {
-						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, startOffset, currLineWhitespaceRun, false);
-					}
-					//format the rest of the lines of the comment
-					else if (initialIndent || (availableLineWidth <= 0)) {
-						// indent if not already indented
-						//String prevRegionWhitespaceRun  = getCharacterRun(currentRegion.getPrevious().getFullText().toCharArray(), 0, true);
-						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, startOffset, currLineWhitespaceRun);
-						// remember to subtract word length
-						availableLineWidth -= characterRunLength;
-						// Indented the first word of the comment
-						if(initialIndent)
-							initialIndent = false;
-					}
-					else {
-						// just collapse spaces
-						startOffset = currentRegion.getStartOffset(region) - getTrailingWhitespace(preRegionLineText).length();
-						availableLineWidth = collapseSpaces(textEdit, startOffset, availableLineWidth, currLineWhitespaceRun);
-					}
-					
-					fullTextOffset += characterRunLength;
+					end++;
+					resultLength++;
 				}
 				else {
-					// handle trailing whitespace
-					int whitespaceOffset = currentRegion.getStartOffset(region) + whitespaceStart;
-					DeleteEdit deleteTrailing = new DeleteEdit(whitespaceOffset, currLineWhitespaceRun.length());
-					textEdit.addChild(deleteTrailing);
+					// correct the indent of this line
+					lineWidth = fPreferences.getMaxLineWidth();
+					resultLength = 0;
+					onOwnLine = true;
+
+					// Compress any whitespace before the line delimiter
+					if (start != end) {
+						int replaceLength = end - start;
+						textEdit.addChild(new ReplaceEdit(start + startOffset, replaceLength, EMPTY));
+						start = end = i;
+					}
 				}
 			}
 			else {
-				// gather word
-				String characterRun = getCharacterRun(fullTextArray, fullTextOffset, false);
-				int characterRunLength = characterRun.length();
-				if (characterRunLength > 0) {
-					// indent if word is too long or forcing initial
-					// indent
-					availableLineWidth = availableLineWidth - characterRunLength;
-
-					//format before the comment open
-					if(isWhitespace(preRegionLineText) && DOMRegionContext.XML_COMMENT_OPEN.equals(region.getType())) {
-						availableLineWidth= indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, currentRegion.getStartOffset(region), currLineWhitespaceRun, false);
+				// Transitioned to a new word
+				if (start != end) {
+					int replaceLength = end - start;
+					if (onOwnLine) {
+						// If content is on its own line, replace leading whitespace with proper indent
+						textEdit.addChild(new ReplaceEdit(start + startOffset, replaceLength, indent));
+						resultLength -= (replaceLength - indent.length());
+						onOwnLine = false;
 					}
-					//format the rest of the lines of the comment
-					else if ((DOMRegionContext.XML_COMMENT_CLOSE.equals(region.getType())) || initialIndent || (DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType()) && availableLineWidth <= 0)) {
-						// indent if not already indented
-						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, currentRegion.getStartOffset(region), currLineWhitespaceRun);
-						// remember to subtract word length
-						availableLineWidth -= characterRunLength;
-						if(initialIndent)
-							initialIndent = false;
+					else if (!(replaceLength == 1 && text.charAt(start) == ' ')) {
+						textEdit.addChild(new ReplaceEdit(start + startOffset, replaceLength, SPACE));
+						resultLength -= (replaceLength - 1);
 					}
-					else {
-						// just collapse spaces
-						availableLineWidth -= characterRunLength;
+					start = end = i;
+					// Make sure the word starts on a new line
+					if (resultLength > lineWidth) {
+						lineWidth = fPreferences.getMaxLineWidth();
+						resultLength = 0;
+						textEdit.addChild(new InsertEdit(start + startOffset, getLineDelimiter(region) + indent));
 					}
-					fullTextOffset += characterRunLength;
 				}
+				// Word is immediately after line delimiters, indent appropriately
+				if (onOwnLine) {
+					textEdit.addChild(new InsertEdit(i + startOffset, indent));
+					onOwnLine = false;
+				}
+				resultLength++;
 			}
 		}
-		// update available line width
-		parentConstraints.setAvailableLineWidth(availableLineWidth);
+
+		// Clean up any dangling whitespace
+		int replaceLength = end - start;
+		indent = getIndentString(indentLevel);
+		if (replaceLength == 0) { // No trailing whitespace
+			textEdit.addChild(new InsertEdit(length + startOffset, (onOwnLine) ? indent : SPACE));
+		}
+		else {
+			String whitespace = text.substring(start);
+			String replacement = (onOwnLine) ? indent : SPACE;
+			if (!whitespace.equals(replacement)) {
+				textEdit.addChild(new ReplaceEdit(start + startOffset, replaceLength, replacement));
+			}
+		}
+	}
+
+	private int formatCommentStart(TextEdit textEdit, XMLFormattingConstraints parentConstraints, int indentLevel, IStructuredDocumentRegion currentRegion, IStructuredDocumentRegion previousRegion, ITextRegion region) {
+		int lineWidth = parentConstraints.getAvailableLineWidth();
+		if (previousRegion.getType() == DOMRegionContext.XML_CONTENT) {
+			String previousText = previousRegion.getFullText();
+			String trailingWhitespace = getTrailingWhitespace(previousText);
+			String delimiters = extractLineDelimiters(trailingWhitespace, previousRegion);
+			if (delimiters != null && delimiters.length() > 0){// && previousText.length() == trailingWhitespace.length()) {
+				// Format the comment if it's on a new line
+				int offset = previousRegion.getEnd() - trailingWhitespace.length();
+				lineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, parentConstraints.getIndentLevel() + indentLevel, offset, trailingWhitespace);
+			}
+		}
+		return lineWidth;
 	}
 
 	/**
@@ -1185,85 +1166,6 @@ public class DefaultXMLPartitionFormatter {
 		}
 		return indentString.toString();
 	}
-	
-	/**
-	 * @param currentRegion the region to indent
-	 * @param indentLevel the level to indent the region to
-	 * @return a <code>TextEdit</code> that will indent the given region to the given indentLevel
-	 */
-	private TextEdit getIndentEdit(IStructuredDocumentRegion currentRegion, int indentLevel) {
-		ReplaceEdit indentEdit = null;
-		
-		IRegion currentLineInfo = getCurrentLineInfo(currentRegion);
-		if(currentLineInfo != null) {
-			String preRegionLineText = getPreRegionLineText(currentRegion, currentLineInfo);
-			int lineOffset = currentLineInfo.getOffset();
-			
-			//if previous region is all whitespace then we need to format it
-			//else only need to format on this line
-			IStructuredDocumentRegion previousRegion = currentRegion.getPrevious();
-			if(DOMRegionContext.XML_CONTENT.equals(previousRegion.getType()) && isWhitespace(previousRegion.getFullText())) {
-				String delimiters = extractLineDelimiters(previousRegion.getFullText(), previousRegion);
-				
-				// keep blank lines preceding comment but remove any other whitespace from them
-				if(delimiters != null && delimiters.length() > 0) {
-					indentEdit = new ReplaceEdit(previousRegion.getStartOffset(),
-						previousRegion.getLength(), delimiters + getIndentString(indentLevel));
-				}
-			} else {
-				// indent the comment only if its on a newline with only whitespace before it
-				int preRegionLineLength = -1;
-				if(lineOffset == currentRegion.getStartOffset()) {
-					preRegionLineLength = 0;
-				} else if(isWhitespace(preRegionLineText)) {
-					preRegionLineLength = preRegionLineText.length();
-				}
-				
-				if(preRegionLineLength != -1) {
-					indentEdit = new ReplaceEdit(lineOffset, preRegionLineLength,
-						getIndentString(indentLevel));
-				}
-			}
-		}
-		
-		return indentEdit;
-	}
-	
-	/**
-	 * @param currentRegion the region to get the line info for
-	 * @return the line information for the line that the given region starts on
-	 */
-	private IRegion getCurrentLineInfo(IStructuredDocumentRegion currentRegion) {
-		IRegion currentLineInfo = null;
-		
-		try {
-			IStructuredDocument doc = currentRegion.getParentDocument();
-			currentLineInfo = doc.getLineInformationOfOffset(currentRegion.getStart());
-		} catch (BadLocationException e) {
-			Logger.logException("This should never happen", e);
-		}
-		
-		return currentLineInfo;
-	}
-	
-	/**
-	 * @param currentRegion the current region
-	 * @param currentLineInfo the line info for the current regions start line
-	 * @return the text that appears on the first line that the given current region is on up until the current region starts
-	 */
-	private String getPreRegionLineText(IStructuredDocumentRegion currentRegion, IRegion currentLineInfo) {
-		String preRegionLineText = "";
-		
-		try {
-			int lineOffset = currentLineInfo.getOffset();
-			int preRegionLineLength = currentRegion.getStartOffset()-lineOffset;
-			preRegionLineText = currentRegion.getParentDocument().get(lineOffset, preRegionLineLength);
-		} catch (BadLocationException e) {
-			Logger.logException("This should never happen", e);
-		}
-		
-		return preRegionLineText;
-	}
 
 	protected XMLFormattingPreferences getFormattingPreferences() {
 		if (fPreferences == null)
@@ -1274,41 +1176,23 @@ public class DefaultXMLPartitionFormatter {
 	protected void setFormattingPreferences(XMLFormattingPreferences preferences) {
 		fPreferences = preferences;
 	}
-	
-	/**
-	 * Indent if whitespaceRun does not already contain an indent
-	 * 
-	 * @param textEdit
-	 * @param currentRegion
-	 * @param indentLevel
-	 * @param indentStartOffset
-	 * @param whitespaceRun
-	 * @return
-	 */
-	private int indentIfNotAlreadyIndented(TextEdit textEdit, IStructuredDocumentRegion currentRegion, int indentLevel, int indentStartOffset, String whitespaceRun) {
-		return indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, indentStartOffset, whitespaceRun, true);
-	}
 
 	/**
 	 * Indent if whitespaceRun does not already contain an indent
 	 * 
 	 * @param textEdit
-	 * @param currentRegion
 	 * @param indentLevel
 	 * @param indentStartOffset
+	 * @param maxAvailableLineWidth
 	 * @param whitespaceRun
-	 * @param checkForLineDelim
-	 * @return
+	 * @return new available line width up to where indented
 	 */
-	private int indentIfNotAlreadyIndented(TextEdit textEdit, IStructuredDocumentRegion currentRegion, int indentLevel, int indentStartOffset, String whitespaceRun, boolean checkForLineDelim) {
+	private int indentIfNotAlreadyIndented(TextEdit textEdit, IStructuredDocumentRegion currentRegion, int indentLevel, int indentStartOffset, String whitespaceRun) {
 		int maxAvailableLineWidth = getFormattingPreferences().getMaxLineWidth();
 
 		int availableLineWidth;
 		String indentString = getIndentString(indentLevel);
-		String lineDelimiter = "";
-		if(checkForLineDelim) {
-			lineDelimiter = getLineDelimiter(currentRegion);
-		}
+		String lineDelimiter = getLineDelimiter(currentRegion);
 		String newLineAndIndent = lineDelimiter + indentString;
 		
 		TextEdit indentation = null;
@@ -1795,16 +1679,5 @@ public class DefaultXMLPartitionFormatter {
 
 	void setProgressMonitor(IProgressMonitor monitor) {
 		fProgressMonitor = monitor;
-	}
-
-	private static boolean isWhitespace(String s) {
-		if(s != null) {
-			for (int i = 0; i < s.length(); i++) {
-				if (!Character.isWhitespace(s.charAt(i))) {
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 }

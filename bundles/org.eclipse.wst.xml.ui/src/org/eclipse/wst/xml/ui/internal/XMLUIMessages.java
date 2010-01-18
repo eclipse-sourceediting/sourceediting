@@ -235,6 +235,8 @@ public class XMLUIMessages extends NLS {
 	public static String Indentation_size;
 	public static String Indentation_size_tip;
 	public static String Clear_all_blank_lines_UI_;
+	public static String Format_comments;
+	public static String Format_comments_join_lines;
 	public static String Grammar_Constraints;
 	public static String Use_inferred_grammar_in_absence_of;
 	public static String Suggestion_Strategy;

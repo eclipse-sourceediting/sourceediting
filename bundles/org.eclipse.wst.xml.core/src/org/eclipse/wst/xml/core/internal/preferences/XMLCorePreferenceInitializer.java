@@ -39,7 +39,8 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET, false);
 		node.putBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT, false);
 		node.putBoolean(XMLCorePreferenceNames.SPACE_BEFORE_EMPTY_CLOSE_TAG, true);
-		
+		node.putBoolean(XMLCorePreferenceNames.FORMAT_COMMENT_TEXT, true);
+		node.putBoolean(XMLCorePreferenceNames.FORMAT_COMMENT_JOIN_LINES, true);
 		// cleanup preferences
 		node.putBoolean(XMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS, true);
 		node.putBoolean(XMLCorePreferenceNames.INSERT_REQUIRED_ATTRS, true);

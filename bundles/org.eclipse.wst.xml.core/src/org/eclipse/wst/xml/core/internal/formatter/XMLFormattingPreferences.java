@@ -27,6 +27,9 @@ public class XMLFormattingPreferences {
 	private boolean fAlignFinalBracket = false;
 	private boolean fSpaceBeforeEmptyCloseTag = true;
 	private boolean fIndentMultipleAttributes = false;
+	private boolean fFormatCommentText = true;
+	private boolean fJoinCommentLines = false;
+
 	private String fPCDataWhitespaceStrategy = XMLFormattingConstraints.PRESERVE;
 	private String fTextIndentStrategy = XMLFormattingConstraints.INLINE;
 	private String fTextWhitespaceStrategy = XMLFormattingConstraints.COLLAPSE;
@@ -40,6 +43,9 @@ public class XMLFormattingPreferences {
 	public XMLFormattingPreferences() {
 		Preferences preferences = XMLCorePlugin.getDefault().getPluginPreferences();
 		if (preferences != null) {
+			setFormatCommentText(preferences.getBoolean(XMLCorePreferenceNames.FORMAT_COMMENT_TEXT));
+			setJoinCommentLines(preferences.getBoolean(XMLCorePreferenceNames.FORMAT_COMMENT_JOIN_LINES));
+
 			setMaxLineWidth(preferences.getInt(XMLCorePreferenceNames.LINE_WIDTH));
 			setIndentMultipleAttributes(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
 			setAlignFinalBracket(preferences.getBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET));
@@ -69,6 +75,10 @@ public class XMLFormattingPreferences {
 
 	public int getMaxLineWidth() {
 		return fMaxLineWidth;
+	}
+
+	public boolean getFormatCommentText() {
+		return fFormatCommentText;
 	}
 
 	public boolean getAlignFinalBracket() {
@@ -103,6 +113,18 @@ public class XMLFormattingPreferences {
 		return fElementWhitespaceStrategy;
 	}
 	
+	public boolean getJoinCommentLines() {
+		return fJoinCommentLines;
+	}
+
+	public void setJoinCommentLines(boolean joinCommentLines) {
+		fJoinCommentLines = joinCommentLines;
+	}
+
+	public void setFormatCommentText(boolean formatCommentText) {
+		fFormatCommentText = formatCommentText;
+	}
+
 	public void setSpaceBeforeEmptyCloseTag(boolean spaceBeforeEmptyCloseTag) {
 		fSpaceBeforeEmptyCloseTag = spaceBeforeEmptyCloseTag;
 	}

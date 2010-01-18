@@ -231,4 +231,20 @@ public class XMLCorePreferenceNames {
      * 
      */
     public static final String HONOUR_ALL_SCHEMA_LOCATIONS = "honourAllSchemaLocations";//$NON-NLS-1$
+
+    /**
+     * Indicates whether or not the content of comments should be formatted
+     * <p>
+     * Value is of type <code>boolean</code><br />
+     * Possible values: {TRUE, FALSE}
+     * </p>
+     */
+    public static final String FORMAT_COMMENT_TEXT = "formatCommentText"; //$NON-NLS-1$
+
+    /**
+     * Indicates whether or not the lines of comments should be joined when formatting
+     * <p>
+     * Value is of type <code>boolean</code>
+     */
+    public static final String FORMAT_COMMENT_JOIN_LINES = "formatCommentJoinLines"; //$NON-NLS-1$
 }
