@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.sse.ui; singleton:=true
-Bundle-Version: 1.1.200.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: org.eclipse.wst.sse.ui.internal.SSEUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -32,7 +32,6 @@ Export-Package: org.eclipse.wst.sse.ui,
  org.eclipse.wst.sse.ui.internal.provisional.preferences;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.sse.ui.internal.provisional.registry;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.sse.ui.internal.provisional.style;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
- org.eclipse.wst.sse.ui.internal.provisional.typing;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.sse.ui.internal.reconcile;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.sse.ui.internal.reconcile.validator;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.sse.ui.internal.search;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
@@ -43,6 +42,8 @@ Export-Package: org.eclipse.wst.sse.ui,
  org.eclipse.wst.sse.ui.internal.ui;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.sse.ui.internal.util;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.sse.ui.internal.view.events;x-friends:="org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.ui",
+ org.eclipse.wst.sse.ui.reconcile,
+ org.eclipse.wst.sse.ui.typing,
  org.eclipse.wst.sse.ui.views.contentoutline,
  org.eclipse.wst.sse.ui.views.properties
 Import-Package: com.ibm.icu.util; version="3.8",

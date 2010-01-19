@@ -20,7 +20,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.sse.ui.internal.provisional.typing.AbstractCharacterPairInserter;
+import org.eclipse.wst.sse.ui.typing.AbstractCharacterPairInserter;
 
 public class JavaCharacterPairInserter extends AbstractCharacterPairInserter implements IPropertyChangeListener {
 

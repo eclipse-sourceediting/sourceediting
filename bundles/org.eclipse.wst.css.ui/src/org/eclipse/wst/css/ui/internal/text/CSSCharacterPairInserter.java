@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal.text;
 
-import org.eclipse.wst.sse.ui.internal.provisional.typing.AbstractCharacterPairInserter;
+import org.eclipse.wst.sse.ui.typing.AbstractCharacterPairInserter;
 
 public class CSSCharacterPairInserter extends AbstractCharacterPairInserter {
 

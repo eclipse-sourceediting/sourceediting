@@ -192,14 +192,14 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.ConfigurationPoint
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.provisional.typing.AbstractCharacterPairInserter;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
-import org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
+import org.eclipse.wst.sse.ui.typing.AbstractCharacterPairInserter;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 

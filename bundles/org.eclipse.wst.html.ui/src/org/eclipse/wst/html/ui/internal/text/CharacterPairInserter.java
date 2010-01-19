@@ -21,7 +21,7 @@ import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.provisional.typing.AbstractCharacterPairInserter;
+import org.eclipse.wst.sse.ui.typing.AbstractCharacterPairInserter;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class CharacterPairInserter extends AbstractCharacterPairInserter implements IPropertyChangeListener {

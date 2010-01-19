@@ -43,6 +43,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
 import org.eclipse.wst.sse.ui.internal.spelling.SpellcheckStrategy;
+import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 
 /**
  * Adds to DirtyRegionProcessor Job: - IDocumentListener - ValidatorStrategy -
