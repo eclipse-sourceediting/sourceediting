@@ -668,7 +668,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 			// New JSP 1.2
 			// description
-			else if (nodeName.equals(JSP12TLDNames.DESCRIPTION)) {
+			else if (nodeName.equals(JSP12TLDNames.DESCRIPTION) && child.hasChildNodes()) {
 				document.setDescription(getContainedText(child));
 			}
 			// display name
