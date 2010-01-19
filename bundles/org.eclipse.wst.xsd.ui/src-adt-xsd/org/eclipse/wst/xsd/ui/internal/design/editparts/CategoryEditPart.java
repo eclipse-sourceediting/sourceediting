@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,7 @@ import org.eclipse.wst.xsd.ui.internal.design.layouts.ContainerLayout;
 public class CategoryEditPart extends BaseEditPart
 {
   protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy;
-  Figure outerPane;
+  protected Figure outerPane;
   HeadingFigure headingFigure;
   protected ScrollPane scrollpane;
   protected int minimumHeight = 400;
@@ -56,10 +56,7 @@ public class CategoryEditPart extends BaseEditPart
     outerPane = new Figure();
     outerPane.setBorder(new RoundedLineBorder(1, 6));
 
-    headingFigure = new HeadingFigure();
-    outerPane.add(headingFigure);
-    headingFigure.getLabel().setText(((CategoryAdapter) getModel()).getText());
-    headingFigure.getLabel().setIcon(((CategoryAdapter) getModel()).getImage());
+    createHeadingFigure();
 
     int minHeight = SWT.DEFAULT;
     switch (getType())
@@ -143,6 +140,14 @@ public class CategoryEditPart extends BaseEditPart
     scrollpane.setContents(pane);
 
     return outerPane;
+  }
+
+  protected void createHeadingFigure()
+  {
+	  headingFigure = new HeadingFigure();
+	  outerPane.add(headingFigure);
+	  headingFigure.getLabel().setText(((CategoryAdapter) getModel()).getText());
+	  headingFigure.getLabel().setIcon(((CategoryAdapter) getModel()).getImage());
   }
 
   public void refreshVisuals()

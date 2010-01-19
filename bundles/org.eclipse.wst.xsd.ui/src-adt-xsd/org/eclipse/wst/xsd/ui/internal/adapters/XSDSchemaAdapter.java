@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDInclude;
 import org.eclipse.xsd.XSDModelGroupDefinition;
+import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
@@ -343,7 +344,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     for (Iterator i = elements.iterator(); i.hasNext();)
     {
       XSDElementDeclaration elem = (XSDElementDeclaration) i.next();
-      if (isSameNamespace(elem.getTargetNamespace(),schema.getTargetNamespace()) && (elem.getRootContainer() == schema || showFromIncludes))
+      if (shouldShowComponent(elem, schema, showFromIncludes))
       {
         list.add(elem);
       }
@@ -372,7 +373,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       if (td instanceof XSDComplexTypeDefinition)
       {
         XSDComplexTypeDefinition ct = (XSDComplexTypeDefinition) td;
-        if (isSameNamespace(ct.getTargetNamespace(),schema.getTargetNamespace()) && (ct.getRootContainer() == schema || showFromIncludes))
+        if (shouldShowComponent(ct, schema, showFromIncludes))
         {
           list.add(ct);
         }
@@ -401,7 +402,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     for (Iterator i = xsdSchema.getAttributeGroupDefinitions().iterator(); i.hasNext();)
     {
       XSDAttributeGroupDefinition attrGroup = (XSDAttributeGroupDefinition) i.next();
-      if (isSameNamespace(attrGroup.getTargetNamespace(), xsdSchema.getTargetNamespace()) && (attrGroup.getRootContainer() == xsdSchema || showFromIncludes))
+      if (shouldShowComponent(attrGroup, xsdSchema, showFromIncludes))
       {
         attributeGroupList.add(attrGroup);
       }
@@ -470,7 +471,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
       if (td instanceof XSDSimpleTypeDefinition)
       {
         XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) td;
-        if (isSameNamespace(st.getTargetNamespace(),schema.getTargetNamespace()) && (st.getRootContainer() == schema || showFromIncludes))
+        if (shouldShowComponent(st, schema, showFromIncludes))
         {
           list.add(st);
         }
@@ -493,7 +494,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     for (Iterator i = groups.iterator(); i.hasNext();)
     {
       XSDModelGroupDefinition group = (XSDModelGroupDefinition) i.next();
-      if (isSameNamespace(group.getTargetNamespace(),schema.getTargetNamespace()) && (group.getRootContainer() == schema || showFromIncludes))
+      if (shouldShowComponent(group, schema, showFromIncludes))
       {
         list.add(group);
       }
@@ -527,5 +528,10 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
   public Image getImage()
   {
     return XSDEditorPlugin.getXSDImage("icons/XSDFile.gif"); //$NON-NLS-1$
+  }
+
+  protected boolean shouldShowComponent(XSDNamedComponent component, XSDSchema schema, boolean showFromIncludes) 
+  {
+	  return isSameNamespace(component.getTargetNamespace(), schema.getTargetNamespace()) && (component.getRootContainer() == schema || showFromIncludes);
   }
 }
