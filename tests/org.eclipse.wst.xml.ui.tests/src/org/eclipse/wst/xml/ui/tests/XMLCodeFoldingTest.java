@@ -41,7 +41,7 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener;
+import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 /**
@@ -463,7 +463,7 @@ public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 
 	/**
 	 * ignore
-	 * @see org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener#aboutToBeReconciled()
+	 * @see org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener#aboutToBeReconciled()
 	 */
 	public void aboutToBeReconciled() {
 		//ignore
@@ -472,7 +472,7 @@ public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 	/**
 	 * keep track of last document reconciled
 	 * 
-	 * @see org.eclipse.wst.sse.ui.internal.reconcile.ISourceReconcilingListener#reconciled(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.source.IAnnotationModel, boolean, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener#reconciled(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.source.IAnnotationModel, boolean, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void reconciled(IDocument document, IAnnotationModel model,
 			boolean forced, IProgressMonitor progressMonitor) {
