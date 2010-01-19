@@ -269,10 +269,13 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	private void decodeRemainingRegions(IStructuredDocumentRegion sdRegion, int start) {
-		ITextRegion region = sdRegion.getRegions().get(start);
-		String text = sdRegion.getFullText();
-		if (region.getStart() <= text.length())
-			fTranslator.decodeScriptBlock(text.substring(region.getStart(), text.length()), 0);
+		ITextRegionList regionList = sdRegion.getRegions();
+		if(regionList != null) {
+			ITextRegion region = regionList.get(start);
+			String text = sdRegion.getFullText();
+			if (text != null && region.getStart() <= text.length())
+				fTranslator.decodeScriptBlock(text.substring(region.getStart(), text.length()), 0);
+		}
 	}
 
 	private int hasIllegalContent(IStructuredDocumentRegion sdRegion) {
