@@ -382,4 +382,14 @@ public class TestPartitionFormatterXML extends TestCase {
 		prefs.setFormatCommentText(false);
 		formatAndAssertEquals("testfiles/xml/xml-format-comments-disabled.xml", "testfiles/xml/xml-format-comments-disabled-fmt.xml", prefs);
 	}
+
+	public void testFormatDocumentLevelComment() throws UnsupportedEncodingException, IOException, CoreException {
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setJoinCommentLines(false);
+		formatAndAssertEquals("testfiles/xml/xml-format-document-level-comment.xml", "testfiles/xml/xml-format-document-level-comment-fmt.xml", prefs);
+	}
+
+	public void testFormatDocumentLevelShortComment() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/xml/xml-format-document-level-short-comment.xml", "testfiles/xml/xml-format-document-level-short-comment-fmt.xml");
+	}
 }
