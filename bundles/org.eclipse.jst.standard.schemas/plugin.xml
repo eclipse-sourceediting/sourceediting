@@ -205,6 +205,15 @@
             <uri
                 name="http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
                 uri="dtdsAndSchemas/persistence_1_0.xsd" />   
+               
+           <uri
+               name="http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+               uri="dtdsAndSchemas/orm_2_0.xsd" />
+       
+           <uri
+               name="http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+               uri="dtdsAndSchemas/persistence_2_0.xsd" />
+               
                           
         </catalogContribution>
 
