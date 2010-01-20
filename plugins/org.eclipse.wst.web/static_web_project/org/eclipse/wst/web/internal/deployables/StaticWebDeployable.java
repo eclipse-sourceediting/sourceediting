@@ -13,17 +13,14 @@ package org.eclipse.wst.web.internal.deployables;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
-import org.eclipse.wst.common.componentcore.resources.IVirtualReference;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.util.IStaticWeb;
 
-public class StaticWebDeployable extends ComponentDeployable implements IStaticWeb {
+public class StaticWebDeployable extends FlatComponentDeployable implements IStaticWeb {
 
 	public StaticWebDeployable(IProject project, IVirtualComponent component) {
 		super(project);
@@ -36,20 +33,21 @@ public class StaticWebDeployable extends ComponentDeployable implements IStaticW
 	    return component.getName();
     }
 	
-	 public String getURI(IModule module) {
-	    IVirtualComponent comp = ComponentCore.createComponent(module.getProject());
-	    String aURI = null;
-	    if (comp !=null) {
-	    	if (!comp.isBinary() && isProjectOfType(module.getProject(),IModuleConstants.WST_WEB_MODULE)) {
-        		IVirtualReference ref = component.getReference(comp.getName());
-        		aURI = ref.getRuntimePath().append(comp.getName()+".war").toString(); //$NON-NLS-1$
-        	}
-	    }
-	    	
-    	if (aURI !=null && aURI.length()>1 && aURI.startsWith("/")) //$NON-NLS-1$
-    		aURI = aURI.substring(1);
-    	return aURI;
-	 }
+	/* TODO This is never called ?? */
+//	 public String getURI(IModule module) {
+//	    IVirtualComponent comp = ComponentCore.createComponent(module.getProject());
+//	    String aURI = null;
+//	    if (comp !=null) {
+//	    	if (!comp.isBinary() && isProjectOfType(module.getProject(),IModuleConstants.WST_WEB_MODULE)) {
+//        		IVirtualReference ref = component.getReference(comp.getName());
+//        		aURI = ref.getRuntimePath().append(comp.getName()+".war").toString(); //$NON-NLS-1$
+//        	}
+//	    }
+//	    	
+//    	if (aURI !=null && aURI.length()>1 && aURI.startsWith("/")) //$NON-NLS-1$
+//    		aURI = aURI.substring(1);
+//    	return aURI;
+//	 }
 	 
 	public String getVersion() {
 		IFacetedProject facetedProject = null;

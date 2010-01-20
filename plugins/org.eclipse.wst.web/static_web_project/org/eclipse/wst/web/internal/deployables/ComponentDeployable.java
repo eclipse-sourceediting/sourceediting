@@ -44,6 +44,9 @@ import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
+/**
+ * @deprecated as of WTP 3.2
+ */
 public abstract class ComponentDeployable extends ProjectModule {
 
 	protected IVirtualComponent component = null;
