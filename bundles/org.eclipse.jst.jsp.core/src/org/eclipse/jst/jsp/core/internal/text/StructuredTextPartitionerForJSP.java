@@ -344,10 +344,9 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitions.JSP_DIRECTIVE);
 				return true;
 			}
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=113346
-			if (fEnableJSPActionPartitions && isAction(sdRegion, offset) && !(containedChildRegion instanceof ITextRegionContainer)) {
-				// if (fEnableJSPActionPartitions && isAction(sdRegion,
-				// offset)) {
+			
+			//if is a JSP custom tag but not a JSP_EL region
+			if (fEnableJSPActionPartitions && !isELRegion(containedChildRegion) && isAction(sdRegion, offset) && !(containedChildRegion instanceof ITextRegionContainer) ) {
 				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitions.JSP_DIRECTIVE);
 				return true;
 			}
@@ -417,6 +416,28 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	 */
 	public void setLanguage(String language) {
 		this.fLanguage = language;
+	}
+	
+	/**
+	 * @param region decide if this region is an EL region
+	 * @return <code>true</code> if the given <code>region</code> is a EL region,
+	 * <code>false</code> otherwise.
+	 */
+	private boolean isELRegion(ITextRegion region) {
+		String type = region.getType();
+		return
+			type == DOMJSPRegionContexts.JSP_EL_CLOSE ||
+			type == DOMJSPRegionContexts.JSP_EL_CONTENT ||
+			type == DOMJSPRegionContexts.JSP_EL_DQUOTE ||
+			type == DOMJSPRegionContexts.JSP_EL_OPEN ||
+			type == DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT ||
+			type == DOMJSPRegionContexts.JSP_EL_SQUOTE ||
+			type == DOMJSPRegionContexts.JSP_VBL_CLOSE ||
+			type == DOMJSPRegionContexts.JSP_VBL_CONTENT ||
+			type == DOMJSPRegionContexts.JSP_VBL_DQUOTE ||
+			type == DOMJSPRegionContexts.JSP_VBL_OPEN ||
+			type == DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT ||
+			type == DOMJSPRegionContexts.JSP_VBL_SQUOTE;
 	}
 
 }

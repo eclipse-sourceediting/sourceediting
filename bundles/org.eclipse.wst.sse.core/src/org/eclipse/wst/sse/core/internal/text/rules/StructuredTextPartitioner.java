@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
@@ -565,34 +566,41 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 		}
 
 		if (!partitionFound && structuredDocumentRegion != null) {
-			ITextRegion resultRegion = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
+			/* We want the actual ITextRegion and not a possible ITextRegionCollection that
+			 * could be returned by IStructuredDocumentRegion#getRegionAtCharacterOffset
+			 * This allows for correct syntax highlighting and content assist.
+			 */
+			ITextRegion resultRegion = getDeepRegionAtCharacterOffset(structuredDocumentRegion, offset);
 			partitionFound = isDocumentRegionBasedPartition(structuredDocumentRegion, resultRegion, offset);
 			if (!partitionFound) {
-				// Note: this new logic doesn't handle container regions
-				// inside of
-				// container regions ... may need to make this first clause
-				// a recursive method
-				if (resultRegion != null && resultRegion instanceof ITextRegionContainer) {
-					ITextRegionContainer containerRegion = (ITextRegionContainer) resultRegion;
-					// then need to "drill down" for relevent region and
-					// relevent offset
-					ITextRegion deepRegion = containerRegion.getRegionAtCharacterOffset(offset);
-					int endOffset = containerRegion.getEndOffset(deepRegion);
-					String type = getPartitionType(deepRegion, endOffset);
-					setInternalPartition(offset, endOffset - offset, type);
+				if (resultRegion != null) {
+					String type = getPartitionType(resultRegion, offset);
+					setInternalPartition(offset, resultRegion.getLength(), type);
 				} else {
-					if (resultRegion != null) {
-						String type = getPartitionType(resultRegion, offset);
-						setInternalPartition(offset, structuredDocumentRegion.getEndOffset(resultRegion) - offset, type);
-					} else {
-						// can happen at EOF
-						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=224886
-						// The unknown type was causing problems with content assist in JSP documents
-						setInternalPartition(offset, 1, getDefaultPartitionType());
-					}
+					// can happen at EOF
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=224886
+					// The unknown type was causing problems with content assist in JSP documents
+					setInternalPartition(offset, 1, getDefaultPartitionType());
 				}
 			}
 		}
+	}
+	
+	/**
+	 * <p>Unlike {@link IStructuredDocumentRegion#getRegionAtCharacterOffset(int)} this will dig
+	 * into <code>ITextRegionCollection</code> to find the region containing the given offset</p>
+	 * 
+	 * @param region the containing region of the given <code>offset</code>
+	 * @param offset to the overall offset in the document.
+	 * @return the <code>ITextRegion</code> containing the given <code>offset</code>, will never be
+	 * a <code>ITextRegionCollextion</code>
+	 */
+	private ITextRegion getDeepRegionAtCharacterOffset(IStructuredDocumentRegion region, int offset) {
+		ITextRegion text = region.getRegionAtCharacterOffset(offset);
+		while (text instanceof ITextRegionCollection) {
+			text = ((ITextRegionCollection) text).getRegionAtCharacterOffset(offset);
+		}
+		return text;
 	}
 
 	/**
