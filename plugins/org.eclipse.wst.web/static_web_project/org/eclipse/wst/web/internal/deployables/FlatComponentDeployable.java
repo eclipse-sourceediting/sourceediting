@@ -140,6 +140,11 @@ public abstract class FlatComponentDeployable extends ProjectModule {
     	return new IModule[]{};
 	}
     
+	@Override
+	public String getPath(IModule m) {
+		return getURI(m);
+	}
+
 	/**
 	 * Returns the URI of the given contained CHILD module.
 	 * 
