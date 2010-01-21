@@ -66,6 +66,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	private IModelManager modelManager;
 	
 	private Class resourceClass;
+	
+	private boolean reverting = false;
 
 	/** The XML DOM model */
 	protected IDOMModel xmlModel;
@@ -440,7 +442,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		if (isBatchChanges)
 			return;
 		try {
-			if (aboutToChangeNode != null && model.getStructuredDocument() != null
+			if (reverting && aboutToChangeNode != null && model.getStructuredDocument() != null
 					&& model.getStructuredDocument().getFirstStructuredDocumentRegion() != aboutToChangeNode) {
 				String id = getModelManagerId();
 				IStructuredModel tempModel = null;
@@ -452,6 +454,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 					if (tempModel != null && (tempModel.getReferenceCountForEdit() > 0)) {
 						tempModel.releaseFromEdit();
 					}
+					reverting = false;
 				}
 			}
 		} finally {
@@ -500,11 +503,15 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	public void processPostModelEvent(ModelLifecycleEvent event) {
-		// TODO Auto-generated method stub
+		if (event.getType() == ModelLifecycleEvent.MODEL_REVERT)
+			reverting = false;
 
 	}
 
 	public void processPreModelEvent(ModelLifecycleEvent event) {
+		if (event.getType() == ModelLifecycleEvent.MODEL_REVERT)
+			reverting = true;
+			
 		if (!isSaving) {
 			if (event.getType() == ModelLifecycleEvent.MODEL_SAVED) {
 				ResourceSetWorkbenchEditSynchronizer synchronizer = (ResourceSetWorkbenchEditSynchronizer) ((ProjectResourceSet) resource.getResourceSet()).getSynchronizer();
@@ -512,6 +519,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 				synchronizer.preSave(aFile, resource);
 			}
 		}
+		
 	}
 
 
