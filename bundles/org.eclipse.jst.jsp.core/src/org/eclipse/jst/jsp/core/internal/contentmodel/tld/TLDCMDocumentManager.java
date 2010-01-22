@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -795,7 +795,18 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				}
 					break;
 				case (ITaglibRecord.URL) : {
-					modificationStamp = IResource.NULL_STAMP;
+                    String loc = ((IURLRecord) record).getBaseLocation();
+                    if (loc != null && loc.endsWith(".jar")) { //$NON-NLS-1$
+                        File jarfile = new File(loc);
+                        if (jarfile.exists()) {
+                            try {
+                                modificationStamp = jarfile.lastModified();
+                            }
+                            catch (SecurityException e) {
+                                modificationStamp = IResource.NULL_STAMP;
+                            }
+                        }
+                    }					
 				}
 					break;
 				default :
