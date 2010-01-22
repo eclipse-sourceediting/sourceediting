@@ -96,6 +96,7 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 		IFlatVirtualComponent em = getFlatComponent();
 		IFlatResource[] resources = em.fetchResources();
 		return convert(resources);
+		
 	}
 
 	protected IModuleResource[] LEGACY_binaryMembers() {
@@ -243,12 +244,55 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 		public ComponentModuleFile(IFlatResource resource) {
 			super(resource);
 		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == this)
+				return true;
+			
+			if (!(obj instanceof IModuleFile))
+				return false;
+			
+			IModuleFile mf = (IModuleFile) obj;
+			if (!getName().equals(mf.getName()))
+				return false;
+			if (!getModuleRelativePath().equals(mf.getModuleRelativePath()))
+				return false;
+			return true;
+		}
+		
+		@Override
+		public int hashCode() {
+			return getName().hashCode() * 37 + getModuleRelativePath().hashCode();
+		}
 	}
 
 	public static class ComponentModuleFolder extends ComponentModuleResource implements IModuleFolder {
 		public ComponentModuleFolder(IFlatResource resource) {
 			super(resource);
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == this)
+				return true;
+			
+			if (!(obj instanceof IModuleFolder))
+				return false;
+			
+			IModuleFolder mf = (IModuleFolder) obj;
+			if (!getName().equals(mf.getName()))
+				return false;
+			if (!getModuleRelativePath().equals(mf.getModuleRelativePath()))
+				return false;
+			return true;
+		}
+		
+		@Override
+		public int hashCode() {
+			return getName().hashCode() * 37 + getModuleRelativePath().hashCode();
+		}
+		
 	}
 
 	protected static boolean isProjectOfType(IProject project, String typeID) {
