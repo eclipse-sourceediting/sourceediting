@@ -247,6 +247,19 @@ public class JSPTranslator {
 	private String fELTranslatorID;
 
 	/**
+	 * <code>true</code> if code has been found, such as HTML tags, that is not translated
+	 * <code>false</code> otherwise.  Useful for deciding if a place holder needs to be
+	 * written to translation
+	 */
+	private boolean fFoundNonTranslatedCode;
+	
+	/**
+	 * <code>true</code> if code has been translated for the current region,
+	 * <code>false</code> otherwise
+	 */
+	private boolean fCodeTranslated;
+	
+	/**
 	 * A structure for holding a region collection marker and list of variable
 	 * information. The region can be used later for positioning validation
 	 * messages.
@@ -554,6 +567,9 @@ public class JSPTranslator {
 
 		fELProblems = new ArrayList();
 
+		fFoundNonTranslatedCode = false;
+		fCodeTranslated = false;
+		
 	}
 
 	/**
@@ -979,7 +995,9 @@ public class JSPTranslator {
 		setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
 
 		while (getCurrentNode() != null && !isCanceled()) {
-
+			//no code has been translated for this region yet
+			fCodeTranslated = false;
+			
 			// intercept HTML comment flat node
 			// also handles UNDEFINED (which is what CDATA comes in as)
 			// basically this part will handle any "embedded" JSP containers
@@ -990,10 +1008,18 @@ public class JSPTranslator {
 				// iterate through each region in the flat node
 				translateRegionContainer(getCurrentNode(), STANDARD_JSP);
 			}
+			
+			//if no code was translated for this region then found "non translated code"
+			if(!fCodeTranslated) {
+				fFoundNonTranslatedCode = true;
+			}
+			
 			if (getCurrentNode() != null)
 				advanceNextNode();
 		}
 
+		writePlaceHolderForNonTranslatedCode();
+		
 		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, fStructuredDocument.getLength()));
 		translateCodas();
 
@@ -1191,6 +1217,11 @@ public class JSPTranslator {
 			}
 			else if (type != null && (type == DOMRegionContext.XML_TAG_OPEN || type == DOMRegionContext.XML_END_TAG_OPEN)) {
 				translateXMLNode(containerRegion, regions);
+			}
+			//the end tags of these regions are "translated" in a sense
+			else if(type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE ||
+					type == DOMJSPRegionContexts.JSP_CLOSE) {
+				this.fCodeTranslated = true;
 			}
 		}
 		// }
@@ -2233,6 +2264,12 @@ public class JSPTranslator {
 		// add a newline so translation looks cleaner
 		if (! nonl && !newText.endsWith(ENDL))
 			newText += ENDL;
+		
+		//dump any non translated code before writing translated code
+		writePlaceHolderForNonTranslatedCode();
+		
+		//if appending to the buffer can assume something got translated
+		fCodeTranslated = true;
 
 		if (buffer == fUserCode) {
 			buffer.append(newText);
@@ -2961,5 +2998,20 @@ public class JSPTranslator {
 			}
 		}
 		fProcessIncludes = true;
+	}
+	
+	/**
+	 * <p>Writes an empty expression to {@link #fUserCode} if previously
+	 * found non translated code</p>
+	 * <p>This should be done before appending any newly translated code.</p>
+	 */
+	private void writePlaceHolderForNonTranslatedCode() {
+		if(fFoundNonTranslatedCode) {
+			String text = (EXPRESSION_PREFIX + "\"\"" + EXPRESSION_SUFFIX +
+					" //non translated code placeholder"+ ENDL);
+			fUserCode.append(text);
+			fOffsetInUserCode += text.length();
+			fFoundNonTranslatedCode = false;
+		}
 	}
 }
