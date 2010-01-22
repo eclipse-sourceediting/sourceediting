@@ -201,7 +201,13 @@ public abstract class DelegatingSourceValidator implements IValidator {
 		if (delta.length > 0) {
 			// get the file, model and document:
 			IFile file = getFile(delta[0]);
-			IDOMModel xmlModel = getModelForResource(file);
+			IDOMModel xmlModel = null;
+			if (file != null)
+				xmlModel = getModelForResource(file);
+			// some problem occurred, abort
+			if (xmlModel == null)
+				return;
+			
 			try {
 				IDOMDocument document = xmlModel.getDocument();
 
