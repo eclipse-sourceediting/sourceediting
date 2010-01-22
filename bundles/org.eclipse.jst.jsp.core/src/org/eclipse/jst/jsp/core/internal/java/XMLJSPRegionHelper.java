@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -271,10 +271,14 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	private void decodeRemainingRegions(IStructuredDocumentRegion sdRegion, int start) {
-		ITextRegion region = sdRegion.getRegions().get(start);
-		String text = sdRegion.getFullText();
-		if (region.getStart() <= text.length())
-			fTranslator.decodeScriptBlock(text.substring(region.getStart(), text.length()), 0);
+		ITextRegionList regionList = sdRegion.getRegions();
+		if(regionList != null) {
+			ITextRegion region = regionList.get(start);
+			String text = sdRegion.getFullText();
+			if (text != null && region.getStart() <= text.length())
+				fTranslator.decodeScriptBlock(text.substring(region.getStart(), text.length()), 0);
+		}
+
 	}
 		
 	private int hasIllegalContent(IStructuredDocumentRegion sdRegion) {
