@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -513,6 +513,11 @@ public class JsTranslation implements IJsTranslation {
 		if (cu != null) {
 			try {
 				synchronized (fLock) {
+					// clear out old validation messages
+					WorkingCopyOwner workingCopyOwner = getWorkingCopyOwner();
+					JsProblemRequestor problemRequestor = (JsProblemRequestor) workingCopyOwner.getProblemRequestor(cu.getWorkingCopy(getProgressMonitor()));
+					if(problemRequestor != null && problemRequestor.getCollectedProblems() != null)
+						problemRequestor.getCollectedProblems().clear();
 					cu.reconcile(IJavaScriptUnit.NO_AST, true, true, getWorkingCopyOwner(), getProgressMonitor());
 				}
 			}
