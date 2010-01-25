@@ -607,7 +607,8 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	private DeepRegion getDeepRegionAtCharacterOffset(IStructuredDocumentRegion region, int offset) {
 		ITextRegion text = region.getRegionAtCharacterOffset(offset);
 		int end = region.getStartOffset();
-		end += text.getStart();
+		if (text != null)
+			end += text.getStart();
 		while (text instanceof ITextRegionCollection) {
 			text = ((ITextRegionCollection) text).getRegionAtCharacterOffset(offset);
 			end += text.getStart();
