@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -570,12 +570,12 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 			 * could be returned by IStructuredDocumentRegion#getRegionAtCharacterOffset
 			 * This allows for correct syntax highlighting and content assist.
 			 */
-			ITextRegion resultRegion = getDeepRegionAtCharacterOffset(structuredDocumentRegion, offset);
-			partitionFound = isDocumentRegionBasedPartition(structuredDocumentRegion, resultRegion, offset);
+			DeepRegion resultRegion = getDeepRegionAtCharacterOffset(structuredDocumentRegion, offset);
+			partitionFound = isDocumentRegionBasedPartition(structuredDocumentRegion, resultRegion.region, offset);
 			if (!partitionFound) {
-				if (resultRegion != null) {
-					String type = getPartitionType(resultRegion, offset);
-					setInternalPartition(offset, resultRegion.getLength(), type);
+				if (resultRegion.region != null) {
+					String type = getPartitionType(resultRegion.region, offset);
+					setInternalPartition(offset, resultRegion.end - offset, type);
 				} else {
 					// can happen at EOF
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=224886
@@ -585,7 +585,16 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 			}
 		}
 	}
-	
+
+	private static class DeepRegion {
+		int end;
+		ITextRegion region;
+		DeepRegion(ITextRegion r, int e) {
+			region = r;
+			end = e;
+		}
+	}
+
 	/**
 	 * <p>Unlike {@link IStructuredDocumentRegion#getRegionAtCharacterOffset(int)} this will dig
 	 * into <code>ITextRegionCollection</code> to find the region containing the given offset</p>
@@ -595,12 +604,17 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	 * @return the <code>ITextRegion</code> containing the given <code>offset</code>, will never be
 	 * a <code>ITextRegionCollextion</code>
 	 */
-	private ITextRegion getDeepRegionAtCharacterOffset(IStructuredDocumentRegion region, int offset) {
+	private DeepRegion getDeepRegionAtCharacterOffset(IStructuredDocumentRegion region, int offset) {
 		ITextRegion text = region.getRegionAtCharacterOffset(offset);
+		int end = region.getStartOffset();
+		end += text.getStart();
 		while (text instanceof ITextRegionCollection) {
 			text = ((ITextRegionCollection) text).getRegionAtCharacterOffset(offset);
+			end += text.getStart();
 		}
-		return text;
+		if (text != null)
+			end += text.getLength();
+		return new DeepRegion(text, end);
 	}
 
 	/**
