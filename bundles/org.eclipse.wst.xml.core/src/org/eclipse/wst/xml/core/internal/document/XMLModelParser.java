@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -303,6 +303,14 @@ public class XMLModelParser {
 		if (this.model.getDocument() == null)
 			return;
 		this.context = new XMLModelContext(this.model.getDocument());
+		
+		//determine if change was whitespace only change
+		boolean isWhitespaceChange = false;
+		if(change.getText() != null && change.getText().length() > 0) {
+			isWhitespaceChange = Character.isWhitespace(change.getText().charAt(0));
+		} else if(change.getDeletedText() != null && change.getDeletedText().length() > 0) {
+			isWhitespaceChange = Character.isWhitespace(change.getDeletedText().charAt(0));
+		}
 
 		// optimize typical cases
 		String regionType = region.getType();
@@ -310,28 +318,28 @@ public class XMLModelParser {
 			changeData(flatNode, region);
 		}
 		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-			if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+			if (isWhitespaceChange && (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd())) {
 				// change is entirely in white-space
 				return;
 			}
 			changeAttrName(flatNode, region);
 		}
 		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-			if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+			if (isWhitespaceChange && (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd())) {
 				// change is entirely in white-space
 				return;
 			}
 			changeAttrValue(flatNode, region);
 		}
 		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
-			if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+			if (isWhitespaceChange && (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd())) {
 				// change is entirely in white-space
 				return;
 			}
 			changeAttrEqual(flatNode, region);
 		}
 		else if (regionType == DOMRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
-			if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+			if (isWhitespaceChange && (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd())) {
 				// change is entirely in white-space
 				return;
 			}
