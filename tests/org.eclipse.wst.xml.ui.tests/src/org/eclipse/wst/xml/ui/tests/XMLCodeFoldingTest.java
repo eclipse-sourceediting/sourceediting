@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
@@ -54,7 +55,7 @@ import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
  */
 public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingListener {
 	/** max amount of time to wait for */
-	private static final int MAX_WAIT_TIME = 4000;
+	private static final int MAX_WAIT_TIME = 5000;
 	
 	/** amount of time to wait for */
 	private static final int WAIT_TIME = 200;
@@ -326,7 +327,7 @@ public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 			verifyAnnotationPositions(viewer, expectedPositions);
 		} else {
 			Assert.fail("Document " + viewer.getDocument() + " was not reconciled with in " + MAX_WAIT_TIME +
-					" so gave up waiting and in turn could not validate folding anotations");
+					" so gave up waiting and in turn could not validate folding anotations (UI blocked?)");
 		}
 	}
 	
@@ -342,6 +343,7 @@ public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 		Iterator annotationIter = projectionModel.getAnnotationIterator();
 		
 		List unexpectedPositions = new ArrayList();
+		List unexpectedAnnotations = new ArrayList();
 		
 		while(annotationIter.hasNext()) {
 			Object obj = annotationIter.next();
@@ -352,6 +354,7 @@ public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 				boolean found = expectedPositions.remove(pos);
 				if(!found) {
 					unexpectedPositions.add(pos);
+					unexpectedAnnotations.add(annotation);
 				}
 				
 			}
@@ -361,7 +364,7 @@ public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 		if(unexpectedPositions.size() != 0) {
 			error  += "There were " + unexpectedPositions.size() + " unexpected positions that were found";
 			for(int i = 0; i < unexpectedPositions.size(); ++i) {
-				error += "\n\t" + unexpectedPositions.get(i);
+				error += "\n\t" + unexpectedPositions.get(i) + "\ttype:" + ((Annotation) unexpectedAnnotations.get(i)).getType();
 			}
 		}
 		
