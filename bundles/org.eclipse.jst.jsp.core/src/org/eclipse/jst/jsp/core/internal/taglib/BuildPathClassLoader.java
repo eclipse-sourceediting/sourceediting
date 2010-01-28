@@ -73,7 +73,13 @@ public class BuildPathClassLoader extends ClassLoader {
 		if (DEBUG)
 			System.out.println("finding: [" + className + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
-			IType type = fProject.findType(className.replace('$', '.'));
+			IType type = fProject.findType(className);
+			int offset = -1;
+			if (type == null && (offset = className.indexOf('$')) != -1) {
+				// Internal classes from source files must be referenced by . instead of $
+				String cls = className.substring(0, offset) + className.substring(offset).replace('$', '.');
+				type = fProject.findType(cls);
+			}
 			if (type != null) {
 				IPath path = null;
 				IResource resource = type.getResource();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
@@ -135,7 +136,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			 * translator for dealing with TEI variables
 			 */
 			try {
-				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f);
+				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f, false);
+				if (handler == null)
+					handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT);
 				document = (IStructuredDocument) handler.getDocumentLoader().createNewStructuredDocument();
 				contents = FileContentCache.getInstance().getContents(f.getFullPath());
 			}
@@ -182,6 +185,11 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				fTagname = null;
 			}
 			else if (isJSPStartRegion(sdRegion)) {
+				int illegalContent = hasIllegalContent(sdRegion);
+				// If illegal content was found, start decoding again after the region
+				if (illegalContent >= 0)
+					decodeRemainingRegions(sdRegion, illegalContent + 1);
+
 				String nameStr = getRegionName(sdRegion);
 				if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
 					if (isPossibleCustomTag(nameStr)) {
@@ -260,6 +268,30 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				// do nothing, since we're just ending
 			}
 		}
+	}
+
+	private void decodeRemainingRegions(IStructuredDocumentRegion sdRegion, int start) {
+		ITextRegionList regionList = sdRegion.getRegions();
+		if(regionList != null) {
+			ITextRegion region = regionList.get(start);
+			String text = sdRegion.getFullText();
+			if (text != null && region.getStart() <= text.length())
+				fTranslator.decodeScriptBlock(text.substring(region.getStart(), text.length()), 0);
+		}
+
+	}
+		
+	private int hasIllegalContent(IStructuredDocumentRegion sdRegion) {
+		ITextRegionList list = sdRegion.getRegions();
+		for (int i = 0; i < list.size(); i++) {
+			ITextRegion region = list.get(i);
+			String type = region.getType();
+			if (type == DOMRegionContext.UNDEFINED)
+				return i;
+			if (type == DOMRegionContext.XML_END_TAG_OPEN || type == DOMRegionContext.XML_EMPTY_TAG_CLOSE || type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE)
+				return -1;
+		}
+		return -1;
 	}
 
 

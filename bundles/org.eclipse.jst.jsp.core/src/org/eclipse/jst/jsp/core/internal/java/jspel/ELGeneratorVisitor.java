@@ -410,7 +410,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 				ASTValuePrefix prefix = (ASTValuePrefix) node.jjtGetChild(0);
 				ASTValueSuffix suffix = (ASTValueSuffix) node.jjtGetChild(1);
 				if(prefix.firstToken.image.equals("pageContext") && suffix.getPropertyNameToken().image.equals("request")) {
-					append("((HTTPServletRequest)");
+					append("((HttpServletRequest)");
 				}
 			}
 		}
@@ -460,7 +460,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 
 			// This is a special case.  Note that the type system, no matter how much type information
 			// we would have wouldn't give us the correct result.  We're looking for "pageContext.request" 
-			// here and will add a downcast to (HTTPServletRequest)
+			// here and will add a downcast to (HttpServletRequest)
 			
 			append(node.firstToken);
 			append("get" + ucaseName + "()", suffix); //$NON-NLS-1$ //$NON-NLS-2$

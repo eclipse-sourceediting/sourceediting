@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -592,7 +592,8 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	 * @see org.eclipse.ui.editors.text.StorageDocumentProvider#getPersistedEncoding(java.lang.Object)
 	 */
 	protected String getPersistedEncoding(Object element) {
-		if (element instanceof IStorageEditorInput) {
+		String charset = super.getPersistedEncoding(element);
+		if (charset == null && element instanceof IStorageEditorInput) {
 			IStorage storage;
 			try {
 				storage = ((IStorageEditorInput) element).getStorage();
@@ -603,9 +604,9 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 						if (contents != null) {
 							QualifiedName[] detectionOptions = new QualifiedName[]{IContentDescription.BYTE_ORDER_MARK, IContentDescription.CHARSET};
 							IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(contents, storage.getName(), detectionOptions);
-							String charset = description.getCharset();
-							if (charset != null)
-								return charset;
+							if (description != null) {
+								charset = description.getCharset();
+							}
 						}
 
 					}
@@ -626,7 +627,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 				Logger.logException(e);
 			}
 		}
-		return super.getPersistedEncoding(element);
+		return charset;
 	}
 
 	public IStructuredModel getModel(IEditorInput element) {

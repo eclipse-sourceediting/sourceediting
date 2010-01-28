@@ -289,8 +289,6 @@ public final class TaglibIndex {
 									}
 								}
 								for (int i = 0; i < projects.length; i++) {
-									if (deltas[i].getKind() == IResourceDelta.CHANGED && (deltas[i].getFlags() == IResourceDelta.ENCODING || deltas[i].getFlags() == IResourceDelta.MARKERS))
-										continue;
 									try {
 										if (deltas[i] != null && deltas[i].getKind() != IResourceDelta.REMOVED && projects[i].isAccessible()) {
 											ProjectDescription description = getDescription(projects[i]);

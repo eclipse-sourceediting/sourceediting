@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 import java.util.Vector;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
@@ -307,59 +308,69 @@ public class CMValidator
   }
 
 
-  public void validateElementList(ElementList list, GraphNode node, ElementContentComparator comparator, Result result, boolean loopFlag)
-  {
-    //println("+validateElementList " + node + " " + list);
-    if (list == null && node.isTerminal)
-    {
-      result.isValid = true;
-    }
-    else
-    {
-      for (Iterator i = node.arcList.iterator(); i.hasNext();)
-      {
-        Arc arc = (Arc)i.next();
-        boolean traverseArc = false;
-        if (arc.kind == Arc.ELEMENT)
-        {
-          if (list != null && comparator.matches(list.head, arc.cmNode))
-          {
-            loopFlag = false;
-            traverseArc = true;
-            list = list.tail; // increment our position in the list
-          }
-        }
-        else if (arc.kind == Arc.REPEAT)
-        {
-          if (!loopFlag)
-          {
-            traverseArc = true;
-          }
-          loopFlag = true;
-        }
-        else
-        {
-          traverseArc = true;
-        }
+  public void validateElementList(ElementList initialList, GraphNode initialGraphNode, ElementContentComparator comparator, Result result, boolean initialLoopFlag) {
+	  Stack arcStack = new Stack();
+	  arcStack.push(new ArcStackItem(null, false));
+	  boolean loopFlag = initialLoopFlag;
+	  ElementList elementList = initialList;
+	  GraphNode graphNode = initialGraphNode;
+	  while(!arcStack.isEmpty() && !result.isValid) {
+		  ArcStackItem stackElement = (ArcStackItem) arcStack.peek();
+		  if(stackElement.isVisited) {
+			  arcStack.pop();
+			  if(stackElement.arc != null) {
+				  result.pop(stackElement.arc);
+				  continue;
+			  }
+		  } else {
+			  stackElement.isVisited = true;
+			  result.push(stackElement.arc);
+			  graphNode = stackElement.arc.node;
+			  loopFlag = stackElement.loopFlag;
+		  } 
+		  if(elementList == null && graphNode.isTerminal) {
+			  result.isValid = true;
+		  } else {
+			  for(Iterator arcIterator = graphNode.arcList.iterator(); arcIterator.hasNext();) {
+				  Arc arc = (Arc)arcIterator.next();
+				  boolean traverseArc = false;
+				  if (arc.kind == Arc.ELEMENT) {
+					  if(elementList != null && comparator.matches(elementList.head, arc.cmNode)) {
+						  loopFlag = false;
+						  traverseArc = true;
+						  elementList = elementList.tail; // increment our position in the list
+					  }
+				  } else if(arc.kind == Arc.REPEAT) {
+					  if(!loopFlag) {
+						  traverseArc = true;
+					  }
+					  loopFlag = true;
+				  } else {
+					  traverseArc = true;
+				  }
+				  if(traverseArc) {
+					  if (result.canPush(arc)) { // test to see if we can push this arc due to facet constraints  
+						  arcStack.push(new ArcStackItem(arc, loopFlag));
+					  }
+				  }
+			  }
+		  }
+	  }
+  }
+  
+  
+  private class ArcStackItem {
+	  
+	  Arc arc;
+	  boolean loopFlag;
+	  boolean isVisited;
+	  
+	  public ArcStackItem(Arc arc, boolean loopflag) {
+		  this.arc = arc;
+		  this.loopFlag = loopflag;
+		  this.isVisited = arc == null;
+	  }
 
-        if (traverseArc)
-        {
-          // test to see if we can push this arc due to facet constraints
-          //
-          if (result.canPush(arc))
-          {          
-            // see if this arc leads to a correct solution          
-            result.push(arc);
-            validateElementList(list, arc.node, comparator, result, loopFlag);
-            if (result.isValid)
-            {
-              break;
-            }
-            result.pop(arc);
-          }
-        }
-      }
-    }
   }
 
 
@@ -416,10 +427,6 @@ public class CMValidator
       ElementList elementList = createElementList(contentType, elementContent, comparator, result);
       if (result.isValid == true)
       {  
-        // defect 226213 ... elements with a large number of children will cause the recursion based validation
-        // algorithm to stack overflow ... as a quick fix assume any element with a large number of children is valid        
-        if (elementContent.size() < 500)
-        {
           boolean isGraphValidationNeeded = !(elementList == null && contentType == CMElementDeclaration.MIXED);
                       
           // exlicity handle 'All' groups
@@ -443,7 +450,6 @@ public class CMValidator
             GraphNode node = lookupOrCreateGraph(ed);
             validateElementList(elementList, node, comparator, result, false);
           }
-        }
       }
     }
     else if (contentType == CMElementDeclaration.PCDATA)

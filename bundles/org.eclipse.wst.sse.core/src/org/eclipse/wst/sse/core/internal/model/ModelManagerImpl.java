@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
@@ -47,9 +48,16 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
@@ -96,6 +104,27 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
  */
 public class ModelManagerImpl implements IModelManager {
 
+	private static int WAIT_DELAY = getInt("org.eclipse.wst.sse.core.modelmanager.maxWaitDuringConcurrentLoad");
+	private static boolean ALLOW_INTERRUPT_WAITING_THREAD = getBoolean("org.eclipse.wst.sse.core.modelmanager.allowInterruptsDuringConcurrentLoad");
+	private static IEclipsePreferences.IPreferenceChangeListener LISTENER;
+	static {
+		InstanceScope scope = new InstanceScope();
+		IEclipsePreferences instancePrefs = scope.getNode(SSECorePlugin.ID);
+		LISTENER = new IEclipsePreferences.IPreferenceChangeListener() {
+
+					public void preferenceChange(PreferenceChangeEvent event) {
+
+				if ("modelmanager.maxWaitDuringConcurrentLoad".equals(event.getKey())) {
+					WAIT_DELAY = getInt("org.eclipse.wst.sse.core.modelmanager.maxWaitDuringConcurrentLoad");
+				}
+				else if ("modelmanager.allowInterruptsDuringConcurrentLoad".equals(event.getKey())) {
+					ALLOW_INTERRUPT_WAITING_THREAD = getBoolean("org.eclipse.wst.sse.core.modelmanager.allowInterruptsDuringConcurrentLoad");
+				}
+			}
+		};
+		instancePrefs.addPreferenceChangeListener(LISTENER);
+	}
+
 	static class ReadEditType {
 		ReadEditType(String type) {
 		}
@@ -109,7 +138,8 @@ public class ModelManagerImpl implements IModelManager {
 		int referenceCountForRead;
 		IStructuredModel theSharedModel;
 		boolean initializing = true;
-		boolean doWait = true;
+		volatile boolean doWait = true;
+		final Object loadCondition = new Object();
 		
 		SharedObject(IStructuredModel sharedModel) {
 			theSharedModel = sharedModel;
@@ -121,15 +151,43 @@ public class ModelManagerImpl implements IModelManager {
 		 * Waits until this shared object has been attempted to be loaded. 
 		 * The load is "attempted" because not all loads result in a model. 
 		 * However, upon leaving this method, theShareModel variable
-		 * is up-to-date.
+		 * is up-to-date. Should not be called if holding a lock on this object.
 		 */
-		public synchronized void waitForLoadAttempt() {
-			while(initializing) {
-				try {
-					wait();
+		public void waitForLoadAttempt() {
+			synchronized(loadCondition) {
+				long start = System.currentTimeMillis();
+				// Note: A WAIT_DELAY of 0 is infinite
+				int maxTimeMs = Math.max(0, WAIT_DELAY);
+				final int waitInterval = Math.min(250, maxTimeMs);
+				boolean interrupted = false;
+				while (initializing && maxTimeMs >= 0) {
+					try {
+						loadCondition.wait(waitInterval);
+						maxTimeMs -= waitInterval;
+					}
+					catch (InterruptedException e) {
+						interrupted = true;
+						if (ALLOW_INTERRUPT_WAITING_THREAD) {
+							break;
+						}
+					}
 				}
-				catch (InterruptedException e) {
-					// ignore interruption!
+				if (initializing) {
+					long totalWaitTime = System.currentTimeMillis() - start;
+					if (interrupted) {
+						throw new OperationCanceledException(
+								"Waiting thread interrupted during simultenous model load. Load aborted. (Waited "
+										+ totalWaitTime + "ms)");
+					}
+					else {
+						throw new OperationCanceledException(
+								"Waiting thread timed-out during simultenous model load. Load aborted. (Waited "
+										+ totalWaitTime + "ms)");
+					}
+				}
+				if (interrupted) {
+					// Propagate (don't swallow) the interrupt
+					Thread.currentThread().interrupt();
 				}
 			}
 		}
@@ -139,9 +197,11 @@ public class ModelManagerImpl implements IModelManager {
 		 * {@link #waitForLoadAttempt()} will proceed after this 
 		 * method returns. 
 		 */
-		public synchronized void setLoaded() {
-			initializing = false;
-			notifyAll();
+		public void setLoaded() {
+			synchronized(loadCondition) {
+				initializing = false;
+				loadCondition.notifyAll();
+			}
 		}
 	}
 
@@ -166,6 +226,12 @@ public class ModelManagerImpl implements IModelManager {
 		return instance;
 	}
 
+	public void removePreferenceListener() {
+		InstanceScope scope = new InstanceScope();
+		IEclipsePreferences instancePrefs = scope.getNode(SSECorePlugin.ID);
+		instancePrefs.removePreferenceChangeListener(LISTENER);
+	}
+
 	/**
 	 * Our cache of managed objects
 	 */
@@ -183,9 +249,12 @@ public class ModelManagerImpl implements IModelManager {
 	ModelManagerImpl() {
 		super();
 		fManagedObjects = new HashMap();
-		// To prevent deadlocks:  always acquire multiple locks in this order: SYNC, sharedObject. 
-		// DO NOT acquire a SYNC within a sharedObject lock, unless you already own the SYNC lock
-		// Tip: Try to hold the smallest number of locks you can
+		/**
+		 * NOTES: To prevent deadlocks: always acquire multiple locks in this
+		 * order: SYNC->sharedObject->sharedObject.loadCondition DO NOT acquire a
+		 * SYNC within a sharedObject lock, unless you already own the SYNC lock
+		 * Tip: Try to hold the smallest number of locks you can
+		 */
 	}
 
 	private IStructuredModel _commonCreateModel(IFile file, String id, IModelHandler handler, URIResolver resolver, ReadEditType rwType, EncodingRule encodingRule) throws IOException,CoreException {
@@ -261,7 +330,8 @@ public class ModelManagerImpl implements IModelManager {
 			URIResolver resolver, ReadEditType rwType, EncodingRule encodingRule,
 			SharedObject sharedObject) throws CoreException, IOException {
 		// XXX: Does not integrate with FileBuffers
-		boolean doRemove = false;
+		boolean doRemove = true;
+		try {
 		synchronized(sharedObject) {
 			InputStream inputStream = null;
 			IStructuredModel model = null;
@@ -286,16 +356,17 @@ public class ModelManagerImpl implements IModelManager {
 				// add to our cache
 				sharedObject.theSharedModel=model;
 				_initCount(sharedObject, rwType);
-			} else {
-				doRemove = true;
+				doRemove = false;
 			}
 		}
+		} finally {
 		if (doRemove) {
 			SYNC.acquire();	
 			fManagedObjects.remove(id);	
 			SYNC.release();
 		}
 		sharedObject.setLoaded();
+		}
 	}
 
 	private IStructuredModel _commonCreateModel(InputStream inputStream, String id, IModelHandler handler, URIResolver resolver, ReadEditType rwType, String encoding, String lineDelimiter) throws IOException {
@@ -347,7 +418,8 @@ public class ModelManagerImpl implements IModelManager {
 	private void _doCommonCreateModel(InputStream inputStream, String id, IModelHandler handler,
 			URIResolver resolver, ReadEditType rwType, String encoding, String lineDelimiter,
 			SharedObject sharedObject) throws IOException {
-		boolean doRemove = false;
+		boolean doRemove = true;
+		try {
 		synchronized(sharedObject) {
 			IStructuredModel model = null;
 			try {
@@ -380,13 +452,12 @@ public class ModelManagerImpl implements IModelManager {
 						((AbstractStructuredModel) model).setContentTypeIdentifier(description.getContentType().getId());
 					}
 				}
-
 				sharedObject.theSharedModel = model;
 				_initCount(sharedObject, rwType);
-			} else {
-				doRemove = true;
+				doRemove = false;
 			}
 		}
+		}finally{
 		if (doRemove) {
 			SYNC.acquire();
 			// remove it if we didn't get one back
@@ -394,6 +465,7 @@ public class ModelManagerImpl implements IModelManager {
 			SYNC.release();
 		}
 		sharedObject.setLoaded();
+		}
 	}
 
 	private IStructuredModel _commonCreateModel(String id, IModelHandler handler, URIResolver resolver) throws ResourceInUse {
@@ -1159,10 +1231,10 @@ public class ModelManagerImpl implements IModelManager {
 				// and return the object.
 				SYNC.release();
 				doRelease=false;
+				if (sharedObject.doWait) {
+					sharedObject.waitForLoadAttempt();
+				}
 				synchronized(sharedObject) {
-					if (sharedObject.doWait) {
-						sharedObject.waitForLoadAttempt();
-					}
 					if (sharedObject.theSharedModel!=null) {
 						_incrCount(sharedObject, EDIT);
 					}
@@ -1241,11 +1313,10 @@ public class ModelManagerImpl implements IModelManager {
 				// and return the object.
 				SYNC.release();
 				doRelease=false;
-
+				if (sharedObject.doWait) {
+					sharedObject.waitForLoadAttempt();
+				}
 				synchronized(sharedObject) {
-					if (sharedObject.doWait) {
-						sharedObject.waitForLoadAttempt();
-					}
 					if (sharedObject.theSharedModel!=null) {
 						_incrCount(sharedObject, READ);
 					}
@@ -2098,4 +2169,92 @@ public class ModelManagerImpl implements IModelManager {
 			SYNC.release();
 			return inUse;
 		}
+
+	private static String getProperty(String property) {
+		// Importance order is:
+		// default-default < instanceScope < configurationScope < systemProperty < envVar
+		String value=null;
+		
+		if (value == null) {
+			value = System.getenv(property);
+		}
+		if (value == null) {
+			value = System.getProperty(property);
+		}
+		if (value==null) {
+			IPreferencesService preferencesService = Platform.getPreferencesService();
+			IScopeContext[] lookupOrder = new IScopeContext[] {
+					 new ConfigurationScope(), new InstanceScope()
+			};
+			String key = property;
+			if (property != null && property.startsWith(SSECorePlugin.ID)) {
+				// +1, include the "."
+				key = property.substring(SSECorePlugin.ID.length() + 1, property.length());
+			}
+			value = preferencesService.getString(SSECorePlugin.ID, key, null, lookupOrder);
+		}
+		
+		return value;
+	}
+
+	private static String getDefault(String property) {
+		// this is the "default-default"
+		if ("org.eclipse.wst.sse.core.modelmanager.maxWaitDuringConcurrentLoad".equals(property)) {
+			return "0";
+		}
+		else if ("org.eclipse.wst.sse.core.modelmanager.allowInterruptsDuringConcurrentLoad"
+				.equals(property)) {
+			return "false";
+		}
+		return null;
+	}
+
+	private static boolean getBoolean(String key) {
+		String property = getProperty(key);
+		// if (property != null) {
+		//			System.out.println("Tweak: " + key + "=" + Boolean.parseBoolean(property)); //$NON-NLS-1$ //$NON-NLS-2$
+		// }
+		return (property != null ? Boolean.valueOf(property) : Boolean
+				.valueOf(getDefault(key))).booleanValue();
+	}
+
+	private static int getInt(String key) {
+		String property = getProperty(key);
+		int size = 0;
+		if (property != null) {
+			try {
+				size = Integer.parseInt(property);
+				//	System.out.println("Tweak: " + key + "=" + size); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			catch (NumberFormatException e) {
+				size = getDefaultInt(key, property, size);
+			}
+		}
+		else {
+			size = getDefaultInt(key, property, size);
+		}
+		return size;
+	}
+
+	private static int getDefaultInt(String key, String property, int size) {
+		// ignored
+		try {
+			size = Integer.parseInt(getDefault(key));
+		}
+		catch (NumberFormatException e1) {
+			handleIntParseException(key, property, e1);
+			size = 0;
+		}
+		return size;
+	}
+
+	private static void handleIntParseException(String key, String property,
+			NumberFormatException e1) {
+		Exception n = new Exception(
+				NLS
+						.bind(
+								"Exception during parse of default value for key ''{0}'' value was ''{1}''. Using 0 instead", //$NON-NLS-1$
+								key, property), e1);
+		n.printStackTrace();
+	}
 }

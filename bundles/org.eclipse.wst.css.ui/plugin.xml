@@ -473,8 +473,9 @@
 		<definition id="org.eclipse.wst.css.ui.cssContentType.definition">
 			<iterate ifEmpty="false">
 				<adapt type="org.eclipse.core.resources.IFile">
+					<!-- Force property tester to load, should not cause entire plug-in to start -->
 					<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
-						value="org.eclipse.wst.css.core.csssource"/>
+						value="org.eclipse.wst.css.core.csssource" forcePluginActivation="true"/>
 				</adapt>
 			</iterate>
 		</definition>

@@ -71,6 +71,8 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 					/* The token may not span the total length of the region */
 					if (end < regionEnd)
 						styleLength = end - regionStart;
+					else /* Bugzilla 282218 */ 
+						styleLength = regionEnd - regionStart;
 					addStyleRange(holdResults, getAttributeFor(token.kind), regionStart, styleLength);
 				}
 				start += token.length;

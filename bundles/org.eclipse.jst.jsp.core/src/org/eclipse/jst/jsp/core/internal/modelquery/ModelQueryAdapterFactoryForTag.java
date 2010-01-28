@@ -15,7 +15,6 @@ import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.SimpleAssociationProvider;
 
 public class ModelQueryAdapterFactoryForTag extends ModelQueryAdapterFactoryForJSP {
@@ -32,6 +31,6 @@ public class ModelQueryAdapterFactoryForTag extends ModelQueryAdapterFactoryForJ
 	}
 
 	ModelQuery createModelQuery(IStructuredModel model, URIResolver resolver) {
-		return new ModelQueryImpl(new SimpleAssociationProvider(new TagModelQueryCMProvider()));
+		return new TagModelQuery(new SimpleAssociationProvider(new TagModelQueryCMProvider()));
 	}
 }

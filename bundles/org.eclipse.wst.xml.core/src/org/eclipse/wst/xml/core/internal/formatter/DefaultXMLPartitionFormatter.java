@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -296,6 +296,9 @@ public class DefaultXMLPartitionFormatter {
 
 			// update available line width in constraints
 			parentConstraints.setAvailableLineWidth(availableLineWidth);
+			// A text node can contain multiple structured document regions - sync the documentRegion
+			// with the last region of the node since the text from all regions was formatted
+			currentDOMRegion.documentRegion = currentDOMRegion.domNode.getLastStructuredDocumentRegion();
 			return;
 		}
 
@@ -991,10 +994,12 @@ public class DefaultXMLPartitionFormatter {
 		if(lineWidth >= 0) {
 			parentConstraints.setAvailableLineWidth(lineWidth);
 			if(previousRegion.getType() == DOMRegionContext.XML_CONTENT) {
-				String delimiters = extractLineDelimiters(previousRegion.getFullText(), previousRegion);
 				// Format the comment if its on a newline
-				if(delimiters != null && delimiters.length() > 0)
-					textEdit.addChild(new ReplaceEdit(previousRegion.getStartOffset(), previousRegion.getLength(), delimiters + getIndentString(parentConstraints.getIndentLevel()+1)));
+				StringBuffer emptyLines = new StringBuffer();
+				int off = getEmptyLines(previousRegion, emptyLines);
+				if (emptyLines.length() > 0) {
+					textEdit.addChild(new ReplaceEdit(previousRegion.getStartOffset() + off, previousRegion.getLength() - off, emptyLines + getIndentString(parentConstraints.getIndentLevel()+1)));
+				}
 			}
 			return;
 		}
@@ -1675,6 +1680,27 @@ public class DefaultXMLPartitionFormatter {
 				break;
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Gets the trailing empty lines of the structured document region,
+	 * compressing all other whitespace. The returns the offset into the region
+	 * where replacement should begin
+	 * 
+	 */
+	private int getEmptyLines(IStructuredDocumentRegion region, StringBuffer emptyLines) {
+		String text = region.getFullText();
+		if (text != null) {
+			char c = 0;
+			for (int i = text.length() - 1; i >= 0; i--) {
+				c = text.charAt(i);
+				if (!Character.isWhitespace(c))
+					return i + 1;
+				if (c == '\r' || c == '\n')
+					emptyLines.insert(0, c);
+			}
+		}
+		return 0;
 	}
 
 	void setProgressMonitor(IProgressMonitor monitor) {

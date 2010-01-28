@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -190,7 +190,7 @@ public class XSDEditNamespacesAction extends Action
               // Change the prefix for all schema components
               updateAllNodes(element, xsdPrefix);
 
-              prefixMapping.remove(origXSDPrefix);
+              prefixMapping.remove(origXSDPrefix != null? origXSDPrefix : ""); //$NON-NLS-1$
             }
             // Now handle the other changes. PrefixMapping size should be
             // greater than 0 for any remaining prefix changes
@@ -205,7 +205,7 @@ public class XSDEditNamespacesAction extends Action
                 // Now update any references to this old prefix in the schema
                 // with the value of the new prefix
                 String ns = (String) origPrefixMap.get(oldPrefix);
-                SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, newPrefix, ns);
+                SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, newPrefix, ns != null? ns : ""); //$NON-NLS-1$
                 spch.resolve();
               }
             }
