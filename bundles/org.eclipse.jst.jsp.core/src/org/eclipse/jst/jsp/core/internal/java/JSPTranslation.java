@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,7 +76,6 @@ public class JSPTranslation implements IJSPTranslation {
 	private HashMap fJava2JspImportsMap = null;
 	private HashMap fJava2JspUseBeanMap = null;
 	private HashMap fJava2JspIndirectMap = null;
-	private List fELProblems = null;
 	
 	// don't want to hold onto model (via translator)
 	// all relevant info is extracted in the constructor.
@@ -92,6 +91,9 @@ public class JSPTranslation implements IJSPTranslation {
 	private String fJspName;
 	private List fTranslationProblems;
 	private Collection fIncludedPaths;
+	
+	/** the {@link JSPTranslator} used by this {@link JSPTranslator} */
+	private JSPTranslator fTranslator;
 
 	public JSPTranslation(IJavaProject javaProj, JSPTranslator translator) {
 
@@ -109,10 +111,18 @@ public class JSPTranslation implements IJSPTranslation {
 			fJava2JspImportsMap = translator.getJava2JspImportRanges();
 			fJava2JspUseBeanMap = translator.getJava2JspUseBeanRanges();
 			fJava2JspIndirectMap = translator.getJava2JspIndirectRanges();
-			fELProblems = translator.getELProblems();
 			fTranslationProblems = translator.getTranslationProblems();
 			fIncludedPaths = translator.getIncludedPaths();
 		}
+		
+		this.fTranslator = translator;
+	}
+	
+	/**
+	 * @return {@link JSPTranslator} used by this {@link JSPTranslation}
+	 */
+	protected JSPTranslator getTranslator() {
+		return this.fTranslator;
 	}
 	
 	public IJavaProject getJavaProject() {
@@ -523,15 +533,6 @@ public class JSPTranslation implements IJSPTranslation {
 		}
 		return fTranslationProblems;
 	}
-	
-	/**
-	 * 
-	 * @return the List of problems collected during reconcile of the compilation unit
-	 */
-	public List getELProblems() {
-		return fELProblems != null ? fELProblems : new ArrayList();
-	}
-
 
 	/**
 	 * Must be set true in order for problems to be collected during reconcile.

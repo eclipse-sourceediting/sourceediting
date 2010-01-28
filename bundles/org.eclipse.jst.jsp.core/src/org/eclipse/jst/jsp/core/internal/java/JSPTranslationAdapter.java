@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,9 +47,28 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	private JSPTranslator fTranslator = null;
 	private NullProgressMonitor fTranslationMonitor = null;
 
+	/**
+	 * <p>Constructs a {@link JSPTranslationAdapter} that will create a new {@link JSPTranslator}<p>
+	 * 
+	 * @param xmlModel {@link IDOMModel} this {@link JSPTranslationAdapter} is for
+	 */
 	public JSPTranslationAdapter(IDOMModel xmlModel) {
 		setXMLModel(xmlModel);
 		initializeJavaPlugins();
+	}
+	
+	/**
+	 * <p>Constructs a {@link JSPTranslationAdapter} using an existing {@link JSPTranslator}</p>
+	 * 
+	 * @param xmlModel {@link IDOMModel} this {@link JSPTranslationAdapter} is for
+	 * @param translator existing {@link JSPTranslator} this {@link JSPTranslationAdapter} will use
+	 */
+	public JSPTranslationAdapter(IDOMModel xmlModel, JSPTranslator translator) {
+		this(xmlModel);
+		this.fTranslator = translator;
+		this.fJavaDocument = new Document(translator.getTranslation().toString());
+		this.fJSPTranslation = new JSPTranslationExtension(getXMLModel().getStructuredDocument(), fJavaDocument, getJavaProject(), this.fTranslator);
+		this.fDocumentIsDirty = false;
 	}
 
 	/**
@@ -114,7 +133,13 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	}
 
 	/**
-	 * Returns the JSPTranslation for this adapter.
+	 * <p>Returns the JSPTranslation for this adapter.</p>
+	 * 
+	 * <p><b>IMPORTANT: </b><i>This will force translation of the
+	 * document if it has not already been called.  To avoid
+	 * accidental translation before calling this method call
+	 * {@link #hasTranslation()} to verify a translation
+	 * has already been forced by this adapter.</i></p>
 	 * 
 	 * @return a JSPTranslationExtension
 	 */
@@ -144,6 +169,18 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 			fDocumentIsDirty = false;
 		}
 		return fJSPTranslation;
+	}
+	
+	/**
+	 * <p>Knowing weather the translation has already been retrieved
+	 * from this adapter is important if you do not wan't to force
+	 * the translation of a document that has not yet been translated</p>
+	 * 
+	 * @return <code>true</code> if {@link #getJSPTranslation()} has
+	 * been called on this adapter already, <code>false</code> otherwise
+	 */
+	public boolean hasTranslation() {
+		return fJSPTranslation != null;
 	}
 
 	JSPTranslator createTranslator() {

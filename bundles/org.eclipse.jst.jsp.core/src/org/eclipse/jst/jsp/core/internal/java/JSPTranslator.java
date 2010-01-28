@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,12 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.Externalizable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,52 +99,139 @@ import com.ibm.icu.util.StringTokenizer;
  * Java translation to the original JSP source, which can be obtained through
  * getJava2JspRanges() and getJsp2JavaRanges().
  */
-public class JSPTranslator {
-	// the name of the element in the extension point
+public class JSPTranslator implements Externalizable {
+	/**
+	 * <p>This value should be incremented if any of the following methods change:
+	 * <ul>
+	 * <li>{@link #writeExternal(ObjectOutput)}</li>
+	 * <li>{@link #readExternal(ObjectInput)}</li>
+	 * <li>{@link #writeString(ObjectOutput, String)}</li>
+	 * <li>{@link #readString(ObjectInput)}</li>
+	 * <li>{@link #writeRanges(ObjectOutput, HashMap)}</li>
+	 * <li>{@link #readRanges(ObjectInput)}</li>
+	 * </ul>
+	 * 
+	 * This is because if any of these change then previously externalized {@link JSPTranslator}s
+	 * will no longer be able to be read by the new implementation.  This value is used by
+	 * the {@link Externalizable} API automatically to determine if the file being read is of the
+	 * correct version to be read by the current implementation of the {@link JSPTranslator}</p>
+	 * 
+	 * @see #writeExternal(ObjectOutput)
+	 * @see #readExternal(ObjectInput)
+	 * @see #writeString(ObjectOutput, String)
+	 * @see #readString(ObjectInput)
+	 * @see #writeRanges(ObjectOutput, HashMap)
+	 * @see #readRanges(ObjectInput)
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/** for debugging */
+	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")); //$NON-NLS-1$  //$NON-NLS-2$
+	
+	/** handy plugin ID constant */
+	private static final String JSP_CORE_PLUGIN_ID = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$
+	
+	// constants for reading extension point
+	/** Default EL Translator extension ID */
+	private static final String DEFAULT_JSP_EL_TRANSLATOR_ID = "org.eclipse.jst.jsp.defaultJSP20"; //$NON-NLS-1$
+	
+	/** the name of the element in the extension point */
 	private static final String EL_TRANSLATOR_EXTENSION_NAME = "elTranslator"; //$NON-NLS-1$
+	
+	/** the name of the property in the extension point */
 	private static final String ELTRANSLATOR_PROP_NAME = "ELTranslator"; //$NON-NLS-1$
 
-	// Default EL Translator extension ID
-	private static final String DEFAULT_JSP_EL_TRANSLATOR_ID = "org.eclipse.jst.jsp.defaultJSP20"; //$NON-NLS-1$
-
-	// handy plugin ID constant
-	private static final String JSP_CORE_PLUGIN_ID = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$
-
-	// for debugging
-	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")); //$NON-NLS-1$  //$NON-NLS-2$
-
-	private IJSPELTranslator fELTranslator = null;
-
+	
+	// these constants are commonly used strings during translation
+	/** end line characters */
 	public static final String ENDL = "\n"; //$NON-NLS-1$
-
-	String fClassHeader = null;
-	String fClassname = null;
-
-	String fImplicitImports = null;
-
-	String fServiceHeader = null;
-
-	private String fSessionVariableDeclaration = "javax.servlet.http.HttpSession session = null;" + ENDL; //$NON-NLS-1$
-	private String fFooter = "}}"; //$NON-NLS-1$
-	private String fException = "Throwable exception = null;"; //$NON-NLS-1$
+	
+	/** session variable declaration */
+	private static final String SESSION_VARIABLE_DECLARATION = "javax.servlet.http.HttpSession session = null;" + ENDL; //$NON-NLS-1$
+	
+	/** footer text */
+	private static final String FOOTER = "}}"; //$NON-NLS-1$
+	
+	/** exception declaration */
+	private static final String EXCEPTION = "Throwable exception = null;"; //$NON-NLS-1$
+	
+	/** expression prefix */
 	public static final String EXPRESSION_PREFIX = "out.print("; //$NON-NLS-1$
+	
+	/** expression suffix */
 	public static final String EXPRESSION_SUFFIX = ");"; //$NON-NLS-1$
+	
+	/** try/catch start */
+	private static final String TRY_CATCH_START = ENDL + "try {" + ENDL; //$NON-NLS-1$
+	
+	/** try/catch end */
+	private static final String TRY_CATCH_END = " } catch (java.lang.Exception e) {} " + ENDL; //$NON-NLS-1$
+	
+	/** JSP tag name prefix */
+	static final String JSP_PREFIX = "jsp:"; //$NON-NLS-1$
+	
+	
+	// these constants are to keep track of what type of code is currently being translated
+	/** code in question is standard JSP */
+	protected final static int STANDARD_JSP = 0;
+	
+	/** code in question is embedded (JSP as an attribute or within comment tags) */
+	protected final static int EMBEDDED_JSP = 1;
+	
+	/** code in question is a JSP declaration */
+	protected final static int DECLARATION = 2;
+	
+	/** code in question is a JSP expression */
+	protected final static int EXPRESSION = 4;
+	
+	/** code in question is a JSP scriptlet */
+	protected final static int SCRIPTLET = 8;
+	
+	
+	// strings specific to this translation
+	/** translated class header */
+	String fClassHeader = null;
+	
+	/** translated class name */
+	String fClassname = null;
+	
+	/** translated class super class */
 	String fSuperclass = null;
 
-	private String fTryCatchStart = ENDL + "try {" + ENDL; //$NON-NLS-1$
-	static final String JSP_PREFIX = "jsp:"; //$NON-NLS-1$
-	private List fTranslationProblems = new ArrayList();
-	private String fTryCatchEnd = " } catch (java.lang.Exception e) {} " + ENDL; //$NON-NLS-1$
+	/** translated class imports */
+	String fImplicitImports = null;
 
+	/** translated class service header */
+	String fServiceHeader = null;
+	
+	/** translated user defined imports */
+	private StringBuffer fUserImports = new StringBuffer();
+	
+	//translation specific state
+	/** {@link IDOMModel} for the JSP file being translated */
+	IDOMModel fStructuredModel = null;
+	
+	/** {@link IStructuredDocument} for the JSP file being translated */
+	IStructuredDocument fStructuredDocument = null;
+	
+	/** the EL translator */
+	private IJSPELTranslator fELTranslator = null;
+	
+	/** reported translation problems */
+	private List fTranslationProblems = new ArrayList();
+	
 	/** fSourcePosition = position in JSP source */
 	private int fSourcePosition = -1;
+	
 	/** fRelativeOffest = offset in the buffer there the cursor is */
 	private int fRelativeOffset = -1;
+	
 	/** fCursorPosition = offset in the translated java document */
 	private int fCursorPosition = -1;
 
 	/** some page directive attributes */
-	private boolean fIsErrorPage, fCursorInExpression = false;
+	private boolean fIsErrorPage = false;
+	private boolean fCursorInExpression = false;
 	private boolean fIsInASession = true;
 
 	/** user java code in body of the service method */
@@ -151,9 +241,6 @@ public class JSPTranslator {
 	/** user defined vars declared in the beginning of the class */
 	private StringBuffer fUserDeclarations = new StringBuffer();
 
-	/** user defined imports */
-	private StringBuffer fUserImports = new StringBuffer();
-
 	/**
 	 * A map of tag names to tag library variable information; used to store
 	 * the ones needed for AT_END variable support.
@@ -161,27 +248,16 @@ public class JSPTranslator {
 	private StackMap fTagToVariableMap = null;
 	private Stack fUseBeansStack = new Stack();
 
-	private StringBuffer fResult; // the final traslated java document
-	// string buffer
-	private StringBuffer fCursorOwner = null; // the buffer where the cursor
-	// is
+	/** the final translated java document */
+	private StringBuffer fResult;
+	
+	/** the buffer where the cursor is */
+	private StringBuffer fCursorOwner = null;
 
-	private IDOMModel fStructuredModel = null;
-	private IStructuredDocument fStructuredDocument = null;
 	private IStructuredDocumentRegion fCurrentNode;
-	private boolean fInCodeRegion = false; // flag for if cursor is in the
-	// current region being translated
-
-	/**
-	 * these constants are to keep track of whether the code in question is
-	 * embedded (JSP as an attribute or within comment tags) or is just
-	 * standard JSP code, or identifies if it's an expression
-	 */
-	protected final static int STANDARD_JSP = 0;
-	protected final static int EMBEDDED_JSP = 1;
-	protected final static int DECLARATION = 2;
-	protected final static int EXPRESSION = 4;
-	protected final static int SCRIPTLET = 8;
+	
+	/** flag for if the cursor is in the current regionb eing translated */
+	private boolean fInCodeRegion = false;
 
 	/** used to avoid infinite looping include files */
 	private Stack fIncludes = null;
@@ -234,17 +310,9 @@ public class JSPTranslator {
 	 */
 	private StringBuffer fJspTextBuffer = new StringBuffer();
 
-
-	/**
-	 * List of EL problems to be translated
-	 */
-	private ArrayList fELProblems = new ArrayList();
-
-	/**
-	 * EL Translator ID (pluggable)
-	 */
+	/** EL Translator ID (pluggable) */
 	private String fELTranslatorID;
-	
+
 	/**
 	 * <code>true</code> if code has been found, such as HTML tags, that is not translated
 	 * <code>false</code> otherwise.  Useful for deciding if a place holder needs to be
@@ -274,7 +342,6 @@ public class JSPTranslator {
 	}
 
 	public JSPTranslator() {
-		super();
 		init();
 	}
 
@@ -564,8 +631,6 @@ public class JSPTranslator {
 		fIncludedPaths.clear();
 
 		fJspTextBuffer = new StringBuffer();
-
-		fELProblems = new ArrayList();
 		
 		fFoundNonTranslatedCode = false;
 		fCodeTranslated = false;
@@ -598,11 +663,9 @@ public class JSPTranslator {
 		// + user code
 		// + try/catch end
 		// + service method footer
-		fResult = new StringBuffer(fImplicitImports.length() + fUserImports.length() + fClassHeader.length() + fUserDeclarations.length() + fServiceHeader.length() + fTryCatchStart.length() // try/catch
-					// start
-					+ fUserCode.length() + fTryCatchEnd.length() // try/catch
-					// end
-					+ fFooter.length());
+		fResult = new StringBuffer(fImplicitImports.length() + fUserImports.length() + fClassHeader.length() +
+				fUserDeclarations.length() + fServiceHeader.length() + TRY_CATCH_START.length()
+				+ fUserCode.length() + TRY_CATCH_END.length() + FOOTER.length());
 
 		int javaOffset = 0;
 
@@ -634,18 +697,18 @@ public class JSPTranslator {
 		javaOffset += fServiceHeader.length();
 		// session participant
 		if (fIsInASession) {
-			fResult.append(fSessionVariableDeclaration);
-			javaOffset += fSessionVariableDeclaration.length();
+			fResult.append(SESSION_VARIABLE_DECLARATION);
+			javaOffset += SESSION_VARIABLE_DECLARATION.length();
 		}
 		// error page
 		if (fIsErrorPage) {
-			fResult.append(fException);
-			javaOffset += fException.length();
+			fResult.append(EXCEPTION);
+			javaOffset += EXCEPTION.length();
 		}
 
 
-		fResult.append(fTryCatchStart);
-		javaOffset += fTryCatchStart.length();
+		fResult.append(TRY_CATCH_START);
+		javaOffset += TRY_CATCH_START.length();
 
 		updateRanges(fCodeRanges, javaOffset);
 
@@ -654,12 +717,12 @@ public class JSPTranslator {
 		javaOffset += fUserCode.length();
 
 
-		fResult.append(fTryCatchEnd);
-		javaOffset += fTryCatchEnd.length();
+		fResult.append(TRY_CATCH_END);
+		javaOffset += TRY_CATCH_END.length();
 
 		// footer
-		fResult.append(fFooter);
-		javaOffset += fFooter.length();
+		fResult.append(FOOTER);
+		javaOffset += FOOTER.length();
 
 		fJava2JspRanges.putAll(fImportRanges);
 		fJava2JspRanges.putAll(fDeclarationRanges);
@@ -975,7 +1038,7 @@ public class JSPTranslator {
 	}
 
 	/**
-	 * /* the main control loop for translating the document, driven by the
+	 * the main control loop for translating the document, driven by the
 	 * structuredDocument nodes
 	 */
 	public void translate() {
@@ -1093,9 +1156,9 @@ public class JSPTranslator {
 	}
 
 	protected void init() {
-		fClassHeader = "public class _JSPServlet extends "; //$NON-NLS-1$
 		fClassname = "_JSPServlet"; //$NON-NLS-1$
-
+		fClassHeader = "public class " + fClassname + " extends "; //$NON-NLS-1$ //$NON-NLS-2$
+		
 		fImplicitImports = "import javax.servlet.*;" + ENDL + //$NON-NLS-1$
 					"import javax.servlet.http.*;" + ENDL + //$NON-NLS-1$
 					"import javax.servlet.jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
@@ -3007,10 +3070,6 @@ public class JSPTranslator {
 		return fCurrentNode;
 	}
 
-	public ArrayList getELProblems() {
-		return fELProblems;
-	}
-
 	public IStructuredDocument getStructuredDocument() {
 		return fStructuredDocument;
 	}
@@ -3082,5 +3141,243 @@ public class JSPTranslator {
 			fOffsetInUserCode += text.length();
 			fFoundNonTranslatedCode = false;
 		}
+	}
+
+	/**
+	 * <p><b>NOTE: </b>If the implementation of this method is changed be sure to update
+	 *  {@link #readExternal(ObjectInput)} and {@link #serialVersionUID}</p>
+	 *
+	 * @see #readExternal(ObjectInput)
+	 * @see #serialVersionUID
+	 * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+	 */
+	public void writeExternal(ObjectOutput out) throws IOException {
+		writeString(out, this.fClassHeader);
+		writeString(out, this.fClassname);
+		writeString(out, this.fSuperclass);
+		writeString(out, this.fImplicitImports);
+		writeString(out, this.fServiceHeader);
+		writeBuffer(out, this.fUserImports);
+		out.writeInt(this.fSourcePosition);
+		out.writeInt(this.fRelativeOffset);
+		out.writeInt(this.fCursorPosition);
+		out.writeBoolean(this.fIsErrorPage);
+		out.writeBoolean(this.fCursorInExpression);
+		out.writeBoolean(this.fIsInASession);
+		writeBuffer(out, this.fUserCode);
+		writeBuffer(out, this.fUserELExpressions);
+		writeBuffer(out, this.fUserDeclarations);
+		writeBuffer(out, this.fCursorOwner);
+		out.writeBoolean(this.fInCodeRegion);
+		out.writeBoolean(this.fProcessIncludes);
+		out.writeInt(this.fOffsetInUserImports);
+		out.writeInt(this.fOffsetInUserDeclarations);
+		out.writeInt(this.fOffsetInUserCode);
+		
+		//write included paths
+		out.writeInt(this.fIncludedPaths.size());
+		Iterator iter = this.fIncludedPaths.iterator();
+		while(iter.hasNext()) {
+			writeString(out, (String)iter.next());
+		}
+		
+		writeRanges(out, this.fImportRanges);
+		writeRanges(out, this.fCodeRanges);
+		writeRanges(out, this.fDeclarationRanges);
+		writeRanges(out, this.fUseBeanRanges);
+		writeRanges(out, this.fUserELRanges);
+		writeRanges(out, this.fIndirectRanges);
+		writeString(out, this.fELTranslatorID);
+	}
+	
+	/**
+	 * <p><b>NOTE: </b>If the implementation of this method is changed be sure to update
+	 * {@link #writeExternal(ObjectOutput)} and {@link #serialVersionUID}</p>
+	 * 
+	 * @see #writeExternal(ObjectOutput)
+	 * @see #serialVersionUID
+	 * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+	 */
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		this.fClassHeader = readString(in);
+		this.fClassname = readString(in);
+		this.fSuperclass = readString(in);
+		this.fImplicitImports = readString(in);
+		this.fServiceHeader = readString(in);
+		this.fUserImports = new StringBuffer(readString(in));
+		this.fSourcePosition = in.readInt();
+		this.fRelativeOffset = in.readInt();
+		this.fCursorPosition = in.readInt();
+		this.fIsErrorPage = in.readBoolean();
+		this.fCursorInExpression = in.readBoolean();
+		this.fIsInASession = in.readBoolean();
+		this.fUserCode = new StringBuffer(readString(in));
+		this.fUserELExpressions = new StringBuffer(readString(in));
+		this.fUserDeclarations = new StringBuffer(readString(in));
+		this.fCursorOwner = new StringBuffer(readString(in));
+		this.fInCodeRegion = in.readBoolean();
+		this.fProcessIncludes = in.readBoolean();
+		this.fOffsetInUserImports = in.readInt();
+		this.fOffsetInUserDeclarations = in.readInt();
+		this.fOffsetInUserCode = in.readInt();
+		
+		//read included paths
+		int size = in.readInt();
+		this.fIncludedPaths = new HashSet(size);
+		for(int i = 0; i < size; ++i) {
+			this.fIncludedPaths.add(readString(in));
+		}
+		
+		this.fImportRanges = readRanges(in);
+		this.fCodeRanges = readRanges(in);
+		this.fDeclarationRanges = readRanges(in);
+		this.fUseBeanRanges = readRanges(in);
+		this.fUserELRanges = readRanges(in);
+		this.fIndirectRanges = readRanges(in);
+		this.fELTranslatorID = readString(in);
+		
+		//build result
+		this.buildResult();
+	}
+	
+	/**
+	 * <p>Writes a string to an {@link ObjectOutput} stream</p>
+	 * 
+	 * <p><b>NOTE: </b>If the implementation of this method is changed be sure to update
+	 * {@link #readString(ObjectInput)} and {@link #serialVersionUID}</p>
+	 * 
+	 * @param out {@link ObjectOutput} stream to write <code>s</code> too
+	 * @param s {@link String} to write to <code>out</code>
+	 * 
+	 * @throws IOException IO can throw exceptions
+	 * 
+	 * @see #readString(ObjectInput)
+	 */
+	private static void writeString(ObjectOutput out, String s) throws IOException {
+		if(s != null) {
+			out.writeInt(s.length());
+			out.writeBytes(s);
+		} else {
+			out.writeInt(0);
+		}
+	}
+	
+	/**
+	 * <p>Reads a {@link String} written by {@link #writeString(ObjectOutput, String)} from
+	 * a {@link ObjectInput} stream.</p>
+	 * 
+	 * <p><b>NOTE: </b>If the implementation of this method is changed be sure to update
+	 * {@link #writeString(ObjectOutput, String)} and {@link #serialVersionUID}</p>
+	 * 
+	 * @param in {@link ObjectInput} stream to read the {@link String} from
+	 * @return {@link String} read from <code>in</code>
+	 * 
+	 * @throws IOException IO Can throw exceptions
+	 * 
+	 * @see #writeString(ObjectOutput, String)
+	 */
+	private static String readString(ObjectInput in) throws IOException {
+		int length = in.readInt();
+		byte[] bytes = new byte[length];
+		in.readFully(bytes);
+		return new String(bytes);
+	}
+	
+	/**
+	 * <p>Writes a {@link StringBuffer} to an {@link ObjectOutput} stream</p>
+	 * 
+	 * @param out {@link ObjectOutput} stream to write <code>s</code> too
+	 * @param s {@link String} to write to <code>out</code>
+	 * 
+	 * @throws IOException IO can throw exceptions
+	 * 
+	 * @see #readString(ObjectInput)
+	 */
+	private static void writeBuffer(ObjectOutput out, StringBuffer buff) throws IOException {
+		if(buff != null && buff.length() > 0) {
+			writeString(out, buff.toString());
+		} else {
+			writeString(out, null);
+		}
+	}
+	
+	/**
+	 * <p>Writes a {@link HashMap} of {@link Position}s to an {@link ObjectOutput} stream</p>
+	 * 
+	 * <p><b>NOTE: </b>If the implementation of this method is changed be sure to update
+	 * {@link #readRanges(ObjectInput)} and {@link #serialVersionUID}</p>
+	 * 
+	 * @param out {@link ObjectOutput} stream to write to
+	 * @param ranges {@link HashMap} of {@link Position}s to write to <code>out</code>
+	 * 
+	 * @throws IOException IO can throw exceptions
+	 * 
+	 * @see #readRanges(ObjectInput)
+	 */
+	private static void writeRanges(ObjectOutput out, HashMap ranges) throws IOException {
+		//this is a strange hack because Position is not designed to be used as keys in a Map, see Position doc
+		HashMap temp = new HashMap();
+		temp.putAll(ranges);
+		
+		Iterator iter = temp.keySet().iterator();
+		out.writeInt(ranges.size());
+		while(iter.hasNext()) {
+			Position javaPos = (Position)iter.next();
+			Position jspPos = (Position)temp.get(javaPos);
+			out.writeInt(javaPos.offset);
+			out.writeInt(javaPos.length);
+			out.writeBoolean(javaPos.isDeleted);
+			
+			if(jspPos != null) {
+				out.writeInt(jspPos.offset);
+				out.writeInt(jspPos.length);
+				out.writeBoolean(jspPos.isDeleted);
+			} else {
+				out.writeInt(-1);
+				out.writeInt(-1);
+			}
+		}
+	}
+	
+	/**
+	 * <p>Reads a {@link HashMap} of {@link Position}s from an {@link ObjectInput} stream that was written by
+	 * {@link #writeRanges(ObjectOutput, HashMap)}</p>
+	 * 
+	 * <p><b>NOTE: </b>If the implementation of this method is changed be sure to update
+	 * {@link #writeRanges(ObjectOutput, HashMap)} and {@link #serialVersionUID}</p>
+	 * 
+	 * @param in {@link ObjectInput} stream to read the {@link HashMap} of {@link Position}s from
+	 * @return {@link HashMap} of {@link Position}s read from <code>in</code>
+	 * 
+	 * @throws IOException IO can throw exceptions
+	 * 
+	 * @see #writeRanges(ObjectOutput, HashMap)
+	 */
+	private static HashMap readRanges(ObjectInput in) throws IOException {
+		int size = in.readInt();
+		HashMap ranges = new HashMap(size);
+		for(int i = 0; i < size; ++i) {
+			Position javaPos = new Position(in.readInt(), in.readInt());
+			if(in.readBoolean()) {
+				javaPos.delete();
+			}
+			
+			//if the jspPos was null for some reason then -1 was written for length and offset
+			Position jspPos = null;
+			int jspPosOffset = in.readInt();
+			int jspPosLength = in.readInt();
+			if(jspPosOffset != -1 && jspPosLength != -1) {
+				jspPos = new Position(jspPosOffset, jspPosLength);
+			}
+			
+			//only read a boolean if the jspPos was not null
+			if(jspPos != null && in.readBoolean()) {
+				jspPos.delete();
+			}
+			
+			ranges.put(javaPos, jspPos);
+		}
+		
+		return ranges;
 	}
 }
