@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
 import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCoreTest;
+import org.eclipse.jst.jsp.core.tests.translation.JSPTranslatorPersistenceTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPActionValidatorTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPBatchValidatorTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPDirectiveValidatorTest;
@@ -66,6 +67,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(JSPActionValidatorTest.class, "Action Validator Tests"));
 		addTest(new TestSuite(JSPBatchValidatorTest.class, "Batch Validator Tests"));
 		addTest(new TestSuite(JSPDirectiveValidatorTest.class, "Directive Validator Tests"));
+		addTest(JSPTranslatorPersistenceTest.suite());
 
 		if (wtp_autotest_noninteractive != null)
 			System.setProperty("wtp.autotest.noninteractive", wtp_autotest_noninteractive);

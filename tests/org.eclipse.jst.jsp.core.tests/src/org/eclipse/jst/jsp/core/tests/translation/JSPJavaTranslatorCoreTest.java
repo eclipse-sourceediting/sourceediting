@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,6 @@ import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
@@ -102,10 +101,8 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertTrue("line delimiters have been converted to Windows [CRLF]", jspSource.indexOf("\r\n") < 0);
 		assertTrue("line delimiters have been converted to Mac [CR]", jspSource.indexOf("\r") < 0);
 
-		if (model.getFactoryRegistry().getFactoryFor(IJSPTranslation.class) == null) {
-			JSPTranslationAdapterFactory factory = new JSPTranslationAdapterFactory();
-			model.getFactoryRegistry().addFactory(factory);
-		}
+		ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
+
 		IDOMDocument xmlDoc = jspModel.getDocument();
 		JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 		JSPTranslation translation = translationAdapter.getJSPTranslation();
