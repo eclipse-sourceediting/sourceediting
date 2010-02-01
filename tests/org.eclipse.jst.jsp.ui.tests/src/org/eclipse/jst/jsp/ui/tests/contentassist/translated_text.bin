@@ -19,8 +19,8 @@ Object page = null;
 javax.servlet.http.HttpSession session = null;
 
 try {
-out.print(""); //non translated code placeholder
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
+{out.print("");} //markup
  String localIncludedString = globalIncludedString;
 for(int i=0; i<5; i++) {
 out.print(i);
@@ -30,8 +30,8 @@ javax.swing.JButton BEAN_includedBean = new javax.swing.JButton();
 javax.swing.JButton includesUseBean = new javax.swing.JButton();
 { // <gifts:gift>
 } // </gifts:gift>
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
 out.print(   );
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
  } catch (java.lang.Exception e) {} 
 }}

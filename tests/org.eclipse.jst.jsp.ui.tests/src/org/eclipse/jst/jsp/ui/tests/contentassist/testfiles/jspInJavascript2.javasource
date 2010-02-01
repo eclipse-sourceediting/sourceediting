@@ -15,12 +15,12 @@ Object page = null;
 javax.servlet.http.HttpSession session = null;
 
 try {
-out.print(""); //non translated code placeholder
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
+{out.print("");} //markup
 out.print( testJspString );
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
   
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
 
         if( request.getAttribute("SoapURL") != null )
         {
@@ -31,8 +31,8 @@ out.print( (String)request.getAttribute("SoapURL"));
         else
         { 
         
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
  } 
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
  } catch (java.lang.Exception e) {} 
 }}

@@ -18,22 +18,22 @@ Object page = null;
 javax.servlet.http.HttpSession session = null;
 
 try {
-out.print(""); //non translated code placeholder
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
+{out.print("");} //markup
 String consec1 = "test";
 String consec2 = "two";
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
 out.print(myFunc());
 out.print(myFunc2());
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
 javax.swing.AbstractButton jb = new javax.swing.JButton();
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
 String includedString = "incd";
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
    jb. 
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
 { // <logic:iterate>
 } // </logic:iterate>
-out.print(""); //non translated code placeholder
+{out.print("");} //markup
  } catch (java.lang.Exception e) {} 
 }}
