@@ -3135,8 +3135,8 @@ public class JSPTranslator implements Externalizable {
 	 */
 	private void writePlaceHolderForNonTranslatedCode() {
 		if(fFoundNonTranslatedCode) {
-			String text = (EXPRESSION_PREFIX + "\"\"" + EXPRESSION_SUFFIX + //$NON-NLS-1$
-					" //non translated code placeholder"+ ENDL); //$NON-NLS-1$
+			String text = ("{" + EXPRESSION_PREFIX + "\"\"" + EXPRESSION_SUFFIX + "}" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					" //markup"+ ENDL); //$NON-NLS-1$
 			fUserCode.append(text);
 			fOffsetInUserCode += text.length();
 			fFoundNonTranslatedCode = false;
