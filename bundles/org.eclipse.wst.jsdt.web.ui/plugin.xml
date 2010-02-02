@@ -643,6 +643,18 @@
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             id="org.eclipse.wst.jsdt.web.ui.jsdtSetup">
+         <visibility>
+                <not>
+                <or>
+            <objectState
+                    name="projectNature"
+                    value="org.eclipse.wst.jsdt.core.jsNature"/>
+            <objectState
+                    name="open"
+                    value="false"/>
+            </or>
+            </not>
+         </visibility>
          <action
             class="org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard"
             label="%action.label.21"
