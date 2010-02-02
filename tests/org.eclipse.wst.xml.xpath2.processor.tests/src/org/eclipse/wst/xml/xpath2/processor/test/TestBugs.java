@@ -35,6 +35,8 @@
  *  Jesper S Moller - bug 297958   Fix fn:nilled for elements
  *  Mukul Gandhi    - bug 298519   improvements to fn:number implementation, catering
  *                                 to node arguments.
+ *  Mukul Gandhi    - bug 301539   fix for "context undefined" bug in case of zero
+ *                                 arity of fn:name function.                             
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -1529,6 +1531,29 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x/@mesg instance of attribute(mesg, mesg_Type)*";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testFnNameContextUndefined() throws Exception {
+		// Bug 301539
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/*[1]/name() eq 'x'";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
