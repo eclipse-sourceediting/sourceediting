@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -173,6 +174,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 
 		for (int i = 0; i < attributesLength; i++) {
 			IDOMNode eachAttr = (IDOMNode) attributes.item(i);
+			if (hasNestedRegion(eachAttr.getNameRegion()))
+				continue;
 			String oldAttrName = eachAttr.getNodeName();
 			String newAttrName = oldAttrName;
 			/*
@@ -196,6 +199,19 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				replaceSource(structuredModel, structuredDocument, attrNameStartOffset, attrNameLength, newAttrName);
 			}
 		}
+	}
+
+	/**
+	 * True if container has nested regions, meaning container is probably too
+	 * complicated (like JSP regions) to validate with this validator.
+	 */
+	private boolean hasNestedRegion(ITextRegion container) {
+		if (!(container instanceof ITextRegionContainer))
+			return false;
+		ITextRegionList regions = ((ITextRegionContainer) container).getRegions();
+		if (regions == null)
+			return false;
+		return true;
 	}
 
 	protected IDOMNode applyTagNameCase(IDOMNode node) {
