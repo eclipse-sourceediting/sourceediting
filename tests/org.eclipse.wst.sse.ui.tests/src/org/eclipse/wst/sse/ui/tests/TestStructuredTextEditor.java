@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
 package org.eclipse.wst.sse.ui.tests;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
 
@@ -33,6 +35,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorInput;
@@ -44,13 +49,18 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.IShowInTargetList;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
+import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 
 public class TestStructuredTextEditor extends TestCase {
 	private final String PROJECT_NAME = "TestStructuredTextEditor";
 	private final String FILE_NAME = "testStructuredTextEditor.xml";
+	private static final int MAX_WAIT = 10000;
+	private static final int TIME_DELTA = 50;
 
 	private static StructuredTextEditor fEditor;
 	private static IFile fFile;
@@ -306,4 +316,139 @@ public class TestStructuredTextEditor extends TestCase {
 		activePage.closeEditor(openedEditor, false);
 		assertEquals("Some non-UI changes did not apply", testLength, finalLength);
 	}
+
+	/**
+	 * Test receiving the initial reconcile notification when the editor opens
+	 */
+	public void testInitialReconciling() throws Exception {
+		IFile file = getOrCreateFile(PROJECT_NAME + "/" + "reconcilingtest.xml");
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		final int[] state = new int[2];
+		Arrays.fill(state, -1);
+		ISourceReconcilingListener listener = new ISourceReconcilingListener() {
+			int mod = 0;
+			public void reconciled(IDocument document, IAnnotationModel model, boolean forced, IProgressMonitor progressMonitor) {
+				state[1] = mod++;
+			}
+			
+			public void aboutToBeReconciled() {
+				state[0] = mod++;
+			}
+		};
+		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+		try {
+			assertTrue("Not a StructuredTextEditor", editor instanceof StructuredTextEditor);
+			addReconcilingListener((StructuredTextEditor) editor, listener);
+			waitForReconcile(state);
+			assertTrue("Initial: Reconciling did not complete in a timely fashion", state[0] != -1 && state[1] != -1);
+			assertTrue("Initial: aboutToBeReconciled not invoked first (" + state[0] +")", state[0] == 0);
+			assertTrue("Initial: reconciled not invoked after aboutToBeReconciled (" + state[1] +")", state[1] == 1);
+		} finally {
+			if (editor != null && activePage != null) {
+				activePage.closeEditor(editor, false);
+			}
+		}
+	}
+
+	/**
+	 * Test that modifications to the editor's content will notify reconciling listeners
+	 */
+	public void testModificationReconciling() throws Exception {
+		IFile file = getOrCreateFile(PROJECT_NAME + "/" + "reconcilingmodificationtest.xml");
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		final int[] state = new int[2];
+		Arrays.fill(state, -1);
+		ISourceReconcilingListener listener = new ISourceReconcilingListener() {
+			int mod = 0;
+			public void reconciled(IDocument document, IAnnotationModel model, boolean forced, IProgressMonitor progressMonitor) {
+				state[1] = mod++;
+			}
+			
+			public void aboutToBeReconciled() {
+				state[0] = mod++;
+			}
+		};
+		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+		try {
+			assertTrue("Not a StructuredTextEditor", editor instanceof StructuredTextEditor);
+			addReconcilingListener((StructuredTextEditor) editor, listener);
+			waitForReconcile(state);
+			assertTrue("Initial: Reconciling did not complete in a timely fashion", state[0] != -1 && state[1] != -1);
+			assertTrue("Initial: aboutToBeReconciled not invoked first (" + state[0] +")", state[0] == 0);
+			assertTrue("Initial: reconciled not invoked after aboutToBeReconciled (" + state[1] +")", state[1] == 1);
+			IDocument document = ((StructuredTextEditor) editor).getDocumentProvider().getDocument(editor.getEditorInput());
+			assertTrue("Editor doesn't have a document", document != null);
+			document.set("<?xml version=\"1.0\" ?>");
+			Arrays.fill(state, -1);
+			waitForReconcile(state);
+			assertTrue("Modified: Reconciling did not complete in a timely fashion", state[0] != -1 && state[1] != -1);
+			assertTrue("Modified: aboutToBeReconciled not invoked first (" + state[0] +")", state[0] == 2);
+			assertTrue("Modified: reconciled not invoked after aboutToBeReconciled (" + state[1] +")", state[1] == 3);
+		} finally {
+			if (editor != null && activePage != null) {
+				activePage.closeEditor(editor, false);
+			}
+		}
+	}
+
+	/**
+	 * Test that an editor notifies reconciling listeners when the editor gets focus.
+	 */
+	public void testFocusedReconciling() throws Exception {
+		IFile file = getOrCreateFile(PROJECT_NAME + "/" + "focustest.xml");
+		IFile fileAlt = getOrCreateFile(PROJECT_NAME + "/" + "focustestAlt.xml");
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		final int[] state = new int[2];
+		Arrays.fill(state, -1);
+		ISourceReconcilingListener listener = new ISourceReconcilingListener() {
+			int mod = 0;
+			public void reconciled(IDocument document, IAnnotationModel model, boolean forced, IProgressMonitor progressMonitor) {
+				state[1] = mod++;
+			}
+			
+			public void aboutToBeReconciled() {
+				state[0] = mod++;
+			}
+		};
+		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+		try {
+			assertTrue("Not a StructuredTextEditor", editor instanceof StructuredTextEditor);
+			addReconcilingListener((StructuredTextEditor) editor, listener);
+			waitForReconcile(state);
+			assertTrue("Initial: Reconciling did not complete in a timely fashion", state[0] != -1 && state[1] != -1);
+			assertTrue("Initial: aboutToBeReconciled not invoked first (" + state[0] +")", state[0] == 0);
+			assertTrue("Initial: reconciled not invoked after aboutToBeReconciled (" + state[1] +")", state[1] == 1);
+			IDE.openEditor(activePage, fileAlt, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+			Arrays.fill(state, -1);
+			IEditorPart editorPart = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+			assertEquals("Didn't get the original editor back.", editor, editorPart);
+			waitForReconcile(state);
+			assertTrue("Modified: Reconciling did not complete in a timely fashion", state[0] != -1 && state[1] != -1);
+			assertTrue("Modified: aboutToBeReconciled not invoked first (" + state[0] +")", state[0] == 2);
+			assertTrue("Modified: reconciled not invoked after aboutToBeReconciled (" + state[1] +")", state[1] == 3);
+		} finally {
+			if (editor != null && activePage != null) {
+				activePage.closeEditor(editor, false);
+			}
+		}
+	}
+
+	private void addReconcilingListener(StructuredTextEditor editor, ISourceReconcilingListener listener) throws Exception {
+		Method mConfig = AbstractTextEditor.class.getDeclaredMethod("getSourceViewerConfiguration", null);
+		mConfig.setAccessible(true);
+		Object config = mConfig.invoke(editor, null);
+		assertTrue("Did not get a source viewer configuration", config instanceof SourceViewerConfiguration);
+		IReconciler reconciler = ((SourceViewerConfiguration) config).getReconciler(fEditor.getTextViewer());
+		assertTrue("Reconciler is not a DirtyRegionProcessor", reconciler instanceof DocumentRegionProcessor);
+		((DocumentRegionProcessor) reconciler).addReconcilingListener(listener);
+	}
+
+	public void waitForReconcile(int[] state) throws Exception {
+		int time = 0;
+		while ((state[0] == -1 || state[1] == -1) && time < MAX_WAIT) {
+			Thread.sleep(TIME_DELTA);
+			time += TIME_DELTA;
+		}
+	}
+	
 }
