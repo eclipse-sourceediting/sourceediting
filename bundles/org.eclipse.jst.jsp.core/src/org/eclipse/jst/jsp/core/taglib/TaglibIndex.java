@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -677,6 +677,7 @@ public final class TaglibIndex {
 			 * while we were waiting for the lock
 			 */
 			if (!isInitialized()) {
+				getWorkingLocation();
 				/*
 				 * Only consider a crash if a value exists and is DIRTY (not a
 				 * new workspace)
@@ -965,15 +966,7 @@ public final class TaglibIndex {
 	 *            indexes
 	 */
 	private void removeIndexes(boolean staleOnly) {
-		String osPath = getTaglibIndexStateLocation().toOSString();
-		File folder = new File(osPath);
-		if (!folder.isDirectory()) {
-			try {
-				folder.mkdir();
-			}
-			catch (SecurityException e) {
-			}
-		}
+		File folder = getWorkingLocation();
 
 		// remove any extraneous index files
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -1026,7 +1019,23 @@ public final class TaglibIndex {
 			fMemoryListener = null;
 		}
 	}
-	
+
+	/**
+	 * Get the working location for the taglib index
+	 * @return The File representing the taglib index's working location
+	 */
+	private File getWorkingLocation() {
+		File folder = new File(getTaglibIndexStateLocation().toOSString());
+		if (!folder.isDirectory()) {
+			try {
+				folder.mkdir();
+			}
+			catch (SecurityException e) {
+			}
+		}
+		return folder;
+	}
+
 	/**
 	 * Have all of the ProjectDescriptions write their information to disk and
 	 * then clear our map of them
