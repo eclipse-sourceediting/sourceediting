@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -143,88 +143,94 @@ public class ProjectUnzipUtility {
 	// specify buffer size for extraction
 	static final int BUFFER = 2048;
 
-	public void unzipAndImport(File inFile, String destinationDirectory) throws Exception {
-		try {
-			// Specify file to decompress
-			// (nsd) redundant?
-			// String inFileName = inFile.getAbsolutePath();
-			// //"c:/example.zip";
-			// File sourceZipFile = new File(inFileName);
-			File sourceZipFile = inFile;
+	public void unzipAndImport(final File inFile, final String destinationDirectory) throws Exception {
+		final List projects = fCreatedProjects;
+		WorkspaceModifyOperation createOp = new WorkspaceModifyOperation() {
+			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
+				try {
+					// Specify file to decompress
+					// (nsd) redundant?
+					// String inFileName = inFile.getAbsolutePath();
+					// //"c:/example.zip";
+					// File sourceZipFile = new File(inFileName);
+					File sourceZipFile = inFile;
 
-			// Specify destination where file will be unzipped
-			// String destinationDirectory =
-			// "d:/eclipsedev/M5_SSE_TESTS_WORKSPACE/"; //"c:/temp/";
-			File unzipDestinationDirectory = new File(destinationDirectory);
-			// Open Zip file for reading
-			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
-			IProject currentProject = null;
-			try {
-				// Create an enumeration of the entries in the zip file
-				Enumeration zipFileEntries = zipFile.entries();
-				String projectFolderName = null;
+					// Specify destination where file will be unzipped
+					// String destinationDirectory =
+					// "d:/eclipsedev/M5_SSE_TESTS_WORKSPACE/"; //"c:/temp/";
+					File unzipDestinationDirectory = new File(destinationDirectory);
+					// Open Zip file for reading
+					ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
+					IProject currentProject = null;
+					try {
+						// Create an enumeration of the entries in the zip file
+						Enumeration zipFileEntries = zipFile.entries();
+						String projectFolderName = null;
 
-				// Process each entry
-				while (zipFileEntries.hasMoreElements()) {
-					// grab a zip file entry
-					ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
-					String currentEntry = entry.getName();
-					// System.out.println("Extracting: " + entry);
-					File destFile = new File(unzipDestinationDirectory, currentEntry);
-					// grab file's parent directory structure
-					File destinationParent = destFile.getParentFile();
-					// create the parent directory structure if needed
-					destinationParent.mkdirs();
-					// extract file if not a directory
-					if (!entry.isDirectory()) {
-						BufferedInputStream is = new BufferedInputStream(zipFile.getInputStream(entry));
-						int currentByte;
-						// establish buffer for writing file
-						byte data[] = new byte[BUFFER];
-						// write the current file to disk
-						FileOutputStream fos = new FileOutputStream(destFile);
-						BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
-						try {
-							// read and write until last byte is encountered
-							while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-								dest.write(data, 0, currentByte);
+						// Process each entry
+						while (zipFileEntries.hasMoreElements()) {
+							// grab a zip file entry
+							ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+							String currentEntry = entry.getName();
+							// System.out.println("Extracting: " + entry);
+							File destFile = new File(unzipDestinationDirectory, currentEntry);
+							// grab file's parent directory structure
+							File destinationParent = destFile.getParentFile();
+							// create the parent directory structure if needed
+							destinationParent.mkdirs();
+							// extract file if not a directory
+							if (!entry.isDirectory()) {
+								BufferedInputStream is = new BufferedInputStream(zipFile.getInputStream(entry));
+								int currentByte;
+								// establish buffer for writing file
+								byte data[] = new byte[BUFFER];
+								// write the current file to disk
+								FileOutputStream fos = new FileOutputStream(destFile);
+								BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+								try {
+									// read and write until last byte is encountered
+									while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+										dest.write(data, 0, currentByte);
+									}
+								}
+								finally {
+									dest.flush();
+									dest.close();
+									is.close();
+									fos.close();
+								}
+								if (projectFolderName != null)
+									importFile(destFile, projectFolderName);
+							}
+							else {
+								// need handle to the main project folder to create
+								// containerPath
+								if (projectFolderName == null) {
+									projectFolderName = destFile.getName();
+									projects.add(projectFolderName);
+
+									currentProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectFolderName);
+								}
 							}
 						}
-						finally {
-							dest.flush();
-							dest.close();
-							is.close();
-							fos.close();
-						}
-						if (projectFolderName != null)
-							importFile(destFile, projectFolderName);
 					}
-					else {
-						// need handle to the main project folder to create
-						// containerPath
-						if (projectFolderName == null) {
-							projectFolderName = destFile.getName();
-							fCreatedProjects.add(projectFolderName);
+					finally {
+						zipFile.close();
+					}
 
-							currentProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectFolderName);
-						}
+					// fixes workspace metadata for the project
+					// for clean startup next run
+					if (currentProject != null) {
+						Path projectLocation = new Path(Platform.getLocation().toOSString());
+						createProject(currentProject, projectLocation, monitor);
 					}
 				}
+				catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
 			}
-			finally {
-				zipFile.close();
-			}
-
-			// fixes workspace metadata for the project
-			// for clean startup next run
-			if (currentProject != null) {
-				Path projectLocation = new Path(Platform.getLocation().toOSString());
-				createProject(currentProject, projectLocation, new WorkspaceProgressMonitor());
-			}
-		}
-		catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
+		};
+		createOp.run(new WorkspaceProgressMonitor());
 	}
 
 	/**
