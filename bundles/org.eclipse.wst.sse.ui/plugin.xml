@@ -537,15 +537,6 @@
 			<separator name="additions" visible="true"></separator>
 			<separator name="sourceEnd" visible="false"></separator>	
 		</menuContribution>
-		<menuContribution locationURI="popup:org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext?before=additions">
-		    <menu id="sourcePopupMenuId" label="%Source">
-				<separator name="sourceBegin" visible="false"></separator>
-				<separator name="additions" visible="true"></separator>
-				<separator name="sourceEnd" visible="false"></separator>	
-		    </menu>
-		    <menu id="refactorPopupMenuId" label="%Refactor">
-		    </menu>
-		</menuContribution>
 
 	    <menuContribution locationURI="menu:goTo?after=additions">
 		    <separator name="matchingBegin" visible="false"></separator>

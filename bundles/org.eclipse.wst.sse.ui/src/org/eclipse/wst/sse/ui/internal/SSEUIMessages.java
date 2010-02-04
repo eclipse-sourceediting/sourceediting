@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2010 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -178,6 +178,7 @@ public class SSEUIMessages extends NLS {
 	//
 	public static String ExpandSelectionToMenu_label;
 	public static String SourceMenu_label;
+	public static String RefactorMenu_label;
 
 	public static String FindOccurrencesActionProvider_0;
 	public static String RemoveAction_0;

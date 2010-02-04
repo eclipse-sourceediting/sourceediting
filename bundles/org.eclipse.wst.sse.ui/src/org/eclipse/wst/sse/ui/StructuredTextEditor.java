@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.BadLocationException;
@@ -162,6 +163,7 @@ import org.eclipse.wst.sse.ui.internal.ExtendedEditorDropTargetAdapter;
 import org.eclipse.wst.sse.ui.internal.IExtendedContributor;
 import org.eclipse.wst.sse.ui.internal.IModelProvider;
 import org.eclipse.wst.sse.ui.internal.IPopupMenuContributor;
+import org.eclipse.wst.sse.ui.internal.IStructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.ReadOnlyAwareDropTargetAdapter;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
@@ -964,6 +966,7 @@ public class StructuredTextEditor extends TextEditor {
 	protected static final String DOT = "."; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext"; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_SUFFIX = ".source.EditorContext"; //$NON-NLS-1$
+
 	/** Non-NLS strings */
 	private static final String EDITOR_KEYBINDING_SCOPE_ID = "org.eclipse.wst.sse.ui.structuredTextEditorScope"; //$NON-NLS-1$
 	/**
@@ -1059,6 +1062,19 @@ public class StructuredTextEditor extends TextEditor {
 		if (getInternalModel() != null) {
 			getInternalModel().aboutToChangeModel();
 		}
+	}
+
+	protected void addSourceMenuActions(IMenuManager menu) {
+		IMenuManager subMenu= new MenuManager(SSEUIMessages.SourceMenu_label, IStructuredTextEditorActionConstants.SOURCE_CONTEXT_MENU_ID);
+		subMenu.add(new Separator(IStructuredTextEditorActionConstants.SOURCE_BEGIN));
+		subMenu.add(new Separator(IStructuredTextEditorActionConstants.SOURCE_ADDITIONS));
+		subMenu.add(new Separator(IStructuredTextEditorActionConstants.SOURCE_END));
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
+	}
+
+	protected void addRefactorMenuActions(IMenuManager menu) {
+		IMenuManager subMenu = new MenuManager(SSEUIMessages.RefactorMenu_label, IStructuredTextEditorActionConstants.REFACTOR_CONTEXT_MENU_ID);
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
 	}
 
 	protected void addContextMenuActions(IMenuManager menu) {
@@ -1882,7 +1898,7 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
 		/*
-		 * To be consistant with the Java Editor, we want to remove ShiftRight
+		 * To be consistent with the Java Editor, we want to remove ShiftRight
 		 * and ShiftLeft from the context menu.
 		 */
 		super.editorContextMenuAboutToShow(menu);
@@ -1890,6 +1906,8 @@ public class StructuredTextEditor extends TextEditor {
 		menu.remove(ITextEditorActionConstants.SHIFT_RIGHT);
 
 		addContextMenuActions(menu);
+		addSourceMenuActions(menu);
+		addRefactorMenuActions(menu);
 		addExtendedContextMenuActions(menu);
 	}
 
