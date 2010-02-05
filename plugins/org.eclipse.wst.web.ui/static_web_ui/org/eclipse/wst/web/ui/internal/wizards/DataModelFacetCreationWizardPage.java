@@ -513,7 +513,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		serverTargetCombo.setLayoutData(gdhfill());
 		Button newServerTargetButton = new Button(group, SWT.NONE);
 		GridDataFactory.defaultsFor(newServerTargetButton).applyTo(newServerTargetButton);
-		newServerTargetButton.setText(ResourceHandler.NewDotDotDot);
+		newServerTargetButton.setText(Resources.newRuntimeButton);
 		newServerTargetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -677,4 +677,15 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		return workingSetGroup == null ? new IWorkingSet[0] : workingSetGroup
 				.getSelectedWorkingSets();
 	}
+	
+    private static final class Resources extends NLS
+    {
+        public static String newRuntimeButton;
+        
+        static
+        {
+            initializeMessages( DataModelFacetCreationWizardPage.class.getName(), Resources.class );
+        }
+    }
+	
 }
