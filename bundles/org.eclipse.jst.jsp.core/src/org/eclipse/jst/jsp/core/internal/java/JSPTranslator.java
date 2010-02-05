@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,6 +115,8 @@ public class JSPTranslator {
 	private IJSPELTranslator fELTranslator = null;
 
 	public static final String ENDL = "\n"; //$NON-NLS-1$
+
+	private static final String JSP_PREFIX = "jsp:"; //$NON-NLS-1$
 
 	String fClassHeader = null;
 	String fClassname = null;
@@ -820,11 +822,63 @@ public class JSPTranslator {
 	}
 
 	protected void addTaglibVariables(String tagToAdd, ITextRegionCollection customTag) {
+		/*
+		 * Variables can declare as available when NESTED, AT_BEGIN, or
+		 * AT_END. For AT_END variables, store the entire list of variables in
+		 * the map field so it can be used on the end tag.
+		 */
+		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
+			/*
+			 * Start tag
+			 */
+			addStartTagVariable(tagToAdd, customTag);
+		}
+		/**
+		 * Pop from stack, add ending curly brace and AT_END variables
+		 */
+		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
+			addEndTagVariable(tagToAdd, customTag);
+		}
+	}
+
+	private void addEndTagVariable(String tagToAdd, ITextRegionCollection customTag){
+		IFile f = getFile();
+		if (f == null || !f.exists())
+			return;
+		String decl = ""; //$NON-NLS-1$
+		RegionTag regionTag = (RegionTag) fTagToVariableMap.pop(tagToAdd);
+		if (regionTag != null) {
+			TaglibVariable[] taglibVars = regionTag.tag.getTagVariables();
+			// even an empty array will indicate a need for a closing
+			// brace
+			StringBuffer text = new StringBuffer();
+			if (regionTag.tag.isIterationTag())
+				doAfterBody(text, regionTag);
+			text.append("} // </"); //$NON-NLS-1$
+			text.append(tagToAdd);
+			text.append(">\n"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+
+			/*
+			 * Add AT_END variables
+			 */
+			for (int i = 0; i < taglibVars.length; i++) {
+				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
+					decl = taglibVars[i].getDeclarationString();
+					appendToBuffer(decl, fUserCode, false, customTag);
+				}
+			}
+		}
+		else {
+			// report an unmatched end tag in fTranslationProblems ?
+		}
+	}
+	
+	private void addStartTagVariable(String tagToAdd,ITextRegionCollection customTag){
 		IFile f = getFile();
 
 		if (f == null || !f.exists())
 			return;
-
 		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
 		/*
 		 * Variables can declare as available when NESTED, AT_BEGIN, or
@@ -832,117 +886,102 @@ public class JSPTranslator {
 		 * the map field so it can be used on the end tag.
 		 */
 		String decl = ""; //$NON-NLS-1$
-		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
+		List problems = new ArrayList();
+		CustomTag tag = helper.getCustomTag(tagToAdd, getStructuredDocument(), customTag, problems);
+		TaglibVariable[] taglibVars = tag.getTagVariables();
+		fTranslationProblems.addAll(problems);
+		// Bug 199047
+		/*
+		 * Add AT_BEGIN variables
+		 */
+		for (int i = 0; i < taglibVars.length; i++) {
+			if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
+				decl = taglibVars[i].getDeclarationString();
+				appendToBuffer(decl, fUserCode, false, customTag);
+			}
+		}
+
+		boolean isEmptyTag = customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
+		if (!isEmptyTag){
+			if (customTag.getLastRegion().getType().equals(DOMRegionContext.WHITE_SPACE)){
+				int len = customTag.getRegions().size();
+				if (len >2){
+					isEmptyTag = customTag.getRegions().get(len-2).getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
+				}
+				
+			}
+		}
+
+		/**
+		 * Add opening curly brace
+		 */
+		StringBuffer text = new StringBuffer();
+		if (!isEmptyTag && tag.isIterationTag() && tag.getTagClassName() != null)
+			text.append("\nwhile (true) "); //$NON-NLS-1$
+		text.append("{ // <"); //$NON-NLS-1$
+		text.append(tagToAdd);
+		if (isEmptyTag)
+			text.append("/>\n"); //$NON-NLS-1$
+		else
+			text.append(">\n"); //$NON-NLS-1$
+
+		appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+
+		/**
+		 * Add NESTED variables
+		 */
+		for (int i = 0; i < taglibVars.length; i++) {
+			if (taglibVars[i].getScope() == VariableInfo.NESTED) {
+				decl = taglibVars[i].getDeclarationString();
+				appendToBuffer(decl, fUserCode, false, customTag);
+			}
+		}
+
+		/**
+		 * If empty, pop from stack, add ending curly brace and AT_END
+		 * variables
+		 */
+		if (isEmptyTag) {
+			text = new StringBuffer();
+			text.append("} // <"); //$NON-NLS-1$
+			text.append(tagToAdd);
+			text.append("/>\n"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+			/* Treat this as the end for empty tags */
+			for (int i = 0; i < taglibVars.length; i++) {
+				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
+					decl = taglibVars[i].getDeclarationString();
+					appendToBuffer(decl, fUserCode, false, customTag);
+				}
+			}
+		}
+		else {
+			/*
+			 * Store for use at end tag and for accurate pairing even with
+			 * extra end tags (with empty non-null array)
+			 */
+			fTagToVariableMap.push(tagToAdd, new RegionTag(customTag, tag));
+		}
+		
+	}
+	
+	private void addCustomTaglibVariables(String tagToAdd, ITextRegionCollection customTag, ITextRegion prevRegion) {
+		//Can't judge by first region as start and end tag are part of same ContextRegionContainer		
+		if (prevRegion != null && prevRegion.getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
+			/*
+			 * End tag
+			 */
+			addEndTagVariable(tagToAdd, customTag);
+		}
+		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
 			/*
 			 * Start tag
 			 */
-			List problems = new ArrayList();
-			CustomTag tag = helper.getCustomTag(tagToAdd, getStructuredDocument(), customTag, problems);
-			TaglibVariable[] taglibVars = tag.getTagVariables();
-			fTranslationProblems.addAll(problems);
-			// Bug 199047
-			/*
-			 * Add AT_BEGIN variables
-			 */
-			for (int i = 0; i < taglibVars.length; i++) {
-				if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
-					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer(decl, fUserCode, false, customTag);
-				}
-			}
-
-			boolean isEmptyTag = customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
-
-			/**
-			 * Add opening curly brace
-			 */
-			StringBuffer text = new StringBuffer();
-			if (!isEmptyTag && tag.isIterationTag() && tag.getTagClassName() != null)
-				text.append("\nwhile (true) "); //$NON-NLS-1$
-			text.append("{ // <"); //$NON-NLS-1$
-			text.append(tagToAdd);
-			if (isEmptyTag)
-				text.append("/>\n"); //$NON-NLS-1$
-			else
-				text.append(">\n"); //$NON-NLS-1$
-
-			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
-
-			/**
-			 * Add NESTED variables
-			 */
-			for (int i = 0; i < taglibVars.length; i++) {
-				if (taglibVars[i].getScope() == VariableInfo.NESTED) {
-					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer(decl, fUserCode, false, customTag);
-				}
-			}
-
-			/**
-			 * If empty, pop from stack, add ending curly brace and AT_END
-			 * variables
-			 */
-			if (isEmptyTag) {
-				text = new StringBuffer();
-				text.append("} // <"); //$NON-NLS-1$
-				text.append(tagToAdd);
-				text.append("/>\n"); //$NON-NLS-1$
-				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
-				for (int i = 0; i < taglibVars.length; i++) {
-					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
-						decl = taglibVars[i].getDeclarationString();
-						appendToBuffer(decl, fUserCode, false, customTag);
-					}
-				}
-			}
-			else {
-				/*
-				 * Store for use at end tag and for accurate pairing even with
-				 * extra end tags (with empty non-null array)
-				 */
-				fTagToVariableMap.push(tagToAdd, new RegionTag(customTag, tag));
-			}
+			addStartTagVariable(tagToAdd,customTag);
 		}
-		/**
-		 * Pop from stack, add ending curly brace and AT_END variables
-		 */
-		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
-			// pop the variables
-			RegionTag regionTag = (RegionTag) fTagToVariableMap.pop(tagToAdd);
-			if (regionTag != null) {
-				TaglibVariable[] taglibVars = regionTag.tag.getTagVariables();
-				// even an empty array will indicate a need for a closing
-				// brace
-				StringBuffer text = new StringBuffer();
-				if (regionTag.tag.isIterationTag())
-					doAfterBody(text, regionTag);
-				text.append("} "); //$NON-NLS-1$
-				text.append("// </"); //$NON-NLS-1$
-				text.append(tagToAdd);
-				if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-					text.append("/>\n"); //$NON-NLS-1$
-				}
-				else {
-					text.append(">\n"); //$NON-NLS-1$
-				}
-				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 
-				/*
-				 * Add AT_END variables
-				 */
-				for (int i = 0; i < taglibVars.length; i++) {
-					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
-						decl = taglibVars[i].getDeclarationString();
-						appendToBuffer(decl, fUserCode, false, customTag);
-					}
-				}
-			}
-			else {
-				// report an unmatched end tag in fTranslationProblems ?
-			}
-		}
 	}
-
+	
 	private void doAfterBody(StringBuffer buffer, RegionTag regionTag) {
 		buffer.append("\tif ( (new "); //$NON-NLS-1$
 		buffer.append(regionTag.tag.getTagClassName());
@@ -1711,6 +1750,16 @@ public class JSPTranslator {
 			// possible delimiter, check later
 			delim = embeddedRegions.get(i);
 			type = delim.getType();
+			if (type == DOMRegionContext.XML_TAG_NAME )
+			{
+				String fullTagName = embeddedContainer.getText(delim);
+				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith(JSP_PREFIX)) {
+					ITextRegion prevRegion =null;
+					if (i>0)
+						prevRegion = embeddedRegions.get(i-1);
+					addCustomTaglibVariables(fullTagName, embeddedContainer,prevRegion); // it may be a custom tag
+				}
+			}
 			if(type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE
 				|| type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_SQUOTE)
 				quotetype = type;
@@ -3007,7 +3056,7 @@ public class JSPTranslator {
 	 */
 	private void writePlaceHolderForNonTranslatedCode() {
 		if(fFoundNonTranslatedCode) {
-			String text = (EXPRESSION_PREFIX + "\"\"" + EXPRESSION_SUFFIX +
+			String text = ("{" + EXPRESSION_PREFIX + "\"\"" + EXPRESSION_SUFFIX + "}" +
 					" //non translated code placeholder"+ ENDL);
 			fUserCode.append(text);
 			fOffsetInUserCode += text.length();
