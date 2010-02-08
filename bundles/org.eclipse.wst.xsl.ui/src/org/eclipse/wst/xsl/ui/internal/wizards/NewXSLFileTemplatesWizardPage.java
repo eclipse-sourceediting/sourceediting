@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2010 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (bug 271916) STAR - externalize strings for New XSL.
+ *     Jesper Steen Moller - bug 289799 - React to the 'cursor' variable in the template
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.wizards;
 
@@ -24,6 +25,7 @@ import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
+import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -314,9 +316,10 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 		return template;
 	}
 
-	String getTemplateString()
+	String getTemplateString(int[] offset)
 	{
 		String templateString = null;
+		offset[0] = 0;
 
 		Template template = getSelectedTemplate();
 		if (template != null)
@@ -328,6 +331,12 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 			{
 				TemplateBuffer buffer = context.evaluate(template);
 				templateString = buffer.getString();
+				for(TemplateVariable t : buffer.getVariables())
+				{
+					if (t.getName().equals(org.eclipse.jface.text.templates.GlobalTemplateVariables.Cursor.NAME)) {
+						if (t.getOffsets().length > 0) offset[0] = t.getOffsets()[0];
+					}
+				}
 			}
 			catch (Exception e)
 			{

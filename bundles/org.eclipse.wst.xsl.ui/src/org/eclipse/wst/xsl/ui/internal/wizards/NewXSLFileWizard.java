@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2010 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 271883 - ArrayIndexOutOfBounds on New XSL with no projects
+ *     Jesper Steen Moller - bug 289799 - React to the 'cursor' variable in the template
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.wizards;
 
@@ -21,7 +22,9 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -30,6 +33,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xsl.ui.internal.Messages;
@@ -80,12 +84,13 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 		// create a new empty file
 		IFile file = fNewFilePage.createNewFile();
 
+		int offset[] = new int[1];
 		// if there was problem with creating file, it will be null, so make
 		// sure to check
 		if (file != null)
 		{
 			// put template contents into file
-			String templateString = fNewFileTemplatesPage.getTemplateString();
+			String templateString = fNewFileTemplatesPage.getTemplateString(offset);
 			if (templateString != null)
 			{
 				// determine the encoding for the new file
@@ -118,7 +123,7 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 			}
 
 			// open the file in editor
-			openEditor(file);
+			openEditor(file, offset[0]);
 
 			// everything's fine
 			performedOK = true;
@@ -126,7 +131,7 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 		return performedOK;
 	}
 
-	private void openEditor(final IFile file)
+	private void openEditor(final IFile file, final int cursorOffset)
 	{
 		// Open editor on new file.
 		String editorId = null;
@@ -140,37 +145,26 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 			// editor id could not be retrieved, so we can not open editor
 			return;
 		}
-		IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		try {
-			if (dw != null) {
-				IWorkbenchPage page = dw.getActivePage();
-				if (page != null) {
-					page.openEditor(new FileEditorInput(file), editorId, true);
+		final String finalEditorId = editorId;
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				try {
+					if (dw != null) {
+						IWorkbenchPage page = dw.getActivePage();
+						if (page != null) {
+							IEditorPart editor = page.openEditor(new FileEditorInput(file), finalEditorId, true);
+							ITextEditor textEditor = (ITextEditor)editor.getAdapter(ITextEditor.class);
+							if (textEditor != null) textEditor.selectAndReveal(cursorOffset, 0);
+							editor.setFocus();
+						}
+					}
+				}
+				catch (PartInitException e) {
+					// editor can not open for some reason
+					XSLUIPlugin.log(e);
 				}
 			}
-		}
-		catch (PartInitException e) {
-			// editor can not open for some reason
-			return;
-		}
-		
-//		if (file != null)
-//		{
-//			getShell().getDisplay().asyncExec(new Runnable()
-//			{
-//				public void run()
-//				{
-//					try
-//					{
-//						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-//						IDE.openEditor(page, file, true);
-//					}
-//					catch (PartInitException e)
-//					{
-//						XSLUIPlugin.log(e);
-//					}
-//				}
-//			});
-//		}
+		});
 	}
 }
