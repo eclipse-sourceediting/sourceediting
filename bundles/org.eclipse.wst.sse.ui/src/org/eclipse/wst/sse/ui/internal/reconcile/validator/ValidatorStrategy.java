@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,7 +57,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
  */
 public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 
-	private static final boolean DEBUG_VALIDATION_CAPABLE_BUT_DISABLED = true || Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidatorEnablement")).booleanValue();
+	private static final boolean DEBUG_VALIDATION_CAPABLE_BUT_DISABLED = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidatorEnablement")).booleanValue();
 	private static final boolean DEBUG_VALIDATION_UNSUPPORTED = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidatorSupported")).booleanValue();
 
 	private String[] fContentTypeIds = null;
@@ -267,7 +267,6 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 				else if (DEBUG_VALIDATION_CAPABLE_BUT_DISABLED) {
 					String message = "Source validator able (id:" + vmd.getValidatorId() + " class:" + vmd.getValidatorClass() + " but skipped because it was reported as disabled";
 					Logger.log(Logger.INFO, message);
-					System.out.println(message);
 				}
 			}
 			else if (DEBUG_VALIDATION_UNSUPPORTED) {
