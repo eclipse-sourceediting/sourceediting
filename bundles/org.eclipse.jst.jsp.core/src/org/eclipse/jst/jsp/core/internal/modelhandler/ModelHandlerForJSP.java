@@ -103,7 +103,7 @@ public class ModelHandlerForJSP extends AbstractModelHandler {
 //					}
 //				}
 				if (factory == null) {
-					factory = JSPTranslationAdapterFactory.getDefault();
+					factory = new JSPTranslationAdapterFactory();
 				}
 
 				sm.getFactoryRegistry().addFactory(factory);
