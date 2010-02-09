@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
+import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -100,9 +100,7 @@ public class TestModelIncludes extends TestCase {
 		try {
 			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file);
 			assertTrue("model has no content", model.getStructuredDocument().getLength() > 0);
-
-			JSPTranslationAdapterFactory factory = JSPTranslationAdapterFactory.getDefault();
-			model.getFactoryRegistry().addFactory(factory);
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
 
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
 			String source = adapter.getJSPTranslation().getJavaText();
@@ -132,9 +130,7 @@ public class TestModelIncludes extends TestCase {
 		try {
 			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file);
 			assertTrue("model has no content", model.getStructuredDocument().getLength() > 0);
-
-			JSPTranslationAdapterFactory factory = JSPTranslationAdapterFactory.getDefault();
-			model.getFactoryRegistry().addFactory(factory);
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
 
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
 			String source = adapter.getJSPTranslation().getJavaText();

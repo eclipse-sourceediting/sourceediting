@@ -30,9 +30,9 @@ import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
+import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.internal.java.search.BasicJSPSearchRequestor;
 import org.eclipse.jst.jsp.ui.tests.util.FileUtil;
 import org.eclipse.jst.jsp.ui.tests.util.ProjectUnzipUtility;
@@ -206,7 +206,7 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 			IPath jspTestFilePath = new Path("judo/SEARCH/searchTestJSP3.jsp");
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(jspTestFilePath);
 			xmlModel = (IDOMModel) getStructuredModelForRead(file);
-			setupAdapterFactory(xmlModel);
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(xmlModel);
 
 			IDOMDocument doc = xmlModel.getDocument();
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
@@ -237,15 +237,5 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	/**
-	 * add the factory for JSPTranslationAdapter here
-	 * @param sm
-	 */
-	private void setupAdapterFactory(IStructuredModel sm) {
-
-		JSPTranslationAdapterFactory factory = JSPTranslationAdapterFactory.getDefault();
-		sm.getFactoryRegistry().addFactory(factory);
 	}
 }
