@@ -183,10 +183,14 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 * @return org.w3c.dom.Document
 	 */
 	public Document getContainerDocument() {
-		for (Node node = this; node != null; node = node.getParentNode()) {
+		Node parent = null;
+		for (Node node = this; node != null; node = parent) {
 			if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				return (Document) node;
 			}
+			/* Break out of a bad hierarchy */
+			if ((parent = node.getParentNode()) == node)
+				break;
 		}
 		return null;
 	}
