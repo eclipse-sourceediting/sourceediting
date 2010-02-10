@@ -214,6 +214,26 @@
                name="http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
                uri="dtdsAndSchemas/persistence_2_0.xsd" />
                
+            <public
+                publicId="-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+                uri="dtdsAndSchemas/facelet-taglib_1_0.dtd"/>
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+                uri="dtdsAndSchemas/facelet-taglib_1_0.dtd"/>
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
+                uri="dtdsAndSchemas/web-facelettaglibrary_2_0.xsd"/>
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+                uri="dtdsAndSchemas/web-facesconfig_2_0.xsd"/>
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-facesuicomponent_2_0.xsd"
+                uri="dtdsAndSchemas/web-facesuicomponent_2_0.xsd"/>
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-partialresponse_2_0.xsd"
+                uri="dtdsAndSchemas/web-partialresponse_2_0.xsd"/>
+
+
                           
         </catalogContribution>
 
