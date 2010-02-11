@@ -50,6 +50,7 @@ public interface IProductConstants {
 	public static final String FINAL_PERSPECTIVE_JCA = "finalPerspectiveJca"; //$NON-NLS-1$
 	public static final String FINAL_PERSPECTIVE_UTILITY = "finalPerspectiveUtility"; //$NON-NLS-1$
 	public static final String FINAL_PERSPECTIVE_STATICWEB = "finalPerspectiveStaticWeb"; //$NON-NLS-1$
+	public static final String FINAL_PERSPECTIVE_WEBFRAGMENT = "finalPerspectiveWebFragment"; //$NON-NLS-1$
 	
 	/**
 	 * Ability to default initial runtimes chosen in wizards
