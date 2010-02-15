@@ -64,7 +64,7 @@ import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjectWizard implements INewWizard, IFacetProjectCreationDataModelProperties {
 
 	protected IDataModel model = null;
-	private final IFacetedProjectTemplate template;
+	protected IFacetedProjectTemplate template;
 	private IWizardPage[] beginingPages;
 	private IConfigurationElement configurationElement;
 
