@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,13 @@
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.Panel;
 import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.RootHolder;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
@@ -148,33 +147,6 @@ public class RootContentEditPart extends BaseEditPart
   public Object getInput()
   {
     return getModel();
-  }
-  
-  public void refresh()
-  {
-    super.refresh();
-    /*
-    // once we're done refreshing we can assume all of the child editparts
-    // now we iteratre thru the list again and tell the children to update
-    // their connections
-    for (Iterator i = getChildren().iterator(); i.hasNext(); )
-    {
-      Object obj = i.next();
-      if (obj instanceof IConnectionContainer)
-      {
-        ((IConnectionContainer)obj).refreshConnections();
-      }
-    }*/
-    
-    for(Iterator i = getChildren().iterator(); i.hasNext(); )
-    {
-      Object obj = i.next();
-      if (obj instanceof AbstractGraphicalEditPart)
-      {
-        ((AbstractGraphicalEditPart)obj).refresh();
-      }
-    }
-
   }
   
   // https://bugs.eclipse.org/bugs/show_bug.cgi?id=252589

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -124,18 +123,6 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
     if (doUpdateDesign)
     {
       super.refresh();
-      for (Iterator i = getChildren().iterator(); i.hasNext();)
-      {
-        Object obj = i.next();
-        if (obj instanceof BaseEditPart)
-        {
-          ((BaseEditPart) obj).refresh();
-        }
-        else if (obj instanceof AbstractGraphicalEditPart)
-        {
-          ((AbstractGraphicalEditPart) obj).refresh();
-        }
-      }
     }
   }
 
