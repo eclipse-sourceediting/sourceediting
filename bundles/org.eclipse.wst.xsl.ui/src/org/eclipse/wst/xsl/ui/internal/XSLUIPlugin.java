@@ -24,6 +24,7 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeXSL;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -130,7 +131,9 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 		if (fContextTypeRegistry == null)
 		{
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
-			registry.addContextType("xsl_new"); //$NON-NLS-1$
+			registry.addContextType(TemplateContextTypeXSL.XSL_NEW);
+			registry.addContextType(TemplateContextTypeXSL.XSL_TAG);
+			registry.addContextType(TemplateContextTypeXSL.XSL_ATTR);
 			fContextTypeRegistry = registry;
 		}
 		return fContextTypeRegistry;

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (Intalio) - bug 289498 - Added additional context types.
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.templates;
 
@@ -16,6 +17,11 @@ import org.eclipse.wst.xml.ui.internal.templates.EncodingTemplateVariableResolve
 
 public class TemplateContextTypeXSL extends TemplateContextType
 {
+	public static final String XSL_TAG = "xsl_tag"; //$NON-NLS-1$
+	public static final String XSL_ATTR = "xsl_attr"; //$NON-NLS-1$
+	public static final String XSL_NEW = "xsl_new"; //$NON-NLS-1$
+	
+	
 	public TemplateContextTypeXSL()
 	{
 		super();
