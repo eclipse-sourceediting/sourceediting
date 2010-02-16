@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -71,7 +72,7 @@ public class XSDGraphViewerDialog extends PopupDialog
 
   public XSDGraphViewerDialog(Shell parentShell, String titleText, String infoText, Object model, String ID)
   {
-    super(parentShell, HOVER_SHELLSTYLE, true, true, true, false, titleText, infoText);
+    super(parentShell, HOVER_SHELLSTYLE, true, true, true, true, false, titleText, infoText);
     setModel(model);
     linkListener = new OpenEditorLinkListener();
     this.infoText = infoText;
@@ -97,13 +98,15 @@ public class XSDGraphViewerDialog extends PopupDialog
   {
     super.fillDialogMenu(dialogMenu);
     dialogMenu.add(new Separator());
+    dialogMenu.add(new ClosePopup());
+    dialogMenu.add(new Separator());
     dialogMenu.add(new SetOpenInEditor());
   }
 
   protected Control createDialogArea(Composite parent)
   {
     viewer = new ScrollingGraphicalViewer();
-    Composite c = new Composite(parent, SWT.NONE);
+    Composite c = (Composite)super.createDialogArea(parent);
 
     if (isHighContrast)
     {
@@ -119,6 +122,11 @@ public class XSDGraphViewerDialog extends PopupDialog
     viewer.setRootEditPart(root);
 
     viewer.createControl(c);
+
+    // The graphical viewer tool tip processing creates an extra shell which
+    // interferes with the PopupDialog's deactivation logic. 
+    removeMouseListeners(viewer.getControl());    
+
     if (isHighContrast)
     {
       viewer.getControl().setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
@@ -136,6 +144,30 @@ public class XSDGraphViewerDialog extends PopupDialog
     
     getShell().addControlListener(moveListener);
     return c;
+  }
+
+  private void removeMouseListeners(Control control)
+  {
+    Listener[] listeners = control.getListeners(SWT.MouseEnter);
+    control.removeListener(SWT.MouseEnter, listeners[0]);
+    
+    listeners = control.getListeners(SWT.MouseExit);
+    control.removeListener(SWT.MouseExit, listeners[0]);    
+
+    listeners = control.getListeners(SWT.MouseHover);
+    control.removeListener(SWT.MouseHover, listeners[0]);    
+
+    listeners = control.getListeners(SWT.MouseMove);
+    control.removeListener(SWT.MouseMove, listeners[0]);    
+
+    listeners = control.getListeners(SWT.MouseDown);
+    control.removeListener(SWT.MouseDown, listeners[0]);    
+
+    listeners = control.getListeners(SWT.MouseUp);
+    control.removeListener(SWT.MouseUp, listeners[0]);    
+    
+    listeners = control.getListeners(SWT.MouseDoubleClick);
+    control.removeListener(SWT.MouseDoubleClick, listeners[0]);
   }
   
   protected Control createInfoTextArea(Composite parent)
@@ -199,6 +231,18 @@ public class XSDGraphViewerDialog extends PopupDialog
     }
   }
   
+  private class ClosePopup extends Action {
+    public ClosePopup()
+    {
+      super(Messages._UI_ACTION_CLOSE_SCHEMA_PREVIEW_POPUP);
+    }
+
+    public void run()
+    {
+      close();
+    }
+  }
+  
   protected IDialogSettings getDialogSettings()
   {
     IDialogSettings settings= XSDEditorPlugin.getDefault().getDialogSettings().getSection(uniqueID);
@@ -259,6 +303,11 @@ public class XSDGraphViewerDialog extends PopupDialog
   
   public boolean close()
   {
+    if (getShell() == null || getShell().isDisposed()) 
+    {
+      return true;
+    }
+    
     getShell().removeControlListener(moveListener);
     if (link != null)
       link.removeHyperlinkListener(linkListener);
@@ -356,4 +405,9 @@ public class XSDGraphViewerDialog extends PopupDialog
     }
     return null;
   }
+  
+  protected Control getFocusControl()
+  {
+    return link;
+  }  
 }
