@@ -432,7 +432,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
           {
             if (!(attr.getTargetNamespace().equals(XSDConstants.SCHEMA_INSTANCE_URI_2001)))
             {
-              if (isSameNamespace(attr.getTargetNamespace(), xsdSchema.getTargetNamespace()) && (attr.getRootContainer() == xsdSchema || showFromIncludes))
+              if (shouldShowComponent(attr, xsdSchema,showFromIncludes))
               {
                 attributesList.add(attr);
               }
@@ -440,7 +440,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
           }
           else
           {
-            if (isSameNamespace(attr.getTargetNamespace(), xsdSchema.getTargetNamespace()) && (attr.getRootContainer() == xsdSchema || showFromIncludes))
+            if (shouldShowComponent(attr, xsdSchema,showFromIncludes))
             {
               attributesList.add(attr);
             }
