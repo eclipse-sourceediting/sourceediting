@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +47,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
 import org.eclipse.wst.jsdt.core.IBuffer;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -100,6 +102,12 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	protected boolean cancelParse = false;
 	protected int missingEndTagRegionStart = -1;
 	protected static final boolean ADD_SEMICOLON_AT_INLINE=true;
+
+	/*
+	 * org.eclipse.jface.text.Regions that contain purely generated code, for
+	 * which no validation messages should be reported to the user
+	 */
+	private List fGeneratedRanges = new ArrayList();
 	
 	protected boolean isGlobalJs() {
 		return fIsGlobalJs;
@@ -237,6 +245,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			scriptLocationInHtml.clear();
 			missingEndTagRegionStart = -1;
 			cancelParse = false;
+			fGeneratedRanges.clear();
 		}
 		translate();
 	}
@@ -507,10 +516,10 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 //				}
 				else {
 					// fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
-					// last offset of content that was skipped
-					int validStart = 0;
-					// start of content to skip
+					// end of last valid JS source, start of next content to skip
 					int validEnd = 0;
+					// start of next valid JS source, last offset of content that was skipped
+					int validStart = 0;
 										
 					Matcher matcher = fClientSideTagPattern.matcher(regionText);
 					StringBuffer contents = new StringBuffer();
@@ -571,13 +580,30 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							catch (BadLocationException e) {
 								column = -1;
 							}
-							if (line >= 0 && column >= 0) {
-								// if the column looks wrong, note any leading tabs would make it non-obvious
-								contents.append("__tag_" + (line+1) + "$" + column + "_"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							// substituted text length much match original length exactly
+							int start = validEnd + container.getStartOffset(region);
+							contents.append('_');
+							for (int i = validEnd + 1; i < validStart; i++) {
+								switch (i - validEnd) {
+									case 1 :
+										contents.append('$');
+										break;
+									case 2 :
+										contents.append('t');
+										break;
+									case 3 :
+										contents.append('a');
+										break;
+									case 4 :
+										contents.append('g');
+										break;
+									default :
+										contents.append('_');
+								}
 							}
-							else {
-								contents.append("__tag_" + startOffset + "_"); //$NON-NLS-1$ //$NON-NLS-2$
-							}
+							int end = validStart + container.getStartOffset(region);
+							// remember that this source range w
+							fGeneratedRanges.add(new Region(start, end - start));
 						}
 						// set up to end while if no end for valid
 						if (validStart > 0) {
@@ -668,5 +694,11 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	public void release() {
 		fStructuredDocument.removeDocumentListener(this);
 	}
-	
+
+	/**
+	 * @return the fGeneratedRanges
+	 */
+	Region[] getGeneratedRanges() {
+		return (Region[]) fGeneratedRanges.toArray(new Region[fGeneratedRanges.size()]);
+	}
 }
