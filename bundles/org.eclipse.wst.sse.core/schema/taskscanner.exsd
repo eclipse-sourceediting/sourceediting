@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.sse.core">
+<schema targetNamespace="org.eclipse.wst.sse.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.wst.sse.core" id="taskscanner" name="Task Scanner Extension Point"/>
@@ -11,6 +11,11 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element internal="true" />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="scanner"/>
@@ -47,17 +52,17 @@
          <attribute name="contentTypeIds" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Content type identifiers for which this scanner applies, separated by commas.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Scanner implementation.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -80,32 +85,8 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="examples"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
