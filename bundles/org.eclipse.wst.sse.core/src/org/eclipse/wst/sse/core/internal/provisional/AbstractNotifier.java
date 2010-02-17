@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,7 +53,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 		fAdapters[adapterCount++] = adapter;
 	}
 
-	private void ensureCapacity(int needed) {
+	private synchronized void ensureCapacity(int needed) {
 		if (fAdapters == null) {
 			// first time
 			fAdapters = new INodeAdapter[needed + growthConstant];
