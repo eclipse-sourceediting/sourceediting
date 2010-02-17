@@ -648,5 +648,9 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		if (resource != null)
 			resourceClass = resource.getClass();
 	}
+	public boolean isReverting() {
+		return this.reverting;
+	}
+
 
 }
