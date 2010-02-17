@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,11 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Jesper Steen Moller - added resolver lookups
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
@@ -24,13 +24,13 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public class ADTExternalResourceVariant extends PlatformObject
@@ -75,16 +75,12 @@ public class ADTExternalResourceVariant extends PlatformObject
   class XSDResourceVariantStorage implements IEncodedStorage
   {
 
-    protected File getFile()
-    {
-      return new File(urlString);
-    }
-
     public InputStream getContents() throws CoreException
     {
       try
       {
-          URL url = new URL(urlString);
+    	  String physicalUrlString = URIResolverPlugin.createResolver().resolvePhysicalLocation(null, null, urlString);
+          URL url = new URL(physicalUrlString);
           URLConnection urlConnection = url.openConnection();
           return urlConnection.getInputStream();
       }
@@ -101,12 +97,13 @@ public class ADTExternalResourceVariant extends PlatformObject
 
     public IPath getFullPath()
     {
-      return new Path(urlString);
+      // Since this is loaded from an URL, this should never be interpreted as a path
+      return null;
     }
 
     public String getName()
     {
-      return getFullPath().toFile().getName();
+      return urlString;
     }
 
     public boolean isReadOnly()

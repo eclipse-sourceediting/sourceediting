@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
+ *     Jesper Steen Moller - broader recognition of URIs
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.text;
 
@@ -218,16 +219,18 @@ public class XSDModelAdapter implements INodeAdapter
   private URI getURI(String baseLocation)
   {
     URI uri = null;
-    if (baseLocation.startsWith("/"))
+    if (baseLocation.startsWith("/")) //$NON-NLS-1$
     {
       uri = URI.createPlatformResourceURI(baseLocation);
     }
-    else if (baseLocation.startsWith("http"))
+    else if (baseLocation.indexOf(':') > 1)
     {
+      // Looks like an URL
       uri = URI.createURI(baseLocation);
     }
     else
     {
+      // Supposedly a file, then
       uri = URI.createFileURI(baseLocation);
     }
     return uri;
