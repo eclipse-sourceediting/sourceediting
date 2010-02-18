@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.BadLocationException;
@@ -2951,15 +2953,21 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @param event
 	 *            The event to fire, either a start or stop event.
 	 */
-	private void fireDocumentRewriteSessionEvent(DocumentRewriteSessionEvent event) {
+	private void fireDocumentRewriteSessionEvent(final DocumentRewriteSessionEvent event) {
 		if (fDocumentRewriteSessionListeners == null || fDocumentRewriteSessionListeners.size() == 0)
 			return;
 
-		List list = new ArrayList(fDocumentRewriteSessionListeners);
-		Iterator e = list.iterator();
-		while (e.hasNext()) {
-			IDocumentRewriteSessionListener l = (IDocumentRewriteSessionListener) e.next();
-			l.documentRewriteSessionChanged(event);
+		Object[] listeners = fDocumentRewriteSessionListeners.toArray();
+		for (int i = 0; i < listeners.length; i++) {
+			final IDocumentRewriteSessionListener l = (IDocumentRewriteSessionListener) listeners[i];
+			SafeRunner.run(new ISafeRunnable() {
+				public void run() throws Exception {
+					l.documentRewriteSessionChanged(event);
+				}
+				public void handleException(Throwable exception) {
+					// logged for us
+				}
+			});
 		}
 	}
 }
