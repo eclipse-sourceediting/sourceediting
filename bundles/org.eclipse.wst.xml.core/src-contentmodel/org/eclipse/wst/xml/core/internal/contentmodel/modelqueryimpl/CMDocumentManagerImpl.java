@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -224,7 +224,9 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
       cmDocumentCache.setStatus(resolvedURI, CMDocumentCache.STATUS_LOADING);
       //Thread thread = new Thread(new AsyncBuildOperation(publicId, resolvedURI, type));
       //thread.start();
-      Job job = new Job(XMLCoreMessages.loading + resolvedURI)
+      final int maxURILength = 150;
+      String uri = resolvedURI.length() > maxURILength ? resolvedURI.substring(0, maxURILength - 1) : resolvedURI;
+      Job job = new Job(XMLCoreMessages.loading + uri)
       {
         public boolean belongsTo(Object family)
         {
