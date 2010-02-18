@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.javascript;
 
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IProblemRequestor;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 
 /**
@@ -55,6 +57,10 @@ public class CompilationUnitHelper {
 				
 				public String toString() {
 					return "Embedded JS Working copy owner"; //$NON-NLS-1$
+				}
+				
+				public IProblemRequestor getProblemRequestor(IJavaScriptUnit workingCopy) {
+					return getInstance().getProblemRequestor();
 				}
 			};
 		}
