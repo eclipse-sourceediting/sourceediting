@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentoutline;
 
-import java.util.List;
-
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -22,28 +20,16 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeContentProvider;
-import org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xml.ui.views.contentoutline.AbstractXMLContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
 import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -79,6 +65,7 @@ public class XSLContentOutlineConfiguration extends XMLContentOutlineConfigurati
 		 * 
 		 * @see org.eclipse.ui.texteditor.IUpdate#update()
 		 */
+		@Override
 		public void update() {
 			super.update();
 			fShowAttributes = isChecked();
@@ -145,6 +132,7 @@ public class XSLContentOutlineConfiguration extends XMLContentOutlineConfigurati
 	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#createMenuContributions(org.eclipse.jface.viewers.TreeViewer)
 	 */
+	@Override
 	protected IContributionItem[] createMenuContributions(TreeViewer viewer) {
 		IContributionItem[] items;
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
@@ -176,6 +164,7 @@ public class XSLContentOutlineConfiguration extends XMLContentOutlineConfigurati
 	 * @param treeViewer
 	 *            the TreeViewer associated with this configuration
 	 */
+	@Override
 	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
 		if (fAttributeShowingLabelProvider != null) {
 			fAttributeShowingLabelProvider.setShowAttributes(showAttributes);
@@ -187,6 +176,7 @@ public class XSLContentOutlineConfiguration extends XMLContentOutlineConfigurati
 	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getContentProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
+	@Override
 	public IContentProvider getContentProvider(TreeViewer viewer) {
 		if (fContentProvider == null) {
 			fContentProvider = new JFaceNodeContentProvider();
@@ -223,6 +213,7 @@ public class XSLContentOutlineConfiguration extends XMLContentOutlineConfigurati
 	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
+	@Override
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (fAttributeShowingLabelProvider == null) {
 			fAttributeShowingLabelProvider = new AttributeShowingLabelProvider(fShowAttributes);
@@ -236,6 +227,7 @@ public class XSLContentOutlineConfiguration extends XMLContentOutlineConfigurati
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getSelection(org.eclipse.jface.viewers.TreeViewer,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
 		ISelection filteredSelection = selection;
 		if (selection instanceof IStructuredSelection) {

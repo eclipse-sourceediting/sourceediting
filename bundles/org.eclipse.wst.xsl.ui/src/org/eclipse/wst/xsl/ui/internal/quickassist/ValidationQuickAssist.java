@@ -16,41 +16,30 @@ import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
 import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jface.text.source.Annotation;
 
-public class ValidationQuickAssist implements IQuickAssistProcessor
-{
-	private String problemId;
+public class ValidationQuickAssist implements IQuickAssistProcessor {
 
-	public ValidationQuickAssist()
-	{
+	public ValidationQuickAssist() {
 		super();
 	}
 
-	public boolean canAssist(IQuickAssistInvocationContext invocationContext)
-	{
+	public boolean canAssist(IQuickAssistInvocationContext invocationContext) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
-	public boolean canFix(Annotation annotation)
-	{
+	public boolean canFix(Annotation annotation) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
-	public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext invocationContext)
-	{
-		CompletionProposal proposal = new CompletionProposal("doug",5,10,11); //$NON-NLS-1$
-		return new ICompletionProposal[]{proposal};
+	public ICompletionProposal[] computeQuickAssistProposals(
+			IQuickAssistInvocationContext invocationContext) {
+		CompletionProposal proposal = new CompletionProposal("doug", 5, 10, 11); //$NON-NLS-1$
+		return new ICompletionProposal[] { proposal };
 	}
 
-	public String getErrorMessage()
-	{
+	public String getErrorMessage() {
 		return null;
-	}
-
-	public void setProblemId(String id)
-	{
-		this.problemId = id;
 	}
 
 }

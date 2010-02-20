@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.text.ITextViewer;

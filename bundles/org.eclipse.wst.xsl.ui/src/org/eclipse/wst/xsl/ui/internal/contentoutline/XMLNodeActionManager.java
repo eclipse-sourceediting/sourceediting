@@ -27,6 +27,7 @@ public class XMLNodeActionManager extends AbstractNodeActionManager {
 		super(model, ModelQueryUtil.getModelQuery(model), viewer);
 	}
 
+	@Override
 	public void reformat(Node newElement, boolean deep) {
 		try {
 			// tell the model that we are about to make a big model change

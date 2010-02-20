@@ -38,12 +38,14 @@ public class AdapterFactoryProviderForXSL extends AdapterFactoryProviderForXML
 	/*
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)
 	 */
+	@Override
 	public void addAdapterFactories(IStructuredModel structuredModel) {
 
 		// add the normal content based factories to model's registry
 		addContentBasedFactories(structuredModel);
 	}
 
+	@Override
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert
@@ -91,10 +93,12 @@ public class AdapterFactoryProviderForXSL extends AdapterFactoryProviderForXML
 	 * isFor(org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler
 	 * )
 	 */
+	@Override
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
 		return (contentTypeDescription instanceof ModelHandlerForXSL);
 	}
 
+	@Override
 	public void reinitializeFactories(IStructuredModel structuredModel) {
 		// nothing to do, since no embedded type
 	}

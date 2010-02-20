@@ -23,14 +23,12 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.Validator;
 import org.eclipse.wst.validation.internal.core.ValidationException;
-import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator;
 import org.eclipse.wst.xsl.ui.internal.editor.XSLEditor;
-import org.eclipse.wst.xsl.ui.internal.quickassist.ValidationQuickAssist;
 
 /**
  * This performs the as-you-type validation for xsl files

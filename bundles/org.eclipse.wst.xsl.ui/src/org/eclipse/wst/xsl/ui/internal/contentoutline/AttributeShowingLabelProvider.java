@@ -12,7 +12,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -26,6 +25,7 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider {
 		fShowAttributes = showAttributes;
 	}
 	
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return true;
 	}
@@ -35,6 +35,7 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider {
 	 * 
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object o) {
 		StringBuffer text = null;
 		if (o instanceof Node) {
@@ -155,6 +156,7 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
 	 */
+	@Override
 	public String getToolTipText(Object element) {
 		if (element instanceof Node) {
 			switch (((Node) element).getNodeType()) {

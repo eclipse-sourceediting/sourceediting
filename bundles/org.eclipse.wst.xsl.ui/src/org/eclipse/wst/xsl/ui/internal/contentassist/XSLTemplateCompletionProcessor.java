@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,7 +47,10 @@ import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
  * templates.
  */
 class XSLTemplateCompletionProcessor extends TemplateCompletionProcessor {
-	private static final class ProposalComparator implements Comparator {
+	private static final class ProposalComparator implements Comparator, Serializable {
+		
+		private static final long serialVersionUID = 4678061726393872083L;
+
 		public int compare(Object o1, Object o2) {
 			return ((TemplateProposal) o2).getRelevance() - ((TemplateProposal) o1).getRelevance();
 		}
@@ -59,6 +63,7 @@ class XSLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	 * Copied from super class except instead of calling createContext(viewer,
 	 * region) call createContext(viewer, region, offset) instead
 	 */
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 
 		ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
@@ -128,10 +133,12 @@ class XSLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		return null;
 	}
 
+	@Override
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region, int relevance) {
 		return new CustomTemplateProposal(template, context, region, getImage(template), relevance);
 	}
 
+	@Override
 	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
 		TemplateContextType type = null;
 
@@ -143,6 +150,7 @@ class XSLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		return type;
 	}
 
+	@Override
 	protected Image getImage(Template template) {
 		// just return the same image for now
 		return XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_XPATH_FUNCTION);
@@ -152,6 +160,7 @@ class XSLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		return XSLUIPlugin.getDefault().getTemplateContextRegistry();
 	}
 
+	@Override
 	protected Template[] getTemplates(String contextTypeId) {
 		Template templates[] = null;
 

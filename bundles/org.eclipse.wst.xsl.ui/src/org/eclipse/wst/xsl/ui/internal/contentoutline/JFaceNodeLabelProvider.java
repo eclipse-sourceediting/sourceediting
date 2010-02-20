@@ -49,6 +49,7 @@ public class JFaceNodeLabelProvider extends ColumnLabelProvider {
 	 * 
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
+	@Override
 	public Image getImage(Object element) {
 		IJFaceNodeAdapter adapter = getAdapter(element);
 		if (adapter != null)
@@ -61,6 +62,7 @@ public class JFaceNodeLabelProvider extends ColumnLabelProvider {
 	 * 
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object element) {
 		IJFaceNodeAdapter adapter = getAdapter(element);
 		if (adapter != null)
@@ -74,6 +76,7 @@ public class JFaceNodeLabelProvider extends ColumnLabelProvider {
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
 	 *      java.lang.String)
 	 */
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}

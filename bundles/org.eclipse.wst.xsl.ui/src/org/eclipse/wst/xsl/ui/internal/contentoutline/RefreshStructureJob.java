@@ -136,6 +136,7 @@ class RefreshStructureJob extends Job {
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.jobs.Job#canceling()
 	 */
+	@Override
 	protected void canceling() {
 		fUpdates.clear();
 		fUpdateViewers.clear();
@@ -326,6 +327,7 @@ class RefreshStructureJob extends Job {
 		schedule(UPDATE_DELAY);
 	}
 
+	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		try {

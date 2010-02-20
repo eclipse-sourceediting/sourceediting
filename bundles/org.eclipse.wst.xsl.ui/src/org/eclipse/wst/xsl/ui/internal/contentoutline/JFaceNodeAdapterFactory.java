@@ -70,6 +70,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 				if (listeners[i] instanceof StructuredViewer) {
 					final StructuredViewer viewer = (StructuredViewer) listeners[i];
 					Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
+						@Override
 						public IStatus runInUIThread(IProgressMonitor monitor) {
 							Control refreshControl = viewer.getControl();
 							if ((refreshControl != null) && !refreshControl.isDisposed()) {
@@ -85,6 +86,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 				else if (listeners[i] instanceof Viewer) {
 					final Viewer viewer = (Viewer) listeners[i];
 					Job refresh = new UIJob(XMLUIMessages.refreshoutline_0) {
+						@Override
 						public IStatus runInUIThread(IProgressMonitor monitor) {
 							Control refreshControl = viewer.getControl();
 							if ((refreshControl != null) && !refreshControl.isDisposed()) {
@@ -122,6 +124,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 		fListeners.add(listener);
 	}
 
+	@Override
 	public INodeAdapterFactory copy() {
 		return new JFaceNodeAdapterFactory(getAdapterKey(), isShouldRegisterAdapter());
 	}
@@ -129,6 +132,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 	/**
 	 * Create a new JFace adapter for the DOM node passed in
 	 */
+	@Override
 	protected INodeAdapter createAdapter(INodeNotifier node) {
 		if (singletonAdapter == null) {
 			// create the JFaceNodeAdapter
@@ -162,7 +166,8 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 		}
 	}
 
-	public void release() {
+	@Override
+	public synchronized void release() {
 		// deregister from CMDocumentManager events
 		if ((cmDocumentManager != null) && (fCMDocumentManagerListener != null)) {
 			cmDocumentManager.removeListener(fCMDocumentManagerListener);
