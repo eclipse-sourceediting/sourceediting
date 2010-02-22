@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (Intalio) - bug 300430 - String concatenation
+ *          
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.util;
 
@@ -80,15 +81,18 @@ public class PathHelper {
 		}
 		// now generate the backs
 		String output = "";//$NON-NLS-1$
+		StringBuffer sb = new StringBuffer(output);
 		while (baseTokenizer.hasMoreTokens()) {
 			baseTokenizer.nextToken();
-			output += "../"; //$NON-NLS-1$
+			sb.append("../"); //$NON-NLS-1$
 		}
-		output += token2;
+		sb.append(token2);
 		// generate the rest
 		while (inputTokenizer.hasMoreTokens()) {
-			output = output + FORWARD_SLASH + inputTokenizer.nextToken();
+			sb.append(FORWARD_SLASH);
+			sb.append(inputTokenizer.nextToken());
 		}
+		output = sb.toString();
 		return output;
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     David Carver (Intalio) - bug 300430 - String concatenation
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.utils;
@@ -221,22 +222,25 @@ public class StringUtils {
 
 		String newText = ""; //$NON-NLS-1$
 		int lineCount = tempDoc.getNumberOfLines();
+		StringBuffer sb = new StringBuffer(newText);
 		for (int i = 0; i < lineCount; i++) {
 			try {
 				org.eclipse.jface.text.IRegion lineInfo = tempDoc.getLineInformation(i);
 				int lineStartOffset = lineInfo.getOffset();
 				int lineLength = lineInfo.getLength();
 				int lineEndOffset = lineStartOffset + lineLength;
-				newText += allText.substring(lineStartOffset, lineEndOffset);
+				sb.append(allText.substring(lineStartOffset, lineEndOffset));
 
-				if ((i < lineCount - 1) && (tempDoc.getLineDelimiter(i) != null))
-					newText += lineDelimiterToUse;
+				if ((i < lineCount - 1) && (tempDoc.getLineDelimiter(i) != null)) {
+					sb.append(lineDelimiterToUse);
+				}
 			}
 			catch (BadLocationException e) {
 				// log for now, unless we find reason not to
 				Logger.log(Logger.INFO, e.getMessage());
 			}
 		}
+		newText = sb.toString();
 
 		return newText;
 	}
@@ -546,13 +550,17 @@ public class StringUtils {
 		int position = 0;
 		int previous = 0;
 		int spacer = source.length();
+		StringBuffer sb = new StringBuffer(normalString);
 		while (position + spacer - 1 < length && aString.indexOf(source, position) > -1) {
 			position = aString.indexOf(source, previous);
-			normalString = normalString + aString.substring(previous, position) + target;
+			sb.append(normalString);
+			sb.append(aString.substring(previous, position));
+			sb.append(target);
 			position += spacer;
 			previous = position;
 		}
-		normalString = normalString + aString.substring(position, aString.length());
+		sb.append(aString.substring(position, aString.length()));
+		normalString = sb.toString();
 
 		return normalString;
 	}

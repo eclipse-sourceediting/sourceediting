@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (Intalio) - bug 300430 - String concatenation
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.util;
 
@@ -169,9 +169,11 @@ public final class Debug {
 	 */
 	private static String space(int depth) {
 		String result = "  "; //$NON-NLS-1$
+		StringBuffer sb = new StringBuffer(result);
 		for (int i = 0; i < depth; i++) {
-			result += "  "; //$NON-NLS-1$
+			sb.append("  "); //$NON-NLS-1$
 		}
+		result = sb.toString();
 		return result;
 	}
 

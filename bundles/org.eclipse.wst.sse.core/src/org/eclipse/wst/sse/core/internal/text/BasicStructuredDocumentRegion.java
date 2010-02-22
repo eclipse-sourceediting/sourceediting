@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (Intalio) - bug 300430 - String concatenation
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
 
@@ -163,11 +163,13 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		ITextRegion region = null;
 		String result = ""; //$NON-NLS-1$
 		int length = getRegions().size();
+		StringBuffer sb = new StringBuffer(result);
 		for (int i = 0; i < length; i++) {
 			region = getRegions().get(i);
 			if (region.getType() == context)
-				result += getFullText(region);
+				sb.append(getFullText(region));
 		}
+		result = sb.toString();
 		return result;
 	}
 
