@@ -857,6 +857,7 @@ public class StructuredTextEditor extends TextEditor {
 		public void verifyKey(final VerifyEvent event) {
 			if (!event.doit || getInsertMode() != SMART_INSERT || isBlockSelectionModeEnabled() && isMultilineSelection())
 				return;
+			final boolean[] paired = { false };
 			for (int i = 0; i < fInserters.length; i++) {
 				final CharacterPairing pairing = fInserters[i];
 				// use a SafeRunner -- this is a critical function (typing)
@@ -865,7 +866,7 @@ public class StructuredTextEditor extends TextEditor {
 						final AbstractCharacterPairInserter inserter = pairing.inserter;
 						if (inserter.hasPair(event.character)) {
 							if (pair(event, inserter, pairing.partitions))
-								return;
+								paired[0] = true;
 						}
 					}
 
@@ -873,6 +874,8 @@ public class StructuredTextEditor extends TextEditor {
 						// rely on default logging
 					}
 				});
+				if (paired[0])
+					return;
 			}
 		}
 
