@@ -70,6 +70,12 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 * since beginProcessing() was called.
 	 */
 	private List fTotalScopeValidatorsAlreadyRun = new ArrayList();
+	
+	/*
+	 * Whether the Validation Framework has indicated that validation is
+	 * suspended for the current resource
+	 */
+	private boolean fValidatorsSuspended = false;
 
 	public ValidatorStrategy(ISourceViewer sourceViewer, String contentType) {
 		super(sourceViewer);
@@ -158,7 +164,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		 * Abort if no workspace file is known (new validation framework does
 		 * not support that scenario) or no validators have been specified
 		 */
-		if (isCanceled() || fMetaData.isEmpty())
+		if (isCanceled() || fMetaData.isEmpty() || fValidatorsSuspended)
 			return;
 
 		IDocument doc = getDocument();
@@ -185,10 +191,8 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		Set disabledValsByClass = new HashSet(20);
 		IFile file = getFile();
 		if (file != null) {
-			// Validation is suspended for this resource, do nothing
-			if (ValidationFramework.getDefault().isSuspended(file.getProject()) || ValidationFramework.getDefault().getProjectSettings(file.getProject()).getSuspend()) {
+			if(!file.isAccessible())
 				return;
-			}
 
 			Collection disabledValidators = null;
 			try {
@@ -305,6 +309,15 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 
 		super.setDocument(document);
 
+		fValidatorsSuspended = false;
+		if (document != null) {
+			IFile file = getFile();
+			if (file != null) {
+				// Validation is suspended for this resource, do nothing
+				fValidatorsSuspended = !file.isAccessible() || ValidationFramework.getDefault().isSuspended(file.getProject()) || ValidationFramework.getDefault().getProjectSettings(file.getProject()).getSuspend();
+			}
+		}
+		
 		// validator steps are in "fVIdToVStepMap" (as opposed to fFirstStep >
 		// next step etc...)
 		Iterator it = fVidToVStepMap.values().iterator();
