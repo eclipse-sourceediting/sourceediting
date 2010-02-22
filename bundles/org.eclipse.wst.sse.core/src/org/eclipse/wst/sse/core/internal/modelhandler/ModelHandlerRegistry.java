@@ -136,7 +136,7 @@ public class ModelHandlerRegistry {
 				/* use the more thorough discovery method to get a description */
 				InputStream contents = null;
 				try {
-					contents = file.getContents(true);
+					contents = file.getContents(false);
 					contentDescription = Platform.getContentTypeManager().getDescriptionFor(contents, file.getName(), IContentDescription.ALL);
 					if (contentDescription != null) {
 						contentType = contentDescription.getContentType();
