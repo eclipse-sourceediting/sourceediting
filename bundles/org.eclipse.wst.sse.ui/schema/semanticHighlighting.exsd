@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.wst.sse.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.wst.sse.ui" id="semanticHighlighting" name="Semantic Highlighting"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          The Semantic Highlighting extension point allows plug-ins to contribute rules to the Structured Source Editor&apos;s semantic highlighting framework. Semantic highlighting is performed as a second pass after syntax highlighting.
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -39,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -61,27 +61,34 @@
                <documentation>
                   Must implement org.eclipse.wst.sse.ui.ISemanticHighlighting to provide basic semantic highlighting information.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.wst.sse.ui.ISemanticHighlighting"/>
-               </appinfo>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="styleStringKey" type="string">
+            <annotation>
+               <documentation>
+                  The preference key that controls the style of the semantic highlighting. The style&apos;s value should be in the form: RGB foreground (#rrggbb) | RGB background (#rrggbb) | bold (true/false) | italic (true/false) | strikethrough (true/false) | underline (true/false)
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          3.1
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          The following is the declaration of a semantic highlighting that is effective on org.eclipse.core.runtime.xml and org.eclipse.wst.xml.core.xmlsource content types. The &lt;code&gt;org.eclipse.wst.xml.ui.internal.style.NamespaceHighlighting&lt;/code&gt; determines the consumable regions of the document.
 &lt;pre&gt;
@@ -96,9 +103,9 @@
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiinfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          See &lt;code&gt;org.eclipse.wst.sse.ui.ISemanticHighlighting&lt;/code&gt;
       </documentation>
@@ -106,9 +113,9 @@
 
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="copyright"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Copyright (c) 2009 IBM Corporation and others.
 All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;

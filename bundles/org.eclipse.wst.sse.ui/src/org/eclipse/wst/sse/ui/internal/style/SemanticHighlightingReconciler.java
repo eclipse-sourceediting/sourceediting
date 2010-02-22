@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,9 +29,12 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.wst.sse.core.internal.model.ModelManagerImpl;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
+import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager.HighlightedPosition;
@@ -97,7 +100,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 		fJobPresenter = fPresenter;
 		fJobSemanticHighlightings = fSemanticHighlightings;
 		fJobHighlightings = fHighlightings;
-		
+		IStructuredModel model = null;
 		try {
 			if (fJobPresenter == null || fJobSemanticHighlightings == null || fJobHighlightings == null)
 				return;
@@ -106,6 +109,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 		
 			startReconcilingPositions();
 			IStructuredDocument document = (IStructuredDocument) fDocument;
+			model = ModelManagerImpl.getInstance().getModelForRead(document);
 			IStructuredDocumentRegion[] regions = document.getStructuredDocumentRegions(partition.getOffset(), partition.getLength());
 			for (int i = 0; i < regions.length; i++) {
 				if (document.containsReadOnly(regions[i].getStartOffset(), regions[i].getLength()))
@@ -113,7 +117,13 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 				else {
 					for (int j = 0; j < fJobSemanticHighlightings.length; j++) {
 						if (fJobHighlightings[j].isEnabled()) {
-							Position[] consumes = fJobSemanticHighlightings[j].consumes(regions[i]);
+							Position[] consumes = null;
+							if (fJobSemanticHighlightings[j] instanceof ISemanticHighlightingExtension && model != null) {
+								consumes = ((ISemanticHighlightingExtension) fJobSemanticHighlightings[j]).consumes(regions[i], model.getIndexedRegion(regions[i].getStartOffset()));
+							}
+							else {
+								consumes = fJobSemanticHighlightings[j].consumes(regions[i]);
+							}
 							if (consumes != null) {
 								for (int k = 0; k < consumes.length; k++)
 									addPosition(consumes[k], fJobHighlightings[j]);
@@ -144,6 +154,8 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 			fJobPresenter= null;
 			fJobSemanticHighlightings= null;
 			fJobHighlightings= null;
+			if (model != null)
+				model.releaseFromRead();
 			synchronized (fReconcileLock) {
 				fIsReconciling= false;
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -295,8 +295,9 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	}
 	
 	private static final String SEMANTIC_HIGHLIGHTING_EXTENSION_POINT = "semanticHighlighting"; //$NON-NLS-1$
-	private static final String TARGET_ATTR = "target";
-	private static final String CLASS_ATTR = "class";
+	private static final String TARGET_ATTR = "target"; //$NON-NLS-1$
+	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
+	private static final String STYLE_KEY_ATTR = "styleStringKey"; //$NON-NLS-1$
 
 	private StructuredTextEditor fEditor;
 	private StructuredTextViewer fSourceViewer;
@@ -312,6 +313,8 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	private ISemanticHighlighting[] fHighlightings;
 	/** The semantic highlighting styles associated with the semantic highlightings */
 	private HighlightingStyle[] fHighlightingStyles;
+	/** The semantic highlighting style string preference keys. null of the highlighting doesn't support it */
+	private String[] fHighlightingStyleStringKeys;
 	
 	private IPropertyChangeListener fHighlightingChangeListener = new IPropertyChangeListener() {
 
@@ -346,6 +349,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		List semantics = new ArrayList(0);
 		
 		ISemanticHighlighting highlighting = null;
+		String styleKey = null;
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(SSEUIPlugin.ID, SEMANTIC_HIGHLIGHTING_EXTENSION_POINT);
 		
 		IContentType contentType = Platform.getContentTypeManager().getContentType(fContentTypeId);
@@ -358,11 +362,12 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 				if (contentType.isKindOf(targetContentType)) {
 					try {
 						highlighting = (ISemanticHighlighting) elements[i].createExecutableExtension(CLASS_ATTR);
+						styleKey = elements[i].getAttribute(STYLE_KEY_ATTR);
 					} catch (CoreException e) {
 						Logger.logException(e);
 					}
 					if (highlighting != null)
-						semantics.add(new SemanticContent(targetContentType, highlighting));
+						semantics.add(new SemanticContent(targetContentType, highlighting, styleKey));
 
 					break;
 				}
@@ -372,10 +377,13 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		Collections.sort(semantics);
 		fHighlightings = new ISemanticHighlighting[semantics.size()];
 		fHighlightingStyles = new HighlightingStyle[semantics.size()];
-		
+		fHighlightingStyleStringKeys = new String[semantics.size()];
+
 		for (int i = 0; i < semantics.size(); i++) {
 			fHighlightings[i] = ((SemanticContent) semantics.get(i)).getHighlighting();
-			fHighlightingStyles[i] = createHighlightingStyle(((SemanticContent) semantics.get(i)).getHighlighting());
+			styleKey = ((SemanticContent) semantics.get(i)).getStyleKey();
+			fHighlightingStyles[i] = createHighlightingStyle(((SemanticContent) semantics.get(i)).getHighlighting(), styleKey);
+			fHighlightingStyleStringKeys[i] = styleKey;
 		}
 	}
 	
@@ -387,10 +395,12 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	private class SemanticContent implements Comparable {
 		public IContentType type;
 		public ISemanticHighlighting highlighting;
-		
-		public SemanticContent(IContentType type, ISemanticHighlighting highlighting) {
+		public String styleKey;
+
+		public SemanticContent(IContentType type, ISemanticHighlighting highlighting, String styleKey) {
 			this.type = type;
 			this.highlighting = highlighting;
+			this.styleKey = styleKey;
 		}
 
 		public int compareTo(Object arg0) {
@@ -407,6 +417,10 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		public ISemanticHighlighting getHighlighting() {
 			return highlighting;
 		}
+
+		public String getStyleKey() {
+			return styleKey;
+		}
 	}
 	
 	/**
@@ -414,31 +428,75 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	 * @param highlighting the semantic highlighting
 	 * @return a highlighting style based on the preferences of the semantic highlighting
 	 */
-	private HighlightingStyle createHighlightingStyle(ISemanticHighlighting highlighting) {
+	private HighlightingStyle createHighlightingStyle(ISemanticHighlighting highlighting, String styleKey) {
 		IPreferenceStore store = highlighting.getPreferenceStore();
 		HighlightingStyle highlightingStyle = null;
 		if (store != null) {
-			int style = getBoolean(store, highlighting.getBoldPreferenceKey()) ? SWT.BOLD : SWT.NORMAL;
-			
-			if (getBoolean(store, highlighting.getItalicPreferenceKey()))
-				style |= SWT.ITALIC;
-			if (getBoolean(store, highlighting.getStrikethroughPreferenceKey()))
-				style |= TextAttribute.STRIKETHROUGH;
-			if (getBoolean(store, highlighting.getUnderlinePreferenceKey()))
-				style |= TextAttribute.UNDERLINE;
+			TextAttribute attribute = null;
+			// A style string is used instead of separate attribute keys
+			if (styleKey != null) {
+				attribute = createTextAttribute(store.getString(styleKey));
+			}
+			else {
+				int style = getBoolean(store, highlighting.getBoldPreferenceKey()) ? SWT.BOLD : SWT.NORMAL;
+				
+				if (getBoolean(store, highlighting.getItalicPreferenceKey()))
+					style |= SWT.ITALIC;
+				if (getBoolean(store, highlighting.getStrikethroughPreferenceKey()))
+					style |= TextAttribute.STRIKETHROUGH;
+				if (getBoolean(store, highlighting.getUnderlinePreferenceKey()))
+					style |= TextAttribute.UNDERLINE;
+
+				String rgbString = getString(store, highlighting.getColorPreferenceKey());
+				Color color = null;
+				
+				if (rgbString != null)
+					color = EditorUtility.getColor(ColorHelper.toRGB(rgbString));
+				attribute = new TextAttribute(color, null, style);
+			}
+
 			store.addPropertyChangeListener(fHighlightingChangeListener);
 			boolean isEnabled = getBoolean(store, highlighting.getEnabledPreferenceKey());
-			String rgbString = getString(store, highlighting.getColorPreferenceKey());
-			Color color = null;
-			
-			if (rgbString != null)
-				color = EditorUtility.getColor(ColorHelper.toRGB(rgbString));
-			
-			highlightingStyle = new HighlightingStyle(new TextAttribute(color, null, style), isEnabled);
+			highlightingStyle = new HighlightingStyle(attribute, isEnabled);
 		}
 		return highlightingStyle;
 	}
-	
+
+	/**
+	 * Creates a text attribute from the style string
+	 * 
+	 * @param styleValue style string in the form: <code>RGB foreground (#rrggbb) | RGB background (#rrggbb) | bold (true/false) | italic (true/false) | strikethrough (true/false) | underline (true/false)</code>
+	 * @return text attribute created from the <code>styleValue</code> or null if the <code>styleValue</code> is invalid
+	 */
+	private TextAttribute createTextAttribute(String styleValue) {
+		String[] values = ColorHelper.unpackStylePreferences(styleValue);
+		if (values.length < 6)
+			return null;
+
+		RGB foreground = ColorHelper.toRGB(values[0]);
+		RGB background = ColorHelper.toRGB(values[1]);
+		boolean bold = Boolean.valueOf(values[2]).booleanValue();
+		boolean italic = Boolean.valueOf(values[3]).booleanValue();
+		boolean strikethrough = Boolean.valueOf(values[4]).booleanValue();
+		boolean underline = Boolean.valueOf(values[5]).booleanValue();
+
+		int style = SWT.NORMAL;
+		if (bold)
+			style = style | SWT.BOLD;
+		if (italic)
+			style = style | SWT.ITALIC;
+		if (strikethrough)
+			style = style | TextAttribute.STRIKETHROUGH;
+		if (underline)
+			style = style | TextAttribute.UNDERLINE;
+
+		return createTextAttribute(foreground, background, style);
+	}
+
+	private TextAttribute createTextAttribute(RGB foreground, RGB background, int style) {
+		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, style);
+	}
+
 	/**
 	 * Looks up a boolean preference by <code>key</code> from the preference store
 	 * @param store the preference store to lookup the preference from
@@ -509,6 +567,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		
 		fHighlightings = null;
 		fHighlightingStyles = null;
+		fHighlightingStyleStringKeys = null;
 	}
 	
 	/**
@@ -524,7 +583,16 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		
 		for (int i = 0; i < fHighlightings.length; i++) {
 			ISemanticHighlighting highlighting = fHighlightings[i];
-			
+
+			if (fHighlightingStyleStringKeys[i] != null) {
+				if (property.equals(fHighlightingStyleStringKeys[i])) {
+					adaptToStyleChange(fHighlightingStyles[i], event);
+					fPresenter.highlightingStyleChanged(fHighlightingStyles[i]);
+					refreshRequired = true;
+					continue;
+				}
+			}
+
 			if (property.equals(highlighting.getBoldPreferenceKey())) {
 				adaptToTextStyleChange(fHighlightingStyles[i], event, SWT.BOLD);
 				fPresenter.highlightingStyleChanged(fHighlightingStyles[i]);
@@ -636,7 +704,22 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		if (activeValue != eventValue)
 			highlighting.setTextAttribute(new TextAttribute(oldAttr.getForeground(), oldAttr.getBackground(), eventValue ? oldAttr.getStyle() | styleAttribute : oldAttr.getStyle() & ~styleAttribute));
 	}
-	
+
+	/**
+	 * Adapts to a style string change
+	 * 
+	 * @param highlighting the highlighting style to update
+	 * @param event the event that triggered the change
+	 */
+	private void adaptToStyleChange(HighlightingStyle highlighting, PropertyChangeEvent event) {
+		Object value = event.getNewValue();
+		if (value instanceof String) {
+			TextAttribute attr = createTextAttribute((String) value);
+			if (attr != null)
+				highlighting.setTextAttribute(attr);
+		}
+	}
+
 	/**
 	 * @return <code>true</code> iff semantic highlighting is enabled in the preferences
 	 */
