@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2010 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -7,6 +7,7 @@
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
 package org.eclipse.wst.xml.ui.internal.tabletree;
+
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -18,13 +19,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
@@ -449,6 +447,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
 	/** The design viewer */
 	IDesignViewer fDesignViewer;
+	/** Any container for the design viewer */
+	private Composite fDesignContainer;
 
 	private ActivationListener fActivationListener;
 
@@ -639,90 +639,60 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		// note: By adding the design page as a Control instead of an
 		// IEditorPart, page switches will indicate
 		// a "null" active editor when the design page is made active
-		fDesignPageIndex = addPage(designViewer.getControl());
+		if (fDesignContainer != null)
+			fDesignPageIndex = addPage(fDesignContainer);
+		else
+			fDesignPageIndex = addPage(designViewer.getControl());
+			
 		setPageText(fDesignPageIndex, designViewer.getTitle());
 	}
 
-	protected IDesignViewer createDesignPage() {
-		XMLTableTreeViewer tableTreeViewer = new XMLTableTreeViewer(getContainer());
+	protected IDesignViewer createDesignPage() {		
+		Composite container = getDesignContainer(getContainer());
+
+		XMLTableTreeViewer tableTreeViewer = new XMLTableTreeViewer(container);
+		tableTreeViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		// Set the default info-pop for XML design viewer.
 		XMLUIPlugin.getInstance().getWorkbench().getHelpSystem().setHelp(tableTreeViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
 
+		// Toolbar wasn't allocated
 		if (fToolbarManager != null) {
-			addToolBarActions(fToolbarManager, tableTreeViewer);
+			addToolBarActions(tableTreeViewer);
 		}
 		return tableTreeViewer;
 	}
 
-	private void addToolBarActions(final ToolBarManager manager, IDesignViewer viewer) {
-		if (viewer instanceof AbstractTreeViewer) {
-			// "dual-mode" actions for both pages
-			final ViewerExpandCollapseAction expand = new ViewerExpandCollapseAction(true) {
-				public void run() {
-					if (getActivePage() == fDesignPageIndex) {
-						super.run();
-					}
-					else if (getActivePage() == fSourcePageIndex) {
-						ITextViewer viewer = fTextEditor.getTextViewer();
-						if (viewer instanceof ProjectionViewer) {
-							ProjectionViewer projectionViewer = (ProjectionViewer) viewer;
-							if (projectionViewer.isProjectionMode())
-								projectionViewer.doOperation(ProjectionViewer.EXPAND_ALL);
-						}
-					}
-				}
-			};
-			final ViewerExpandCollapseAction collapse = new ViewerExpandCollapseAction(false) {
-				public void run() {
-					if (getActivePage() == fDesignPageIndex) {
-						super.run();
-					}
-					else if (getActivePage() == fSourcePageIndex) {
-						ITextViewer viewer = fTextEditor.getTextViewer();
-						if (viewer instanceof ProjectionViewer) {
-							ProjectionViewer projectionViewer = (ProjectionViewer) viewer;
-							if (projectionViewer.isProjectionMode())
-								projectionViewer.doOperation(ProjectionViewer.COLLAPSE_ALL);
-						}
-					}
-				}
-			};
-			expand.setViewer((AbstractTreeViewer) viewer);
-			collapse.setViewer((AbstractTreeViewer) viewer);
-
-			manager.add(expand);
-			manager.add(collapse);
-			manager.getControl().pack(true);
-			manager.update(true);
+	protected Composite getDesignContainer(Composite defaultContainer) {
+		Composite container = defaultContainer;
+		// create a container to hold the toolbar if it should be created
+		if (fAllocateToolbar) {
+			container = new Composite(defaultContainer, SWT.NONE);
+			GridLayout layout = new GridLayout();
+			layout.marginHeight = 0;
+			layout.verticalSpacing = 0;
+			layout.marginWidth = 0;
+			container.setLayout(layout);
+	
+			ToolBar tb = new ToolBar(container, SWT.FLAT);
+			fToolbarManager = new ToolBarManager(tb);
+			tb.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
+			fDesignContainer = container;
 		}
+		return container;
 	}
 
-	protected Composite createPageContainer(Composite parent) {
-		if (fAllocateToolbar) {
-			Composite container = new Composite(super.createPageContainer(parent), SWT.NONE);
-			GridLayout layout = new GridLayout(1, true);
-			layout.horizontalSpacing = 0;
-			layout.verticalSpacing = 0;
-			layout.marginBottom = 0;
-			layout.marginTop = 0;
-			layout.marginHeight = 0;
-			layout.marginWidth = 0;
-			layout.marginLeft = 0;
-			layout.marginRight = 0;
-			layout.horizontalSpacing = 0;
-			container.setLayout(layout);
-
-			ToolBar toolbar = new ToolBar(container, SWT.FLAT);
-			fToolbarManager = new ToolBarManager(toolbar);
-			GridData data = GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).grab(true, false).create();
-			toolbar.setLayoutData(data);
-
-			Composite composite = new Composite(container, SWT.NONE);
-			composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-			return composite;
+	private void addToolBarActions(IDesignViewer viewer) {
+		if (viewer instanceof AbstractTreeViewer) {
+			ViewerExpandCollapseAction expand = new ViewerExpandCollapseAction(true);
+			ViewerExpandCollapseAction collapse = new ViewerExpandCollapseAction(false);
+			fToolbarManager.add(expand);
+			fToolbarManager.add(collapse);
+			fToolbarManager.update(true);
+	
+	
+			expand.setViewer((AbstractTreeViewer) viewer);
+			collapse.setViewer((AbstractTreeViewer) viewer);
 		}
-		return super.createPageContainer(parent);
 	}
 
 	/**
