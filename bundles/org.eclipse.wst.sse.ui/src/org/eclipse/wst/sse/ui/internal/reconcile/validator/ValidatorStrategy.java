@@ -185,6 +185,11 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		Set disabledValsByClass = new HashSet(20);
 		IFile file = getFile();
 		if (file != null) {
+			// Validation is suspended for this resource, do nothing
+			if (ValidationFramework.getDefault().isSuspended(file.getProject()) || ValidationFramework.getDefault().getProjectSettings(file.getProject()).getSuspend()) {
+				return;
+			}
+
 			Collection disabledValidators = null;
 			try {
 				/*
@@ -237,6 +242,9 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 				 * preferences before attempting to create/use it
 				 */
 				if (!disabledValsBySourceId.contains(vmd.getValidatorId()) && !disabledValsByClass.contains(vmd.getValidatorClass())) {
+					if (DEBUG_VALIDATION_UNSUPPORTED) {
+						Logger.log(Logger.INFO, "Source validator "+vmd.getValidatorId()+" handling (content types:[" + StringUtils.pack(getContentTypeIds()) + "] partition type:" + partitionType);
+					}
 					int validatorScope = vmd.getValidatorScope();
 					ReconcileStepForValidator validatorStep = null;
 					// get step for partition type
@@ -270,7 +278,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 				}
 			}
 			else if (DEBUG_VALIDATION_UNSUPPORTED) {
-				Logger.log(Logger.INFO, "Source validator not enabled (content types:[" + StringUtils.pack(getContentTypeIds()) + "] partition type:" + partitionType);
+				Logger.log(Logger.INFO, "Source validator "+vmd.getValidatorId()+" can not handle (content types:[" + StringUtils.pack(getContentTypeIds()) + "] partition type:" + partitionType);
 			}
 		}
 
