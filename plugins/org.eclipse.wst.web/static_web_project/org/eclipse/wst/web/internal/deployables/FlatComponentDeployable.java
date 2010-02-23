@@ -61,13 +61,36 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 	}
 	
 	/**
+	 * We will cache the flattened piece here, and instead redirect
+	 * the module factories to recreate the modules *whenever* there is 
+	 * a workspace change. This will still be much more efficient than
+	 * traversing the tree each time a call to getResources() or getChildModules(). 
+	 */
+	private FlatVirtualComponent cacheFlattened = null;
+
+	
+	public boolean shouldCache() {
+		return false;
+	}
+	
+	public void clearCache() {
+		cacheFlattened = null;
+	}
+	
+	/**
 	 * The export model is what does the grunt of the work
 	 * @return
 	 */
 	protected IFlatVirtualComponent getFlatComponent() {
-		FlatComponentTaskModel options = new FlatComponentTaskModel();
-		options.put(FlatVirtualComponent.PARTICIPANT_LIST, Arrays.asList(getParticipants()));
-		return new FlatVirtualComponent(component, options);
+		if( !shouldCache() || cacheFlattened == null ) {
+			FlatComponentTaskModel options = new FlatComponentTaskModel();
+			options.put(FlatVirtualComponent.PARTICIPANT_LIST, Arrays.asList(getParticipants()));
+			FlatVirtualComponent tmp = new FlatVirtualComponent(component, options);
+			if( shouldCache())
+				cacheFlattened = tmp;
+			return tmp;
+		}
+		return cacheFlattened;
 	}
 	
 	/**
