@@ -20,10 +20,6 @@
                name="http://www.w3.org/2001/XMLSchema"
                uri="platform:/plugin/org.eclipse.xsd/cache/www.w3.org/2001/XMLSchema.xsd">
           </uri> 
-           <uri id="testURIId3"
-               name="http://oasis.names.tc.entity.xmlns.xml.catalog"
-               uri="jar:platform:/plugin/org.eclipse.wst.xml.catalog.tests/data/schemas.jar!/data/catalog.xsd">
-          </uri> 
           <nextCatalog id="testNestedCatalog"
                catalog="data/catalog1.xml"/> 
        </catalogContribution> 
