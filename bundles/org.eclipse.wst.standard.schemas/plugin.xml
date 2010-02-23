@@ -119,6 +119,9 @@
             <uri
                 name="http://schemas.xmlsoap.org/soap/encoding/"
                 uri="xsd/soapenc.xsd" />
+            <uri
+                name="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+                uri="xsd/xmlcatalog11.xsd" />
 
 
             <!-- these are removed from the catalog, since they are -not- 
