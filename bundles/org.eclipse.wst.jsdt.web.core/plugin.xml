@@ -37,8 +37,12 @@
    			priority="1" />
    </extension>
    
-   <!-- Install Handler for web JSDT.. Piggybacks on wst.web facet-->
-  
+   <!-- Install Handler for web JSDT.. Piggybacks on wst.web/jst.web facet-->
+   <extension point="org.eclipse.wst.common.project.facet.core.listeners">
+      <listener class="org.eclipse.wst.jsdt.web.core.internal.project.FacetedProjectListener" eventTypes="POST_INSTALL"/>
+   </extension>
+   
+  <!--
    <extension point="org.eclipse.wst.common.project.facet.core.facets">
    
 		<event-handler facet="wst.web" type="POST_INSTALL" version="[1.0">
@@ -50,7 +54,7 @@
 		</event-handler>
 
 	</extension>
-	
+	-->
 	<!-- removed due to JUnit failures during initial WTP build
 	   <extension id="embeded.jsNature" name="%extension.name.0" point="org.eclipse.core.resources.natures"> 
 		   <runtime>          
