@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,7 @@ public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
 				IDOMDocument xmlDoc = ((IDOMModel) model).getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
-					IJsTranslation translation = adapter.getJsTranslation(true);
+					IJsTranslation translation = adapter.getJsTranslation(false);
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102211
 					elements = translation.getElementsFromJsRange(selection.getOffset(), selection.getOffset() + selection.getLength());
 				}
@@ -80,6 +80,10 @@ public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
 	
 	
 	protected ISearchQuery getSearchQuery(IFile file, IStructuredDocument document, String regionText, String regionType, ITextSelection textSelection) {
-		return new JsSearchQuery(file, getJavaElement(document, textSelection));
+		IJavaScriptElement javaScriptElement = getJavaElement(document, textSelection);
+		if (javaScriptElement != null) {
+			return new JsSearchQuery(file, javaScriptElement);
+		}
+		return null;
 	}
 }

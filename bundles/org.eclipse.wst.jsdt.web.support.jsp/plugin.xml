@@ -13,6 +13,10 @@
 		<documentationTextHover
 			class="org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTHoverProcessor"
 			target="org.eclipse.jst.jsp.SCRIPT.JAVASCRIPT" />
+		<provisionalConfiguration
+			type="org.eclipse.wst.sse.ui.internal.search.FindOccurrencesProcessor"
+			class="org.eclipse.wst.jsdt.web.ui.internal.java.search.JsFindOccurrencesProcessor"
+			target="org.eclipse.jst.jsp.SCRIPT,org.eclipse.jst.jsp.SCRIPT.EVENTHANDLER" />
 	</extension>
 
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">

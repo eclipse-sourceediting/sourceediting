@@ -28,6 +28,10 @@
 			type="autoeditstrategy"
 			class="org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForJs"
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
+		<provisionalConfiguration
+			type="org.eclipse.wst.sse.ui.internal.search.FindOccurrencesProcessor"
+			class="org.eclipse.wst.jsdt.web.ui.internal.java.search.JsFindOccurrencesProcessor"
+			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
 	</extension>		
 	
 	 <extension
@@ -637,24 +641,25 @@
    </extension>
 -->
 
+  	 <!--
   	 <extension
          point="org.eclipse.ui.popupMenus">
   		<objectContribution
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             id="org.eclipse.wst.jsdt.web.ui.jsdtSetup">
-         <visibility>
-                <not>
-                <or>
-            <objectState
-                    name="projectNature"
-                    value="org.eclipse.wst.jsdt.core.jsNature"/>
-            <objectState
-                    name="open"
-                    value="false"/>
-            </or>
+       	 <visibility>
+        	<not>
+	        	<or>
+		            <objectState 
+			            name="projectNature" 
+			            value="org.eclipse.wst.jsdt.core.jsNature"/>
+			        <objectState
+			        	name="open"
+			        	value="false"/>
+	            </or>
             </not>
-         </visibility>
+       	 </visibility>
          <action
             class="org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard"
             label="%action.label.21"
@@ -664,6 +669,7 @@
       	</action>
    		</objectContribution>
    </extension> 
+-->
 
   	 <!-- Uncomment for Standalone + HTML as seperate options -->
   	 <!--
