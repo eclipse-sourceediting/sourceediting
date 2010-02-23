@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (Intalio) - bug 300434 - Make inner classes static where possible
  *******************************************************************************/
 package org.eclipse.wst.sse.internal.contentproperties;
 
@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
 */
 class SimpleNodeOperator {
 
-	class CreateContentSettingsFailureException extends Exception {
+	static class CreateContentSettingsFailureException extends Exception {
 		/**
 		 * Comment for <code>serialVersionUID</code>
 		 */
@@ -63,7 +63,7 @@ class SimpleNodeOperator {
 	}
 
 
-	class ReadContentSettingsFailureException extends Exception {
+	static class ReadContentSettingsFailureException extends Exception {
 		/**
 		 * Comment for <code>serialVersionUID</code>
 		 */
@@ -86,7 +86,7 @@ class SimpleNodeOperator {
 	}
 
 	// writer class for .contentSettings.
-	class XMLDocumentWriter {
+	static class XMLDocumentWriter {
 		OutputStream fOut;
 
 		protected XMLDocumentWriter(OutputStream out) {

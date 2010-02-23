@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (Intalio) - bug 300434 - Make inner classes static where possibl *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.tasks;
 
@@ -29,7 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 public class FileTaskScannerRegistryReader {
-	private class ScannerInfo {
+	private static class ScannerInfo {
 		String fId;
 		IFileTaskScanner fScanner;
 

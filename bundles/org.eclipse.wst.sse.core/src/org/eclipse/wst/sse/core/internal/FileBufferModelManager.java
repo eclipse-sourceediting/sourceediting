@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (Intalio) - bug 300434 - Make inner classes static where possible
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal;
 
@@ -102,7 +102,7 @@ public class FileBufferModelManager {
 	/**
 	 * A URIResolver instance of models built on java.io.Files
 	 */
-	class ExternalURIResolver implements URIResolver {
+	static class ExternalURIResolver implements URIResolver {
 		IPath fLocation;
 
 		ExternalURIResolver(IPath location) {
@@ -164,7 +164,7 @@ public class FileBufferModelManager {
 	 * A URIResolver instance of models built on the extensible WST URI
 	 * resolver
 	 */
-	class CommonURIResolver implements URIResolver {
+	static class CommonURIResolver implements URIResolver {
 		String fLocation;
 		IPath fPath;
 		private IProject fProject;

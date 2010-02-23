@@ -10,6 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     Jesper Steen Møller - initial IDocumentExtension4 support - #102822
  *                           (see also #239115)
+ *     David Carver (Intalio) - bug 300434 - Make inner classes static where possible
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
@@ -223,7 +224,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		}
 	}
 
-	class RegisteredReplace {
+	static class RegisteredReplace {
 		/** The owner of this replace operation. */
 		IDocumentListener fOwner;
 		/** The replace operation */
@@ -265,7 +266,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	private IStructuredDocumentRegion cachedDocumentRegion;
 	private EncodingMemento encodingMemento;
 	private boolean fAcceptPostNotificationReplaces = true;
-	private CurrentDocumentRegionCache fCurrentDocumnetRegionCache;
+	private CurrentDocumentRegionCache fCurrentDocumentRegionCache;
 	private DocumentEvent fDocumentEvent;
 	private IDocumentListener[] fDocumentListeners;
 
@@ -331,7 +332,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 	public BasicStructuredDocument() {
 		super();
-		fCurrentDocumnetRegionCache = new CurrentDocumentRegionCache();
+		fCurrentDocumentRegionCache = new CurrentDocumentRegionCache();
 		setTextStore(new StructuredDocumentTextStore(50, 300));
 		setLineTracker(new DefaultLineTracker());
 		NULL_DOCUMENT_EVENT = new NullDocumentEvent();
@@ -1257,7 +1258,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	IStructuredDocumentRegion getCachedDocumentRegion() {
 		IStructuredDocumentRegion result = null;
 		if (USE_LOCAL_THREAD) {
-			result = fCurrentDocumnetRegionCache.get();
+			result = fCurrentDocumentRegionCache.get();
 		}
 		else {
 			result = cachedDocumentRegion;
@@ -2485,7 +2486,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	public void setCachedDocumentRegion(IStructuredDocumentRegion structuredRegion) {
 		if (USE_LOCAL_THREAD) {
-			fCurrentDocumnetRegionCache.set(structuredRegion);
+			fCurrentDocumentRegionCache.set(structuredRegion);
 		}
 		else {
 			cachedDocumentRegion = structuredRegion;
@@ -2738,7 +2739,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * Class which implements the rewritable session for the SSE.
 	 * 
 	 */
-	class StructuredDocumentRewriteSession extends DocumentRewriteSession {
+	static class StructuredDocumentRewriteSession extends DocumentRewriteSession {
 
 		/**
 		 * Creates a new session.
