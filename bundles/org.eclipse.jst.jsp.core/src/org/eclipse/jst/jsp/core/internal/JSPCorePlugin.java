@@ -15,7 +15,11 @@ import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ISavedState;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentPropertiesManager;
@@ -71,20 +75,31 @@ public class JSPCorePlugin extends Plugin {
 		JavaCore.addElementChangedListener(TaglibHelperManager.getInstance());
 
 		//restore save state and process any events that happened before plugin loaded
-		if(JSPTranslatorPersister.ACTIVATED) {
+		if (JSPTranslatorPersister.ACTIVATED) {
 			try {
-				ISavedState savedState = ResourcesPlugin.getWorkspace().addSaveParticipant(
-						plugin.getBundle().getSymbolicName(), this.fSaveParticipant);
+				final ISavedState savedState = ResourcesPlugin.getWorkspace().addSaveParticipant(plugin.getBundle().getSymbolicName(), this.fSaveParticipant);
 				if (savedState != null) {
-					savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
+					Job persister = new Job(JSPCoreMessages.Initializing) {
+						protected IStatus run(IProgressMonitor monitor) {
+							try {
+								Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+							}
+							finally {
+								savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
+							}
+							return Status.OK_STATUS;
+						}
+					};
+					persister.setUser(false);
+					persister.schedule(2000);
 				}
-			} catch(CoreException e) {
+				//set up persister to listen to resource change events
+				ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPTranslatorPersister.getDefault());
+			}
+			catch (CoreException e) {
 				Logger.logException("Could not load previous save state", e);
 			}
 		}
-		
-		//set up persister to listen to resource change events
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPTranslatorPersister.getDefault());
 		
 		//init the JSP index
 		JSPIndexManager.getInstance().initialize();
