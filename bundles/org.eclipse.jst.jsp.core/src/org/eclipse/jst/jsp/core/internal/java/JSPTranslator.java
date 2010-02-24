@@ -147,7 +147,7 @@ public class JSPTranslator implements Externalizable {
 	public static final String ENDL = "\n"; //$NON-NLS-1$
 	
 	/** session variable declaration */
-	private static final String SESSION_VARIABLE_DECLARATION = "javax.servlet.http.HttpSession session = null;" + ENDL; //$NON-NLS-1$
+	private static final String SESSION_VARIABLE_DECLARATION = "javax.servlet.http.HttpSession session = pageContext.getSession();" + ENDL; //$NON-NLS-1$
 	
 	/** footer text */
 	private static final String FOOTER = "}}"; //$NON-NLS-1$
@@ -1166,11 +1166,11 @@ public class JSPTranslator implements Externalizable {
 		fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
 					" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
 					"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
-					"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
-					"javax.servlet.ServletContext application = null;" + ENDL + //$NON-NLS-1$
-					"javax.servlet.ServletConfig config = null;" + ENDL + //$NON-NLS-1$ 
-					"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
-					"Object page = null;" + ENDL; //$NON-NLS-1$
+					"javax.servlet.jsp.PageContext pageContext = JspFactory.getDefaultFactory().getPageContext(this, request, response, null, true, JspWriter.DEFAULT_BUFFER, true);" + ENDL + //$NON-NLS-1$
+					"javax.servlet.ServletContext application = pageContext.getServletContext();" + ENDL + //$NON-NLS-1$
+					"javax.servlet.ServletConfig config = pageContext.getServletConfig();" + ENDL + //$NON-NLS-1$ 
+					"javax.servlet.jsp.JspWriter out = pageContext.getOut();" + ENDL + //$NON-NLS-1$
+					"Object page = this;" + ENDL; //$NON-NLS-1$
 		fSuperclass = "javax.servlet.http.HttpServlet"; //$NON-NLS-1$
 	}
 

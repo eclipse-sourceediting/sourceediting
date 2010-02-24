@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,18 +115,18 @@ public class TaglibVariable {
 		 */
 		if (includeDoc && getDescription() != null) {
 			if (style == M_PRIVATE) {
-				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + "private " + getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$  //$NON-NLS-5$
+				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + "private " + getVarClass() + " " + getVarName() + " = (" + getVarClass() + ") pageContext.getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 			}
 			else {
-				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$  //$NON-NLS-5$
+				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + getVarClass() + " " + getVarName() + " = (" + getVarClass() + ") pageContext.getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			}
 		}
 		else {
 			if (style == M_PRIVATE) {
-				declaration = "private " + getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				declaration = "private " + getVarClass() + " " + getVarName() + " = (" + getVarClass() + ") pageContext.getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			}
 			else {
-				declaration = getVarClass() + " " + getVarName() + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
+				declaration = getVarClass() + " " + getVarName() + " = (" + getVarClass() + ") pageContext.getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 		}
 		return declaration;
