@@ -7,12 +7,12 @@ String testJspString = "testJspString";
 
 public void _jspService(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response)
 		throws java.io.IOException, javax.servlet.ServletException {
-javax.servlet.jsp.PageContext pageContext = null;
-javax.servlet.ServletContext application = null;
-javax.servlet.ServletConfig config = null;
-javax.servlet.jsp.JspWriter out = null;
-Object page = null;
-javax.servlet.http.HttpSession session = null;
+javax.servlet.jsp.PageContext pageContext = JspFactory.getDefaultFactory().getPageContext(this, request, response, null, true, JspWriter.DEFAULT_BUFFER, true);
+javax.servlet.ServletContext application = pageContext.getServletContext();
+javax.servlet.ServletConfig config = pageContext.getServletConfig();
+javax.servlet.jsp.JspWriter out = pageContext.getOut();
+Object page = this;
+javax.servlet.http.HttpSession session = pageContext.getSession();
 
 try {
 {out.print("");} //markup
