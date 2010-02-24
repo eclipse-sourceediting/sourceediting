@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -266,7 +266,7 @@ public abstract class AbstractStructuredFoldingStrategy
 
 			//if a new position can be calculated then update the position of the annotation,
 			//else the annotation needs to be deleted
-			if(newPos != null && newPos.length > 0) {
+			if(newPos != null && newPos.length > 0 && fProjectionAnnotationModel != null) {
 				Position oldPos = fProjectionAnnotationModel.getPosition(foldingAnnotation);
 				//only update the position if we have to
 				if(!newPos.equals(oldPos)) {
