@@ -2841,7 +2841,7 @@ public class JSPTranslator implements Externalizable {
 			}
 			else {
 				// no useBean start tag being remembered
-				ITextRegionCollection extraEndRegion = (ITextRegionCollection) fUseBeansStack.pop();
+				ITextRegionCollection extraEndRegion = container;
 				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.UseBeanStartTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraEndRegion.getStartOffset(), extraEndRegion.getEndOffset());
 				fTranslationProblems.add(missingStartTag);
 			}
