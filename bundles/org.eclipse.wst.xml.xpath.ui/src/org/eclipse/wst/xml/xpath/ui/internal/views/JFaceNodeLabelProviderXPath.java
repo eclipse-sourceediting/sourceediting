@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2010 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 284306 - removed truncation of string value.
+ *     David Carver (Intalio) - bug 303349 - fix NPE when Adaptor not found.
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
@@ -26,6 +27,7 @@ import org.w3c.dom.NamedNodeMap;
 
 public class JFaceNodeLabelProviderXPath extends LabelProvider implements
 		IFontProvider {
+	private static final String NO_MATCHES = "<No Matches>";
 	FontRegistry registry = new FontRegistry();
 
 	protected IJFaceNodeAdapter getAdapter(Object adaptable) {
@@ -48,9 +50,14 @@ public class JFaceNodeLabelProviderXPath extends LabelProvider implements
 
 	public String getText(Object element) {
 		if (element instanceof EmptyNodeList) {
-			return "<No Matches>";
+			return NO_MATCHES;
 		}
+		
 		IJFaceNodeAdapter adapter = getAdapter(element);
+		if (adapter == null) {
+			return NO_MATCHES;
+		}
+		
 		StringBuffer sb = new StringBuffer(adapter.getLabelText(element));
 		if (element instanceof Element) {
 			Element impl = (Element) element;
