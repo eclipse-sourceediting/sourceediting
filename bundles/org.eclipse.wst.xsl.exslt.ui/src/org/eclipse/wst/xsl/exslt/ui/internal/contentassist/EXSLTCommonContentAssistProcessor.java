@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Carver - initial API and implementation
+ *     Jesper Moller - bug 303823 - NPE if namespace was unknown
  *******************************************************************************/
 package org.eclipse.wst.xsl.exslt.ui.internal.contentassist;
 
@@ -17,12 +18,9 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
-import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest;
-import org.w3c.dom.Document;
 
 public class EXSLTCommonContentAssistProcessor extends
 		AbstractXSLContentAssistProcessor implements IContentAssistProcessor {
@@ -65,8 +63,10 @@ public class EXSLTCommonContentAssistProcessor extends
 		
 				
 		// Only provide proposals for elements in either the XSLT Namespace or EXSLT namespace.
-		if (!xmlNode.getNamespaceURI().contains("http://exslt.org/") &&
-			!xmlNode.getNamespaceURI().equals(XSLCore.XSL_NAMESPACE_URI)) {
+		String namespaceURI = xmlNode.getNamespaceURI();
+		if (namespaceURI == null ||
+			!namespaceURI.contains("http://exslt.org/") &&
+			!namespaceURI.equals(XSLCore.XSL_NAMESPACE_URI)) {
 			return null;
 		}
 
