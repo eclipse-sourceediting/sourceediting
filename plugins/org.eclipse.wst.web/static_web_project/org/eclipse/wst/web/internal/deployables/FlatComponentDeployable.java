@@ -56,7 +56,7 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 		this.component = aComponent;
 	}
 
-	protected IVirtualComponent getComponent() {
+	public IVirtualComponent getComponent() {
 		return component;
 	}
 	
