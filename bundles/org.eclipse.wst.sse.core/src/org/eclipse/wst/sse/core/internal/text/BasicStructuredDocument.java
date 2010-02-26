@@ -11,6 +11,7 @@
  *     Jesper Steen Møller - initial IDocumentExtension4 support - #102822
  *                           (see also #239115)
  *     David Carver (Intalio) - bug 300434 - Make inner classes static where possible
+ *     David Carver (Intalio) - bug 300443 - some constants aren't static final
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
@@ -106,7 +107,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		// jobs -- found not to be a good assumption. See below.
 		private List cachedRegionPositionArray = Collections.synchronizedList(new ArrayList());
 		private final boolean DEBUG = false;
-		private final int MAX_SIZE = 50;
+		private static final int MAX_SIZE = 50;
 
 
 		private ThreadLocal threadLocalCachePosition = new ThreadLocal();
@@ -304,7 +305,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * user's preference is usually to be internally consistent.
 	 */
 	private String fInitialLineDelimiter;
-	private final String READ_ONLY_REGIONS_CATEGORY = "_READ_ONLY_REGIONS_CATEGORY_"; //$NON-NLS-1$
+	private static final String READ_ONLY_REGIONS_CATEGORY = "_READ_ONLY_REGIONS_CATEGORY_"; //$NON-NLS-1$
 	/**
 	 * Current rewrite session, or none if not presently rewriting.
 	 */

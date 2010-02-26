@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     David Carver (Intalio) - bug 300443 - some constants aren't static final
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.internal.contentproperties;
@@ -58,13 +59,13 @@ public class ContentSettings implements IContentSettings {
 
 	private String contentSettingsPath;
 	private IProject currProject;
-	private final String fileElementName = "file";//$NON-NLS-1$
-	private final String PATHATTR = "path"; //$NON-NLS-1$
-	private final String projectElementName = "project";//$NON-NLS-1$
+	private static final String fileElementName = "file";//$NON-NLS-1$
+	private static final String PATHATTR = "path"; //$NON-NLS-1$
+	private static final String projectElementName = "project";//$NON-NLS-1$
 
 
 
-	private final String rootElementName = "contentsettings";//$NON-NLS-1$
+	private static final String rootElementName = "contentsettings";//$NON-NLS-1$
 
 
 
@@ -122,10 +123,10 @@ public class ContentSettings implements IContentSettings {
 
 		Element e = null;
 		if (resource.getType() == IResource.PROJECT) {
-			e = (Element) domOperator.getElementWithNodeName(this.projectElementName);
+			e = (Element) domOperator.getElementWithNodeName(projectElementName);
 			if (e == null) {
 				// create project Element and add it into tree
-				e = (Element) domOperator.addElementUnderRoot(this.projectElementName);
+				e = (Element) domOperator.addElementUnderRoot(projectElementName);
 			}
 		}
 		else if (resource.getType() == IResource.FILE) {
@@ -133,7 +134,7 @@ public class ContentSettings implements IContentSettings {
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(resource));
 			if (e == null) {
 				// create file Element and add path into it.
-				e = (Element) domOperator.addElementUnderRoot(this.fileElementName);
+				e = (Element) domOperator.addElementUnderRoot(fileElementName);
 				domOperator.addAttributeAt(e, getPathAttr(), getRelativePathFromProject(resource));
 			}
 		}
@@ -222,10 +223,10 @@ public class ContentSettings implements IContentSettings {
 
 		Element e = null;
 		if (resource.getType() == IResource.PROJECT) {
-			e = (Element) domOperator.getElementWithNodeName(this.projectElementName);
+			e = (Element) domOperator.getElementWithNodeName(projectElementName);
 			if (e == null) {
 				// create project Element and add it into tree
-				e = (Element) domOperator.addElementUnderRoot(this.projectElementName);
+				e = (Element) domOperator.addElementUnderRoot(projectElementName);
 			}
 		}
 		else if (resource.getType() == IResource.FILE) {
@@ -233,7 +234,7 @@ public class ContentSettings implements IContentSettings {
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(resource));
 			if (e == null) {
 				// create file Element and add path into it.
-				e = (Element) domOperator.addElementUnderRoot(this.fileElementName);
+				e = (Element) domOperator.addElementUnderRoot(fileElementName);
 				domOperator.addAttributeAt(e, getPathAttr(), getRelativePathFromProject(resource));
 			}
 		}
@@ -330,7 +331,7 @@ public class ContentSettings implements IContentSettings {
 		Element e = null;
 		if (deletedFile.getType() == IResource.PROJECT)
 			// select project element and get attribute
-			e = (Element) domOperator.getElementWithNodeName(this.projectElementName);
+			e = (Element) domOperator.getElementWithNodeName(projectElementName);
 		else if (deletedFile.getType() == IResource.FILE)
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(deletedFile));
 		if (e == null) {
@@ -341,7 +342,7 @@ public class ContentSettings implements IContentSettings {
 
 		// when deletedFile entry exists.
 		if (deletedFile.getType() == IResource.PROJECT)
-			domOperator.removeElementWith(this.projectElementName);
+			domOperator.removeElementWith(projectElementName);
 		else if (deletedFile.getType() == IResource.FILE)
 			domOperator.removeElementWith(getPathAttr(), getRelativePathFromProject(deletedFile));
 
@@ -397,7 +398,7 @@ public class ContentSettings implements IContentSettings {
 		Element e = null;
 		if (resource.getType() == IResource.PROJECT)
 			// select project element and get attribute
-			e = (Element) domOperator.getElementWithNodeName(this.projectElementName);
+			e = (Element) domOperator.getElementWithNodeName(projectElementName);
 		else if (resource.getType() == IResource.FILE)
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(resource));
 
@@ -458,7 +459,7 @@ public class ContentSettings implements IContentSettings {
 		Element e = null;
 		if (resource.getType() == IResource.PROJECT)
 			// select project element and get attribute
-			e = (Element) domOperator.getElementWithNodeName(this.projectElementName);
+			e = (Element) domOperator.getElementWithNodeName(projectElementName);
 		else if (resource.getType() == IResource.FILE)
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(resource));
 
@@ -542,7 +543,7 @@ public class ContentSettings implements IContentSettings {
 		Element e = null;
 		if (resource.getType() == IResource.PROJECT)
 			// select project element and get attribute
-			e = (Element) domOperator.getElementWithNodeName(this.projectElementName);
+			e = (Element) domOperator.getElementWithNodeName(projectElementName);
 		else if (resource.getType() == IResource.FILE)
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(resource));
 
@@ -607,7 +608,7 @@ public class ContentSettings implements IContentSettings {
 		Element e = null;
 		if (resource.getType() == IResource.PROJECT)
 			// select project element and get attribute
-			e = (Element) domOperator.getElementWithNodeName(this.projectElementName);
+			e = (Element) domOperator.getElementWithNodeName(projectElementName);
 		else if (resource.getType() == IResource.FILE)
 			e = (Element) domOperator.getElementWithAttribute(getPathAttr(), getRelativePathFromProject(resource));
 

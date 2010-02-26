@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     Jesper Steen Møller - initial IDocumentExtension4 support - #102822
+ *     David Carver (Intalio) - bug 300443 - some constants aren't static final
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.format;
@@ -45,7 +46,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 	 * Max length of text to be formatted to be considered a "small change"
 	 * Used for document rewrite session type.
 	 */
-	private final int MAX_SMALL_FORMAT_SIZE = 1000;
+	private static final int MAX_SMALL_FORMAT_SIZE = 1000;
 
 	protected void ensureClosed(OutputStream outputStream, InputStream inputStream) {
 
