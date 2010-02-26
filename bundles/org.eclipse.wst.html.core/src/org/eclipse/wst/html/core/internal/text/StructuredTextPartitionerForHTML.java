@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,9 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		HTML40Namespace.ATTR_NAME_ONLOAD,
 		HTML40Namespace.ATTR_NAME_ONUNLOAD,
 		HTML40Namespace.ATTR_NAME_ONSUBMIT};
+	
+	/** array of style attribute names */
+	private static final String[] STYLE_ATTRIBUTE_NAMES =  {HTML40Namespace.ATTR_NAME_STYLE};
 	
 	public StructuredTextPartitionerForHTML() {
 		super();
@@ -163,6 +166,8 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			result = IHTMLPartitions.HTML_DECLARATION;
 		else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && isScriptAttributeValue(region, offset))
 			result = IHTMLPartitions.SCRIPT_EVENTHANDLER;
+		else if (isStyleAttributeValue(region, offset))
+			result = ICSSPartitions.STYLE;
 		else
 			result = super.getPartitionType(region, offset);
 		return result;
@@ -212,7 +217,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		}
 		else if (tagname.equalsIgnoreCase(HTML40Namespace.ElementName.SCRIPT))
 			result = IHTMLPartitions.SCRIPT;
-		else if (tagname.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE))
+		else if (tagname.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE) || isStyleAttributeValue(region,offset))
 			result = ICSSPartitions.STYLE;
 		else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && isScriptAttributeValue(region, offset))
 			result = IHTMLPartitions.SCRIPT_EVENTHANDLER;
@@ -241,14 +246,41 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		if (region.getType() != DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 			return false;
 
-		return isAttributeNameForValueAnEventScript(region, offset);
+		return isAttributeNameForValueInArray(EVENT_ATTRIBUTE_NAMES, region, offset);
 	}
+	
+	/**
+	 * @param region {@link ITextRegion} containing <code>offset</code>
+	 * @param offset offset in the given <code>region</code> to check if it is in
+	 * the attribute value region of a style attribute
+	 * @return <code>true</code> if the given offset in the given region is
+	 * in the value region of a style attribute, <code>false</code> otherwise
+	 */
+	private boolean isStyleAttributeValue(ITextRegion region, int offset) {
+		boolean isStyleAttributeValue = false;
+		if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			isStyleAttributeValue = isAttributeNameForValueInArray(STYLE_ATTRIBUTE_NAMES, region, offset);
+		}
 
-	private boolean isAttributeNameForValueAnEventScript(ITextRegion attrValueRegion, int offset) {
+		return isStyleAttributeValue;
+	}
+	
+	/**
+	 * <p>determines if the attribute name associated with the given attribute region
+	 * is in the given array of attribute names</p>
+	 * 
+	 * @param attributeNames determine if the attribute name associated with the given offset
+	 * is in this array of attribute names
+	 * @param attrValueRegion {@link ITextRegion} of the attribute region containing the given offset
+	 * @param offset offset in an attribute region to determine if it is in the list of given attribute names
+	 * @return <code>true</code> if the attribute name associated with the given offset is in the given
+	 * list of attribute names, <code>false</code> otherwise
+	 */
+	private boolean isAttributeNameForValueInArray(String[] attributeNames, ITextRegion attrValueRegion, int offset) {
 		IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
 		ITextRegionList regionList = node.getRegions();
 		int currentIndex = regionList.indexOf(attrValueRegion);
-
+		
 		/*
 		 * 4 is the minimum index allowing for the tag's open, name, attribute
 		 * name and equals character to appear first
@@ -257,17 +289,17 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			return false;
 		ITextRegion tagAttrNameRegion = regionList.get(currentIndex - 2);
 		
-		boolean isEvent = false;
+		boolean foundAttributeName = false;
 		if (fStructuredDocument instanceof IRegionComparible) {
 			int start = node.getStartOffset(tagAttrNameRegion);
-			for (int i = 0; !isEvent && i < EVENT_ATTRIBUTE_NAMES.length; i++) {
-				isEvent = ((IRegionComparible) fStructuredDocument).regionMatchesIgnoreCase(start, tagAttrNameRegion.getTextLength(), EVENT_ATTRIBUTE_NAMES[i]);
+			for (int i = 0; !foundAttributeName && i < attributeNames.length; i++) {
+				foundAttributeName = ((IRegionComparible) fStructuredDocument).regionMatchesIgnoreCase(start, tagAttrNameRegion.getTextLength(), attributeNames[i]);
 			}
 		}
 		else {
 			String tagAttrName = node.getText(tagAttrNameRegion);
-			isEvent = StringUtils.contains(EVENT_ATTRIBUTE_NAMES, tagAttrName, false);
+			foundAttributeName = StringUtils.contains(attributeNames, tagAttrName, false);
 		}
-		return isEvent;
+		return foundAttributeName;
 	}
 }

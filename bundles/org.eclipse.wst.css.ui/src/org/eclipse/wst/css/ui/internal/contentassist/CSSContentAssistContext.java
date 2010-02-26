@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,7 +106,17 @@ class CSSContentAssistContext {
 		if (fStructuredDocument != null) {
 			IStructuredDocumentRegion flatNode = fStructuredDocument.getRegionAtCharacterOffset(offset);
 			if (flatNode != null) {
-				region = flatNode.getRegionAtCharacterOffset(offset);
+				//if its a quoted region and at the beginning of a node then get the node before it
+				if(offset == flatNode.getStartOffset() && fQuote != 0) {
+					flatNode = fStructuredDocument.getRegionAtCharacterOffset(offset-1);
+				}
+				
+				//if its the end offset of the node then to get the region need to step back one
+				if(offset == flatNode.getEndOffset()) {
+					region = flatNode.getRegionAtCharacterOffset(offset-1);
+				} else {
+					region = flatNode.getRegionAtCharacterOffset(offset);
+				}
 			}
 		}
 		return region;
@@ -274,6 +284,11 @@ class CSSContentAssistContext {
 		} else {
 			fTargetPos = fCursorPos - 1;
 		}
+		
+		//deal with the leading quote
+		if(fQuote != 0) {
+			fTargetPos--;
+		}
 	}
 
 	/**
@@ -287,9 +302,15 @@ class CSSContentAssistContext {
 			fTextToReplace = ""; //$NON-NLS-1$
 			fTextToCompare = ""; //$NON-NLS-1$
 		} else {
+			//math to deal with leading quote
+			int targetPos = fTargetPos;
+			if(fQuote != 0) {
+				targetPos--;
+			}
+			
 			String regionText = documentRegion.getText(targetRegion);
 			int regionStart = documentRegion.getStartOffset(targetRegion);
-			if (!fSelected && (regionStart == fCursorPos || regionText.trim().length() == 0 || regionStart + regionText.length() - 1 < fTargetPos)) {
+			if (!fSelected && (regionStart == fCursorPos || regionText.trim().length() == 0 || regionStart + regionText.length() - 1 < targetPos)) {
 				// to insertion
 				fReplaceBegin = fCursorPos;
 				fTextToReplace = ""; //$NON-NLS-1$
@@ -298,8 +319,16 @@ class CSSContentAssistContext {
 				// to replace
 				fReplaceBegin = regionStart;
 				fTextToReplace = regionText;
-				if(fCursorPos >= fReplaceBegin && regionText.trim().length() >= (fCursorPos - fReplaceBegin))
-					fTextToCompare = regionText.substring(0, fCursorPos - fReplaceBegin);
+				
+				//math to deal with leading quote
+				int matchLength = fCursorPos - fReplaceBegin;
+				if(fQuote != 0) {
+					matchLength--;
+					fReplaceBegin++;
+				}
+				
+				if(fCursorPos >= fReplaceBegin && regionText.trim().length() >= (matchLength))
+					fTextToCompare = regionText.substring(0, matchLength);
 				else
 					fTextToCompare = ""; //$NON-NLS-1$
 			}
@@ -311,10 +340,18 @@ class CSSContentAssistContext {
 	 */
 	private boolean isSpecialDelimiterRegion(int pos) {
 		ITextRegion region = getRegionByOffset(pos);
-		String type = region.getType();
-		return (type == CSSRegionContexts.CSS_LBRACE || type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || type == CSSRegionContexts.CSS_S);
+		String type = null;
+		if(region != null) {
+			type = region.getType();
+		}
+		return (type != null) &&((type == CSSRegionContexts.CSS_LBRACE ||
+				type == CSSRegionContexts.CSS_RBRACE ||
+				type == CSSRegionContexts.CSS_DELIMITER ||
+				type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR ||
+				type == CSSRegionContexts.CSS_DECLARATION_DELIMITER ||
+				type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR ||
+				type == CSSRegionContexts.CSS_S));
 	}
-
 	/**
 	 *  
 	 */
