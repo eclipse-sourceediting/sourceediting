@@ -156,12 +156,9 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 					in = new ObjectInputStream(fis);
 					translator = (JSPTranslator)in.readObject();
 					
-					//set up some fields that were not externalized but can be retrieved from model
+					//do post read external setup
 					if(translator != null) {
-						translator.fStructuredDocument = model.getStructuredDocument();
-						if(model instanceof IDOMModel) {
-							translator.fStructuredModel = (IDOMModel)model;
-						}
+						translator.postReadExternalSetup(model);
 					}
 				} else {
 					persistedTranslatorFile.delete();

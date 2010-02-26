@@ -643,14 +643,18 @@ public class JSPTranslator implements Externalizable {
 	 */
 	public final StringBuffer getEmptyTranslation() {
 		reset();
-		buildResult();
+		buildResult(true);
 		return getTranslation();
 	}
 
 	/**
-	 * put the final java document together
+	 * <p>put the final java document together</p>
+	 * 
+	 * @param updateRanges <code>true</code> if the ranges need to be updated as the result
+	 * is built, <code>false</code> if the ranges have already been updated.  This is useful
+	 * if building a result from a persisted {@link JSPTranslator}.
 	 */
-	private final void buildResult() {
+	private final void buildResult(boolean updateRanges) {
 		// to build the java document this is the order:
 		// 
 		// + default imports
@@ -673,7 +677,9 @@ public class JSPTranslator implements Externalizable {
 		javaOffset += fImplicitImports.length();
 
 		// updateRanges(fIndirectImports, javaOffset);
-		updateRanges(fImportRanges, javaOffset);
+		if(updateRanges) {
+			updateRanges(fImportRanges, javaOffset);
+		}
 		// user imports
 		append(fUserImports);
 		javaOffset += fUserImports.length();
@@ -684,12 +690,16 @@ public class JSPTranslator implements Externalizable {
 		fResult.append(fSuperclass + "{" + ENDL); //$NON-NLS-1$
 		javaOffset += fSuperclass.length() + 2;
 
-		updateRanges(fDeclarationRanges, javaOffset);
+		if(updateRanges) {
+			updateRanges(fDeclarationRanges, javaOffset);
+		}
 		// user declarations
 		append(fUserDeclarations);
 		javaOffset += fUserDeclarations.length();
 
-		updateRanges(fUserELRanges, javaOffset);
+		if(updateRanges) {
+			updateRanges(fUserELRanges, javaOffset);
+		}
 		append(fUserELExpressions);
 		javaOffset += fUserELExpressions.length();
 
@@ -710,7 +720,9 @@ public class JSPTranslator implements Externalizable {
 		fResult.append(TRY_CATCH_START);
 		javaOffset += TRY_CATCH_START.length();
 
-		updateRanges(fCodeRanges, javaOffset);
+		if(updateRanges) {
+			updateRanges(fCodeRanges, javaOffset);
+		}
 
 		// user code
 		append(fUserCode);
@@ -1118,7 +1130,7 @@ public class JSPTranslator implements Externalizable {
 			fTranslationProblems.add(missingEndTag);
 		}
 
-		buildResult();
+		buildResult(true);
 	}
 
  	/**
@@ -3191,7 +3203,11 @@ public class JSPTranslator implements Externalizable {
 	}
 	
 	/**
-	 * <p><b>NOTE: </b>If the implementation of this method is changed be sure to update
+	 * <p><b>NOTE 1: </b>After reading in an externalized {@link JSPTranslator} the caller must
+	 * manually call {@link #postReadExternalSetup(IStructuredModel)} to finish setting up
+	 * the {@link JSPTranslator} for use.</p>
+	 * 
+	 * <p><b>NOTE 2: </b>If the implementation of this method is changed be sure to update
 	 * {@link #writeExternal(ObjectOutput)} and {@link #serialVersionUID}</p>
 	 * 
 	 * @see #writeExternal(ObjectOutput)
@@ -3237,7 +3253,22 @@ public class JSPTranslator implements Externalizable {
 		this.fELTranslatorID = readString(in);
 		
 		//build result
-		this.buildResult();
+		this.buildResult(false);
+	}
+	
+	/**
+	 * <p>This does mandatory setup needed after a JSPTranslator is restored from
+	 * a persisted file</p>
+	 * 
+	 * @param jspModel {@link IStructuredModel} representing the JSP file that this
+	 * is a translator for
+	 */
+	protected void postReadExternalSetup(IStructuredModel jspModel) {
+		this.fStructuredDocument = jspModel.getStructuredDocument();
+		this.fJspTextBuffer = new StringBuffer(this.fStructuredDocument.get());
+		if(jspModel instanceof IDOMModel) {
+			this.fStructuredModel = (IDOMModel)jspModel;
+		}
 	}
 	
 	/**
@@ -3379,5 +3410,90 @@ public class JSPTranslator implements Externalizable {
 		}
 		
 		return ranges;
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		boolean equal = false;
+		if(obj instanceof JSPTranslator) {
+			JSPTranslator other = (JSPTranslator)obj;
+			equal = this.fClassHeader.equals(other.fClassHeader) &&
+				this.fClassname.equals(other.fClassname) &&
+				this.fSuperclass.equals(other.fSuperclass) &&
+				this.fImplicitImports.equals(other.fImplicitImports) &&
+				this.fServiceHeader.equals(other.fServiceHeader) &&
+				buffersEqual(this.fUserImports, other.fUserImports) &&
+				this.fSourcePosition == other.fSourcePosition &&
+				this.fRelativeOffset == other.fRelativeOffset &&
+				this.fCursorPosition == other.fCursorPosition &&
+				this.fIsErrorPage == other.fIsErrorPage &&
+				this.fCursorInExpression == other.fCursorInExpression &&
+				this.fIsInASession == other.fIsInASession &&
+				buffersEqual(this.fUserCode, other.fUserCode) &&
+				buffersEqual(this.fUserELExpressions, other.fUserELExpressions) &&
+				buffersEqual(this.fUserDeclarations, other.fUserDeclarations) &&
+				buffersEqual(this.fCursorOwner, other.fCursorOwner) &&
+				this.fInCodeRegion == other.fInCodeRegion &&
+				this.fProcessIncludes == other.fProcessIncludes &&
+				this.fOffsetInUserImports == other.fOffsetInUserImports &&
+				this.fOffsetInUserDeclarations == other.fOffsetInUserDeclarations &&
+				this.fOffsetInUserCode == other.fOffsetInUserCode &&
+				rangesEqual(this.fImportRanges, other.fImportRanges) &&
+				rangesEqual(this.fCodeRanges, other.fCodeRanges) &&
+				rangesEqual(this.fDeclarationRanges, other.fDeclarationRanges) &&
+				rangesEqual(this.fUseBeanRanges, other.fUseBeanRanges) &&
+				rangesEqual(this.fUserELRanges, other.fUserELRanges) &&
+				rangesEqual(this.fIndirectRanges, other.fIndirectRanges) &&
+				(
+					(this.fELTranslatorID != null && other.fELTranslatorID != null) ||
+					(this.fELTranslatorID == null && other.fELTranslatorID != null && other.fELTranslatorID.length() == 0) ||
+					(this.fELTranslatorID != null && this.fELTranslatorID.length() == 0 && other.fELTranslatorID == null) ||
+					(this.fELTranslatorID.equals(other.fELTranslator))
+				);
+		}
+		return equal;
+	}
+	
+	/**
+	 * <p><code>null</code> is considered equivlent to an empty buffer</p>
+	 * 
+	 * @param buff1 can be <code>null</code>
+	 * @param buff2 can be <code>null</code>
+	 * @return <code>true</code> if the two given buffers are equal, <codee>false</code> otherwise
+	 */
+	private static boolean buffersEqual(StringBuffer buff1, StringBuffer buff2) {
+		return (buff1 == null && buff2 == null) ||
+			(buff1 != null && buff2!= null && buff1.toString().equals(buff2.toString())) ||
+			(buff1 == null && buff2 != null && buff2.length() == 0) ||
+			(buff1 != null && buff1.length() == 0 && buff2 == null);
+	}
+	
+	/**
+	 * @param ranges1
+	 * @param ranges2
+	 * @return <code>true</code> if the two maps of ranges contains the same key/value pares,
+	 * <code>false</code> otherwise
+	 */
+	private static boolean rangesEqual(HashMap ranges1, HashMap ranges2) {
+		//this is a strange hack because Position is not designed to be used as keys in a Map, see Position doc
+		HashMap temp = new HashMap();
+		temp.putAll(ranges1);
+		ranges1 = temp;
+		
+		boolean equal = false;
+		if(ranges1 != null && ranges2 != null) {
+			equal = true;
+			Iterator ranges1Keys = ranges1.keySet().iterator();
+			while(ranges1Keys.hasNext() && equal) {
+				Position key = (Position)ranges1Keys.next();
+				Position ranges1Value = (Position)ranges1.get(key);
+				Position ranges2Value = (Position)ranges2.get(key);
+				equal = ranges1Value.equals(ranges2Value);
+			}
+		}
+		
+		return equal;
 	}
 }
