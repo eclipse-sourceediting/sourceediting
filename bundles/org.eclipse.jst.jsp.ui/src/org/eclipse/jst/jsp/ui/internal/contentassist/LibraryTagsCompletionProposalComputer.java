@@ -34,7 +34,7 @@ import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer;
+import org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentModelGenerator;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
@@ -98,7 +98,7 @@ public class LibraryTagsCompletionProposalComputer extends
 	}
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.DefaultXMLCompletionProposalComputer#addAttributeValueProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer#addAttributeValueProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addAttributeValueProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -199,7 +199,7 @@ public class LibraryTagsCompletionProposalComputer extends
 	}
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#setErrorMessage(java.lang.String)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#setErrorMessage(java.lang.String)
 	 */
 	public void setErrorMessage(String errorMessage) {
 		if (fDepthCount == 0) {
@@ -208,21 +208,21 @@ public class LibraryTagsCompletionProposalComputer extends
 	}
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getGenericTagImage()
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getGenericTagImage()
 	 */
 	protected Image getGenericTagImage() {
 		return JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_JSP);
 	}
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getDeemphasizedTagImage()
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getDeemphasizedTagImage()
 	 */
 	protected Image getDeemphasizedTagImage() {
 		return JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_JSP);
 	}
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getEmphasizedTagImage()
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getEmphasizedTagImage()
 	 */
 	protected Image getEmphasizedTagImage() {
 		return JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_JSP);

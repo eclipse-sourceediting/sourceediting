@@ -43,7 +43,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
-import org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer;
+import org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentModelGenerator;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
@@ -68,7 +68,7 @@ public class HTMLTagsCompletionProposalComputer extends
 	/**
 	 * <p>Determine if the document is XHTML or not, then compute the proposals</p>
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#computeCompletionProposals(org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#computeCompletionProposals(org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public List computeCompletionProposals(
 			CompletionProposalInvocationContext context,
@@ -91,7 +91,7 @@ public class HTMLTagsCompletionProposalComputer extends
 	/**
 	 * <p>Dependent on if the document is XHTML or not</p>
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getContentGenerator()
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getContentGenerator()
 	 */
 	protected XMLContentModelGenerator getContentGenerator() {
 		if (fGenerator == null) {
@@ -107,7 +107,7 @@ public class HTMLTagsCompletionProposalComputer extends
 	/**
 	 * <p>Filter out all {@link CMNode}s except those specific to HTML documents</p>
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#validModelQueryNode(org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#validModelQueryNode(org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
 	 */
 	protected boolean validModelQueryNode(CMNode node) {
 		boolean isValid = false;
@@ -129,7 +129,7 @@ public class HTMLTagsCompletionProposalComputer extends
 	}
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#addEmptyDocumentProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#addEmptyDocumentProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addEmptyDocumentProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -139,7 +139,7 @@ public class HTMLTagsCompletionProposalComputer extends
 	}
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#addStartDocumentProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#addStartDocumentProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addStartDocumentProposals(
 			ContentAssistRequest contentAssistRequest,

@@ -53,7 +53,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.ui.contentassist.DefaultXMLCompletionProposalComputer;
+import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistUtilities;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
@@ -80,7 +80,7 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 	}
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.DefaultXMLCompletionProposalComputer#sessionEnded()
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer#sessionEnded()
 	 */
 	public void sessionEnded() {
 		fTranslationAdapter = null;
@@ -91,7 +91,7 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 	 * location within the document that corresponds to the current cursor
 	 * position within the text-editor control.</p>
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#computeCompletionProposals(org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#computeCompletionProposals(org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public List computeCompletionProposals(
 			CompletionProposalInvocationContext context,
@@ -150,7 +150,7 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 	}
 
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#computeContextInformation(org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#computeContextInformation(org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public List computeContextInformation(
 			CompletionProposalInvocationContext context,

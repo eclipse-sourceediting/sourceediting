@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.contentassist;
+package org.eclipse.wst.xml.ui.internal.contentassist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,9 +38,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.ui.internal.contentassist.AttributeContextInformationPresenter;
-import org.eclipse.wst.xml.ui.internal.contentassist.AttributeContextInformationProvider;
-import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

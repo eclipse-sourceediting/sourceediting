@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.contentassist;
+package org.eclipse.wst.xml.ui.internal.contentassist;
 
 import java.util.Properties;
 import java.util.Vector;
@@ -17,7 +17,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 
 /**
  * <p>Default implementation of the {@link AbstractXMLCompletionProposalComputer}, defaults are to do nothing</p>
@@ -46,7 +45,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addAttributeNameProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addAttributeNameProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addAttributeNameProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -57,7 +56,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addAttributeValueProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addAttributeValueProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addAttributeValueProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -68,7 +67,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addCommentProposal(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addCommentProposal(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addCommentProposal(
 			ContentAssistRequest contentAssistRequest,
@@ -79,7 +78,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addDocTypeProposal(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addDocTypeProposal(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addDocTypeProposal(
 			ContentAssistRequest contentAssistRequest,
@@ -90,7 +89,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addEmptyDocumentProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addEmptyDocumentProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addEmptyDocumentProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -101,7 +100,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addEndTagNameProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addEndTagNameProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addEndTagNameProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -112,7 +111,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addEndTagProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addEndTagProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addEndTagProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -123,7 +122,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addEntityProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion, org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addEntityProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion, org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addEntityProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -135,7 +134,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addEntityProposals(java.util.Vector, java.util.Properties, java.lang.String, int, org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion, org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addEntityProposals(java.util.Vector, java.util.Properties, java.lang.String, int, org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion, org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addEntityProposals(Vector proposals, Properties map,
 			String key, int nodeOffset, IStructuredDocumentRegion sdRegion,
@@ -147,7 +146,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addPCDATAProposal(java.lang.String, org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addPCDATAProposal(java.lang.String, org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addPCDATAProposal(String nodeName,
 			ContentAssistRequest contentAssistRequest,
@@ -158,7 +157,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addStartDocumentProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addStartDocumentProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addStartDocumentProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -169,7 +168,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addTagCloseProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addTagCloseProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addTagCloseProposals(
 			ContentAssistRequest contentAssistRequest,
@@ -180,7 +179,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addTagInsertionProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, int, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addTagInsertionProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, int, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addTagInsertionProposals(
 			ContentAssistRequest contentAssistRequest, int childPosition,
@@ -191,7 +190,7 @@ public class DefaultXMLCompletionProposalComputer extends
 	/**
 	 * Default behavior is do to nothing.
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLCompletionProposalComputer#addTagNameProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, int, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#addTagNameProposals(org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest, int, org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext)
 	 */
 	protected void addTagNameProposals(
 			ContentAssistRequest contentAssistRequest, int childPosition,

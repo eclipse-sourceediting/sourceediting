@@ -11,7 +11,6 @@
 package org.eclipse.wst.xml.ui.internal.contentassist;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer;
 
 /**
  * <p>{@link AbstractXMLModelQueryCompletionProposalComputer} used to
@@ -28,7 +27,7 @@ public class XMLTagsCompletionProposalComputer extends
 	protected XMLContentModelGenerator fGenerator;
 	
 	/**
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getContentGenerator()
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getContentGenerator()
 	 */
 	protected XMLContentModelGenerator getContentGenerator() {
 		if (fGenerator == null) {
@@ -42,7 +41,7 @@ public class XMLTagsCompletionProposalComputer extends
 	 * <p><b>NOTE:</b> Currently nothing is filtered so this computer returns all
 	 * results from the model query for the current content type</p>
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractXMLModelQueryCompletionProposalComputer#validModelQueryNode(org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#validModelQueryNode(org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
 	 */
 	protected boolean validModelQueryNode(CMNode node) {
 		return true;

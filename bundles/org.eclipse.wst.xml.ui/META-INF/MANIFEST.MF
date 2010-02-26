@@ -7,7 +7,6 @@ Bundle-Activator: org.eclipse.wst.xml.ui.internal.XMLUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xml.ui,
- org.eclipse.wst.xml.ui.contentassist,
  org.eclipse.wst.xml.ui.internal;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.actions;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.autoedit;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
