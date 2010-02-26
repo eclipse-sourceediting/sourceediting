@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,12 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 
 public interface TLDElementDeclaration extends CMElementDeclaration {
+	/** 
+	 * Property stating weather the {@link CMElementDeclaration}
+	 * is a library tag or not
+	 */
+	String IS_LIBRARY_TAG = "isLibraryTag";
+	
 	String TAG_SOURCE = "Tag Definition Source"; //$NON-NLS-1$
 	String SOURCE_JSP_TLD = "JSP Tag Library Descriptor"; //$NON-NLS-1$
 	String SOURCE_TAG_FILE = "JSP Tag 2.0 File"; //$NON-NLS-1$

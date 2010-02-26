@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -322,6 +322,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 			}
 			return getOwnerDocument().getProperty(propertyName);
 		}
+		else if(TLDElementDeclaration.IS_LIBRARY_TAG.equals(propertyName)) {
+			return Boolean.TRUE;
+		}
 		return null;
 	}
 
@@ -512,7 +515,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 * 
 	 */
 	public boolean supports(String propertyName) {
-		return propertyName == null || propertyName.equals("tagInfo") || propertyName.equals(JSP12TLDNames.DESCRIPTION) || propertyName.equals(TLDDocument.CM_KIND) || propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON) || propertyName.equals(TLDElementDeclaration.TAG_SOURCE);//$NON-NLS-1$ //$NON-NLS-2$
+		return propertyName == null || propertyName.equals("tagInfo") || propertyName.equals(JSP12TLDNames.DESCRIPTION) || propertyName.equals(TLDDocument.CM_KIND) || propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON) || propertyName.equals(TLDElementDeclaration.TAG_SOURCE) || propertyName.equals(TLDElementDeclaration.IS_LIBRARY_TAG);//$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public String toString() {
