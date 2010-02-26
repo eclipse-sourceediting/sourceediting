@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,8 @@ package org.eclipse.wst.sse.ui.internal;
 
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -80,5 +82,18 @@ public class SSEUIPlugin extends AbstractUIPlugin {
 
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
+	}
+
+	/**
+	 * <p>A utility function for getting the active workbench shell.</p>
+	 * 
+	 * @return the active workbench {@link Shell}
+	 */
+	public static Shell getActiveWorkbenchShell() {
+		 IWorkbenchWindow window = getDefault().getWorkbench().getActiveWorkbenchWindow();
+		 if (window != null) {
+		 	return window.getShell();
+		 }
+		 return null;
 	}
 }

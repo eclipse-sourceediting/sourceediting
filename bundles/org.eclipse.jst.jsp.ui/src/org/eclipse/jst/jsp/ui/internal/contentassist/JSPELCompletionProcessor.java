@@ -5,6 +5,9 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 
+/**
+ * @deprecated This class is no longer used locally and will be removed in the future
+ */
 public class JSPELCompletionProcessor extends JSPCompletionProcessor {
 	protected JSPProposalCollector getProposalCollector(ICompilationUnit cu, JSPTranslation translation) {
 		return new JSPELProposalCollector(cu, translation);

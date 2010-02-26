@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,13 +36,9 @@ import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
 
 
 /**
- * Completion processor for HTML Templates. Most of the work is already done
- * by the HTML Content Assist processor, so by the time the
- * HTMLTemplateCompletionProcessor is asked for content assist proposals, the
- * HTML content assist processor has already set the context type for
- * templates.
+ * <p>Completion computer for HTML templates</p>
  */
-class HTMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
+public class HTMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	private static final class ProposalComparator implements Comparator {
 		public int compare(Object o1, Object o2) {
 			return ((TemplateProposal) o2).getRelevance() - ((TemplateProposal) o1).getRelevance();
@@ -158,7 +154,7 @@ class HTMLTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		return HTMLUIPlugin.getDefault().getTemplateStore();
 	}
 
-	void setContextType(String contextTypeId) {
+	public void setContextType(String contextTypeId) {
 		fContextTypeId = contextTypeId;
 	}
 }

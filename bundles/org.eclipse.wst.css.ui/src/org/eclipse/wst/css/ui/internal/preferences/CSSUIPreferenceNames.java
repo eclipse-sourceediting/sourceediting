@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,4 +34,40 @@ public class CSSUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
+	
+	/**
+	 * <p>preference key used for saving which categories should not display on the default page</p>
+	 * 
+	 * <p>Value is of type {@link String} consisting of
+	 * <tt>org.eclipse.wst.sse.ui.completionProposal/proposalCategory/@id</tt>s separated by the null
+	 * character (<tt>\0</tt>), ordered is ignored</p>
+	 */
+	public static final String CONTENT_ASSIST_DO_NOT_DISPLAY_ON_DEFAULT_PAGE = "css_content_assist_display_on_default_page"; //$NON-NLS-1$
+	
+	/**
+	 * <p>preference key used for saving which categories should not display on their own page</p>
+	 * 
+	 * <p>Value is of type {@link String} consisting of
+	 * <tt>org.eclipse.wst.sse.ui.completionProposal/proposalCategory/@id</tt>s separated by the null
+	 * character (<tt>\0</tt>), order is ignored</p>
+	 */
+	public static final String CONTENT_ASSIST_DO_NOT_DISPLAY_ON_OWN_PAGE = "css_content_assist_display_on_own_page"; //$NON-NLS-1$
+	
+	/**
+	 * <p>preference key for saving the sort order of the categories when displaying them on their own page</p>
+	 * 
+	 * <p>Value is of type {@link String} consisting of
+	 * <tt>org.eclipse.wst.sse.ui.completionProposal/proposalCategory/@id</tt>s separated by the null
+	 * character (<tt>\0</tt>) in the desired sort order.</p>
+	 */
+	public static final String CONTENT_ASSIST_OWN_PAGE_SORT_ORDER= "css_content_assist_own_page_sort_order"; //$NON-NLS-1$
+	
+	/**
+	 * <p>preference key for saving the sort order of the categories when displaying them on the default page</p>
+	 * 
+	 * <p>Value is of type {@link String} consisting of
+	 * <tt>org.eclipse.wst.sse.ui.completionProposal/proposalCategory/@id</tt>s separated by the null
+	 * character (<tt>\0</tt>) in the desired sort order.</p>
+	 */
+	public static final String CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER= "css_content_assist_default_page_sort_order"; //$NON-NLS-1$
 }

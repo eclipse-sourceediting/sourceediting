@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,10 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistUtilities;
 import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 
+/**
+ * @deprecated This class is no longer used locally and will be removed in the future
+ * @see CSSStructuredContentAssistProcessor
+ */
 public class CSSContentAssistProcessor implements IContentAssistProcessor {
 
 	private int fDocumentOffset = 0;

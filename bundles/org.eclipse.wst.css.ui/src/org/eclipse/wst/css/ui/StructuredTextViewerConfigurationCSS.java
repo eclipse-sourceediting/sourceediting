@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.format.FormatProcessorCSS;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
-import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
+import org.eclipse.wst.css.ui.internal.contentassist.CSSStructuredContentAssistProcessor;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForCSS;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -77,15 +77,15 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		}
 		return fConfiguredContentTypes;
 	}
-
+	
+	/**
+	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getContentAssistProcessors(
+	 * 	org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	 */
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-		IContentAssistProcessor[] processors = null;
-
-		if ((partitionType == ICSSPartitions.STYLE) || (partitionType == IStructuredPartitions.UNKNOWN_PARTITION)) {
-			processors = new IContentAssistProcessor[]{new CSSContentAssistProcessor()};
-		}
-
-		return processors;
+		IContentAssistProcessor processor = new CSSStructuredContentAssistProcessor(
+				this.getContentAssistant(), partitionType, sourceViewer);
+		return new IContentAssistProcessor[]{processor};
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {

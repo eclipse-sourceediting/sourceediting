@@ -67,7 +67,7 @@
 			target="org.eclipse.wst.xml.XML_DEFAULT" />
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.xml.ui.preferences.xml.xml, org.eclipse.wst.sse.ui.preferences.xml.source, org.eclipse.wst.sse.ui.preferences.xml.templates, org.eclipse.wst.sse.ui.preferences.xml.colors"
+			value="org.eclipse.wst.xml.ui.preferences.xml.xml, org.eclipse.wst.sse.ui.preferences.xml.source, org.eclipse.wst.sse.ui.preferences.xml.templates, org.eclipse.wst.sse.ui.preferences.xml.colors, org.eclipse.wst.sse.ui.preferences.xml.contentassist"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalDefinition
 			type="spellingregions"
@@ -177,6 +177,13 @@
          	<keywordReference id="org.eclipse.wst.xml.ui.source"/>
 		</page>
 		<page
+			name="%XML_Content_Assist.name"
+			category="org.eclipse.wst.sse.ui.preferences.xml.source"
+			class="org.eclipse.wst.xml.ui.internal.preferences.XMLContentAssistPreferencePage"
+			id="org.eclipse.wst.sse.ui.preferences.xml.contentassist">
+         	<keywordReference id="org.eclipse.wst.xml.ui.contentassist"/>
+		</page>
+		<page
 			name="%XML_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.xml.source"
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLTemplatePreferencePage"
@@ -220,6 +227,9 @@
 		<keyword
 			label="%preferenceKeywords.source"
 			id="org.eclipse.wst.xml.ui.source"/>
+		<keyword
+			label="%preferenceKeywords.contentassist"
+			id="org.eclipse.wst.xml.ui.contentassist"/>
 		<keyword
 			label="%preferenceKeywords.templates"
 			id="org.eclipse.wst.xml.ui.templates"/>
@@ -1660,6 +1670,44 @@
              id="org.eclipse.wst.xml.core.xmlsource" partitions="org.eclipse.wst.xml.XML_DEFAULT,org.eclipse.wst.xml.XML_DECL">
        </contentTypeIdentifier>
     </inserter>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalCategory
+          icon="icons/full/obj16/tag-generic.gif"
+          id="org.eclipse.wst.xml.ui.proposalCategory.xmlTags"
+          name="%proposalCategory.xmlTags">
+    </proposalCategory>
+    <proposalCategory
+          icon="icons/full/obj16/tag-macro.gif"
+          id="org.eclipse.wst.xml.ui.proposalCategory.xmlTemplates"
+          name="%proposalCategory.xmlTemplates">
+    </proposalCategory>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.xml.ui.proposalCategory.xmlTags"
+          class="org.eclipse.wst.xml.ui.internal.contentassist.XMLTagsCompletionProposalComputer"
+          id="org.eclipse.wst.xml.ui.proposalComputer.xmlTags">
+       <contentType
+             id="org.eclipse.core.runtime.xml">
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.xml.ui.proposalCategory.xmlTemplates"
+          class="org.eclipse.wst.xml.ui.internal.contentassist.XMLTemplatesCompletionProposalComputer"
+          id="org.eclipse.wst.xml.ui.proposalComputer.xmlTemplates">
+       <contentType
+             id="org.eclipse.core.runtime.xml">
+       </contentType>
+    </proposalComputer>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposalCategoriesConfiguration">
+    <categoriesConfiguration
+          class="org.eclipse.wst.xml.ui.internal.preferences.XMLCompletionProposalCategoriesConfiguration"
+          contentTypeID="org.eclipse.core.runtime.xml">
+    </categoriesConfiguration>
  </extension>
 
 </plugin>

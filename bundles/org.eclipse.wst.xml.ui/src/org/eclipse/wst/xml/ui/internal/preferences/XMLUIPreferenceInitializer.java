@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,13 +52,7 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
 		store.setDefault(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS, styleValue); // specified
-		// value
-		// is
-		// black;
-		// leaving
-		// as
-		// widget
-		// default
+		// value is black; leaving as widget default
 
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.COMMENT_BORDER, 63, 95, 191) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.COMMENT_BORDER, styleValue);
@@ -81,13 +75,7 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
 		store.setDefault(IStyleConstantsXML.XML_CONTENT, styleValue); // specified
-		// value
-		// is
-		// black;
-		// leaving
-		// as
-		// widget
-		// default
+		// value is black; leaving as widget default
 
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.TAG_BORDER, 0, 128, 128) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.TAG_BORDER, styleValue);
@@ -100,13 +88,7 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
 		store.setDefault(IStyleConstantsXML.PI_CONTENT, styleValue); // specified
-		// value
-		// is
-		// black;
-		// leaving
-		// as
-		// widget
-		// default
+		// value is black; leaving as widget default
 
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.CDATA_BORDER, 0, 128, 128) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.CDATA_BORDER, styleValue);
@@ -135,6 +117,16 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, true);
 		store.setDefault(XMLUIPreferenceNames.TYPING_CLOSE_STRINGS, true);
 		store.setDefault(XMLUIPreferenceNames.TYPING_CLOSE_BRACKETS, true);
+		
+		// Defaults for Content Assist preference page
+		store.setDefault(XMLUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_DEFAULT_PAGE, "");
+		store.setDefault(XMLUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_OWN_PAGE, "");
+		store.setDefault(XMLUIPreferenceNames.CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER,
+				"org.eclipse.wst.xml.ui.proposalCategory.xmlTags\0" +
+				"org.eclipse.wst.xml.ui.proposalCategory.xmlTemplates");
+		store.setDefault(XMLUIPreferenceNames.CONTENT_ASSIST_OWN_PAGE_SORT_ORDER,
+				"org.eclipse.wst.xml.ui.proposalCategory.xmlTemplates\0"+ 
+				"org.eclipse.wst.xml.ui.proposalCategory.xmlTags");
 	}
 
 }

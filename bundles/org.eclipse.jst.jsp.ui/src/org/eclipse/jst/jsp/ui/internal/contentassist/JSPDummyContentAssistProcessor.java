@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.ui.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentModelGenerator;
@@ -36,7 +37,8 @@ import org.w3c.dom.Node;
 /**
  * This class is a "null" version of AbstractContentAssistProcessor
  * 
- * @plannedfor 1.0
+ * @deprecated This class is no longer used locally and will be removed in the future
+ * @see DefaultXMLCompletionProposalComputer
  */
 public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcessor {
 	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {

@@ -433,4 +433,32 @@ public class SSEUIMessages extends NLS {
 	public static String StyledTextColorPicker_0;
 	
 	public static String TextSearchLabelProvider_matchCountFormat;
+	
+	//content assist messages
+	public static String ContentAssist_computing_proposals;
+	public static String ContentAssist_collecting_proposals;
+	public static String ContentAssist_sorting_proposals;
+	public static String ContentAssist_collecting_contexts;
+	public static String ContentAssist_computing_contexts;
+	public static String ContentAssist_sorting_contexts;
+	public static String ContentAssist_no_completions;
+	public static String ContentAssist_all_disabled_title;
+	public static String ContentAssist_all_disabled_message;
+	public static String ContentAssist_all_disabled_preference_link;
+	public static String ContentAssist_no_message;
+	public static String ContentAssist_toggle_affordance_update_message;
+	public static String ContentAssist_defaultProposalCategory_title;
+	public static String ContentAssist_press;
+	public static String ContentAssist_click;
+	public static String OptionalMessageDialog_dontShowAgain;
+	
+	//content assist preference messages
+	public static String CodeAssistAdvancedConfigurationBlock_page_description;
+	public static String CodeAssistAdvancedConfigurationBlock_no_shortcut;
+	public static String CodeAssistAdvancedConfigurationBlock_Up;
+	public static String CodeAssistAdvancedConfigurationBlock_Down;
+	public static String CodeAssistAdvancedConfigurationBlock_separate_table_description;
+	public static String CodeAssistAdvancedConfigurationBlock_default_table_description;
+	public static String CodeAssistAdvancedConfigurationBlock_default_table_category_column_title;
+	public static String CodeAssistAdvancedConfigurationBlock_separate_table_category_column_title;
 }

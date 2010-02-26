@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.preferences;
 
-import java.util.Vector;
-
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -23,7 +21,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -45,14 +42,6 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	private final int MIN_INDENTATION_SIZE = 0;
 	private final int MAX_INDENTATION_SIZE = 16;
 
-	// Content Assist
-	protected Button fAutoPropose;
-	protected Label fAutoProposeLabel;
-	protected Text fAutoProposeText;
-	private Combo fSuggestionStrategyCombo;
-	private Vector fSuggestionStrategies = null;
-	protected Button fClearAllBlankLines;
-
 	// Formatting
 	protected Label fLineWidthLabel;
 	protected Text fLineWidthText;
@@ -66,6 +55,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	private Button fFormatCommentsJoinLines;
 	// BUG195264 - Support for removing/adding a space before empty close tags
 	private Button fSpaceBeforeEmptyCloseTag;
+	protected Button fClearAllBlankLines;
 
 	// grammar constraints
 	protected Button fUseInferredGrammar;
@@ -79,33 +69,11 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		new Label(composite, SWT.NONE).setLayoutData(GridDataFactory.swtDefaults().create());
 
 		createContentsForFormattingGroup(composite);
-		createContentsForContentAssistGroup(composite);
 		createContentsForGrammarConstraintsGroup(composite);
 		setSize(composite);
 		loadPreferences();
 
 		return composite;
-	}
-
-	protected void createContentsForContentAssistGroup(Composite parent) {
-		Group contentAssistGroup = createGroup(parent, 2);
-		contentAssistGroup.setText(XMLUIMessages.Content_assist_UI_);
-
-		fAutoPropose = createCheckBox(contentAssistGroup, XMLUIMessages.Automatically_make_suggest_UI_);
-		((GridData) fAutoPropose.getLayoutData()).horizontalSpan = 2;
-		fAutoPropose.addSelectionListener(this);
-
-		fAutoProposeLabel = createLabel(contentAssistGroup, XMLUIMessages.Prompt_when_these_characte_UI_);
-		fAutoProposeText = createTextField(contentAssistGroup);
-
-		createLabel(contentAssistGroup, XMLUIMessages.Suggestion_Strategy);
-		fSuggestionStrategyCombo = new Combo(contentAssistGroup, SWT.READ_ONLY);
-		fSuggestionStrategies = new Vector();
-		fSuggestionStrategyCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		fSuggestionStrategyCombo.add(XMLUIMessages.Suggestion_Strategy_Lax);
-		fSuggestionStrategies.add(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
-		fSuggestionStrategyCombo.add(XMLUIMessages.Suggestion_Strategy_Strict);
-		fSuggestionStrategies.add(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_STRICT);
 	}
 
 	protected void createContentsForFormattingGroup(Composite parent) {
@@ -180,16 +148,6 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	}
 
 	protected void enableValues() {
-		if (fAutoPropose != null) {
-			if (fAutoPropose.getSelection()) {
-				fAutoProposeLabel.setEnabled(true);
-				fAutoProposeText.setEnabled(true);
-			}
-			else {
-				fAutoProposeLabel.setEnabled(false);
-				fAutoProposeText.setEnabled(false);
-			}
-		}
 		if (fFormatComments != null && fFormatCommentsJoinLines != null) {
 			fFormatCommentsJoinLines.setEnabled(fFormatComments.getSelection());
 		}
@@ -199,36 +157,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		return XMLCorePlugin.getDefault().getPluginPreferences();
 	}
 
-	/**
-	 * Return the currently selected suggestion strategy preference
-	 * 
-	 * @return a suggestion strategy constant from XMLUIPreferenceNames
-	 */
-	private String getCurrentSuggestionStrategy() {
-		int i = fSuggestionStrategyCombo.getSelectionIndex();
-		if (i >= 0) {
-			return (String) (fSuggestionStrategies.elementAt(i));
-		}
-		return ""; //$NON-NLS-1$
-	}
-
 	protected void initializeValues() {
 		initializeValuesForFormattingGroup();
-		initializeValuesForContentAssistGroup();
 		initializeValuesForGrammarConstraintsGroup();
-	}
-
-	protected void initializeValuesForContentAssistGroup() {
-		// Content Assist
-		fAutoPropose.setSelection(getPreferenceStore().getBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
-		fAutoProposeText.setText(getPreferenceStore().getString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
-		String suggestionStrategy = getPreferenceStore().getString(XMLUIPreferenceNames.SUGGESTION_STRATEGY);
-		if (suggestionStrategy.length() > 0) {
-			setCurrentSuggestionStrategy(suggestionStrategy);
-		}
-		else {
-			setCurrentSuggestionStrategy(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
-		}
 	}
 
 	protected void initializeValuesForFormattingGroup() {
@@ -260,26 +191,12 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void performDefaults() {
 		performDefaultsForFormattingGroup();
-		performDefaultsForContentAssistGroup();
 		performDefaultsForGrammarConstraintsGroup();
 
 		validateValues();
 		enableValues();
 
 		super.performDefaults();
-	}
-
-	protected void performDefaultsForContentAssistGroup() {
-		// Content Assist
-		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
-		fAutoProposeText.setText(getPreferenceStore().getDefaultString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
-		String suggestionStrategy = getPreferenceStore().getDefaultString(XMLUIPreferenceNames.SUGGESTION_STRATEGY);
-		if (suggestionStrategy.length() > 0) {
-			setCurrentSuggestionStrategy(suggestionStrategy);
-		}
-		else {
-			setCurrentSuggestionStrategy(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_LAX);
-		}
 	}
 
 	protected void performDefaultsForFormattingGroup() {
@@ -317,33 +234,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		return result;
 	}
 
-	/**
-	 * Set a suggestion strategy in suggestion strategy combo box
-	 * 
-	 * @param strategy
-	 */
-	private void setCurrentSuggestionStrategy(String strategy) {
-		// Clear the current selection.
-		fSuggestionStrategyCombo.clearSelection();
-		fSuggestionStrategyCombo.deselectAll();
-
-		int i = fSuggestionStrategies.indexOf(strategy);
-		if (i >= 0) {
-			fSuggestionStrategyCombo.select(i);
-		}
-	}
-
 	protected void storeValues() {
 		storeValuesForFormattingGroup();
-		storeValuesForContentAssistGroup();
 		storeValuesForGrammarConstraintsGroup();
-	}
-
-	protected void storeValuesForContentAssistGroup() {
-		// Content Assist
-		getPreferenceStore().setValue(XMLUIPreferenceNames.AUTO_PROPOSE, fAutoPropose.getSelection());
-		getPreferenceStore().setValue(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, fAutoProposeText.getText());
-		getPreferenceStore().setValue(XMLUIPreferenceNames.SUGGESTION_STRATEGY, getCurrentSuggestionStrategy());
 	}
 
 	protected void storeValuesForFormattingGroup() {

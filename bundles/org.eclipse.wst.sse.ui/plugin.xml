@@ -519,6 +519,8 @@
 		id="quickFixProcessor" 
 		name="%quickFixProcessor" 
 		schema="schema/quickFixProcessor.exsd"/>
+ <extension-point id="completionProposal" name="%Completion_Proposal.name" schema="schema/completionProposal.exsd"/>
+ <extension-point id="completionProposalCategoriesConfiguration" name="%Completion_Proposal_Categories_Configuration.name" schema="schema/completionProposalCategoriesConfiguration.exsd"/>
  
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=edit">

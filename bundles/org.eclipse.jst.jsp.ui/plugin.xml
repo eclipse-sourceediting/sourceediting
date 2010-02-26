@@ -60,7 +60,7 @@
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.jst.jsp.ui.preferences.jsp, org.eclipse.wst.sse.ui.preferences.jsp.source, org.eclipse.wst.sse.ui.preferences.jsp.templates, org.eclipse.wst.sse.ui.preferences.jsp.styles,,org.eclipse.jst.jsp.ui.preferences.validation"
+			value="org.eclipse.jst.jsp.ui.preferences.jsp, org.eclipse.wst.sse.ui.preferences.jsp.source, org.eclipse.wst.sse.ui.preferences.jsp.templates, org.eclipse.wst.sse.ui.preferences.jsp.styles,,org.eclipse.jst.jsp.ui.preferences.validation, org.eclipse.wst.sse.ui.preferences.jsp.contentassist"
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<provisionalDefinition
 			type="showintarget"
@@ -224,6 +224,15 @@
 			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPSourcePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp.source">
 		</page>
+  <page
+        category="org.eclipse.wst.sse.ui.preferences.jsp.source"
+        class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPContentAssistPreferencePage"
+        id="org.eclipse.wst.sse.ui.preferences.jsp.contentassist"
+        name="%JSP_Content_Assist.name">
+     <keywordReference
+           id="org.eclipse.jst.jsp.ui.contentassist">
+     </keywordReference>
+  </page>
 		<page
 			name="%JSP_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.jsp.source"
@@ -258,6 +267,9 @@
 		<keyword
 			label="%preferenceKeywords.files"
 			id="org.eclipse.jst.jsp.ui.files"/>
+		<keyword
+			label="%preferenceKeywords.contentassist"
+			id="org.eclipse.jst.jsp.ui.contentassist"/>
 		<keyword
 			label="%preferenceKeywords.templates"
 			id="org.eclipse.jst.jsp.ui.templates"/>
@@ -1071,4 +1083,227 @@
 			</contentTypeIdentifier>
 		</inserter>
 	</extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalCategory
+          icon="icons/full/obj16/tag-template.gif"
+          id="org.eclipse.jst.jsp.ui.proposalCategory.jspTemplates"
+          name="%proposalCategory.jspTemplates">
+    </proposalCategory>
+    <proposalCategory
+          icon="icons/full/obj16/tag-jsp.gif"
+          id="org.eclipse.jst.jsp.ui.proposalCategory.jsp"
+          name="%proposalCategory.jsp">
+    </proposalCategory>
+    <proposalCategory
+          icon="icons/full/elcl16/javaassist_co.gif"
+          id="org.eclipse.jst.jsp.ui.proposalCategory.jspJava"
+          name="%proposalCategory.jspJava">
+    </proposalCategory>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.html.ui.proposalComputer.htmlTags">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.html.HTML_COMMENT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.sse.ST_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_COMMENT">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.html.ui.proposalComputer.htmlTemplates">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.html.HTML_COMMENT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.sse.ST_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_COMMENT">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.xml.ui.proposalComputer.xmlTags">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.xml.XML_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.xml.ui.proposalComputer.xmlTemplates">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.xml.XML_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jspTemplates"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.JSPTemplatesCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.jspTemplates">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jsp"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.JSPCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.jsp">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jsp"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.LibraryTagsCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.libraryTags">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.html.HTML_COMMENT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.sse.ST_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_COMMENT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jspJava"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.jspJava">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.jst.jsp.SCRIPT.JAVA">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.xml.XML_CDATA">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.DEFAULT_JSP">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.SCRIPT.DELIMITER">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.SCRIPT.JAVASCRIPT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.html.SCRIPT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jspJava"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.JSPELCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.jspEL">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.jst.jsp.SCRIPT.JSP_EL">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jspJava"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.JSPImportCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.jspImport">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jsp"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.JSPPropertyCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.jspProperty">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jsp"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.JSPUseBeanCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.jspUseBean">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.jst.jsp.ui.proposalCategory.jsp"
+          class="org.eclipse.jst.jsp.ui.internal.contentassist.JSPTaglibCompletionProposalComputer"
+          id="org.eclipse.jst.jsp.ui.proposalComputer.jspTaglib">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+       </contentType>
+    </proposalComputer>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.css.ui.proposalComputer.css">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.css.STYLE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.css.ui.proposalComputer.cssTemplates">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.css.STYLE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+ </extension>
+  <extension
+       point="org.eclipse.wst.sse.ui.completionProposalCategoriesConfiguration">
+    <categoriesConfiguration
+          class="org.eclipse.jst.jsp.ui.internal.preferences.JSPCompletionProposalCategoriesConfiguration"
+          contentTypeID="org.eclipse.jst.jsp.core.jspsource">
+    </categoriesConfiguration>
+ </extension>
 </plugin>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,7 @@ public interface XMLRelevanceConstants extends IRelevanceConstants {
 	int R_TAG_INSERTION = 500;
 	int R_STRICTLY_VALID_TAG_INSERTION = 600;
 	int R_TAG_NAME = 1200;
+	int R_STRICTLY_VALID_TAG_NAME = 1250;
 	int R_XML_ATTRIBUTE_NAME = 900;
 	int R_XML_ATTRIBUTE_VALUE = 800;
 	int R_XML_DECLARATION = 1300;

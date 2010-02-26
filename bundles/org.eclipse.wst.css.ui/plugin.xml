@@ -39,7 +39,7 @@
 			target="org.eclipse.wst.css.STYLE" />
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.css.ui.preferences.css org.eclipse.wst.sse.ui.preferences.css.source, org.eclipse.wst.css.ui.preferences.templates, org.eclipse.wst.sse.ui.preferences.css.styles"
+			value="org.eclipse.wst.css.ui.preferences.css org.eclipse.wst.sse.ui.preferences.css.source, org.eclipse.wst.css.ui.preferences.templates, org.eclipse.wst.sse.ui.preferences.css.styles, org.eclipse.wst.sse.ui.preferences.css.contentassist"
 			target="org.eclipse.wst.css.core.csssource" />
 		<provisionalDefinition
 			type="spellingregions"
@@ -90,6 +90,15 @@
 			id="org.eclipse.wst.sse.ui.preferences.css.source">
 			<keywordReference id="org.eclipse.wst.css.ui.source"/>
 		</page>
+  <page
+        category="org.eclipse.wst.sse.ui.preferences.css.source"
+        class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSContentAssistPreferencePage"
+        id="org.eclipse.wst.sse.ui.preferences.css.contentassist"
+        name="%CSS_Content_Assist.name">
+     <keywordReference
+           id="org.eclipse.wst.css.ui.contentassist">
+     </keywordReference>
+  </page>
 		<page
 			name="%CSS_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.css.source"
@@ -145,6 +154,10 @@
 		<keyword
 			label="%preferenceKeywords.webcontent"
 			id="org.eclipse.wst.css.ui.webcontent"/>
+  <keyword
+        id="org.eclipse.wst.css.ui.contentassist"
+        label="%preferenceKeywords.contentassist">
+  </keyword>
     </extension>
 
 	<!-- Editor actionsets -->
@@ -585,4 +598,42 @@
 			</contentTypeIdentifier>
 		</inserter>
 	</extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalCategory
+          icon="icons/full/obj16/tag_selector.gif"
+          id="org.eclipse.wst.css.ui.proposalCategory.css"
+          name="%proposalCategory.css">
+    </proposalCategory>
+    <proposalCategory
+          icon="icons/full/obj16/tag-template.gif"
+          id="org.eclipse.wst.css.ui.proposalCategory.cssTemplates"
+          name="%proposalCategory.cssTemplates">
+    </proposalCategory>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.css.ui.proposalCategory.css"
+          class="org.eclipse.wst.css.ui.internal.contentassist.CSSCompletionProposalComputer"
+          id="org.eclipse.wst.css.ui.proposalComputer.css">
+       <contentType
+             id="org.eclipse.wst.css.core.csssource">
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.css.ui.proposalCategory.cssTemplates"
+          class="org.eclipse.wst.css.ui.internal.contentassist.CSSTemplatesCompletionProposalComputer"
+          id="org.eclipse.wst.css.ui.proposalComputer.cssTemplates">
+       <contentType
+             id="org.eclipse.wst.css.core.csssource">
+       </contentType>
+    </proposalComputer>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposalCategoriesConfiguration">
+    <categoriesConfiguration
+          class="org.eclipse.wst.css.ui.internal.preferences.CSSCompletionProposalCategoriesConfiguration"
+          contentTypeID="org.eclipse.wst.css.core.csssource">
+    </categoriesConfiguration>
+ </extension>
 </plugin>

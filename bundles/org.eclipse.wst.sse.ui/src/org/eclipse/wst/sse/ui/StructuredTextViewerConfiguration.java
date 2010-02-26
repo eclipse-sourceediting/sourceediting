@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,6 +52,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
@@ -87,11 +88,12 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
  * @since 1.0
  */
 public class StructuredTextViewerConfiguration extends TextSourceViewerConfiguration {
-	/*
+	/**
 	 * One instance per configuration because creating a second assistant that
 	 * is added to a viewer can cause odd key-eating by the wrong one.
 	 */
 	private StructuredContentAssistant fContentAssistant = null;
+	
 	/*
 	 * One instance per configuration because it's just like content assistant
 	 */
@@ -104,7 +106,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * Extended configuration provisionalConfiguration type to contribute
 	 * additional auto edit strategies
 	 */
-	private final String AUTOEDITSTRATEGY = "autoeditstrategy";
+	private final String AUTOEDITSTRATEGY = "autoeditstrategy"; //$NON-NLS-1$
 	
 	private ReconcilerHighlighter fHighlighter = null;
 	
@@ -273,9 +275,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 				fContentAssistant.setContextInformationPopupForeground(color);
 				fContentAssistant.setContextSelectorForeground(color);
 			}
-		}
-
-		if (!fContentAssistant.isInitialized()) {
+			
 			// add content assist processors for each partition type
 			String[] types = getConfiguredContentTypes(sourceViewer);
 			for (int i = 0; i < types.length; i++) {
@@ -294,8 +294,13 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
-	 * Returns the content assist processors that will be used for content
-	 * assist in the given source viewer and for the given partition type.
+	 * <p>Returns a {@link StructuredContentAssistProcessor} which can be contributed to through
+	 * the <tt>org.eclipse.wst.sse.ui.completionProposal</tt> extension point.</p>
+	 * 
+	 * <p>If an extender of this class overrides this method and does not include an
+	 * implementation of a {@link StructuredContentAssistProcessor} in their returned
+	 * processors then all of the contributions by the aforementioned extension point
+	 * will be left out.</p>
 	 * 
 	 * @param sourceViewer
 	 *            the source viewer to be configured by this configuration
@@ -305,7 +310,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @return IContentAssistProcessors or null if should not be supported
 	 */
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-		return null;
+		IContentAssistProcessor processor = new StructuredContentAssistProcessor(
+				fContentAssistant, partitionType, sourceViewer, null);
+		return new IContentAssistProcessor[]{processor};
 	}
 
 	/**
@@ -687,5 +694,12 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	
 	public void setHighlighter(ReconcilerHighlighter highlighter) {
 		fHighlighter = highlighter;
+	}
+	
+	/**
+	 * @return the associated content assistnat
+	 */
+	protected StructuredContentAssistant getContentAssistant() {
+		return this.fContentAssistant;
 	}
 }

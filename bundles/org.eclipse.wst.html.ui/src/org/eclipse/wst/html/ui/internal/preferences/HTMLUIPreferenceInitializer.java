@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,6 +115,20 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, true);
 		store.setDefault(HTMLUIPreferenceNames.TYPING_CLOSE_STRINGS, true);
 		store.setDefault(HTMLUIPreferenceNames.TYPING_CLOSE_BRACKETS, true);
+		
+		// Defaults for Content Assist preference page
+		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_DEFAULT_PAGE, "");
+		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_OWN_PAGE, "");
+		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER,
+				"org.eclipse.wst.html.ui.proposalCategory.htmlTags\0" +
+				"org.eclipse.wst.css.ui.proposalCategory.css\0" +
+				"org.eclipse.wst.html.ui.proposalCategory.htmlTemplates\0" +
+				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates");
+		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_OWN_PAGE_SORT_ORDER,
+				"org.eclipse.wst.html.ui.proposalCategory.htmlTemplates\0"+
+				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates\0" +
+				"org.eclipse.wst.html.ui.proposalCategory.htmlTags\0" +
+				"org.eclipse.wst.css.ui.proposalCategory.css");
 	}
 
 }

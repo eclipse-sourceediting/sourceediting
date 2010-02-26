@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2010 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -221,7 +221,8 @@ public class XMLUIMessages extends NLS {
 	public static String EOL_NoTranslation;
 	public static String XMLFilesPreferencePage_ExtensionLabel;
 	public static String XMLFilesPreferencePage_ExtensionError;
-	public static String Content_assist_UI_;
+	public static String XMLContentAssistPreferencePage_Auto_Activation_UI_;
+	public static String XMLContentAssistPreferencePage_Cycling_UI_;
 	public static String Automatically_make_suggest_UI_;
 	public static String Prompt_when_these_characte_UI_;
 	public static String Formatting_UI_;

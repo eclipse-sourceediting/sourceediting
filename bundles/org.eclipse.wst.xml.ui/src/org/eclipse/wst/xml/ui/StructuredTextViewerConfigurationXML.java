@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,8 +35,7 @@ import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerFor
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.internal.XMLFormattingStrategy;
 import org.eclipse.wst.xml.ui.internal.autoedit.AutoEditStrategyForTabs;
-import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
-import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
+import org.eclipse.wst.xml.ui.internal.contentassist.XMLStructuredContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.w3c.dom.Attr;
@@ -100,18 +99,15 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		}
 		return fConfiguredContentTypes;
 	}
-
+	
+	/**
+	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getContentAssistProcessors(
+	 * 	org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	 */
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-		IContentAssistProcessor[] processors = null;
-
-		if ((partitionType == IStructuredPartitions.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
-			processors = new IContentAssistProcessor[]{new XMLContentAssistProcessor()};
-		}
-		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
-			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessor()};
-		}
-
-		return processors;
+		IContentAssistProcessor processor = new XMLStructuredContentAssistProcessor(
+				this.getContentAssistant(), partitionType, sourceViewer);
+		return new IContentAssistProcessor[]{processor};
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {

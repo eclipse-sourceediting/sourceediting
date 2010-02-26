@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,7 +98,7 @@ abstract class AbstractPropertyPreferencePage extends PropertyPage implements IW
 
 		if (getProject() != null) {
 			fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
-			fEnableProjectSettings.setText(SSEUIMessages.EnableProjectSettings); //$NON-NLS-1$//$NON-NLS-2$
+			fEnableProjectSettings.setText(SSEUIMessages.EnableProjectSettings);
 			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			boolean enabledForProject = createPreferenceScopes()[0].getNode(getPreferenceNodeQualifier()).getBoolean(getProjectSettingsKey(), false);
 			fEnableProjectSettings.setSelection(enabledForProject);
@@ -255,7 +255,7 @@ abstract class AbstractPropertyPreferencePage extends PropertyPage implements IW
 			}
 			else {
 				if (_debugPreferences) {
-					System.out.println(getClass().getName() + " removing " + getProjectSettingsKey() + " from scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					System.out.println(getClass().getName() + " removing " + getProjectSettingsKey() + " from scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				preferenceScopes[0].getNode(getPreferenceNodeQualifier()).remove(getProjectSettingsKey());
 			}

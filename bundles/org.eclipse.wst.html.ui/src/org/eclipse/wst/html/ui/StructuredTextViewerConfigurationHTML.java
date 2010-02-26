@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,6 @@ import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
-import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForEmbeddedCSS;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
@@ -34,8 +33,7 @@ import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdF
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
-import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
-import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
+import org.eclipse.wst.html.ui.internal.contentassist.HTMLStructuredContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -120,20 +118,12 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		return fConfiguredContentTypes;
 	}
 
-	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-		IContentAssistProcessor[] processors = null;
-
-		if ((partitionType == IHTMLPartitions.HTML_DEFAULT) || (partitionType == IHTMLPartitions.HTML_COMMENT)) {
-			processors = new IContentAssistProcessor[]{new HTMLContentAssistProcessor()};
-		}
-		else if (partitionType == ICSSPartitions.STYLE) {
-			processors = new IContentAssistProcessor[]{new CSSContentAssistProcessor()};
-		}
-		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
-			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessorForHTML()};
-		}
-
-		return processors;
+	protected IContentAssistProcessor[] getContentAssistProcessors(
+			ISourceViewer sourceViewer, String partitionType) {
+		
+		IContentAssistProcessor processor = new HTMLStructuredContentAssistProcessor(
+				this.getContentAssistant(), partitionType, sourceViewer);
+		return new IContentAssistProcessor[]{processor};
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,9 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
+/**
+ * @deprecated This class is no longer used locally and will be removed in the future
+ */
 public class JSPELContentAssistProcessor extends JSPJavaContentAssistProcessor {
 	protected char elCompletionProposalAutoActivationCharacters[] = new char[]{'.', ':'};
 

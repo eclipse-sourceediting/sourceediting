@@ -88,6 +88,16 @@ public class CSSUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		if (template != null)
 			templateName = template.getName();
 		store.setDefault(CSSUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		
+		// Defaults for Content Assist preference page
+		store.setDefault(CSSUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_DEFAULT_PAGE, "");
+		store.setDefault(CSSUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_OWN_PAGE, "");
+		store.setDefault(CSSUIPreferenceNames.CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER,
+				"org.eclipse.wst.css.ui.proposalCategory.css\0" +
+				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates");
+		store.setDefault(CSSUIPreferenceNames.CONTENT_ASSIST_OWN_PAGE_SORT_ORDER,
+				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates\0"+ 
+				"org.eclipse.wst.css.ui.proposalCategory.css");
 	}
 
 }

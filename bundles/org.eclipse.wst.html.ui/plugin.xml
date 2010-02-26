@@ -52,7 +52,7 @@
 			target="org.eclipse.wst.html.HTML_DEFAULT, org.eclipse.wst.html.HTML_DECLARATION" />
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.html.ui.preferences.html, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles,org.eclipse.wst.html.ui.preferences.validation"
+			value="org.eclipse.wst.html.ui.preferences.html, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles,org.eclipse.wst.html.ui.preferences.validation, org.eclipse.wst.html.ui.preferences.contentassist"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalDefinition
 			type="spellingregions"
@@ -97,6 +97,15 @@
 			id="org.eclipse.wst.html.ui.preferences.source">
 			<keywordReference id="org.eclipse.wst.html.ui.source"/>
 		</page>
+  <page
+        category="org.eclipse.wst.html.ui.preferences.source"
+        class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLContentAssistPreferencePage"
+        id="org.eclipse.wst.html.ui.preferences.contentassist"
+        name="%HTML_Content_Assist.name">
+     <keywordReference
+           id="org.eclipse.wst.html.ui.contentassist">
+     </keywordReference>
+  </page>
 		<page
 			name="%HTML_Templates.name"
 			category="org.eclipse.wst.html.ui.preferences.source"
@@ -200,6 +209,9 @@
 		<keyword
 			label="%preferenceKeywords.source"
 			id="org.eclipse.wst.html.ui.source"/>
+		<keyword
+			label="%preferenceKeywords.contentassist"
+			id="org.eclipse.wst.html.ui.contentassist"/>
 		<keyword
 			label="%preferenceKeywords.templates"
 			id="org.eclipse.wst.html.ui.templates"/>
@@ -636,5 +648,67 @@
 			</contentTypeIdentifier>
 		</inserter>
 	</extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalCategory
+          icon="icons/full/obj16/tag-generic.gif"
+          id="org.eclipse.wst.html.ui.proposalCategory.htmlTags"
+          name="%proposalCategory.htmlTags">
+    </proposalCategory>
+    <proposalCategory
+          icon="icons/full/obj16/tag-template.gif"
+          id="org.eclipse.wst.html.ui.proposalCategory.htmlTemplates"
+          name="%proposalCategory.htmlTemplates">
+    </proposalCategory>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"
+          class="org.eclipse.wst.html.ui.internal.contentassist.HTMLTagsCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.htmlTags">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTemplates"
+          class="org.eclipse.wst.html.ui.internal.contentassist.HTMLTemplatesCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.htmlTemplates">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.css.ui.proposalComputer.css">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType
+                id="org.eclipse.wst.css.STYLE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.css.ui.proposalComputer.cssTemplates">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType
+                id="org.eclipse.wst.css.STYLE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposalCategoriesConfiguration">
+    <categoriesConfiguration
+          class="org.eclipse.wst.html.ui.internal.preferences.HTMLCompletionProposalCategoriesConfiguration"
+          contentTypeID="org.eclipse.wst.html.core.htmlsource">
+    </categoriesConfiguration>
+ </extension>
 	
 </plugin>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,12 +14,12 @@ package org.eclipse.wst.sse.ui.internal;
 
 
 
-import com.ibm.icu.util.StringTokenizer;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Small convenience class to log messages to plugin's log file and also, if
@@ -75,10 +75,20 @@ public class Logger {
 		}
 		message = (message != null) ? message : "null"; //$NON-NLS-1$
 		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
-		Bundle bundle = Platform.getBundle(PLUGIN_ID);
-		if (bundle != null) 
-			Platform.getLog(bundle).log(statusObj);
+		_log(statusObj);
 
+	}
+	
+	/**
+	 * Adds {@link IStatus} to the log.
+	 * 
+	 * @param statusObj {@link IStatus} to add to the log
+	 */
+	protected static void _log(IStatus statusObj) {
+		Bundle bundle = Platform.getBundle(PLUGIN_ID);
+		if (bundle != null) {
+			Platform.getLog(bundle).log(statusObj);
+		}
 	}
 
 	/**
@@ -137,6 +147,15 @@ public class Logger {
 
 	public static void log(int level, String message, Throwable exception) {
 		_log(level, message, exception);
+	}
+	
+	/**
+	 * <p>Allows an already constructed status to be logged</p>
+	 * 
+	 * @param status {@link IStatus} to log.
+	 */
+	public static void log(IStatus status) {
+		_log(status);
 	}
 
 	public static void logException(String message, Throwable exception) {

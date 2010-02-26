@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -35,10 +34,7 @@ import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSPJava;
-import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
-import org.eclipse.jst.jsp.ui.internal.contentassist.JSPELContentAssistProcessor;
-import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
-import org.eclipse.jst.jsp.ui.internal.contentassist.NoRegionContentAssistProcessorForJSP;
+import org.eclipse.jst.jsp.ui.internal.contentassist.JSPStructuredContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
@@ -48,7 +44,6 @@ import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -183,46 +178,17 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 		return fConfiguredContentTypes;
 	}
-
-	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-		IContentAssistProcessor[] processors = null;
-
-		if (partitionType == IHTMLPartitions.SCRIPT) {
-			// HTML JavaScript
-			IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
-			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(IHTMLPartitions.SCRIPT);
-			processors = new IContentAssistProcessor[]{processor};
-		}
-		else if (partitionType == ICSSPartitions.STYLE) {
-			// HTML CSS
-			IContentAssistant htmlContentAssistant = getHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
-			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(ICSSPartitions.STYLE);
-			processors = new IContentAssistProcessor[]{processor};
-		}
-		// // jspcontentassistprocessor handles this?
-		// else if ((partitionType == IHTMLPartitionTypes.HTML_DEFAULT) ||
-		// (partitionType == IHTMLPartitionTypes.HTML_COMMENT)) {
-		// processors = new IContentAssistProcessor[]{new
-		// HTMLContentAssistProcessor()};
-		// }
-		else if ((partitionType == IXMLPartitions.XML_DEFAULT) || (partitionType == IHTMLPartitions.HTML_DEFAULT) || (partitionType == IHTMLPartitions.HTML_COMMENT) || (partitionType == IJSPPartitions.JSP_DEFAULT) || (partitionType == IJSPPartitions.JSP_DIRECTIVE) || (partitionType == IJSPPartitions.JSP_CONTENT_DELIMITER) || (partitionType == IJSPPartitions.JSP_CONTENT_JAVASCRIPT) || (partitionType == IJSPPartitions.JSP_COMMENT)) {
-			// jsp
-			processors = new IContentAssistProcessor[]{new JSPContentAssistProcessor()};
-		}
-		else if ((partitionType == IXMLPartitions.XML_CDATA) || (partitionType == IJSPPartitions.JSP_CONTENT_JAVA)) {
-			// jsp java
-			processors = new IContentAssistProcessor[]{new JSPJavaContentAssistProcessor()};
-		}
-		else if (partitionType == IJSPPartitions.JSP_DEFAULT_EL) {
-			// jsp el
-			processors = new IContentAssistProcessor[]{new JSPELContentAssistProcessor()};
-		}
-		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
-			// unknown
-			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessorForJSP()};
-		}
-
-		return processors;
+	
+	/**
+	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getContentAssistProcessors(
+	 * 	org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	 */
+	protected IContentAssistProcessor[] getContentAssistProcessors(
+			ISourceViewer sourceViewer, String partitionType) {
+		
+		IContentAssistProcessor processor = new JSPStructuredContentAssistProcessor(
+				this.getContentAssistant(), partitionType, sourceViewer);
+		return new IContentAssistProcessor[]{processor};
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {

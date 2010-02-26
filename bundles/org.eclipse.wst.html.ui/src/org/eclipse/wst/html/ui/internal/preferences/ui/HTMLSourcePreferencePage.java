@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,6 @@ import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 
 public class HTMLSourcePreferencePage extends AbstractPreferencePage {
@@ -43,10 +42,6 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 	private final int MIN_INDENTATION_SIZE = 0;
 	private final int MAX_INDENTATION_SIZE = 16;
 
-	// Content Assist
-	private Button fAutoPropose;
-	private Label fAutoProposeLabel;
-	private Text fAutoProposeText;
 	private Button fClearAllBlankLines;
 
 	// Formatting
@@ -56,21 +51,6 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 	private Button fIndentUsingTabs;
 	private Button fIndentUsingSpaces;
 	private Spinner fIndentationSize;
-
-	private void createContentsForContentAssistGroup(Composite parent) {
-		Group contentAssistGroup = createGroup(parent, 2);
-		contentAssistGroup.setText(HTMLUIMessages.Content_assist_UI_);
-
-		fAutoPropose = createCheckBox(contentAssistGroup, HTMLUIMessages.Automatically_make_suggest_UI_);
-		((GridData) fAutoPropose.getLayoutData()).horizontalSpan = 2;
-		fAutoPropose.addSelectionListener(this);
-
-		fAutoProposeLabel = createLabel(contentAssistGroup, HTMLUIMessages.Prompt_when_these_characte_UI_);
-		fAutoProposeText = createTextField(contentAssistGroup);
-
-		// add one more group of preferences
-		createContentsForPreferredCaseGroup(parent, 2);
-	}
 
 	private Composite createContentsForPreferredCaseGroup(Composite parent, int columnSpan) {
 		Group caseGroup = createGroup(parent, columnSpan);
@@ -143,18 +123,11 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		fAttrNameLower.setSelection(getModelPreferences().getDefaultInt(HTMLCorePreferenceNames.ATTR_NAME_CASE) == HTMLCorePreferenceNames.LOWER);
 
 		performDefaultsForFormattingGroup();
-		performDefaultsForContentAssistGroup();
 
 		validateValues();
 		enableValues();
 
 		super.performDefaults();
-	}
-
-	private void performDefaultsForContentAssistGroup() {
-		// Content Assist
-		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(HTMLUIPreferenceNames.AUTO_PROPOSE));
-		fAutoProposeText.setText(getPreferenceStore().getDefaultString(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE));
 	}
 
 	private void performDefaultsForFormattingGroup() {
@@ -182,13 +155,6 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		fAttrNameLower.setSelection(getModelPreferences().getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE) == HTMLCorePreferenceNames.LOWER);
 
 		initializeValuesForFormattingGroup();
-		initializeValuesForContentAssistGroup();
-	}
-
-	private void initializeValuesForContentAssistGroup() {
-		// Content Assist
-		fAutoPropose.setSelection(getPreferenceStore().getBoolean(HTMLUIPreferenceNames.AUTO_PROPOSE));
-		fAutoProposeText.setText(getPreferenceStore().getString(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE));
 	}
 
 	private void initializeValuesForFormattingGroup() {
@@ -221,13 +187,6 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 			getModelPreferences().setValue(HTMLCorePreferenceNames.ATTR_NAME_CASE, HTMLCorePreferenceNames.LOWER);
 
 		storeValuesForFormattingGroup();
-		storeValuesForContentAssistGroup();
-	}
-
-	private void storeValuesForContentAssistGroup() {
-		// Content Assist
-		getPreferenceStore().setValue(HTMLUIPreferenceNames.AUTO_PROPOSE, fAutoPropose.getSelection());
-		getPreferenceStore().setValue(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE, fAutoProposeText.getText());
 	}
 
 	private void storeValuesForFormattingGroup() {
@@ -276,24 +235,11 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		new Label(composite, SWT.NONE).setLayoutData(GridDataFactory.swtDefaults().create());
 
 		createContentsForFormattingGroup(composite);
-		createContentsForContentAssistGroup(composite);
+		createContentsForPreferredCaseGroup(composite, 2);
 		setSize(composite);
 		loadPreferences();
 
 		return composite;
-	}
-
-	protected void enableValues() {
-		if (fAutoPropose != null) {
-			if (fAutoPropose.getSelection()) {
-				fAutoProposeLabel.setEnabled(true);
-				fAutoProposeText.setEnabled(true);
-			}
-			else {
-				fAutoProposeLabel.setEnabled(false);
-				fAutoProposeText.setEnabled(false);
-			}
-		}
 	}
 
 	protected void validateValues() {

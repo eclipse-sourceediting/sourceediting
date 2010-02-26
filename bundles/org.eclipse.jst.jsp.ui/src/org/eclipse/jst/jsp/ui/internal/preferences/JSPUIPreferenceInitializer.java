@@ -78,6 +78,29 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(JSPUIPreferenceNames.TYPING_CLOSE_STRINGS, true);
 		store.setDefault(JSPUIPreferenceNames.TYPING_CLOSE_BRACKETS, true);
 		
+		// Defaults for Content Assist preference page
+		store.setDefault(JSPUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_DEFAULT_PAGE, "");
+		store.setDefault(JSPUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_OWN_PAGE, "");
+		store.setDefault(JSPUIPreferenceNames.CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER,
+				"org.eclipse.jst.jsp.ui.proposalCategory.jsp\0" +
+				"org.eclipse.jst.jsp.ui.proposalCategory.jspJava\0" +
+				"org.eclipse.wst.html.ui.proposalCategory.htmlTags\0" +
+				"org.eclipse.wst.xml.ui.proposalCategory.xmlTags\0" +
+				"org.eclipse.wst.css.ui.proposalCategory.css\0" +
+				"org.eclipse.jst.jsp.ui.proposalCategory.jspTemplates\0" +
+				"org.eclipse.wst.html.ui.proposalCategory.htmlTemplates\0" +
+				"org.eclipse.wst.xml.ui.proposalCategory.xmlTemplates\0" +
+				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates");
+		store.setDefault(JSPUIPreferenceNames.CONTENT_ASSIST_OWN_PAGE_SORT_ORDER,
+				"org.eclipse.jst.jsp.ui.proposalCategory.jspTemplates\0" +
+				"org.eclipse.wst.html.ui.proposalCategory.htmlTemplates\0" +
+				"org.eclipse.wst.xml.ui.proposalCategory.xmlTemplates\0" +
+				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates\0" +
+				"org.eclipse.wst.html.ui.proposalCategory.htmlTags\0" +
+				"org.eclipse.wst.xml.ui.proposalCategory.xmlTags\0" +
+				"org.eclipse.jst.jsp.ui.proposalCategory.jsp\0" +
+				"org.eclipse.jst.jsp.ui.proposalCategory.jspJava\0" +
+				"org.eclipse.wst.css.ui.proposalCategory.css");
 	}
 
 }
