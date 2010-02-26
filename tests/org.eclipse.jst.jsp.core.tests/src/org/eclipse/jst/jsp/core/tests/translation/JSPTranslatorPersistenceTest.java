@@ -98,6 +98,16 @@ public class JSPTranslatorPersistenceTest extends TestCase {
 				originalTranslation.toString(), externalizedTranslation.toString());
 	}
 	
+	public void testTranslationsDeepEqual() throws Exception {
+		String outFileName = "testTranslationTextComparison.obj";
+
+		JSPTranslator originalTranslator = writeTranslator("Test1.jsp", outFileName);
+		JSPTranslator externalizedTranslator = (JSPTranslator)readObject(outFileName);
+		
+		assertEquals("The original translation should be deeply equal to the restored externalized translation",
+				originalTranslator, externalizedTranslator);
+	}
+	
 	/**
 	 * <p>This test case follows the general pattern of how a translation is created, then can be
 	 * externalized when the workspace is closed, then reloaded when its opened again.</p>
@@ -135,6 +145,8 @@ public class JSPTranslatorPersistenceTest extends TestCase {
 		 */
 		assertEquals("The original translation should be the same as the restored externalized translation",
 				originalTranslator.getTranslation().toString(), jspTranslationExtension.getJavaText());
+		
+		
 	}
 	
 	private static JSPTranslator writeTranslator(String jspFileName, String externalizedFileName) throws IOException, CoreException {
