@@ -23,7 +23,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  com.ibm.icu,
- org.eclipse.wst.validation
+ org.eclipse.wst.validation,
+ org.eclipse.ui.ide
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
 Bundle-ActivationPolicy: lazy

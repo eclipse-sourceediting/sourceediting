@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.xml.ui.internal.validation.TestDelegatingSourceValidatorForXML;
 import org.eclipse.wst.xml.ui.internal.validation.TestMarkupValidator;
-import org.eclipse.wst.xml.ui.tests.contentassist.TestXMLContentAssist;
+import org.eclipse.wst.xml.ui.tests.contentassist.TestXMLContentAssistComputers;
 import org.eclipse.wst.xml.ui.tests.viewer.TestViewerConfigurationXML;
 
 
@@ -40,7 +40,7 @@ public class XMLUITestSuite extends TestSuite {
 		addTestSuite(TestMarkupValidator.class);
 		addTestSuite(TestReconcilerXML.class);
 		addTestSuite(TestSourceValidationFramework.class);
-		addTestSuite(TestXMLContentAssist.class);
 		addTest(new TestSuite(TestSpellcheckDelegateAdapaterFactory.class, "Test Spellcheck Delegate Adapter Factory"));
+		addTest(TestXMLContentAssistComputers.suite());
 	}
 }

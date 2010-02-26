@@ -13,6 +13,8 @@ package org.eclipse.wst.html.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.html.ui.tests.contentassist.TestEmbededCSSContentAssistComputers;
+import org.eclipse.wst.html.ui.tests.contentassist.TestHTMLContentAssistComputers;
 import org.eclipse.wst.html.ui.tests.validation.TestHTMLValidator;
 import org.eclipse.wst.html.ui.tests.viewer.TestViewerConfigurationHTML;
 
@@ -31,5 +33,7 @@ public class HTMLUITestSuite extends junit.framework.TestSuite {
 		addTest(new TestSuite(TestEditorConfigurationHTML.class));
 		addTest(TestHTMLValidator.suite());
 		//		addTest(new SSEModelTestSuite());
+		addTest(TestHTMLContentAssistComputers.suite());
+		addTest(TestEmbededCSSContentAssistComputers.suite());
 	}
 }

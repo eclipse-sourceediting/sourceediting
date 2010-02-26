@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.jst.jsp.ui.tests.contentassist.BeanInfoProviderTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPELContentAssistTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPJavaTranslatorTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPTranslationTest;
+import org.eclipse.jst.jsp.ui.tests.contentassist.TestJSPContentAssistComputers;
 import org.eclipse.jst.jsp.ui.tests.contentdescription.TestContentDescription;
 import org.eclipse.jst.jsp.ui.tests.document.FileBufferDocumentTester;
 import org.eclipse.jst.jsp.ui.tests.model.TestModelsFromFiles;
@@ -51,6 +52,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(BeanInfoProviderTest.class, "BeanInfo Provider Test"));
 		addTest(new TestSuite(JSPTranslationTest.class, "Translator Tests"));
 		addTest(new TestSuite(JSPELContentAssistTest.class, "JSP EL Content Assist Tests"));
+		addTest(TestJSPContentAssistComputers.suite());
 		addTest(new TestSuite(AdapterFactoryRegistryTest.class, "AdapterFactoryRegistry Tests"));
 		addTest(new TestSuite(JSPUIPreferencesTest.class, "Preference Tests"));
 		addTest(new TestSuite(TestViewerConfigurationJSP.class, "Source Viewer Configuration Tests"));
