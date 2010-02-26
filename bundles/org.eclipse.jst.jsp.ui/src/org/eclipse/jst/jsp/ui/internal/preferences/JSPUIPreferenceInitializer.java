@@ -71,6 +71,13 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 			templateName = template.getName();
 		store.setDefault(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
 		
+		// set default new jsp tag file template to use in new tag file wizard
+		templateName = ""; //$NON-NLS-1$
+		template = JSPUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.jst.jsp.ui.templates.simpletag"); //$NON-NLS-1$
+		if (template != null)
+			templateName = template.getName();
+		store.setDefault(JSPUIPreferenceNames.NEW_TAG_FILE_TEMPLATE_NAME, templateName);
+		
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES, true);
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS, true);
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS, true);

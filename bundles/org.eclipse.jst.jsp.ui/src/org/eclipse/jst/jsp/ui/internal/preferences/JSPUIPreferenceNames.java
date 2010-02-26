@@ -64,6 +64,16 @@ public class JSPUIPreferenceNames {
 	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
 	
 	/**
+	 * The key to store the last template name used in new JSP Tag file wizard.
+	 * Template name is stored instead of template id because user-created
+	 * templates do not have template ids.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String NEW_TAG_FILE_TEMPLATE_NAME = "newTagFileTemplateName"; //$NON-NLS-1$
+
+	/**
 	 * The key to store the option for auto-completing EL braces after entering
 	 * <code>${</code>
 	 * <p>

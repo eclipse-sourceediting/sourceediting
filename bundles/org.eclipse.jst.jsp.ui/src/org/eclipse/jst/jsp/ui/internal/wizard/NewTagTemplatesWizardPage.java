@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -417,7 +417,7 @@ public class NewTagTemplatesWizardPage extends WizardPage {
 
 		Template template = getSelectedTemplate();
 		if (template != null) {
-			TemplateContextType contextType = JSPUIPlugin.getDefault().getTemplateContextRegistry().getContextType(TemplateContextTypeIdsJSP.NEW);
+			TemplateContextType contextType = JSPUIPlugin.getDefault().getTemplateContextRegistry().getContextType(TemplateContextTypeIdsJSP.NEW_TAG);
 			IDocument document = new Document();
 			TemplateContext context = new DocumentTemplateContext(contextType, document, 0, 0);
 			try {
@@ -425,7 +425,7 @@ public class NewTagTemplatesWizardPage extends WizardPage {
 				templateString = buffer.getString();
 			}
 			catch (Exception e) {
-				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new jsp", e); //$NON-NLS-1$
+				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new jsp tag", e); //$NON-NLS-1$
 			}
 		}
 
@@ -443,7 +443,7 @@ public class NewTagTemplatesWizardPage extends WizardPage {
 	 * Load the last template name used in New JSP File wizard.
 	 */
 	private void loadLastSavedPreferences() {
-		String templateName = JSPUIPlugin.getDefault().getPreferenceStore().getString(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_NAME);
+		String templateName = JSPUIPlugin.getDefault().getPreferenceStore().getString(JSPUIPreferenceNames.NEW_TAG_FILE_TEMPLATE_NAME);
 		if (templateName == null || templateName.length() == 0) {
 			fLastSelectedTemplateName = ""; //$NON-NLS-1$
 			fUseTemplateButton.setSelection(false);
@@ -466,7 +466,7 @@ public class NewTagTemplatesWizardPage extends WizardPage {
 			templateName = template.getName();
 		}
 
-		JSPUIPlugin.getDefault().getPreferenceStore().setValue(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		JSPUIPlugin.getDefault().getPreferenceStore().setValue(JSPUIPreferenceNames.NEW_TAG_FILE_TEMPLATE_NAME, templateName);
 		JSPUIPlugin.getDefault().savePluginPreferences();
 	}
 
@@ -482,7 +482,7 @@ public class NewTagTemplatesWizardPage extends WizardPage {
 
 		if (templateName != null && templateName.length() > 0) {
 			// pick the last used template
-			template = fTemplateStore.findTemplate(templateName, TemplateContextTypeIdsJSP.NEW);
+			template = fTemplateStore.findTemplate(templateName, TemplateContextTypeIdsJSP.NEW_TAG);
 		}
 
 		// no record of last used template so just pick first element
