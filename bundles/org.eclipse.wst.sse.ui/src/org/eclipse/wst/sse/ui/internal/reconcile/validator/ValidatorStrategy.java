@@ -309,13 +309,19 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 
 		super.setDocument(document);
 
-		fValidatorsSuspended = false;
-		if (document != null) {
-			IFile file = getFile();
-			if (file != null) {
-				// Validation is suspended for this resource, do nothing
-				fValidatorsSuspended = !file.isAccessible() || ValidationFramework.getDefault().isSuspended(file.getProject()) || ValidationFramework.getDefault().getProjectSettings(file.getProject()).getSuspend();
+		try {
+			fValidatorsSuspended = false;
+			if (document != null) {
+				IFile file = getFile();
+				if (file != null) {
+					// Validation is suspended for this resource, do nothing
+					fValidatorsSuspended = !file.isAccessible() || ValidationFramework.getDefault().isSuspended(file.getProject()) || ValidationFramework.getDefault().getProjectSettings(file.getProject()).getSuspend();
+				}
 			}
+		}
+		catch (Exception e) {
+			fValidatorsSuspended = true;
+			Logger.logException(e);
 		}
 		
 		// validator steps are in "fVIdToVStepMap" (as opposed to fFirstStep >
