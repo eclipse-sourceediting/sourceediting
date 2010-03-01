@@ -1,11 +1,14 @@
 package org.eclipse.wst.jsdt.web.core.tests;
 
-import org.eclipse.wst.jsdt.web.core.tests.translation.TestHtmlTranslation;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllWebCoreTests {
+import org.eclipse.wst.jsdt.web.core.tests.translation.TestHtmlTranslation;
+
+public class AllWebCoreTests extends TestSuite {
+	public AllWebCoreTests() {
+		super("JSDT Web Core Tests");
+	}
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("JSDT Web Core Tests");

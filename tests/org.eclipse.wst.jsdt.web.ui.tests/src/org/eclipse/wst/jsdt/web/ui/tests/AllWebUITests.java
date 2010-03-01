@@ -17,7 +17,10 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.jsdt.web.ui.tests.style.StyleTests;
 
-public class AllWebUITests {
+public class AllWebUITests extends TestSuite {
+	public AllWebUITests() {
+		super("JSDT Web UI Tests");
+	}
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("JSDT Web UI Tests");
