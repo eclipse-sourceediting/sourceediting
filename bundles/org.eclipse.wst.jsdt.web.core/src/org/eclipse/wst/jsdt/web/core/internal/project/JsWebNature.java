@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,8 +28,8 @@ import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
-
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
+import org.eclipse.wst.jsdt.internal.core.util.ConvertUtility;
 //import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 /**
 *
@@ -171,6 +171,10 @@ public class JsWebNature implements IProjectNature {
 	private void createSourceClassPath() {
 		if (hasAValidSourcePath()) {
 			return;
+		}
+		IIncludePathEntry[] entries = new ConvertUtility(fCurrProject).getDefaultSourcePaths(fCurrProject);
+		for (int i = 0; i < entries.length; i++) {
+			classPathEntries.add(entries[i]);
 		}
 		// IPath projectPath = fCurrProject.getFullPath();
 		// classPathEntries.add(JavaScriptCore.newSourceEntry(projectPath));

@@ -119,4 +119,9 @@
 	      </JsGlobalScopeContainerInitializer>
   	 </extension>
 	
+	<extension
+		id="webSourcePathProvider"
+		point="org.eclipse.wst.jsdt.core.sourcePathProvider">
+		<provider class="org.eclipse.wst.jsdt.web.core.internal.project.ModuleSourcePathProvider"/>
+	</extension>
 </plugin>
