@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ package org.eclipse.wst.xml.core.internal.catalog.provisional;
  */
 public interface ICatalogEntry extends ICatalogElement
 {
-    /** The SYSTEM Catalog Entry type. */
+    /** The PUBLIC Catalog Entry type. */
     public static final int ENTRY_TYPE_PUBLIC = 2;
 
     /** The SYSTEM Catalog Entry type. */
