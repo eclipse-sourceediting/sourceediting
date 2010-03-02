@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentassist;
 
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
@@ -34,10 +34,9 @@ public class HTMLMinimalContentModelGenerator extends XMLContentModelGenerator {
 	}
 
 	private void init() {
-		//IPreferenceStore prefs = CommonPreferencesPlugin.getDefault().getPreferenceStore(ContentType.ContentTypeID_HTML);
-		Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences();
-		fTagCase = prefs.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE);
-		fAttrCase = prefs.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE);
+		String qualifier = HTMLCorePlugin.getDefault().getBundle().getSymbolicName();
+		fTagCase = Platform.getPreferencesService().getInt(qualifier, HTMLCorePreferenceNames.TAG_NAME_CASE, 0, null);
+		fAttrCase = Platform.getPreferencesService().getInt(qualifier, HTMLCorePreferenceNames.ATTR_NAME_CASE, 0, null);
 	}
 
 	protected void generateEndTag(String tagName, Node parentNode, CMElementDeclaration elementDecl, StringBuffer buffer) {
@@ -110,6 +109,11 @@ public class HTMLMinimalContentModelGenerator extends XMLContentModelGenerator {
 					return ">"; //$NON-NLS-1$
 				}
 			}
+		}
+		
+		//if not an html element and empty, assume start tag needs to be closed
+		else if (elementDecl.getContentType() == CMElementDeclaration.EMPTY) {
+			return "/>"; //$NON-NLS-1$
 		}
 
 		return ">"; //$NON-NLS-1$

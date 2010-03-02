@@ -58,9 +58,6 @@ import org.w3c.dom.Node;
  */
 public class HTMLTagsCompletionProposalComputer extends
 		AbstractXMLModelQueryCompletionProposalComputer {
-
-	/** the content generator for generating proposals */
-	protected XMLContentModelGenerator fGenerator;
 	
 	/** <code>true</code> if the document the proposal request is on is XHTML */
 	protected boolean isXHTML = false;
@@ -80,7 +77,6 @@ public class HTMLTagsCompletionProposalComputer extends
 		IDOMNode node = (IDOMNode) treeNode;
 		boolean isXHTMLNode = isXHTMLNode(node);
 		if(this.isXHTML != isXHTMLNode) {
-			this.fGenerator = null;
 			this.isXHTML = isXHTMLNode;
 		}
 		
@@ -94,14 +90,11 @@ public class HTMLTagsCompletionProposalComputer extends
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer#getContentGenerator()
 	 */
 	protected XMLContentModelGenerator getContentGenerator() {
-		if (fGenerator == null) {
-			if (isXHTML) {
-				fGenerator = XHTMLMinimalContentModelGenerator.getInstance();
-			} else {
-				fGenerator = HTMLMinimalContentModelGenerator.getInstance();
-			}
+		if (isXHTML) {
+			return XHTMLMinimalContentModelGenerator.getInstance();
+		} else {
+			return HTMLMinimalContentModelGenerator.getInstance();
 		}
-		return fGenerator;
 	}
 	
 	/**
