@@ -42,7 +42,7 @@ import org.w3c.dom.Text;
 public class XMLModelParser {
 	private XMLModelContext context = null;
 	private DOMModelImpl model = null;
-	private TextImpl previousText = null;
+	private TextImpl lastTextNode = null;
 
 	/**
 	 */
@@ -1145,7 +1145,10 @@ public class XMLModelParser {
 			if (text != null) { // existing text found
 				// do not append data
 				text.appendStructuredDocumentRegion(flatNode);
-				previousText = text;
+				// Adjacent text nodes, where changes were queued
+				if (lastTextNode != null && lastTextNode != text)
+					lastTextNode.notifyValueChanged();
+				lastTextNode = text;
 				return;
 			}
 
@@ -1520,10 +1523,10 @@ public class XMLModelParser {
 			isTextNode = true;
 		}
 
-		/* Changes to text regions are queued up, and once the value is done changing a notification is sent */
-		if (!isTextNode && previousText != null) {
-			previousText.notifyValueChanged();
-			previousText = null;
+		// Changes to text regions are queued up, and once the value is done changing a notification is sent
+		if (!isTextNode && lastTextNode != null) {
+			lastTextNode.notifyValueChanged();
+			lastTextNode = null;
 		}
 	}
 
@@ -1562,7 +1565,10 @@ public class XMLModelParser {
 		TextImpl text = (TextImpl) this.context.findPreviousText();
 		if (text != null) { // existing text found
 			text.appendStructuredDocumentRegion(flatNode);
-			previousText = text;
+			// Adjacent text nodes, where changes were queued
+			if (lastTextNode != null && lastTextNode != text)
+				lastTextNode.notifyValueChanged();
+			lastTextNode = text;
 			return;
 		}
 
