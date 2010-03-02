@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -230,8 +230,8 @@ public class SourceValidator {
 			end = found + 2;
 		} else {
 			// normal tag
-			int found = source.indexOf('>', offset);
-			if (found < 0)
+			int found = source.lastIndexOf('>');
+			if (found < offset)
 				return -1; // invalid tag
 			end = found + 1;
 		}
