@@ -20,6 +20,11 @@
 			description="%_UI_PREF_TAGLIB_DEF_FILES"
 			id="org.eclipse.wst.xml.core.ui.catalogFileType.tld">
 		</fileType>
+		<fileType
+			extensions="xml, cat, xmlcatalog"
+			description="%_UI_PREF_CATALOG_FILES"
+			id="org.eclipse.wst.xml.core.ui.catalogFileType.cat">
+		</fileType>
 	</extension>
 
 	<!--The org.eclipse.wst.xml.core.xmlsource content type is only for
