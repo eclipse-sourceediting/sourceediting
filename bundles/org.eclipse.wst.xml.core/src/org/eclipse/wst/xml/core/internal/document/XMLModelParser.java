@@ -42,6 +42,7 @@ import org.w3c.dom.Text;
 public class XMLModelParser {
 	private XMLModelContext context = null;
 	private DOMModelImpl model = null;
+	private TextImpl previousText = null;
 
 	/**
 	 */
@@ -1144,8 +1145,7 @@ public class XMLModelParser {
 			if (text != null) { // existing text found
 				// do not append data
 				text.appendStructuredDocumentRegion(flatNode);
-				// notify the change
-				text.notifyValueChanged();
+				previousText = text;
 				return;
 			}
 
@@ -1489,6 +1489,7 @@ public class XMLModelParser {
 	 */
 	protected void insertStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
+		boolean isTextNode = false;
 		if (regionType == DOMRegionContext.XML_TAG_OPEN) {
 			insertStartTag(flatNode);
 		}
@@ -1500,6 +1501,7 @@ public class XMLModelParser {
 		}
 		else if (regionType == DOMRegionContext.XML_ENTITY_REFERENCE || regionType == DOMRegionContext.XML_CHAR_REFERENCE) {
 			insertEntityRef(flatNode);
+			isTextNode = true;
 		}
 		else if (regionType == DOMRegionContext.XML_DECLARATION_OPEN) {
 			insertDecl(flatNode);
@@ -1515,6 +1517,13 @@ public class XMLModelParser {
 		}
 		else {
 			insertText(flatNode);
+			isTextNode = true;
+		}
+
+		/* Changes to text regions are queued up, and once the value is done changing a notification is sent */
+		if (!isTextNode && previousText != null) {
+			previousText.notifyValueChanged();
+			previousText = null;
 		}
 	}
 
@@ -1553,8 +1562,7 @@ public class XMLModelParser {
 		TextImpl text = (TextImpl) this.context.findPreviousText();
 		if (text != null) { // existing text found
 			text.appendStructuredDocumentRegion(flatNode);
-			// notify the change
-			text.notifyValueChanged();
+			previousText = text;
 			return;
 		}
 
