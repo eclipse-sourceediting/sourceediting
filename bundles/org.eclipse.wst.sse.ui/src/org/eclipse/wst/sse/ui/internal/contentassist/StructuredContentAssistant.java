@@ -12,14 +12,21 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.contentassist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 
 /**
  * <p>Content assistant that uses {@link CompoundContentAssistProcessor}s so that multiple
  * processors can be registered for each partition type</p>
  */
 public class StructuredContentAssistant extends ContentAssistant {
+	/** need to retain copy of all releasable processors so they can be released on uninstall */
+	private List fReleasableProcessors;
+	
 	/** 
 	 * <code>true</code> if a content assist processor has been added to this assistant,
 	 * <code>false</code> otherwise
@@ -31,6 +38,7 @@ public class StructuredContentAssistant extends ContentAssistant {
 	 */
 	public StructuredContentAssistant() {
 		this.fIsInitalized = false;
+		this.fReleasableProcessors = new ArrayList();
 	}
 	
 	/**
@@ -52,6 +60,7 @@ public class StructuredContentAssistant extends ContentAssistant {
 		CompoundContentAssistProcessor compoundProcessor = getExistingContentAssistProcessor(partitionType);
 		if(compoundProcessor == null) {
 			compoundProcessor = new CompoundContentAssistProcessor();
+			this.fReleasableProcessors.add(compoundProcessor);
 		}
 		
 		compoundProcessor.add(processor);
@@ -82,5 +91,22 @@ public class StructuredContentAssistant extends ContentAssistant {
 			}
 		}
 		return compoundContentAssistProcessor;
+	}
+	
+	/**
+	 * @see org.eclipse.jface.text.contentassist.ContentAssistant#uninstall()
+	 */
+	public void uninstall() {
+		// dispose of all content assist processors
+		if (this.fReleasableProcessors != null && !this.fReleasableProcessors.isEmpty()) {
+			for(int i = 0; i < this.fReleasableProcessors.size(); ++i) {
+				((IReleasable)this.fReleasableProcessors.get(i)).release();
+			}
+			
+			this.fReleasableProcessors.clear();
+		}
+		this.fReleasableProcessors = null;
+		
+		super.uninstall();
 	}
 }
