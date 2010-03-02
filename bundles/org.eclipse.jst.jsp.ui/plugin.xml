@@ -1143,9 +1143,6 @@
           <partitionType
                 id="org.eclipse.wst.xml.XML_DEFAULT">
           </partitionType>
-          <partitionType
-                id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
-          </partitionType>
        </contentType>
     </proposalComputerExtendedActivation>
     <proposalComputerExtendedActivation
@@ -1199,6 +1196,9 @@
           </partitionType>
           <partitionType
                 id="org.eclipse.jst.jsp.JSP_COMMENT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
           </partitionType>
        </contentType>
     </proposalComputer>
