@@ -150,7 +150,7 @@ public class TestHtmlTranslation extends TestCase {
 	}
 
 	protected String getFile(String fileName) {
-		return readFile("/testfiles/".concat(fileName));
+		return readFile("/testFiles/".concat(fileName));
 	}
 	
 	public void testMangleTagInJS() {
