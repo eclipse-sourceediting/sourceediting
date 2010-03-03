@@ -662,6 +662,10 @@ public class XMLModelParser {
 	/**
 	 */
 	private void cleanupText() {
+		if (lastTextNode != null) {
+			lastTextNode.notifyValueChanged();
+			lastTextNode = null;
+		}
 		Node parent = this.context.getParentNode();
 		if (parent == null)
 			return; // error
