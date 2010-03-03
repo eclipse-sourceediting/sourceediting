@@ -32,6 +32,7 @@ import java.util.Stack;
 
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -73,7 +74,7 @@ import org.eclipse.jst.jsp.core.internal.util.ZeroStructuredDocumentRegion;
 import org.eclipse.jst.jsp.core.jspel.IJSPELTranslator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
-import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -894,119 +895,143 @@ public class JSPTranslator implements Externalizable {
 	 * @param customTag
 	 */
 	protected void addTaglibVariables(String tagToAdd, ITextRegionCollection customTag) {
-		IFile f = getFile();
-
-		if (f == null || !f.exists())
-			return;
-
-		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
-		String decl = ""; //$NON-NLS-1$
 		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
 			/*
 			 * Start tag
 			 */
-			List problems = new ArrayList();
-			CustomTag tag = helper.getCustomTag(tagToAdd, getStructuredDocument(), customTag, problems);
-			TaglibVariable[] taglibVars = tag.getTagVariables();
-			fTranslationProblems.addAll(problems);
-			/*
-			 * Add AT_BEGIN variables
-			 */
-			for (int i = 0; i < taglibVars.length; i++) {
-				if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
-					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer(decl, fUserCode, false, customTag);
-				}
-			}
-
-			boolean isEmptyTag = customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
-			/*
-			 * Add a single  { to limit the scope of NESTED variables
-			 */
-			StringBuffer text = new StringBuffer();
-			if (!isEmptyTag && tag.isIterationTag() && tag.getTagClassName() != null) {
-				text.append("\nwhile(true) "); //$NON-NLS-1$
-			}
-			text.append("{ // <"); //$NON-NLS-1$
-			text.append(tagToAdd);
-			if (isEmptyTag) {
-				text.append("/>\n"); //$NON-NLS-1$
-			}
-			else {
-				text.append(">\n"); //$NON-NLS-1$
-			}
-			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
-
-			for (int i = 0; i < taglibVars.length; i++) {
-				if (taglibVars[i].getScope() == VariableInfo.NESTED) {
-					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer(decl, fUserCode, false, customTag);
-				}
-			}
-			/*
-			 * For empty tags, add the corresponding } and AT_END variables immediately.  
-			 */
-			if (isEmptyTag) {
-				text = new StringBuffer();
-				text.append("} // <"); //$NON-NLS-1$
-				text.append(tagToAdd);
-				text.append("/>\n"); //$NON-NLS-1$
-				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
-				/* Treat this as the end for empty tags */
-				for (int i = 0; i < taglibVars.length; i++) {
-					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
-						decl = taglibVars[i].getDeclarationString();
-						appendToBuffer(decl, fUserCode, false, customTag);
-					}
-				}
-			}
-			else {
-				/*
-				 * For non-empty tags, remember the variable information
-				 */
-				fTagToVariableMap.push(tagToAdd, new RegionTags(customTag, tag));
-			}
+			addStartTagVariable(tagToAdd, customTag);
 		}
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
 			/*
 			 * End tag
 			 */
-			RegionTags regionAndTags = (RegionTags) fTagToVariableMap.pop(tagToAdd);
-			if (regionAndTags != null) {
-				/*
-				 * Even an empty array of variables will indicate a need for a
-				 * closing brace, so add one. If "regionAndTaglibVars" is
-				 * null, that means there was no start tag for use with this
-				 * end tag. Adding a '}' even then would cause a Java
-				 * translation fault, but that's not particularly helpful to a
-				 * user who may only know how to use custom tags. Ultimately
-				 * unbalanced custom tags should just be reported as
-				 * unbalanced tags.
-				 */
-				TaglibVariable[] taglibVars = regionAndTags.tag.getTagVariables();
-				StringBuffer text = new StringBuffer();
-				if (regionAndTags.tag.isIterationTag())
-					doAfterBody(text, regionAndTags);
-				text.append("} // </"); //$NON-NLS-1$
-				text.append(tagToAdd);
-				text.append(">\n"); //$NON-NLS-1$
-				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
-				for (int i = 0; i < taglibVars.length; i++) {
-					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
-						decl = taglibVars[i].getDeclarationString();
-						appendToBuffer(decl, fUserCode, false, customTag);
-					}
+			addEndTagVariable(tagToAdd, customTag);
+		}
+	}
+	
+	private void addEndTagVariable(String tagToAdd, ITextRegionCollection customTag){
+		IFile f = getFile();
+		if (f == null || !f.exists())
+			return;
+		String decl = ""; //$NON-NLS-1$
+		RegionTags regionTag = (RegionTags) fTagToVariableMap.pop(tagToAdd);
+		if (regionTag != null) {
+			// even an empty array will indicate a need for a closing brace
+			TaglibVariable[] taglibVars = regionTag.tag.getTagVariables();
+			StringBuffer text = new StringBuffer();
+			if (regionTag.tag.isIterationTag())
+				doAfterBody(text, regionTag);
+			text.append("} // </"); //$NON-NLS-1$
+			text.append(tagToAdd);
+			text.append(">\n"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+			for (int i = 0; i < taglibVars.length; i++) {
+				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
+					decl = taglibVars[i].getDeclarationString();
+					appendToBuffer(decl, fUserCode, false, customTag);
 				}
 			}
-			else {
-				/*
-				 * Since something should have been in the map because of a
-				 * start tag, its absence now means an unbalanced end tag.
-				 * Extras will be checked later to flag unbalanced start tags.
-				 */
-				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.StartCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "No start tag for " + tagToAdd, customTag.getStartOffset(), customTag.getEndOffset());
-				fTranslationProblems.add(missingStartTag);
+		}
+		else {
+			/*
+			 * Since something should have been in the map because of a
+			 * start tag, its absence now means an unbalanced end tag.
+			 * Extras will be checked later to flag unbalanced start tags.
+			 */
+			IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.StartCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "No start tag for " + tagToAdd, customTag.getStartOffset(), customTag.getEndOffset());
+			fTranslationProblems.add(missingStartTag);
+		}
+	}
+	private void addStartTagVariable(String tagToAdd,ITextRegionCollection customTag){
+		IFile f = getFile();
+
+		if (f == null || !f.exists())
+			return;
+		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
+		String decl = ""; //$NON-NLS-1$
+		List problems = new ArrayList();
+		CustomTag tag = helper.getCustomTag(tagToAdd, getStructuredDocument(), customTag, problems);
+		TaglibVariable[] taglibVars = tag.getTagVariables();
+		fTranslationProblems.addAll(problems);
+		/*
+		 * Add AT_BEGIN variables
+		 */
+		for (int i = 0; i < taglibVars.length; i++) {
+			if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
+				decl = taglibVars[i].getDeclarationString();
+				appendToBuffer(decl, fUserCode, false, customTag);
 			}
+		}
+
+		boolean isEmptyTag = customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
+		if (!isEmptyTag){
+			if (customTag.getLastRegion().getType().equals(DOMRegionContext.WHITE_SPACE)){
+				int len = customTag.getRegions().size();
+				if (len >2){
+					isEmptyTag = customTag.getRegions().get(len-2).getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
+				}
+			}
+		}
+		/*
+		 * Add a single  { to limit the scope of NESTED variables
+		 */
+		StringBuffer text = new StringBuffer();
+		if (!isEmptyTag && tag.isIterationTag() && tag.getTagClassName() != null) {
+			text.append("\nwhile(true) "); //$NON-NLS-1$
+		}
+		text.append("{ // <"); //$NON-NLS-1$
+		text.append(tagToAdd);
+		if (isEmptyTag)
+			text.append("/>\n"); //$NON-NLS-1$
+		else
+			text.append(">\n"); //$NON-NLS-1$
+
+		appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+
+		for (int i = 0; i < taglibVars.length; i++) {
+			if (taglibVars[i].getScope() == VariableInfo.NESTED) {
+				decl = taglibVars[i].getDeclarationString();
+				appendToBuffer(decl, fUserCode, false, customTag);
+			}
+		}
+		/*
+		 * For empty tags, add the corresponding } and AT_END variables immediately.  
+		 */
+		if (isEmptyTag) {
+			text = new StringBuffer();
+			text.append("} // <"); //$NON-NLS-1$
+			text.append(tagToAdd);
+			text.append("/>\n"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+			/* Treat this as the end for empty tags */
+			for (int i = 0; i < taglibVars.length; i++) {
+				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
+					decl = taglibVars[i].getDeclarationString();
+					appendToBuffer(decl, fUserCode, false, customTag);
+				}
+			}
+		}
+		else {
+			/*
+			 * For non-empty tags, remember the variable information
+			 */
+			fTagToVariableMap.push(tagToAdd, new RegionTags(customTag, tag));
+		}
+		
+	}
+	private void addCustomTaglibVariables(String tagToAdd, ITextRegionCollection customTag, ITextRegion prevRegion) {
+		//Can't judge by first region as start and end tag are part of same ContextRegionContainer		
+		if (prevRegion != null && prevRegion.getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
+			/*
+			 * End tag
+			 */
+			addEndTagVariable(tagToAdd, customTag);
+		}
+		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
+			/*
+			 * Start tag
+			 */
+			addStartTagVariable(tagToAdd,customTag);
 		}
 	}
 
@@ -1021,23 +1046,17 @@ public class JSPTranslator implements Externalizable {
 	 */
 	private IFile getFile() {
 		IFile f = null;
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
-		try {
-			if (sModel != null) {
-				Path path = new Path(sModel.getBaseLocation());
-				if (path.segmentCount() > 1) {
-					f = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				}
-				if (f != null && f.isAccessible()) {
-					return f;
-				}
+		ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(getStructuredDocument());
+		if (buffer != null) {
+			IPath path = buffer.getLocation();
+			if (path.segmentCount() > 1) {
+				f = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			}
-			return null;
+			if (f != null && f.isAccessible()) {
+				return f;
+			}
 		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
-		}
+		return null;
 	}
 
 	/*
@@ -1840,6 +1859,15 @@ public class JSPTranslator implements Externalizable {
 			// possible delimiter, check later
 			delim = embeddedRegions.get(i);
 			type = delim.getType();
+			if (type == DOMRegionContext.XML_TAG_NAME ) {
+				String fullTagName = embeddedContainer.getText(delim);
+				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith(JSP_PREFIX)) {
+					ITextRegion prevRegion =null;
+					if (i>0)
+						prevRegion = embeddedRegions.get(i-1);
+					addCustomTaglibVariables(fullTagName, embeddedContainer,prevRegion); // it may be a custom tag
+				}
+			}
 			if(type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE
 				|| type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_SQUOTE)
 				quotetype = type;
@@ -3088,14 +3116,9 @@ public class JSPTranslator implements Externalizable {
 
 	private IPath getModelPath() {
 		IPath path = null;
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
-		try {
-			if (sModel != null)
-				path = new Path(sModel.getBaseLocation());
-		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
+		ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(getStructuredDocument());
+		if (buffer != null) {
+			path = buffer.getLocation();
 		}
 		return path;
 	}
