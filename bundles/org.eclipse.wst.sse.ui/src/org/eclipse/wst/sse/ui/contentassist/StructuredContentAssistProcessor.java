@@ -436,7 +436,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		
 		// if default page
 		// Deal with adding in proposals from processors added through the legacy extension
-		if (getIteration() == 0 && this.fLegacyExtendedContentAssistProcessors != null && !fLegacyExtendedContentAssistProcessors.isEmpty()) {
+		if (getIteration() == 1 && this.fLegacyExtendedContentAssistProcessors != null && !fLegacyExtendedContentAssistProcessors.isEmpty()) {
 			Iterator iter = fLegacyExtendedContentAssistProcessors.iterator();
 			while (iter.hasNext()) {
 				IContentAssistProcessor legacyProcessor = (IContentAssistProcessor) iter.next();
