@@ -169,7 +169,7 @@ public class JsWebNature implements IProjectNature {
 	}
 	
 	private void createSourceClassPath() {
-		if (hasAValidSourcePath()) {
+		if (hasAValidSourcePath() || true) {
 			return;
 		}
 		IIncludePathEntry[] entries = new ConvertUtility(fCurrProject).getDefaultSourcePaths(fCurrProject);
