@@ -51,6 +51,7 @@ public interface ActionDefinitionIds {
 	public final static String TOGGLE_COMMENT = "org.eclipse.wst.sse.ui.toggle.comment";//$NON-NLS-1$
 	public final static String TOGGLE_BREAKPOINTS = "org.eclipse.wst.sse.ui.breakpoints.toggle";//$NON-NLS-1$
 	public final static String UNCOMMENT = "org.eclipse.wst.sse.ui.uncomment";//$NON-NLS-1$
+	public final static String SHOW_OUTLINE = "org.eclipse.wst.sse.ui.quick_outline";//$NON-NLS-1$
 
 	// registered command IDs, so we pick up the declared key bindings
 	public static final String GOTO_MATCHING_BRACKET= "org.eclipse.wst.sse.ui.goto.matching.bracket"; //$NON-NLS-1$

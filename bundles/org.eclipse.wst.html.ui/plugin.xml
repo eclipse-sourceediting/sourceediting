@@ -23,6 +23,9 @@
 		<contentOutlineConfiguration
 			class="org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration"
 			target="org.eclipse.wst.html.core.htmlsource" />
+		<quickOutlineConfiguration
+			class="org.eclipse.wst.xml.ui.internal.quickoutline.XMLQuickOutlineConfiguration"
+			target="org.eclipse.wst.html.core.htmlsource"/>
 		<propertySheetConfiguration
 			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.wst.html.core.htmlsource" />

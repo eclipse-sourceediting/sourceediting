@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,6 +66,11 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	 * strategy
 	 */
 	public static final String DOUBLECLICKSTRATEGY = "doubleClickStrategy"; //$NON-NLS-1$
+	/**
+	 * Extension type to pass into getConfigurations to get quick outline
+	 * configuration
+	 */
+	public static final String QUICKOUTLINECONFIGURATION = "quickOutlineConfiguration"; //$NON-NLS-1$
 
 	private static final String ATT_CLASS = "class"; //$NON-NLS-1$
 	private static final String ATT_TARGET = "target"; //$NON-NLS-1$

@@ -19,6 +19,9 @@
 		<contentOutlineConfiguration
 			class="org.eclipse.wst.css.ui.views.contentoutline.CSSContentOutlineConfiguration"
 			target="org.eclipse.wst.css.core.csssource" />
+		<quickOutlineConfiguration
+			class="org.eclipse.wst.css.ui.views.contentoutline.CSSQuickOutlineConfiguration"
+			target="org.eclipse.wst.css.core.csssource" />
 		<sourceViewerConfiguration
 			class="org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS"
 			target="org.eclipse.wst.css.core.csssource" />

@@ -2,15 +2,20 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.wst.sse.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.wst.sse.ui" id="editorConfiguration" name="Editor Configuration"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          The SSE StructuredTextEditor is intended to be as flexible as possible.  Much of its design centers around the notion of defining and redefining its behavior and appearance based on the content type of its input.  This extension point allows clients to provide an editor configuration to the StructuredTextEditor without having to subclass the editor.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="sourceViewerConfiguration" minOccurs="0" maxOccurs="unbounded"/>
@@ -20,6 +25,7 @@
             <element ref="doubleClickStrategy" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="provisionalConfiguration" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="provisionalDefinition" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="quickOutlineConfiguration" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -64,9 +70,9 @@
                <documentation>
                   Must subclass org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration:"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -91,9 +97,9 @@
                <documentation>
                   Must subclass org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration:"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -118,9 +124,9 @@
                <documentation>
                   Must subclass org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration:"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -147,9 +153,9 @@
                <documentation>
                   Must implement org.eclipse.jface.text.ITextHover
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.jface.text.ITextHover"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -176,9 +182,9 @@
                <documentation>
                   Must implement org.eclipse.jface.text.ITextDoubleClickStrategy
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.jface.text.ITextDoubleClickStrategy"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -211,9 +217,9 @@ Note: this is not API and is only used for provisional configuration types.
                <documentation>
                   Implementation class for this type.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -251,19 +257,46 @@ Note: this is not API and is only used for provisional configuration types.
       </complexType>
    </element>
 
+   <element name="quickOutlineConfiguration">
+      <annotation>
+         <documentation>
+            Defines the configuration to be used when displaying editor input in the Tree layout for an editor&apos;s Quick Outline.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension, either an editor or content type id.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The class that provides implementation of the quick outline configuration.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.AbstractQuickOutlineConfiguration:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          1.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          &lt;pre&gt;
    &lt;extension 
@@ -286,20 +319,19 @@ Note: this is not API and is only used for provisional configuration types.
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiInfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          see &lt;code&gt;org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration&lt;/code&gt;, &lt;code&gt;org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration&lt;/code&gt;, &lt;code&gt;org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration&lt;/code&gt;.
       </documentation>
    </annotation>
 
 
-
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="copyright"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Copyright (c) 2005, 2007 IBM Corporation and others.
 All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;

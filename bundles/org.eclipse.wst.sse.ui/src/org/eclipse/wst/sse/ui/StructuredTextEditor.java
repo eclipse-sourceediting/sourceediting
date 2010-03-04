@@ -50,6 +50,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.text.AbstractInformationControlManager;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IBlockTextSelection;
@@ -70,6 +71,8 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.information.IInformationPresenter;
+import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
@@ -194,12 +197,16 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.ConfigurationPoint
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.quickoutline.QuickOutlineHandler;
+import org.eclipse.wst.sse.ui.internal.quickoutline.QuickOutlinePopupDialog;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
+import org.eclipse.wst.sse.ui.internal.text.SourceInfoProvider;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.sse.ui.quickoutline.AbstractQuickOutlineConfiguration;
 import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 import org.eclipse.wst.sse.ui.typing.AbstractCharacterPairInserter;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
@@ -1036,6 +1043,8 @@ public class StructuredTextEditor extends TextEditor {
 	/** The information presenter. */
 	private InformationPresenter fInformationPresenter;
 	private boolean fUpdateMenuTextPending;
+	/** The quick outline handler */
+	private QuickOutlineHandler fOutlineHandler;
 
 	private boolean shouldClose = false;
 	private long startPerfTime;
@@ -1355,9 +1364,13 @@ public class StructuredTextEditor extends TextEditor {
 		computeAndSetDoubleClickAction();
 		
 		IHandler handler = new GotoMatchingBracketHandler();
-    IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-    if (handlerService != null)
-      handlerService.activateHandler(ActionDefinitionIds.GOTO_MATCHING_BRACKET, handler);
+	    IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+	    if (handlerService != null)
+	      handlerService.activateHandler(ActionDefinitionIds.GOTO_MATCHING_BRACKET, handler);
+	    if (handlerService != null) {
+	    	fOutlineHandler = new QuickOutlineHandler();
+	    	handlerService.activateHandler(ActionDefinitionIds.SHOW_OUTLINE, fOutlineHandler);
+	    }
 
 		fShowPropertiesAction = new ShowPropertiesAction(getEditorPart(), getSelectionProvider());
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
@@ -1463,7 +1476,11 @@ public class StructuredTextEditor extends TextEditor {
 		fPartListener = new PartListener(this);
 		getSite().getWorkbenchWindow().getPartService().addPartListener(fPartListener);
 		installSemanticHighlighting();
-
+		IInformationPresenter presenter = configureOutlinePresenter(getSourceViewer(), getSourceViewerConfiguration());
+		if (presenter != null) {
+			presenter.install(getSourceViewer());
+			fOutlineHandler.configure(presenter);
+		}
 		installCharacterPairing();
 		ISourceViewer viewer = getSourceViewer();
 		if (viewer instanceof ITextViewerExtension)
@@ -1641,6 +1658,9 @@ public class StructuredTextEditor extends TextEditor {
 			fInformationPresenter = null;
 		}
 
+		if (fOutlineHandler != null) {
+			fOutlineHandler.dispose();
+		}
 		// dispose of selection history
 		if (fSelectionHistory != null) {
 			fSelectionHistory.dispose();
@@ -3517,5 +3537,46 @@ public class StructuredTextEditor extends TextEditor {
 			fSemanticManager.uninstall();
 			fSemanticManager = null;
 		}
+	}
+
+	private IInformationPresenter configureOutlinePresenter(ISourceViewer sourceViewer, SourceViewerConfiguration config) {
+		InformationPresenter presenter = null;
+
+		// Get the quick outline configuration
+		AbstractQuickOutlineConfiguration cfg = null;
+		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+		String[] ids = getConfigurationPoints();
+		for (int i = 0; cfg == null && i < ids.length; i++) {
+			cfg = (AbstractQuickOutlineConfiguration) builder.getConfiguration(ExtendedConfigurationBuilder.QUICKOUTLINECONFIGURATION, ids[i]);
+		}
+
+		if (cfg != null) {
+			presenter = new InformationPresenter(getOutlinePresenterControlCreator(cfg));
+			presenter.setDocumentPartitioning(config.getConfiguredDocumentPartitioning(sourceViewer));
+			presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
+			IInformationProvider provider = new SourceInfoProvider(this);
+			String[] contentTypes = config.getConfiguredContentTypes(sourceViewer);
+			for (int i = 0; i < contentTypes.length; i++) {
+				presenter.setInformationProvider(provider, contentTypes[i]);
+			}
+			presenter.setSizeConstraints(50, 20, true, false);
+		}
+		return presenter;
+	}
+
+	/**
+	 * Returns the outline presenter control creator. The creator is a 
+	 * factory creating outline presenter controls for the given source viewer. 
+	 *
+	 * @param sourceViewer the source viewer to be configured by this configuration
+	 * @return an information control creator
+	 */
+	private IInformationControlCreator getOutlinePresenterControlCreator(final AbstractQuickOutlineConfiguration config) {
+		return new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell parent) {
+				int shellStyle = SWT.RESIZE;
+				return new QuickOutlinePopupDialog(parent, shellStyle, getInternalModel(), config);
+			}
+		};
 	}
 }

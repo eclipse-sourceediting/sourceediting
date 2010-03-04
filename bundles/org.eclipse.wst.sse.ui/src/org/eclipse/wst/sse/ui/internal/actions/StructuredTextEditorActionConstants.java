@@ -33,6 +33,7 @@ public interface StructuredTextEditorActionConstants {
 	public final static String ACTION_NAME_TOGGLE_COMMENT = "ToggleComment";//$NON-NLS-1$
 	public final static String ACTION_NAME_UNCOMMENT = "Uncomment";//$NON-NLS-1$
 	public final static String ACTION_NAME_GOTO_MATCHING_BRACKET = "GotoMatchingBracket";//$NON-NLS-1$
+	public final static String ACTION_NAME_SHOW_OUTLINE = "ShowQuickOutline"; //$NON-NLS-1$
 
 	/**
 	 * @deprecated use UNDERSCORE instead
