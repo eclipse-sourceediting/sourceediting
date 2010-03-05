@@ -436,7 +436,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		
 		// if default page
 		// Deal with adding in proposals from processors added through the legacy extension
-		if (getIteration() == 1 && this.fLegacyExtendedContentAssistProcessors != null && !fLegacyExtendedContentAssistProcessors.isEmpty()) {
+		if (isFirstPage() && this.fLegacyExtendedContentAssistProcessors != null && !fLegacyExtendedContentAssistProcessors.isEmpty()) {
 			Iterator iter = fLegacyExtendedContentAssistProcessors.iterator();
 			while (iter.hasNext()) {
 				IContentAssistProcessor legacyProcessor = (IContentAssistProcessor) iter.next();
@@ -722,6 +722,13 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 */
 	private int getIteration() {
 		return fRepetition % fCategoryIteration.size();
+	}
+	
+	/**
+	 * @return <code>true</code> if displaying first page, <code>false</code> otherwise
+	 */
+	private boolean isFirstPage() {
+		return fCategoryIteration.size() == 1 || fRepetition % fCategoryIteration.size() == 1;
 	}
 	
 	/**
