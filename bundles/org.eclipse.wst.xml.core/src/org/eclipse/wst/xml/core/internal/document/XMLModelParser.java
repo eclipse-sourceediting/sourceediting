@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,7 @@ import org.w3c.dom.Text;
 public class XMLModelParser {
 	private XMLModelContext context = null;
 	private DOMModelImpl model = null;
+	private TextImpl lastTextNode = null;
 
 	/**
 	 */
@@ -636,6 +637,11 @@ public class XMLModelParser {
 	/**
 	 */
 	private void cleanupText() {
+		// Notify the text node of its queued value changes
+		if (lastTextNode != null) {
+			lastTextNode.notifyValueChanged();
+			lastTextNode = null;
+		}
 		Node parent = this.context.getParentNode();
 		if (parent == null)
 			return; // error
@@ -1116,8 +1122,10 @@ public class XMLModelParser {
 			if (text != null) { // existing text found
 				// do not append data
 				text.appendStructuredDocumentRegion(flatNode);
-				// notify the change
-				text.notifyValueChanged();
+				// Adjacent text nodes, where changes were queued
+				if (lastTextNode != null && lastTextNode != text)
+					lastTextNode.notifyValueChanged();
+				lastTextNode = text;
 				return;
 			}
 
@@ -1457,6 +1465,7 @@ public class XMLModelParser {
 	 */
 	protected void insertStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
+		boolean isTextNode = false;
 		if (regionType == DOMRegionContext.XML_TAG_OPEN) {
 			insertStartTag(flatNode);
 		}
@@ -1468,6 +1477,7 @@ public class XMLModelParser {
 		}
 		else if (regionType == DOMRegionContext.XML_ENTITY_REFERENCE || regionType == DOMRegionContext.XML_CHAR_REFERENCE) {
 			insertEntityRef(flatNode);
+			isTextNode = true;
 		}
 		else if (regionType == DOMRegionContext.XML_DECLARATION_OPEN) {
 			insertDecl(flatNode);
@@ -1483,6 +1493,13 @@ public class XMLModelParser {
 		}
 		else {
 			insertText(flatNode);
+			isTextNode = true;
+		}
+
+		// Changes to text regions are queued up, and once the value is done changing a notification is sent
+		if (!isTextNode && lastTextNode != null) {
+			lastTextNode.notifyValueChanged();
+			lastTextNode = null;
 		}
 	}
 
@@ -1521,8 +1538,10 @@ public class XMLModelParser {
 		TextImpl text = (TextImpl) this.context.findPreviousText();
 		if (text != null) { // existing text found
 			text.appendStructuredDocumentRegion(flatNode);
-			// notify the change
-			text.notifyValueChanged();
+			// Adjacent text nodes, where changes were queued
+			if (lastTextNode != null && lastTextNode != text)
+				lastTextNode.notifyValueChanged();
+			lastTextNode = text;
 			return;
 		}
 
