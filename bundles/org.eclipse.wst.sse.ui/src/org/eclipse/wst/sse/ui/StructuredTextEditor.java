@@ -1476,10 +1476,12 @@ public class StructuredTextEditor extends TextEditor {
 		fPartListener = new PartListener(this);
 		getSite().getWorkbenchWindow().getPartService().addPartListener(fPartListener);
 		installSemanticHighlighting();
-		IInformationPresenter presenter = configureOutlinePresenter(getSourceViewer(), getSourceViewerConfiguration());
-		if (presenter != null) {
-			presenter.install(getSourceViewer());
-			fOutlineHandler.configure(presenter);
+		if (fOutlineHandler != null) {
+			IInformationPresenter presenter = configureOutlinePresenter(getSourceViewer(), getSourceViewerConfiguration());
+			if (presenter != null) {
+				presenter.install(getSourceViewer());
+				fOutlineHandler.configure(presenter);
+			}
 		}
 		installCharacterPairing();
 		ISourceViewer viewer = getSourceViewer();
