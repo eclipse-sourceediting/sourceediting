@@ -1119,6 +1119,9 @@
           <partitionType
                 id="org.eclipse.jst.jsp.JSP_COMMENT">
           </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+          </partitionType>
        </contentType>
     </proposalComputerExtendedActivation>
     <proposalComputerExtendedActivation
