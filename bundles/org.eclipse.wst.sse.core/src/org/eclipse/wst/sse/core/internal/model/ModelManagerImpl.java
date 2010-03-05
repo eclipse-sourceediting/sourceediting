@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1725,14 +1725,12 @@ public class ModelManagerImpl implements IModelManager {
 			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed"); //$NON-NLS-1$
 			sharedObject.waitForLoadAttempt();
 			
-			SYNC.acquire();
 			synchronized(sharedObject) {
 				_decrCount(sharedObject, EDIT);
 				if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 					discardModel(id, sharedObject);
 				}
 			}
-			SYNC.release();
 			// if edit goes to zero, but still open for read,
 			// then we should reload here, so we are in synch with
 			// contents on disk.
@@ -1841,14 +1839,12 @@ public class ModelManagerImpl implements IModelManager {
 			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed"); //$NON-NLS-1$
 			sharedObject.waitForLoadAttempt();
 		}
-		SYNC.acquire();
 		synchronized(sharedObject) {
 			_decrCount(sharedObject, READ);
 			if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 				discardModel(id, sharedObject);
 			}
 		}
-		SYNC.release();
 	}
 
 	/**
