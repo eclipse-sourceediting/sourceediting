@@ -8,9 +8,12 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 287499 - add XML Catalog Resolution for a file.
+ *     Jesper Steen Moller - bug 304162 - support absolute files properly
  *******************************************************************************/
 package org.eclipse.wst.xsl.core;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +21,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
@@ -138,13 +142,50 @@ public class XSLCore {
 		if (resource == null) {
 			String baseURI = currentFile.getRawLocationURI().toString();
 			String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", uri);		 //$NON-NLS-1$
-			if (resolvedURI != null) {
+
+			URI parsedUri = null;
+			boolean isAbsolute = false;
+			try {
+				parsedUri = new URI(resolvedURI);
+				if (parsedUri.isAbsolute()) isAbsolute = true;
+			} catch (URISyntaxException e) {
+			}
+			
+			if (uri != null && isAbsolute) {
+				if (resolvedURI.startsWith("platform:/resource/")) {		 //$NON-NLS-1$
+					String platformPart = resolvedURI.substring(19);
+					resource = currentFile.getWorkspace().getRoot().findMember(platformPart);
+				} else {
+					resource = findBestFileForURI(parsedUri);
+				}
+			} else {
 				resource = currentFile.getParent().findMember(new Path(uri));
 			}
 		}
 		if (resource == null || resource.getType() != IResource.FILE)
 			return null;
 		return (IFile) resource;
+	}
+
+	/**
+	 * Find an IFile as close to the root as possible matching this file URI.
+	 * 
+	 * @param parsedUri URI from the catalog / resolver lookup
+	 * @return a file resource which exists in the workspace, or null if none were found.
+	 */
+	private static IFile findBestFileForURI(URI parsedUri) {
+		IFile fileNearestRoot = null;
+		IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(parsedUri);
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].exists()) {
+				if (fileNearestRoot == null
+						||
+						files[i].getFullPath().segmentCount() < fileNearestRoot.getFullPath().segmentCount()) {
+					fileNearestRoot = files[i];
+				}
+			}
+		}
+		return fileNearestRoot;
 	}
 
 	/**
