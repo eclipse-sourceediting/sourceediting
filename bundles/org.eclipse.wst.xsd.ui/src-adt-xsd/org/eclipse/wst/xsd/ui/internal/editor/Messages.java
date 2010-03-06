@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -129,6 +129,7 @@ public class Messages extends NLS
   public static String _UI_ACTION_REDEFINE_SIMPLE_TYPE;
   public static String _UI_ACTION_REDEFINE_ATTRIBUTE_GROUP;
   public static String _UI_ACTION_REDEFINE_MODEL_GROUP;
+  public static String _UI_ACTION_RENAME;  
   
   public static String _UI_IMAGE_COMPLEX_TYPE;
   public static String _UI_IMAGE_SIMPLE_TYPE;
@@ -146,4 +147,9 @@ public class Messages extends NLS
   public static String _UI_TEXT_ENABLE_AUTO_IMPORT_CLEANUP;
   public static String _UI_TEXT_ENABLE_AUTO_OPEN_SCHEMA_DIALOG;
   public static String _UI_GRAPH_REDEFINE_SCHEMA;
+
+  public static String _UI_COMBO_NEW;
+  public static String _UI_COMBO_BROWSE;
+
+  public static String _UI_ERROR_INVALID_NAME;  
 }

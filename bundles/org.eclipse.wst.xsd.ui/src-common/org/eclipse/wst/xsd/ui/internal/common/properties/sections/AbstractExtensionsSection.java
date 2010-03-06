@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -324,7 +324,7 @@ public abstract class AbstractExtensionsSection extends AbstractSection
     PlatformUI.getWorkbench().getHelpSystem().setHelp(addButton,
     		XSDEditorCSHelpIds.EXTENSIONS_TAB__ADD);     
     
-    removeButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_ACTION_DELETE, SWT.FLAT);
+    removeButton = getWidgetFactory().createButton(buttonComposite, Messages._UI_DELETE_BUTTON, SWT.FLAT);
     removeButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     removeButton.addSelectionListener(this);
     removeButton.setToolTipText(Messages._UI_ACTION_DELETE_EXTENSION_COMPONENT);

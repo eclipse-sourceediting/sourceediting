@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,7 +68,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_ABSTRACT + ":");
+    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_ABSTRACT);
     abstractLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -91,7 +91,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel blockLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_BLOCK + ":");
+    CLabel blockLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_BLOCK);
     blockLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -114,7 +114,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel finalLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_FINAL + ":");
+    CLabel finalLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_FINAL);
     finalLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -137,7 +137,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel subGroupLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_SUBSTITUTION_GROUP + ":");
+    CLabel subGroupLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_SUBSTITUTION_GROUP);
     subGroupLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -160,7 +160,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel nillableLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_NILLABLE + ":");
+    CLabel nillableLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_NILLABLE);
     nillableLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -267,11 +267,11 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
       String selection = substGroupCombo.getText();
       ComponentSpecification newValue;
       IComponentDialog dialog= null;
-      if ( selection.equals(Messages._UI_ACTION_BROWSE))
+      if ( selection.equals(Messages._UI_COMBO_BROWSE))
       {
         dialog = manager.getBrowseDialog();
       }
-      else if ( selection.equals(Messages._UI_ACTION_NEW))
+      else if ( selection.equals(Messages._UI_COMBO_NEW))
       {
         dialog = manager.getNewDialog();
       }
@@ -402,8 +402,8 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
       ComponentSpecification[] items = manager.getQuickPicks();
 
       substGroupCombo.removeAll();
-      substGroupCombo.add(Messages._UI_ACTION_BROWSE);
-      substGroupCombo.add(Messages._UI_ACTION_NEW);
+      substGroupCombo.add(Messages._UI_COMBO_BROWSE);
+      substGroupCombo.add(Messages._UI_COMBO_NEW);
       for (int i = 0; i < items.length; i++)
       {
         substGroupCombo.add(items[i].getName());

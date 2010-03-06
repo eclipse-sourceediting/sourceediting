@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,25 +68,25 @@ public class XSDSchemaAdvancedSection extends AbstractSection
 
     // Create elementFormDefault label and combo       
     elementFormLabel = XSDCommonUIUtils.getNewPropertiesLabel(composite,getWidgetFactory(),
-        Messages._UI_LABEL_ELEMENTFORMDEFAULT + ":");
+        Messages._UI_LABEL_ELEMENTFORMDEFAULT);
     elementFormCombo = XSDCommonUIUtils.getNewPropertiesCombo(composite,getWidgetFactory(),this,
         formQualification,XSDEditorCSHelpIds.ADVANCE_TAB__SCHEMA_ELEMENT_FORM_DEFAULT);
 
     // Create attributeFormDefault label and combo
     attributeFormLabel = XSDCommonUIUtils.getNewPropertiesLabel(composite,getWidgetFactory(),
-        Messages._UI_LABEL_ATTRIBUTEFORMDEFAULT + ":");
+        Messages._UI_LABEL_ATTRIBUTEFORMDEFAULT);
     attributeFormCombo = XSDCommonUIUtils.getNewPropertiesCombo(composite,getWidgetFactory(),this,
         formQualification,XSDEditorCSHelpIds.ADVANCE_TAB__SCHEMA_ATTRIBUTE_FORM_DEFAULT);    
     
     // Create blockDefault label and combo
     blockDefaultLabel = XSDCommonUIUtils.getNewPropertiesLabel(composite,getWidgetFactory(),
-        Messages._UI_LABEL_BLOCKDEFAULT + ":");
+        Messages._UI_LABEL_BLOCKDEFAULT);
     blockDefaultCombo = XSDCommonUIUtils.getNewPropertiesCombo(composite,getWidgetFactory(),this,
         blockDefaultValues,XSDEditorCSHelpIds.ADVANCE_TAB__SCHEMA_BLOCK_DEFAULT);
     
     // Create finalDefault label and combo
     finalDefaultLabel = XSDCommonUIUtils.getNewPropertiesLabel(composite,getWidgetFactory(),
-        Messages._UI_LABEL_FINALDEFAULT + ":");
+        Messages._UI_LABEL_FINALDEFAULT);
     finalDefaultCombo = XSDCommonUIUtils.getNewPropertiesCombo(composite,getWidgetFactory(),this,
         finalDefaultValues,XSDEditorCSHelpIds.ADVANCE_TAB__SCHEMA_FINAL_DEFAULT);    
     

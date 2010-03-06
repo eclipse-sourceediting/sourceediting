@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,12 @@ public class UpdateAttributeValueCommand  extends BaseCommand
   public UpdateAttributeValueCommand(Element element, String attributeName, String attributeValue, String label)
   {
     this(element, attributeName, attributeValue, false);
-    setLabel(NLS.bind(Messages._UI_ACTION_CHANGE, label));
+
+    // The command label is shared with the actual UI label, which contains 
+    // mnemonics and colon characters. Since we don't want these to show up in 
+    // the undo menu we do a little bit of regular expression magic here to remove them.
+    
+    setLabel(NLS.bind(Messages._UI_ACTION_CHANGE, label.replaceAll("[&:]", "")));
   }
   
   public UpdateAttributeValueCommand(Element element, String attributeName, String attributeValue)

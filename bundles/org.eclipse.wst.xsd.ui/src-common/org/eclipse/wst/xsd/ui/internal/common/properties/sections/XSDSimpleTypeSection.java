@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
-import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDComplexTypeBaseTypeEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
@@ -92,7 +92,7 @@ public class XSDSimpleTypeSection extends RefactoringSection
 
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
-    CLabel nameLabel = factory.createCLabel(composite, Messages._UI_LABEL_NAME);
+    CLabel nameLabel = factory.createCLabel(composite, Messages.UI_LABEL_NAME);
     nameLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -317,12 +317,12 @@ public class XSDSimpleTypeSection extends RefactoringSection
       String selection = typesCombo.getText();
       ComponentSpecification newValue;
       IComponentDialog dialog= null;
-      if ( selection.equals(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_BROWSE))
+      if ( selection.equals(Messages._UI_COMBO_BROWSE))
       {
         dialog = manager.getBrowseDialog();
         ((XSDSearchListDialogDelegate) dialog).showComplexTypes(false);
       }
-      else if ( selection.equals(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_NEW))
+      else if ( selection.equals(Messages._UI_COMBO_NEW))
       {
         dialog = manager.getNewDialog();
         ((NewTypeDialog) dialog).allowComplexType(false);
@@ -602,8 +602,8 @@ public class XSDSimpleTypeSection extends RefactoringSection
     {
       ComponentSpecification[] items = manager.getQuickPicks();
 
-      typesCombo.add(org.eclipse.wst.xsd.ui.internal.adt.editor.Messages._UI_ACTION_BROWSE);
-      typesCombo.add(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_NEW);
+      typesCombo.add(Messages._UI_COMBO_BROWSE);
+      typesCombo.add(Messages._UI_COMBO_NEW);
 
       for (int i = 0; i < items.length; i++)
       {

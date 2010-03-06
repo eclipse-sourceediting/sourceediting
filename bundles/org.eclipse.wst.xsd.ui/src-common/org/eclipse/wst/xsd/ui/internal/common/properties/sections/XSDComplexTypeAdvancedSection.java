@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,7 +57,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_ABSTRACT + ":");
+    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_ABSTRACT);
     abstractLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -80,7 +80,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel blockLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_BLOCK + ":");
+    CLabel blockLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_BLOCK);
     blockLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -103,7 +103,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel finalLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_FINAL + ":");
+    CLabel finalLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_FINAL);
     finalLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -126,7 +126,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel mixedLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_MIXED + ":");
+    CLabel mixedLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_MIXED);
     mixedLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------

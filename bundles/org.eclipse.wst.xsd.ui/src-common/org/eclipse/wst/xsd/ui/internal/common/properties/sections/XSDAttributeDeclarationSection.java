@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -268,8 +268,8 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
       ComponentSpecification[] items = manager.getQuickPicks();
 
       typeCombo.removeAll();
-      typeCombo.add(Messages._UI_ACTION_BROWSE);
-      typeCombo.add(Messages._UI_ACTION_NEW);
+      typeCombo.add(Messages._UI_COMBO_BROWSE);
+      typeCombo.add(Messages._UI_COMBO_NEW);
       for (int i = 0; i < items.length; i++)
       {
         typeCombo.add(items[i].getName());
@@ -487,12 +487,12 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
       String selection = typeCombo.getText();
       ComponentSpecification newValue;
       IComponentDialog dialog= null;
-      if ( selection.equals(Messages._UI_ACTION_BROWSE))
+      if ( selection.equals(Messages._UI_COMBO_BROWSE))
       {
         dialog = manager.getBrowseDialog();
         ((XSDSearchListDialogDelegate) dialog).showComplexTypes(false);
       }
-      else if ( selection.equals(Messages._UI_ACTION_NEW))
+      else if ( selection.equals(Messages._UI_COMBO_NEW))
       {
         dialog = manager.getNewDialog();
         ((NewTypeDialog) dialog).allowComplexType(false);
@@ -526,11 +526,11 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
       String selection = componentNameCombo.getText();
       ComponentSpecification newValue;
       IComponentDialog dialog= null;
-      if ( selection.equals(Messages._UI_ACTION_BROWSE))
+      if ( selection.equals(Messages._UI_COMBO_BROWSE))
       {
         dialog = manager.getBrowseDialog();
       }
-      else if ( selection.equals(Messages._UI_ACTION_NEW))
+      else if ( selection.equals(Messages._UI_COMBO_NEW))
       {
         dialog = manager.getNewDialog();
       }

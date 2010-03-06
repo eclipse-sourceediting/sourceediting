@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -266,11 +266,11 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
       String selection = baseTypeCombo.getText();
       ComponentSpecification newValue;
       IComponentDialog dialog= null;
-      if ( selection.equals(Messages._UI_ACTION_BROWSE))
+      if ( selection.equals(Messages._UI_COMBO_BROWSE))
       {
         dialog = manager.getBrowseDialog();
       }
-      else if ( selection.equals(Messages._UI_ACTION_NEW))
+      else if ( selection.equals(Messages._UI_COMBO_NEW))
       {
         dialog = manager.getNewDialog();
       }
@@ -395,8 +395,8 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
   private void fillTypesCombo()
   {
     baseTypeCombo.removeAll();
-    baseTypeCombo.add(Messages._UI_ACTION_BROWSE);
-    baseTypeCombo.add(Messages._UI_ACTION_NEW);
+    baseTypeCombo.add(Messages._UI_COMBO_BROWSE);
+    baseTypeCombo.add(Messages._UI_COMBO_NEW);
     // Add the current Type of this attribute if needed
     XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
     XSDTypeDefinition baseType = complexType.getBaseType();

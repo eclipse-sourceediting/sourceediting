@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,11 @@ public class BaseCommand extends Command
 
   public BaseCommand(String label)
   {
-    super(label);
+    // Commands inherit their name from the associated action.
+    // This label shows up in the undo menu and it would look ugly with the mnemonic in it.
+    // Ideally, we'd have separate strings.
+
+    super(label.replaceFirst("&", ""));
   }
   
   public XSDConcreteComponent getAddedComponent()

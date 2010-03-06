@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -377,7 +377,7 @@ public abstract class AbstractSection extends AbstractPropertySection implements
       // for browse.. and new.. otherwise, selection event will be fired
       if (eventType == SWT.DefaultSelection)
       {
-        if (selectedItem instanceof String && ((Messages._UI_ACTION_BROWSE.equals(selectedItem) || Messages._UI_ACTION_NEW.equals(selectedItem))))
+        if (selectedItem instanceof String && ((Messages._UI_COMBO_BROWSE.equals(selectedItem) || Messages._UI_COMBO_NEW.equals(selectedItem))))
           return true;
         return false;
       }
@@ -386,7 +386,7 @@ public abstract class AbstractSection extends AbstractPropertySection implements
       // browse.. or new..
       if (wasTraversing && selectedItem instanceof String)
       {
-        if (Messages._UI_ACTION_BROWSE.equals(selectedItem) || Messages._UI_ACTION_NEW.equals(selectedItem))
+        if (Messages._UI_COMBO_BROWSE.equals(selectedItem) || Messages._UI_COMBO_NEW.equals(selectedItem))
         {
           return false;
         }

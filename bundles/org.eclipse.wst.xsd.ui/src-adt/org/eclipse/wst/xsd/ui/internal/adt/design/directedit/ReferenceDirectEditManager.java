@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
-import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 
 public abstract class ReferenceDirectEditManager extends ComboBoxCellEditorManager
@@ -50,8 +50,8 @@ public abstract class ReferenceDirectEditManager extends ComboBoxCellEditorManag
     ComponentReferenceEditManager editManager = getComponentReferenceEditManager();
     if (editManager != null)
     {
-       list.add(Messages._UI_ACTION_BROWSE);
-       list.add(Messages._UI_ACTION_NEW);
+       list.add(Messages._UI_COMBO_BROWSE);
+       list.add(Messages._UI_COMBO_NEW);
        ComponentSpecification[] quickPicks = editManager.getQuickPicks();
        if (quickPicks != null)
        {

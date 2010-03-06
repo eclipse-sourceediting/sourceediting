@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
-import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 
 /*
  * This wraps the ComboBoxCellEditor.
@@ -139,12 +139,12 @@ public class ADTComboBoxCellEditor extends ComboBoxCellEditor
           String[] items = getItems();
           String stringSelection = items[selection];
 
-          if (stringSelection.equals(Messages._UI_ACTION_BROWSE))
+          if (stringSelection.equals(Messages._UI_COMBO_BROWSE))
           {
             continueApply = true;
             newValue = invokeDialog(componentReferenceEditManager.getBrowseDialog());
           }
-          else if (stringSelection.equals(Messages._UI_ACTION_NEW))
+          else if (stringSelection.equals(Messages._UI_COMBO_NEW))
           {
             continueApply = true;
             newValue = invokeDialog(componentReferenceEditManager.getNewDialog());
