@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cat:catalog
+  prefer="system"
+  xmlns:cat="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+  xmlns:custom="urn:x-test:schema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="urn:oasis:names:tc:entity:xmlns:xml:catalog ../xsd/xmlcatalog11.xsd ">
+
+  <!-- The original ones -->
+  <cat:public id="idvalue0" publicId="" uri="http://tempuri.org"/>
+  <cat:public id="idvalue1" publicId="Kroelleboelle" uri="http://tempuri.org"/>
+  <cat:system systemId="http://old-DTD-location.org/" uri="http://www.new-location.com/"/>
+  <cat:uri name="urn:fishy:fish" uri="http://www.example.org/"/>
+  <cat:nextCatalog catalog="catalog.xml" custom:custom1="yes"/>
+
+  <!-- The "newer" ones (partial support from WTP 3.1) -->
+  <cat:delegatePublic catalog="tom.xml" publicIdStartString="-//OASIS//"/>
+  <cat:delegateSystem catalog="fritz.xml" systemIdStartString="http:"/>
+  <cat:delegateURI catalog="garfield.xml" uriStartString="urn:x-foods:lasagna"/>
+
+  <cat:rewriteSystem
+    systemIdStartString="http://www.original-repository.com/schemes/"
+    rewritePrefix="http://cache.some-repository.com/schemes/" />
+  <cat:rewriteURI
+    uriStartString="urn:x-funny:"
+    rewritePrefix="urn:funny:" />
+
+  <cat:systemSuffix
+    systemIdSuffix="schemas/goof.xml"
+    uri="../schemas/2009/goof-v2.xml" />
+
+  <cat:uriSuffix
+    uriSuffix="schemas/goof.xml"
+    uri="../schemas/2009/fun-v2.xml" />
+  
+  <cat:group prefer="public">
+    <cat:public id="idvalue2" publicId="Sleepy" uri="http://tempuri.org" />
+    <cat:system systemId="http://old-DTD-location.org/" uri="http://www.new-location.com/"/>
+  </cat:group>
+  
+</cat:catalog>

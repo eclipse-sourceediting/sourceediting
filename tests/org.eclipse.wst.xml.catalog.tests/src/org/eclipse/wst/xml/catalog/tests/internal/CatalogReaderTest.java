@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -132,6 +132,45 @@ public class CatalogReaderTest extends AbstractCatalogTest {
 		
 
 	}
+
+	/*
+	 * Class under test for void read(ICatalog, String)
+	 */
+	public void testReadComplexCatalog() throws Exception {
+
+		//read catalog
+		String catalogFile = "/data/delegateAndRewrite/catalog11.xml";
+		URL catalogUrl = TestPlugin.getDefault().getBundle().getEntry(catalogFile);
+		assertNotNull(catalogUrl);
+		URL base = FileLocator.resolve(catalogUrl);
+
+		Catalog catalog = (Catalog)getCatalog("catalog11", base.toString());
+		//CatalogReader.read(catalog, catalogFilePath);
+		assertNotNull(catalog);
+		
+		// test main catalog - catalog1.xml
+		//assertEquals("cat1", catalog.getId());
+		assertEquals(13, catalog.getCatalogElements().length);
+			
+		// test public entries
+		assertEquals(2, CatalogTest.getCatalogEntries(catalog, ICatalogEntry.ENTRY_TYPE_PUBLIC).size());
+
+		//  test system entries
+		assertEquals(2, CatalogTest.getCatalogEntries(catalog, ICatalogEntry.ENTRY_TYPE_SYSTEM).size());
+
+		//  test uri entries
+		assertEquals(1, CatalogTest.getCatalogEntries(catalog, ICatalogEntry.ENTRY_TYPE_URI).size());
+
+		//  test next catalog - catalog2.xml
+		INextCatalog[] nextCatalogEntries = catalog.getNextCatalogs();
+		assertEquals(1, nextCatalogEntries.length);
+	
+		INextCatalog nextCatalogEntry = (INextCatalog)nextCatalogEntries[0];
+		assertNotNull(nextCatalogEntry);
+		
+		assertEquals("catalog.xml", nextCatalogEntry.getCatalogLocation());
+	}
+
 	
 	public void testCompatabilityReader() throws Exception {
 		//	read catalog
