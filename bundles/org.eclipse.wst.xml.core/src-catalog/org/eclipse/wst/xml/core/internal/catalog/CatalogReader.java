@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -172,23 +172,17 @@ public final class CatalogReader
       }
       else if (OASISCatalogConstants.TAG_NEXT_CATALOG.equals(localName))
       {
-        String nextCatalogId = attributes.getValue("", OASISCatalogConstants.ATTR_ID); //$NON-NLS-1$
-
-        String location = attributes.getValue("", OASISCatalogConstants.ATTR_CATALOG);    //$NON-NLS-1$
-        NextCatalog delegate = new NextCatalog();
-        delegate.setBase((String)baseURIStack.peek());
-        delegate.setCatalogLocation(location);  
-        delegate.setId(nextCatalogId);
-        catalog.addCatalogElement(delegate);
+        catalogElement = createNextCatalog(attributes);
+      }
+      
+      if (catalogElement == null)
+      {
+    	// do not set the extra information
         return;
       }
-      else{
-    	  // do not handle other entries
-    	  return;
-      }
 
-	  String attrId = attributes.getValue("", OASISCatalogConstants.ATTR_ID);
-	  catalogElement.setId(attrId);
+	  String attrId = attributes.getValue("", OASISCatalogConstants.ATTR_ID);//$NON-NLS-1$
+	  if (attrId != null && ! "".equals(attrId)) catalogElement.setId(attrId);//$NON-NLS-1$
       // process any other attributes
       for (int j = 0; j < attributes.getLength(); j++)
       {
@@ -207,6 +201,14 @@ public final class CatalogReader
       catalog.addCatalogElement(catalogElement);
 
     }
+
+	private ICatalogElement createNextCatalog(Attributes attributes) {
+		String location = attributes.getValue("", OASISCatalogConstants.ATTR_CATALOG);    //$NON-NLS-1$
+        NextCatalog delegate = new NextCatalog();
+        delegate.setBase((String)baseURIStack.peek());
+        delegate.setCatalogLocation(location);  
+		return delegate;
+	}
 
     private ICatalogEntry createEntry(Attributes attributes, int entryType, String keyAttributeName) {
     	String key = attributes.getValue("", keyAttributeName); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.CatalogSet;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
-import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEvent;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogListener;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
@@ -187,18 +187,11 @@ public class XMLCatalogPreferencePage extends PreferencePage implements IWorkben
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 				Object selectedObject = (selection instanceof IStructuredSelection) && ((IStructuredSelection) selection).size() == 1 ? ((IStructuredSelection) selection).getFirstElement() : null;
-				if (selectedObject instanceof ICatalogEntry) {
-					ICatalogEntry entry = (ICatalogEntry) selectedObject;
-					detailsView.setCatalogElement(entry);
+				if (selectedObject instanceof ICatalogElement) {
+					detailsView.setCatalogElement((ICatalogElement)selectedObject);
+				} else {
+					detailsView.setCatalogElement(null);
 				}
-				else if (selectedObject instanceof INextCatalog) {
-					INextCatalog entry = (INextCatalog) selectedObject;
-					detailsView.setCatalogElement(entry);
-				}
-				else {
-					detailsView.setCatalogElement((ICatalogEntry) null);
-				}
-
 			}
 		};
 		catalogEntriesView.getViewer().addSelectionChangedListener(listener);

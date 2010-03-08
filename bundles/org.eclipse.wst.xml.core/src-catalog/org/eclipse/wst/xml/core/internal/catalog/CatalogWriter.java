@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,8 +29,12 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.IDelegateCatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.IRewriteEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ISuffixEntry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -82,6 +86,137 @@ public final class CatalogWriter
     doc.appendChild(catalogElement);
     processCatalogEntries(xmlCatalog, catalogElement);
     processNextCatalogs(xmlCatalog, catalogElement);
+    processDelegateCatalogs(xmlCatalog, catalogElement);
+    processSuffixEntries(xmlCatalog, catalogElement);
+    processRewriteEntries(xmlCatalog, catalogElement);
+  }
+
+  private void processRewriteEntries(ICatalog catalog, Element parent)
+  {
+    IRewriteEntry[] catalogEntries = catalog.getRewriteEntries();
+    
+    for (int i = 0; i < catalogEntries.length; i++)
+    {
+      IRewriteEntry entry = catalogEntries[i];
+      String startString = entry.getStartString();
+      String prefix = entry.getRewritePrefix();
+	  Element childElement = null;
+	 
+     switch (entry.getEntryType())
+      {
+        case IRewriteEntry.REWRITE_TYPE_SYSTEM :
+          childElement = parent.getOwnerDocument().createElement(OASISCatalogConstants.TAG_REWRITE_SYSTEM);
+          if (childElement != null)
+          {
+            childElement.setAttribute(OASISCatalogConstants.ATTR_SYSTEM_ID_START_STRING, startString);
+            childElement.setAttribute(OASISCatalogConstants.ATTR_REWRITE_PREFIX, prefix);
+          }
+          break;
+        case IRewriteEntry.REWRITE_TYPE_URI:
+          childElement = parent.getOwnerDocument().createElement(OASISCatalogConstants.TAG_REWRITE_URI);
+          if (childElement != null)
+          {
+	            childElement.setAttribute(OASISCatalogConstants.ATTR_URI_START_STRING, startString);
+	            childElement.setAttribute(OASISCatalogConstants.ATTR_REWRITE_PREFIX, prefix);
+          }
+          break;
+        default :
+          break;
+      }
+      if (childElement != null)
+      {
+        setAttributes(entry, childElement);
+        parent.appendChild(childElement);
+      }
+    }
+  }
+
+  private void processSuffixEntries(ICatalog catalog, Element parent)
+  {
+    ISuffixEntry[] suffixEntries = catalog.getSuffixEntries();
+    
+    for (int i = 0; i < suffixEntries.length; i++)
+    {
+      ISuffixEntry entry = suffixEntries[i];
+      String suffixString = entry.getSuffix();
+      String uri = entry.getURI();
+	  Element childElement = null;
+	 
+     switch (entry.getEntryType())
+      {
+        case ISuffixEntry.SUFFIX_TYPE_SYSTEM :
+          childElement = parent.getOwnerDocument().createElement(OASISCatalogConstants.TAG_SYSTEM_SUFFIX);
+          if (childElement != null)
+          {
+            childElement.setAttribute(OASISCatalogConstants.ATTR_SYSTEM_ID_SUFFFIX, suffixString);
+            childElement.setAttribute(OASISCatalogConstants.ATTR_URI, uri);
+          }
+          break;
+        case ISuffixEntry.SUFFIX_TYPE_URI:
+          childElement = parent.getOwnerDocument().createElement(OASISCatalogConstants.TAG_URI_SUFFIX);
+          if (childElement != null)
+          {
+	            childElement.setAttribute(OASISCatalogConstants.ATTR_URI_SUFFIX, suffixString);
+	            childElement.setAttribute(OASISCatalogConstants.ATTR_URI, uri);
+          }
+          break;
+        default :
+          break;
+      }
+      if (childElement != null)
+      {
+        setAttributes(entry, childElement);
+        parent.appendChild(childElement);
+      }
+    }
+  }
+
+  private void processDelegateCatalogs(ICatalog catalog, Element parent)
+  {
+    IDelegateCatalog[] delegateCatalogs = catalog.getDelegateCatalogs();
+
+    for (int i = 0; i < delegateCatalogs.length; i++)
+    {
+      IDelegateCatalog entry = delegateCatalogs[i];
+      String prefixString = entry.getStartString();
+      String catalogLocation = entry.getCatalogLocation();
+      Element childElement = null;
+
+      switch (entry.getEntryType())
+      {
+      case IDelegateCatalog.DELEGATE_TYPE_PUBLIC:
+        childElement = parent.getOwnerDocument().createElement(OASISCatalogConstants.TAG_DELEGATE_PUBLIC);
+        if (childElement != null)
+        {
+          childElement.setAttribute(OASISCatalogConstants.ATTR_PUBLIC_ID_START_STRING, prefixString);
+          childElement.setAttribute(OASISCatalogConstants.ATTR_CATALOG, catalogLocation);
+        }
+        break;
+      case IDelegateCatalog.DELEGATE_TYPE_SYSTEM:
+        childElement = parent.getOwnerDocument().createElement(OASISCatalogConstants.TAG_DELEGATE_SYSTEM);
+        if (childElement != null)
+        {
+          childElement.setAttribute(OASISCatalogConstants.ATTR_SYSTEM_ID_START_STRING, prefixString);
+          childElement.setAttribute(OASISCatalogConstants.ATTR_CATALOG, catalogLocation);
+        }
+        break;
+      case IDelegateCatalog.DELEGATE_TYPE_URI:
+        childElement = parent.getOwnerDocument().createElement(OASISCatalogConstants.TAG_DELEGATE_URI);
+        if (childElement != null)
+        {
+          childElement.setAttribute(OASISCatalogConstants.ATTR_URI_START_STRING, prefixString);
+          childElement.setAttribute(OASISCatalogConstants.ATTR_CATALOG, catalogLocation);
+        }
+        break;
+      default :
+        break;
+      }
+      if (childElement != null)
+      {
+        setAttributes(entry, childElement);
+        parent.appendChild(childElement);
+      }
+    }
   }
 
   private void processCatalogEntries(ICatalog catalog, Element parent)
@@ -93,10 +228,9 @@ public final class CatalogWriter
       ICatalogEntry entry = catalogEntries[i];
       String key = entry.getKey();
       String uri = entry.getURI();
-	  String id = entry.getId();
-	  Element childElement = null;
+      Element childElement = null;
 	 
-     switch (entry.getEntryType())
+      switch (entry.getEntryType())
       {
         case ICatalogEntry.ENTRY_TYPE_PUBLIC :
           childElement = parent.getOwnerDocument().createElement(OASISCatalogConstants.TAG_PUBLIC);
@@ -125,27 +259,33 @@ public final class CatalogWriter
         default :
           break;
       }
-	  if(childElement != null && id != null && !id.equals("")){ //$NON-NLS-1$
-		  childElement.setAttribute(OASISCatalogConstants.ATTR_ID, id);
-	  }
-      
-      String[] attributes = entry.getAttributes();   
-      for (int j = 0; j < attributes.length; j++)
-      {
-        String attrName = attributes[j];
-        if (attrName != null && !attrName.equals("")) //$NON-NLS-1$
-        {
-		  String attrValue = entry.getAttributeValue(attrName);
-          if (childElement != null && attrValue != null)
-          {
-            childElement.setAttribute(attrName, attrValue);
-          }
-        }
-      }
       if (childElement != null)
       {
+    	  setAttributes(entry, childElement);
         parent.appendChild(childElement);
       }
+    }
+  }
+
+  private void setAttributes(ICatalogElement entry, Element childElement)
+  {
+    String[] attributes = entry.getAttributes();   
+    for (int j = 0; j < attributes.length; j++)
+    {
+      String attrName = attributes[j];
+      if (attrName != null && !attrName.equals("")) //$NON-NLS-1$
+      {
+        String attrValue = entry.getAttributeValue(attrName);
+        if (childElement != null && attrValue != null)
+        {
+          childElement.setAttribute(attrName, attrValue);
+        }
+      }
+    }
+    String id = entry.getId();
+    if (id != null)
+    {
+      childElement.setAttribute(OASISCatalogConstants.ATTR_ID, id);
     }
   }
 
@@ -167,11 +307,7 @@ public final class CatalogWriter
         {
           childElement.setAttribute(OASISCatalogConstants.ATTR_CATALOG, location);
         }
-		 String id = delegate.getId();
-		 if (id != null)
-		 {
-			 childElement.setAttribute(OASISCatalogConstants.ATTR_ID, id);
-		 }
+        setAttributes(delegate, childElement);
       }
     }
   }

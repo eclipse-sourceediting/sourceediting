@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -37,7 +35,10 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.IDelegateCatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.IRewriteEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ISuffixEntry;
 
 
 public class XMLCatalogTreeViewer extends TreeViewer {
@@ -45,6 +46,9 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 	protected static Image errorImage = ImageFactory.INSTANCE.getImage("icons/ovr16/error-overlay.gif"); //$NON-NLS-1$
 	protected static Image entryImage = ImageFactory.INSTANCE.getImage("icons/obj16/entry_obj.png"); //$NON-NLS-1$
 	protected static Image nextCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/nextCatalog_obj.gif"); //$NON-NLS-1$
+	protected static Image rewriteEntryImage = ImageFactory.INSTANCE.getImage("icons/obj16/rewrite_entry.gif"); //$NON-NLS-1$
+	protected static Image suffixEntryImage = ImageFactory.INSTANCE.getImage("icons/obj16/suffix_entry.gif"); //$NON-NLS-1$
+	protected static Image delegateCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/delegate_catalog.gif"); //$NON-NLS-1$
 
 	protected static String ERROR_STATE_KEY = "errorstatekey"; //$NON-NLS-1$
 
@@ -76,7 +80,14 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 			if (object instanceof ICatalogEntry) {
 				ICatalogEntry catalogEntry = (ICatalogEntry) object;
 				result = catalogEntry.getKey();
-				// result = URIHelper.removePlatformResourceProtocol(result);
+			}
+			else if (object instanceof ISuffixEntry) {
+				ISuffixEntry entry = (ISuffixEntry) object;
+				result = "[...]" + entry.getSuffix() + " " + XMLCatalogMessages.UI_LABEL_ARROW + " " + entry.getURI();
+			}
+			else if (object instanceof IRewriteEntry) {
+				IRewriteEntry entry = (IRewriteEntry) object;
+				result = entry.getStartString() + "[...] " + XMLCatalogMessages.UI_LABEL_ARROW + " " + entry.getRewritePrefix() + "[...]";
 			}
 			else if (object instanceof INextCatalog) {
 				INextCatalog nextCatalog = (INextCatalog) object;
@@ -89,40 +100,74 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 					result += " (" + XMLCatalogMessages.UI_LABEL_PLATFORM_RESOURCE + ")";
 				}
 			}
+			else if (object instanceof IDelegateCatalog) {
+				IDelegateCatalog nextCatalog = (IDelegateCatalog) object;
+				// result = nextCatalog.getCatalogLocation();
+				result = nextCatalog.getStartString() + " " + XMLCatalogMessages.UI_LABEL_ARROW + " " + URIUtils.convertURIToLocation(nextCatalog.getCatalogLocation());
+				if (nextCatalog.getCatalogLocation().startsWith("file:")) {
+					result += " (" + XMLCatalogMessages.UI_LABEL_FILE_SYSTEM_RESOURCE + ")";
+				}
+				else if (nextCatalog.getCatalogLocation().startsWith("platform:")) {
+					result += " (" + XMLCatalogMessages.UI_LABEL_PLATFORM_RESOURCE + ")";
+				}
+			}
 			return result != null ? result : object.toString();
 		}
 
 		public Image getImage(Object object) {
 			Image result = null;
-			Image base = null;
 			if (object instanceof String) {
 				result = xmlCatalogImage;
 			}
 			else if (object instanceof ICatalogEntry) {
 				ICatalogEntry catalogEntry = (ICatalogEntry) object;
 				String uri = catalogEntry.getURI();
-				IEditorRegistry er = PlatformUI.getWorkbench().getEditorRegistry();
-				ImageDescriptor imageDescriptor = er.getImageDescriptor(uri);
-				Image image = (Image) imageTable.get(imageDescriptor);
-				if (image == null) {
-					image = imageDescriptor.createImage();
-					imageTable.put(imageDescriptor, image);
-				}
-				base = image;
-
-				if (base != null) {
-					if (URIHelper.isReadableURI(uri, true)) {
-						result = base;
-					}
-					else {
-						result = ImageFactory.INSTANCE.createCompositeImage(base, errorImage, ImageFactory.BOTTOM_LEFT);
-					}
-				}
+				result = getResourceImage(uri);
 			}
 			else if (object instanceof INextCatalog) {
 				// TODO: add image to the imageTable and add error overlay if
 				// next catalog URI is not readable
 				result = nextCatalogImage;
+			}
+			else if (object instanceof IDelegateCatalog) {
+				// TODO: add image to the imageTable and add error overlay if
+				// next catalog URI is not readable
+				result = delegateCatalogImage;
+			}
+			else if (object instanceof ISuffixEntry) {
+				// TODO: add image to the imageTable and add error overlay if
+				// next catalog URI is not readable
+				result = suffixEntryImage;
+			}
+			else if (object instanceof IRewriteEntry) {
+				// TODO: add image to the imageTable and add error overlay if
+				// next catalog URI is not readable
+				result = rewriteEntryImage;
+			}
+			return result;
+		}
+
+		private Image getResourceImage(String uri) {
+			Image result = null;
+			Image base = null;
+
+			IEditorRegistry er = PlatformUI.getWorkbench().getEditorRegistry();
+			ImageDescriptor imageDescriptor = er.getImageDescriptor(uri);
+			Image image = (Image) imageTable.get(imageDescriptor);
+			if (image == null) {
+				image = imageDescriptor.createImage();
+				imageTable.put(imageDescriptor, image);
+			}
+			base = image;
+
+			if (base != null) {
+				// TODO: This should be moved into the catalog
+				if (URIHelper.isReadableURI(uri, false)) {
+					result = base;
+				}
+				else {
+					result = ImageFactory.INSTANCE.createCompositeImage(base, errorImage, ImageFactory.BOTTOM_LEFT);
+				}
 			}
 			return result;
 		}
@@ -165,11 +210,14 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 				ICatalog nextCatalog = ((INextCatalog) parentElement).getReferencedCatalog();
 				result = getChildrenHelper(nextCatalog);
 			}
+			else if (parentElement instanceof IDelegateCatalog) {
+				ICatalog nextCatalog = ((IDelegateCatalog) parentElement).getReferencedCatalog();
+				result = getChildrenHelper(nextCatalog);
+			}
 			return result;
 		}
 
 		protected Object[] getChildrenHelper(ICatalog catalog) {
-			// TODO add entries from the nested catalogs
 
 			ICatalogEntry[] entries = catalog.getCatalogEntries();
 			if (entries.length > 0) {
@@ -188,6 +236,9 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 			}
 			Vector result = new Vector();
 			result.addAll(Arrays.asList(entries));
+			result.addAll(Arrays.asList(catalog.getRewriteEntries()));
+			result.addAll(Arrays.asList(catalog.getSuffixEntries()));
+			result.addAll(Arrays.asList(catalog.getDelegateCatalogs()));
 			INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
 			List nextCatalogsList = Arrays.asList(nextCatalogs);
 			result.addAll(nextCatalogsList);
@@ -214,16 +265,6 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 		public boolean isDeleted(Object object) {
 			return false;
 		}
-	}
-
-
-	public void menuAboutToShow(IMenuManager menuManager) {
-		Action action = new Action("hello") { //$NON-NLS-1$
-			public void run() {
-				System.out.println("run!"); //$NON-NLS-1$
-			}
-		};
-		menuManager.add(action);
 	}
 
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,14 +30,21 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_LABEL_SELECT_FILE;
 	public static String UI_LABEL_KEY;
 	public static String UI_LABEL_KEY_COLON;
+	public static String UI_LABEL_SUFFIX;
+	public static String UI_LABEL_SUFFIX_COLON;
 	public static String UI_LABEL_DETAILS_KEY_COLON;
 	public static String UI_LABEL_DETAILS_IN_JAR_FILE;
 	public static String UI_LABEL_URI;
 	public static String UI_LABEL_LOCATION_COLON;
+	public static String UI_MATCH_KEY_TYPE_COLON;
+	public static String UI_LABEL_ARROW;
 	public static String UI_LABEL_CATALOG_URI_COLON;
 	public static String UI_LABEL_DETAILS_URI_COLON;
 	public static String UI_LABEL_DETAILS_URI_LOCATION;
 	public static String UI_KEY_TYPE_COLON;
+	public static String UI_ELEMENT_TYPE_COLON;
+	public static String UI_LABEL_START_STRING_COLON;
+	public static String UI_LABEL_REWRITE_PREFIX_COLON;
 	public static String UI_KEY_TYPE_DETAILS_COLON;
 	public static String UI_KEY_TYPE_DESCRIPTION_XSD_PUBLIC;
 	public static String UI_KEY_TYPE_DESCRIPTION_XSD_SYSTEM;
@@ -59,8 +66,10 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_WARNING_NO_ELEMENT_XSD_LONG;
 	public static String UI_WARNING_SHOULD_BE_FULLY_QUALIFIED_URI;
 	public static String UI_WARNING_DUPLICATE_ENTRY;
-
-
+	public static String UI_WARNING_DUPLICATE_SUFFIX;
+	public static String UI_WARNING_DUPLICATE_REWRITE;
+	public static String UI_WARNING_DUPLICATE_DELEGATE;
+	
 	// NewModelWizard
 	public static String UI_INVALID_GRAMMAR_ERROR;
 	public static String UI_BUTTON_BROWSE;
@@ -117,15 +126,31 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_LABEL_FILE_IS_READ_ONLY;
 	public static String UI_LABEL_DIALOG_DESCRIPTION;
 
+	public static String UI_LABEL_NEXT_CATALOG;
+	public static String UI_LABEL_DELEGATE_CATALOG;
+	public static String UI_LABEL_REWRITE_ENTRY;
+	public static String UI_LABEL_SUFFIX_ENTRY;
+
+	public static String UI_LABEL_DELEGATE_CATALOG_URI_COLON;
 	public static String EditCatalogEntryDialog_catalogEntryLabel;
 	public static String EditCatalogEntryDialog_nextCatalogLabel;
+	public static String EditCatalogEntryDialog_rewriteEntryLabel;
+	public static String EditCatalogEntryDialog_suffixEntryLabel;
+	public static String EditCatalogEntryDialog_delegateCatalogLabel;
 	public static String UI_BUTTON_MENU_BROWSE_WORKSPACE;
 	public static String UI_BUTTON_MENU_BROWSE_FILE_SYSTEM;
 	public static String UI_LABEL_SELECT_FILE_FILTER_CONTROL;
 	public static String UI_TEXT_SELECT_FILE_FILTER_CONTROL;
+	
+	public static String UI_LABEL_PUBLIC;
+	public static String UI_LABEL_SYSTEM;
 
+	public static String UI_LABEL_START_STRING;
+	public static String UI_LABEL_REWRITE_PREFIX;
+	public static String UI_LABEL_ENTRY_ELEMENT_COLON;
 
-
+	public static String UI_LABEL_DETAILS_SUFFIX_COLON;
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, XMLCatalogMessages.class);

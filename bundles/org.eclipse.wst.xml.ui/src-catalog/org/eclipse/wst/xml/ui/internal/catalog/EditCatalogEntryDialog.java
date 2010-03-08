@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,13 +50,20 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.IDelegateCatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.IRewriteEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ISuffixEntry;
 
 public class EditCatalogEntryDialog extends Dialog {
 	protected static Image borwseImage = ImageFactory.INSTANCE.getImage("icons/obj16/file_expand.gif"); //$NON-NLS-1$
 	protected static Image catalogEntryToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/catalogEntry.gif"); //$NON-NLS-1$
 	protected static Image nextCatalogToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/nextCatalog.gif"); //$NON-NLS-1$
-
+	protected static Image delegateCatalogToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/delegateCatalog.gif"); //$NON-NLS-1$
+	protected static Image rewriteToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/rewrite.gif"); //$NON-NLS-1$
+	protected static Image prefixToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/prefix.gif"); //$NON-NLS-1$
+	protected static Image suffixToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/sufix.gif"); //$NON-NLS-1$
+	
 	protected class CatalogEntryPage extends CatalogElementPage {
 
 		protected Button browseWorkspaceButton;
@@ -82,41 +89,45 @@ public class EditCatalogEntryDialog extends Dialog {
 		protected String key;
 		
 		protected int type;
+		
+		public void refresh() {
+			computeErrorMessage();
+			updateErrorMessageLabel(errorMessageLabel);
+			updateOKButtonState();
+		}
 
 		protected void computeErrorMessage() {
 			errorMessage = null;
 			warningMessage = null;
 
-			if (errorMessage == null) {
-				String fileName = resourceLocationField.getText();
-				if (fileName.trim().length() > 0) {
-					if ((fileName.indexOf("..") != -1) || (fileName.indexOf("./") != -1) || (fileName.indexOf("/.") != -1) || (fileName.indexOf(".\\") != -1) || (fileName.indexOf("\\.") != -1)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-						errorMessage = XMLCatalogMessages.UI_WARNING_URI_MUST_NOT_HAVE_DOTS;
-					}
-
-					String uri = fileName;
-					if (!URIHelper.hasProtocol(uri)) {
-						URIHelper.isAbsolute(uri);
-						uri = (URIHelper.isAbsolute(uri)) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
-					}
-
-					if ((errorMessage == null) && !URIHelper.isReadableURI(uri, false)) {
-						errorMessage = XMLCatalogMessages.UI_WARNING_URI_NOT_FOUND_COLON + fileName;
-					}
-				}
-				else {
-					// this an error that is not actaully
-					// reported ... OK is just disabled
-					errorMessage = ""; //$NON-NLS-1$
+			String fileName = resourceLocationField.getText();
+			if (fileName.trim().length() > 0) {
+				if ((fileName.indexOf("..") != -1) || (fileName.indexOf("./") != -1) || (fileName.indexOf("/.") != -1) || (fileName.indexOf(".\\") != -1) || (fileName.indexOf("\\.") != -1)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+					errorMessage = XMLCatalogMessages.UI_WARNING_URI_MUST_NOT_HAVE_DOTS;
 				}
 
-				// Make sure the key is a fully qualified URI in the cases
-				// where the key type is "System ID" or "Schema location"
-				if ((keyField.getText().length() > 0) && (getKeyType() == ICatalogEntry.ENTRY_TYPE_SYSTEM)) {
-					URI uri = URI.createURI(keyField.getText());
-					if (uri.scheme() == null) {
-						warningMessage = XMLCatalogMessages.UI_WARNING_SHOULD_BE_FULLY_QUALIFIED_URI;
-					}
+				String uri = fileName;
+				if (!URIHelper.hasProtocol(uri)) {
+					URIHelper.isAbsolute(uri);
+					uri = (URIHelper.isAbsolute(uri)) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
+				}
+
+				if ((errorMessage == null) && !URIHelper.isReadableURI(uri, false)) {
+					errorMessage = XMLCatalogMessages.UI_WARNING_URI_NOT_FOUND_COLON + fileName;
+				}
+			}
+			else {
+				// this an error that is not actaully
+				// reported ... OK is just disabled
+				errorMessage = ""; //$NON-NLS-1$
+			}
+
+			// Make sure the key is a fully qualified URI in the cases
+			// where the key type is "System ID" or "Schema location"
+			if ((keyField.getText().length() > 0) && (getKeyType() == ICatalogEntry.ENTRY_TYPE_SYSTEM)) {
+				URI uri = URI.createURI(keyField.getText());
+				if (uri.scheme() == null) {
+					warningMessage = XMLCatalogMessages.UI_WARNING_SHOULD_BE_FULLY_QUALIFIED_URI;
 				}
 			}
 
@@ -234,7 +245,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			Label keyTypeLabel = new Label(group, SWT.NONE);
 			keyTypeLabel.setText(XMLCatalogMessages.UI_KEY_TYPE_COLON);
 
-			keyTypeCombo = new Combo(group, SWT.NONE);
+			keyTypeCombo = new Combo(group, SWT.READ_ONLY);
 			gd = new GridData();
 			gd.horizontalAlignment = SWT.FILL;
 			gd.grabExcessHorizontalSpace = true;
@@ -484,6 +495,315 @@ public class EditCatalogEntryDialog extends Dialog {
 
 	}
 
+	protected class SuffixEntryPage extends CatalogElementPage {
+	
+		protected Button browseWorkspaceButton;
+		
+		protected Button browseFileSystemButton;
+	
+		protected ISuffixEntry catalogEntry;
+	
+		protected Label errorMessageLabel;
+	
+		protected Text suffixField;
+	
+		protected Combo keyTypeCombo;
+	
+		protected Text resourceLocationField;
+	
+		protected Combo resourceTypeCombo;
+
+		protected String key;
+		
+		protected int type;
+		
+		public void refresh() {
+			computeErrorMessage();
+			updateErrorMessageLabel(errorMessageLabel);
+			updateOKButtonState();
+		}
+	
+		protected void computeErrorMessage() {
+			errorMessage = null;
+			warningMessage = null;
+	
+			String fileName = resourceLocationField.getText();
+			if (fileName.trim().length() > 0) {
+				if ((fileName.indexOf("..") != -1) || (fileName.indexOf("./") != -1) || (fileName.indexOf("/.") != -1) || (fileName.indexOf(".\\") != -1) || (fileName.indexOf("\\.") != -1)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+					errorMessage = XMLCatalogMessages.UI_WARNING_URI_MUST_NOT_HAVE_DOTS;
+				}
+
+				String uri = fileName;
+				if (!URIHelper.hasProtocol(uri)) {
+					URIHelper.isAbsolute(uri);
+					uri = (URIHelper.isAbsolute(uri)) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
+				}
+
+				if ((errorMessage == null) && !URIHelper.isReadableURI(uri, false)) {
+					errorMessage = XMLCatalogMessages.UI_WARNING_URI_NOT_FOUND_COLON + fileName;
+				}
+			}
+			else {
+				// this an error that is not actaully
+				// reported ... OK is just disabled
+				errorMessage = ""; //$NON-NLS-1$
+			}
+
+	
+			if ((errorMessage == null) && (suffixField.getText().trim().length() == 0)) {
+				// this an error that is not actaully
+				// reported ... OK is just disabled
+				errorMessage = ""; //$NON-NLS-1$
+			}
+		}
+	
+		protected Control createSuffixEntryPanel(Composite parent) {
+	
+			ModifyListener modifyListener = new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					if (e.widget == resourceLocationField) {
+						if (suffixField.getText().length() == 0) {
+							String uri = resourceLocationField.getText();
+							if (uri.endsWith("xsd") && !URIHelper.hasProtocol(uri)) { //$NON-NLS-1$
+								uri = URIHelper.isAbsolute(uri) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
+								String namespaceURI = XMLQuickScan.getTargetNamespaceURIForSchema(uri);
+								if (namespaceURI != null) {
+									suffixField.setText(namespaceURI);
+								}
+							}
+						}
+					}
+					updateWidgets(e.widget);
+				}
+			};
+	
+			Composite composite = new Composite(parent, SWT.NONE);
+			GridData gd = new GridData(GridData.FILL_BOTH);
+			composite.setLayoutData(gd);
+	
+			GridLayout layout = new GridLayout();
+			composite.setLayout(layout);
+	
+			Composite group = new Composite(composite, SWT.NONE);
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			group.setLayoutData(gd);
+	
+			layout = new GridLayout(2, false);
+			group.setLayout(layout);
+	
+			Label resourceLocationLabel = new Label(group, SWT.NONE);
+			resourceLocationLabel.setText(XMLCatalogMessages.UI_LABEL_LOCATION_COLON);
+	
+			resourceLocationField = new Text(group, SWT.SINGLE | SWT.BORDER);
+			gd = new GridData();
+			gd.horizontalAlignment = SWT.FILL;
+			gd.grabExcessHorizontalSpace = true;
+			resourceLocationField.setLayoutData(gd);
+	
+			resourceLocationField.setText(getDisplayValue(URIUtils.convertURIToLocation(getEntry().getURI())));
+			resourceLocationField.addModifyListener(modifyListener);
+		
+			Composite browseButtonsComposite = new Composite(group, SWT.NONE);
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 2;
+			gd.horizontalAlignment = GridData.END;
+			browseButtonsComposite.setLayoutData(gd);
+			
+			layout = new GridLayout();
+			layout.numColumns = 2;
+			layout.marginWidth = 0;
+			layout.marginHeight = 0;
+			layout.marginBottom = 5;
+			browseButtonsComposite.setLayout(layout);
+			
+			browseWorkspaceButton = new Button(browseButtonsComposite, SWT.PUSH);
+			browseWorkspaceButton.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_WORKSPACE);
+			browseWorkspaceButton.addSelectionListener(new SelectionListener(){
+	
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+	
+				public void widgetSelected(SelectionEvent e) {
+					String value = invokeWorkspaceFileSelectionDialog();
+					if(value != null) {
+						resourceLocationField.setText(value);
+					}
+				}
+			});
+			
+			browseFileSystemButton = new Button(browseButtonsComposite, SWT.PUSH);
+			browseFileSystemButton.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_FILE_SYSTEM);
+			browseFileSystemButton.addSelectionListener(new SelectionListener(){
+	
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+	
+				public void widgetSelected(SelectionEvent e) {
+					String value = invokeFileSelectionDialog();
+					if(value != null) {
+						resourceLocationField.setText(value);
+					}
+				}
+			});
+			
+			// Key Type
+			//
+			Label keyTypeLabel = new Label(group, SWT.NONE);
+			keyTypeLabel.setText(XMLCatalogMessages.UI_KEY_TYPE_COLON);
+	
+			keyTypeCombo = new Combo(group, SWT.READ_ONLY);
+			gd = new GridData();
+			gd.horizontalAlignment = SWT.FILL;
+			gd.grabExcessHorizontalSpace = true;
+			keyTypeCombo.setLayoutData(gd);
+			updateKeyTypeCombo(getEntry().getEntryType());
+			keyTypeCombo.addModifyListener(modifyListener);
+	
+			// Suffix
+			// 
+			Label suffixValueLabel = new Label(group, SWT.NONE);
+			suffixValueLabel.setText(XMLCatalogMessages.UI_LABEL_SUFFIX_COLON);
+			suffixField = new Text(group, SWT.SINGLE | SWT.BORDER);
+
+			suffixField.setLayoutData(gd);
+			suffixField.setText(getDisplayValue(getEntry().getSuffix()));
+			suffixField.addModifyListener(modifyListener);
+		
+			errorMessageLabel = new Label(composite, SWT.NONE);
+			errorMessageLabel.setForeground(color);
+			errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	
+			updateWidgets(null);
+			
+			key = getEntry().getSuffix();
+			type = getEntry().getEntryType();
+	
+			return composite;
+		}
+	
+		public Control createControl(Composite parent) {
+	
+			fControl = createSuffixEntryPanel(parent);
+	
+			return fControl;
+		}
+	
+	
+		public ICatalogElement getData() {
+			return getEntry();
+		}
+	
+		protected ISuffixEntry getEntry() {
+			if (catalogEntry == null) {
+				if ((fCatalogElement != null) && (fCatalogElement.getType() == ICatalogElement.TYPE_SUFFIX)) {
+					catalogEntry = (ISuffixEntry) fCatalogElement;
+				}
+				else {
+					if (catalog != null) {
+						catalogEntry = (ISuffixEntry) catalog.createCatalogElement(ICatalogElement.TYPE_SUFFIX);
+					}
+				}
+			}
+			return catalogEntry;
+		}
+	
+		protected int getKeyType() {
+			switch (keyTypeCombo.getSelectionIndex()) {
+				case 0 :
+					return ISuffixEntry.SUFFIX_TYPE_URI; // xsd namespace is URI type key
+				case 1 :
+					return ISuffixEntry.SUFFIX_TYPE_SYSTEM;
+				default :
+					return ISuffixEntry.SUFFIX_TYPE_URI;
+			}
+		}
+	
+		public void saveData() {
+			if (validateData()) {
+				getEntry().setURI(URIUtils.convertLocationToURI(resourceLocationField.getText()));
+				getEntry().setSuffix(suffixField.getText());
+				getEntry().setEntryType(getKeyType());
+				dataSaved = true;
+			}
+			else {
+				errorMessage = XMLCatalogMessages.UI_WARNING_DUPLICATE_SUFFIX;
+				errorMessageLabel.setText(errorMessage);
+				updateOKButtonState();
+				dataSaved = false;
+			}
+		}
+		
+		protected boolean validateData() {
+			ISuffixEntry entry = getEntry();
+			String uri = URIUtils.convertLocationToURI(resourceLocationField.getText());
+			if(entry.getEntryType() != getKeyType() || !entry.getSuffix().equals(suffixField.getText()) || !entry.getURI().equals(uri)) {
+				ISuffixEntry[] entries = catalog.getSuffixEntries();
+				for (int i = 0; i < entries.length; i++) {
+					if (entries[i].getSuffix().equals(suffixField.getText()) && entries[i].getEntryType() == getKeyType()) return false;
+				}
+			}
+			return true;
+		}
+	
+		protected void updateKeyTypeCombo(int type) {
+			keyTypeCombo.removeAll();
+			for (Iterator i = CatalogFileTypeRegistryReader.getXMLCatalogFileTypes().iterator(); i.hasNext();) {
+				XMLCatalogFileType theFileType = (XMLCatalogFileType) i.next();
+				if (theFileType.extensions != null) {
+					for (Iterator j = theFileType.extensions.iterator(); j.hasNext();) {
+						String extension = (String) j.next();
+						if (resourceLocationField.getText().endsWith(extension)) {
+							if ("org.eclipse.wst.xml.core.ui.catalogFileType.xsd".equals(theFileType.id)) { //$NON-NLS-1$
+								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_XSD_PUBLIC);
+								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_XSD_SYSTEM);
+							}
+							else if ("org.eclipse.wst.xml.core.ui.catalogFileType.dtd".equals(theFileType.id)) { //$NON-NLS-1$
+								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_URI);
+								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_SYSTEM);
+							}
+							else {
+								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_URI);
+							}
+						}
+	
+					}
+	
+				}
+			}
+			if (keyTypeCombo.getItemCount() == 0) {
+				keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_URI);
+				keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_SYSTEM);
+			}
+	
+			switch (type) {
+				case ISuffixEntry.SUFFIX_TYPE_URI: // handle XML Schema,
+					keyTypeCombo.select(0); // namespace name as URI key
+					break;
+
+				case ISuffixEntry.SUFFIX_TYPE_SYSTEM :
+					keyTypeCombo.select(1);
+					break;
+
+				default :
+					if (keyTypeCombo.getItemCount() > 0) {
+						keyTypeCombo.select(0);
+					}
+					break;
+			}
+	
+		}
+		
+		protected void updateWidgets(Widget widget) {
+			if (widget != keyTypeCombo) {
+				updateKeyTypeCombo(getKeyType());
+			}
+			computeErrorMessage();
+			updateErrorMessageLabel(errorMessageLabel);
+			updateOKButtonState();
+		}
+	
+	}
+
 	protected abstract class CatalogElementPage {
 
 		Control fControl;
@@ -492,6 +812,8 @@ public class EditCatalogEntryDialog extends Dialog {
 			super();
 
 		}
+		
+		public abstract void refresh();
 
 		public abstract Control createControl(Composite parent);
 
@@ -525,7 +847,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			Label label = new Label(composite, SWT.NONE);
 			label.setText(XMLCatalogMessages.UI_LABEL_SELECT_FILE_FILTER_CONTROL);
 
-			filterControl = new Combo(composite, SWT.NONE);
+			filterControl = new Combo(composite, SWT.READ_ONLY);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			filterControl.setLayoutData(gd);
 
@@ -539,6 +861,7 @@ public class EditCatalogEntryDialog extends Dialog {
 				}
 			}
 
+			filterControl.select(0);
 			filterControl.addSelectionListener(this);
 		}
 
@@ -573,7 +896,8 @@ public class EditCatalogEntryDialog extends Dialog {
 		}
 	}
 
-	protected class NextCatalogPage extends CatalogElementPage {
+	protected abstract class AbstractDelegatePage extends CatalogElementPage {
+	
 		
 		protected Button browseWorkspaceButton;
 		
@@ -581,44 +905,35 @@ public class EditCatalogEntryDialog extends Dialog {
 		
 		protected Text catalogLocationField;
 
-		protected INextCatalog nextCatalog;
-
 		protected Label errorMessageLabel;
 
 		protected void computeErrorMessage() {
 			errorMessage = null;
-
-			if (errorMessage == null) {
-				String fileName = catalogLocationField.getText();
-				if (fileName.trim().length() > 0) {
-					if ((fileName.indexOf("..") != -1) || (fileName.indexOf("./") != -1) || (fileName.indexOf("/.") != -1) || (fileName.indexOf(".\\") != -1) || (fileName.indexOf("\\.") != -1)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-						errorMessage = XMLCatalogMessages.UI_WARNING_URI_MUST_NOT_HAVE_DOTS;
-					}
-
-					String uri = fileName;
-					if (!URIHelper.hasProtocol(uri)) {
-						uri = URIHelper.isAbsolute(uri) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
-					}
-
-					if ((errorMessage == null) && !URIHelper.isReadableURI(uri, false)) {
-						errorMessage = XMLCatalogMessages.UI_WARNING_URI_NOT_FOUND_COLON + fileName;
-					}
+			String fileName = catalogLocationField.getText();
+			if (fileName.trim().length() > 0) {
+				if ((fileName.indexOf("..") != -1) || (fileName.indexOf("./") != -1) || (fileName.indexOf("/.") != -1) || (fileName.indexOf(".\\") != -1) || (fileName.indexOf("\\.") != -1)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+					errorMessage = XMLCatalogMessages.UI_WARNING_URI_MUST_NOT_HAVE_DOTS;
 				}
-				else {
-					// this an error that is not actually
-					// reported ... OK is just disabled
-					errorMessage = ""; //$NON-NLS-1$
+
+				String uri = fileName;
+				if (!URIHelper.hasProtocol(uri)) {
+					uri = URIHelper.isAbsolute(uri) ? URIHelper.prependFileProtocol(uri) : URIHelper.prependPlatformResourceProtocol(uri);
+				}
+
+				if ((errorMessage == null) && !URIHelper.isReadableURI(uri, false)) {
+					errorMessage = XMLCatalogMessages.UI_WARNING_URI_NOT_FOUND_COLON + fileName;
 				}
 			}
-
+			else {
+				// this an error that is not actually
+				// reported ... OK is just disabled
+				errorMessage = ""; //$NON-NLS-1$
+			}
 		}
 
-		public Control createControl(Composite parent) {
-			fControl = createNextCatalogPanel(parent);
-			return fControl;
-		}
+		public abstract Control createControl(Composite parent);
 
-		protected Control createNextCatalogPanel(Composite parent) {
+		protected Control createNextCatalogPanel(Composite parent, String catalogUriLabel) {
 			ModifyListener modifyListener = new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					updateWidgets(e.widget);
@@ -639,12 +954,14 @@ public class EditCatalogEntryDialog extends Dialog {
 			layout = new GridLayout();
 			group.setLayout(layout);
 
+			createSpecificFields(group);
+			
 			Label resourceLocationLabel = new Label(group, SWT.NONE);
-			resourceLocationLabel.setText(XMLCatalogMessages.UI_LABEL_CATALOG_URI_COLON);
+			resourceLocationLabel.setText(catalogUriLabel);
 
 			catalogLocationField = new Text(group, SWT.SINGLE | SWT.BORDER);
 			catalogLocationField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			catalogLocationField.setText(URIUtils.convertURIToLocation(getDisplayValue(getNextCatalog().getCatalogLocation())));
+			catalogLocationField.setText(URIUtils.convertURIToLocation(getDisplayValue(getCatalogLocation())));
 			// WorkbenchHelp.setHelp(resourceLocationField,
 			// XMLBuilderContextIds.XMLP_ENTRY_URI);
 			catalogLocationField.addModifyListener(modifyListener);
@@ -699,8 +1016,29 @@ public class EditCatalogEntryDialog extends Dialog {
 			return composite;
 		}
 
+		protected void createSpecificFields(Composite group) {
+		}
+
+		protected abstract String getCatalogLocation();
+
+		protected void updateWidgets(Widget widget) {
+			computeErrorMessage();
+			updateErrorMessageLabel(errorMessageLabel);
+			updateOKButtonState();
+		}
+	}
+
+	protected class NextCatalogPage extends AbstractDelegatePage {
+		protected INextCatalog nextCatalog;
+
 		public ICatalogElement getData() {
 			return getNextCatalog();
+		}
+		
+		public void refresh() {
+			computeErrorMessage();
+			updateErrorMessageLabel(errorMessageLabel);
+			updateOKButtonState();
 		}
 
 		protected INextCatalog getNextCatalog() {
@@ -722,31 +1060,373 @@ public class EditCatalogEntryDialog extends Dialog {
 			dataSaved = true;
 		}
 
-		protected void updateWidgets(Widget widget) {
+		protected String getCatalogLocation() {
+			return getNextCatalog().getCatalogLocation();
+		}
+		
+		public Control createControl(Composite parent) {
+			fControl = createNextCatalogPanel(parent, XMLCatalogMessages.UI_LABEL_CATALOG_URI_COLON);
+			return fControl;
+		}
+	}
+
+	protected class DelegateCatalogPage extends AbstractDelegatePage {
+		protected IDelegateCatalog delegateCatalog;
+		private Text prefixField;
+		private Combo keyTypeCombo;
+		
+		public void refresh() {
 			computeErrorMessage();
 			updateErrorMessageLabel(errorMessageLabel);
 			updateOKButtonState();
 		}
-	}
 
-	protected class ToolBarItemSelectionChangeListener implements SelectionListener {
-		public void widgetDefaultSelected(SelectionEvent e) {
-			// TODO Auto-generated method stub
-
+		protected void computeErrorMessage() {
+			errorMessage = null;
+			String prefix = prefixField.getText();
+			if(prefix.length() > 0) {
+				// good
+			} else {
+				errorMessage = "";
+			}
+		}
+		
+		public ICatalogElement getData() {
+			return getDelegateCatalog();
 		}
 
+		protected void createSpecificFields(Composite group) {
+			
+			Composite prefixComposite = new Composite(group, SWT.NONE);
+			
+			GridLayout layout = new GridLayout();
+			layout.numColumns = 2;
+			layout.marginWidth = 0;
+			layout.marginHeight = 0;
+			layout.marginBottom = 5;
+			prefixComposite.setLayout(layout);
+			
+			// Key Type
+			//
+			Label keyTypeLabel = new Label(prefixComposite, SWT.NONE);
+			keyTypeLabel.setText(XMLCatalogMessages.UI_MATCH_KEY_TYPE_COLON);
+	
+			keyTypeCombo = new Combo(prefixComposite, SWT.READ_ONLY);
+			GridData gd = new GridData();
+			gd.horizontalAlignment = SWT.FILL;
+			gd.grabExcessHorizontalSpace = true;
+			keyTypeCombo.setLayoutData(gd);
+			keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_PUBLIC);
+			keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_SYSTEM);
+			keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_URI);
+			switch (getDelegateCatalog().getEntryType()) {
+			case IDelegateCatalog.DELEGATE_TYPE_PUBLIC:
+				keyTypeCombo.select(0);
+				break;
+			case IDelegateCatalog.DELEGATE_TYPE_SYSTEM:
+				keyTypeCombo.select(1);
+				break;
+			default:
+			case IDelegateCatalog.DELEGATE_TYPE_URI:
+				keyTypeCombo.select(2);
+				break;
+			}
+
+			Label prefixLabel = new Label(prefixComposite, SWT.NONE);
+			prefixLabel.setText(XMLCatalogMessages.UI_LABEL_START_STRING_COLON);
+
+			prefixField = new Text(prefixComposite, SWT.SINGLE | SWT.BORDER);
+			prefixField.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+			prefixField.setText(getDisplayValue(getDelegateCatalog().getStartString()));
+			ModifyListener modifyListener = new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					updateWidgets(e.widget);
+				}
+			};
+			prefixField.addModifyListener(modifyListener);
+			prefixComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		}
+
+		protected IDelegateCatalog getDelegateCatalog() {
+			if (delegateCatalog == null) {
+				if ((fCatalogElement != null) && (fCatalogElement.getType() == ICatalogElement.TYPE_DELEGATE)) {
+					delegateCatalog = (IDelegateCatalog) fCatalogElement;
+				}
+				else {	
+					if (catalog != null) {
+						delegateCatalog = (IDelegateCatalog) catalog.createCatalogElement(IDelegateCatalog.DELEGATE_TYPE_URI);
+					}
+				}
+			}
+			return delegateCatalog;
+		}
+
+		public void saveData() {
+			if (validateData())
+			{
+				getDelegateCatalog().setCatalogLocation(URIUtils.convertLocationToURI(catalogLocationField.getText()));
+				getDelegateCatalog().setStartString(prefixField.getText());
+				getDelegateCatalog().setEntryType(getDelegateType());
+				dataSaved = true;
+			}
+			else {
+				errorMessage = XMLCatalogMessages.UI_WARNING_DUPLICATE_DELEGATE;
+				errorMessageLabel.setText(errorMessage);
+				updateOKButtonState();
+				dataSaved = false;
+			}
+		}
+
+		private int getDelegateType() {
+			switch (keyTypeCombo.getSelectionIndex()) {
+			case 0:
+				return IDelegateCatalog.DELEGATE_TYPE_PUBLIC;
+
+			case 1:
+				return IDelegateCatalog.DELEGATE_TYPE_SYSTEM;
+			
+			case 2:				
+			default:
+				return IDelegateCatalog.DELEGATE_TYPE_URI;
+			}
+		}
+	
+		protected boolean validateData() {
+			IDelegateCatalog entry = getDelegateCatalog();
+			String prefix = prefixField.getText();
+			if(entry.getEntryType() != getDelegateType() || !prefix.equals(entry.getStartString())) {
+				IDelegateCatalog[] entries = catalog.getDelegateCatalogs();
+				for (int i = 0; i < entries.length; i++) {
+					if (entries[i].getStartString().equals(prefixField) && entries[i].getEntryType() == getDelegateType()) return false;
+				}
+			}
+			return true;
+		}
+
+		protected String getCatalogLocation() {
+			return getDelegateCatalog().getCatalogLocation();
+		}
+
+		public Control createControl(Composite parent) {
+			fControl = createNextCatalogPanel(parent, XMLCatalogMessages.UI_LABEL_DELEGATE_CATALOG_URI_COLON);
+			return fControl;
+		}
+	}
+
+	protected class RadioItemSelectionChangeListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+		
 		public void widgetSelected(SelectionEvent e) {
 			Object selection = e.getSource();
-			if (selection instanceof ToolItem) {
-				if (!showPage((CatalogElementPage) ((ToolItem) selection).getData())) {
-					// Page flipping wasn't successful
-					// handleError();
+			if (selection instanceof Button) {
+				Button button = (Button) selection;
+				if (button.getSelection()) {
+					if (!showPage((CatalogElementPage) button.getData())) {
+						// Page flipping wasn't successful
+						// handleError();
+					}
 				}
 			}
 		}
 
 	}
 
+	protected class RewriteEntryPage extends CatalogElementPage {
+		protected IRewriteEntry rewriteEntry;
+		private Text startStringField;
+		private Text prefixField;
+		private Combo keyTypeCombo;
+		
+		public void refresh() {
+			computeErrorMessage();
+			updateErrorMessageLabel(errorMessageLabel);
+			updateOKButtonState();
+		}
+	
+		public ICatalogElement getData() {
+			return getRewriteEntry();
+		}
+	
+		protected Label errorMessageLabel;
+
+		protected void computeErrorMessage() {
+			errorMessage = null;
+			
+			String start = startStringField.getText();
+			String prefix = prefixField.getText();
+			if (start.trim().length() > 0 && prefix.trim().length() > 0) {
+				// good
+			}
+			else {
+				// this an error that is not actually
+				// reported ... OK is just disabled
+				errorMessage = ""; //$NON-NLS-1$
+			}
+		}
+
+		protected IRewriteEntry getRewriteEntry() {
+			if (rewriteEntry == null) {
+				if ((fCatalogElement != null) && (fCatalogElement.getType() == ICatalogElement.TYPE_REWRITE)) {
+					rewriteEntry = (IRewriteEntry) fCatalogElement;
+				}
+				else {
+					if (catalog != null) {
+						rewriteEntry = (IRewriteEntry) catalog.createCatalogElement(IRewriteEntry.REWRITE_TYPE_SYSTEM);
+					}
+				}
+			}
+			return rewriteEntry;
+		}
+
+		protected void updateWidgets(Widget widget) {
+			computeErrorMessage();
+			updateErrorMessageLabel(errorMessageLabel);
+			updateOKButtonState();
+		}
+		public void saveData() {
+			if (validateData()) {
+				getRewriteEntry().setRewritePrefix(prefixField.getText());
+				getRewriteEntry().setStartString(startStringField.getText());
+				getRewriteEntry().setEntryType(getEntryType());
+				dataSaved = true;
+			}
+			else {
+				errorMessage = XMLCatalogMessages.UI_WARNING_DUPLICATE_REWRITE;
+				errorMessageLabel.setText(errorMessage);
+				updateOKButtonState();
+				dataSaved = false;
+			}
+		}
+
+		private int getEntryType() {
+			switch (keyTypeCombo.getSelectionIndex()) {
+			case 0:
+				return IRewriteEntry.REWRITE_TYPE_SYSTEM;
+			case 1:
+			default:
+				return IRewriteEntry.REWRITE_TYPE_URI;
+			}
+		}
+		
+		protected boolean validateData() {
+			IRewriteEntry entry = getRewriteEntry();
+			String startString = startStringField.getText();
+			if(entry.getEntryType() != getEntryType() || !entry.getStartString().equals(startString)) {
+				IRewriteEntry[] entries = catalog.getRewriteEntries();
+				for (int i = 0; i < entries.length; i++) {
+					if (entries[i].getStartString().equals(startString) && entries[i].getEntryType() == getEntryType()) return false;
+				}
+			}
+			return true;
+		}
+			
+		public Control createControl(Composite parent) {
+	
+			fControl = createRewriteEntryPanel(parent);
+	
+			return fControl;
+		}
+	
+		public Control createRewriteEntryPanel(Composite parent) {
+			ModifyListener modifyListener = new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					updateWidgets(e.widget);
+				}
+			};
+
+			Composite composite = new Composite(parent, SWT.NONE);
+			GridData gd = new GridData(GridData.FILL_BOTH);
+			composite.setLayoutData(gd);
+
+			GridLayout layout = new GridLayout();
+			composite.setLayout(layout);
+
+			Composite group = new Composite(composite, SWT.NONE);
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			group.setLayoutData(gd);
+
+			layout = new GridLayout();
+			group.setLayout(layout);
+				
+			Composite prefixComposite = new Composite(group, SWT.NONE);
+			
+			layout = new GridLayout();
+			layout.numColumns = 2;
+			layout.marginWidth = 0;
+			layout.marginHeight = 0;
+			layout.marginBottom = 5;
+			prefixComposite.setLayout(layout);
+			
+			// Key Type
+			//
+			Label keyTypeLabel = new Label(prefixComposite, SWT.NONE);
+			keyTypeLabel.setText(XMLCatalogMessages.UI_MATCH_KEY_TYPE_COLON);
+	
+			keyTypeCombo = new Combo(prefixComposite, SWT.READ_ONLY);
+			gd = new GridData();
+			gd.horizontalAlignment = SWT.FILL;
+			gd.grabExcessHorizontalSpace = true;
+			keyTypeCombo.setLayoutData(gd);
+			keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_SYSTEM);
+			keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_URI);
+			switch (getRewriteEntry().getEntryType()) {
+			case IDelegateCatalog.DELEGATE_TYPE_SYSTEM:
+				keyTypeCombo.select(0);
+				break;
+			default:
+			case IDelegateCatalog.DELEGATE_TYPE_URI:
+				keyTypeCombo.select(1);
+				break;
+			}
+			Label startStringLabel = new Label(prefixComposite, SWT.NONE);
+			startStringLabel.setText(XMLCatalogMessages.UI_LABEL_START_STRING_COLON);
+	
+			startStringField = new Text(prefixComposite, SWT.SINGLE | SWT.BORDER);
+			startStringField.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+			startStringField.setText(getDisplayValue(getRewriteEntry().getStartString()));
+			startStringField.addModifyListener(modifyListener);
+
+			Label prefixLabel = new Label(prefixComposite, SWT.NONE);
+			prefixLabel.setText(XMLCatalogMessages.UI_LABEL_REWRITE_PREFIX_COLON);
+	
+			prefixField = new Text(prefixComposite, SWT.SINGLE | SWT.BORDER);
+			prefixField.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+			prefixField.setText(getDisplayValue(getRewriteEntry().getRewritePrefix()));
+			prefixField.addModifyListener(modifyListener);
+	
+			prefixComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+
+			errorMessageLabel = new Label(group, SWT.NONE);
+			errorMessageLabel.setForeground(color);
+			errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			updateWidgets(null);
+			return composite;
+		}
+	}
+
+	protected class ToolBarItemSelectionChangeListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {}
+
+		public void widgetSelected(SelectionEvent e) {
+			Object selection = e.getSource();
+			if (selection instanceof ToolItem) {
+				ToolItem toolItem = (ToolItem)selection;
+				ToolBar toolbar = toolItem.getParent();
+				if(toolbar != null) {
+					ToolItem[] items = toolbar.getItems();
+					for (int i = 0; i < items.length; i++) {
+						items[i].setSelection(items[i] == toolItem);
+					}
+				}
+				if (!showPage((CatalogElementPage) toolItem.getData())) {
+					// Page flipping wasn't successful
+					// handleError();
+				}
+			}
+		}
+	}
+	
 	public static String[] createStringArray(List list) {
 		String[] stringArray = new String[list.size()];
 		for (int i = 0; i < stringArray.length; i++) {
@@ -783,8 +1463,10 @@ public class EditCatalogEntryDialog extends Dialog {
 	protected CatalogElementPage selectedPage;
 
 	// protected TreeViewer treeViewer;
-
+	
 	protected ToolBar toolBar;
+
+	protected Composite elementTypeComposite;
 
 	protected Color color;
 	protected boolean dataSaved;
@@ -822,15 +1504,6 @@ public class EditCatalogEntryDialog extends Dialog {
 		updateOKButtonState();
 	}
 
-	protected void createCatalogEntryButton() {
-		CatalogElementPage page = new CatalogEntryPage();
-		page.createControl(pageContainer);
-		ToolItem toolItem = new ToolItem(toolBar, SWT.PUSH);
-		toolItem.setImage(catalogEntryToolBarImage);
-		toolItem.setText(XMLCatalogMessages.EditCatalogEntryDialog_catalogEntryLabel);
-		toolItem.setData(page);
-		toolItem.addSelectionListener(new ToolBarItemSelectionChangeListener());
-	}
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogAreaComposite = (Composite) super.createDialogArea(parent);
@@ -840,8 +1513,8 @@ public class EditCatalogEntryDialog extends Dialog {
 		layout.marginWidth = 0;
 		dialogAreaComposite.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.widthHint = 500;
-		gd.heightHint = 250;
+		gd.widthHint = 550;
+		//gd.heightHint = 250;
 		dialogAreaComposite.setLayoutData(gd);
 		createMainComponent(dialogAreaComposite);
 		return this.dialogArea;
@@ -876,6 +1549,21 @@ public class EditCatalogEntryDialog extends Dialog {
 				nextCatalogPage.createControl(pageContainer);
 				showPage(nextCatalogPage);
 			}
+			else if (fCatalogElement.getType() == ICatalogElement.TYPE_DELEGATE) {
+				DelegateCatalogPage delegateCatalogPage = new DelegateCatalogPage();
+				delegateCatalogPage.createControl(pageContainer);
+				showPage(delegateCatalogPage);
+			}
+			else if (fCatalogElement.getType() == ICatalogElement.TYPE_SUFFIX) {
+				SuffixEntryPage suffixEntryPage = new SuffixEntryPage();
+				suffixEntryPage.createControl(pageContainer);
+				showPage(suffixEntryPage);
+			}
+			else if (fCatalogElement.getType() == ICatalogElement.TYPE_REWRITE) {
+				RewriteEntryPage rewriteEntryPage = new RewriteEntryPage();
+				rewriteEntryPage.createControl(pageContainer);
+				showPage(rewriteEntryPage);
+			}
 
 			return composite1;
 		}
@@ -883,6 +1571,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 	}
 
+	
 	protected Composite createMainComponentWithToolbar(Composite composite) {
 
 		FormLayout formLayout = new FormLayout();
@@ -898,6 +1587,7 @@ public class EditCatalogEntryDialog extends Dialog {
 		label.setLayoutData(data);
 
 		toolBar = new ToolBar(composite, SWT.BORDER | SWT.FLAT | SWT.VERTICAL);
+		
 
 		data = new FormData();
 		data.top = new FormAttachment(label, 0);
@@ -925,24 +1615,102 @@ public class EditCatalogEntryDialog extends Dialog {
 
 		// add pages for each type of catalog element
 		createCatalogEntryButton();
+		createRewriteButton();
+		createSuffixCatalogButton();
 		createNextCatalogButton();
+		createDelegateCatalogButton();
 		if (toolBar.getItemCount() > 0) {
 			ToolItem item = toolBar.getItem(0);
 			showPage((CatalogElementPage) (item.getData()));
 		}
 		return composite1;
 	}
+	
+	protected void createCatalogEntryButton() {
+		CatalogElementPage page = new CatalogEntryPage();
+		page.createControl(pageContainer);
+		ToolItem toolItem = new ToolItem(toolBar, SWT.CHECK);
+		toolItem.setImage(catalogEntryToolBarImage);
+		toolItem.setText(XMLCatalogMessages.EditCatalogEntryDialog_catalogEntryLabel);
+		toolItem.setData(page);
+		toolItem.addSelectionListener(new ToolBarItemSelectionChangeListener());
+		toolItem.setSelection(true);
+	}
 
 	protected void createNextCatalogButton() {
 		CatalogElementPage page = new NextCatalogPage();
 		page.createControl(pageContainer);
-		ToolItem toolItem = new ToolItem(toolBar, SWT.PUSH);
+		ToolItem toolItem = new ToolItem(toolBar, SWT.CHECK);
 		toolItem.setImage(nextCatalogToolBarImage);
 		toolItem.setText(XMLCatalogMessages.EditCatalogEntryDialog_nextCatalogLabel);
 		toolItem.setData(page);
 		toolItem.addSelectionListener(new ToolBarItemSelectionChangeListener());
 
 	}
+	
+	protected void createRewriteButton() {
+		CatalogElementPage page = new RewriteEntryPage();
+		page.createControl(pageContainer);
+		ToolItem toolItem = new ToolItem(toolBar, SWT.CHECK);
+		toolItem.setImage(rewriteToolBarImage);
+		toolItem.setText(XMLCatalogMessages.EditCatalogEntryDialog_rewriteEntryLabel);
+		toolItem.setData(page);
+		toolItem.addSelectionListener(new ToolBarItemSelectionChangeListener());
+	}
+	
+	protected void createDelegateCatalogButton() {
+		CatalogElementPage page = new DelegateCatalogPage();
+		page.createControl(pageContainer);
+		ToolItem toolItem = new ToolItem(toolBar, SWT.CHECK);
+		toolItem.setImage(delegateCatalogToolBarImage);
+		toolItem.setText(XMLCatalogMessages.EditCatalogEntryDialog_delegateCatalogLabel);
+		toolItem.setData(page);
+		toolItem.addSelectionListener(new ToolBarItemSelectionChangeListener());
+	}
+	
+	protected void createSuffixCatalogButton() {
+		CatalogElementPage page = new SuffixEntryPage();
+		page.createControl(pageContainer);
+		ToolItem toolItem = new ToolItem(toolBar, SWT.CHECK);
+		toolItem.setImage(suffixToolBarImage);
+		toolItem.setText(XMLCatalogMessages.EditCatalogEntryDialog_suffixEntryLabel);
+		toolItem.setData(page);
+		toolItem.addSelectionListener(new ToolBarItemSelectionChangeListener());
+	}
+	
+	
+	
+	
+	
+	
+//
+//	protected void createRewriteEntryButton() {
+//		CatalogElementPage page = new RewriteEntryPage();
+//		page.createControl(pageContainer);
+//		Button radioButton = new Button(elementTypeComposite, SWT.RADIO);
+//		radioButton.setText(XMLCatalogMessages.EditCatalogEntryDialog_rewriteEntryLabel);
+//		radioButton.setData(page);
+//		radioButton.addSelectionListener(new RadioItemSelectionChangeListener());
+//	}
+//
+//	protected void createSuffixEntryButton() {
+//		CatalogElementPage page = new SuffixEntryPage();
+//		page.createControl(pageContainer);
+//		Button radioButton = new Button(elementTypeComposite, SWT.RADIO);
+//		radioButton.setText(XMLCatalogMessages.EditCatalogEntryDialog_suffixEntryLabel);
+//		radioButton.setData(page);
+//		radioButton.addSelectionListener(new RadioItemSelectionChangeListener());
+//	}
+//
+//	protected void createDelegateCatalogButton() {
+//		CatalogElementPage page = new DelegateCatalogPage();
+//		page.createControl(pageContainer);
+//		Button radioButton = new Button(elementTypeComposite, SWT.RADIO);
+//		radioButton.setText(XMLCatalogMessages.EditCatalogEntryDialog_delegateCatalogLabel);
+//		radioButton.setData(page);
+//		radioButton.addSelectionListener(new RadioItemSelectionChangeListener());
+//
+//	}
 
 	protected ICatalogElement getCatalogElement() {
 		return fCatalogElement;
@@ -971,6 +1739,7 @@ public class EditCatalogEntryDialog extends Dialog {
 		pageContainer.setVisible(true);
 		pageContainer.showPage(selectedPage.getControl());
 		fCatalogElement = selectedPage.getData();
+		selectedPage.refresh();
 		return true;
 	}
 
