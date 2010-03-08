@@ -138,25 +138,43 @@ public class TestEmbededCSSContentAssistComputers extends TestCase {
 	public void testDeclarationPropertyProposals_EmptyQuotes_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
 		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
-		runProposalTest("test3.html", 39, 13, expectedProposalCounts);
+		runProposalTest("test3.html", 33, 12, expectedProposalCounts);
 	}
 	
 	public void testDeclarationValueProposals_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
 		int[] expectedProposalCounts = new int[] {11, 0, 11, 11};
-		runProposalTest("test3.html", 33, 26, expectedProposalCounts);
+		runProposalTest("test3.html", 35, 26, expectedProposalCounts);
 	}
 	
 	public void testFinishDeclarationProposals_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
 		int[] expectedProposalCounts = new int[] {4, 0, 4, 4};
-		runProposalTest("test3.html", 35, 25, expectedProposalCounts);
+		runProposalTest("test3.html", 37, 25, expectedProposalCounts);
 	}
 	
 	public void testFinishDeclarationValueProposals_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
 		int[] expectedProposalCounts = new int[] {4, 0, 4, 4};
-		runProposalTest("test3.html", 37, 34, expectedProposalCounts);
+		runProposalTest("test3.html", 39, 34, expectedProposalCounts);
+	}
+	
+	public void testDeclarationPropertyProposals_AfterSemicolon_NoSpace_StyleAttribute() throws Exception {
+		// default page, templates page, standard page, default page again
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		runProposalTest("test3.html", 41, 40, expectedProposalCounts);
+	}
+	
+	public void testDeclarationPropertyProposals_AfterSemicolon_BeforeSpace_StyleAttribute() throws Exception {
+		// default page, templates page, standard page, default page again
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		runProposalTest("test3.html", 43, 40, expectedProposalCounts);
+	}
+	
+	public void testDeclarationPropertyProposals_AfterSemicolon_AfterSpace_StyleAttribute() throws Exception {
+		// default page, templates page, standard page, default page again
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		runProposalTest("test3.html", 43, 41, expectedProposalCounts);
 	}
 	
 	/**
