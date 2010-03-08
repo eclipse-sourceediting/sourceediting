@@ -302,15 +302,9 @@ class CSSContentAssistContext {
 			fTextToReplace = ""; //$NON-NLS-1$
 			fTextToCompare = ""; //$NON-NLS-1$
 		} else {
-			//math to deal with leading quote
-			int targetPos = fTargetPos;
-			if(fQuote != 0) {
-				targetPos--;
-			}
-			
 			String regionText = documentRegion.getText(targetRegion);
 			int regionStart = documentRegion.getStartOffset(targetRegion);
-			if (!fSelected && (regionStart == fCursorPos || regionText.trim().length() == 0 || regionStart + regionText.length() - 1 < targetPos)) {
+			if (!fSelected && (regionStart == fCursorPos || regionText.trim().length() == 0 || regionStart + regionText.length() - 1 < this.fTargetPos)) {
 				// to insertion
 				fReplaceBegin = fCursorPos;
 				fTextToReplace = ""; //$NON-NLS-1$
