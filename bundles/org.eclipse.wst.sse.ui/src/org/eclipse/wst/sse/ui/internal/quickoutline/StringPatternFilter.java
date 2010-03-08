@@ -64,6 +64,10 @@ public class StringPatternFilter extends ViewerFilter {
 		
 	}
 
+	public StringMatcher getStringMatcher() {
+		return fStringMatcher;
+	}
+
 	/**
 	 * String matcher based on {@link org.eclipse.ui.internal.misc.StringMatcher}
 	 */

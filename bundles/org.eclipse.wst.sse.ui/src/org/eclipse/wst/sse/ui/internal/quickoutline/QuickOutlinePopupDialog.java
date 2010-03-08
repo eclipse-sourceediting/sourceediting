@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2010 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.quickoutline;
 
 import org.eclipse.jface.action.IMenuManager;
@@ -47,6 +57,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.IContentSelectionProvider;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.quickoutline.StringPatternFilter.StringMatcher;
 import org.eclipse.wst.sse.ui.quickoutline.AbstractQuickOutlineConfiguration;
 
 /**
@@ -151,12 +162,16 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 				if (length > 0 && text.charAt(length -1 ) != '*') {
 					text = text + '*';
 				}
-				fFilter.updatePattern(text);
-				stringMatcherUpdated();
+				setMatcherString(text, true);
 			}
 		});
 	}
 
+	protected void setMatcherString(String pattern, boolean update) {
+		fFilter.updatePattern(pattern);
+		if (update)
+			stringMatcherUpdated();
+	}
 	/**
 	 * The string matcher has been modified. The default implementation
 	 * refreshes the view and selects the first matched element
@@ -166,9 +181,36 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		fTreeViewer.getControl().setRedraw(false);
 		fTreeViewer.refresh();
 		fTreeViewer.expandAll();
-		if (fTreeViewer.getTree().getItemCount() > 0)
-			fTreeViewer.getTree().setSelection(fTreeViewer.getTree().getItem(0));
+		selectFirstMatch();
 		fTreeViewer.getControl().setRedraw(true);
+	}
+
+	private void selectFirstMatch() {
+		TreeItem item = findItem(fTreeViewer.getTree().getItems(), fFilter.getStringMatcher());
+		if (item != null) {
+			fTreeViewer.getTree().setSelection(item);
+		}
+		else {
+			fTreeViewer.setSelection(StructuredSelection.EMPTY);
+		}
+	}
+
+	private TreeItem findItem(TreeItem[] items, StringMatcher matcher) {
+		if (matcher == null)
+			return items.length > 0 ? items[0] : null;
+		int length = items.length;
+		TreeItem result = null;
+		for (int i = 0; i < length; i++) {
+			if (matcher.match(items[i].getText()))
+				return items[i];
+			if (items[i].getItemCount() > 0) {
+				result = findItem(items[i].getItems(), matcher);
+				if (result != null)
+					return result;
+			}
+				
+		}
+		return result;
 	}
 
 	protected IDialogSettings getDialogSettings() {
