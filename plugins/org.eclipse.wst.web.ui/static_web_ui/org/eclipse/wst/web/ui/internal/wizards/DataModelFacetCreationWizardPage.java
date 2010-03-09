@@ -512,8 +512,8 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		serverTargetCombo = new Combo(group, SWT.BORDER | SWT.READ_ONLY);
 		serverTargetCombo.setLayoutData(gdhfill());
 		Button newServerTargetButton = new Button(group, SWT.NONE);
-		GridDataFactory.defaultsFor(newServerTargetButton).applyTo(newServerTargetButton);
 		newServerTargetButton.setText(Resources.newRuntimeButton);
+		GridDataFactory.defaultsFor(newServerTargetButton).applyTo(newServerTargetButton);		
 		newServerTargetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
