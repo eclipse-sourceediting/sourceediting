@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.refactor.handlers.MakeAnonymousTypeGobalHandler;
 import org.eclipse.wst.xsd.ui.internal.refactor.structure.MakeAnonymousTypeGlobalCommand;
 import org.eclipse.wst.xsd.ui.internal.refactor.structure.MakeTypeGlobalProcessor;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactoringWizardMessages;
@@ -30,6 +31,9 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.w3c.dom.Node;
 
+/**
+ * @deprecated Use {@link MakeAnonymousTypeGobalHandler}
+ */
 public class MakeAnonymousTypeGlobalAction extends XSDSelectionDispatchAction {
 
 	private String fParentName;

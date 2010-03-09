@@ -23,6 +23,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringComponent;
 import org.eclipse.wst.xsd.ui.internal.refactor.XMLRefactoringComponent;
+import org.eclipse.wst.xsd.ui.internal.refactor.handlers.RenameHandler;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameComponentProcessor;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactoringWizardMessages;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RenameRefactoringWizard;
@@ -33,6 +34,9 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.w3c.dom.Node;
 
+/**
+ * @deprecated Use {@link RenameHandler} 
+ */
 public class RenameComponentAction extends XSDSelectionDispatchAction {
 
 	private XSDNamedComponent selectedComponent;

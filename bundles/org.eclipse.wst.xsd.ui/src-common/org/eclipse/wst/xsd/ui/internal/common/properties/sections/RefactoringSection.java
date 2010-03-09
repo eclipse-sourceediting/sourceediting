@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.ISelectionMapper;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.refactor.actions.RenameComponentAction;
+import org.eclipse.wst.xsd.ui.internal.refactor.handlers.RenameHandler;
 import org.eclipse.xsd.XSDSchema;
 
 public abstract class RefactoringSection extends AbstractSection implements IHyperlinkListener
@@ -45,9 +45,8 @@ public abstract class RefactoringSection extends AbstractSection implements IHyp
     ISelection selection = new StructuredSelection(input);
     ISelectionMapper mapper = (ISelectionMapper) editor.getAdapter(ISelectionMapper.class);
     selection = mapper != null ? mapper.mapSelection(selection) : selection;
-    RenameComponentAction action = new RenameComponentAction(selection, schema);
-    action.update(selection);
-    action.run();
+    RenameHandler renameHandler = new RenameHandler();
+    renameHandler.execute(selection, schema);
   }
 
   protected void showLink(boolean isVisible)

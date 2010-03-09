@@ -385,72 +385,10 @@
             label="%search.references.label"
             class="org.eclipse.wst.xsd.ui.internal.search.actions.XSDSearchReferencesGroupActionDelegate"> 
          </action>
-         <action
-            id="org.eclipse.wst.xsd.ui.refactoring.menu.refactorGroup.object" 
-            enablesFor="1"
-            style="pulldown"
-            menubarPath="refactoring-slot"
-            label="%refactoringActionSet.label" 
-            class="org.eclipse.wst.xsd.ui.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
-         </action>   
+  
       </objectContribution>         
-      <!-- here we add the 'refactor' menu item to the source view -->
-      <viewerContribution
-        id="org.eclipse.wst.xsd.ui.refactoring.menu.source"
-        targetID="org.eclipse.wst.xsd.core.xsdsource.source.EditorContext">
-	    <action id="org.eclipse.wst.xsd.ui.refactoring.menu.refactorGroup.source"
-       		style="pulldown"
-            menubarPath="additions"
-            label="%refactoring.menu.label" 
-            class="org.eclipse.wst.xsd.ui.internal.refactor.actions.XSDRefactorGroupActionDelegate"> 
-  	    </action>
-       </viewerContribution>
-		<viewerContribution
-			targetID="org.eclipse.wst.xsd.core.xsdsource.source.RulerContext"
-			id="org.eclipse.wst.xsd.ui.ruler.context.actions">
-			<action
-				label="%AddTask.label"
-				helpContextId="org.eclipse.ui.AddTask_action_context"
-				class="org.eclipse.ui.texteditor.TaskRulerAction"
-				tooltip="%AddTask.tooltip"
-				menubarPath="additions"
-				id="org.eclipse.ui.texteditor.TaskRulerAction">
-			</action>
-			<action
-				label="%AddBookmark.label"
-				helpContextId="org.eclipse.ui.bookmark_action_context"
-				class="org.eclipse.ui.texteditor.BookmarkRulerAction"
-				tooltip="%AddBookmark.tooltip"
-				menubarPath="additions"
-				id="org.eclipse.ui.texteditor.BookmarkRulerAction">
-			</action>
-		</viewerContribution>
-
+    
      </extension>
-
-	
-	<!-- 
-		The following extension to the file context menu is temporary until resource 
-		navigator will provide allow to extend refactor menu        
-	-->
-	
-	<!--extension point="org.eclipse.ui.popupMenus">
-	 <objectContribution
-		objectClass="org.eclipse.core.resources.IFile"
-		nameFilter="*.xsd"
-		id="org.wst.xsd.ui.rename">
-		<menu id="refactorXSDResource" path="additions" label="%refactoring.menu.label">
-		  <separator name="refactor"/>
-		</menu>
-	<action
-		label="%refactoring.renameAction.label"
-		menubarPath="refactorXSDResource/refactor"
-		class="org.eclipse.wst.xsd.ui.internal.refactor.actions.RenameResourceActionDelegate"
-		enablesFor="1"
-		id="org.eclipse.wst.xsd.ui.refactoring.actions.RenameResource">
-	 </action>
-	 </objectContribution>
-	</extension-->	
 
 	<extension point="org.eclipse.ui.commands">
 		<command
@@ -511,6 +449,120 @@
            </visibleWhen>         
         </command>        
      </menuContribution>
+     <menuContribution locationURI="popup:refactorPopupMenuId">
+        <command
+              commandId="org.eclipse.wst.xsd.ui.refactor.rename.element"
+              label="%refactoring.renameAction.label">
+           <visibleWhen
+                 checkEnabled="false">
+           </visibleWhen>
+        </command>
+    </menuContribution>
+    <menuContribution
+          locationURI="popup:org.eclipse.wst.xsd.ui.refactorMenuId">
+          <command
+                commandId="org.eclipse.wst.xsd.ui.refactor.rename.element"
+                label="%refactoring.renameAction.label">
+             <visibleWhen
+                   checkEnabled="false">
+             </visibleWhen>
+        </command>
+    </menuContribution>
+	<menuContribution
+          locationURI="menu:refactorMenuId">
+       <command
+             commandId="org.eclipse.wst.xsd.ui.refactor.rename.element"
+             label="%refactoring.renameAction.label">
+          <visibleWhen
+                checkEnabled="false">
+                <or>
+	                <reference
+	                      definitionId="org.eclipse.wst.xsd.ui.editor.active.designView.definition">
+	                </reference>
+	                <reference
+	                      definitionId="org.eclipse.wst.xsd.ui.editor.active.sourceView.definition">
+	                </reference>
+                </or>
+          </visibleWhen>
+          
+        </command>
+    </menuContribution>
+    <menuContribution locationURI="popup:refactorPopupMenuId">
+        <command
+              commandId="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal"
+              label="%command.xsd.refactor.makeElementGlobal.element.name">
+           <visibleWhen
+                 checkEnabled="false">
+           </visibleWhen>
+        </command>
+    </menuContribution>
+    <menuContribution
+          locationURI="popup:org.eclipse.wst.xsd.ui.refactorMenuId">
+          <command
+                commandId="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal"
+                label="%command.xsd.refactor.makeElementGlobal.element.name">
+             <visibleWhen
+                   checkEnabled="false">
+             </visibleWhen>
+        </command>
+    </menuContribution>
+	<menuContribution
+          locationURI="menu:refactorMenuId">
+       <command
+             commandId="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal"
+             label="%command.xsd.refactor.makeElementGlobal.element.name">
+          <visibleWhen
+                checkEnabled="false">
+                <or>
+	                <reference
+	                      definitionId="org.eclipse.wst.xsd.ui.editor.active.designView.definition">
+	                </reference>
+	                <reference
+	                      definitionId="org.eclipse.wst.xsd.ui.editor.active.sourceView.definition">
+	                </reference>
+                </or>
+          </visibleWhen>
+          
+        </command>
+    </menuContribution>
+     <menuContribution locationURI="popup:refactorPopupMenuId">
+        <command
+              commandId="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal"
+              label="%command.xsd.refactor.makeTypeGlobal.element.name">
+           <visibleWhen
+                 checkEnabled="false">
+           </visibleWhen>
+        </command>
+    </menuContribution>
+    <menuContribution
+          locationURI="popup:org.eclipse.wst.xsd.ui.refactorMenuId">
+          <command
+                commandId="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal"
+                label="%command.xsd.refactor.makeTypeGlobal.element.name">
+             <visibleWhen
+                   checkEnabled="false">
+             </visibleWhen>
+        </command>
+    </menuContribution>
+	<menuContribution
+          locationURI="menu:refactorMenuId">
+       <command
+             commandId="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal"
+             label="%command.xsd.refactor.makeTypeGlobal.element.name">
+          <visibleWhen
+                checkEnabled="false">
+                <or>
+	                <reference
+	                      definitionId="org.eclipse.wst.xsd.ui.editor.active.designView.definition">
+	                </reference>
+	                <reference
+	                      definitionId="org.eclipse.wst.xsd.ui.editor.active.sourceView.definition">
+	                </reference>
+                </or>
+          </visibleWhen>
+          
+        </command>
+    </menuContribution>
   </extension>
 
  <extension point="org.eclipse.ui.navigator.navigatorContent">
@@ -518,4 +570,112 @@
 		<enablement></enablement>
 	</commonWizard>
  </extension>
+ <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.wst.xsd.ui.internal.refactor.handlers.RenameHandler"
+            commandId="org.eclipse.wst.xsd.ui.refactor.rename.element">
+         <enabledWhen>
+                <with
+	                   variable="selection">
+                 <test
+                       property="org.eclipse.wst.xsd.ui.refactor.renameEnabled">
+                 </test>
+	                
+	             </with>             
+		</enabledWhen>
+      </handler>
+     <handler
+            class="org.eclipse.wst.xsd.ui.internal.refactor.handlers.MakeLocalElementGlobalHandler"
+            commandId="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal">
+         <enabledWhen>
+                <with
+	                   variable="selection">
+                 <test
+                       property="org.eclipse.wst.xsd.ui.refactor.makeLocalElementGlobalEnabled">
+                 </test>
+	                
+	             </with>             
+		</enabledWhen>
+      </handler>
+      <handler
+            class="org.eclipse.wst.xsd.ui.internal.refactor.handlers.MakeAnonymousTypeGobalHandler"
+            commandId="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal">
+         <enabledWhen>
+                <with
+	                   variable="selection">
+                 <test
+                       property="org.eclipse.wst.xsd.ui.refactor.makeAnonymousTypeGlobalEnabled">
+                 </test>
+	                
+	             </with>             
+		</enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.wst.xsd.ui.internal.refactor.RenameEnablementTester"
+            id="org.eclipse.wst.xsd.ui.refactor.rename.enablement"
+            namespace="org.eclipse.wst.xsd.ui.refactor"
+            properties="renameEnabled"
+            type="org.eclipse.jface.viewers.ISelection">
+      </propertyTester>
+      <propertyTester
+            class="org.eclipse.wst.xsd.ui.internal.refactor.MakeLocalElementGlobalEnablementTester"
+            id="org.eclipse.wst.xsd.ui.refactor.makeLocalElementGlobalEnabled"
+            namespace="org.eclipse.wst.xsd.ui.refactor"
+            properties="makeLocalElementGlobalEnabled"
+            type="org.eclipse.jface.viewers.ISelection">
+      </propertyTester>
+       <propertyTester
+            class="org.eclipse.wst.xsd.ui.internal.refactor.MakeAnonymousTypsGlobalEnablementTester"
+            id="org.eclipse.wst.xsd.ui.refactor.makeAnonymousTypeGlobalEnabled"
+            namespace="org.eclipse.wst.xsd.ui.refactor"
+            properties="makeAnonymousTypeGlobalEnabled"
+            type="org.eclipse.jface.viewers.ISelection">
+      </propertyTester>
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="%XSD_DESIGN_VIEW_DESCRIPTION"
+            id="org.eclipse.wst.xsd.ui.editor.designView"
+            name="%XSD_DESIGN_VIEW">
+      </context>
+            <context
+            description="%XSD_SOURCE_VIEW_DESCRIPTION"
+            id="org.eclipse.wst.xsd.ui.editor.sourceView"
+            name="%XSD_SOURCE_VIEW">
+      </context>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.eclipse.wst.xsd.ui.editor.active.designView.definition">
+         <with
+               variable="activeContexts">
+            <iterate
+                  operator="or">
+               <equals
+                     value="org.eclipse.wst.xsd.ui.editor.designView">
+               </equals>
+            </iterate>
+         </with>
+      </definition>
+      <definition
+            id="org.eclipse.wst.xsd.ui.editor.active.sourceView.definition">
+         <with
+               variable="activeContexts">
+            <iterate
+                  operator="or">
+               <equals
+                     value="org.eclipse.wst.xsd.ui.editor.sourceView">
+               </equals>
+            </iterate>
+         </with>
+      </definition>
+   </extension>  
+   
 </plugin>

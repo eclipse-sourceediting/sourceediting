@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,8 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ContextMenuParticipant;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorModeManager;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.refactor.IXSDRefactorConstants;
 
 
 public class DesignViewContextMenuProvider extends ContextMenuProvider
@@ -111,7 +113,8 @@ public class DesignViewContextMenuProvider extends ContextMenuProvider
           }
         }
         menu.add(new Separator());       
-        menu.add(new Separator("refactoring-slot"));  //$NON-NLS-1$
+        IMenuManager subMenu = new MenuManager(Messages._UI_REFACTOR_CONTEXT_MENU, IXSDRefactorConstants.REFACTOR_CONTEXT_MENU_ID); //$NON-NLS-1$
+        menu.add(subMenu);
         menu.add(new Separator());       
         menu.add(new Separator("search-slot"));        //$NON-NLS-1$
         menu.add(new Separator());

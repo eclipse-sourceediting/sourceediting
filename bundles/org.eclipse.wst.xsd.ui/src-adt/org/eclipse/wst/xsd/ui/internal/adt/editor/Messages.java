@@ -49,4 +49,5 @@ public class Messages extends NLS
   public static String _UI_ACTION_CAPTURE_SCREEN_DEFAULT_FILE_NAME;
   public static String _UI_ACTION_CAPTURE_SCREEN_FILE_SAVE_DIALOG_TITLE;
   public static String _UI_HOVER_BACK_TO_SCHEMA;
+  public static String _UI_REFACTOR_CONTEXT_MENU;
 }

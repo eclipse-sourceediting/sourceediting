@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
@@ -52,6 +54,9 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
   private int currentPage = -1;
   protected Button tableOfContentsButton;
   protected ADTFloatingToolbar floatingToolbar;
+  private IContextActivation contextActivation;
+  public final static String DESIGN_VIEW_CONTEXT = "org.eclipse.wst.xsd.ui.editor.designView"; //$NON-NLS-1$
+  public final static String SOURCE_VIEW_CONTEXT = "org.eclipse.wst.xsd.ui.editor.sourceView"; //$NON-NLS-1$
   
   /**
    * Creates a multi-page editor example.
@@ -210,8 +215,12 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
 
   protected void pageChange(int newPageIndex)
   {
+	deactivateContext(contextActivation);
     currentPage = newPageIndex;
     super.pageChange(newPageIndex);
+    
+    String context = getContext(currentPage);
+    contextActivation = activateContext(context);
     
     if (newPageIndex == DESIGN_PAGE_INDEX)
     {
@@ -332,6 +341,33 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
       XSDEditorPlugin.getPlugin().setDesignPageAsDefault();
     }
     floatingToolbar = null;
+	deactivateContext(contextActivation);
     super.dispose();
   }
+  protected String getContext(int pageIndex) {
+	  if (pageIndex == DESIGN_PAGE_INDEX) {
+		  return DESIGN_VIEW_CONTEXT;
+	  } else if (pageIndex == SOURCE_PAGE_INDEX) {
+		  return SOURCE_VIEW_CONTEXT;
+	  }
+	  
+	  return null;
+  }
+  private IContextActivation activateContext(String context) {
+	  IContextService contextService = (IContextService) getSite().getService(IContextService.class);
+
+	  if (contextService != null && context != null) {
+		  return contextActivation = contextService.activateContext(context);
+	  }
+	  return null;
+  }
+  
+  private void deactivateContext(IContextActivation contextActivation) {
+	  IContextService contextService = (IContextService) getSite().getService(IContextService.class);
+
+	  if (contextService != null && contextActivation != null) {
+		  contextService.deactivateContext(contextActivation);
+	  }
+  }
+
 }

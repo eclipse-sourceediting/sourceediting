@@ -14,12 +14,16 @@ package org.eclipse.wst.xsd.ui.internal.refactor.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
+import org.eclipse.wst.xsd.ui.internal.refactor.handlers.MakeLocalElementGlobalHandler;
 import org.eclipse.wst.xsd.ui.internal.refactor.structure.MakeLocalElementGlobalCommand;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Node;
 
+/**
+ * @deprecated Use {@link MakeLocalElementGlobalHandler}
+ */
 public class MakeLocalElementGlobalAction extends XSDSelectionDispatchAction {
 
 	XSDElementDeclaration fSelectedComponent;
