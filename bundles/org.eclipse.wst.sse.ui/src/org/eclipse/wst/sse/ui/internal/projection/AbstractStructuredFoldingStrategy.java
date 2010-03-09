@@ -195,7 +195,7 @@ public abstract class AbstractStructuredFoldingStrategy
 					
 					//reconcile each effected indexed region
 					Iterator indexedRegionsIter = indexedRegions.iterator();
-					while(indexedRegionsIter.hasNext()) {
+					while(indexedRegionsIter.hasNext() && fProjectionAnnotationModel != null) {
 						IndexedRegion indexedRegion = (IndexedRegion)indexedRegionsIter.next();
 					
 						//only try to create an annotation if the index region is a valid type
@@ -497,9 +497,9 @@ public abstract class AbstractStructuredFoldingStrategy
 		Set indexedRegions = new HashSet();
 
 		//for each text region in each struct doc region find the indexed region it spans/is in
-		for(int structRegionIndex = 0; structRegionIndex < structRegions.length; ++structRegionIndex) {
+		for(int structRegionIndex = 0; structRegionIndex < structRegions.length && fProjectionAnnotationModel != null; ++structRegionIndex) {
 			ITextRegionList textRegions = structRegions[structRegionIndex].getRegions();
-			for(int textRegionIndex = 0; textRegionIndex < textRegions.size(); ++textRegionIndex) {
+			for(int textRegionIndex = 0; textRegionIndex < textRegions.size() && fProjectionAnnotationModel != null; ++textRegionIndex) {
 				int offset = structRegions[structRegionIndex].getStartOffset(textRegions.get(textRegionIndex));
 				indexedRegions.add(model.getIndexedRegion(offset));
 			}
