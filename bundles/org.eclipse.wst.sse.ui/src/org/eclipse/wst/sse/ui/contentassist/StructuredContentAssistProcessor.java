@@ -161,11 +161,14 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	/** Optionally specified preference store for listening to property change events */
 	private IPreferenceStore fPreferenceStore;
 	
+	/** The viewer this processor is associated with */
+	private ITextViewer fViewer;
+
 	/**
 	 * the {@link ITextInputListener} used to set the content type when
 	 * a document is set for this processors associated viewer.
 	 */
-	private ITextInputListener fInputListener;
+	private ITextInputListener fTextInputListener;
 	
 	/**
 	 * <p>Create a new content assist processor for a specific partition type. 
@@ -197,15 +200,16 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		
 		//The content type can not be determined until a document has been set
 		this.fContentTypeID = null;
+		this.fViewer = viewer;
 		if(viewer != null) {
-			this.fInputListener = new TextInputListener();
-			viewer.addTextInputListener(this.fInputListener);
+			this.fTextInputListener = new TextInputListener();
+			viewer.addTextInputListener(this.fTextInputListener);
 		
 			if(viewer.getDocument() != null) {
 				/* it is highly unlike the document has already been set, but check
 				 * just for sanity
 				 */
-				this.fInputListener.inputDocumentChanged(null, viewer.getDocument());
+				this.fTextInputListener.inputDocumentChanged(null, viewer.getDocument());
 			}
 		}
 		
@@ -320,6 +324,12 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	public void release() {
 		if(this.fPreferenceStore != null) {
 			this.fPreferenceStore.removePropertyChangeListener(this);
+			this.fPreferenceStore = null;
+		}
+		
+		if(this.fViewer != null) {
+			this.fViewer.removeTextInputListener(this.fTextInputListener);
+			this.fViewer = null;
 		}
 	}
 	
@@ -399,7 +409,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	}
 	
 	/**
-	 * @return the assoicated preference store
+	 * @return the associated preference store
 	 */
 	protected IPreferenceStore getPreferenceStore() {
 		return this.fPreferenceStore;
