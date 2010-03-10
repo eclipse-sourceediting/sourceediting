@@ -471,12 +471,12 @@ public class ModelManagerImpl implements IModelManager {
 					_doCommonGetModel(file, id, sharedObject,rwType);
 					break;
 				} else if (sharedObject == testObject) {
+					SYNC.release();
 					synchronized(sharedObject) {
 						if (sharedObject.theSharedModel!=null) {
 							_incrCount(sharedObject, rwType);
 						}
 					}
-					SYNC.release();
 					break;
 				} else {
 					// we got a different object than what we were expecting
