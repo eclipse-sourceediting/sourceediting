@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
 
 /**
  * Manages creation and caching (ordered MRU) of TaglibHelpers.
@@ -70,6 +71,22 @@ public class TaglibHelperManager implements IElementChangedListener {
 					handleClasspathChange(changed, i, proj);
 				}
 			}
+		}
+		else if (delta.getElement().getElementType() == IJavaElement.COMPILATION_UNIT) {
+			IJavaElementDelta[] changed = delta.getChangedChildren();
+			for (int i = 0; i < changed.length; i++) {
+				if ((changed[i].getFlags() & IJavaElementDelta.F_SUPER_TYPES) != 0) {
+					IJavaElement element = changed[i].getElement();
+					handleSuperTypeChange(element);
+				}
+			}
+		}
+	}
+
+	private void handleSuperTypeChange(IJavaElement element) {
+		IJavaProject project = element.getJavaProject();
+		if (element instanceof IType) {
+			fCache.invalidate(project.getProject().getName(), ((IType) element).getFullyQualifiedName());
 		}
 	}
     

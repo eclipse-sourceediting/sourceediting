@@ -155,7 +155,22 @@ class TaglibHelperCache {
             }
         }
     }
-    
+
+    public final synchronized void invalidate(String projectName, String className) {
+    	Entry entry = null;
+        Iterator it = fHelpers.iterator();
+        while(it.hasNext()) {
+            entry = (Entry)it.next();
+            if(entry.getProjectName().equals(projectName)) {
+            	entry.getHelper().invalidateClass(className);
+                if(DEBUG) { 
+                    Logger.log(Logger.INFO, "(-) TaglibHelperCache invalidated: " + className); //$NON-NLS-1$
+                    printCacheContents();
+                }
+                break;
+            }
+        }
+    }
     private void printCacheContents() {
         StringBuffer debugString = new StringBuffer();
         debugString.append("\n-----------------------------------------------------------"); //$NON-NLS-1$

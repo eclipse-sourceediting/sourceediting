@@ -12,13 +12,15 @@ package org.eclipse.jst.jsp.core.internal.taglib;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
@@ -32,8 +34,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
@@ -68,6 +72,9 @@ import com.ibm.icu.text.MessageFormat;
  */
 public class TaglibHelper {
 
+	private static final String ITERATION_QUALIFIER = "javax.servlet.jsp.tagext"; //$NON-NLS-1$
+	private static final String ITERATION_NAME = "IterationTag"; //$NON-NLS-1$
+	
 	// for debugging
 	private static final boolean DEBUG;
 	static {
@@ -87,6 +94,8 @@ public class TaglibHelper {
 	 */
 	private Set fNotFoundClasses = null;
 
+	private Map fClassMap = null;
+
 	/**
 	 * Used to keep the {@link #fNotFoundClasses} cache clean when memory is low
 	 */
@@ -98,6 +107,92 @@ public class TaglibHelper {
 		fMemoryListener = new MemoryListener();
 		fMemoryListener.connect();
 		fNotFoundClasses = new HashSet();
+		fClassMap = Collections.synchronizedMap(new HashMap());
+	}
+
+	/**
+	 * Checks that <code>type</code> implements an IterationTag
+	 * 
+	 * @param type
+	 * @return true if <code>type</code> implements IterationTag
+	 * @throws JavaModelException
+	 * @throws ClassNotFoundException thrown when the <code>type</code> is null
+	 */
+	private boolean isIterationTag(IType type) throws JavaModelException, ClassNotFoundException {
+		if (type == null) {
+			throw new ClassNotFoundException();
+		}
+		synchronized (fClassMap) {
+			if (fClassMap.containsKey(type.getFullyQualifiedName()))
+				return ((Boolean) fClassMap.get(type.getFullyQualifiedName())).booleanValue();
+		}
+
+		String signature;
+		String qualifier;
+		String name;
+		String[] interfaces = type.getSuperInterfaceTypeSignatures();
+		boolean isIteration = false;
+		// Check any super interfaces for the iteration tag
+		for (int i = 0; i < interfaces.length; i++) {
+			// For source files, the interface may need to be resolved
+			String erasureSig = Signature.getTypeErasure(interfaces[i]);
+			qualifier = Signature.getSignatureQualifier(erasureSig);
+			name = Signature.getSignatureSimpleName(erasureSig);
+			// Interface type is unresolved
+			if (erasureSig.charAt(0) == Signature.C_UNRESOLVED) {
+				String[][] types = type.resolveType(getQualifiedType(qualifier, name));
+				// Type was resolved
+				if (types != null && types.length > 0) {
+					isIteration = handleInterface(type, types[0][0], types[0][1]);
+				}
+			}
+			else {
+				isIteration = handleInterface(type, qualifier, name);
+			}
+			if (isIteration)
+				return true;
+		}
+
+		signature = type.getSuperclassTypeSignature();
+		if (signature != null) {
+			String erasureSig = Signature.getTypeErasure(signature);
+			qualifier = Signature.getSignatureQualifier(erasureSig);
+			name = Signature.getSignatureSimpleName(erasureSig);
+			// superclass was unresolved
+			if (erasureSig.charAt(0) == Signature.C_UNRESOLVED) {
+				String[][] types = type.resolveType(getQualifiedType(qualifier, name));
+				// Type was resolved
+				if (types != null && types.length > 0) {
+					isIteration = isIterationTag(fJavaProject.findType(types[0][0], types[0][1]));
+				}
+			}
+			else {
+				isIteration = isIterationTag(fJavaProject.findType(qualifier, name));
+			}
+		}
+		fClassMap.put(type.getFullyQualifiedName(), Boolean.valueOf(isIteration));
+		return isIteration;
+	}
+
+	private boolean handleInterface(IType type, String qualifier, String name) throws JavaModelException, ClassNotFoundException {
+		boolean isIteration = false;
+		// Qualified interface is an iteration tag
+		if (ITERATION_QUALIFIER.equals(qualifier) && ITERATION_NAME.equals(name))
+			isIteration = true;
+		// Check ancestors of this interface
+		else
+			isIteration = isIterationTag(fJavaProject.findType(qualifier, name));
+
+		fClassMap.put(type.getFullyQualifiedName(), Boolean.valueOf(isIteration));
+		return isIteration;
+	}
+
+	private String getQualifiedType(String qualifier, String name) {
+		StringBuffer qual = new StringBuffer(qualifier);
+		if (qual.length() > 0)
+			qual.append('.');
+		qual.append(name);
+		return qual.toString();
 	}
 
 	private boolean isIterationTag(TLDElementDeclaration elementDecl, IStructuredDocument document, ITextRegionCollection customTag, List problems) {
@@ -106,10 +201,11 @@ public class TaglibHelper {
 			return false;
 
 		try {
-			Class tagClass = Class.forName(className, true, getClassloader());
-			if (tagClass != null) {
-				return IterationTag.class.isInstance(tagClass.newInstance());
+			synchronized (fClassMap) {
+				if (fClassMap.containsKey(className))
+					return ((Boolean) fClassMap.get(className)).booleanValue();
 			}
+			return isIterationTag(fJavaProject.findType(className));
 		} catch (ClassNotFoundException e) {
 			//the class could not be found so add it to the cache
 			fNotFoundClasses.add(className);
@@ -119,14 +215,11 @@ public class TaglibHelper {
 				problems.add(createdProblem);
 			if (DEBUG)
 				Logger.logException(className, e);
-		} catch (IllegalAccessException e) {
+		} catch (JavaModelException e) {
 			if (DEBUG)
 				Logger.logException(className, e);
-		} catch (InstantiationException e) {
-			if (DEBUG)
-				Logger.logException(className, e);
-		}  catch (Exception e) {
-			// this is 3rd party code, need to catch all exceptions
+		} catch (Exception e) {
+			// this is 3rd party code, need to catch all errors
 			if (DEBUG)
 				Logger.logException(className, e);
 		} catch (Error e) {
@@ -784,8 +877,13 @@ public class TaglibHelper {
 		fJavaProject = null;
 		fProject = null;
 		fNotFoundClasses = null;
+		fClassMap = null;
 		fMemoryListener.disconnect();
 		fMemoryListener = null;
+	}
+
+	public void invalidateClass(String className) {
+		fClassMap.remove(className);
 	}
 
 	/**
@@ -825,6 +923,7 @@ public class TaglibHelper {
 			 * and rebuilt at the expense of processing time
 			 */
 			fNotFoundClasses.clear();
+			fClassMap.clear();
 		}
 
 	}
