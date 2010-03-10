@@ -23,4 +23,14 @@
 <required>false</required>
 </attribute>
 </tag>
+<tag>
+<name>list</name>
+<tagclass>java.util.List</tagclass>
+<bodycontent>JSP</bodycontent>
+</tag>
+<tag>
+<name>uberloop</name>
+<tagclass>org.eclipse.UberLoopTag</tagclass>
+<bodycontent>JSP</bodycontent>
+</tag>
 </taglib>

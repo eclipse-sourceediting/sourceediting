@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.tests.translation;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,6 +40,8 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
+import org.eclipse.jst.jsp.core.internal.taglib.CustomTag;
+import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
 import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
@@ -47,6 +50,7 @@ import org.eclipse.jst.jsp.core.tests.validation.ReporterForTest;
 import org.eclipse.jst.jsp.core.tests.validation.ValidationContextForTest;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
@@ -601,6 +605,58 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		finally {
 			if (model != null)
 				model.releaseFromEdit();
+		}
+	}
+
+	public void testTaglibHelperWrongHierarchy() throws Exception { 
+		String testName = "testIterationTags";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		if (!project.isAccessible()) {
+			// Create new project
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
+			assertTrue(project.exists());
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+		}
+		waitForBuildAndValidation(project);
+		TaglibHelper helper = new TaglibHelper(project);
+		IFile testFile = project.getFile("/WebContent/iterationTester.jsp");
+		assertTrue("iterationTester.jsp is not accessible", testFile.isAccessible());
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(testFile);
+			IStructuredDocument doc = model.getStructuredDocument();
+			CustomTag tag = helper.getCustomTag("plain:list", doc, null, new ArrayList());
+			assertFalse("plain:list should not be an IterationTag", tag.isIterationTag());
+		}
+		finally {
+			if (model != null)
+				model.releaseFromRead();
+		}
+	}
+
+	public void testTaglibHelperUnresolvedSupertype() throws Exception { 
+		String testName = "testIterationTags";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		if (!project.isAccessible()) {
+			// Create new project
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
+			assertTrue(project.exists());
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+		}
+		waitForBuildAndValidation(project);
+		TaglibHelper helper = new TaglibHelper(project);
+		IFile testFile = project.getFile("/WebContent/iterationTester.jsp");
+		assertTrue("iterationTester.jsp is not accessible", testFile.isAccessible());
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(testFile);
+			IStructuredDocument doc = model.getStructuredDocument();
+			CustomTag tag = helper.getCustomTag("plain:uberloop", doc, null, new ArrayList());
+			assertTrue("plain:uberloop should be an IterationTag", tag.isIterationTag());
+		}
+		finally {
+			if (model != null)
+				model.releaseFromRead();
 		}
 	}
 }
