@@ -455,6 +455,9 @@
               label="%refactoring.renameAction.label">
            <visibleWhen
                  checkEnabled="false">
+               	<reference
+                   	definitionId="org.eclipse.wst.xsd.ui.editor.active.sourceView.definition">
+               	</reference>
            </visibleWhen>
         </command>
     </menuContribution>
@@ -493,6 +496,9 @@
               label="%command.xsd.refactor.makeElementGlobal.element.name">
            <visibleWhen
                  checkEnabled="false">
+               <reference
+                    definitionId="org.eclipse.wst.xsd.ui.editor.active.sourceView.definition">
+               </reference>
            </visibleWhen>
         </command>
     </menuContribution>
@@ -531,6 +537,9 @@
               label="%command.xsd.refactor.makeTypeGlobal.element.name">
            <visibleWhen
                  checkEnabled="false">
+               <reference
+                  definitionId="org.eclipse.wst.xsd.ui.editor.active.sourceView.definition">
+               </reference>
            </visibleWhen>
         </command>
     </menuContribution>
