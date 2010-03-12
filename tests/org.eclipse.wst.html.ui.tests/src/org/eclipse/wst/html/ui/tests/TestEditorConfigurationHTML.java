@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *   Jens Lukowski/Innoopract - initial renaming/restructuring
  *******************************************************************************/
 package org.eclipse.wst.html.ui.tests;
+
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -47,9 +49,13 @@ public class TestEditorConfigurationHTML extends TestCase {
 	}
 	
 	public void testGetDocumentationTextHover() {
-		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, IHTMLPartitions.HTML_DEFAULT);
-		assertNotNull("no documentation text hover for " + IHTMLPartitions.HTML_DEFAULT, o);
+		List configs = ExtendedConfigurationBuilder.getInstance().getConfigurations(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, IHTMLPartitions.HTML_DEFAULT);
+		assertFalse("no documentation text hover for " + IHTMLPartitions.HTML_DEFAULT, configs.isEmpty());
 		// check for over-qualified subclasses
-		assertEquals("unexpected documentation text hover for " + IHTMLPartitions.HTML_DEFAULT, HTMLTagInfoHoverProcessor.class, o.getClass());
+		boolean found = false;
+		for (int i = 0; i < configs.size() && !found; i++) {
+			found = configs.get(i).getClass() == HTMLTagInfoHoverProcessor.class;
+		}
+		assertTrue("unexpected documentation text hover for " + IHTMLPartitions.HTML_DEFAULT, found);
 	}
 }
