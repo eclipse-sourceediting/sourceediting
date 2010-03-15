@@ -51,26 +51,31 @@ class ConvertJob extends WorkspaceJob {
 			IProjectFacet projectFacet = ProjectFacetsManager.getProjectFacet(JSDT_FACET);
 			IFacetedProject facetedProject = ProjectFacetsManager.create(fProject);
 
-			if (fInstall) {
-				IProjectFacetVersion latestVersion = projectFacet.getLatestVersion();
-				facetedProject.installProjectFacet(latestVersion, null, monitor);
-			}
+			if (facetedProject != null && fProject.isAccessible()) {
+				if (fInstall) {
+					IProjectFacetVersion latestVersion = projectFacet.getLatestVersion();
+					facetedProject.installProjectFacet(latestVersion, null, monitor);
+				}
 
 
-			if (fUseExplicitWorkingCopy) {
-				IFacetedProjectWorkingCopy copy = facetedProject.createWorkingCopy();
-				Set fixed = new HashSet(facetedProject.getFixedProjectFacets());
-				fixed.add(projectFacet);
-				copy.setFixedProjectFacets(fixed);
-				copy.commitChanges(new NullProgressMonitor());
-			}
-			else {
-				Set fixed = new HashSet(facetedProject.getFixedProjectFacets());
-				if (!fixed.contains(projectFacet)) {
+				if (fUseExplicitWorkingCopy) {
+					IFacetedProjectWorkingCopy copy = facetedProject.createWorkingCopy();
+					Set fixed = new HashSet(facetedProject.getFixedProjectFacets());
 					fixed.add(projectFacet);
-					facetedProject.setFixedProjectFacets(fixed);
+					copy.setFixedProjectFacets(fixed);
+					copy.commitChanges(new NullProgressMonitor());
+				}
+				else {
+					Set fixed = new HashSet(facetedProject.getFixedProjectFacets());
+					if (!fixed.contains(projectFacet)) {
+						fixed.add(projectFacet);
+						facetedProject.setFixedProjectFacets(fixed);
+					}
 				}
 			}
+		}
+		catch (IllegalArgumentException e) {
+			// unknown facet ID, bad installation configuration?
 		}
 		catch (Exception e) {
 			Logger.logException(e);
