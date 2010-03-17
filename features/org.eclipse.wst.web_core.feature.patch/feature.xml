@@ -5,16 +5,20 @@
       version="3.0.5.qualifier"
       provider-name="%providerName">
 
-      <description>%description</description>
+   <description>
+      %description
+   </description>
 
-      <copyright>%copyright</copyright>
+   <copyright>
+      %copyright
+   </copyright>
 
-      <license url="%licenseURL">%license</license>
-
-
+   <license url="%licenseURL">
+      %license
+   </license>
 
    <requires>
-      <import feature="org.eclipse.wst.web_core.feature" version="3.0.5.v200904070030-7G2EBCAM217nJZPEYxjAcnk40uRS" patch="true"/>
+      <import feature="org.eclipse.wst.web_core.feature" version="3.1.1.v200908120400-7H77FDCAT7oGlivgHN1M2RkCBHz0" patch="true"/>
    </requires>
 
    <plugin
