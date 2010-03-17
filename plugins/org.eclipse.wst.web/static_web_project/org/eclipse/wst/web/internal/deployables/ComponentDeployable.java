@@ -20,13 +20,11 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ArtifactEdit;
 import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.internal.resources.VirtualArchiveComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualContainer;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
@@ -369,13 +367,12 @@ public abstract class ComponentDeployable extends ProjectModule {
 		IModuleFile mf = null;
 		final String archiveName = reference.getArchiveName();
 		final IVirtualComponent virtualComp = reference.getReferencedComponent();
-		final IPath archivePath = ((VirtualArchiveComponent)virtualComp).getWorkspaceRelativePath();
-		if (archivePath != null) { //In Workspace
-			IFile utilFile = ResourcesPlugin.getWorkspace().getRoot().getFile(archivePath);
-			String name = null != archiveName ? archiveName : utilFile.getName();
-			mf = new ModuleFile(utilFile, name, runtimePath.makeRelative());
+		IFile ifile = (IFile)virtualComp.getAdapter(IFile.class);
+		if (ifile != null) { //In Workspace
+			String name = null != archiveName ? archiveName : ifile.getName();
+			mf = new ModuleFile(ifile, name, runtimePath.makeRelative());
 		} else {
-			File extFile = ((VirtualArchiveComponent)virtualComp).getUnderlyingDiskFile();
+			File extFile = (File)virtualComp.getAdapter(File.class);
 			String name = null != archiveName ? archiveName : extFile.getName();
 			mf = new ModuleFile(extFile, name, runtimePath.makeRelative());
 		}
