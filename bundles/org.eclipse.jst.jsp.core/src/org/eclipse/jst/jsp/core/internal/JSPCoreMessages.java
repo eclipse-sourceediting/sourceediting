@@ -59,6 +59,7 @@ public class JSPCoreMessages extends NLS {
 	public static String TLDValidator_MissingVariable;
 	public static String TLDValidator_MissingListener;
 	public static String Initializing;
+	public static String Persisting_JSP_Translations;
 	
 	/**
 	 * @deprecated

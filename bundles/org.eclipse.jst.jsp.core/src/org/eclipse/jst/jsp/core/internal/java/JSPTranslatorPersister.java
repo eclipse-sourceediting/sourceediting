@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.LinkedList;
 import java.util.zip.CRC32;
 
 import org.eclipse.core.resources.IFile;
@@ -28,8 +29,15 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
@@ -91,11 +99,15 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 	 */
 	private IResourceDeltaVisitor fResourceDeltaVisitor;
 	
+	/** {@link Job} that actually does all the persisting */
+	protected PersisterJob fPersisterJob;
+	
 	/**
 	 * <p>Private singleton default constructor</p>
 	 */
 	private JSPTranslatorPersister() {
 		this.fResourceDeltaVisitor = new JSPResourceVisitor();
+		this.fPersisterJob = new PersisterJob();
 	}
 	
 	/**
@@ -112,16 +124,28 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
 	 */
 	public void resourceChanged(IResourceChangeEvent event) {
-		// only analyze the full (starting at root) delta hierarchy
-		IResourceDelta delta = event.getDelta();
-		if (delta != null && delta.getFullPath().toString().equals("/")) { //$NON-NLS-1$
-			try {
-				//use visitor to visit all children
-				delta.accept(this.fResourceDeltaVisitor, false);
-			} catch (CoreException e) {
-				Logger.logException("Processing resource change event delta failed, " +
-						"persisted JSPTranslators may not have been updated.", e);
-			}
+		switch(event.getType()) {
+			case IResourceChangeEvent.PRE_CLOSE:
+			case IResourceChangeEvent.PRE_DELETE:
+				//pre-close or pre-delete stop the persister job so it does not interfere
+				this.fPersisterJob.stop();
+				break;
+			case IResourceChangeEvent.POST_CHANGE:
+				//post change start up the persister job and process the delta
+				this.fPersisterJob.start();
+				
+				// only analyze the full (starting at root) delta hierarchy
+				IResourceDelta delta = event.getDelta();
+				if (delta != null && delta.getFullPath().toString().equals("/")) { //$NON-NLS-1$
+					try {
+						//use visitor to visit all children
+						delta.accept(this.fResourceDeltaVisitor, false);
+					} catch (CoreException e) {
+						Logger.logException("Processing resource change event delta failed, " +
+								"persisted JSPTranslators may not have been updated.", e);
+					}
+				}
+				break;
 		}
 	}
 	
@@ -169,15 +193,15 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 			 * of the JSPTranslator, so delete it */
 			persistedTranslatorFile.delete();
 		}catch (IOException e) {
-			Logger.logException("Could not read externalized JSPTranslator at " + persistedTranslatorFilePath, e);
+			Logger.logException("Could not read externalized JSPTranslator at " + persistedTranslatorFilePath, e); //$NON-NLS-1$
 		} catch (ClassNotFoundException e) {
-			Logger.logException("Class of a serialized JSPTranslator cannot be found", e);
+			Logger.logException("Class of a serialized JSPTranslator cannot be found", e); //$NON-NLS-1$
 		} finally {
 			if(in != null) {
 				try {
 					in.close();
 				} catch (IOException e) {
-					Logger.logException("Could not close externalized JSPTranslator that was just read", e);
+					Logger.logException("Could not close externalized JSPTranslator that was just read", e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -227,7 +251,8 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 		
 		/**
 		 * <p>For each {@link IResourceDelta} determine if its a JSP resource and if it is
-		 * update its persisted translator accordingly</p>
+		 * add the appropriate action to the {@link PersisterJob} so as not to hold up
+		 * the {@link IResourceDelta}</p>
 		 * 
 		 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
 		 */
@@ -240,13 +265,30 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 						 * else create a new persisted translation, if its a change then
 						 *   the old persisted translation will be overwritten */
 						if((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-							renamePersistedTranslator(delta.getMovedFromPath(), delta.getFullPath());
+							final File from = getPersistedFile(delta.getMovedFromPath());
+							final File to = getPersistedFile(delta.getFullPath());
+							//add the move action to the persister job
+							JSPTranslatorPersister.this.fPersisterJob.addAction(new ISafeRunnable() {
+								public void run() throws Exception {
+									renamePersistedTranslator(from, to);
+								}
+
+								public void handleException(Throwable exception) {}
+							});
 						} else {
-							IPath jspFilePath = delta.getFullPath();
-							JSPTranslator translator = getJSPTranslator(jspFilePath);
-							if(translator != null) {
-								persistTranslator(translator, jspFilePath);
-							}
+							final String filePath = getPersistedTranslatorFilePath(delta.getFullPath().toPortableString());
+							final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(delta.getFullPath());
+							//add the add action to the persister job
+							JSPTranslatorPersister.this.fPersisterJob.addAction(new ISafeRunnable() {
+								public void run() throws Exception {
+									JSPTranslator translator = getJSPTranslator(file);
+									if(translator != null) {
+										persistTranslator(translator, filePath);
+									}
+								}
+
+								public void handleException(Throwable exception) {}
+							});
 						}
 						
 						break;
@@ -255,7 +297,15 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 						/* only remove if its not a move,
 						 * if it is a move the added file delta event will move translation */
 						if((delta.getFlags() & IResourceDelta.MOVED_TO) == 0) {
-							deletePersistedTranslator(delta.getFullPath());
+							final File file = getPersistedFile(delta.getFullPath());
+							//add the delete action to the persister job
+							JSPTranslatorPersister.this.fPersisterJob.addAction(new ISafeRunnable() {
+								public void run() throws Exception {
+									deletePersistedTranslator(file);
+								}
+
+								public void handleException(Throwable exception) {}
+							});
 						}
 						break;
 					}
@@ -296,13 +346,12 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 		 * <p><b>NOTE: </b><i>This does not get the persisted translator but rather the
 		 * associated translator in memory</i></p>
 		 * 
-		 * @param jspFilePath {@link IPath} to the JSP file that the associated {@link JSPTranslator}
+		 * @param jspFile {@link IFile} to the JSP file that the associated {@link JSPTranslator}
 		 * is needed for
 		 * @return {@link JSPTranslator} associated with the given <code>jspFilePath</code>, or
 		 * <code>null</code> if none can be found.
 		 */
-		private JSPTranslator getJSPTranslator(IPath jspFilePath) {
-			IFile jspFile = ResourcesPlugin.getWorkspace().getRoot().getFile(jspFilePath);
+		protected JSPTranslator getJSPTranslator(IFile jspFile) {
 			IStructuredModel model = null;
 			JSPTranslator translator = null;
 			try {
@@ -318,11 +367,11 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 					}
 				}
 			} catch (IOException e) {
-				Logger.logException("Could not get translator for " + jspFilePath +
-						" because could not read model for same.", e);
+				Logger.logException("Could not get translator for " + jspFile.getName() + //$NON-NLS-1$
+						" because could not read model for same.", e); //$NON-NLS-1$
 			} catch (CoreException e) {
-				Logger.logException("Could not get translator for " + jspFilePath +
-						" because could not read model for same.", e);
+				Logger.logException("Could not get translator for " + jspFile.getName() + //$NON-NLS-1$
+						" because could not read model for same.", e); //$NON-NLS-1$
 			} finally {
 				if(model != null) {
 					model.releaseFromRead();
@@ -338,17 +387,15 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 		 * @param translator {@link JSPTranslator} to persist to disk
 		 * @param jspFilePath {@link IPath} to the JSP file the given <code>translator</code> is for
 		 */
-		private void persistTranslator(JSPTranslator translator, IPath jspFilePath) {
-			String persistedTranslatorFilePath =
-				getPersistedTranslatorFilePath(jspFilePath.toPortableString());
+		protected void persistTranslator(JSPTranslator translator, String filePath) {
 			try {
-				FileOutputStream fos = new FileOutputStream(persistedTranslatorFilePath);
+				FileOutputStream fos = new FileOutputStream(filePath);
 				ObjectOutputStream out = new ObjectOutputStream(fos);
 				out.writeObject(translator);
 				out.close();
 			} catch (IOException e) {
-				Logger.logException("Was unable to externalize JSPTranslator " + translator +
-						" to " + persistedTranslatorFilePath, e);
+				Logger.logException("Was unable to externalize JSPTranslator " + translator + //$NON-NLS-1$
+						" to " + filePath, e); //$NON-NLS-1$
 			}
 		}
 		
@@ -357,11 +404,8 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 		 * 
 		 * @param jspFilePath {@link IPath} to the JSP file that has been deleted
 		 */
-		private void deletePersistedTranslator(IPath jspFilePath) {
-			String persistedTranslatorFilePath =
-				getPersistedTranslatorFilePath(jspFilePath.toPortableString());
-			File persistedTranslatorFile = new File(persistedTranslatorFilePath);
-			persistedTranslatorFile.delete();
+		protected void deletePersistedTranslator(File file) {
+			file.delete();
 		}
 		
 		/**
@@ -370,16 +414,116 @@ public class JSPTranslatorPersister implements IResourceChangeListener {
 		 * @param jspPrevFilePath {@link IPath} to the previous location of JSP file</p>
 		 * @param jspNewFilePath {@link IPath} to new location of JSP file</p>
 		 */
-		private void renamePersistedTranslator(IPath jspPrevFilePath, IPath jspNewFilePath) {
-			String prevPersistedTranslatorFilePath =
-				getPersistedTranslatorFilePath(jspPrevFilePath.toPortableString());
-			String newPersistedTranslatorFilePath =
-				getPersistedTranslatorFilePath(jspNewFilePath.toPortableString());
-			File oldPersistedTranslatorFile = new File(prevPersistedTranslatorFilePath);
-			File newPersistedTranslatorFile = new File(newPersistedTranslatorFilePath);
-			
+		protected void renamePersistedTranslator(File from, File to) {
 			//do the move
-			oldPersistedTranslatorFile.renameTo(newPersistedTranslatorFile);
+			from.renameTo(to);
+		}
+
+		private File getPersistedFile(IPath path) {
+			return new File(getPersistedTranslatorFilePath(path.toPortableString()));
+		}
+	}
+	
+	/**
+	 * <p>{@link Job} responsible for reacting to {@link IResourceDelta} visited
+	 * by {@link JSPResourceVisitor}.  This way the actions that need to be taken
+	 * in reaction to the delta to not hold up the {@link IResourceChangeListener}
+	 * or the {@link IResourceDelta}.</p>
+	 *
+	 */
+	private class PersisterJob extends Job {
+		/** Length to delay when scheduling job */
+		private static final int DELAY = 500;
+		
+		/** 
+		 *  <code>{@link LinkedList}&lt{@link ISafeRunnable}&gt</code>
+		 * <p>The persister actions that have been queued up by the {@link JSPResourceVisitor}</p>
+		 */
+		private LinkedList fActions;
+		
+		/** Whether this job has been stopped or not */
+		private boolean fIsStopped;
+		
+		/**
+		 * <p>Sets job up as a system job</p>
+		 */
+		protected PersisterJob() {
+			super(JSPCoreMessages.Persisting_JSP_Translations);
+			this.setUser(false);
+			this.setSystem(true);
+			this.setPriority(Job.LONG);
+			
+			this.fActions = new LinkedList();
+			this.fIsStopped = false;
+		}
+		
+		/**
+		 * <p>Starts this job.  This has no effect if the job is already started.</p>
+		 * <p>This should be used in place of {@link Job#schedule()} to reset state
+		 * caused by calling {@link #stop()}</p>
+		 * 
+		 * @see #stop()
+		 */
+		protected synchronized void start() {
+			this.fIsStopped = false;
+			
+			//get the job running again depending on its current state
+			if(this.getState() == Job.SLEEPING) {
+				this.wakeUp(DELAY);
+			} else {
+				this.schedule(DELAY);
+			}
+		}
+		
+		/**
+		 * <p>Stops this job, even if it is running</p>
+		 * <p>This should be used in place of {@link Job#sleep()} because {@link Job#sleep()}
+		 * will not stop a job that is already running but calling this will stop this job
+		 * even if it is running. {@link #start()} must be used to start this job again</p>
+		 * 
+		 * @see #start()
+		 */
+		protected synchronized void stop() {
+			//sleep the job if it is waiting to run
+			this.sleep();
+			
+			//if job is already running will force it to stop
+			this.fIsStopped = true;
+		}
+		
+		/**
+		 * @param action {@link ISafeRunnable} containing a persister action to take
+		 * based on an {@link IResourceDelta} processed by {@link JSPResourceVisitor}
+		 */
+		protected void addAction(ISafeRunnable action) {
+			//add the action
+			synchronized (this.fActions) {
+				this.fActions.addLast(action);
+			}
+			
+			//if job has not been manually stopped, then start it
+			if(!this.fIsStopped) {
+				this.start();
+			}
+		}
+
+		/**
+		 * <p>Process the actions until there are none left</p>
+		 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		protected IStatus run(IProgressMonitor monitor) {
+			/*  run so long as job has not been stopped,
+			 *monitor canceled, and have actions to process */
+			while(!this.fIsStopped && !monitor.isCanceled() && !this.fActions.isEmpty()) {
+				ISafeRunnable action;
+				synchronized (this.fActions) {
+					action = (ISafeRunnable)this.fActions.removeFirst();
+				}
+				
+				SafeRunner.run(action);
+			}
+			
+			return Status.OK_STATUS;
 		}
 	}
 }
