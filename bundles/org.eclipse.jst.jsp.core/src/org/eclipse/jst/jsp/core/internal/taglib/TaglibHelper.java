@@ -31,7 +31,6 @@ import javax.servlet.jsp.tagext.VariableInfo;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -855,7 +854,7 @@ public class TaglibHelper {
 		Object tagClass = null;
 		if (tagClassname != null && tagClassname.length() > 0 && fJavaProject.exists()) {
 			try {
-				tagClass = fJavaProject.findType(tagClassname, new NullProgressMonitor());
+				tagClass = fJavaProject.findType(tagClassname);
 			}
 			catch (JavaModelException e) {
 				Logger.logException(e);
