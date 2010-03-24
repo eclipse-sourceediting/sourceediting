@@ -15,6 +15,7 @@ package org.eclipse.wst.sse.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.DefaultInformationControl;
@@ -107,6 +108,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * additional auto edit strategies
 	 */
 	private final String AUTOEDITSTRATEGY = "autoeditstrategy"; //$NON-NLS-1$
+	
+	private final String CONTENT_ASSIST_SIZE = "contentassistsize";
 	
 	private ReconcilerHighlighter fHighlighter = null;
 	
@@ -288,6 +291,14 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 						fContentAssistant.setContentAssistProcessor(processors[j], type);
 					}
 				}
+			}
+			IDialogSettings dialogSettings = SSEUIPlugin.getInstance().getDialogSettings();
+			if(dialogSettings != null) {
+				IDialogSettings section = dialogSettings.getSection(CONTENT_ASSIST_SIZE);
+				if(section == null) {
+					section = dialogSettings.addNewSection(CONTENT_ASSIST_SIZE);
+				}
+				fContentAssistant.setRestoreCompletionProposalSize(section);
 			}
 		}
 		return fContentAssistant;
