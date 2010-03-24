@@ -107,15 +107,15 @@ public class StructuredTextViewerConfigurationXSL extends
 		return fConfiguredContentTypes;
 	}
 
-	@Override
-	public LineStyleProvider[] getLineStyleProviders(
-			ISourceViewer sourceViewer, String partitionType) {
-		LineStyleProvider[] providers = null;
-        if (isXMLPartition(partitionType)) {
-    		providers = new LineStyleProvider[] {getLineStyleProviderForXSL()};
-		}
-		return providers;
-	}
+//	@Override
+//	public LineStyleProvider[] getLineStyleProviders(
+//			ISourceViewer sourceViewer, String partitionType) {
+//		LineStyleProvider[] providers = null;
+//        if (isXMLPartition(partitionType)) {
+//    		providers = new LineStyleProvider[] {getLineStyleProviderForXSL()};
+//		}
+//		return providers;
+//	}
 
 	private boolean isXMLPartition(String partitionType) {
 		return partitionType.equals(IXMLPartitions.XML_DEFAULT)

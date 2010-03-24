@@ -22,7 +22,7 @@ import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.style.IStyleConstantsXSL;
 
 /**
- * Sets default values for XML UI preferences
+ * Sets default values for XSL UI preferences
  */
 public class XSLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
@@ -52,5 +52,18 @@ public class XSLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXSL.TAG_NAME, 63, 127, 127) + BOLD;
 		store.setDefault(IStyleConstantsXSL.TAG_NAME, styleValue);
 		
+		store.setDefault("xsl.ui.highlighting.tag.bold", true); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.tag.italic", false); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.tag.strikethrough", false); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.tag.underline", false); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.tag.enabled", true); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.tag.color", "#FF00FF"); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		store.setDefault("xsl.ui.highlighting.attr.bold", true); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.attr.italic", false); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.attr.strikethrough", false); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.attr.underline", false); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.attr.enabled", true); //$NON-NLS-1$
+		store.setDefault("xsl.ui.highlighting.attr.color", "#FF00FF"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

@@ -45,8 +45,9 @@ import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
  * 
  * @author David Carver
  * @since 1.0
- * 
+ * @deprecated Use AbstractXSLSemanticHighlighting and the SemanticHighlighting extension point
  */
+@Deprecated
 public class LineStyleProviderForXSL extends AbstractLineStyleProvider implements LineStyleProvider {
 
 	protected IStructuredDocument structuredDocument;
