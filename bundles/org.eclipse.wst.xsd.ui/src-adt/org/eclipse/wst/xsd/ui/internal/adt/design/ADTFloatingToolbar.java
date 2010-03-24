@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adt.design;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.GraphicalViewerImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
@@ -53,8 +54,13 @@ public class ADTFloatingToolbar extends GraphicalViewerImpl
   public void refresh(boolean isDrilledDown)
   {
     this.isDrilledDown = isDrilledDown;
-    editPart.setIsDrilledDown(isDrilledDown);
-    getContents().refresh();
+    if (editPart != null) {
+    	editPart.setIsDrilledDown(isDrilledDown);
+    }
+    EditPart contents = getContents();
+    if (contents != null) {
+    	contents.refresh();
+    }
   }
   
   public class ADTFloatingToolbarModel
