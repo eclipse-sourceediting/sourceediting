@@ -37,6 +37,7 @@ public class XMLCoreMessages {
 	public static String Catalog_resolution_null_catalog;
 	public static String Catalog_resolution_malformed_url;
 	public static String Catalog_resolution_io_exception;
+	public static String CMDocument_load_exception;
 
 	static {
 		// load message values from bundle file

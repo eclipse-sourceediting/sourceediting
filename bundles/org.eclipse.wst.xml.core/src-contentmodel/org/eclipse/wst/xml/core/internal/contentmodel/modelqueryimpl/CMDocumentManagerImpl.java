@@ -31,6 +31,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManag
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentReferenceProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 
+import com.ibm.icu.text.MessageFormat;
 
 /**
  *
@@ -240,7 +241,7 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
           }
           catch (Exception e)
           {
-        	  Logger.logException(e);
+        	  Logger.logException(MessageFormat.format(XMLCoreMessages.CMDocument_load_exception, new Object[]{resolvedURI, publicId}), e);
           }
           return Status.OK_STATUS;
         }
