@@ -35,6 +35,9 @@
         class="org.eclipse.wst.xsl.ui.internal.contentoutline.XSLContentOutlineConfiguration"
         target="org.eclipse.wst.xml.core.xslsource">
 		</contentOutlineConfiguration>
+		<quickOutlineConfiguration
+			class="org.eclipse.wst.xml.ui.internal.quickoutline.XMLQuickOutlineConfiguration"
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource, org.eclipse.wst.core.xslsource" />
 	    <doubleClickStrategy
            class="org.eclipse.wst.xsl.ui.internal.doubleclick.XSLDoubleClickStrategy"
            target="org.eclipse.wst.xsl.XSL_XPATH">
