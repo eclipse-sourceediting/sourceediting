@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2010 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 261588 - Add Edit Namespace support for XPath view
  *     David Carver (Intalio) - bug 246110 - Clean up XPath UI.
+ *     David Carver (Intalio) - bug 271288 - Set ContextNode for XPath Evaluation
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
@@ -110,6 +111,7 @@ public class XPathView extends ViewPart {
 	private Integer currentSheet = Integer.valueOf(0);
 	private Map<Integer, String> sheetMap;
 	private IStructuredSelection currentSelection;
+	private Node contextNode = null;
 
 	public void createPartControl(Composite parent) {
 		Composite parentComp = new Composite(parent, SWT.NONE);
@@ -272,6 +274,7 @@ public class XPathView extends ViewPart {
 
 	private void recalculateLocation(Node selected) {
 		this.location = XSLTXPathHelper.calculateXPathToNode(selected);
+		contextNode = selected;
 		updateLocationText();
 	}
 
@@ -279,6 +282,9 @@ public class XPathView extends ViewPart {
 		if (activeEditor != null) {
 			boolean valid = expressionValid;
 			try {
+				if (contextNode != null) {
+					xpathComputer.setSelectedNode(contextNode);
+				}
 				xpathComputer.setText(text.getText());
 				xpathComputer.compute();
 				valid = true;
