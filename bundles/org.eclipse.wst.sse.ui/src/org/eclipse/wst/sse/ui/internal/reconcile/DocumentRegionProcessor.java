@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
+ *     David Carver (Intalio) - bug 307323 - remove extraneous call to spell check strategy
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
@@ -111,7 +111,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		IReconcilingStrategy spellingStrategy = getSpellcheckStrategy();
 		IDocument document = getDocument();
 		if (spellingStrategy != null && document != null) {
-			getSpellcheckStrategy().reconcile(new Region(0, document.getLength()));
+			 spellingStrategy.reconcile(new Region(0, document.getLength()));
 		}
 		
 		IReconcilingStrategy semanticHighlightingStrategy = getSemanticHighlightingStrategy();
