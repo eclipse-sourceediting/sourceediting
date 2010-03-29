@@ -43,8 +43,8 @@ public class XSLLineBreakpoint extends LineBreakpoint
 				marker.setAttribute(IMarker.MESSAGE, Messages.XSLLineBreakpoint_0 + resource.getName() + " [line: " + lineNumber + "]"); //$NON-NLS-1$ //$NON-NLS-2$ 
 
 				marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-				marker.setAttribute(IMarker.CHAR_START, new Integer(charStart));
-				marker.setAttribute(IMarker.CHAR_END, new Integer(charEnd));
+				marker.setAttribute(IMarker.CHAR_START, Integer.valueOf(charStart));
+				marker.setAttribute(IMarker.CHAR_END, Integer.valueOf(charEnd));
 
 				register(true);
 			}
