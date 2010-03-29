@@ -13,6 +13,7 @@
  *     Balazs Banfai: Bug 154737 getUserData/setUserData support for Node
  *     https://bugs.eclipse.org/bugs/show_bug.cgi?id=154737
  *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
+ *     David Carver (Intalio) - bug 273004 - add check for valid xml characters in createAttribute
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
@@ -281,6 +282,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	 *            java.lang.String
 	 */
 	public Attr createAttribute(String name) throws DOMException {
+		checkTagNameValidity(name);
 		AttrImpl attr = new AttrImpl();
 		attr.setOwnerDocument(this);
 		attr.setName(name);
@@ -290,6 +292,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 	/**
 	 */
 	public Attr createAttributeNS(String uri, String name) throws DOMException {
+		checkTagNameValidity(name);
 		AttrImpl attr = new AttrImpl();
 		attr.setOwnerDocument(this);
 		attr.setName(name);
