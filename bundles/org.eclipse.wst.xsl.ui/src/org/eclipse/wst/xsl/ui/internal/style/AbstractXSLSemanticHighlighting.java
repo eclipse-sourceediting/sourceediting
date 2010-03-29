@@ -75,7 +75,6 @@ public abstract class AbstractXSLSemanticHighlighting implements
 	
 		Position p[] = null;
 		ITextRegionList regionList = region.getRegions();
-		ITextRegion tagRegion = regionList.get(1);
 		
 		ArrayList arrpos = new ArrayList();
 		for (int i = 0; i < regionList.size(); i++) {

@@ -125,7 +125,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 	}
 
 	@Override
-	public INodeAdapterFactory copy() {
+	public synchronized INodeAdapterFactory copy() {
 		return new JFaceNodeAdapterFactory(getAdapterKey(), isShouldRegisterAdapter());
 	}
 
@@ -133,7 +133,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 	 * Create a new JFace adapter for the DOM node passed in
 	 */
 	@Override
-	protected INodeAdapter createAdapter(INodeNotifier node) {
+	protected synchronized INodeAdapter createAdapter(INodeNotifier node) {
 		if (singletonAdapter == null) {
 			// create the JFaceNodeAdapter
 			singletonAdapter = new JFaceNodeAdapter(this);
@@ -150,7 +150,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 		return new ArrayList(fListeners);
 	}
 
-	protected void initAdapter(INodeAdapter adapter, INodeNotifier node) {
+	protected synchronized void initAdapter(INodeAdapter adapter, INodeNotifier node) {
 		Assert.isTrue(cmDocumentManager == null);
 		Assert.isTrue(fCMDocumentManagerListener == null);
 
