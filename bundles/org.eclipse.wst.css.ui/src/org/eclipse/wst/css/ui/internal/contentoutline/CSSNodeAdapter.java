@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -46,6 +47,17 @@ import org.w3c.dom.stylesheets.MediaList;
  * Adapts the CSS DOM node to a JFace viewer.
  */
 class CSSNodeAdapter implements IJFaceNodeAdapter, INodeAdapter, Runnable {
+	/**
+	 * debug .option
+	 */
+	private static final boolean DEBUG = getDebugValue();
+
+	private static boolean getDebugValue() {
+		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
+		boolean result = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		return result;
+	}
+
 	class NotifyContext {
 		NotifyContext(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 			this.notifier = notifier;
@@ -81,11 +93,19 @@ class CSSNodeAdapter implements IJFaceNodeAdapter, INodeAdapter, Runnable {
 	private Vector notifyQueue;
 	StyleViewUpdater lastUpdater;
 	protected int delayMSecs = 500;
+	RefreshStructureJob fRefreshJob = null;
 	final static Class ADAPTER_KEY = IJFaceNodeAdapter.class;
 
 	public CSSNodeAdapter(INodeAdapterFactory adapterFactory) {
 		super();
 		this.adapterFactory = adapterFactory;
+	}
+
+	private synchronized RefreshStructureJob getRefreshJob() {
+		if (fRefreshJob == null) {
+			fRefreshJob = new RefreshStructureJob();
+		}
+		return fRefreshJob;
 	}
 
 	/**
@@ -318,19 +338,34 @@ class CSSNodeAdapter implements IJFaceNodeAdapter, INodeAdapter, Runnable {
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		if (notifyQueue == null)
 			notifyQueue = new Vector();
-		notifyQueue.add(new NotifyContext(notifier, eventType, changedFeature, oldValue, newValue, pos));
+//		notifyQueue.add(new NotifyContext(notifier, eventType, changedFeature, oldValue, newValue, pos));
 		// TODO-future: there's probably a better way than relying on async
 		// exec
-		if (Thread.currentThread() == getDisplay().getThread())
-			getDisplay().timerExec(delayMSecs, this);
-		else
-			getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (getDisplay() != null) {
-						getDisplay().timerExec(delayMSecs, this);
+		if (notifier instanceof ICSSNode) {
+			Collection listeners = ((JFaceNodeAdapterFactoryCSS) adapterFactory).getListeners();
+			Iterator iterator = listeners.iterator();
+
+			while (iterator.hasNext()) {
+				Object listener = iterator.next();
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=90637
+				// if (notifier instanceof Node && (listener instanceof
+				// StructuredViewer) && (eventType ==
+				// INodeNotifier.STRUCTURE_CHANGED || (eventType ==
+				// INodeNotifier.CHANGE && changedFeature == null))) {
+				if ((listener instanceof StructuredViewer) && ((eventType == INodeNotifier.STRUCTURE_CHANGED) || (eventType == INodeNotifier.CONTENT_CHANGED) || (eventType == INodeNotifier.CHANGE || (eventType == INodeNotifier.ADD) || (eventType == INodeNotifier.REMOVE)))) {
+					if (DEBUG) {
+						System.out.println("JFaceNodeAdapter notified on event type > " + eventType); //$NON-NLS-1$
+					}
+
+					// refresh on structural and "unknown" changes
+					StructuredViewer structuredViewer = (StructuredViewer) listener;
+					// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5230
+					if (structuredViewer.getControl() != null) {
+						getRefreshJob().refresh(structuredViewer, (ICSSNode) notifier);
 					}
 				}
-			});
+			}
+		}
 	}
 
 	Display getDisplay() {

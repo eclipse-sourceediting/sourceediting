@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,8 @@ public class StructuredDocumentRegionsReplacedEvent extends StructuredDocumentEv
 	private IStructuredDocumentRegionList fNewStructuredDocumentRegions;
 	private IStructuredDocumentRegionList fOldStructuredDocumentRegions;
 
+	private boolean fIsEntireDocumentReplaced;
+
 	/**
 	 * Creates an instance of StructuredDocumentRegionsReplacedEvent
 	 * 
@@ -53,6 +55,11 @@ public class StructuredDocumentRegionsReplacedEvent extends StructuredDocumentEv
 		fNewStructuredDocumentRegions = newStructuredDocumentRegions;
 	}
 
+	public StructuredDocumentRegionsReplacedEvent(IStructuredDocument document, Object originalRequester, IStructuredDocumentRegionList oldStructuredDocumentRegions, IStructuredDocumentRegionList newStructuredDocumentRegions, String changes, int offset, int lengthToReplace, boolean entireDocumentReplaced) {
+		this(document, originalRequester, oldStructuredDocumentRegions, newStructuredDocumentRegions, changes, offset, lengthToReplace);
+		fIsEntireDocumentReplaced = entireDocumentReplaced;
+	}
+
 	/**
 	 * Returns the new structured document regions.
 	 * 
@@ -69,5 +76,9 @@ public class StructuredDocumentRegionsReplacedEvent extends StructuredDocumentEv
 	 */
 	public IStructuredDocumentRegionList getOldStructuredDocumentRegions() {
 		return fOldStructuredDocumentRegions;
+	}
+
+	public boolean isEntireDocumentReplaced() {
+		return fIsEntireDocumentReplaced;
 	}
 }

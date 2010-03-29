@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,6 +50,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 	protected final CoreNodeList EMPTY_LIST = new CoreNodeList();
 	protected String fChanges;
 	protected String fDeletedText;
+	protected boolean fIsEntireDocument;
 
 	private FindReplaceDocumentAdapter fFindReplaceDocumentAdapter = null;
 	protected int fLengthDifference;
@@ -339,7 +340,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 			// is
 			// no adjustments
 			// to downstream stuff necessary.
-			result = new StructuredDocumentRegionsReplacedEvent(fStructuredDocument, fRequester, oldNodes, newNodes, fChanges, fStart, fLengthToReplace);
+			result = new StructuredDocumentRegionsReplacedEvent(fStructuredDocument, fRequester, oldNodes, newNodes, fChanges, fStart, fLengthToReplace, fIsEntireDocument);
 		} else {
 			// note: integrates changes into model as a side effect
 			result = minimumEvent(oldNodes, newNodes);
@@ -720,6 +721,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		dirtyEnd = null;
 		fChanges = null;
 		fDeletedText = null;
+		fIsEntireDocument = false;
 	}
 
 	protected IStructuredDocumentRegion findDirtyEnd(int end) {
@@ -838,6 +840,8 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		// notice this one is derived
 		fLengthDifference = Utilities.calculateLengthDifference(fChanges, fLengthToReplace);
 		fDeletedText = fStructuredDocument.get(fStart, fLengthToReplace);
+		int docLength = fStructuredDocument.getLength();
+		fIsEntireDocument = lengthToReplace >= docLength && docLength > 0;
 	}
 
 	protected void insertNodes(IStructuredDocumentRegion previousOldNode, IStructuredDocumentRegion nextOldNode, CoreNodeList newNodes) {
@@ -1061,7 +1065,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 	protected StructuredDocumentEvent nodesReplacedCheck(CoreNodeList oldNodes, CoreNodeList newNodes) {
 		// actually, nothing to check here, since (and assuming) we've already
 		// minimized the number of nodes, and ruled out mere region changes
-		StructuredDocumentEvent result = new StructuredDocumentRegionsReplacedEvent(fStructuredDocument, fRequester, oldNodes, newNodes, fChanges, fStart, fLengthToReplace);
+		StructuredDocumentEvent result = new StructuredDocumentRegionsReplacedEvent(fStructuredDocument, fRequester, oldNodes, newNodes, fChanges, fStart, fLengthToReplace, fIsEntireDocument);
 		return result;
 	}
 
