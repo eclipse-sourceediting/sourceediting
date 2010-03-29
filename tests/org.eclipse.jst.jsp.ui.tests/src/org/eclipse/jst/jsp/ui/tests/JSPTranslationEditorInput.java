@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,7 +72,8 @@ public class JSPTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#getName()
 		 */
 		public String getName() {
-			return getTranslationAdapter().getJSPTranslation().getCompilationUnit().getElementName();
+//			return getTranslationAdapter().getJSPTranslation().getCompilationUnit().getElementName();
+			return new Path(fModel.getBaseLocation()).lastSegment() + ".java";
 		}
 
 		/*
