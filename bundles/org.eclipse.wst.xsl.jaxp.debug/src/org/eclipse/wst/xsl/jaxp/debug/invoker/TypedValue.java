@@ -60,7 +60,7 @@ public class TypedValue {
 			o = value;
 		} else if (TYPE_BOOLEAN.equals(type)) {
 			boolean b = "yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value); //$NON-NLS-1$ //$NON-NLS-2$
-			o = new Boolean(b);
+			o = Boolean.valueOf(b);
 		} else if (TYPE_INT.equals(type)) {
 			try {
 				o = new Integer(value);
