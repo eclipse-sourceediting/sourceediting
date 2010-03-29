@@ -97,6 +97,7 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
  */
 public class ModelManagerImpl implements IModelManager {
 
+	private static long WAIT_INTERVAL_MS = 500; 
 	static class ReadEditType {
 		ReadEditType(String type) {
 		}
@@ -109,8 +110,8 @@ public class ModelManagerImpl implements IModelManager {
 		int referenceCountForEdit;
 		int referenceCountForRead;
 		IStructuredModel theSharedModel;
-		boolean initializing = true;
-		boolean doWait = true;
+		volatile boolean initializing = true;
+		volatile boolean doWait = true;
 		
 		SharedObject(IStructuredModel sharedModel) {
 			theSharedModel = sharedModel;
@@ -124,14 +125,42 @@ public class ModelManagerImpl implements IModelManager {
 		 * However, upon leaving this method, theShareModel variable
 		 * is up-to-date.
 		 */
-		public synchronized void waitForLoadAttempt() {
-			while(initializing) {
-				try {
-					wait();
+		public void waitForLoadAttempt() {
+			boolean interrupted = false;
+			try {
+				// if we have a rule, then use a polling system with
+				// short-circuit, otherwise use wait/notify
+				if (Job.getJobManager().currentRule() != null) {
+					while (initializing) {
+						Job.getJobManager().currentJob().yieldRule(null);
+						synchronized (this) {
+							if (initializing) {
+								try {
+									wait(WAIT_INTERVAL_MS);
+								}
+								catch (InterruptedException e) {
+									interrupted = true;
+								}
+							}
+						}
+					}
 				}
-				catch (InterruptedException e) {
-					// ignore interruption!
+				else {
+					synchronized (this) {
+						while (initializing) {
+							try {
+								wait();
+							}
+							catch (InterruptedException e) {
+								interrupted = true;
+							}
+						}
+					}
 				}
+			}
+			finally {
+				if (interrupted)
+					Thread.currentThread().interrupt();
 			}
 		}
 		
