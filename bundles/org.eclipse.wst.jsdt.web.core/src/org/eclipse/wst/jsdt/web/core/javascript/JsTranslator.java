@@ -13,7 +13,6 @@
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  *     
- *     
  *******************************************************************************/
 
 
@@ -66,7 +65,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
 * (repeatedly) as the API evolves.
 
- * Translates a JSP/HTML document into its JavaScript pieces. 
+ * Translates a web page into its JavaScript pieces. 
  * 
  */
 public class JsTranslator extends Job implements IJsTranslator, IDocumentListener {
@@ -79,6 +78,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 //	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
 	private static final boolean REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE = false;
 	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<%)>]+/?>"); //$NON-NLS-1$
+
+	// FIXME: Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=307401
+	private String[][] fServerSideDelimiters = new String[][]{{"<%","%>"},{"<?","?>"}};
 	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsjavamapping"); //$NON-NLS-1$
@@ -473,12 +475,12 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				
 				spaces = Util.getPad(scriptStart - scriptOffset);
 				fScriptText.append(spaces); 	
-				// fJsToHTMLRanges.put(inScript, inHtml);
+				// container regions get replaced entirely
 				if(isContainerRegion && REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE) {
 					spaces = Util.getPad(regionLength);
 					fScriptText.append(spaces); 	
 				}
-				// Bug 241794 - Validation shows errors when using JSP Expressions inside JavaScript code
+				// exclude XML/HTML comment starts
 				else if (regionText.indexOf(XML_COMMENT_START) >= 0) {
 					int index = regionText.indexOf(XML_COMMENT_START);
 					int leadingTrim = index + XML_COMMENT_START.length();
@@ -496,37 +498,43 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 					fScriptText.append(spaces);
 					fScriptText.append(regionText.substring(leadingTrim));
 				}
-//				// Bug 241794 - Validation shows errors when using JSP Expressions inside JavaScript code
-//				else if (regionText.indexOf(XML_COMMENT_END) >= 0) {
-//					int index = regionText.indexOf(XML_COMMENT_END);
-//					int trailingTrim = index + XML_COMMENT_END.length();
-//					for (int i = index; i < trailingTrim; i++) {
-//						/*
-//						 * ignore the comment end when it's followed only
-//						 * by white space
-//						 */
-//						if (!Character.isWhitespace(regionText.charAt(i))) {
-//							trailingTrim = 0;
-//							break;
-//						}
-//					}
-//					spaces = Util.getPad(trailingTrim);
-//					fScriptText.append(spaces);
-//					fScriptText.append(regionText.substring(0, trailingTrim));
-//				}
+				// server-side code
 				else {
-					// fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
-					// end of last valid JS source, start of next content to skip
+					/*
+					 * Fix for
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
+					 * end of last valid JS source, start of next content to
+					 * skip
+					 */
+					// last offset of valid JS source, after which there's server-side stuff
 					int validEnd = 0;
 					// start of next valid JS source, last offset of content that was skipped
 					int validStart = 0;
-										
+
 					Matcher matcher = fClientSideTagPattern.matcher(regionText);
-					StringBuffer contents = new StringBuffer();
-					// find any instance of tags in the region text
-					int serverSideStart = regionText.indexOf("<%");
+					// note the start of a HTML tag if one's present
 					int clientMatchStart = matcher.find() ? matcher.start() : -1;
-					// contains server-side script
+
+					StringBuffer contents = new StringBuffer();
+					
+					int serverSideStart = -1;
+					int serverSideDelimiter = 0;
+
+					// find any instance of server code blocks in the region text
+					for (int i = 0; i < fServerSideDelimiters.length; i++) {
+						int index = regionText.indexOf(fServerSideDelimiters[i][0]);
+						if (serverSideStart < 0) {
+							serverSideStart = index;
+							serverSideDelimiter = i;
+						}
+						else if (index >= 0) {
+							serverSideStart = Math.min(serverSideStart, index);
+							if (serverSideStart == index) {
+								serverSideDelimiter = i;
+							}
+						}
+					}
+					// contains something other than pur JavaScript
 					while (serverSideStart > -1 || clientMatchStart > -1) { //$NON-NLS-1$
 						validEnd = validStart;
 						boolean biasClient = false;
@@ -554,9 +562,10 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							// change the skipped content to a valid variable name and append it as a placeholder
 							int startOffset = container.getStartOffset(region) + validEnd;
 
-							int serverSideEnd = (regionLength > validEnd + 2) ? regionText.indexOf("%>", validEnd + 2) : -1;
+							String serverEnd = fServerSideDelimiters[serverSideDelimiter][1];
+							int serverSideEnd = (regionLength > validEnd + serverEnd.length()) ? regionText.indexOf(serverEnd, validEnd + 2) : -1;
 							if (serverSideEnd > -1)
-								serverSideEnd += 2;
+								serverSideEnd += serverEnd.length();
 							int clientMatchEnd = matcher.find(validEnd) ? matcher.end() : -1;
 							// update end of what we skipped
 							validStart = -1;
@@ -580,7 +589,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							catch (BadLocationException e) {
 								column = -1;
 							}
-							// substituted text length much match original length exactly
+							// substituted text length much match original length exactly, find text of the right length
 							int start = validEnd + container.getStartOffset(region);
 							contents.append('_');
 							for (int i = validEnd + 1; i < validStart; i++) {
@@ -607,7 +616,21 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						}
 						// set up to end while if no end for valid
 						if (validStart > 0) {
-							serverSideStart = validStart < regionLength - 2 ? regionText.indexOf("<%", validStart) : -1;
+							int serverSideStartGuess = -1;
+							for (int i = 0; i < fServerSideDelimiters.length; i++) {
+								int index = regionText.indexOf(fServerSideDelimiters[i][0], validStart);
+								if (serverSideStartGuess < 0) {
+									serverSideStartGuess = index;
+									serverSideDelimiter = i;
+								}
+								else if (index >= 0) {
+									serverSideStartGuess = Math.min(serverSideStartGuess, index);
+									if (serverSideStartGuess == index) {
+										serverSideDelimiter = i;
+									}
+								}
+							}
+							serverSideStart = validStart < regionLength - 2 ? serverSideStartGuess : -1;
 							clientMatchStart = validStart < regionLength ? (matcher.find(validStart + 1) ? matcher.start() : -1) : -1;
 						}
 						else {
