@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -183,6 +183,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("<%") < 0);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("%>") < 0);
 		assertTrue("tag included\n" + translated, translated.indexOf("custom") < 0);
@@ -207,6 +208,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("<%") < 0);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("%>") < 0);
 		assertTrue("tag included\n" + translated, translated.indexOf("custom") < 0);
@@ -244,7 +246,7 @@ public class TestHtmlTranslation extends TestCase {
 //		// release model
 //		structuredModel.releaseFromRead();
 //	}
-	public void testMangleServerSideInJSCheckProblems() {
+	public void testMangleServerSide1InJSCheckProblems() {
 		// get model
 		String fileName = getName() + ".html";
 		IStructuredModel structuredModel = getSharedModel(fileName, "<script> var text = <%= javaObject.getText() %>; </script>");
@@ -255,8 +257,90 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
 		assertTrue("server-side script block included", translated.indexOf("%>") < 0);
+		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testMangleServerSide2InJSCheckProblems() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> var text = <? serverObject.getText() ?>; </script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
+		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
+		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testMangleMultipleServerSide1InJSCheckProblems() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> var text = <%= javaObject.getText() %>;  <%= javaObject.getText() %></script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
+		assertTrue("server-side script block included", translated.indexOf("%>") < 0);
+		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testMangleMultipleServerSide2InJSCheckProblems() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> var text = <? serverObject.getText() ?>;  <? serverObject.getText() ?></script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
+		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
+		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testMangleMultipleMixedServerSideInJS_and_CheckProblems() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> var text = <? serverObject.getText() ?>; <%=\"a\"%> <%=\"b\"%> <? serverObject.getText() ?><%=\"c\"%> </script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
+		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
 		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
 		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
 
@@ -274,6 +358,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("<") < 0);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("/") < 0);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf(">") < 0);
@@ -282,7 +367,7 @@ public class TestHtmlTranslation extends TestCase {
 		// release model
 		structuredModel.releaseFromRead();
 	}
-	public void testJustServerSideInJS() {
+	public void testJustServer1SideInJS() {
 		// get model
 		String fileName = getName() + ".html";
 		IStructuredModel structuredModel = getSharedModel(fileName, "<script><%= %></script>");
@@ -293,8 +378,28 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("<%") < 0);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("%>") < 0);
+		assertTrue("content not included\n" + translated, translated.length() != 0); 
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testJustServer2SideInJS() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script><? !!!!!!!!!!!!!! ?></script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("server-side script block included\n" + translated, translated.indexOf("<?") < 0);
+		assertTrue("server-side script block included\n" + translated, translated.indexOf("?>") < 0);
 		assertTrue("content not included\n" + translated, translated.length() != 0); 
 
 		// release model
