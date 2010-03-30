@@ -85,7 +85,7 @@ public class ShowTranslationHandler extends AbstractHandler {
 								final IJsTranslation translation = translationAdapter.getJsTranslation(false);
 
 								// create an IEditorInput for the Java editor
-								final IStorageEditorInput input = new JSTranslationEditorInput(model);
+								final IStorageEditorInput input = new JSTranslationEditorInput(translation, model.getBaseLocation());
 								try {
 									IEditorPart editor = IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), input, JavaScriptUI.ID_CU_EDITOR, true);
 									// Now add the problems we found

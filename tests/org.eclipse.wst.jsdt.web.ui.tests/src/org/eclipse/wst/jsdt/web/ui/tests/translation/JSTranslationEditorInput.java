@@ -22,9 +22,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.internal.util.DocumentInputStream;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 /**
  * @author nitin
@@ -32,11 +30,12 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  */
 public class JSTranslationEditorInput implements IStorageEditorInput {
 	private class JSTranslationStorage implements IStorage {
-		/**
-		 * 
-		 */
-		public JSTranslationStorage(IDOMModel jspModel) {
-			fModel = jspModel;
+		private final IJsTranslation fTranslation;
+		final String fBaseLocation;
+
+		public JSTranslationStorage(IJsTranslation translation, String baseLocation) {
+			fTranslation = translation;
+			fBaseLocation = baseLocation;			
 		}
 
 		/*
@@ -46,7 +45,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		 * org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 		 */
 		public Object getAdapter(Class adapter) {
-			return fModel.getAdapter(adapter);
+			return null;
 		}
 
 		/*
@@ -55,7 +54,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#getContents()
 		 */
 		public InputStream getContents() throws CoreException {
-			return new DocumentInputStream(new Document(getTranslationAdapter().getJsTranslation(false).getJsText()));
+			return new DocumentInputStream(new Document(fTranslation.getJsText()));
 		}
 
 		/*
@@ -64,7 +63,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#getFullPath()
 		 */
 		public IPath getFullPath() {
-			return new Path(getTranslationAdapter().getJsTranslation(false).getJavaPath());
+			return new Path(fTranslation.getJavaPath());
 		}
 
 		/*
@@ -73,7 +72,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#getName()
 		 */
 		public String getName() {
-			return new Path(fModel.getBaseLocation()).lastSegment() + ".js";
+			return new Path(fBaseLocation).lastSegment() + ".js";
 		}
 
 		/*
@@ -86,15 +85,13 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		}
 	}
 
-	IDOMModel fModel;
-
 	private JSTranslationStorage fStorage;
 
 	/**
 	 * 
 	 */
-	public JSTranslationEditorInput(IDOMModel model) {
-		fStorage = new JSTranslationStorage(model);
+	public JSTranslationEditorInput(IJsTranslation translation, String baseLocation) {
+		fStorage = new JSTranslationStorage(translation, baseLocation);
 	}
 
 	/*
@@ -112,7 +109,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		return fModel.getAdapter(adapter);
+		return null;
 	}
 
 	/*
@@ -157,13 +154,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 	 * @see org.eclipse.ui.IEditorInput#getToolTipText()
 	 */
 	public String getToolTipText() {
-		return fModel.getBaseLocation();
+		return fStorage.fBaseLocation;
 	}
-
-	JsTranslationAdapter getTranslationAdapter() {
-		JsTranslationAdapter adapter = (JsTranslationAdapter) fModel.getDocument().getAdapterFor(IJsTranslation.class);
-		return adapter;
-	}
-
 
 }
