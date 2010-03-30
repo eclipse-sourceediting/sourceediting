@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,21 +40,28 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
  * building on APIs that aren't specifically designed for SSE (such as those
  * revolving around IDocuments). Unmanaged models offer no such features, and
  * are largely used for tasks where their contents are ephemeral, such as for
- * populating a source viewer with the right syntax colors.
+ * populating a source viewer with syntax-colored content.
  * </p>
  * <p>
  * There are two types of access used when retrieving a model from the model
- * manager: read or edit. The contents of the model can be modified regardless
- * of which access type is used, but any client who gets a model for edit is
+ * manager: READ and EDIT. The contents of a model can be modified regardless
+ * of which access type is used, but any client who gets a model for EDIT is
  * explicitly declaring that they are interested in saving those changed
- * contents. The edit and read reference counts are visible to everyone, as
+ * contents. The EDIT and READ reference counts are visible to everyone, as
  * are convenience methods for determining whether a managed model is shared
- * among multiple clients accessing it for read or edit.
+ * among multiple clients accessing it for READ or EDIT.
  * </p>
  * <p>
- * Managed models whose contents are "dirty" with read and edit counts above
- * zero will be reverted to the on-disk content if the edit count drops to
- * zero while the read count remains above zero.
+ * Managed models whose contents are "dirty" with READ and EDIT counts above
+ * zero will be reverted to the on-disk content if the EDIT count drops to
+ * zero while the READ count remains above zero.
+ * </p>
+ * <p>
+ * Shared models for which the read and edit counts have both dropped to zero
+ * are no longer valid for use, regardless of whether they have been garbage
+ * collected or not. It is possible, but not guaranteed, that the underlying
+ * structured document is still valid and may even be used in constructing a
+ * new shared model.
  * </p>
  * <p>
  * 

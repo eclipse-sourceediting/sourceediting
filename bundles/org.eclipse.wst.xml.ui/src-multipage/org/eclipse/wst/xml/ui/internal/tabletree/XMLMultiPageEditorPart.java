@@ -515,7 +515,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		/*
 		 * Connect selection from the Design page to the selection provider
 		 * for the XMLMultiPageEditorPart so that selection changes in the
-		 * Design page will propogate across the workbench
+		 * Design page will propagate across the workbench
 		 */
 		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
 			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
@@ -570,6 +570,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		/*
 		 * Handle double-click in the Design page by selecting the
 		 * corresponding amount of text in the Source page.
+		 * 
+		 * Warning: This implies more knowledge of the design viewer's underlying
+		 * Control than expressed in the IDesignViewer interface
 		 */
 		fDesignViewer.getControl().addListener(SWT.MouseDoubleClick, new Listener() {
 			public void handleEvent(Event event) {
