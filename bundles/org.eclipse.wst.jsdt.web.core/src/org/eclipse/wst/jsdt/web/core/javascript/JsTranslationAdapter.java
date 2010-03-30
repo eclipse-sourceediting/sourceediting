@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,7 +52,7 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jstranslation")); //$NON-NLS-1$  //$NON-NLS-2$
 	private IStructuredDocument fHtmlDocument = null;
-	private IJsTranslation fJSPTranslation = null;
+	private IJsTranslation fJSTranslation = null;
 	private NullProgressMonitor fTranslationMonitor = null;
 	private String baseLocation;
 	private boolean listenForChanges=false;
@@ -93,8 +93,8 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	 * @return a IJsTranslation
 	 */
 	public IJsTranslation getJsTranslation(boolean listenForChanges) {
-		if (fJSPTranslation == null || (!this.listenForChanges && listenForChanges)) {
-			if(fJSPTranslation!=null) fJSPTranslation.release();
+		if (fJSTranslation == null || (!this.listenForChanges && listenForChanges)) {
+			if(fJSTranslation!=null) fJSTranslation.release();
 			if(fTranslationElement==null) {
 				/* load the translation factory from the extension point */
 				try {
@@ -120,12 +120,12 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 					System.out.println(e);
 				}
 			}
-			//fJSPTranslation = new JsTranslation(fHtmlDocument, getJavaProject(),listenForChanges);
-			fJSPTranslation = fTranslationElement.getInstance(fHtmlDocument, getJavaProject(), listenForChanges);
+			//fJSTranslation = new JsTranslation(fHtmlDocument, getJavaProject(),listenForChanges);
+			fJSTranslation = fTranslationElement.getInstance(fHtmlDocument, getJavaProject(), listenForChanges);
 			this.listenForChanges=listenForChanges;
 		}
 		shouldListenForChanges(listenForChanges);
-		return fJSPTranslation;
+		return fJSTranslation;
 	}
 	
 	
@@ -144,11 +144,11 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 			fTranslationMonitor.setCanceled(true);
 		}
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
-		if (fJSPTranslation != null) {
+		if (fJSTranslation != null) {
 			if (JsTranslationAdapter.DEBUG) {
-				System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
+				System.out.println("JSTranslationAdapter releasing:" + fJSTranslation); //$NON-NLS-1$
 			}
-			fJSPTranslation.release();
+			fJSTranslation.release();
 		}
 	}
 
@@ -157,8 +157,8 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	 */
 	public void resourceChanged(IResourceChangeEvent event) {
 		IProject changedProject = (event==null || event.getResource()==null)?null:event.getResource().getProject();
-		if(changedProject!=null && getJavaProject().getProject().equals(changedProject) && fJSPTranslation!=null){
-			fJSPTranslation.classpathChange();
+		if(changedProject!=null && getJavaProject().getProject().equals(changedProject) && fJSTranslation!=null){
+			fJSTranslation.classpathChange();
 		}	
 	}
 }
