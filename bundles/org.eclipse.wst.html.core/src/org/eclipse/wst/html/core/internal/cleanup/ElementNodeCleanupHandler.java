@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver (Intalion) - Cleanup Repeated Conditional check in isXMLType method
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.cleanup;
 
@@ -525,7 +526,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 	protected boolean isXMLType(IDOMModel structuredModel) {
 		boolean result = false;
 
-		if (structuredModel != null && structuredModel != null) {
+		if (structuredModel != null) {
 			IDOMDocument document = structuredModel.getDocument();
 
 			if (document != null)
