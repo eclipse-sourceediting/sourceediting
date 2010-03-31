@@ -2572,10 +2572,6 @@ public class StructuredTextEditor extends TextEditor {
 	 * viewer-dependent.
 	 */
 	private void initializeSourceViewer() {
-		IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
-		if (contentAssistAction instanceof IUpdate) {
-			((IUpdate) contentAssistAction).update();
-		}
 		IAction openHyperlinkAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE);
 		if (openHyperlinkAction instanceof OpenHyperlinkAction) {
 			((OpenHyperlinkAction) openHyperlinkAction).setHyperlinkDetectors(getSourceViewerConfiguration().getHyperlinkDetectors(getSourceViewer()));
@@ -3349,10 +3345,6 @@ public class StructuredTextEditor extends TextEditor {
 			// (maybe only need to reset viewerconfig's document)
 			if (!configured)
 				getSourceViewer().configure(configuration);
-			IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
-			if (contentAssistAction instanceof IUpdate) {
-				((IUpdate) contentAssistAction).update();
-			}
 			IAction openHyperlinkAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE);
 			if (openHyperlinkAction instanceof OpenHyperlinkAction) {
 				((OpenHyperlinkAction) openHyperlinkAction).setHyperlinkDetectors(getSourceViewerConfiguration().getHyperlinkDetectors(getSourceViewer()));
