@@ -31,9 +31,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 
 public class TestHtmlTranslation extends TestCase {
-
-	
-	protected IModelManager fModelManager = null;
+	private IModelManager fModelManager = null;
 	private static final String testFilesDirectory = "testFiles";
 	public TestHtmlTranslation(){
 		fModelManager = StructuredModelManager.getModelManager();
@@ -58,7 +56,7 @@ public class TestHtmlTranslation extends TestCase {
 		structuredModel.releaseFromRead();
 	}
 
-	protected String readFile(String fileName) {		
+	private String readFile(String fileName) {		
 		String inputString = null;
 		InputStream fileInputStream = null;
 
@@ -91,11 +89,11 @@ public class TestHtmlTranslation extends TestCase {
 		return inputString;
 	}
 
-	protected static void printException(Exception exception) {
+	private static void printException(Exception exception) {
 		exception.printStackTrace();
 	}
 
-	protected IStructuredModel getModel(String fileName) {
+	private IStructuredModel getModel(String fileName) {
 		IStructuredModel structuredModel = null;
 		InputStream inputStream = null;
 
@@ -123,7 +121,7 @@ public class TestHtmlTranslation extends TestCase {
 		return structuredModel;
 	}
 
-	protected IStructuredModel getSharedModel(String id, String contents) {
+	private IStructuredModel getSharedModel(String id, String contents) {
 		IStructuredModel structuredModel = null;
 		InputStream inputStream = null;
 
@@ -149,7 +147,7 @@ public class TestHtmlTranslation extends TestCase {
 		return structuredModel;
 	}
 
-	protected String getFile(String fileName) {
+	private String getFile(String fileName) {
 		return readFile("/testFiles/".concat(fileName));
 	}
 	
@@ -349,6 +347,29 @@ public class TestHtmlTranslation extends TestCase {
 		// release model
 		structuredModel.releaseFromRead();
 	}
+	public void testMangleMultipleMixedServerSideInJSwithXMLcomment_and_CheckProblems() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> <!-- var text = <? serverObject.getText() ?>; <%=\"a\"%> <%=\"b\"%> <? serverObject.getText() ?><%=\"c\"%> </script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertEquals("translated contents not as expected", "              var text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
+		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
+		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
+		assertTrue("server-side script block included", translated.indexOf("%>") < 0);
+		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
 	public void testMangleMultipleMixedServerSideAndClientTagInJS_and_CheckProblems() {
 		// get model
 		String fileName = getName() + ".html";
@@ -449,6 +470,38 @@ public class TestHtmlTranslation extends TestCase {
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("?>") < 0);
 		assertTrue("content not included\n" + translated, translated.length() != 0); 
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testLeadingXMLComment() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, " <script> <!--  </script> ");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertEquals("                ", translated);
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testXMLComment() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> if(a) <!-- --> </script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertEquals("         if(a) <!-- --> ", translated);
 
 		// release model
 		structuredModel.releaseFromRead();
