@@ -76,10 +76,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	
 	private static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
 //	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
-	private static final boolean REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE = false;
 	
 	//TODO: should be an inclusive rule rather than exclusive
-	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<%?)>]+/?>"); //$NON-NLS-1$
+	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<%?)!>]+/?>"); //$NON-NLS-1$
 
 	// FIXME: Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=307401
 	private String[][] fServerSideDelimiters = new String[][]{{"<%","%>"},{"<?","?>"}};
@@ -474,28 +473,25 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				
 				spaces = Util.getPad(scriptStart - scriptOffset);
 				fScriptText.append(spaces); 	
-				// container regions get replaced entirely
-				if(isContainerRegion && REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE) {
-					spaces = Util.getPad(regionLength);
-					fScriptText.append(spaces); 	
-				}
 				// skip over XML/HTML comment starts
-				else if (regionText.indexOf(XML_COMMENT_START) >= 0) {
+				if (regionText.indexOf(XML_COMMENT_START) >= 0) {
 					int index = regionText.indexOf(XML_COMMENT_START);
-					int leadingTrim = index + XML_COMMENT_START.length();
+					int leadingTrimPlusCommentStart = index + XML_COMMENT_START.length();
+					boolean replaceCommentStart = true;
 					for (int i = 0; i < index; i++) {
 						/*
-						 * ignore the comment start when it's preceded only
-						 * by white space
+						 * replace the comment start in the translation when
+						 * it's preceded only by white space
 						 */
-						if (!Character.isWhitespace(regionText.charAt(i))) {
-							leadingTrim = 0;
-							break;
-						}
+						replaceCommentStart = replaceCommentStart && Character.isWhitespace(regionText.charAt(i));
 					}
-					spaces = Util.getPad(leadingTrim);
-					fScriptText.append(spaces);
-					fScriptText.append(regionText.substring(leadingTrim));
+					if (replaceCommentStart) {
+						StringBuffer newRegionText = new StringBuffer(regionText.substring(0, index));
+						spaces = Util.getPad(XML_COMMENT_START.length());
+						newRegionText.append(spaces);
+						newRegionText.append(regionText.substring(leadingTrimPlusCommentStart));
+						regionText = newRegionText.toString();
+					}
 				}
 				// server-side code
 //				else {
