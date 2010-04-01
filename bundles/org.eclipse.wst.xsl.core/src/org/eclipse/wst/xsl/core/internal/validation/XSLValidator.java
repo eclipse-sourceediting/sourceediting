@@ -10,7 +10,8 @@
  *     David Carver (STAR) - bug 230072 - Project level specific validation
  *                         - bug 226245 - XPath 2.0 validation for XSLT
  *                         - bug 258937 - XML Catalog support for includes/imports
- *                         - bug 290286 - Model loading of parameters not respecting functions. 
+ *                         - bug 290286 - Model loading of parameters not respecting functions.
+ *                         - bug 307926 - Fix for NPE in Validation. 
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation;
 
@@ -43,6 +44,7 @@ import org.eclipse.wst.xsl.core.model.CallTemplate;
 import org.eclipse.wst.xsl.core.model.Function;
 import org.eclipse.wst.xsl.core.model.Include;
 import org.eclipse.wst.xsl.core.model.Parameter;
+import org.eclipse.wst.xsl.core.model.Stylesheet;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
@@ -133,8 +135,9 @@ public class XSLValidator {
 		checkIncludesImports(stylesheetComposed, report);
 		// template checks
 		checkTemplates(stylesheetComposed, report);
+		Stylesheet stylesheet = stylesheetComposed.getStylesheet();
 		
-		if (stylesheetComposed.getStylesheet().getVersion().equals("2.0")) { //$NON-NLS-1$
+		if (XSLT2_Version.equals(stylesheet.getVersion())) { 
 			checkFunctions(stylesheetComposed, report);
 		}
 		// call-template checks
