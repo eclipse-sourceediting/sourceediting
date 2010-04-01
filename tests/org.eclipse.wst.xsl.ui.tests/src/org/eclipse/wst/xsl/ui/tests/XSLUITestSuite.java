@@ -26,6 +26,7 @@ import org.eclipse.wst.xsl.ui.tests.contentassist.TestXPathXMLCompletionProposal
 import org.eclipse.wst.xsl.ui.tests.contentassist.XSLCompletionTest;
 import org.eclipse.wst.xsl.ui.tests.extensions.TestContentAssistProcessorFactory;
 import org.eclipse.wst.xsl.ui.tests.hyperlinkdetector.TestXSLHyperlinkDetector;
+import org.eclipse.wst.xsl.ui.tests.style.TestSemanticHighlighting;
 import org.eclipse.wst.xsl.ui.tests.style.TestXMLRegionMap;
 import org.eclipse.wst.xsl.ui.tests.style.TestXSLLineStyleProvider;
 import org.eclipse.wst.xsl.ui.tests.style.TestXSLRegionMap;
@@ -55,5 +56,6 @@ public class XSLUITestSuite extends TestSuite {
 		addTestSuite(TestTemplateContextTypeXSL.class);
 		addTestSuite(TestEmptyFileCompletionProposal.class);
 		addTestSuite(TestContentAssistProcessorFactory.class);
+		addTestSuite(TestSemanticHighlighting.class);
 	}
 }
