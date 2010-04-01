@@ -17,9 +17,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.internal.flat.FlatVirtualComponent;
 import org.eclipse.wst.common.componentcore.internal.flat.IChildModuleReference;
@@ -44,6 +46,29 @@ import org.eclipse.wst.server.core.util.ProjectModule;
 
 public abstract class FlatComponentDeployable extends ProjectModule {
 
+	/*
+	 * Register an adapt IModule to IVirtualComponent 
+	 */
+	static {
+		Platform.getAdapterManager().registerAdapters(new IAdapterFactory() {
+			public Class[] getAdapterList() {
+				return new Class[] { IVirtualComponent.class };
+			}
+
+			public Object getAdapter(Object adaptableObject, Class adapterType) {
+				if (adaptableObject instanceof IModule) {
+					IModule module = (IModule) adaptableObject;
+					FlatComponentDeployable deployable = (FlatComponentDeployable) module.loadAdapter(FlatComponentDeployable.class, null);
+					if(deployable != null){
+						IVirtualComponent virtualComponent = deployable.getComponent();
+						return virtualComponent;
+					}
+				}
+				return null;
+			}
+		}, IModule.class);
+	}
+	
 	protected IVirtualComponent component = null;
 	protected List<IModuleResource> members = new ArrayList<IModuleResource>();
 	
