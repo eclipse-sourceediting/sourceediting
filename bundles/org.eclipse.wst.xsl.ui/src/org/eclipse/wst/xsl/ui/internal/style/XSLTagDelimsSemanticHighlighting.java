@@ -7,12 +7,15 @@
  *
  * Contributors:
  *     David Carver (Intalio) - bug 256339 - initial API and implementation
+ *                            - bug 307924 - Fix NPE when textRegion is null.
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.style;
 
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -38,36 +41,34 @@ public class XSLTagDelimsSemanticHighlighting extends
 
 	public Position[] consumes(IStructuredDocumentRegion region) {
 		
-		Position[] openPos = createSemanticPositions(region.getFirstRegion(), region, DOMRegionContext.XML_TAG_OPEN);
-		Position[] endOpenPos = createSemanticPositions(region.getFirstRegion(), region, DOMRegionContext.XML_END_TAG_OPEN);
-		Position[] emptyTagClose = createSemanticPositions(region, DOMRegionContext.XML_EMPTY_TAG_CLOSE);
-		Position[] closePos = createSemanticPositions(region,	DOMRegionContext.XML_TAG_CLOSE);
+		List openPos = createSemanticPositions(region.getFirstRegion(), region, DOMRegionContext.XML_TAG_OPEN);
+		List endOpenPos = createSemanticPositions(region.getFirstRegion(), region, DOMRegionContext.XML_END_TAG_OPEN);
+		List emptyTagClose = createSemanticPositions(region, DOMRegionContext.XML_EMPTY_TAG_CLOSE);
+		List closePos = createSemanticPositions(region,	DOMRegionContext.XML_TAG_CLOSE);
 		ArrayList arrpos = new ArrayList();
-		arrpos.addAll(Arrays.asList(openPos));
-		arrpos.addAll(Arrays.asList(closePos));
-		arrpos.addAll(Arrays.asList(endOpenPos));
-		arrpos.addAll(Arrays.asList(emptyTagClose));
+		arrpos.addAll(openPos);
+		arrpos.addAll(closePos);
+		arrpos.addAll(endOpenPos);
+		arrpos.addAll(emptyTagClose);
 		Position[] allPos = new Position[arrpos.size()];
-		arrpos.toArray(allPos);
+		if (!arrpos.isEmpty()) {
+			arrpos.toArray(allPos);
+		}
 		return allPos;
 	}
 	
-	protected Position[] createSemanticPositions(ITextRegion textRegion, IStructuredDocumentRegion region, String regionType) {
-		if (textRegion == null) {
-			return null;
-		}
-		
-		Position p[] = null;
-	
+	protected List createSemanticPositions(ITextRegion textRegion, IStructuredDocumentRegion region, String regionType) {
 		ArrayList arrpos = new ArrayList();
-		if (textRegion.getType().equals(regionType)) {
+		if (textRegion == null) {
+			return Collections.EMPTY_LIST;
+		}
+	
+		if (regionType.equals(textRegion.getType())) {
 			Position pos = new Position(region
 					.getStartOffset(textRegion), textRegion.getLength());
 			arrpos.add(pos);
 		}
-		p = new Position[arrpos.size()];
-		arrpos.toArray(p);
-		return p;
+		return arrpos;
 	}
 
 }

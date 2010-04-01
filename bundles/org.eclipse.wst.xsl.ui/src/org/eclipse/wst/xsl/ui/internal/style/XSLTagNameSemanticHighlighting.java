@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.style;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
@@ -30,6 +32,12 @@ public class XSLTagNameSemanticHighlighting extends AbstractXSLSemanticHighlight
 	}
 
 	public Position[] consumes(IStructuredDocumentRegion region) {
-		return createSemanticPositions(region, DOMRegionContext.XML_TAG_NAME);
+		ArrayList array = new ArrayList();
+		array.addAll(createSemanticPositions(region, DOMRegionContext.XML_TAG_NAME));
+		Position[] allPos = new Position[array.size()];
+		if (!array.isEmpty()) {
+			array.toArray(allPos);
+		}
+		return allPos;
 	}
 }

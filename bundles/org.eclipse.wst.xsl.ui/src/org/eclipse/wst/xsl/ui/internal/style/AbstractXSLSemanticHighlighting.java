@@ -11,6 +11,8 @@
 package org.eclipse.wst.xsl.ui.internal.style;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Position;
@@ -64,16 +66,15 @@ public abstract class AbstractXSLSemanticHighlighting implements
 
 	public abstract Position[] consumes(IStructuredDocumentRegion region);
 
-	protected Position[] createSemanticPositions(IStructuredDocumentRegion region, String regionType) {
+	protected List createSemanticPositions(IStructuredDocumentRegion region, String regionType) {
 		if (region == null) {
-			return null;
+			return Collections.EMPTY_LIST;
 		}
 		
 		if (!region.getType().equals(DOMRegionContext.XML_TAG_NAME)) {
-			return null;
+			return Collections.EMPTY_LIST;
 		}
 	
-		Position p[] = null;
 		ITextRegionList regionList = region.getRegions();
 		
 		ArrayList arrpos = new ArrayList();
@@ -85,9 +86,7 @@ public abstract class AbstractXSLSemanticHighlighting implements
 				arrpos.add(pos);
 			}
 		}
-		p = new Position[arrpos.size()];
-		arrpos.toArray(p);
-		return p;
+		return arrpos;
 	}
 
 	public Position[] consumes(IStructuredDocumentRegion documentRegion, IndexedRegion indexedRegion) {
