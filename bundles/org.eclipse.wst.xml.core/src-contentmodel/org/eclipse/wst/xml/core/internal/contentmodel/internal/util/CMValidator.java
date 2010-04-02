@@ -429,10 +429,10 @@ public class CMValidator
       {  
           boolean isGraphValidationNeeded = !(elementList == null && contentType == CMElementDeclaration.MIXED);
                       
-          // exlicity handle 'All' groups
+          // explicitly handle 'All' groups
           //
           CMContent content = ed.getContent();
-          if (content.getNodeType() == CMNode.GROUP)
+          if (content != null && content.getNodeType() == CMNode.GROUP)
           {
             CMGroup group = (CMGroup)content;
             if (group.getOperator() == CMGroup.ALL)
