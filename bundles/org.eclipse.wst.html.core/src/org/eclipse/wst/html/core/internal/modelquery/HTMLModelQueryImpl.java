@@ -85,12 +85,15 @@ public class HTMLModelQueryImpl extends ModelQueryImpl implements MovableModelQu
 		// Now, the time to check exclusion.
 		Vector content = new Vector(candidates.size());
 		for (int i = 0; i < candidates.size(); i++) {
-			CMElementDeclaration candidate = (CMElementDeclaration) candidates.elementAt(i);
-			if (candidate == null)
-				continue;
-			if (isExcluded(candidate, element))
-				continue;
-			content.add(candidate);
+			Object eCandidate = candidates.elementAt(i);
+			if(eCandidate instanceof CMElementDeclaration) {
+				CMElementDeclaration candidate = (CMElementDeclaration) eCandidate;
+				if (candidate == null)
+					continue;
+				if (isExcluded(candidate, element))
+					continue;
+				content.add(candidate);
+			}
 		}
 
 		return content;
