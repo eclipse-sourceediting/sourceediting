@@ -297,9 +297,9 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 
 				String noprefixName = DOMNamespaceHelper.getUnprefixedName(attributeName);
 				if (allAttributes != null) {
-					attrDecl = (CMAttributeDeclaration) allAttributes.getNamedItem(noprefixName);
+					attrDecl = (CMAttributeDeclaration) allAttributes.getNamedItem(attributeName);
 					if (attrDecl == null) {
-						attrDecl = (CMAttributeDeclaration) allAttributes.getNamedItem(attributeName);
+						attrDecl = (CMAttributeDeclaration) allAttributes.getNamedItem(noprefixName);
 					}
 				}
 				if (attrDecl == null) {
