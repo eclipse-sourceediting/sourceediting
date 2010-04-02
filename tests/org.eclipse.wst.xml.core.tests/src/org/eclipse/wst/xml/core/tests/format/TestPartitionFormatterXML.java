@@ -249,10 +249,10 @@ public class TestPartitionFormatterXML extends TestCase {
 	public void testPreserveCDATAFormat() throws UnsupportedEncodingException, IOException, CoreException {
 		// BUG161330
 		formatAndAssertEquals("testfiles/xml/usecdata.xml", "testfiles/xml/usecdata-fmt.xml");
-		// the below test will expose a bug in the new formatter so commenting
-		// out for now
-		// formatAndAssertEquals("testfiles/xml/usecdata2.xml",
-		// "testfiles/xml/usecdata2-fmt.xml");
+	}
+	
+	public void testPreserveCDATAFormat2() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/xml/usecdata2.xml", "testfiles/xml/usecdata2-fmt.xml");
 	}
 
 	public void testSplitAttributesFormat() throws UnsupportedEncodingException, IOException, CoreException {
