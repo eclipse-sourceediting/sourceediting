@@ -175,6 +175,12 @@ public class TestJSPContentAssistComputers extends TestCase {
 		runProposalTest("test1.jsp", 41, 15, expectedProposalCounts);
 	}
 	
+	public void testHTMLTagAttributeValueProposals() throws Exception {
+		//default, jsp, jsp java, default
+		int[] expectedProposalCounts = new int[] {15, 2, 0, 0, 13, 15};
+		runProposalTest("test3.jsp", 8, 10, expectedProposalCounts);
+	}
+	
 	/**
 	 * <p>Run a proposal test by opening the given file and invoking content assist for
 	 * each expected proposal count at the given line number and line character
