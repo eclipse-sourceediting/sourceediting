@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Jesper Steen Moeller, and others
+ * Copyright (c) 2005, 2010 Jesper Steen Moeller, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,20 +7,26 @@
  *
  * Contributors:
  *     Jesper Steen Moeller - bug 285152 - implement fn:normalize-unicocde
+ *     Jesper Steen Moller  - bug 290337 - Revisit use of ICU
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 
 import com.ibm.icu.text.Normalizer;
 
@@ -41,6 +47,7 @@ import com.ibm.icu.text.Normalizer;
  */
 public class FnNormalizeUnicode extends Function {
 	private static Collection _expected_args = null;
+	private static W3CNormalizer normalizer = null;
 
 	/**
 	 * Constructor for FnNormalizeUnicode
@@ -49,29 +56,80 @@ public class FnNormalizeUnicode extends Function {
 		super(new QName("normalize-unicode"), 1, 2);
 	}
 
+	/**
+	 * The common interface which normalizers must adhere to
+	 */
 	public interface W3CNormalizer {
 		String normalize(String argument, String normalizationForm) throws DynamicError;
 	};
 	
+	/**
+	 * W3C normalizer implemented via IBM's ICU
+	 */
 	static class ICUNormalizer implements W3CNormalizer {
+		
+		private Map<String, Normalizer.Mode> modeMap = new HashMap<String, Normalizer.Mode>();
+		{
+			// Can't handle "FULLY-NORMALIZED" yet
+			
+			modeMap.put("NFC", Normalizer.NFC);
+			modeMap.put("NFD", Normalizer.NFD);
+			modeMap.put("NFKC", Normalizer.NFKC);
+			modeMap.put("NFKD", Normalizer.NFKD);
+		}
 		
 		public String normalize(String argument, String normalizationForm)
 				throws DynamicError {
-			if (normalizationForm.equals("NFC")) {
-				return Normalizer.normalize(argument, Normalizer.NFC);
-			} else if (normalizationForm.equals("NFD")) {
-				return Normalizer.normalize(argument, Normalizer.NFD);
-			} else if (normalizationForm.equals("NFKC")) {
-				return Normalizer.normalize(argument, Normalizer.NFKC);
-			} else if (normalizationForm.equals("NFKD")) {
-				return Normalizer.normalize(argument, Normalizer.NFKD);
-//			} else if (normalizationForm.equals("FULLY-NORMALIZED")) {
-//				String normalized_but_possibly_partial = Normalizer.normalize(argument, Normalizer.NFC);
-				// XXX: Check to see that the string starts with a modifier, and, if required, neutralize it to its composed equivalent
-//				return normalized_but_possibly_partial;
+			Normalizer.Mode mode = modeMap.get(normalizationForm);
+			if (mode != null) {
+				return Normalizer.normalize(argument, mode);
 			} else {
 				throw DynamicError.unsupported_normalization_form(normalizationForm);
 			}
+		}
+	}
+
+	static class JDK6Normalizer implements W3CNormalizer {
+		private Method normalizeMethod;
+		private Map<String, Enum> formMap = new HashMap<String, Enum>();
+
+		public JDK6Normalizer(Class<?> normalizerCls, Class<? extends Enum> formCls) throws SecurityException, NoSuchMethodException {
+			this.normalizeMethod = normalizerCls.getMethod("normalize", CharSequence.class, formCls);
+			Enum[] formConstants = formCls.getEnumConstants();
+			for (Enum form : formConstants) {
+				formMap.put(form.name(), form);
+			}
+			// Can't handle "FULLY-NORMALIZED" yet
+		}
+		
+		public String normalize(String argument, String normalizationForm)
+				throws DynamicError {
+
+			//if (normalizationForm.equals("FULLY-NORMALIZED")) {
+			//   We can't handle this one yet
+			// }
+			Enum form = formMap.get(normalizationForm);
+			if (form != null) {
+				try {
+					return (String)normalizeMethod.invoke(null, argument, form);
+				} catch (RuntimeException e) {
+					throw DynamicError.runtime_error("java.text.Normalizer.normalize(..., \"" + normalizationForm + "\")", e);
+				} catch (IllegalAccessException e) {
+					throw DynamicError.runtime_error("java.text.Normalizer.normalize(..., \"" + normalizationForm + "\")", e);
+				} catch (InvocationTargetException e) {
+					throw DynamicError.runtime_error("java.text.Normalizer.normalize(..., \"" + normalizationForm + "\")", e);
+				}
+			} else {
+				throw DynamicError.unsupported_normalization_form(normalizationForm);
+			}			
+		}
+	}
+
+	static class FailingNormalizer implements W3CNormalizer {
+		
+		public String normalize(String argument, String normalizationForm)
+				throws DynamicError {
+			throw DynamicError.unsupported_normalization_form("Can't normalize to form " + normalizationForm + ": No ICU Library or Java 6 found. 'normalize-unicode' requires either 'com.ibm.icu.text.Normalizer' or 'java.text.Normalizer' on the classpath");
 		}
 	}
 	
@@ -130,9 +188,45 @@ public class FnNormalizeUnicode extends Function {
 	}
 
 	private static W3CNormalizer getNormalizer() {
-		return new ICUNormalizer();
+		if (normalizer == null) {
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			
+			normalizer = createICUNormalizer(classLoader);
+			if (normalizer == null) {
+				normalizer = createJDKNormalizer(classLoader);
+			}
+			if (normalizer == null) {
+				normalizer = new FailingNormalizer();
+			}
+		}
+		return normalizer;
 	}
 
+	private static W3CNormalizer createJDKNormalizer(ClassLoader classLoader) {
+		// If that fails, we'll check for the Java 6 Normalizer class
+		try {
+			Class<?> normalizerClass = classLoader.loadClass("java.text.Normalizer");
+			Class<? extends Enum> formClass = (Class<? extends Enum>) classLoader.loadClass("java.text.Normalizer$Form");
+			
+			return new JDK6Normalizer(normalizerClass, formClass);
+		} catch (ClassNotFoundException e) {
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
+		}
+		return null;
+	}
+
+	private static W3CNormalizer createICUNormalizer(ClassLoader classLoader) {
+		// First attempt is to try the IBM ICU library
+		try {
+			if (classLoader.loadClass("com.ibm.icu.text.Normalizer") != null) {
+				return new ICUNormalizer();
+			}
+		} catch (ClassNotFoundException e) {
+		}
+		return null;
+	}
+	
 	/**
 	 * Calculate the expected arguments.
 	 * 

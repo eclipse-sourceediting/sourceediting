@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@
  *     Jesper Steen Moller  - Bug 286062 - Add FOAR0002  
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *     Jesper Steen Moller  - bug 262765 - Add FORG0006
+ *     Jesper Steen Moller  - bug 290337 - Revisit use of ICU
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -255,12 +256,27 @@ public class DynamicError extends XPathException {
 	 * 
 	 */
 	public static DynamicError unsupported_normalization_form(String err) {
-		String error = "Unsupported normalization form. ";
+		String error = "Unsupported normalization form: ";
 
 		if (err != null)
 			error += " " + err;
 
 		return new DynamicError("FOCH0003", error);
+	}
+
+	/**
+	 * Returns the dynamic error for an unsupported normalization form
+	 * 
+	 * @param err
+	 *            is the error
+	 * @return the DynamicError.
+	 * @since 1.1
+	 * 
+	 */
+	public static DynamicError runtime_error(String msg, Throwable err) {
+		String error = "Error at runtime: " + msg + ": " + err.getMessage();
+
+		return new DynamicError("FOER0000", error);
 	}
 
 	private static DynamicError make_error(String code, String err, String msg) {
