@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,9 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 		super(element, newPackage);
 	}
 	
+	/**
+	 * @see org.eclipse.jst.jsp.ui.internal.java.refactoring.BasicRefactorSearchRequestor#getRenameText(org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate, org.eclipse.jdt.core.search.SearchMatch)
+	 */
 	protected String getRenameText(JavaSearchDocumentDelegate searchDoc, SearchMatch javaMatch) {
 		
 		String renameText = getElement().getElementName();
@@ -44,6 +47,12 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 				// getNewName() is the pkg name
 				renameText = getNewName() + "." + renameText; //$NON-NLS-1$
 		}
+
+		//if the rename text is the same as the match text then, don't want to bother renaming anything
+		if(renameText.equals(matchText)) {
+			renameText = null;
+		} 
+
 		return renameText;
 	}
 	

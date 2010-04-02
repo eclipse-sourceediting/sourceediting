@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,14 +80,18 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 	
 			String renameText = getRenameText((JavaSearchDocumentDelegate)searchDoc, javaMatch);
 			
-			// add it for the correct document
-			addJavaEdit(searchDoc.getPath(), new ReplaceEdit(javaMatch.getOffset(), javaMatch.getLength(), renameText));
+			//if rename text is null then don't create an edit for it
+			if(renameText != null) {
+				// add it for the correct document
+				addJavaEdit(searchDoc.getPath(), new ReplaceEdit(javaMatch.getOffset(), javaMatch.getLength(), renameText));
+			}
 		}
 	}
 	
 	/**
 	 * @param searchDoc
-	 * @return
+	 * @return the rename text or <code>null</code> if no edit should be created for the given match.
+	 * Such a case would be a match where nothing needs to be edited.
 	 */
 	protected String getRenameText(JavaSearchDocumentDelegate searchDoc, SearchMatch javaMatch) {
 		return getNewName();
