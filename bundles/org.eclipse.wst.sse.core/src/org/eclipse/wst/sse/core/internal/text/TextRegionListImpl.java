@@ -40,13 +40,13 @@ public class TextRegionListImpl implements ITextRegionList {
 
 	}
 
-	private class RegionIterator implements Iterator {
+	private static class RegionIterator implements Iterator {
 		private ITextRegion[] fIteratorRegions;
 		private int index = -1;
 		private int maxindex = -1;
 
-		public RegionIterator() {
-			fIteratorRegions = toArray();
+		public RegionIterator(ITextRegion[] regions) {
+			fIteratorRegions = regions;
 			maxindex = fIteratorRegions.length - 1;
 		}
 
@@ -61,8 +61,11 @@ public class TextRegionListImpl implements ITextRegionList {
 		}
 
 		public void remove() {
+			if (index < 0) {
+				// next() has never been called
+				throw new IllegalStateException("can not remove regions without prior invocation of next()"); //$NON-NLS-1$
+			}
 			throw new UnsupportedOperationException("can not remove regions via iterator"); //$NON-NLS-1$
-
 		}
 
 	}
@@ -166,7 +169,7 @@ public class TextRegionListImpl implements ITextRegionList {
 		if (size() == 0) {
 			return new NullIterator();
 		} else {
-			return new RegionIterator();
+			return new RegionIterator(toArray());
 		}
 	}
 
@@ -217,6 +220,14 @@ public class TextRegionListImpl implements ITextRegionList {
 		ITextRegion[] newArray = new ITextRegion[fRegionsCount];
 		System.arraycopy(fRegions, 0, newArray, 0, fRegionsCount);
 		return newArray;
+	}
+	
+	public void trimToSize() {
+		if (fRegions.length > fRegionsCount) {
+			ITextRegion[] newRegions = new ITextRegion[fRegionsCount];
+			System.arraycopy(fRegions, 0, newRegions, 0, fRegionsCount);
+			fRegions = newRegions;
+		}
 	}
 
 }
