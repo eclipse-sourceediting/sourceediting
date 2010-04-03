@@ -47,22 +47,6 @@
             pattern="org\.eclipse\.wst\.web\.[\.\w/]*">
       	</activityPatternBinding>
       	
-      	<!--
-      	<activityRequirementBinding 
-      		requiredActivityId="org.eclipse.wtp.xml.capabilities" 
-      		activityId="org.eclipse.wtp.web.capabilities">
-      	</activityRequirementBinding>
-      	-->
-      	<!--
-       <categoryActivityBinding
-            activityId="org.eclipse.wst.web.capabilities"
-            categoryId="org.eclipse.categories.developmentCategory">
-       </categoryActivityBinding>
-             	
-      	<defaultEnablement
-            id="org.eclipse.wtp.web.capabilities">
-      	</defaultEnablement>
-      -->
    </extension>
    
 </plugin>

@@ -50,14 +50,6 @@
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.internet\.proxy\.[\.\w/]*">
         </activityPatternBinding>
-        <!--
-        <categoryActivityBinding
-            activityId="org.eclipse.wtp.xml.capabilities"
-            categoryId="org.eclipse.categories.developmentCategory">
-        </categoryActivityBinding>
-        <defaultEnablement
-            id="org.eclipse.wtp.xml.capabilities">
-        </defaultEnablement>
-        -->
+       
     </extension>
 </plugin>

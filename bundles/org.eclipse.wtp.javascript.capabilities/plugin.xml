@@ -12,14 +12,6 @@
             activityId="org.eclipse.wtp.javascript.capabilities"
             pattern="org\.eclipse\.wst\.jsdt\.[\.\w/]*">
         </activityPatternBinding>
-        <!--
-        <categoryActivityBinding
-            activityId="org.eclipse.wtp.javascript.capabilities"
-            categoryId="org.eclipse.categories.developmentCategory">
-        </categoryActivityBinding>
-        <defaultEnablement
-            id="org.eclipse.wtp.javascript.capabilities">
-        </defaultEnablement>
-        -->
+
     </extension>
 </plugin>
