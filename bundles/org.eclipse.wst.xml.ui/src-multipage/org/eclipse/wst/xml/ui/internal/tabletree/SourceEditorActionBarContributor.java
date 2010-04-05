@@ -18,7 +18,7 @@ import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.internal.IExtendedContributor;
 import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
@@ -181,7 +181,7 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 		// other editors, the following
 		// check is added.
 		if (multiPageEditor != null) {
-			if ((activeEditor != null) && (activeEditor instanceof StructuredTextEditor)) {
+			if ((activeEditor != null) && (activeEditor instanceof ITextEditor)) {
 				activateSourcePage(activeEditor);
 			}
 			else {

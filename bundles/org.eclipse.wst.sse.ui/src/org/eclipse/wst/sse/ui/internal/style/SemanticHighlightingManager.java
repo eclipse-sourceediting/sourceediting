@@ -23,6 +23,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -32,10 +33,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
@@ -299,8 +298,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	private static final String STYLE_KEY_ATTR = "styleStringKey"; //$NON-NLS-1$
 
-	private StructuredTextEditor fEditor;
-	private StructuredTextViewer fSourceViewer;
+	private ISourceViewer fSourceViewer;
 	private IPreferenceStore fPreferenceStore;
 	private SourceViewerConfiguration fConfiguration;
 	private StructuredPresentationReconciler fPresentationReconciler;
@@ -327,8 +325,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		handlePropertyChange(event);
 	}
 	
-	public void install(StructuredTextEditor editor, StructuredTextViewer sourceViewer, IPreferenceStore preferenceStore, SourceViewerConfiguration configuration, String contentTypeId) {
-		fEditor = editor;
+	public void install(ISourceViewer sourceViewer, IPreferenceStore preferenceStore, SourceViewerConfiguration configuration, String contentTypeId) {
 		fSourceViewer = sourceViewer;
 		fPreferenceStore = preferenceStore;
 		fConfiguration = configuration;
@@ -526,15 +523,15 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		
 		fPresenter = new SemanticHighlightingPresenter();
 		fPresenter.install(fSourceViewer, fPresentationReconciler);
-		if (fEditor != null) {
+//		if (fEditor != null) {
 			fReconciler = new SemanticHighlightingReconciler();
-			fReconciler.install(fEditor, fSourceViewer, fPresenter, fHighlightings, fHighlightingStyles);
+			fReconciler.install(fSourceViewer, fPresenter, fHighlightings, fHighlightingStyles);
 			IReconciler reconciler = fConfiguration.getReconciler(fSourceViewer);
 			if (reconciler instanceof DocumentRegionProcessor)
 				((DocumentRegionProcessor) reconciler).setSemanticHighlightingStrategy(fReconciler);
-		} else {
+//		} else {
 //			fPresenter.updatePresentation(null, createHardcodedPositions(), new HighlightedPosition[0]);
-		}
+//		}
 	}
 	
 	/**
@@ -735,7 +732,6 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 			fPreferenceStore = null;
 		}
 		
-		fEditor = null;
 		fSourceViewer = null;
 		fConfiguration = null;
 		fPresentationReconciler = null;

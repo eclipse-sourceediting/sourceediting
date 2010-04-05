@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,14 +15,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuManager;
-//import org.eclipse.jface.action.IToolBarManager;
-//import org.eclipse.jface.action.MenuManager;
-//import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-//import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -208,6 +204,9 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		return (editor == null ? null : editor.getAction(actionId));
 	}
 
+	/**
+	 * @deprecated - not to be used
+	 */
 	protected IStructuredModel getModelForEditorPart(IEditorPart targetEditor) {
 		IStructuredModel result = null;
 		if (editorPart instanceof XMLMultiPageEditorPart) {
@@ -217,6 +216,9 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		return result;
 	}
 
+	/**
+	 * @deprecated - not to be used
+	 */
 	protected XMLTableTreeViewer getTableTreeViewerForEditorPart(IEditorPart targetEditor) {
 		XMLTableTreeViewer result = null;
 		Object object = targetEditor.getAdapter(IDesignViewer.class);

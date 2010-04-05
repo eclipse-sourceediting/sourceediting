@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,7 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.ui.texteditor.MarkerAnnotation;
+import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 import org.eclipse.ui.texteditor.TextEditorAction;
 
 /**
@@ -204,6 +204,7 @@ public class GotoAnnotationAction extends TextEditorAction {
 		// The original JavaEditor M7 implementation made use of an adapter,
 		// but that approach
 		// fails with a MultiPageEditorSite
+		
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)
 			return null;
@@ -320,8 +321,8 @@ public class GotoAnnotationAction extends TextEditorAction {
 	 */
 	protected void updateAnnotationViews(Annotation annotation) {
 		IMarker marker = null;
-		if (annotation instanceof MarkerAnnotation)
-			marker = ((MarkerAnnotation) annotation).getMarker();
+		if (annotation instanceof SimpleMarkerAnnotation)
+			marker = ((SimpleMarkerAnnotation) annotation).getMarker();
 
 		if (marker != null) {
 			try {
@@ -338,6 +339,13 @@ public class GotoAnnotationAction extends TextEditorAction {
 						}
 						else if (marker.isSubtypeOf(IMarker.BOOKMARK)) {
 							view = page.findView(IPageLayout.ID_BOOKMARKS);
+						}
+//						else if (marker.isSubtypeOf(IBreakpoint.BREAKPOINT_MARKER)) {
+//							view = page.findView(IDebugUIConstants.ID_BREAKPOINT_VIEW);
+//						}
+						
+						if (view == null) {
+							view = page.findView("org.eclipse.ui.views.AllMarkersView");
 						}
 						// If the view isn't open on this perspective, don't
 						// interact with it

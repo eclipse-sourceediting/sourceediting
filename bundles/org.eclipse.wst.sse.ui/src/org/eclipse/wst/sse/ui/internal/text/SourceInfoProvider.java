@@ -5,13 +5,13 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 public class SourceInfoProvider implements IInformationProvider, IInformationProviderExtension  {
 
-	private StructuredTextEditor fEditor;
+	private ITextEditor fEditor;
 
-	public SourceInfoProvider(StructuredTextEditor editor) {
+	public SourceInfoProvider(ITextEditor editor) {
 		fEditor = editor;
 	}
 	public String getInformation(ITextViewer textViewer, IRegion subject) {

@@ -3519,7 +3519,7 @@ public class StructuredTextEditor extends TextEditor {
 		IStructuredModel model = getInternalModel();
 		if (fSemanticManager == null && model != null) {
 			fSemanticManager = new SemanticHighlightingManager();
-			fSemanticManager.install(this, (StructuredTextViewer) getSourceViewer(), getPreferenceStore(), getSourceViewerConfiguration(), model.getContentTypeIdentifier());
+			fSemanticManager.install(getSourceViewer(), getPreferenceStore(), getSourceViewerConfiguration(), model.getContentTypeIdentifier());
 		}
 	}
 	

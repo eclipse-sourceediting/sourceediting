@@ -17,6 +17,7 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension2;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -29,7 +30,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -59,7 +59,6 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 		IDocument document = viewer.getDocument();
 		LinkedPositionGroup group = new LinkedPositionGroup();
 		try {
-			if (viewer instanceof StructuredTextViewer) {
 				IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
 				IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 				ITextRegion region = (startStructuredDocumentRegion == null) ? null : startStructuredDocumentRegion.getRegionAtCharacterOffset(offset);
@@ -93,8 +92,8 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 				// TODO CompletionProposalPopup#insertProposal() calls
 				// IRewriteTarget.beginCompoundChange()
 				// which disables redraw in ITextViewer. Workaround for now.
-				((StructuredTextViewer) viewer).setRedraw(true);
-			}
+				if(viewer instanceof ITextViewerExtension)
+					((ITextViewerExtension) viewer).setRedraw(true);
 
 			LinkedModeModel linkedModeModel = new LinkedModeModel();
 			linkedModeModel.addGroup(group);

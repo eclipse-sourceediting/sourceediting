@@ -133,7 +133,7 @@ public class CSSTemplatePreferencePage extends TemplatePreferencePage {
 		SourceViewer viewer = null;
 		String contentTypeID = ContentTypeIdForCSS.ContentTypeID_CSS;
 		viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		viewer.getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
 		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
 		IDocument document = scratchModel.getStructuredDocument();
 		viewer.configure(viewerConfiguration);

@@ -42,7 +42,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -221,7 +220,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		// handle blank HTML document case
 		if (treeNode == null || isViewerEmpty(textViewer)) {
 			// cursor is at the EOF
-			ICompletionProposal htmlTagProposal = getHTMLTagProposal((StructuredTextViewer) textViewer, documentPosition);
+			ICompletionProposal htmlTagProposal = getHTMLTagProposal(textViewer, documentPosition);
 			ICompletionProposal[] superResults = super.computeCompletionProposals(textViewer, documentPosition);
 			if (superResults != null && superResults.length > 0 && htmlTagProposal != null) {
 				ICompletionProposal[] blankHTMLDocResults = new ICompletionProposal[superResults.length + 1];
@@ -331,7 +330,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	/**
 	 * @return ICompletionProposal
 	 */
-	private ICompletionProposal getHTMLTagProposal(StructuredTextViewer viewer, int documentPosition) {
+	private ICompletionProposal getHTMLTagProposal(ITextViewer viewer, int documentPosition) {
 		IModelManager mm = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 		ICompletionProposal result = null;

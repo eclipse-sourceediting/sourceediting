@@ -19,7 +19,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Node;
 
@@ -34,14 +33,13 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 	protected IStructuredDocumentRegion fStructuredDocumentRegion = null;
 	protected String fStructuredDocumentRegionText = ""; //$NON-NLS-1$
 	protected IStructuredModel fStructuredModel = null;
-	protected StructuredTextViewer fStructuredTextViewer;
+	protected ITextViewer fTextViewer;
 	protected ITextRegion fTextRegion = null;
 
 	public void doubleClicked(ITextViewer textViewer) {
-		if (textViewer instanceof StructuredTextViewer) {
-			fStructuredTextViewer = (StructuredTextViewer) textViewer;
+			fTextViewer = textViewer;
 			try {
-				fStructuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fStructuredTextViewer.getDocument());
+				fStructuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fTextViewer.getDocument());
 
 				if (fStructuredModel != null) {
 					int caretPosition = textViewer.getSelectedRange().x;
@@ -71,7 +69,6 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 					fStructuredModel.releaseFromRead();
 				}
 			}
-		}
 	}
 
 	protected Point getWord(String string, int cursor) {
@@ -139,7 +136,7 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		ITextRegion nextRegion = fStructuredDocumentRegion.getRegionAtCharacterOffset(nextRegionOffset);
 
 		if ((prevRegion != null) && (prevRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) && (nextRegion != null) && (nextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
-			fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(prevRegion), nextRegion.getTextEnd() - prevRegion.getStart());
+			fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(prevRegion), nextRegion.getTextEnd() - prevRegion.getStart());
 		}
 	}
 
@@ -151,11 +148,11 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 			nextRegionOffset = fStructuredDocumentRegion.getEndOffset(nextRegion);
 			nextRegion = fStructuredDocumentRegion.getRegionAtCharacterOffset(nextRegionOffset);
 			if ((nextRegion != null) && (nextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), nextRegion.getTextEnd() - fTextRegion.getStart());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), nextRegion.getTextEnd() - fTextRegion.getStart());
 			}
 			else {
 				// attribute has no value
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
 				fDoubleClickCount = 0;
 			}
 		}
@@ -167,18 +164,18 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		if (fDoubleClickCount == 1) {
 			Point word = getWord(regionText, fCaretPosition - fStructuredDocumentRegion.getStartOffset(fTextRegion));
 			if (word.x == word.y) { // no word found; select whole region
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), regionText.length());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), regionText.length());
 				fDoubleClickCount++;
 			}
 			else {
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion) + word.x, word.y - word.x);
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion) + word.x, word.y - word.x);
 			}
 		}
 		else if (fDoubleClickCount == 2) {
 			if (isQuoted(regionText)) {
 				// ==> // Point word = getWord(regionText, fCaretPosition -
 				// fStructuredDocumentRegion.getStartOffset(fTextRegion));
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), regionText.length());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), regionText.length());
 			}
 			else {
 				processElementAttrValueDoubleClicked2Times();
@@ -189,12 +186,12 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 				processElementAttrValueDoubleClicked2Times();
 			}
 			else {
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
 				fDoubleClickCount = 0;
 			}
 		}
 		else { // fDoubleClickCount == 4
-			fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
+			fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
 			fDoubleClickCount = 0;
 		}
 	}
@@ -207,7 +204,7 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 			prevRegionOffset = fStructuredDocumentRegion.getStartOffset(prevRegion) - 1;
 			prevRegion = fStructuredDocumentRegion.getRegionAtCharacterOffset(prevRegionOffset);
 			if ((prevRegion != null) && (prevRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(prevRegion), fTextRegion.getTextEnd() - prevRegion.getStart());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(prevRegion), fTextRegion.getTextEnd() - prevRegion.getStart());
 			}
 		}
 	}
@@ -218,7 +215,7 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		}
 		else {
 			if (fDoubleClickCount == 1) {
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart() + fTextRegion.getStart(), fTextRegion.getTextLength());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart() + fTextRegion.getStart(), fTextRegion.getTextLength());
 			}
 			else if (fDoubleClickCount == 2) {
 				if (fTextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
@@ -228,12 +225,12 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 					processElementAttrEqualsDoubleClicked2Times();
 				}
 				else {
-					fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
+					fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
 					fDoubleClickCount = 0;
 				}
 			}
 			else { // fDoubleClickCount == 3
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
 				fDoubleClickCount = 0;
 			}
 		}
@@ -241,9 +238,9 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 
 	protected void processTextDoubleClicked() {
 		if (fDoubleClickCount == 1) {
-			super.doubleClicked(fStructuredTextViewer);
+			super.doubleClicked(fTextViewer);
 
-			Point selectedRange = fStructuredTextViewer.getSelectedRange();
+			Point selectedRange = fTextViewer.getSelectedRange();
 			if ((selectedRange.x == fStructuredDocumentRegion.getStartOffset(fTextRegion)) && (selectedRange.y == fTextRegion.getTextLength())) {
 				// only one word in region, skip one level of double click
 				// selection
@@ -252,28 +249,28 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		}
 		else if (fDoubleClickCount == 2) {
 			if (fTextRegion.getType() == DOMRegionContext.UNDEFINED) {
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
 				fDoubleClickCount = 0;
 			}
 			else {
 				if (isQuoted(fStructuredDocumentRegion.getFullText(fTextRegion))) {
-					fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion) + 1, fTextRegion.getTextLength() - 2);
+					fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion) + 1, fTextRegion.getTextLength() - 2);
 				}
 				else {
-					fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), fTextRegion.getTextLength());
+					fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), fTextRegion.getTextLength());
 				}
 			}
 		}
 		else {
 			if ((fDoubleClickCount == 3) && isQuoted(fStructuredDocumentRegion.getFullText(fTextRegion))) {
-				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), fTextRegion.getTextLength());
+				fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), fTextRegion.getTextLength());
 			}
 			else {
 				if ((fDoubleClickCount == 3) && isQuoted(fStructuredDocumentRegionText)) {
-					fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart() + 1, fStructuredDocumentRegion.getLength() - 2);
+					fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart() + 1, fStructuredDocumentRegion.getLength() - 2);
 				}
 				else {
-					fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
+					fTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
 					fDoubleClickCount = 0;
 				}
 			}

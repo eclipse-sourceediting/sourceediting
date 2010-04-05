@@ -25,6 +25,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -45,7 +46,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
@@ -205,39 +205,36 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 		
 		IDOMModel xmlModel = null;
 		try {
-			if (viewer instanceof StructuredTextViewer) {
+			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
 
-				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(((StructuredTextViewer) viewer).getDocument());
-	
-				IDOMDocument xmlDoc = xmlModel.getDocument();
-				if (fTranslationAdapter == null || xmlModel.getId() != fModelId) {
-					fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-					fModelId = xmlModel.getId();
+			IDOMDocument xmlDoc = xmlModel.getDocument();
+			if (fTranslationAdapter == null || xmlModel.getId() != fModelId) {
+				fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+				fModelId = xmlModel.getId();
+			}
+			if (fTranslationAdapter != null) {
+
+				JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
+				int javaPosition = translation.getJavaOffset(pos) + javaPositionExtraOffset;
+
+				try {
+
+					ICompilationUnit cu = translation.getCompilationUnit();
+
+					// can't get java proposals w/out a compilation unit
+					// or without a valid position
+					if (cu == null || -1 == javaPosition)
+						return new ArrayList(0);
+					
+					collector = getProposalCollector(cu, translation);
+					synchronized (cu) {
+						cu.codeComplete(javaPosition, collector, (WorkingCopyOwner) null);
+					}
 				}
-				if (fTranslationAdapter != null) {
-	
-					JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
-					int javaPosition = translation.getJavaOffset(pos) + javaPositionExtraOffset;
-	
-					try {
-	
-						ICompilationUnit cu = translation.getCompilationUnit();
-	
-						// can't get java proposals w/out a compilation unit
-						// or without a valid position
-						if (cu == null || -1 == javaPosition)
-							return new ArrayList(0);
-						
-						collector = getProposalCollector(cu, translation);
-						synchronized (cu) {
-							cu.codeComplete(javaPosition, collector, (WorkingCopyOwner) null);
-						}
-					}
-					catch (CoreException coreEx) {
-						// a possible Java Model Exception due to not being a Web
-						// (Java) Project
-						coreEx.printStackTrace();
-					}
+				catch (CoreException coreEx) {
+					// a possible Java Model Exception due to not being a Web
+					// (Java) Project
+					coreEx.printStackTrace();
 				}
 			}
 		}
@@ -314,10 +311,13 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 	 * @param documentPosition
 	 * @return String
 	 */
-	private String getPartitionType(StructuredTextViewer viewer, int documentPosition) {
+	private String getPartitionType(ITextViewer viewer, int documentPosition) {
 		String partitionType = null;
 		try {
-			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, viewer.modelOffset2WidgetOffset(documentPosition), false);
+			if (viewer instanceof ITextViewerExtension5)
+				partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, ((ITextViewerExtension5) viewer).modelOffset2WidgetOffset(documentPosition), false);
+			else
+				partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, documentPosition, false);
 		}
 		catch (BadLocationException e) {
 			partitionType = IDocument.DEFAULT_CONTENT_TYPE;
@@ -340,7 +340,7 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 		ITextViewer viewer = context.getViewer();
 		int documentPosition = context.getInvocationOffset();
 		
-		String partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition);
+		String partitionType = getPartitionType(viewer, documentPosition);
 		IStructuredDocument structuredDocument = (IStructuredDocument) viewer.getDocument();
 		IStructuredDocumentRegion fn = structuredDocument.getRegionAtCharacterOffset(documentPosition);
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(viewer, documentPosition);
@@ -435,7 +435,7 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 								// well get those proposals from the embedded
 								// adapter
 								if (documentPosition > 0) {
-									partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
+									partitionType = getPartitionType(viewer, documentPosition - 1);
 									break;
 								}
 							}
@@ -466,7 +466,7 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 					// if it is, we're just gonna let the embedded JAVASCRIPT
 					// adapter get the proposals
 					if (documentPosition > 0) {
-						String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
+						String checkType = getPartitionType(viewer, documentPosition - 1);
 						if (checkType != IJSPPartitions.JSP_CONTENT_JAVASCRIPT) { // this
 							// check is failing for XML-JSP (region is not javascript...)
 							return true;
@@ -488,7 +488,7 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 						// if it is, we're just gonna let the embedded
 						// JAVASCRIPT adapter get the proposals
 						if (documentPosition > 0) {
-							String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
+							String checkType = getPartitionType(viewer, documentPosition - 1);
 							if (checkType != IJSPPartitions.JSP_CONTENT_JAVASCRIPT) {
 								return true;
 							}

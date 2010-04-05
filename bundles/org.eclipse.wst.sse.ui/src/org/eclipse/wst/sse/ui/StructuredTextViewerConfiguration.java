@@ -594,7 +594,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	private IInformationControlCreator getQuickAssistAssistantInformationControlCreator() {
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true));
+				return new DefaultInformationControl(parent, new HTMLTextPresenter(true));
 			}
 		};
 	}

@@ -28,6 +28,7 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -38,7 +39,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 
@@ -86,7 +86,7 @@ public abstract class AbstractStructuredFoldingStrategy
 	/**
 	 * The structured text viewer this folding strategy is associated with
 	 */
-	private StructuredTextViewer fViewer;
+	private ProjectionViewer fViewer;
 	
 	/**
 	 * these are not used but needed to implement abstract methods
@@ -107,7 +107,7 @@ public abstract class AbstractStructuredFoldingStrategy
 	 * 
 	 * @param viewer the viewer to associate this folding strategy with
 	 */
-	public void setViewer(StructuredTextViewer viewer) {
+	public void setViewer(ProjectionViewer viewer) {
 		super.setViewer(viewer);
 		
 		if(fViewer != null) {

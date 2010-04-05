@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,19 +19,21 @@ import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.osgi.framework.Bundle;
-/**
-*
 
-* Provisional API: This class/interface is part of an interim API that is still under development and expected to
-* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
-* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
-* (repeatedly) as the API evolves.
-*/
+/**
+ * Provisional API: This class/interface is part of an interim API that is
+ * still under development and expected to change significantly before
+ * reaching stability. It is being made available at this early stage to
+ * solicit feedback from pioneering adopters on the understanding that any
+ * code that uses this API will almost certainly be broken (repeatedly) as the
+ * API evolves.
+ * 
+ * This class is not intended to be subclassed.
+ */
 public class JSDTContentAssistantProcessor extends AbstractContentAssistProcessor {
 	private static final String JSDT_CORE_PLUGIN_ID = "org.eclipse.wst.jsdt.core"; //$NON-NLS-1$
 //	static {
@@ -42,7 +44,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 	protected int fJspSourcePosition, fJavaPosition;
 	private JSDTProposalCollector fProposalCollector;
 	private JsTranslationAdapter fTranslationAdapter = null;
-	protected StructuredTextViewer fViewer = null;
+	protected ITextViewer fViewer = null;
 	
 	public JSDTContentAssistantProcessor() {
 		super();
@@ -67,9 +69,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 		JSDTProposalCollector collector = null;
 		IDOMModel xmlModel = null;
 		try {
-			if (viewer instanceof StructuredTextViewer) {
-				fViewer = (StructuredTextViewer) viewer;
-			}
+			fViewer = viewer;
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
 			IDOMDocument xmlDoc = xmlModel.getDocument();
 			if (fTranslationAdapter == null) {

@@ -19,23 +19,21 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
-import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.wst.sse.core.internal.model.ModelManagerImpl;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager.HighlightedPosition;
 import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager.HighlightingStyle;
@@ -50,7 +48,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 
 	private IDocument fDocument;
 
-	private StructuredTextEditor fEditor;
+	private ITextViewer fViewer;
 	private SemanticHighlightingPresenter fPresenter;
 	private ISemanticHighlighting[] fSemanticHighlightings;
 	private HighlightingStyle[] fHighlightings;
@@ -75,15 +73,15 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 	/** HighlightingStyle - cache for background thread, only valid during {@link #reconcile(IRegion)} */
 	private HighlightingStyle[] fJobHighlightings;
 
-	public void install(StructuredTextEditor editor, ISourceViewer sourceViewer, SemanticHighlightingPresenter presenter, ISemanticHighlighting[] semanticHighlightings, HighlightingStyle[] highlightings) {
-		fEditor = editor;
+	public void install(ITextViewer sourceViewer, SemanticHighlightingPresenter presenter, ISemanticHighlighting[] semanticHighlightings, HighlightingStyle[] highlightings) {
+		fViewer = sourceViewer;
 		fPresenter = presenter;
 		fSemanticHighlightings = semanticHighlightings;
 		fHighlightings = highlightings;
 	}
 
 	public void uninstall() {
-		fEditor = null;
+		fViewer = null;
 		fPresenter = null;
 		fSemanticHighlightings = null;
 		fHighlightings = null;
@@ -200,19 +198,14 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 		if (runnable == null)
 			return;
 
-		StructuredTextEditor editor = fEditor;
-		if (editor == null)
+		if (fViewer == null)
 			return;
 
-		IWorkbenchPartSite site = editor.getSite();
-		if (site == null)
+		Control viewerControl = fViewer.getTextWidget();
+		if (viewerControl == null)
 			return;
 
-		Shell shell = site.getShell();
-		if (shell == null || shell.isDisposed())
-			return;
-
-		Display display = shell.getDisplay();
+		Display display = viewerControl.getDisplay();
 		if (display == null || display.isDisposed())
 			return;
 

@@ -32,7 +32,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 
@@ -78,7 +77,7 @@ public class JSPELCompletionProposalComputer extends
 			if (cursorRegion.getType() == DOMJSPRegionContexts.JSP_EL_CONTENT) {
 				String prefix = getPrefix(documentPosition - startOffset, elText);
 				if (null != prefix) {
-					List proposals = getFunctionProposals(prefix, (StructuredTextViewer) viewer, documentPosition);
+					List proposals = getFunctionProposals(prefix, viewer, documentPosition);
 					results.addAll(proposals);
 				}
 			}
@@ -130,7 +129,7 @@ public class JSPELCompletionProposalComputer extends
 	 * @param offset
 	 * @return
 	 */
-	private List getFunctionProposals(String prefix, StructuredTextViewer viewer, int offset) {
+	private List getFunctionProposals(String prefix, ITextViewer viewer, int offset) {
 		TLDCMDocumentManager docMgr = TaglibController.getTLDCMDocumentManager(viewer.getDocument());
 		ArrayList completionList = new ArrayList();
 		if (docMgr == null)

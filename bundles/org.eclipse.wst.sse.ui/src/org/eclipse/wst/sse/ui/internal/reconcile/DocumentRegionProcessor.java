@@ -32,11 +32,11 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
@@ -194,7 +194,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			}
 			
 			ITextViewer viewer = getTextViewer();
-			if(viewer instanceof StructuredTextViewer) {
+			if(viewer instanceof ProjectionViewer) {
 				ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 				
 				IContentType type = Platform.getContentTypeManager().getContentType(contentTypeId);
@@ -206,7 +206,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 				}
 				
 				if(fFoldingStrategy != null) {
-					fFoldingStrategy.setViewer((StructuredTextViewer)viewer);
+					fFoldingStrategy.setViewer((ProjectionViewer)viewer);
 					fFoldingStrategy.setDocument(getDocument());
 				}
 			}

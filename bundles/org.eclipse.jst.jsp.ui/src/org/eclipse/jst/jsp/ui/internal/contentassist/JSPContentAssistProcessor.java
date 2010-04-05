@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -63,7 +64,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposal;
@@ -461,7 +461,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 		ICompletionProposal[] embeddedResults = EMPTY_PROPOSAL_SET;
 
 		// check the actual partition type
-		String partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition);
+		String partitionType = getPartitionType(viewer, documentPosition);
 		IStructuredDocument structuredDocument = (IStructuredDocument) viewer.getDocument();
 
 		IStructuredDocumentRegion fn = structuredDocument.getRegionAtCharacterOffset(documentPosition);
@@ -559,7 +559,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 								// well get those proposals from the embedded
 								// adapter
 								if (documentPosition > 0) {
-									partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
+									partitionType = getPartitionType(viewer, documentPosition - 1);
 									break;
 								}
 							}
@@ -590,7 +590,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 					// if it is, we're just gonna let the embedded JAVASCRIPT
 					// adapter get the proposals
 					if (documentPosition > 0) {
-						String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
+						String checkType = getPartitionType(viewer, documentPosition - 1);
 						if (checkType != IJSPPartitions.JSP_CONTENT_JAVASCRIPT) { // this
 							// check
 							// is
@@ -620,7 +620,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 						// if it is, we're just gonna let the embedded
 						// JAVASCRIPT adapter get the proposals
 						if (documentPosition > 0) {
-							String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
+							String checkType = getPartitionType(viewer, documentPosition - 1);
 							if (checkType != IJSPPartitions.JSP_CONTENT_JAVASCRIPT) {
 								return getJSPJavaCompletionProposals(viewer, documentPosition);
 							}
@@ -888,10 +888,13 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	 * @param documentPosition
 	 * @return String
 	 */
-	protected String getPartitionType(StructuredTextViewer viewer, int documentPosition) {
+	protected String getPartitionType(ITextViewer viewer, int documentPosition) {
 		String partitionType = null;
 		try {
-			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, viewer.modelOffset2WidgetOffset(documentPosition), false);
+			if (viewer instanceof ITextViewerExtension5)
+				partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, ((ITextViewerExtension5) viewer).modelOffset2WidgetOffset(documentPosition), false);
+			else
+				partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, documentPosition, false);
 		}
 		catch (BadLocationException e) {
 			partitionType = IDocument.DEFAULT_CONTENT_TYPE;
