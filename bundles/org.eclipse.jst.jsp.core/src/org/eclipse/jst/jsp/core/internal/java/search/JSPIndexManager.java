@@ -400,9 +400,6 @@ public class JSPIndexManager {
 			// makes sure IndexManager is aware of our indexes
 			saveIndexes();
 			singleInstance.initializing = false;
-			
-			//build the initial index
-			rebuildIndex();
 		}
 
 	}
