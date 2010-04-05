@@ -109,7 +109,7 @@ public class TextRegionListImpl implements ITextRegionList {
 		if (numMoved > 0)
 			System.arraycopy(fRegions, insertPos, fRegions, insertPos + newRegionListSize, numMoved);
 
-		if (newRegionList instanceof TextRegionListImpl) {
+		if (newRegionList instanceof TextRegionListImpl && ((TextRegionListImpl) newRegionList).fRegions != null) {
 			System.arraycopy(((TextRegionListImpl) newRegionList).fRegions, 0, fRegions, insertPos, newRegionListSize);
 		}
 		else {

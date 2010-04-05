@@ -790,12 +790,13 @@ public class DefaultXMLPartitionFormatter {
 		String whitespaceStrategy = constraints.getWhitespaceStrategy();
 		int availableLineWidth = constraints.getAvailableLineWidth();
 		ITextRegionList textRegions = currentDocumentRegion.getRegions();
+		int currentNumberOfRegions = currentDocumentRegion.getNumberOfRegions();
 		int currentTextRegionIndex = 1;
 
 		ITextRegion currentTextRegion = textRegions.get(currentTextRegionIndex);
 		String currentType = currentTextRegion.getType();
 		// tag name should always be the first text region
-		if (DOMRegionContext.XML_TAG_NAME.equals(currentType)) {
+		if (DOMRegionContext.XML_TAG_NAME.equals(currentType) && currentTextRegionIndex < currentNumberOfRegions - 1) {
 			ITextRegion nextTextRegion = textRegions.get(currentTextRegionIndex + 1);
 			// Bug 221279 - Some non well-formed documents will not contribute a next region
 			if (nextTextRegion != null && DOMRegionContext.XML_TAG_CLOSE.equals(nextTextRegion.getType())) {
