@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -99,7 +99,7 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 	private void smartRemoveEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
 			// An opening tag is now a self-terminated end-tag
-			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1)) && isPreferenceEnabled(HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
+			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1)) && command.length == 0 && isPreferenceEnabled(HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
 				IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
 				if (node != null && !node.hasChildNodes()) {
 					IStructuredDocumentRegion region = node.getFirstStructuredDocumentRegion();
