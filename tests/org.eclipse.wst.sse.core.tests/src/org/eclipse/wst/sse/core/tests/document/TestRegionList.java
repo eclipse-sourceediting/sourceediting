@@ -90,6 +90,62 @@ public class TestRegionList extends TestCase {
 		assertEquals("count was wrong", 0, new Accessor(impl, TextRegionListImpl.class).getInt("fRegionsCount"));
 	}
 
+	public void test_getOver() {
+		ITextRegion[] regions = new ITextRegion[3];
+
+		TextRegionListImpl impl = new TextRegionListImpl();
+		boolean added = impl.add(regions[0] = new ContextRegion(REGION_TYPE, 0, 1, 1));
+		assertTrue("region not added", added);
+		assertEquals("count was wrong", 1, new Accessor(impl, TextRegionListImpl.class).getInt("fRegionsCount"));
+		added = impl.add(regions[1] = new ContextRegion(REGION_TYPE, 1, 1, 1));
+		assertTrue("region not added", added);
+		assertEquals("count was wrong", 2, new Accessor(impl, TextRegionListImpl.class).getInt("fRegionsCount"));
+		added = impl.add(regions[2] = new ContextRegion(REGION_TYPE, 2, 1, 1));
+		assertTrue("region not added", added);
+		assertEquals("count was wrong", 3, new Accessor(impl, TextRegionListImpl.class).getInt("fRegionsCount"));
+
+		assertEquals("wrong object", regions[0], impl.get(0));
+		assertEquals("wrong object", regions[1], impl.get(1));
+		assertEquals("wrong object", regions[2], impl.get(2));
+
+		ArrayIndexOutOfBoundsException e = null;
+		try {
+			impl.get(impl.size());
+		}
+		catch (ArrayIndexOutOfBoundsException e2){
+			e = e2;
+		}
+		assertNotNull("no ArrayIndexOutOfBoundsException thrown when expected", e);
+	}
+
+	public void test_getUnder() {
+		ITextRegion[] regions = new ITextRegion[3];
+
+		TextRegionListImpl impl = new TextRegionListImpl();
+		boolean added = impl.add(regions[0] = new ContextRegion(REGION_TYPE, 0, 1, 1));
+		assertTrue("region not added", added);
+		assertEquals("count was wrong", 1, new Accessor(impl, TextRegionListImpl.class).getInt("fRegionsCount"));
+		added = impl.add(regions[1] = new ContextRegion(REGION_TYPE, 1, 1, 1));
+		assertTrue("region not added", added);
+		assertEquals("count was wrong", 2, new Accessor(impl, TextRegionListImpl.class).getInt("fRegionsCount"));
+		added = impl.add(regions[2] = new ContextRegion(REGION_TYPE, 2, 1, 1));
+		assertTrue("region not added", added);
+		assertEquals("count was wrong", 3, new Accessor(impl, TextRegionListImpl.class).getInt("fRegionsCount"));
+
+		assertEquals("wrong object", regions[0], impl.get(0));
+		assertEquals("wrong object", regions[1], impl.get(1));
+		assertEquals("wrong object", regions[2], impl.get(2));
+
+		ArrayIndexOutOfBoundsException e = null;
+		try {
+			impl.get(-1);
+		}
+		catch (ArrayIndexOutOfBoundsException e2){
+			e = e2;
+		}
+		assertNotNull("no ArrayIndexOutOfBoundsException thrown when expected", e);
+	}
+
 	public void test_get() {
 		ITextRegion[] regions = new ITextRegion[3];
 
