@@ -86,7 +86,6 @@ public class TextRegionListImpl implements ITextRegionList {
 	}
 
 	public boolean add(ITextRegion region) {
-
 		if (region == null)
 			return false;
 		ensureCapacity(fRegionsCount + 1);
@@ -94,7 +93,7 @@ public class TextRegionListImpl implements ITextRegionList {
 		return true;
 	}
 
-	public boolean addAll(int insertPos, ITextRegionList newRegions) {
+	public boolean addAll(int insertPos, ITextRegionList newRegionList) {
 		// beginning of list is 0 to insertPos-1
 		// remainder of list is insertPos to fRegionsCount
 		// resulting total will be be fRegionsCount + newRegions.size()
@@ -102,20 +101,24 @@ public class TextRegionListImpl implements ITextRegionList {
 			throw new ArrayIndexOutOfBoundsException(insertPos);
 		}
 
-		int newRegionsSize = newRegions.size();
+		int newRegionListSize = newRegionList.size();
 
-		ensureCapacity(fRegionsCount + newRegionsSize);
+		ensureCapacity(fRegionsCount + newRegionListSize);
 
 		int numMoved = fRegionsCount - insertPos;
 		if (numMoved > 0)
-			System.arraycopy(fRegions, insertPos, fRegions, insertPos + newRegionsSize, numMoved);
+			System.arraycopy(fRegions, insertPos, fRegions, insertPos + newRegionListSize, numMoved);
 
-		for (int i = 0; i < newRegionsSize; i++)
-			fRegions[insertPos++] = newRegions.get(i);
-
-		fRegionsCount += newRegionsSize;
-		return newRegionsSize != 0;
-
+		if (newRegionList instanceof TextRegionListImpl) {
+			System.arraycopy(((TextRegionListImpl) newRegionList).fRegions, 0, fRegions, insertPos, newRegionListSize);
+		}
+		else {
+			for (int i = 0; i < newRegionListSize; i++) {
+				fRegions[insertPos++] = newRegionList.get(i);
+			}
+		}
+		fRegionsCount += newRegionListSize;
+		return newRegionListSize != 0;
 	}
 
 	public void clear() {
@@ -139,14 +142,14 @@ public class TextRegionListImpl implements ITextRegionList {
 	}
 
 	public ITextRegion get(int index) {
-		if (index < 0 || index > fRegionsCount) {
+		// fRegionCount may not equal fRegions.length
+		if (index < 0 || index >= fRegionsCount) {
 			throw new ArrayIndexOutOfBoundsException(index);
 		}
 		return fRegions[index];
 	}
 
 	public int indexOf(ITextRegion region) {
-
 		int result = -1;
 		if (region != null) {
 			if (fRegions != null) {
