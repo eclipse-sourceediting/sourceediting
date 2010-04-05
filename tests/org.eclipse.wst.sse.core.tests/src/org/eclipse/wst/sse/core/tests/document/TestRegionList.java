@@ -77,6 +77,29 @@ public class TestRegionList extends TestCase {
 		assertEquals("object was wrong", regions[0], ((ITextRegion[]) new Accessor(impl, TextRegionListImpl.class).get("fRegions"))[2]);
 	}
 
+	public void test_addAllToEmpty() {
+		ITextRegion[] regions = new ITextRegion[3];
+
+		TextRegionListImpl impl = new TextRegionListImpl();
+		boolean added = impl.add(regions[0] = new ContextRegion(REGION_TYPE, 0, 1, 1));
+		assertTrue("region not added", added);
+
+		added = impl.add(regions[1] = new ContextRegion(REGION_TYPE, 1, 1, 1));
+		assertTrue("region not added", added);
+		added = impl.add(regions[2] = new ContextRegion(REGION_TYPE, 2, 1, 1));
+		assertTrue("region not added", added);
+
+		TextRegionListImpl impl2 = new TextRegionListImpl();
+		added = impl2.addAll(0, impl);
+		assertTrue("regions not added", added);
+
+		assertEquals("count was wrong", 3, new Accessor(impl, TextRegionListImpl.class).getInt("fRegionsCount"));
+
+		assertEquals("object was wrong", regions[0], ((ITextRegion[]) new Accessor(impl, TextRegionListImpl.class).get("fRegions"))[0]);
+		assertEquals("object was wrong", regions[1], ((ITextRegion[]) new Accessor(impl, TextRegionListImpl.class).get("fRegions"))[1]);
+		assertEquals("object was wrong", regions[2], ((ITextRegion[]) new Accessor(impl, TextRegionListImpl.class).get("fRegions"))[2]);
+	}
+
 	public void test_clear() {
 		TextRegionListImpl impl = new TextRegionListImpl();
 		boolean added = impl.add(new ContextRegion(REGION_TYPE, 0, 1, 1));
