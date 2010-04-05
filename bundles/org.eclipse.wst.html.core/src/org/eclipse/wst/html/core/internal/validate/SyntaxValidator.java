@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@ package org.eclipse.wst.html.core.internal.validate;
 
 import java.util.Iterator;
 
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLPropertyDeclaration;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -182,21 +184,31 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		else {
 			if (info.hasEndTag()) {
 				if (info.decl != null) {
-					if (/*CMUtil.isHTML(info.decl) &&*/ !info.target.hasChildNodes()) {
-						if (info.target.isContainer()) {
-							// Set the error mark to the start of the element.
-							Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_END_TAG);
-							report(MISSING_START_TAG_ERROR, errorSeg, info.target);
-						}
-						else {
-							// Mark the whole END tag as an error segment.
-							Segment errorSeg = new Segment(info.endTag);
-							report(UNNECESSARY_END_TAG_ERROR, errorSeg, info.target);
-						}
-					}
-					else if (info.isXHTML) {
+					//if xhtml then must have end tag
+					//else determine if end tag is omissible
+					if (info.isXHTML) {
 						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_END_TAG_NAME);
 						report(MISSING_START_TAG_ERROR, errorSeg, info.target);
+					} else {
+						//determine if the end tag is omissible
+						boolean canOmitStartTag = false;
+						if(info.decl instanceof HTMLPropertyDeclaration) {
+							int omitType = ((HTMLPropertyDeclaration)info.decl).getOmitType();
+							canOmitStartTag = omitType == HTMLElementDeclaration.OMIT_BOTH;
+						}
+					
+						if (!canOmitStartTag && !info.target.hasChildNodes()) {
+							if (info.target.isContainer()) {
+								// Set the error mark to the start of the element.
+								Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_END_TAG);
+								report(MISSING_START_TAG_ERROR, errorSeg, info.target);
+							}
+							else {
+								// Mark the whole END tag as an error segment.
+								Segment errorSeg = new Segment(info.endTag);
+								report(UNNECESSARY_END_TAG_ERROR, errorSeg, info.target);
+							}
+						}
 					}
 				}
 			}
