@@ -21,18 +21,6 @@ public class CSSCoreMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.css.core.internal.CSSCorePluginResources";//$NON-NLS-1$
 
 	public static String You_cannot_use_CSSStyleShe_UI_;
-	public static String _1concat_ERROR_;
-	public static String _2concat_ERROR_;
-	public static String _3concat_ERROR_;
-	public static String _4concat_ERROR_;
-	public static String _25concat_ERROR_;
-	public static String _26concat_ERROR_;
-	public static String _27concat_ERROR_;
-	public static String _28concat_ERROR_;
-	public static String _5concat_ERROR_;
-	public static String _6concat_ERROR_;
-	public static String _7concat_ERROR_;
-	public static String _8concat_ERROR_;
 	public static String CSSContentPropertiesManager_Updating;
 	public static String CSSContentPropertiesManager_Problems_Updating;
 
