@@ -198,7 +198,7 @@
 		<command
 			name="%command.information.quick_outline.name"
 			description="%command.information.quick_outline.description"
-			categoryId="org.eclipse.ui.category.edit"
+			categoryId="org.eclipse.ui.category.navigate"
 			id="org.eclipse.wst.sse.ui.quick_outline">
 		</command>
 	</extension>
