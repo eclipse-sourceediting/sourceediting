@@ -18,32 +18,32 @@
      	</activity>
      	
       	<activityPatternBinding
-            activityId="org.eclipse.wst.web"
+            activityId="org.eclipse.wtp.web.capabilities"
             pattern="org\.eclipse\.wst\.css\.[\.\w/]*">
       	</activityPatternBinding>
       	
       	<activityPatternBinding
-            activityId="org.eclipse.wst.web"
+            activityId="org.eclipse.wtp.web.capabilities"
             pattern="org\.eclipse\.wst\.html\.[\.\w/]*">
       	</activityPatternBinding>
       	
       	<activityPatternBinding
-            activityId="org.eclipse.wst.web"
+            activityId="org.eclipse.wtp.web.capabilities"
             pattern="org\.eclipse\.wst\.javascript\.[\.\w/]*">
       	</activityPatternBinding>
       	
       	<activityPatternBinding
-            activityId="org.eclipse.wst.web"
+            activityId="org.eclipse.wtp.web.capabilities"
             pattern="org\.eclipse\.wst\.server\.[\.\w/]*">
       	</activityPatternBinding>
       	
       	<activityPatternBinding
-            activityId="org.eclipse.wst.web"
+            activityId="org.eclipse.wtp.web.capabilities"
             pattern="org\.eclipse\.wst\.internet\.monitor\.[\.\w/]*">
       	</activityPatternBinding>
       	
       	<activityPatternBinding
-            activityId="org.eclipse.wst.web"
+            activityId="org.eclipse.wtp.web.capabilities"
             pattern="org\.eclipse\.wst\.web\.[\.\w/]*">
       	</activityPatternBinding>
       	
