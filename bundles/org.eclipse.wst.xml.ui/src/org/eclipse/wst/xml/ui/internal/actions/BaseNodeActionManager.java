@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -151,11 +151,14 @@ public abstract class BaseNodeActionManager {
 		}
 	}
 
+	protected boolean canContributeChildActions(Node node){
+		return true;
+	}
 
 	protected void contributeAddChildActions(IMenuManager menu, Node node, int ic, int vc) {
 		int nodeType = node.getNodeType();
 
-		if (nodeType == Node.ELEMENT_NODE) {
+		if (nodeType == Node.ELEMENT_NODE && canContributeChildActions(node)) {
 			// 'Add Child...' and 'Add Attribute...' actions
 			//
 			Element element = (Element) node;
@@ -164,7 +167,7 @@ public abstract class BaseNodeActionManager {
 			IMenuManager addChildMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_CHILD);
 			menu.add(addAttributeMenu);
 			menu.add(addChildMenu);
-
+		
 			CMElementDeclaration ed = modelQuery.getCMElementDeclaration(element);
 			if (ed != null) {
 				// add insert attribute actions
@@ -172,7 +175,6 @@ public abstract class BaseNodeActionManager {
 				List modelQueryActionList = new ArrayList();
 				modelQuery.getInsertActions(element, ed, -1, ModelQuery.INCLUDE_ATTRIBUTES, vc, modelQueryActionList);
 				addActionHelper(addAttributeMenu, modelQueryActionList);
-
 				// add insert child node actions
 				//
 				modelQueryActionList = new ArrayList();

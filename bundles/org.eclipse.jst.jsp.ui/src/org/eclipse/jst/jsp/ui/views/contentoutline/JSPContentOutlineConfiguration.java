@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,12 @@
 package org.eclipse.jst.jsp.ui.views.contentoutline;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.actions.JSPNodeActionManager;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 
 /**
  * Configuration for outline view page which shows JSP content.
@@ -47,5 +51,9 @@ public class JSPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	 */
 	protected IPreferenceStore getPreferenceStore() {
 		return JSPUIPlugin.getDefault().getPreferenceStore();
+	}
+	
+	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
+		return new JSPNodeActionManager((IStructuredModel) treeViewer.getInput(), treeViewer);
 	}
 }
