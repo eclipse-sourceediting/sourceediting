@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.css.core.internal.Logger;
@@ -54,8 +53,6 @@ public class CSSCompletionProposalComputer implements ICompletionProposalCompute
 		CSSProposalArranger arranger = null;
 
 		// If there is a selected region, we'll need to replace the text
-		ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
-		boolean selected = (selection != null && selection.getText() != null && selection.getText().trim().length() > 0);
 		
 		// bail if we couldn't get an indexed node
 		// if(indexedNode == null) return new ICompletionProposal[0];
@@ -76,7 +73,7 @@ public class CSSCompletionProposalComputer implements ICompletionProposalCompute
 				if (keyIndexedNode == null) {
 					keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
 				}
-				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0, selected);
+				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
 			}
 		} else if ((parent != null) && parent.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
 			// now we know the cursor is in a <style> tag with a region
@@ -90,7 +87,7 @@ public class CSSCompletionProposalComputer implements ICompletionProposalCompute
 				if (keyIndexedNode == null) {
 					keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
 				}
-				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0, selected);
+				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
 			}
 		} else if (indexedNode instanceof IDOMNode) {
 			IDOMNode domNode = ((IDOMNode)indexedNode);
@@ -115,7 +112,7 @@ public class CSSCompletionProposalComputer implements ICompletionProposalCompute
 				}
 				if (cssIndexedNode instanceof ICSSNode) {
 					// inline style for a tag, not embedded
-					arranger = new CSSProposalArranger(pos, (ICSSNode) cssIndexedNode, textRegionStartOffset, quote, selected);
+					arranger = new CSSProposalArranger(pos, (ICSSNode) cssIndexedNode, textRegionStartOffset, quote);
 				}
 			}
 		} else if (indexedNode instanceof ICSSNode) {
@@ -130,7 +127,7 @@ public class CSSCompletionProposalComputer implements ICompletionProposalCompute
 					}
 					if (keyIndexedNode instanceof ICSSNode) {
 						// inline style for a tag, not embedded
-						arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, 0, (char)0, selected);
+						arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, 0, (char)0);
 					}
 				}
 			}
