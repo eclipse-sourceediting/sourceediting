@@ -13,3 +13,4 @@ Bundle-Vendor: %vendorName
 Export-Package: org.eclipse.wst.xml.xpath.core.tests;uses:="org.osgi.framework,junit.framework,org.eclipse.core.runtime",
  org.eclipse.wst.xsl.internal.core.xpath.tests;x-internal:=true
 Bundle-Localization: plugin
+Import-Package: junit.framework;version="3.8.2"
