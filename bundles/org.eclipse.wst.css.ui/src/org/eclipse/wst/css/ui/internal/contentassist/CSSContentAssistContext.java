@@ -34,6 +34,7 @@ class CSSContentAssistContext {
 	private int fTargetPos = -1;
 	private ICSSNode fTargetNode = null;
 	private int fCursorPos = -1;
+	private int fLength = -1;
 	private IStructuredDocument fStructuredDocument = null;
 	private int fDocumentOffset = 0;
 	private char fQuote = 0;
@@ -57,7 +58,16 @@ class CSSContentAssistContext {
 		fQuote = quote;
 		initialize(node.getOwnerDocument());
 	}
-	
+
+	CSSContentAssistContext(int documentPosition, ICSSNode node, int documentOffset, int length, char quote) {
+		this();
+		fCursorPos = documentPosition;
+		fDocumentOffset = documentOffset;
+		fQuote = quote;
+		fLength = length;
+		initialize(node.getOwnerDocument());
+	}
+
 	CSSContentAssistContext(int documentPosition, ICSSNode node, int documentOffset, char quote, boolean selected) {
 		this();
 		fCursorPos = documentPosition;
@@ -309,11 +319,17 @@ class CSSContentAssistContext {
 				fReplaceBegin = fCursorPos;
 				fTextToReplace = ""; //$NON-NLS-1$
 				fTextToCompare = ""; //$NON-NLS-1$
+				try {
+					if (fLength > 0)
+						fTextToReplace = fStructuredDocument.get(fReplaceBegin, fLength);
+				}
+				catch (BadLocationException e) {
+				}
 			} else {
 				// to replace
 				fReplaceBegin = regionStart;
 				fTextToReplace = regionText;
-				
+
 				//math to deal with leading quote
 				int matchLength = fCursorPos - fReplaceBegin;
 				if(fQuote != 0) {
