@@ -15,6 +15,7 @@
             category="org.eclipse.wst.web.ui"
             class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard"
             project="true"
+            finalPerspective="org.eclipse.wst.web.ui.webDevPerspective"
             id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard">
          <description>
             %StaticWebProject.description
