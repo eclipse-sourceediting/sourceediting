@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -548,21 +548,21 @@ public final class DeploymentDescriptorPropertyCache {
 		}
 	}
 
-	private static DeploymentDescriptorPropertyCache _instance = new DeploymentDescriptorPropertyCache();
+	private static final DeploymentDescriptorPropertyCache _instance = new DeploymentDescriptorPropertyCache();
 	private static final boolean _debugResolutionCache = false;
 
-	private static final float defaultWebAppVersion = 2.4f;
-	static String EL_IGNORED = "el-ignored"; //$NON-NLS-1$
-	private static String ID = "id"; //$NON-NLS-1$
-	static String INCLUDE_CODA = "include-coda"; //$NON-NLS-1$
-	static String INCLUDE_PRELUDE = "include-prelude"; //$NON-NLS-1$
+	private static final float defaultWebAppVersion = 3f;
+	static final String EL_IGNORED = "el-ignored"; //$NON-NLS-1$
+	static final String ID = "id"; //$NON-NLS-1$
+	static final String INCLUDE_CODA = "include-coda"; //$NON-NLS-1$
+	static final String INCLUDE_PRELUDE = "include-prelude"; //$NON-NLS-1$
 
-	static String IS_XML = "is-xml"; //$NON-NLS-1$
+	static final String IS_XML = "is-xml"; //$NON-NLS-1$
 	private static String JSP_PROPERTY_GROUP = "jsp-property-group"; //$NON-NLS-1$
-	static String PAGE_ENCODING = "page-encoding"; //$NON-NLS-1$
+	static final String PAGE_ENCODING = "page-encoding"; //$NON-NLS-1$
 
-	static String SCRIPTING_INVALID = "scripting-invalid"; //$NON-NLS-1$
-	static String URL_PATTERN = "url-pattern"; //$NON-NLS-1$
+	static final String SCRIPTING_INVALID = "scripting-invalid"; //$NON-NLS-1$
+	static final String URL_PATTERN = "url-pattern"; //$NON-NLS-1$
 	private static final String WEB_APP_ELEMENT_LOCAL_NAME = ":web-app"; //$NON-NLS-1$
 	private static final String WEB_APP_ELEMENT_NAME = "web-app"; //$NON-NLS-1$
 
@@ -692,6 +692,8 @@ public final class DeploymentDescriptorPropertyCache {
 	 */
 	private float convertSpecVersions(float version) {
 		if (version > 0) {
+			if (version == 3f)
+				return 2.2f;
 			if (version == 2.5f)
 				return 2.1f;
 			else if (version == 2.4f)
