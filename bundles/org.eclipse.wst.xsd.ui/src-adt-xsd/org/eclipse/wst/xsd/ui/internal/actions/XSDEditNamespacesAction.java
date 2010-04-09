@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -167,6 +167,28 @@ public class XSDEditNamespacesAction extends Action
               TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, targetNamespace, dialog.getTargetNamespace());
               targetNamespaceChangeHandler.resolve();
             }
+
+            
+            // Now handle the other changes. PrefixMapping size should be
+            // greater than 0 for any remaining prefix changes
+
+            if (prefixMapping.size() > 0)
+            {
+              for (Iterator iter = prefixMapping.keySet().iterator(); iter.hasNext();)
+              {
+                String oldPrefix = (String) iter.next();
+                String newPrefix = (String) prefixMapping.get(oldPrefix);
+
+                // Now update any references to this old prefix in the schema
+                // with the value of the new prefix
+                String ns = (String) origPrefixMap.get(oldPrefix);
+                SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, newPrefix, ns != null? ns : ""); //$NON-NLS-1$
+                spch.resolve();
+              }
+            }
+            namespaceInfoManager.removeNamespaceInfo(element);
+            namespaceInfoManager.addNamespaceInfo(element, newInfoList, false);
+            
             // Third, handle the schema for schema prefix change
             if (xsdPrefixChanged)
             {
@@ -192,26 +214,6 @@ public class XSDEditNamespacesAction extends Action
 
               prefixMapping.remove(origXSDPrefix != null? origXSDPrefix : ""); //$NON-NLS-1$
             }
-            // Now handle the other changes. PrefixMapping size should be
-            // greater than 0 for any remaining prefix changes
-
-            if (prefixMapping.size() > 0)
-            {
-              for (Iterator iter = prefixMapping.keySet().iterator(); iter.hasNext();)
-              {
-                String oldPrefix = (String) iter.next();
-                String newPrefix = (String) prefixMapping.get(oldPrefix);
-
-                // Now update any references to this old prefix in the schema
-                // with the value of the new prefix
-                String ns = (String) origPrefixMap.get(oldPrefix);
-                SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, newPrefix, ns != null? ns : ""); //$NON-NLS-1$
-                spch.resolve();
-              }
-            }
-            namespaceInfoManager.removeNamespaceInfo(element);
-            namespaceInfoManager.addNamespaceInfo(element, newInfoList, false);
-
             xsdSchema.setIncrementalUpdate(true);
           }
           catch (Exception e)
