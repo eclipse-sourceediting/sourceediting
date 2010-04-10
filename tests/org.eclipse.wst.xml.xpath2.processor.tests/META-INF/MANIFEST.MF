@@ -30,4 +30,3 @@ Bundle-Activator: org.eclipse.wst.xml.xpath2.processor.test.XPath20TestPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/xmlunit-1.2.jar
-Import-Package: junit.framework;version="3.8.2"
