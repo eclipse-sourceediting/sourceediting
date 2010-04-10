@@ -4,3 +4,5 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wtp.xml.capabilities;singleton:=true
 Bundle-Version: 1.0.100.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Require-Bundle: org.eclipse.ui.workbench,
+ org.eclipse.help.ui
