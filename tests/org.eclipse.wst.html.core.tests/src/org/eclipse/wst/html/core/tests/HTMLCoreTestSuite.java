@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.wst.html.core.tests.misc.HTMLTagInfoTest;
 import org.eclipse.wst.html.core.tests.model.BUG124835SetStyleAttributeValueTest;
 import org.eclipse.wst.html.core.tests.model.GetOverrideStyleTest;
 import org.eclipse.wst.html.core.tests.model.ModelModifications;
+import org.eclipse.wst.html.core.tests.model.TestCSS;
 import org.eclipse.wst.html.core.tests.model.TestCatalogContentModels;
 import org.eclipse.wst.html.core.tests.model.TestForNPEInCSSCreation;
 
@@ -40,6 +41,7 @@ public class HTMLCoreTestSuite extends TestSuite {
 		super("HTML Core TestSuite");
 
 		addTest(ModelParserTests.suite());
+		addTest(new TestSuite(TestCSS.class));
 		addTest(new TestSuite(HTMLCorePreferencesTest.class));
 		addTest(new TestSuite(HTMLTagInfoTest.class));
 		addTest(new TestSuite(ModelModifications.class));
