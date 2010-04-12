@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 		}
 		
 		String type = region.getType();
-		if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)) {
+		if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) || (type == DOMRegionContext.UNDEFINED)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 		}
 		if ((type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
@@ -94,9 +94,6 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 		}
 		if ((type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBLIC) || (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSTEM)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
-		}
-		if (type == DOMRegionContext.UNDEFINED) {
-			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
 		}
 		if (type == DOMRegionContext.WHITE_SPACE) {
 			/*
