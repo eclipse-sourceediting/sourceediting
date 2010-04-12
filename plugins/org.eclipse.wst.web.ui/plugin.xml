@@ -133,5 +133,33 @@
 					tooltip="%action.tooltip.HTML" />
 		</actionSet>
 	</extension>
+	 <extension
+	       point="org.eclipse.ui.navigator.navigatorContent">
+			<commonWizard
+				menuGroupId="org.eclipse.jst.j2ee.ui.newProjects" 
+				type="new"
+				wizardId="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard">
+				<enablement>
+					<or>
+						<instanceof
+							value="org.eclipse.core.resources.IWorkspaceRoot" />
+						<and>
+							<adapt
+								type="org.eclipse.core.resources.IProject">
+								<or>
+									<test forcePluginActivation="true"
+										property="org.eclipse.wst.common.project.facet.core.projectFacet"
+										value="jst.ear" />
+								</or>
+							</adapt>
+						</and>
+					    <and>
+						  <instanceof value="java.util.Collection"/>
+						  <count value="0" />
+						</and>
+					</or>
+				</enablement>
+			</commonWizard>    
+	 </extension>
 
 </plugin>
