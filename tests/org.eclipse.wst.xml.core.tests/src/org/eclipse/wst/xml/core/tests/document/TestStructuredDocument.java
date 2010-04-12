@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRe
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 
@@ -492,6 +493,25 @@ public class TestStructuredDocument extends TestCase {
 				}
 			}
 			assertEquals("wrong number of positions", categories.length, found);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+
+	/** Tests that when a tag is read-only, its entirety is read-only. */
+	public void testReadOnlyTag() throws CoreException, IOException {
+		IStructuredModel model = getTestModel();
+		try {
+			IDOMNode node = (IDOMNode) model.getIndexedRegion(23);
+			assertNotNull("couldn't get node", node);
+			// all descendants are read-only
+			node.setChildEditable(false);
+			IStructuredDocument document = model.getStructuredDocument();
+			assertTrue(document.containsReadOnly(80, 0));
+			
 		}
 		finally {
 			if (model != null) {
