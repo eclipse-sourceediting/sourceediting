@@ -412,7 +412,7 @@
 	<!-- define the XMLSamples project wizard -->
 	<extension point="org.eclipse.ui.newWizards">
 		<category
-			name="%_UI_WIZARD_NEW_XML"
+			name="%_UI_WIZARD_XML_CATEGORY"
 			parentCategory="org.eclipse.ui.Examples"
 			id="org.eclipse.wst.xml.examples">
 		</category>
@@ -735,7 +735,7 @@
        point="org.eclipse.ui.importWizards">
     <category
           id="org.eclipse.wst.XMLCategory"
-          name="%_UI_WIZARD_NEW_XML">
+          name="%_UI_WIZARD_XML_CATEGORY">
     </category>
     <wizard
           category="org.eclipse.wst.XMLCategory"
@@ -752,7 +752,7 @@
        point="org.eclipse.ui.exportWizards">
     <category
           id="org.eclipse.wst.XMLCategory"
-          name="%_UI_WIZARD_NEW_XML">
+          name="%_UI_WIZARD_XML_CATEGORY">
     </category>
     <wizard
           category="org.eclipse.wst.XMLCategory"
