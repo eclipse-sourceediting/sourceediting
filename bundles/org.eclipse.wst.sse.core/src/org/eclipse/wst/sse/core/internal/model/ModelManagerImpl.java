@@ -468,14 +468,12 @@ public class ModelManagerImpl implements IModelManager {
 
 	private IStructuredModel _commonGetModel(IFile iFile, ReadEditType rwType, String encoding, String lineDelimiter) throws UnsupportedEncodingException, IOException, CoreException {
 		String id = calculateId(iFile);
-		IModelHandler handler = calculateType(iFile);
-		URIResolver resolver = calculateURIResolver(iFile);
-		IStructuredModel model = _commonGetModel(iFile, id, handler, resolver, rwType, encoding, lineDelimiter);
+		IStructuredModel model = _commonGetModel(iFile, id, rwType, encoding, lineDelimiter);
 
 		return model;
 	}
 
-	private IStructuredModel _commonGetModel(IFile file, String id, IModelHandler handler, URIResolver resolver, ReadEditType rwType, String encoding, String lineDelimiter) throws IOException, CoreException {
+	private IStructuredModel _commonGetModel(IFile file, String id, ReadEditType rwType, String encoding, String lineDelimiter) throws IOException, CoreException {
 		if (id == null)
 			throw new IllegalArgumentException("Program Error: id may not be null"); //$NON-NLS-1$
 
