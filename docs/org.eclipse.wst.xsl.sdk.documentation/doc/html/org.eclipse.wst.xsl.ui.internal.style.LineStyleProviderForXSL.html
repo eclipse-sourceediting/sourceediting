@@ -1,0 +1,133 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.style</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.style</strong></font><br>
+               Class LineStyleProviderForXSL</h2><br><hr><pre>public class <strong>LineStyleProviderForXSL</strong>
+extends AbstractLineStyleProvider</pre>This implements a Syntax Line Style Provider for XSL. It leverages some
+ information from the XML Syntax Coloring, but adds specific coloring for XSL
+ specific elements and attributes.<p></p><p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected Highlighter</code></td><td width="80%" align="left"><code><a href="#field_highlighter">highlighter</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected ReconcilerHighlighter</code></td><td width="80%" align="left"><code><a href="#field_recHighlighter">recHighlighter</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected IStructuredDocument</code></td><td width="80%" align="left"><code><a href="#field_structuredDocument">structuredDocument</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_LineStyleProviderForXSL">LineStyleProviderForXSL</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_addTextAttribute">addTextAttribute</a>(java.lang.String colorKey)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Looks up the colorKey in the preference store and adds the style
+ information to list of TextAttributes</td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_commonInit">commonInit</a>(IStructuredDocument document
+         ,
+      Highlighter highlighter)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected TextAttribute</code></td><td width="" align="left"><code><a href="#method_createTextAttribute">createTextAttribute</a>(RGB foreground
+         ,
+      RGB background
+         ,
+      boolean bold)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected TextAttribute</code></td><td width="" align="left"><code><a href="#method_createTextAttribute">createTextAttribute</a>(RGB foreground
+         ,
+      RGB background
+         ,
+      int style)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected TextAttribute</code></td><td width="" align="left"><code><a href="#method_getAttributeFor">getAttributeFor</a>(ITextRegionCollection collection
+         ,
+      ITextRegion textRegion)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected TextAttribute</code></td><td width="" align="left"><code><a href="#method_getAttributeFor">getAttributeFor</a>(ITextRegion region)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected IPreferenceStore</code></td><td width="" align="left"><code><a href="#method_getColorPreferences">getColorPreferences</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected IStructuredDocument</code></td><td width="" align="left"><code><a href="#method_getDocument">getDocument</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected Highlighter</code></td><td width="" align="left"><code><a href="#method_getHighlighter">getHighlighter</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_handlePropertyChange">handlePropertyChange</a>(PropertyChangeEvent event)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_init">init</a>(IStructuredDocument document
+         ,
+      Highlighter highlighter)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_init">init</a>(IStructuredDocument structuredDocument
+         ,
+      ISourceViewer sourceViewer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_init">init</a>(IStructuredDocument structuredDocument
+         ,
+      ReconcilerHighlighter highlighter)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_isInitialized">isInitialized</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns the initialized.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_loadColors">loadColors</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_prepareRegions">prepareRegions</a>(ITypedRegion typedRegion
+         ,
+      int lineRequestStart
+         ,
+      int lineRequestLength
+         ,
+      java.util.Collection holdResults)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected boolean</code></td><td width="" align="left"><code><a href="#method_prepareTextRegion">prepareTextRegion</a>(ITextRegionCollection blockedRegion
+         ,
+      int partitionStartOffset
+         ,
+      int partitionLength
+         ,
+      java.util.Collection holdResults)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected boolean</code></td><td width="" align="left"><code><a href="#method_prepareTextRegions">prepareTextRegions</a>(IStructuredDocumentRegion structuredDocumentRegion
+         ,
+      int partitionStartOffset
+         ,
+      int partitionLength
+         ,
+      java.util.Collection holdResults)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_registerPreferenceManager">registerPreferenceManager</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_release">release</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_unRegisterPreferenceManager">unRegisterPreferenceManager</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_highlighter">highlighter</a></h2><p><code>protected Highlighter <strong>highlighter</strong></code></p><hr><h2><a name="field_recHighlighter">recHighlighter</a></h2><p><code>protected ReconcilerHighlighter <strong>recHighlighter</strong></code></p><hr><h2><a name="field_structuredDocument">structuredDocument</a></h2><p><code>protected IStructuredDocument <strong>structuredDocument</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_LineStyleProviderForXSL">LineStyleProviderForXSL</a></h2><p><code>public <strong>LineStyleProviderForXSL</strong>()</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_addTextAttribute">addTextAttribute</a></h2><p><code>protected void <strong>addTextAttribute</strong>(java.lang.String colorKey)</code></p><p>Looks up the colorKey in the preference store and adds the style
+ information to list of TextAttributes</p><h3>Parameters</h3><p><code>colorKey</code></p><hr><h2><a name="method_commonInit">commonInit</a></h2><p><code>protected void <strong>commonInit</strong>(IStructuredDocument document
+         ,
+      Highlighter highlighter)</code></p><p></p><h3>Parameters</h3><p><code>document</code></p><p><code>highlighter</code></p><hr><h2><a name="method_createTextAttribute">createTextAttribute</a></h2><p><code>protected TextAttribute <strong>createTextAttribute</strong>(RGB foreground
+         ,
+      RGB background
+         ,
+      boolean bold)</code></p><p></p><h3>Parameters</h3><p><code>foreground</code></p><p><code>background</code></p><p><code>bold</code></p><h3>Returns</h3><p><code>TextAttribute</code></p><hr><h2><a name="method_createTextAttribute">createTextAttribute</a></h2><p><code>protected TextAttribute <strong>createTextAttribute</strong>(RGB foreground
+         ,
+      RGB background
+         ,
+      int style)</code></p><p></p><h3>Parameters</h3><p><code>foreground</code></p><p><code>background</code></p><p><code>style</code></p><h3>Returns</h3><p><code>TextAttribute</code></p><hr><h2><a name="method_getAttributeFor">getAttributeFor</a></h2><p><code>protected TextAttribute <strong>getAttributeFor</strong>(ITextRegionCollection collection
+         ,
+      ITextRegion textRegion)</code></p><p></p><h3>Parameters</h3><p><code>collection</code></p><p><code>textRegion</code></p><h3>Returns</h3><p><code>TextAttribute</code></p><hr><h2><a name="method_getAttributeFor">getAttributeFor</a></h2><p><code>protected TextAttribute <strong>getAttributeFor</strong>(ITextRegion region)</code></p><p></p><h3>Parameters</h3><p><code>region</code></p><h3>Returns</h3><p><code>TextAttribute</code></p><hr><h2><a name="method_getColorPreferences">getColorPreferences</a></h2><p><code>protected IPreferenceStore <strong>getColorPreferences</strong>()</code></p><p></p><h3>Returns</h3><p><code>IPreferenceStore</code></p><hr><h2><a name="method_getDocument">getDocument</a></h2><p><code>protected IStructuredDocument <strong>getDocument</strong>()</code></p><p></p><h3>Returns</h3><p><code>IStructuredDocument</code></p><hr><h2><a name="method_getHighlighter">getHighlighter</a></h2><p><code>protected Highlighter <strong>getHighlighter</strong>()</code></p><p></p><h3>Returns</h3><p><code>Highlighter</code></p><hr><h2><a name="method_handlePropertyChange">handlePropertyChange</a></h2><p><code>protected void <strong>handlePropertyChange</strong>(PropertyChangeEvent event)</code></p><p></p><h3>Parameters</h3><p><code>event</code></p><hr><h2><a name="method_init">init</a></h2><p><code>public void <strong>init</strong>(IStructuredDocument document
+         ,
+      Highlighter highlighter)</code></p><p></p><h3>Parameters</h3><p><code>document</code></p><p><code>highlighter</code></p><hr><h2><a name="method_init">init</a></h2><p><code>public void <strong>init</strong>(IStructuredDocument structuredDocument
+         ,
+      ISourceViewer sourceViewer)</code></p><p></p><h3>Parameters</h3><p><code>structuredDocument</code></p><p><code>sourceViewer</code></p><hr><h2><a name="method_init">init</a></h2><p><code>public void <strong>init</strong>(IStructuredDocument structuredDocument
+         ,
+      ReconcilerHighlighter highlighter)</code></p><p></p><h3>Parameters</h3><p><code>structuredDocument</code></p><p><code>highlighter</code></p><hr><h2><a name="method_isInitialized">isInitialized</a></h2><p><code>public boolean <strong>isInitialized</strong>()</code></p><p>Returns the initialized.</p><h3>Returns</h3><p><code>boolean</code> - boolean</p><hr><h2><a name="method_loadColors">loadColors</a></h2><p><code>protected void <strong>loadColors</strong>()</code></p><p></p><hr><h2><a name="method_prepareRegions">prepareRegions</a></h2><p><code>public boolean <strong>prepareRegions</strong>(ITypedRegion typedRegion
+         ,
+      int lineRequestStart
+         ,
+      int lineRequestLength
+         ,
+      java.util.Collection holdResults)</code></p><p></p><h3>Parameters</h3><p><code>typedRegion</code></p><p><code>lineRequestStart</code></p><p><code>lineRequestLength</code></p><p><code>holdResults</code></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_prepareTextRegion">prepareTextRegion</a></h2><p><code>protected boolean <strong>prepareTextRegion</strong>(ITextRegionCollection blockedRegion
+         ,
+      int partitionStartOffset
+         ,
+      int partitionLength
+         ,
+      java.util.Collection holdResults)</code></p><p></p><h3>Parameters</h3><p><code>blockedRegion</code></p><p><code>partitionStartOffset</code></p><p><code>partitionLength</code></p><p><code>holdResults</code></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_prepareTextRegions">prepareTextRegions</a></h2><p><code>protected boolean <strong>prepareTextRegions</strong>(IStructuredDocumentRegion structuredDocumentRegion
+         ,
+      int partitionStartOffset
+         ,
+      int partitionLength
+         ,
+      java.util.Collection holdResults)</code></p><p></p><h3>Parameters</h3><p><code>structuredDocumentRegion</code></p><p><code>partitionStartOffset</code></p><p><code>partitionLength</code></p><p><code>holdResults</code></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_registerPreferenceManager">registerPreferenceManager</a></h2><p><code>protected void <strong>registerPreferenceManager</strong>()</code></p><p></p><hr><h2><a name="method_release">release</a></h2><p><code>public void <strong>release</strong>()</code></p><p></p><hr><h2><a name="method_unRegisterPreferenceManager">unRegisterPreferenceManager</a></h2><p><code>protected void <strong>unRegisterPreferenceManager</strong>()</code></p><p></p><hr></body></html>

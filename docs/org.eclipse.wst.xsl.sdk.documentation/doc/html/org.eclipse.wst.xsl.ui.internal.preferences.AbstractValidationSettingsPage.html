@@ -1,0 +1,83 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.preferences</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.preferences</strong></font><br>
+               Class AbstractValidationSettingsPage</h2><br><hr><pre>package-private class <strong>AbstractValidationSettingsPage</strong>
+extends org.eclipse.wst.xsl.ui.internal.preferences.PropertyPreferencePage</pre>Based on org.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock<hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_AbstractValidationSettingsPage">AbstractValidationSettingsPage</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected Combo</code></td><td width="" align="left"><code><a href="#method_addComboBox">addComboBox</a>(Composite parent
+         ,
+      java.lang.String label
+         ,
+      java.lang.String key
+         ,
+      int[] values
+         ,
+      java.lang.String[] valueLabels
+         ,
+      int indent)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Creates a Combo widget in the composite <code>parent</code>. The data
+ in the Combo is associated with <code>key</code>. The Combo data is
+ generated based on the integer <code>values</code> where the index
+ of <code>values</code> corresponds to the index of <code>valueLabels</code></td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_controlChanged">controlChanged</a>(Widget widget)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected ExpandableComposite</code></td><td width="" align="left"><code><a href="#method_createTwistie">createTwistie</a>(Composite parent
+         ,
+      java.lang.String label
+         ,
+      int nColumns)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_expandedStateChanged">expandedStateChanged</a>(ExpandableComposite expandable)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected ExpandableComposite</code></td><td width="" align="left"><code><a href="#method_getParentExpandableComposite">getParentExpandableComposite</a>(Control control)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected ScrolledPageContent</code></td><td width="" align="left"><code><a href="#method_getParentScrolledComposite">getParentScrolledComposite</a>(Control control)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected SelectionListener</code></td><td width="" align="left"><code><a href="#method_getSelectionListener">getSelectionListener</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected Combo</code></td><td width="" align="left"><code><a href="#method_newComboControl">newComboControl</a>(Composite composite
+         ,
+      java.lang.String key
+         ,
+      int[] values
+         ,
+      java.lang.String[] valueLabels)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Creates a combo box and associates the combo data with the
+ combo box.</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_performOk">performOk</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_resetSeverities">resetSeverities</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_restoreSectionExpansionStates">restoreSectionExpansionStates</a>(IDialogSettings settings)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected boolean</code></td><td width="" align="left"><code><a href="#method_shouldRevalidateOnSettingsChange">shouldRevalidateOnSettingsChange</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_storeSectionExpansionStates">storeSectionExpansionStates</a>(IDialogSettings section)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_storeValues">storeValues</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_AbstractValidationSettingsPage">AbstractValidationSettingsPage</a></h2><p><code>public <strong>AbstractValidationSettingsPage</strong>()</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_addComboBox">addComboBox</a></h2><p><code>protected Combo <strong>addComboBox</strong>(Composite parent
+         ,
+      java.lang.String label
+         ,
+      java.lang.String key
+         ,
+      int[] values
+         ,
+      java.lang.String[] valueLabels
+         ,
+      int indent)</code></p><p>Creates a Combo widget in the composite <code>parent</code>. The data
+ in the Combo is associated with <code>key</code>. The Combo data is
+ generated based on the integer <code>values</code> where the index
+ of <code>values</code> corresponds to the index of <code>valueLabels</code></p><h3>Parameters</h3><p><code>parent</code> - the composite to create the combo box in</p><p><code>label</code> - the label to give the combo box</p><p><code>key</code> - the unique key to identify the combo box</p><p><code>values</code> - the values represented by the combo options</p><p><code>valueLabels</code> - the calues displayed in the combo box</p><p><code>indent</code> - how far to indent the combo box label</p><h3>Returns</h3><p><code>Combo</code> - the generated combo box</p><hr><h2><a name="method_controlChanged">controlChanged</a></h2><p><code>protected void <strong>controlChanged</strong>(Widget widget)</code></p><p></p><h3>Parameters</h3><p><code>widget</code></p><hr><h2><a name="method_createTwistie">createTwistie</a></h2><p><code>protected ExpandableComposite <strong>createTwistie</strong>(Composite parent
+         ,
+      java.lang.String label
+         ,
+      int nColumns)</code></p><p></p><h3>Parameters</h3><p><code>parent</code></p><p><code>label</code></p><p><code>nColumns</code></p><h3>Returns</h3><p><code>ExpandableComposite</code></p><hr><h2><a name="method_expandedStateChanged">expandedStateChanged</a></h2><p><code>protected void <strong>expandedStateChanged</strong>(ExpandableComposite expandable)</code></p><p></p><h3>Parameters</h3><p><code>expandable</code></p><hr><h2><a name="method_getParentExpandableComposite">getParentExpandableComposite</a></h2><p><code>protected ExpandableComposite <strong>getParentExpandableComposite</strong>(Control control)</code></p><p></p><h3>Parameters</h3><p><code>control</code></p><h3>Returns</h3><p><code>ExpandableComposite</code></p><hr><h2><a name="method_getParentScrolledComposite">getParentScrolledComposite</a></h2><p><code>protected ScrolledPageContent <strong>getParentScrolledComposite</strong>(Control control)</code></p><p></p><h3>Parameters</h3><p><code>control</code></p><h3>Returns</h3><p><code>ScrolledPageContent</code></p><hr><h2><a name="method_getSelectionListener">getSelectionListener</a></h2><p><code>protected SelectionListener <strong>getSelectionListener</strong>()</code></p><p></p><h3>Returns</h3><p><code>SelectionListener</code></p><hr><h2><a name="method_newComboControl">newComboControl</a></h2><p><code>protected Combo <strong>newComboControl</strong>(Composite composite
+         ,
+      java.lang.String key
+         ,
+      int[] values
+         ,
+      java.lang.String[] valueLabels)</code></p><p>Creates a combo box and associates the combo data with the
+ combo box.</p><h3>Parameters</h3><p><code>composite</code> - the composite to create the combo box in</p><p><code>key</code> - the unique key to identify the combo box</p><p><code>values</code> - the values represented by the combo options</p><p><code>valueLabels</code> - the values displayed in the combo box</p><h3>Returns</h3><p><code>Combo</code> - the generated combo box</p><hr><h2><a name="method_performOk">performOk</a></h2><p><code>public boolean <strong>performOk</strong>()</code></p><p></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_resetSeverities">resetSeverities</a></h2><p><code>protected void <strong>resetSeverities</strong>()</code></p><p></p><hr><h2><a name="method_restoreSectionExpansionStates">restoreSectionExpansionStates</a></h2><p><code>protected void <strong>restoreSectionExpansionStates</strong>(IDialogSettings settings)</code></p><p></p><h3>Parameters</h3><p><code>settings</code></p><hr><h2><a name="method_shouldRevalidateOnSettingsChange">shouldRevalidateOnSettingsChange</a></h2><p><code>protected boolean <strong>shouldRevalidateOnSettingsChange</strong>()</code></p><p></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_storeSectionExpansionStates">storeSectionExpansionStates</a></h2><p><code>protected void <strong>storeSectionExpansionStates</strong>(IDialogSettings section)</code></p><p></p><h3>Parameters</h3><p><code>section</code></p><hr><h2><a name="method_storeValues">storeValues</a></h2><p><code>protected void <strong>storeValues</strong>()</code></p><p></p><hr></body></html>

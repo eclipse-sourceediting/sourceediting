@@ -1,0 +1,80 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.contentassist</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.contentassist</strong></font><br>
+               Class SelectAttributeContentAssist</h2><br><hr><pre>public class <strong>SelectAttributeContentAssist</strong>
+extends org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest</pre>This class provides content assistance for the XSL select attribute.<p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_SELECT_ATTRIBUTE">SELECT_ATTRIBUTE</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_SelectAttributeContentAssist">SelectAttributeContentAssist</a></strong>(org.w3c.dom.Node node
+         ,
+      IStructuredDocumentRegion documentRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      int begin
+         ,
+      int length
+         ,
+      java.lang.String filter
+         ,
+      ITextViewer textViewer)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_addSelectProposals">addSelectProposals</a>(org.w3c.dom.Element rootElement
+         ,
+      int offset)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_addTemplates">addTemplates</a>(java.lang.String context
+         ,
+      int startOffset)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Adds XPath related templates to the list of proposals</td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_adjustXPathStart">adjustXPathStart</a>(java.lang.String attrName)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               This needs to setup the content assistance correctly. Here is what needs
+ to happen: 1. Adjust the matchString (This should have been calculated
+ earlier) 2. Get the current tokens offset position..this will be the
+ starting offset. 3. Get the replacement length...this is the difference
+ between the token offset and the next token or end of the string</td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.lang.String</code></td><td width="" align="left"><code><a href="#method_extractXPathMatchString">extractXPathMatchString</a>(IDOMAttr node
+         ,
+      ITextRegion aRegion
+         ,
+      int offset)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected IDOMAttr</code></td><td width="" align="left"><code><a href="#method_getAttribute">getAttribute</a>(java.lang.String attrName)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.ArrayList</code></td><td width="" align="left"><code><a href="#method_getCompletionProposals">getCompletionProposals</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               (non-Javadoc)</td></tr><tr valign="top"><td width="20%" align="right"><code>protected int</code></td><td width="" align="left"><code><a href="#method_getXPathSeperatorPos">getXPathSeperatorPos</a>(int column
+         ,
+      java.lang.String nodeValue)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_SELECT_ATTRIBUTE">SELECT_ATTRIBUTE</a></h2><p><code>protected static  java.lang.String <strong>SELECT_ATTRIBUTE</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_SelectAttributeContentAssist">SelectAttributeContentAssist</a></h2><p><code>public <strong>SelectAttributeContentAssist</strong>(org.w3c.dom.Node node
+         ,
+      IStructuredDocumentRegion documentRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      int begin
+         ,
+      int length
+         ,
+      java.lang.String filter
+         ,
+      ITextViewer textViewer)</code></p><p>Handles Content Assistance requests for Select Attributes. This is called
+ an instantiated through the use of the computeProposals method from the
+ XSLContentAssistProcessor. It will calculate the available proposals that
+ are available for the XSL select attribute.</p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_addSelectProposals">addSelectProposals</a></h2><p><code>protected void <strong>addSelectProposals</strong>(org.w3c.dom.Element rootElement
+         ,
+      int offset)</code></p><p></p><h3>Parameters</h3><p><code>rootElement</code></p><p><code>offset</code></p><hr><h2><a name="method_addTemplates">addTemplates</a></h2><p><code>protected void <strong>addTemplates</strong>(java.lang.String context
+         ,
+      int startOffset)</code></p><p>Adds XPath related templates to the list of proposals</p><h3>Parameters</h3><p><code>context</code></p><p><code>startOffset</code></p><hr><h2><a name="method_adjustXPathStart">adjustXPathStart</a></h2><p><code>protected void <strong>adjustXPathStart</strong>(java.lang.String attrName)</code></p><p>This needs to setup the content assistance correctly. Here is what needs
+ to happen: 1. Adjust the matchString (This should have been calculated
+ earlier) 2. Get the current tokens offset position..this will be the
+ starting offset. 3. Get the replacement length...this is the difference
+ between the token offset and the next token or end of the string</p><h3>Parameters</h3><p><code>attrName</code> - The name of the attribute to use as the starting node.</p><hr><h2><a name="method_extractXPathMatchString">extractXPathMatchString</a></h2><p><code>protected java.lang.String <strong>extractXPathMatchString</strong>(IDOMAttr node
+         ,
+      ITextRegion aRegion
+         ,
+      int offset)</code></p><p></p><h3>Parameters</h3><p><code>node</code></p><p><code>aRegion</code></p><p><code>offset</code></p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_getAttribute">getAttribute</a></h2><p><code>protected IDOMAttr <strong>getAttribute</strong>(java.lang.String attrName)</code></p><p></p><h3>Parameters</h3><p><code>attrName</code></p><h3>Returns</h3><p><code>IDOMAttr</code></p><hr><h2><a name="method_getCompletionProposals">getCompletionProposals</a></h2><p><code>public java.util.ArrayList <strong>getCompletionProposals</strong>()</code></p><p>(non-Javadoc)</p><h3>Returns</h3><p><code>java.util.ArrayList</code></p><hr><h2><a name="method_getXPathSeperatorPos">getXPathSeperatorPos</a></h2><p><code>protected int <strong>getXPathSeperatorPos</strong>(int column
+         ,
+      java.lang.String nodeValue)</code></p><p></p><h3>Parameters</h3><p><code>column</code></p><p><code>nodeValue</code></p><h3>Returns</h3><p><code>int</code></p><hr></body></html>

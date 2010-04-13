@@ -4,12 +4,12 @@ extends java.lang.Object</pre><hr><table width="100%" border="1"><tr bgcolor="#C
                &nbsp;&nbsp;&nbsp;&nbsp;
                Returns a XPath expression given a DOM Node.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static void</code></td><td width="" align="left"><code><a href="#method_compile">compile</a>(java.lang.String expression)</code><br>
                &nbsp;&nbsp;&nbsp;&nbsp;
-               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static XObject</code></td><td width="" align="left"><code><a href="#method_eval">eval</a>(org.w3c.dom.Node contextNode
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static org.apache.xpath.objects.XObject</code></td><td width="" align="left"><code><a href="#method_eval">eval</a>(org.w3c.dom.Node contextNode
          ,
       java.lang.String str)</code><br>
                &nbsp;&nbsp;&nbsp;&nbsp;
                Evaluate XPath string to an XObject. Using this method, XPath namespace
- prefixes will be resolved from the namespaceNode.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static XObject</code></td><td width="" align="left"><code><a href="#method_eval">eval</a>(org.w3c.dom.Node contextNode
+ prefixes will be resolved from the namespaceNode.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static org.apache.xpath.objects.XObject</code></td><td width="" align="left"><code><a href="#method_eval">eval</a>(org.w3c.dom.Node contextNode
          ,
       java.lang.String str
          ,
@@ -19,17 +19,17 @@ extends java.lang.Object</pre><hr><table width="100%" border="1"><tr bgcolor="#C
  resolved from the namespaceNode. The implementation of this is a little
  slow, since it creates a number of objects each time it is called. This
  could be optimized to keep the same objects around, but then
- thread-safety issues would arise.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static XObject</code></td><td width="" align="left"><code><a href="#method_eval">eval</a>(org.w3c.dom.Node contextNode
+ thread-safety issues would arise.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static org.apache.xpath.objects.XObject</code></td><td width="" align="left"><code><a href="#method_eval">eval</a>(org.w3c.dom.Node contextNode
          ,
       java.lang.String str
          ,
-      PrefixResolver prefixResolver)</code><br>
+      org.apache.xml.utils.PrefixResolver prefixResolver)</code><br>
                &nbsp;&nbsp;&nbsp;&nbsp;
                Evaluate XPath string to an XObject. XPath namespace prefixes are
  resolved from the namespaceNode. The implementation of this is a little
  slow, since it creates a number of objects each time it is called. This
  could be optimized to keep the same objects around, but then
- thread-safety issues would arise.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected static FunctionTable</code></td><td width="" align="left"><code><a href="#method_getFunctionTable">getFunctionTable</a>()</code><br>
+ thread-safety issues would arise.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected static org.apache.xpath.compiler.FunctionTable</code></td><td width="" align="left"><code><a href="#method_getFunctionTable">getFunctionTable</a>()</code><br>
                &nbsp;&nbsp;&nbsp;&nbsp;
                </td></tr><tr valign="top"><td width="20%" align="right"><code>public static org.w3c.dom.traversal.NodeIterator</code></td><td width="" align="left"><code><a href="#method_selectNodeIterator">selectNodeIterator</a>(org.w3c.dom.Node contextNode
          ,
@@ -72,10 +72,10 @@ extends java.lang.Object</pre><hr><table width="100%" border="1"><tr bgcolor="#C
                   Constructor Detail
                </h2></td></tr></table><h2><a name="con_XSLTXPathHelper">XSLTXPathHelper</a></h2><p><code>public <strong>XSLTXPathHelper</strong>()</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
                   Methods Detail
-               </h2></td></tr></table><h2><a name="method_calculateXPathToNode">calculateXPathToNode</a></h2><p><code>public java.lang.String <strong>calculateXPathToNode</strong>(org.w3c.dom.Node node)</code></p><p>Returns a XPath expression given a DOM Node.</p><h3>Parameters</h3><p><code>node</code> - The DOM Node to create the XPath expression.</p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_compile">compile</a></h2><p><code>public void <strong>compile</strong>(java.lang.String expression)</code></p><p></p><h3>Parameters</h3><p><code>expression</code></p><h3>Throws:</h3><p><code>javax.xml.xpath.XPathExpressionException</code></p><hr><h2><a name="method_eval">eval</a></h2><p><code>public XObject <strong>eval</strong>(org.w3c.dom.Node contextNode
+               </h2></td></tr></table><h2><a name="method_calculateXPathToNode">calculateXPathToNode</a></h2><p><code>public java.lang.String <strong>calculateXPathToNode</strong>(org.w3c.dom.Node node)</code></p><p>Returns a XPath expression given a DOM Node.</p><h3>Parameters</h3><p><code>node</code> - The DOM Node to create the XPath expression.</p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_compile">compile</a></h2><p><code>public void <strong>compile</strong>(java.lang.String expression)</code></p><p></p><h3>Parameters</h3><p><code>expression</code></p><h3>Throws:</h3><p><code>javax.xml.xpath.XPathExpressionException</code></p><hr><h2><a name="method_eval">eval</a></h2><p><code>public org.apache.xpath.objects.XObject <strong>eval</strong>(org.w3c.dom.Node contextNode
          ,
       java.lang.String str)</code></p><p>Evaluate XPath string to an XObject. Using this method, XPath namespace
- prefixes will be resolved from the namespaceNode.</p><h3>Parameters</h3><p><code>contextNode</code> - The node to start searching from.</p><p><code>str</code> - A valid XPath string.</p><h3>Returns</h3><p><code>XObject</code> - An XObject, which can be used to obtain a string, number,          nodelist, etc, should never be null.</p><h3>Throws:</h3><p><code>javax.xml.transform.TransformerException</code></p><hr><h2><a name="method_eval">eval</a></h2><p><code>public XObject <strong>eval</strong>(org.w3c.dom.Node contextNode
+ prefixes will be resolved from the namespaceNode.</p><h3>Parameters</h3><p><code>contextNode</code> - The node to start searching from.</p><p><code>str</code> - A valid XPath string.</p><h3>Returns</h3><p><code>org.apache.xpath.objects.XObject</code> - An XObject, which can be used to obtain a string, number,          nodelist, etc, should never be null.</p><h3>Throws:</h3><p><code>javax.xml.transform.TransformerException</code></p><hr><h2><a name="method_eval">eval</a></h2><p><code>public org.apache.xpath.objects.XObject <strong>eval</strong>(org.w3c.dom.Node contextNode
          ,
       java.lang.String str
          ,
@@ -83,15 +83,15 @@ extends java.lang.Object</pre><hr><table width="100%" border="1"><tr bgcolor="#C
  resolved from the namespaceNode. The implementation of this is a little
  slow, since it creates a number of objects each time it is called. This
  could be optimized to keep the same objects around, but then
- thread-safety issues would arise.</p><h3>Parameters</h3><p><code>contextNode</code> - The node to start searching from.</p><p><code>str</code> - A valid XPath string.</p><p><code>namespaceNode</code> - The node from which prefixes in the XPath will be resolved to             namespaces.</p><h3>Returns</h3><p><code>XObject</code> - An XObject, which can be used to obtain a string, number,          nodelist, etc, should never be null.</p><h3>Throws:</h3><p><code>javax.xml.transform.TransformerException</code></p><hr><h2><a name="method_eval">eval</a></h2><p><code>public XObject <strong>eval</strong>(org.w3c.dom.Node contextNode
+ thread-safety issues would arise.</p><h3>Parameters</h3><p><code>contextNode</code> - The node to start searching from.</p><p><code>str</code> - A valid XPath string.</p><p><code>namespaceNode</code> - The node from which prefixes in the XPath will be resolved to             namespaces.</p><h3>Returns</h3><p><code>org.apache.xpath.objects.XObject</code> - An XObject, which can be used to obtain a string, number,          nodelist, etc, should never be null.</p><h3>Throws:</h3><p><code>javax.xml.transform.TransformerException</code></p><hr><h2><a name="method_eval">eval</a></h2><p><code>public org.apache.xpath.objects.XObject <strong>eval</strong>(org.w3c.dom.Node contextNode
          ,
       java.lang.String str
          ,
-      PrefixResolver prefixResolver)</code></p><p>Evaluate XPath string to an XObject. XPath namespace prefixes are
+      org.apache.xml.utils.PrefixResolver prefixResolver)</code></p><p>Evaluate XPath string to an XObject. XPath namespace prefixes are
  resolved from the namespaceNode. The implementation of this is a little
  slow, since it creates a number of objects each time it is called. This
  could be optimized to keep the same objects around, but then
- thread-safety issues would arise.</p><h3>Parameters</h3><p><code>contextNode</code> - The node to start searching from.</p><p><code>str</code> - A valid XPath string.</p><p><code>prefixResolver</code> - Will be called if the parser encounters namespace prefixes, to             resolve the prefixes to URLs.</p><h3>Returns</h3><p><code>XObject</code> - An XObject, which can be used to obtain a string, number,          nodelist, etc, should never be null.</p><h3>Throws:</h3><p><code>javax.xml.transform.TransformerException</code></p><hr><h2><a name="method_getFunctionTable">getFunctionTable</a></h2><p><code>protected FunctionTable <strong>getFunctionTable</strong>()</code></p><p></p><h3>Returns</h3><p><code>FunctionTable</code></p><hr><h2><a name="method_selectNodeIterator">selectNodeIterator</a></h2><p><code>public org.w3c.dom.traversal.NodeIterator <strong>selectNodeIterator</strong>(org.w3c.dom.Node contextNode
+ thread-safety issues would arise.</p><h3>Parameters</h3><p><code>contextNode</code> - The node to start searching from.</p><p><code>str</code> - A valid XPath string.</p><p><code>prefixResolver</code> - Will be called if the parser encounters namespace prefixes, to             resolve the prefixes to URLs.</p><h3>Returns</h3><p><code>org.apache.xpath.objects.XObject</code> - An XObject, which can be used to obtain a string, number,          nodelist, etc, should never be null.</p><h3>Throws:</h3><p><code>javax.xml.transform.TransformerException</code></p><hr><h2><a name="method_getFunctionTable">getFunctionTable</a></h2><p><code>protected org.apache.xpath.compiler.FunctionTable <strong>getFunctionTable</strong>()</code></p><p></p><h3>Returns</h3><p><code>org.apache.xpath.compiler.FunctionTable</code></p><hr><h2><a name="method_selectNodeIterator">selectNodeIterator</a></h2><p><code>public org.w3c.dom.traversal.NodeIterator <strong>selectNodeIterator</strong>(org.w3c.dom.Node contextNode
          ,
       java.lang.String str)</code></p><p>Use an XPath string to select a nodelist. XPath namespace prefixes are
  resolved from the contextNode.</p><h3>Parameters</h3><p><code>contextNode</code> - The node to start searching from.</p><p><code>str</code> - A valid XPath string.</p><h3>Returns</h3><p><code>org.w3c.dom.traversal.NodeIterator</code> - A NodeIterator, should never be null.</p><h3>Throws:</h3><p><code>javax.xml.transform.TransformerException</code></p><hr><h2><a name="method_selectNodeIterator">selectNodeIterator</a></h2><p><code>public org.w3c.dom.traversal.NodeIterator <strong>selectNodeIterator</strong>(org.w3c.dom.Node contextNode

@@ -1,0 +1,40 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.contentoutline</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.contentoutline</strong></font><br>
+               Class RefreshStructureJob</h2><br><hr><pre>package-private class <strong>RefreshStructureJob</strong>
+extends Job</pre>This job holds a queue of updates (affected nodes) for multiple structured
+ viewers. When a new request comes in, the current run is cancelled, the new
+ request is added to the queue, then the job is re-scheduled. Support for
+ multiple structured viewers is required because refresh updates are usually
+ triggered by model changes, and the model may be visible in more than one
+ viewer.<p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>package-private static  boolean</code></td><td width="80%" align="left"><code><a href="#field_DEBUG">DEBUG</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               debug flag</td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.Set</code></td><td width="80%" align="left"><code><a href="#field_fRefreshViewers">fRefreshViewers</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               the structured viewers</td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.Set</code></td><td width="80%" align="left"><code><a href="#field_fUpdateViewers">fUpdateViewers</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_RefreshStructureJob">RefreshStructureJob</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_canceling">canceling</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_refresh">refresh</a>(StructuredViewer viewer
+         ,
+      org.w3c.dom.Node node)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Invoke a refresh on the viewer on the given node.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected IStatus</code></td><td width="" align="left"><code><a href="#method_run">run</a>(IProgressMonitor monitor)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_update">update</a>(StructuredViewer viewer
+         ,
+      org.w3c.dom.Node node
+         ,
+      java.lang.String[] properties)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Invoke a refresh on the viewer on the given node.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_DEBUG">DEBUG</a></h2><p><code>package-private static  boolean <strong>DEBUG</strong></code></p><table><tr><td>debug flag</td></tr></table><hr><h2><a name="field_fRefreshViewers">fRefreshViewers</a></h2><p><code>package-private java.util.Set <strong>fRefreshViewers</strong></code></p><table><tr><td>the structured viewers</td></tr></table><hr><h2><a name="field_fUpdateViewers">fUpdateViewers</a></h2><p><code>package-private java.util.Set <strong>fUpdateViewers</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_RefreshStructureJob">RefreshStructureJob</a></h2><p><code>public <strong>RefreshStructureJob</strong>()</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_canceling">canceling</a></h2><p><code>protected void <strong>canceling</strong>()</code></p><p></p><hr><h2><a name="method_refresh">refresh</a></h2><p><code>public void <strong>refresh</strong>(StructuredViewer viewer
+         ,
+      org.w3c.dom.Node node)</code></p><p>Invoke a refresh on the viewer on the given node.</p><h3>Parameters</h3><p><code>viewer</code></p><p><code>node</code></p><hr><h2><a name="method_run">run</a></h2><p><code>protected IStatus <strong>run</strong>(IProgressMonitor monitor)</code></p><p></p><h3>Parameters</h3><p><code>monitor</code></p><h3>Returns</h3><p><code>IStatus</code></p><hr><h2><a name="method_update">update</a></h2><p><code>public void <strong>update</strong>(StructuredViewer viewer
+         ,
+      org.w3c.dom.Node node
+         ,
+      java.lang.String[] properties)</code></p><p>Invoke a refresh on the viewer on the given node.</p><h3>Parameters</h3><p><code>viewer</code></p><p><code>node</code></p><p><code>properties</code></p><hr></body></html>

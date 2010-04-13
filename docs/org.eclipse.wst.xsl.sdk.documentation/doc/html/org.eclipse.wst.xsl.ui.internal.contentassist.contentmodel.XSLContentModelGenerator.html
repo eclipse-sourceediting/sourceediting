@@ -1,0 +1,66 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel</strong></font><br>
+               Class XSLContentModelGenerator</h2><br><hr><pre>public class <strong>XSLContentModelGenerator</strong>
+extends AbstractContentModelGenerator</pre>This provides the ContentModel based off the XSL xml schema grammars and other
+ grammars provided by the xml editor.<p></p><hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_XSLContentModelGenerator">XSLContentModelGenerator</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_generateAttribute">generateAttribute</a>(CMAttributeDeclaration attrDecl
+         ,
+      java.lang.StringBuffer buffer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               (non-Javadoc)</td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_generateEndTag">generateEndTag</a>(java.lang.String tagName
+         ,
+      org.w3c.dom.Node parentNode
+         ,
+      CMElementDeclaration elementDecl
+         ,
+      java.lang.StringBuffer buffer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_generateRequiredAttribute">generateRequiredAttribute</a>(org.w3c.dom.Node ownerNode
+         ,
+      CMAttributeDeclaration attrDecl
+         ,
+      java.lang.StringBuffer buffer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_generateStartTag">generateStartTag</a>(java.lang.String tagName
+         ,
+      org.w3c.dom.Node parentNode
+         ,
+      CMElementDeclaration elementDecl
+         ,
+      java.lang.StringBuffer buffer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_getMinimalStartTagLength">getMinimalStartTagLength</a>(org.w3c.dom.Node node
+         ,
+      CMElementDeclaration elementDecl)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               (non-Javadoc)</td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.lang.String</code></td><td width="" align="left"><code><a href="#method_getOtherClose">getOtherClose</a>(org.w3c.dom.Node notATagNode)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_getStartTagClose">getStartTagClose</a>(org.w3c.dom.Node parentNode
+         ,
+      CMElementDeclaration elementDecl)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               (non-Javadoc)</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_XSLContentModelGenerator">XSLContentModelGenerator</a></h2><p><code>public <strong>XSLContentModelGenerator</strong>()</code></p><p>XSLContentModelGenerator constructor comment.</p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_generateAttribute">generateAttribute</a></h2><p><code>public void <strong>generateAttribute</strong>(CMAttributeDeclaration attrDecl
+         ,
+      java.lang.StringBuffer buffer)</code></p><p>(non-Javadoc)</p><h3>Parameters</h3><p><code>attrDecl</code></p><p><code>buffer</code></p><hr><h2><a name="method_generateEndTag">generateEndTag</a></h2><p><code>protected void <strong>generateEndTag</strong>(java.lang.String tagName
+         ,
+      org.w3c.dom.Node parentNode
+         ,
+      CMElementDeclaration elementDecl
+         ,
+      java.lang.StringBuffer buffer)</code></p><p></p><h3>Parameters</h3><p><code>tagName</code></p><p><code>parentNode</code></p><p><code>elementDecl</code></p><p><code>buffer</code></p><hr><h2><a name="method_generateRequiredAttribute">generateRequiredAttribute</a></h2><p><code>public void <strong>generateRequiredAttribute</strong>(org.w3c.dom.Node ownerNode
+         ,
+      CMAttributeDeclaration attrDecl
+         ,
+      java.lang.StringBuffer buffer)</code></p><p></p><h3>Parameters</h3><p><code>ownerNode</code></p><p><code>attrDecl</code></p><p><code>buffer</code></p><hr><h2><a name="method_generateStartTag">generateStartTag</a></h2><p><code>protected void <strong>generateStartTag</strong>(java.lang.String tagName
+         ,
+      org.w3c.dom.Node parentNode
+         ,
+      CMElementDeclaration elementDecl
+         ,
+      java.lang.StringBuffer buffer)</code></p><p></p><h3>Parameters</h3><p><code>tagName</code></p><p><code>parentNode</code></p><p><code>elementDecl</code></p><p><code>buffer</code></p><hr><h2><a name="method_getMinimalStartTagLength">getMinimalStartTagLength</a></h2><p><code>public int <strong>getMinimalStartTagLength</strong>(org.w3c.dom.Node node
+         ,
+      CMElementDeclaration elementDecl)</code></p><p>(non-Javadoc)</p><h3>Parameters</h3><p><code>node</code></p><p><code>elementDecl</code></p><h3>Returns</h3><p><code>int</code></p><hr><h2><a name="method_getOtherClose">getOtherClose</a></h2><p><code>protected java.lang.String <strong>getOtherClose</strong>(org.w3c.dom.Node notATagNode)</code></p><p></p><h3>Parameters</h3><p><code>notATagNode</code></p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_getStartTagClose">getStartTagClose</a></h2><p><code>public java.lang.String <strong>getStartTagClose</strong>(org.w3c.dom.Node parentNode
+         ,
+      CMElementDeclaration elementDecl)</code></p><p>(non-Javadoc)</p><h3>Parameters</h3><p><code>parentNode</code></p><p><code>elementDecl</code></p><h3>Returns</h3><p><code>java.lang.String</code></p><hr></body></html>

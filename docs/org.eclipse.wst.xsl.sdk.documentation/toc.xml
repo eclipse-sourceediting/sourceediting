@@ -1,47 +1,565 @@
-<?xml version="1.0" encoding="UTF-8"?><toc label="XSL Tools SDK Documentation">
-   <topic label="Reference">
-      <topic label="org.eclipse.wst.xml.xpath.core">
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.core.XPathCorePlugin.html" label="org.eclipse.wst.xml.xpath.core.XPathCorePlugin"/>
-      </topic>
-      <topic label="org.eclipse.wst.xml.xpath.core.util">
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.core.util.XPath20Helper.html" label="org.eclipse.wst.xml.xpath.core.util.XPath20Helper"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper.html" label="org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper"/>
-      </topic>
-      <topic label="org.eclipse.wst.xsl.core">
-         <topic href="doc/html/org.eclipse.wst.xsl.core.ValidationPreferences.html" label="org.eclipse.wst.xsl.core.ValidationPreferences"/>
-         <topic href="doc/html/org.eclipse.wst.xsl.core.XSLCore.html" label="org.eclipse.wst.xsl.core.XSLCore"/>
-      </topic>
-      <topic label="org.eclipse.wst.xsl.core.resolver">
-         <topic href="doc/html/org.eclipse.wst.xsl.core.resolver.ResolverExtension.html" label="org.eclipse.wst.xsl.core.resolver.ResolverExtension"/>
-         <topic href="doc/html/org.eclipse.wst.xsl.core.resolver.StopParsingException.html" label="org.eclipse.wst.xsl.core.resolver.StopParsingException"/>
-         <topic href="doc/html/org.eclipse.wst.xsl.core.resolver.XSLVersionHandler.html" label="org.eclipse.wst.xsl.core.resolver.XSLVersionHandler"/>
-      </topic>
-      <topic label="org.eclipse.wst.xsl.xalan.debugger">
-         <topic href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanDebugger.html" label="org.eclipse.wst.xsl.xalan.debugger.XalanDebugger"/>
-         <topic href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanPrintTraceListener.html" label="org.eclipse.wst.xsl.xalan.debugger.XalanPrintTraceListener"/>
-         <topic href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanRootStyleFrame.html" label="org.eclipse.wst.xsl.xalan.debugger.XalanRootStyleFrame"/>
-         <topic href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanStyleFrame.html" label="org.eclipse.wst.xsl.xalan.debugger.XalanStyleFrame"/>
-         <topic href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanTraceListener.html" label="org.eclipse.wst.xsl.xalan.debugger.XalanTraceListener"/>
-         <topic href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanVariable.html" label="org.eclipse.wst.xsl.xalan.debugger.XalanVariable"/>
-      </topic>
-   </topic>
-   <topic label="Extension Points">
-     <topic label="JAXP Debugger">
-      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_debugger.html" label="org.eclipse.wst.xsl.jaxp.launching.debugger">
-      </topic>
-   </topic>
-   <topic label="JAXP Launching">
-      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_invoke.html" label="org.eclipse.wst.xsl.jaxp.launching.invoke">
-      </topic>
-      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_processor.html" label="org.eclipse.wst.xsl.jaxp.launching.processor">
-      </topic>
-      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_processorType.html" label="org.eclipse.wst.xsl.jaxp.processorType">
-      </topic>
-   </topic>
-   <topic label="XSLT Editor">
-      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_ui_contentAssistProcessor.html" label="org.eclipse.wst.xsl.ui.contentAssistProcessor">
-      </topic>
-   </topic>
-         
-   </topic>
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="XSL Tools SDK Documentation">
+	<topic label="Reference">
+		<topic label="org.eclipse.wst.xml.xpath.core">
+			<topic href="doc/html/org.eclipse.wst.xml.xpath.core.XPathCorePlugin.html"
+				label="org.eclipse.wst.xml.xpath.core.XPathCorePlugin" />
+			<topic
+				href="doc/html/org.eclipse.wst.xml.xpath.core.XPathProcessorPreferences.html"
+				label="org.eclipse.wst.xml.xpath.core.XPathProcessorPreferences" />
+		</topic>
+		<topic label="org.eclipse.wst.xml.xpath.core.internal.preferences">
+			<topic
+				href="doc/html/org.eclipse.wst.xml.xpath.core.internal.preferences.PreferenceInitializer.html"
+				label="org.eclipse.wst.xml.xpath.core.internal.preferences.PreferenceInitializer" />
+		</topic>
+		<topic label="org.eclipse.wst.xml.xpath.core.util">
+			<topic
+				href="doc/html/org.eclipse.wst.xml.xpath.core.util.NodeListImpl.html"
+				label="org.eclipse.wst.xml.xpath.core.util.NodeListImpl" />
+			<topic
+				href="doc/html/org.eclipse.wst.xml.xpath.core.util.XPath20Helper.html"
+				label="org.eclipse.wst.xml.xpath.core.util.XPath20Helper" />
+			<topic
+				href="doc/html/org.eclipse.wst.xml.xpath.core.util.XPathCoreHelper.html"
+				label="org.eclipse.wst.xml.xpath.core.util.XPathCoreHelper" />
+			<topic
+				href="doc/html/org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper.html"
+				label="org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core">
+			<topic href="doc/html/org.eclipse.wst.xsl.core.ValidationPreferences.html"
+				label="org.eclipse.wst.xsl.core.ValidationPreferences" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.XSLCore.html"
+				label="org.eclipse.wst.xsl.core.XSLCore" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal">
+			<topic href="doc/html/org.eclipse.wst.xsl.core.internal.Messages.html"
+				label="org.eclipse.wst.xsl.core.internal.Messages" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.XSLCorePlugin.html"
+				label="org.eclipse.wst.xsl.core.internal.XSLCorePlugin" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.ant">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.ant.XIncludeTask.html"
+				label="org.eclipse.wst.xsl.core.internal.ant.XIncludeTask" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.model">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder.html"
+				label="org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.model.StylesheetParser.html"
+				label="org.eclipse.wst.xsl.core.internal.model.StylesheetParser" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.model.StylesheetParserData.html"
+				label="org.eclipse.wst.xsl.core.internal.model.StylesheetParserData" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.model.XSLElementFactory.html"
+				label="org.eclipse.wst.xsl.core.internal.model.XSLElementFactory" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.model.XSLModelObjectFactory.html"
+				label="org.eclipse.wst.xsl.core.internal.model.XSLModelObjectFactory" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.preferences">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.preferences.PreferenceInitializer.html"
+				label="org.eclipse.wst.xsl.core.internal.preferences.PreferenceInitializer" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.util">
+			<topic href="doc/html/org.eclipse.wst.xsl.core.internal.util.Debug.html"
+				label="org.eclipse.wst.xsl.core.internal.util.Debug" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.util.FileUtil.html"
+				label="org.eclipse.wst.xsl.core.internal.util.FileUtil" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.util.StructuredDocumentUtil.html"
+				label="org.eclipse.wst.xsl.core.internal.util.StructuredDocumentUtil" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.util.XMLContentType.html"
+				label="org.eclipse.wst.xsl.core.internal.util.XMLContentType" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.validation">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.validation.MaxErrorsExceededException.html"
+				label="org.eclipse.wst.xsl.core.internal.validation.MaxErrorsExceededException" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage.html"
+				label="org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport.html"
+				label="org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.validation.XSLValidator.html"
+				label="org.eclipse.wst.xsl.core.internal.validation.XSLValidator" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.validation.eclipse">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.validation.eclipse.Validator.html"
+				label="org.eclipse.wst.xsl.core.internal.validation.eclipse.Validator" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.validation.eclipse.Validator2.html"
+				label="org.eclipse.wst.xsl.core.internal.validation.eclipse.Validator2" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.validation.eclipse.XSLValidationReport.html"
+				label="org.eclipse.wst.xsl.core.internal.validation.eclipse.XSLValidationReport" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.xinclude">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.xinclude.XIncluder.html"
+				label="org.eclipse.wst.xsl.core.internal.xinclude.XIncluder" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.model">
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.CallTemplate.html"
+				label="org.eclipse.wst.xsl.core.model.CallTemplate" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.Function.html"
+				label="org.eclipse.wst.xsl.core.model.Function" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.Import.html"
+				label="org.eclipse.wst.xsl.core.model.Import" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.Include.html"
+				label="org.eclipse.wst.xsl.core.model.Include" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.Parameter.html"
+				label="org.eclipse.wst.xsl.core.model.Parameter" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.Stylesheet.html"
+				label="org.eclipse.wst.xsl.core.model.Stylesheet" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.StylesheetModel.html"
+				label="org.eclipse.wst.xsl.core.model.StylesheetModel" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.Template.html"
+				label="org.eclipse.wst.xsl.core.model.Template" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.Variable.html"
+				label="org.eclipse.wst.xsl.core.model.Variable" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.XSLAttribute.html"
+				label="org.eclipse.wst.xsl.core.model.XSLAttribute" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.XSLElement.html"
+				label="org.eclipse.wst.xsl.core.model.XSLElement" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.XSLModelObject.html"
+				label="org.eclipse.wst.xsl.core.model.XSLModelObject" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.model.XSLModelObject.Type.html"
+				label="org.eclipse.wst.xsl.core.model.XSLModelObject.Type" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.model.XSLModelObject.Type.html"
+				label="org.eclipse.wst.xsl.core.model.XSLModelObject.Type" />
+			<topic href="doc/html/org.eclipse.wst.xsl.core.model.XSLNode.html"
+				label="org.eclipse.wst.xsl.core.model.XSLNode" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.resolver">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.resolver.ResolverExtension.html"
+				label="org.eclipse.wst.xsl.core.resolver.ResolverExtension" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.resolver.StopParsingException.html"
+				label="org.eclipse.wst.xsl.core.resolver.StopParsingException" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.resolver.XSLVersionHandler.html"
+				label="org.eclipse.wst.xsl.core.resolver.XSLVersionHandler" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.encoding">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.encoding.XSLDocumentLoader.html"
+				label="org.eclipse.wst.xsl.core.internal.encoding.XSLDocumentLoader" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.modelhandler">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.modelhandler.ModelHandlerForXSL.html"
+				label="org.eclipse.wst.xsl.core.internal.modelhandler.ModelHandlerForXSL" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.modelhandler.XSLModelLoader.html"
+				label="org.eclipse.wst.xsl.core.internal.modelhandler.XSLModelLoader" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.parser">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.parser.XSLSourceParser.html"
+				label="org.eclipse.wst.xsl.core.internal.parser.XSLSourceParser" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.parser.regions">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.parser.regions.XPathSeparatorRegion.html"
+				label="org.eclipse.wst.xsl.core.internal.parser.regions.XPathSeparatorRegion" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.regions">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.regions.XPathRegionContext.html"
+				label="org.eclipse.wst.xsl.core.internal.regions.XPathRegionContext" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.regions.XSLParserRegionFactory.html"
+				label="org.eclipse.wst.xsl.core.internal.regions.XSLParserRegionFactory" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.text">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.text.IXSLPartitions.html"
+				label="org.eclipse.wst.xsl.core.internal.text.IXSLPartitions" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.core.internal.text.rules">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.core.internal.text.rules.StructuredTextPartitionerForXSL.html"
+				label="org.eclipse.wst.xsl.core.internal.text.rules.StructuredTextPartitionerForXSL" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal">
+			<topic href="doc/html/org.eclipse.wst.xsl.ui.internal.Messages.html"
+				label="org.eclipse.wst.xsl.ui.internal.Messages" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.PreferenceInitializer.html"
+				label="org.eclipse.wst.xsl.ui.internal.PreferenceInitializer" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL.html"
+				label="org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL" />
+			<topic href="doc/html/org.eclipse.wst.xsl.ui.internal.XSLUIConstants.html"
+				label="org.eclipse.wst.xsl.ui.internal.XSLUIConstants" />
+			<topic href="doc/html/org.eclipse.wst.xsl.ui.internal.XSLUIPlugin.html"
+				label="org.eclipse.wst.xsl.ui.internal.XSLUIPlugin" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.actions">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.actions.NewDTDFileWizardDelegate.html"
+				label="org.eclipse.wst.xsl.ui.internal.actions.NewDTDFileWizardDelegate" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.actions.NewWSDLFileWizardDelegate.html"
+				label="org.eclipse.wst.xsl.ui.internal.actions.NewWSDLFileWizardDelegate" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.actions.NewWizardAction.html"
+				label="org.eclipse.wst.xsl.ui.internal.actions.NewWizardAction" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.actions.NewXMLFileWizardDelegate.html"
+				label="org.eclipse.wst.xsl.ui.internal.actions.NewXMLFileWizardDelegate" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.actions.NewXSDFileWizardDelegate.html"
+				label="org.eclipse.wst.xsl.ui.internal.actions.NewXSDFileWizardDelegate" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.actions.NewXSLFileWizardDelegate.html"
+				label="org.eclipse.wst.xsl.ui.internal.actions.NewXSLFileWizardDelegate" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.contentassist">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.AttributeContentAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.AttributeContentAssist" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.CallTemplateContentAssistRequest.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.CallTemplateContentAssistRequest" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.ContentAssistProcessorFactory.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.ContentAssistProcessorFactory" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.ExcludeResultPrefixesContentAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.ExcludeResultPrefixesContentAssist" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.SelectAttributeContentAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.SelectAttributeContentAssist" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.TemplateModeAttributeContentAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.TemplateModeAttributeContentAssist" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.TemplateNameAttributeContentAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.TemplateNameAttributeContentAssist" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.TestAttributeContentAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.TestAttributeContentAssist" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.XPathElementContentAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.XPathElementContentAssist" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistRequestFactory.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistRequestFactory" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.XSLElementContentAssistRequest.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.XSLElementContentAssistRequest" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.XSLTemplateCompletionProcessor.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.XSLTemplateCompletionProcessor" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.XSLTemplateContentAssistProcessor.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.XSLTemplateContentAssistProcessor" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel.XSLContentModelGenerator.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel.XSLContentModelGenerator" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.contentassist.href">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.href.HrefContentAssistRequest.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.href.HrefContentAssistRequest" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentassist.href.PathComparator.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentassist.href.PathComparator" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.contentoutline">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.AttributeShowingLabelProvider.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.AttributeShowingLabelProvider" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapter.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapter" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory.CMDocumentManagerListenerImpl.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory.CMDocumentManagerListenerImpl" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory.CMDocumentManagerListenerImpl.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory.CMDocumentManagerListenerImpl" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeContentProvider.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeContentProvider" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeLabelProvider.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeLabelProvider" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.RefreshStructureJob.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.RefreshStructureJob" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.XMLNodeActionManager.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.XMLNodeActionManager" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.contentoutline.XSLContentOutlineConfiguration.html"
+				label="org.eclipse.wst.xsl.ui.internal.contentoutline.XSLContentOutlineConfiguration" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.doubleclick">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.doubleclick.XSLDoubleClickStrategy.html"
+				label="org.eclipse.wst.xsl.ui.internal.doubleclick.XSLDoubleClickStrategy" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.editor">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicator.html"
+				label="org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicator" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicatorImageProvider.html"
+				label="org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicatorImageProvider" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicatorManager.html"
+				label="org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicatorManager" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.editor.SourceFileHyperlink.html"
+				label="org.eclipse.wst.xsl.ui.internal.editor.SourceFileHyperlink" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.editor.XSLEditor.html"
+				label="org.eclipse.wst.xsl.ui.internal.editor.XSLEditor" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.editor.XSLHyperlinkDetector.html"
+				label="org.eclipse.wst.xsl.ui.internal.editor.XSLHyperlinkDetector" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.handlers">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.handlers.OpenDeclarationHandler.html"
+				label="org.eclipse.wst.xsl.ui.internal.handlers.OpenDeclarationHandler" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.preferences">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.AbstractValidationSettingsPage.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.AbstractValidationSettingsPage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.AbstractXSLPreferencePage.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.AbstractXSLPreferencePage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.ComboData.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.ComboData" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.MainPreferencePage.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.MainPreferencePage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.PropertyPreferencePage.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.PropertyPreferencePage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.ValidationPreferencePage.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.ValidationPreferencePage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.XSLSyntaxColoringPage.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.XSLSyntaxColoringPage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.XSLTemplatePreferencePage.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.XSLTemplatePreferencePage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.XSLUIPreferenceInitializer.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.XSLUIPreferenceInitializer" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.preferences.XSLValidationPreferencePage.html"
+				label="org.eclipse.wst.xsl.ui.internal.preferences.XSLValidationPreferencePage" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.quickassist">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.quickassist.OverrideQuickAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.quickassist.OverrideQuickAssist" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.quickassist.ValidationQuickAssist.html"
+				label="org.eclipse.wst.xsl.ui.internal.quickassist.ValidationQuickAssist" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.registry">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.registry.AdapterFactoryProviderForXSL.html"
+				label="org.eclipse.wst.xsl.ui.internal.registry.AdapterFactoryProviderForXSL" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.style">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.AbstractXSLSemanticHighlighting.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.AbstractXSLSemanticHighlighting" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.IStyleConstantsXSL.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.IStyleConstantsXSL" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.LineStyleProviderForXSL.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.LineStyleProviderForXSL" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.XMLRegionMap.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.XMLRegionMap" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.XMLTextAttributeMap.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.XMLTextAttributeMap" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.XSLAttrNameSemanticHighlighting.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.XSLAttrNameSemanticHighlighting" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.XSLAttrValueSemanticHighlighting.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.XSLAttrValueSemanticHighlighting" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.XSLRegionMap.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.XSLRegionMap" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.XSLTagDelimsSemanticHighlighting.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.XSLTagDelimsSemanticHighlighting" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.XSLTagNameSemanticHighlighting.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.XSLTagNameSemanticHighlighting" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.style.XSLTextAttributeMap.html"
+				label="org.eclipse.wst.xsl.ui.internal.style.XSLTextAttributeMap" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.templates">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeXSL.html"
+				label="org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeXSL" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.templates.VersionTemplateVariableResolverXSL.html"
+				label="org.eclipse.wst.xsl.ui.internal.templates.VersionTemplateVariableResolverXSL" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.templates.XSLTemplatesPage.html"
+				label="org.eclipse.wst.xsl.ui.internal.templates.XSLTemplatesPage" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.util">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper.html"
+				label="org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages.html"
+				label="org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.validation">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL.html"
+				label="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.validation.XSLErrorListener.html"
+				label="org.eclipse.wst.xsl.ui.internal.validation.XSLErrorListener" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.validation.XSLMarkupValidator.html"
+				label="org.eclipse.wst.xsl.ui.internal.validation.XSLMarkupValidator" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.views.stylesheet">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.views.stylesheet.ListWorkbenchAdapter.html"
+				label="org.eclipse.wst.xsl.ui.internal.views.stylesheet.ListWorkbenchAdapter" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.views.stylesheet.StylesheetModelView.html"
+				label="org.eclipse.wst.xsl.ui.internal.views.stylesheet.StylesheetModelView" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.views.stylesheet.XSLModelAdapterFactory.html"
+				label="org.eclipse.wst.xsl.ui.internal.views.stylesheet.XSLModelAdapterFactory" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.views.stylesheet.XSLWorkbenchAdapter.html"
+				label="org.eclipse.wst.xsl.ui.internal.views.stylesheet.XSLWorkbenchAdapter" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.internal.wizards">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileTemplatesWizardPage.html"
+				label="org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileTemplatesWizardPage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileWizard.html"
+				label="org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileWizard" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileWizardPage.html"
+				label="org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileWizardPage" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.wizards.TemplateContentProvider.html"
+				label="org.eclipse.wst.xsl.ui.internal.wizards.TemplateContentProvider" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.internal.wizards.TemplateLabelProvider.html"
+				label="org.eclipse.wst.xsl.ui.internal.wizards.TemplateLabelProvider" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.ui.provisional.contentassist">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXMLElementContentAssistRequest.html"
+				label="org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXMLElementContentAssistRequest" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistProcessor.html"
+				label="org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistProcessor" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest.html"
+				label="org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.provisional.contentassist.CustomCompletionProposal.html"
+				label="org.eclipse.wst.xsl.ui.provisional.contentassist.CustomCompletionProposal" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest.html"
+				label="org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.provisional.contentassist.IXSLContentAssistProcessor.html"
+				label="org.eclipse.wst.xsl.ui.provisional.contentassist.IXSLContentAssistProcessor" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.ui.provisional.contentassist.NullContentAssistRequest.html"
+				label="org.eclipse.wst.xsl.ui.provisional.contentassist.NullContentAssistRequest" />
+		</topic>
+		<topic label="org.eclipse.wst.xsl.xalan.debugger">
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanDebugger.html"
+				label="org.eclipse.wst.xsl.xalan.debugger.XalanDebugger" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanPrintTraceListener.html"
+				label="org.eclipse.wst.xsl.xalan.debugger.XalanPrintTraceListener" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanRootStyleFrame.html"
+				label="org.eclipse.wst.xsl.xalan.debugger.XalanRootStyleFrame" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanStyleFrame.html"
+				label="org.eclipse.wst.xsl.xalan.debugger.XalanStyleFrame" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanTraceListener.html"
+				label="org.eclipse.wst.xsl.xalan.debugger.XalanTraceListener" />
+			<topic
+				href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanVariable.html"
+				label="org.eclipse.wst.xsl.xalan.debugger.XalanVariable" />
+		</topic>
+	</topic>
+	<topic label="Extension Points">
+		<topic label="JAXP Debugger">
+			<topic
+				href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_debugger.html"
+				label="org.eclipse.wst.xsl.jaxp.launching.debugger">
+			</topic>
+		</topic>
+		<topic label="JAXP Launching">
+			<topic
+				href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_invoke.html"
+				label="org.eclipse.wst.xsl.jaxp.launching.invoke">
+			</topic>
+			<topic
+				href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_processor.html"
+				label="org.eclipse.wst.xsl.jaxp.launching.processor">
+			</topic>
+			<topic
+				href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_processorType.html"
+				label="org.eclipse.wst.xsl.jaxp.processorType">
+			</topic>
+		</topic>
+		<topic label="XSLT Editor">
+			<topic
+				href="doc/html/extension_point/org_eclipse_wst_xsl_ui_contentAssistProcessor.html"
+				label="org.eclipse.wst.xsl.ui.contentAssistProcessor">
+			</topic>
+		</topic>
+	</topic>
 </toc>

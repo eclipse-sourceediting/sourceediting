@@ -1,0 +1,39 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.contentassist.href</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.contentassist.href</strong></font><br>
+               Class HrefContentAssistRequest</h2><br><hr><pre>public class <strong>HrefContentAssistRequest</strong>
+extends org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest</pre><p>This provides content assistance proposals for href attributes with a mode attribute.</p>
+ <p>Content assistance is restricted to files with the XSL content type that are in the same project as the file currently 
+ being edited. This is because projects in the workspace can have completely different physical file locations, leading to 
+ confusion in relative file paths across projects. Similarly, no content assistance is given for files external to the workspace. 
+ Such files should be assigned an absolute 'file:///' URL.</p><p></p><p></p><hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_HrefContentAssistRequest">HrefContentAssistRequest</a></strong>(org.w3c.dom.Node node
+         ,
+      IStructuredDocumentRegion documentRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      int begin
+         ,
+      int length
+         ,
+      java.lang.String filter
+         ,
+      ITextViewer textViewer)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.ArrayList</code></td><td width="" align="left"><code><a href="#method_getCompletionProposals">getCompletionProposals</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The main method that returns an array of proposals. Returns relative paths to files in the current project.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.util.List</code></td><td width="" align="left"><code><a href="#method_sortProposals">sortProposals</a>(java.util.List proposalsIn)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Do not wish to sort the proposals - they are already sorted</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_HrefContentAssistRequest">HrefContentAssistRequest</a></h2><p><code>public <strong>HrefContentAssistRequest</strong>(org.w3c.dom.Node node
+         ,
+      IStructuredDocumentRegion documentRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      int begin
+         ,
+      int length
+         ,
+      java.lang.String filter
+         ,
+      ITextViewer textViewer)</code></p><p>Constructor for creating the HrefContentAssistRequest class.</p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getCompletionProposals">getCompletionProposals</a></h2><p><code>public java.util.ArrayList <strong>getCompletionProposals</strong>()</code></p><p>The main method that returns an array of proposals. Returns relative paths to files in the current project.</p><h3>Returns</h3><p><code>java.util.ArrayList</code> - ICompletionProposal[]</p><hr><h2><a name="method_sortProposals">sortProposals</a></h2><p><code>protected java.util.List <strong>sortProposals</strong>(java.util.List proposalsIn)</code></p><p>Do not wish to sort the proposals - they are already sorted</p><h3>Parameters</h3><p><code>proposalsIn</code></p><h3>Returns</h3><p><code>java.util.List</code> - the same list, in the same order</p><hr></body></html>

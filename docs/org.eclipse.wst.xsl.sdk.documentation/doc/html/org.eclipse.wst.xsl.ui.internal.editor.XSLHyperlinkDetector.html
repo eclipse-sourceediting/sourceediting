@@ -1,0 +1,31 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.editor</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.editor</strong></font><br>
+               Class XSLHyperlinkDetector</h2><br><hr><pre>public class <strong>XSLHyperlinkDetector</strong>
+extends AbstractHyperlinkDetector</pre>A hyperlink detector for XSL files.
+ 
+ The detector makes use of the model built by SSE validation (found in <code>XSLCore</code>).
+ 
+ Currently supports hyperlinking for includes, imports or called templates.<p></p><hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_XSLHyperlinkDetector">XSLHyperlinkDetector</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public IHyperlink[]</code></td><td width="" align="left"><code><a href="#method_detectHyperlinks">detectHyperlinks</a>(ITextViewer textViewer
+         ,
+      IRegion region
+         ,
+      boolean canShowMultipleHyperlinks)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Try to create hyperlinks for viewer and region</td></tr><tr valign="top"><td width="20%" align="right"><code>public IHyperlink[]</code></td><td width="" align="left"><code><a href="#method_detectHyperlinks">detectHyperlinks</a>(IDocument document
+         ,
+      IRegion region
+         ,
+      boolean canShowMultipleHyperlinks)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Try to create hyperlinks for document and region</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_XSLHyperlinkDetector">XSLHyperlinkDetector</a></h2><p><code>public <strong>XSLHyperlinkDetector</strong>()</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_detectHyperlinks">detectHyperlinks</a></h2><p><code>public IHyperlink[] <strong>detectHyperlinks</strong>(ITextViewer textViewer
+         ,
+      IRegion region
+         ,
+      boolean canShowMultipleHyperlinks)</code></p><p>Try to create hyperlinks for viewer and region</p><h3>Parameters</h3><p><code>textViewer</code></p><p><code>region</code></p><p><code>canShowMultipleHyperlinks</code></p><h3>Returns</h3><p><code>IHyperlink[]</code> - array of hyperlinks for current region</p><hr><h2><a name="method_detectHyperlinks">detectHyperlinks</a></h2><p><code>public IHyperlink[] <strong>detectHyperlinks</strong>(IDocument document
+         ,
+      IRegion region
+         ,
+      boolean canShowMultipleHyperlinks)</code></p><p>Try to create hyperlinks for document and region</p><h3>Parameters</h3><p><code>document</code></p><p><code>region</code></p><p><code>canShowMultipleHyperlinks</code></p><h3>Returns</h3><p><code>IHyperlink[]</code> - array of hyperlinks for current region</p><hr></body></html>

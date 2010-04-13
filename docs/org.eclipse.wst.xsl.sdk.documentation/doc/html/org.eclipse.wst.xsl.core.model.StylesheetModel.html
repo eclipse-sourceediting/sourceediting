@@ -1,0 +1,99 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.core.model</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.core.model</strong></font><br>
+               Class StylesheetModel</h2><br><hr><pre>public class <strong>StylesheetModel</strong>
+extends org.eclipse.wst.xsl.core.model.XSLModelObject</pre>The composed stylesheet, consisting of all templates and variables available
+ via imports and includes.
+ 
+ <p>
+ The <code>fix()</code> method does the actual work of populating the fields
+ of this, so it must be called before calling any of the other methods.
+ </p>
+ 
+ <p>
+ Note that this model may not be valid - for instance there may be more than
+ one named template for a given name or more than one global variable with a
+ given name.
+ </p><p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.List</code></td><td width="80%" align="left"><code><a href="#field_callTemplates">callTemplates</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private boolean</code></td><td width="80%" align="left"><code><a href="#field_circularReference">circularReference</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.Set</code></td><td width="80%" align="left"><code><a href="#field_files">files</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.List</code></td><td width="80%" align="left"><code><a href="#field_functions">functions</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.List</code></td><td width="80%" align="left"><code><a href="#field_globalVariables">globalVariables</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.List</code></td><td width="80%" align="left"><code><a href="#field_importModel">importModel</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.List</code></td><td width="80%" align="left"><code><a href="#field_includeModel">includeModel</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.Set</code></td><td width="80%" align="left"><code><a href="#field_stylesheets">stylesheets</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.List</code></td><td width="80%" align="left"><code><a href="#field_templates">templates</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private java.util.Set</code></td><td width="80%" align="left"><code><a href="#field_templateSet">templateSet</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_StylesheetModel">StylesheetModel</a></strong>(org.eclipse.wst.xsl.core.model.Stylesheet stylesheet)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_findAllNestedTemplates">findAllNestedTemplates</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               A utility method that traverses all stylesheet in the hierarchy of
+ stylesheets (not including the current stylesheet), and adds all their
+ templates to the returned list. Therefore the returned list has no regard
+ for whether a template is 'visible' (i.e. whether it might be overridden
+ since it was included via an import). The order of the templates in the
+ list is arbitrary.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_findMatching">findMatching</a>(org.eclipse.wst.xsl.core.model.Template toMatch)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get all templates that match the given template (determined from
+ <code>Template.equals()</code>).</td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_fix">fix</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Perform the process of traversing the hierarchy to determine all of the
+ properties of this. Note that this method may force other
+ <code>StylesheetModel</code>'s to be built during the process of fixing.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getCallTemplates">getCallTemplates</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.Set</code></td><td width="" align="left"><code><a href="#method_getFileDependencies">getFileDependencies</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get all files that are included in this stylesheet anywhere in the
+ hierarchy via either import or include.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getFunctionByName">getFunctionByName</a>(java.lang.String name)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get all functions that are included in this stylesheet anywhere in the
+ hierarchy via either import or include which have the given name.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getFunctions">getFunctions</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get a List of all functions that are known.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getGlobalVariables">getGlobalVariables</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get all global variables that are included in this stylesheet anywhere in
+ the hierarchy via either import or include.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getIncludes">getIncludes</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get all stylesheets that are included in this stylesheet anywhere in the
+ hierarchy via either import or include.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xsl.core.model.XSLModelObject.Type</code></td><td width="" align="left"><code><a href="#method_getModelType">getModelType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xsl.core.model.Stylesheet</code></td><td width="" align="left"><code><a href="#method_getStylesheet">getStylesheet</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the stylesheet that this is the model for.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getTemplates">getTemplates</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get all templates that are included in this stylesheet anywhere in the
+ hierarchy via either import or include.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getTemplatesByName">getTemplatesByName</a>(java.lang.String name)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get all named templates that are included in this stylesheet anywhere in
+ the hierarchy via either import or include which have the given name.</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_hasCircularReference">hasCircularReference</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get whether this has a circular reference anywhere in its import/included
+ hierarchy.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_callTemplates">callTemplates</a></h2><p><code>package-private java.util.List <strong>callTemplates</strong></code></p><hr><h2><a name="field_circularReference">circularReference</a></h2><p><code>package-private boolean <strong>circularReference</strong></code></p><hr><h2><a name="field_files">files</a></h2><p><code>package-private java.util.Set <strong>files</strong></code></p><hr><h2><a name="field_functions">functions</a></h2><p><code>package-private java.util.List <strong>functions</strong></code></p><hr><h2><a name="field_globalVariables">globalVariables</a></h2><p><code>package-private java.util.List <strong>globalVariables</strong></code></p><hr><h2><a name="field_importModel">importModel</a></h2><p><code>package-private java.util.List <strong>importModel</strong></code></p><hr><h2><a name="field_includeModel">includeModel</a></h2><p><code>package-private java.util.List <strong>includeModel</strong></code></p><hr><h2><a name="field_stylesheets">stylesheets</a></h2><p><code>package-private java.util.Set <strong>stylesheets</strong></code></p><hr><h2><a name="field_templates">templates</a></h2><p><code>package-private java.util.List <strong>templates</strong></code></p><hr><h2><a name="field_templateSet">templateSet</a></h2><p><code>package-private java.util.Set <strong>templateSet</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_StylesheetModel">StylesheetModel</a></h2><p><code>public <strong>StylesheetModel</strong>(org.eclipse.wst.xsl.core.model.Stylesheet stylesheet)</code></p><p>Create a new instance of this.</p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_findAllNestedTemplates">findAllNestedTemplates</a></h2><p><code>public java.util.List <strong>findAllNestedTemplates</strong>()</code></p><p>A utility method that traverses all stylesheet in the hierarchy of
+ stylesheets (not including the current stylesheet), and adds all their
+ templates to the returned list. Therefore the returned list has no regard
+ for whether a template is 'visible' (i.e. whether it might be overridden
+ since it was included via an import). The order of the templates in the
+ list is arbitrary.</p><h3>Returns</h3><p><code>java.util.List</code> - an unordered list of all templates from all stylesheets.</p><hr><h2><a name="method_findMatching">findMatching</a></h2><p><code>public java.util.List <strong>findMatching</strong>(org.eclipse.wst.xsl.core.model.Template toMatch)</code></p><p>Get all templates that match the given template (determined from
+ <code>Template.equals()</code>).</p><h3>Parameters</h3><p><code>toMatch</code> - the template to match</p><h3>Returns</h3><p><code>java.util.List</code> - the set of templates that match</p><hr><h2><a name="method_fix">fix</a></h2><p><code>public void <strong>fix</strong>()</code></p><p>Perform the process of traversing the hierarchy to determine all of the
+ properties of this. Note that this method may force other
+ <code>StylesheetModel</code>'s to be built during the process of fixing.</p><hr><h2><a name="method_getCallTemplates">getCallTemplates</a></h2><p><code>public java.util.List <strong>getCallTemplates</strong>()</code></p><p></p><h3>Returns</h3><p><code>java.util.List</code></p><hr><h2><a name="method_getFileDependencies">getFileDependencies</a></h2><p><code>public java.util.Set <strong>getFileDependencies</strong>()</code></p><p>Get all files that are included in this stylesheet anywhere in the
+ hierarchy via either import or include.</p><h3>Returns</h3><p><code>java.util.Set</code> - the set of files in the entire hierarchy</p><hr><h2><a name="method_getFunctionByName">getFunctionByName</a></h2><p><code>public java.util.List <strong>getFunctionByName</strong>(java.lang.String name)</code></p><p>Get all functions that are included in this stylesheet anywhere in the
+ hierarchy via either import or include which have the given name.</p><h3>Parameters</h3><p><code>name</code> - the template name</p><h3>Returns</h3><p><code>java.util.List</code> - the set of named templates with the given name</p><hr><h2><a name="method_getFunctions">getFunctions</a></h2><p><code>public java.util.List <strong>getFunctions</strong>()</code></p><p>Get a List of all functions that are known.</p><h3>Returns</h3><p><code>java.util.List</code></p><hr><h2><a name="method_getGlobalVariables">getGlobalVariables</a></h2><p><code>public java.util.List <strong>getGlobalVariables</strong>()</code></p><p>Get all global variables that are included in this stylesheet anywhere in
+ the hierarchy via either import or include.</p><h3>Returns</h3><p><code>java.util.List</code> - the set of files in the entire hierarchy</p><hr><h2><a name="method_getIncludes">getIncludes</a></h2><p><code>public java.util.List <strong>getIncludes</strong>()</code></p><p>Get all stylesheets that are included in this stylesheet anywhere in the
+ hierarchy via either import or include.</p><h3>Returns</h3><p><code>java.util.List</code> - the set of stylesheets in the entire hierarchy</p><hr><h2><a name="method_getModelType">getModelType</a></h2><p><code>public org.eclipse.wst.xsl.core.model.XSLModelObject.Type <strong>getModelType</strong>()</code></p><p></p><h3>Returns</h3><p><code>org.eclipse.wst.xsl.core.model.XSLModelObject.Type</code></p><hr><h2><a name="method_getStylesheet">getStylesheet</a></h2><p><code>public org.eclipse.wst.xsl.core.model.Stylesheet <strong>getStylesheet</strong>()</code></p><p>Get the stylesheet that this is the model for.</p><h3>Returns</h3><p><code>org.eclipse.wst.xsl.core.model.Stylesheet</code> - the stylesheet that this is the model for</p><hr><h2><a name="method_getTemplates">getTemplates</a></h2><p><code>public java.util.List <strong>getTemplates</strong>()</code></p><p>Get all templates that are included in this stylesheet anywhere in the
+ hierarchy via either import or include.</p><h3>Returns</h3><p><code>java.util.List</code> - the set of templates in the entire hierarchy</p><hr><h2><a name="method_getTemplatesByName">getTemplatesByName</a></h2><p><code>public java.util.List <strong>getTemplatesByName</strong>(java.lang.String name)</code></p><p>Get all named templates that are included in this stylesheet anywhere in
+ the hierarchy via either import or include which have the given name.</p><h3>Parameters</h3><p><code>name</code> - the template name</p><h3>Returns</h3><p><code>java.util.List</code> - the set of named templates with the given name</p><hr><h2><a name="method_hasCircularReference">hasCircularReference</a></h2><p><code>public boolean <strong>hasCircularReference</strong>()</code></p><p>Get whether this has a circular reference anywhere in its import/included
+ hierarchy.</p><h3>Returns</h3><p><code>boolean</code> - <code>true</code> if this has a circular reference</p><hr></body></html>

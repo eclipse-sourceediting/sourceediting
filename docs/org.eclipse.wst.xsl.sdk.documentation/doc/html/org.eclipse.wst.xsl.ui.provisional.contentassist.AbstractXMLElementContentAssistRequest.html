@@ -1,0 +1,156 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.provisional.contentassist</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.provisional.contentassist</strong></font><br>
+               Class AbstractXMLElementContentAssistRequest</h2><br><hr><pre>public class <strong>AbstractXMLElementContentAssistRequest</strong>
+extends org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest</pre>Adopters can extend this class to implement their own content assistance for Element
+ proposals using the XML Content Model.<p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel.XSLContentModelGenerator</code></td><td width="80%" align="left"><code><a href="#field_contentModel">contentModel</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected MarkupTagInfoProvider</code></td><td width="80%" align="left"><code><a href="#field_infoProvider">infoProvider</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_XPATH_FIRST_XSLANCESTOR_NODE">XPATH_FIRST_XSLANCESTOR_NODE</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_AbstractXMLElementContentAssistRequest">AbstractXMLElementContentAssistRequest</a></strong>(org.w3c.dom.Node node
+         ,
+      IStructuredDocumentRegion documentRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      int begin
+         ,
+      int length
+         ,
+      java.lang.String filter
+         ,
+      ITextViewer textViewer)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_addTagNameProposals">addTagNameProposals</a>(int position)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Adds proposals for the XML_TAG_NAME region.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected boolean</code></td><td width="" align="left"><code><a href="#method_beginsWith">beginsWith</a>(java.lang.String aString
+         ,
+      java.lang.String prefix)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected org.eclipse.wst.xsl.ui.provisional.contentassist.CustomCompletionProposal</code></td><td width="" align="left"><code><a href="#method_createProposal">createProposal</a>(java.lang.String proposedText
+         ,
+      java.lang.String additionalInfo
+         ,
+      int offset
+         ,
+      Image image
+         ,
+      int startLength)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.lang.String</code></td><td width="" align="left"><code><a href="#method_getAdditionalInfo">getAdditionalInfo</a>(CMNode parentOrOwner
+         ,
+      CMNode cmnode)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Retrieves cmnode's documentation to display in the completion proposal's
+ additional info. If no documentation exists for cmnode, try displaying
+ parentOrOwner's documentation
+ 
+ String any documentation information to display for cmnode.
+ <code>null</code> if there is nothing to display.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.util.List</code></td><td width="" align="left"><code><a href="#method_getAvailableChildElementDeclarations">getAvailableChildElementDeclarations</a>(org.w3c.dom.Element parent
+         ,
+      int childPosition)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns a list of CMNodes that are available within this parent context
+ Given the grammar shown below and a snippet of XML code (where the '|'
+ indicated the cursor position)
+ the list would return all of the element declarations that are
+ potential child elements of Foo.
+
+ grammar : Foo -> (A, B, C)
+ snippet : <Foo><A>|
+ result : {A, B, C}</td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.util.List</code></td><td width="" align="left"><code><a href="#method_getAvailableChildrenAtIndex">getAvailableChildrenAtIndex</a>(org.w3c.dom.Element parent
+         ,
+      int index
+         ,
+      int validityChecking)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.util.Iterator</code></td><td width="" align="left"><code><a href="#method_getAvailableContentNodes">getAvailableContentNodes</a>(IDOMDocument domDocument
+         ,
+      org.w3c.dom.Node ancestorNode
+         ,
+      int includeOptions)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected CMElementDeclaration</code></td><td width="" align="left"><code><a href="#method_getCMElementDeclaration">getCMElementDeclaration</a>(org.w3c.dom.Node node)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected Image</code></td><td width="" align="left"><code><a href="#method_getCMNodeImage">getCMNodeImage</a>(CMNode cmNode)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected int</code></td><td width="" align="left"><code><a href="#method_getCursorPositionForProposedText">getCursorPositionForProposedText</a>(java.lang.String proposedText)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               This is the position the cursor should be in after the proposal is
+ applied</td></tr><tr valign="top"><td width="20%" align="right"><code>protected int</code></td><td width="" align="left"><code><a href="#method_getElementPosition">getElementPosition</a>(org.w3c.dom.Node child)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected MarkupTagInfoProvider</code></td><td width="" align="left"><code><a href="#method_getInfoProvider">getInfoProvider</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Gets the infoProvider.
+ 
+ fInfoProvider and if fInfoProvider was <code>null</code> create a new
+ instance</td></tr><tr valign="top"><td width="20%" align="right"><code>protected ITextRegion</code></td><td width="" align="left"><code><a href="#method_getNameRegion">getNameRegion</a>(IStructuredDocumentRegion flatNode)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.lang.String</code></td><td width="" align="left"><code><a href="#method_getRequiredName">getRequiredName</a>(org.w3c.dom.Node ownerNode
+         ,
+      CMNode cmnode)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected boolean</code></td><td width="" align="left"><code><a href="#method_inAttributeRegion">inAttributeRegion</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Check to see if the current position is in an Attribute Region if so,
+ return true otherwise false</td></tr><tr valign="top"><td width="20%" align="right"><code>protected boolean</code></td><td width="" align="left"><code><a href="#method_isNameRegion">isNameRegion</a>(ITextRegion region)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Checks to the see if the element is in the correct region.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_contentModel">contentModel</a></h2><p><code>protected org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel.XSLContentModelGenerator <strong>contentModel</strong></code></p><hr><h2><a name="field_infoProvider">infoProvider</a></h2><p><code>protected MarkupTagInfoProvider <strong>infoProvider</strong></code></p><hr><h2><a name="field_XPATH_FIRST_XSLANCESTOR_NODE">XPATH_FIRST_XSLANCESTOR_NODE</a></h2><p><code>protected static  java.lang.String <strong>XPATH_FIRST_XSLANCESTOR_NODE</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_AbstractXMLElementContentAssistRequest">AbstractXMLElementContentAssistRequest</a></h2><p><code>public <strong>AbstractXMLElementContentAssistRequest</strong>(org.w3c.dom.Node node
+         ,
+      IStructuredDocumentRegion documentRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      int begin
+         ,
+      int length
+         ,
+      java.lang.String filter
+         ,
+      ITextViewer textViewer)</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_addTagNameProposals">addTagNameProposals</a></h2><p><code>protected void <strong>addTagNameProposals</strong>(int position)</code></p><p>Adds proposals for the XML_TAG_NAME region.</p><h3>Parameters</h3><p><code>position</code></p><hr><h2><a name="method_beginsWith">beginsWith</a></h2><p><code>protected boolean <strong>beginsWith</strong>(java.lang.String aString
+         ,
+      java.lang.String prefix)</code></p><p></p><h3>Parameters</h3><p><code>aString</code></p><p><code>prefix</code></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_createProposal">createProposal</a></h2><p><code>protected org.eclipse.wst.xsl.ui.provisional.contentassist.CustomCompletionProposal <strong>createProposal</strong>(java.lang.String proposedText
+         ,
+      java.lang.String additionalInfo
+         ,
+      int offset
+         ,
+      Image image
+         ,
+      int startLength)</code></p><p></p><h3>Parameters</h3><p><code>proposedText</code></p><p><code>additionalInfo</code></p><p><code>offset</code></p><p><code>image</code></p><p><code>startLength</code></p><h3>Returns</h3><p><code>org.eclipse.wst.xsl.ui.provisional.contentassist.CustomCompletionProposal</code></p><hr><h2><a name="method_getAdditionalInfo">getAdditionalInfo</a></h2><p><code>protected java.lang.String <strong>getAdditionalInfo</strong>(CMNode parentOrOwner
+         ,
+      CMNode cmnode)</code></p><p>Retrieves cmnode's documentation to display in the completion proposal's
+ additional info. If no documentation exists for cmnode, try displaying
+ parentOrOwner's documentation
+ 
+ String any documentation information to display for cmnode.
+ <code>null</code> if there is nothing to display.</p><h3>Parameters</h3><p><code>parentOrOwner</code></p><p><code>cmnode</code></p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_getAvailableChildElementDeclarations">getAvailableChildElementDeclarations</a></h2><p><code>protected java.util.List <strong>getAvailableChildElementDeclarations</strong>(org.w3c.dom.Element parent
+         ,
+      int childPosition)</code></p><p>Returns a list of CMNodes that are available within this parent context
+ Given the grammar shown below and a snippet of XML code (where the '|'
+ indicated the cursor position)
+ the list would return all of the element declarations that are
+ potential child elements of Foo.
+
+ grammar : Foo -> (A, B, C)
+ snippet : <Foo><A>|
+ result : {A, B, C}</p><h3>Parameters</h3><p><code>parent</code></p><p><code>childPosition</code></p><h3>Returns</h3><p><code>java.util.List</code></p><hr><h2><a name="method_getAvailableChildrenAtIndex">getAvailableChildrenAtIndex</a></h2><p><code>protected java.util.List <strong>getAvailableChildrenAtIndex</strong>(org.w3c.dom.Element parent
+         ,
+      int index
+         ,
+      int validityChecking)</code></p><p></p><h3>Parameters</h3><p><code>parent</code></p><p><code>index</code></p><p><code>validityChecking</code></p><h3>Returns</h3><p><code>java.util.List</code></p><hr><h2><a name="method_getAvailableContentNodes">getAvailableContentNodes</a></h2><p><code>protected java.util.Iterator <strong>getAvailableContentNodes</strong>(IDOMDocument domDocument
+         ,
+      org.w3c.dom.Node ancestorNode
+         ,
+      int includeOptions)</code></p><p></p><h3>Parameters</h3><p><code>domDocument</code></p><p><code>ancestorNode</code></p><p><code>includeOptions</code></p><h3>Returns</h3><p><code>java.util.Iterator</code></p><hr><h2><a name="method_getCMElementDeclaration">getCMElementDeclaration</a></h2><p><code>protected CMElementDeclaration <strong>getCMElementDeclaration</strong>(org.w3c.dom.Node node)</code></p><p></p><h3>Parameters</h3><p><code>node</code></p><h3>Returns</h3><p><code>CMElementDeclaration</code></p><hr><h2><a name="method_getCMNodeImage">getCMNodeImage</a></h2><p><code>protected Image <strong>getCMNodeImage</strong>(CMNode cmNode)</code></p><p></p><h3>Parameters</h3><p><code>cmNode</code></p><h3>Returns</h3><p><code>Image</code></p><hr><h2><a name="method_getCursorPositionForProposedText">getCursorPositionForProposedText</a></h2><p><code>protected int <strong>getCursorPositionForProposedText</strong>(java.lang.String proposedText)</code></p><p>This is the position the cursor should be in after the proposal is
+ applied</p><h3>Parameters</h3><p><code>proposedText</code></p><h3>Returns</h3><p><code>int</code> - the position the cursor should be in after the proposal is          applied</p><hr><h2><a name="method_getElementPosition">getElementPosition</a></h2><p><code>protected int <strong>getElementPosition</strong>(org.w3c.dom.Node child)</code></p><p></p><h3>Parameters</h3><p><code>child</code></p><h3>Returns</h3><p><code>int</code></p><hr><h2><a name="method_getInfoProvider">getInfoProvider</a></h2><p><code>protected MarkupTagInfoProvider <strong>getInfoProvider</strong>()</code></p><p>Gets the infoProvider.
+ 
+ fInfoProvider and if fInfoProvider was <code>null</code> create a new
+ instance</p><h3>Returns</h3><p><code>MarkupTagInfoProvider</code></p><hr><h2><a name="method_getNameRegion">getNameRegion</a></h2><p><code>protected ITextRegion <strong>getNameRegion</strong>(IStructuredDocumentRegion flatNode)</code></p><p></p><h3>Parameters</h3><p><code>flatNode</code></p><h3>Returns</h3><p><code>ITextRegion</code></p><hr><h2><a name="method_getRequiredName">getRequiredName</a></h2><p><code>protected java.lang.String <strong>getRequiredName</strong>(org.w3c.dom.Node ownerNode
+         ,
+      CMNode cmnode)</code></p><p></p><h3>Parameters</h3><p><code>ownerNode</code></p><p><code>cmnode</code></p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_inAttributeRegion">inAttributeRegion</a></h2><p><code>protected boolean <strong>inAttributeRegion</strong>()</code></p><p>Check to see if the current position is in an Attribute Region if so,
+ return true otherwise false</p><h3>Returns</h3><p><code>boolean</code> - True if in attribute region, false otherwise.</p><hr><h2><a name="method_isNameRegion">isNameRegion</a></h2><p><code>protected boolean <strong>isNameRegion</strong>(ITextRegion region)</code></p><p>Checks to the see if the element is in the correct region.</p><h3>Parameters</h3><p><code>region</code></p><h3>Returns</h3><p><code>boolean</code></p><hr></body></html>

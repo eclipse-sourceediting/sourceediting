@@ -1,0 +1,67 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.provisional.contentassist</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.provisional.contentassist</strong></font><br>
+               Class AbstractXSLContentAssistProcessor</h2><br><hr><pre>public class <strong>AbstractXSLContentAssistProcessor</strong>
+extends java.lang.Object</pre>This is an Abstract class that implementors should extend for implementing
+ XSL Content Assist Processors.   It provides common convience methods for
+ information that is needed to construct a content assist processor.<p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected ITextRegion</code></td><td width="80%" align="left"><code><a href="#field_completionRegion">completionRegion</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected int</code></td><td width="80%" align="left"><code><a href="#field_cursorPosition">cursorPosition</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_errorMessage">errorMessage</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_matchString">matchString</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected IStructuredDocumentRegion</code></td><td width="80%" align="left"><code><a href="#field_sdRegion">sdRegion</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected ITextViewer</code></td><td width="80%" align="left"><code><a href="#field_textViewer">textViewer</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected IDOMNode</code></td><td width="80%" align="left"><code><a href="#field_xmlNode">xmlNode</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_AbstractXSLContentAssistProcessor">AbstractXSLContentAssistProcessor</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public char[]</code></td><td width="" align="left"><code><a href="#method_getCompletionProposalAutoActivationCharacters">getCompletionProposalAutoActivationCharacters</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns the characters which when entered by the user should
+ automatically trigger the presentation of possible completions.
+ 
+ the auto activation characters for completion proposal or
+ <code>null</code> if no auto activation is desired</td></tr><tr valign="top"><td width="20%" align="right"><code>protected ITextRegion</code></td><td width="" align="left"><code><a href="#method_getCompletionRegion">getCompletionRegion</a>(int documentPosition
+         ,
+      org.w3c.dom.Node domnode)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Return the region whose content's require completion. This is something
+ of a misnomer as sometimes the user wants to be prompted for contents of
+ a non-existent ITextRegion, such as for enumerated attribute values
+ following an '=' sign.
+ 
+ Copied from AbstractContentAssist Processor.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected ITextRegion</code></td><td width="" align="left"><code><a href="#method_getCompletionRegion">getCompletionRegion</a>(int offset
+         ,
+      IStructuredDocumentRegion sdRegion)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_getErrorMessage">getErrorMessage</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               (non-Javadoc)</td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_initializeProposalVariables">initializeProposalVariables</a>(ITextViewer textViewer
+         ,
+      int documentPosition)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_setErrorMessage">setErrorMessage</a>(java.lang.String errorMessage)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Sets the error message for why content assistance didn't complete.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_completionRegion">completionRegion</a></h2><p><code>protected ITextRegion <strong>completionRegion</strong></code></p><hr><h2><a name="field_cursorPosition">cursorPosition</a></h2><p><code>protected int <strong>cursorPosition</strong></code></p><hr><h2><a name="field_errorMessage">errorMessage</a></h2><p><code>protected java.lang.String <strong>errorMessage</strong></code></p><hr><h2><a name="field_matchString">matchString</a></h2><p><code>protected java.lang.String <strong>matchString</strong></code></p><hr><h2><a name="field_sdRegion">sdRegion</a></h2><p><code>protected IStructuredDocumentRegion <strong>sdRegion</strong></code></p><hr><h2><a name="field_textViewer">textViewer</a></h2><p><code>protected ITextViewer <strong>textViewer</strong></code></p><hr><h2><a name="field_xmlNode">xmlNode</a></h2><p><code>protected IDOMNode <strong>xmlNode</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_AbstractXSLContentAssistProcessor">AbstractXSLContentAssistProcessor</a></h2><p><code>public <strong>AbstractXSLContentAssistProcessor</strong>()</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getCompletionProposalAutoActivationCharacters">getCompletionProposalAutoActivationCharacters</a></h2><p><code>public char[] <strong>getCompletionProposalAutoActivationCharacters</strong>()</code></p><p>Returns the characters which when entered by the user should
+ automatically trigger the presentation of possible completions.
+ 
+ the auto activation characters for completion proposal or
+ <code>null</code> if no auto activation is desired</p><h3>Returns</h3><p><code>char[]</code> - an array of activation characters</p><hr><h2><a name="method_getCompletionRegion">getCompletionRegion</a></h2><p><code>protected ITextRegion <strong>getCompletionRegion</strong>(int documentPosition
+         ,
+      org.w3c.dom.Node domnode)</code></p><p>Return the region whose content's require completion. This is something
+ of a misnomer as sometimes the user wants to be prompted for contents of
+ a non-existent ITextRegion, such as for enumerated attribute values
+ following an '=' sign.
+ 
+ Copied from AbstractContentAssist Processor.</p><h3>Parameters</h3><p><code>documentPosition</code></p><p><code>domnode</code></p><h3>Returns</h3><p><code>ITextRegion</code></p><hr><h2><a name="method_getCompletionRegion">getCompletionRegion</a></h2><p><code>protected ITextRegion <strong>getCompletionRegion</strong>(int offset
+         ,
+      IStructuredDocumentRegion sdRegion)</code></p><p></p><h3>Parameters</h3><p><code>offset</code></p><p><code>sdRegion</code></p><h3>Returns</h3><p><code>ITextRegion</code></p><hr><h2><a name="method_getErrorMessage">getErrorMessage</a></h2><p><code>public java.lang.String <strong>getErrorMessage</strong>()</code></p><p>(non-Javadoc)</p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_initializeProposalVariables">initializeProposalVariables</a></h2><p><code>protected void <strong>initializeProposalVariables</strong>(ITextViewer textViewer
+         ,
+      int documentPosition)</code></p><p></p><h3>Parameters</h3><p><code>textViewer</code></p><p><code>documentPosition</code></p><hr><h2><a name="method_setErrorMessage">setErrorMessage</a></h2><p><code>public void <strong>setErrorMessage</strong>(java.lang.String errorMessage)</code></p><p>Sets the error message for why content assistance didn't complete.</p><h3>Parameters</h3><p><code>errorMessage</code></p><hr></body></html>

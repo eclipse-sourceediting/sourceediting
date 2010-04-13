@@ -1,0 +1,63 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.contentoutline</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.contentoutline</strong></font><br>
+               Class JFaceNodeAdapter</h2><br><hr><pre>public class <strong>JFaceNodeAdapter</strong>
+extends java.lang.Object</pre>Adapts a DOM node to a JFace viewer.<hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>package-private static  java.lang.Class</code></td><td width="80%" align="left"><code><a href="#field_ADAPTER_KEY">ADAPTER_KEY</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory</code></td><td width="80%" align="left"><code><a href="#field_fAdapterFactory">fAdapterFactory</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private org.eclipse.wst.xsl.ui.internal.contentoutline.RefreshStructureJob</code></td><td width="80%" align="left"><code><a href="#field_fRefreshJob">fRefreshJob</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_JFaceNodeAdapter">JFaceNodeAdapter</a></strong>(org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory adapterFactory)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected Image</code></td><td width="" align="left"><code><a href="#method_createImage">createImage</a>(java.lang.Object object)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected Image</code></td><td width="" align="left"><code><a href="#method_createXMLImageDescriptor">createXMLImageDescriptor</a>(java.lang.String imageResourceName)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.Object[]</code></td><td width="" align="left"><code><a href="#method_getChildren">getChildren</a>(java.lang.Object object)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.Object[]</code></td><td width="" align="left"><code><a href="#method_getElements">getElements</a>(java.lang.Object node)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns an enumeration with the elements belonging to the passed
+ element. These are the top level items in a list, tree, table, etc...</td></tr><tr valign="top"><td width="20%" align="right"><code>public Image</code></td><td width="" align="left"><code><a href="#method_getLabelImage">getLabelImage</a>(java.lang.Object node)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Fetches the label image specific to this object instance.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_getLabelText">getLabelText</a>(java.lang.Object node)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Fetches the label text specific to this object instance.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.Object</code></td><td width="" align="left"><code><a href="#method_getParent">getParent</a>(java.lang.Object object)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected ImageDescriptor</code></td><td width="" align="left"><code><a href="#method_getXSLImage">getXSLImage</a>(org.w3c.dom.Element node)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_hasChildren">hasChildren</a>(java.lang.Object object)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_isAdapterForType">isAdapterForType</a>(java.lang.Object type)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Allowing the INodeAdapter to compare itself against the type allows it
+ to return true in more than one case.</td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_notifyChanged">notifyChanged</a>(INodeNotifier notifier
+         ,
+      int eventType
+         ,
+      java.lang.Object changedFeature
+         ,
+      java.lang.Object oldValue
+         ,
+      java.lang.Object newValue
+         ,
+      int pos)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Called by the object being adapter (the notifier) when something has
+ changed.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_ADAPTER_KEY">ADAPTER_KEY</a></h2><p><code>package-private static  java.lang.Class <strong>ADAPTER_KEY</strong></code></p><hr><h2><a name="field_fAdapterFactory">fAdapterFactory</a></h2><p><code>package-private org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory <strong>fAdapterFactory</strong></code></p><hr><h2><a name="field_fRefreshJob">fRefreshJob</a></h2><p><code>package-private org.eclipse.wst.xsl.ui.internal.contentoutline.RefreshStructureJob <strong>fRefreshJob</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_JFaceNodeAdapter">JFaceNodeAdapter</a></h2><p><code>public <strong>JFaceNodeAdapter</strong>(org.eclipse.wst.xsl.ui.internal.contentoutline.JFaceNodeAdapterFactory adapterFactory)</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_createImage">createImage</a></h2><p><code>protected Image <strong>createImage</strong>(java.lang.Object object)</code></p><p></p><h3>Parameters</h3><p><code>object</code></p><h3>Returns</h3><p><code>Image</code></p><hr><h2><a name="method_createXMLImageDescriptor">createXMLImageDescriptor</a></h2><p><code>protected Image <strong>createXMLImageDescriptor</strong>(java.lang.String imageResourceName)</code></p><p></p><h3>Parameters</h3><p><code>imageResourceName</code></p><h3>Returns</h3><p><code>Image</code></p><hr><h2><a name="method_getChildren">getChildren</a></h2><p><code>public java.lang.Object[] <strong>getChildren</strong>(java.lang.Object object)</code></p><p></p><h3>Parameters</h3><p><code>object</code></p><h3>Returns</h3><p><code>java.lang.Object[]</code></p><hr><h2><a name="method_getElements">getElements</a></h2><p><code>public java.lang.Object[] <strong>getElements</strong>(java.lang.Object node)</code></p><p>Returns an enumeration with the elements belonging to the passed
+ element. These are the top level items in a list, tree, table, etc...</p><h3>Parameters</h3><p><code>node</code></p><h3>Returns</h3><p><code>java.lang.Object[]</code></p><hr><h2><a name="method_getLabelImage">getLabelImage</a></h2><p><code>public Image <strong>getLabelImage</strong>(java.lang.Object node)</code></p><p>Fetches the label image specific to this object instance.</p><h3>Parameters</h3><p><code>node</code> - DOM Node</p><h3>Returns</h3><p><code>Image</code> - Image for the label.</p><hr><h2><a name="method_getLabelText">getLabelText</a></h2><p><code>public java.lang.String <strong>getLabelText</strong>(java.lang.Object node)</code></p><p>Fetches the label text specific to this object instance.</p><h3>Parameters</h3><p><code>node</code></p><h3>Returns</h3><p><code>java.lang.String</code> - Node Name for the Label</p><hr><h2><a name="method_getParent">getParent</a></h2><p><code>public java.lang.Object <strong>getParent</strong>(java.lang.Object object)</code></p><p></p><h3>Parameters</h3><p><code>object</code></p><h3>Returns</h3><p><code>java.lang.Object</code></p><hr><h2><a name="method_getXSLImage">getXSLImage</a></h2><p><code>protected ImageDescriptor <strong>getXSLImage</strong>(org.w3c.dom.Element node)</code></p><p></p><h3>Parameters</h3><p><code>node</code></p><h3>Returns</h3><p><code>ImageDescriptor</code></p><hr><h2><a name="method_hasChildren">hasChildren</a></h2><p><code>public boolean <strong>hasChildren</strong>(java.lang.Object object)</code></p><p></p><h3>Parameters</h3><p><code>object</code></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_isAdapterForType">isAdapterForType</a></h2><p><code>public boolean <strong>isAdapterForType</strong>(java.lang.Object type)</code></p><p>Allowing the INodeAdapter to compare itself against the type allows it
+ to return true in more than one case.</p><h3>Parameters</h3><p><code>type</code></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_notifyChanged">notifyChanged</a></h2><p><code>public void <strong>notifyChanged</strong>(INodeNotifier notifier
+         ,
+      int eventType
+         ,
+      java.lang.Object changedFeature
+         ,
+      java.lang.Object oldValue
+         ,
+      java.lang.Object newValue
+         ,
+      int pos)</code></p><p>Called by the object being adapter (the notifier) when something has
+ changed.</p><h3>Parameters</h3><p><code>notifier</code></p><p><code>eventType</code></p><p><code>changedFeature</code></p><p><code>oldValue</code></p><p><code>newValue</code></p><p><code>pos</code></p><hr></body></html>

@@ -1,0 +1,47 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.core.internal.validation.eclipse</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.core.internal.validation.eclipse</strong></font><br>
+               Class Validator2</h2><br><hr><pre>public class <strong>Validator2</strong>
+extends AbstractValidator</pre>Validator for both build validation (AbstractValidator) and as-you-type validation (IValidatorJob).<p></p><hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_Validator2">Validator2</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_clean">clean</a>(IProject project
+         ,
+      ValidationState state
+         ,
+      IProgressMonitor monitor)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_cleanup">cleanup</a>(IReporter reporter)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public ISchedulingRule</code></td><td width="" align="left"><code><a href="#method_getSchedulingRule">getSchedulingRule</a>(IValidationContext helper)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public ValidationResult</code></td><td width="" align="left"><code><a href="#method_validate">validate</a>(IResource resource
+         ,
+      int kind
+         ,
+      ValidationState state
+         ,
+      IProgressMonitor monitor)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_validate">validate</a>(IValidationContext helper
+         ,
+      IReporter reporter)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public IStatus</code></td><td width="" align="left"><code><a href="#method_validateInJob">validateInJob</a>(IValidationContext helper
+         ,
+      IReporter reporter)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_Validator2">Validator2</a></h2><p><code>public <strong>Validator2</strong>()</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_clean">clean</a></h2><p><code>public void <strong>clean</strong>(IProject project
+         ,
+      ValidationState state
+         ,
+      IProgressMonitor monitor)</code></p><p></p><h3>Parameters</h3><p><code>project</code></p><p><code>state</code></p><p><code>monitor</code></p><hr><h2><a name="method_cleanup">cleanup</a></h2><p><code>public void <strong>cleanup</strong>(IReporter reporter)</code></p><p></p><h3>Parameters</h3><p><code>reporter</code></p><hr><h2><a name="method_getSchedulingRule">getSchedulingRule</a></h2><p><code>public ISchedulingRule <strong>getSchedulingRule</strong>(IValidationContext helper)</code></p><p></p><h3>Parameters</h3><p><code>helper</code></p><h3>Returns</h3><p><code>ISchedulingRule</code></p><hr><h2><a name="method_validate">validate</a></h2><p><code>public ValidationResult <strong>validate</strong>(IResource resource
+         ,
+      int kind
+         ,
+      ValidationState state
+         ,
+      IProgressMonitor monitor)</code></p><p></p><h3>Parameters</h3><p><code>resource</code></p><p><code>kind</code></p><p><code>state</code></p><p><code>monitor</code></p><h3>Returns</h3><p><code>ValidationResult</code></p><hr><h2><a name="method_validate">validate</a></h2><p><code>public void <strong>validate</strong>(IValidationContext helper
+         ,
+      IReporter reporter)</code></p><p></p><h3>Parameters</h3><p><code>helper</code></p><p><code>reporter</code></p><h3>Throws:</h3><p><code>ValidationException</code></p><hr><h2><a name="method_validateInJob">validateInJob</a></h2><p><code>public IStatus <strong>validateInJob</strong>(IValidationContext helper
+         ,
+      IReporter reporter)</code></p><p></p><h3>Parameters</h3><p><code>helper</code></p><p><code>reporter</code></p><h3>Returns</h3><p><code>IStatus</code></p><h3>Throws:</h3><p><code>ValidationException</code></p><hr></body></html>
