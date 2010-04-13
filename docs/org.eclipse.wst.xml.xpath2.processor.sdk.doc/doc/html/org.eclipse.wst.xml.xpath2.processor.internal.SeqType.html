@@ -1,0 +1,43 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.processor.internal</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.processor.internal</strong></font><br>
+               Class SeqType</h2><br><hr><pre>public class <strong>SeqType</strong>
+extends java.lang.Object</pre>represents a Sequence types used for matching expected arguments of functions<hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public static  int</code></td><td width="80%" align="left"><code><a href="#field_OCC_EMPTY">OCC_EMPTY</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  int</code></td><td width="80%" align="left"><code><a href="#field_OCC_NONE">OCC_NONE</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  int</code></td><td width="80%" align="left"><code><a href="#field_OCC_PLUS">OCC_PLUS</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  int</code></td><td width="80%" align="left"><code><a href="#field_OCC_QMARK">OCC_QMARK</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  int</code></td><td width="80%" align="left"><code><a href="#field_OCC_STAR">OCC_STAR</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_XML_SCHEMA_NS">XML_SCHEMA_NS</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Path to w3.org XML Schema specification.</td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_SeqType">SeqType</a></strong>(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType t
+         ,
+      int occ)</code></td></tr><tr><td><code><strong><a href="#con_SeqType">SeqType</a></strong>(int occ)</code></td></tr><tr><td><code><strong><a href="#con_SeqType">SeqType</a></strong>(java.lang.Class type_class
+         ,
+      int occ)</code></td></tr><tr><td><code><strong><a href="#con_SeqType">SeqType</a></strong>(org.eclipse.wst.xml.xpath2.processor.internal.ast.SequenceType st
+         ,
+      org.eclipse.wst.xml.xpath2.processor.StaticContext sc
+         ,
+      org.eclipse.wst.xml.xpath2.processor.ResultSequence rs)</code></td></tr><tr><td><code><strong><a href="#con_SeqType">SeqType</a></strong>(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType t)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.processor.ResultSequence</code></td><td width="" align="left"><code><a href="#method_match">match</a>(org.eclipse.wst.xml.xpath2.processor.ResultSequence args)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               matches args</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_occurence">occurence</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType</code></td><td width="" align="left"><code><a href="#method_type">type</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_OCC_EMPTY">OCC_EMPTY</a></h2><p><code>public static  int <strong>OCC_EMPTY</strong></code></p><hr><h2><a name="field_OCC_NONE">OCC_NONE</a></h2><p><code>public static  int <strong>OCC_NONE</strong></code></p><hr><h2><a name="field_OCC_PLUS">OCC_PLUS</a></h2><p><code>public static  int <strong>OCC_PLUS</strong></code></p><hr><h2><a name="field_OCC_QMARK">OCC_QMARK</a></h2><p><code>public static  int <strong>OCC_QMARK</strong></code></p><hr><h2><a name="field_OCC_STAR">OCC_STAR</a></h2><p><code>public static  int <strong>OCC_STAR</strong></code></p><hr><h2><a name="field_XML_SCHEMA_NS">XML_SCHEMA_NS</a></h2><p><code>public static  java.lang.String <strong>XML_SCHEMA_NS</strong></code></p><table><tr><td>Path to w3.org XML Schema specification.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_SeqType">SeqType</a></h2><p><code>public <strong>SeqType</strong>(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType t
+         ,
+      int occ)</code></p><p>sequence type</p><hr><h2><a name="con_SeqType">SeqType</a></h2><p><code>public <strong>SeqType</strong>(int occ)</code></p><p></p><hr><h2><a name="con_SeqType">SeqType</a></h2><p><code>public <strong>SeqType</strong>(java.lang.Class type_class
+         ,
+      int occ)</code></p><p></p><hr><h2><a name="con_SeqType">SeqType</a></h2><p><code>public <strong>SeqType</strong>(org.eclipse.wst.xml.xpath2.processor.internal.ast.SequenceType st
+         ,
+      org.eclipse.wst.xml.xpath2.processor.StaticContext sc
+         ,
+      org.eclipse.wst.xml.xpath2.processor.ResultSequence rs)</code></p><p></p><hr><h2><a name="con_SeqType">SeqType</a></h2><p><code>public <strong>SeqType</strong>(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType t)</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_match">match</a></h2><p><code>public org.eclipse.wst.xml.xpath2.processor.ResultSequence <strong>match</strong>(org.eclipse.wst.xml.xpath2.processor.ResultSequence args)</code></p><p>matches args</p><h3>Parameters</h3><p><code>args</code> - is a result sequence</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.processor.ResultSequence</code> - a result sequence</p><h3>Throws:</h3><p><code>org.eclipse.wst.xml.xpath2.processor.DynamicError</code></p><hr><h2><a name="method_occurence">occurence</a></h2><p><code>public int <strong>occurence</strong>()</code></p><p></p><h3>Returns</h3><p><code>int</code> - an integer.</p><hr><h2><a name="method_type">type</a></h2><p><code>public org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType <strong>type</strong>()</code></p><p></p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType</code> - a type.</p><hr></body></html>

@@ -1,0 +1,53 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.processor.internal</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.processor.internal</strong></font><br>
+               Class XPathCup</h2><br><hr><pre>public class <strong>XPathCup</strong>
+extends java_cup.runtime.lr_parser</pre>CUP v0.10k generated parser.<p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected static  short[][]</code></td><td width="80%" align="left"><code><a href="#field__action_table">_action_table</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Parse-action table.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected static  short[][]</code></td><td width="80%" align="left"><code><a href="#field__production_table">_production_table</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Production table.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected static  short[][]</code></td><td width="80%" align="left"><code><a href="#field__reduce_table">_reduce_table</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               &lt;code&gt;reduce_goto&lt;/code&gt; table.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected org.eclipse.wst.xml.xpath2.processor.internal.CUP$XPathCup$actions</code></td><td width="80%" align="left"><code><a href="#field_action_obj">action_obj</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Instance of action encapsulation class.</td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_XPathCup">XPathCup</a></strong>()</code></td></tr><tr><td><code><strong><a href="#con_XPathCup">XPathCup</a></strong>(java_cup.runtime.Scanner s)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public short[][]</code></td><td width="" align="left"><code><a href="#method_action_table">action_table</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Access to parse-action table.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java_cup.runtime.Symbol</code></td><td width="" align="left"><code><a href="#method_do_action">do_action</a>(int act_num
+         ,
+      java_cup.runtime.lr_parser parser
+         ,
+      java.util.Stack stack
+         ,
+      int top)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Invoke a user supplied parse action.</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_EOF_sym">EOF_sym</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               <code>EOF</code> Symbol index.</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_error_sym">error_sym</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               <code>error</code> Symbol index.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_init_actions">init_actions</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Action encapsulation object initializer.</td></tr><tr valign="top"><td width="20%" align="right"><code>public short[][]</code></td><td width="" align="left"><code><a href="#method_production_table">production_table</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Access to production table.</td></tr><tr valign="top"><td width="20%" align="right"><code>public short[][]</code></td><td width="" align="left"><code><a href="#method_reduce_table">reduce_table</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Access to <code>reduce_goto</code> table.</td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_report_error">report_error</a>(java.lang.String message
+         ,
+      java.lang.Object info)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_start_production">start_production</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Indicates start production.</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_start_state">start_state</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Indicates start state.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field__action_table">_action_table</a></h2><p><code>protected static  short[][] <strong>_action_table</strong></code></p><table><tr><td>Parse-action table.</td></tr></table><hr><h2><a name="field__production_table">_production_table</a></h2><p><code>protected static  short[][] <strong>_production_table</strong></code></p><table><tr><td>Production table.</td></tr></table><hr><h2><a name="field__reduce_table">_reduce_table</a></h2><p><code>protected static  short[][] <strong>_reduce_table</strong></code></p><table><tr><td><code>reduce_goto</code> table.</td></tr></table><hr><h2><a name="field_action_obj">action_obj</a></h2><p><code>protected org.eclipse.wst.xml.xpath2.processor.internal.CUP$XPathCup$actions <strong>action_obj</strong></code></p><table><tr><td>Instance of action encapsulation class.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_XPathCup">XPathCup</a></h2><p><code>public <strong>XPathCup</strong>()</code></p><p>Default constructor.</p><hr><h2><a name="con_XPathCup">XPathCup</a></h2><p><code>public <strong>XPathCup</strong>(java_cup.runtime.Scanner s)</code></p><p>Constructor which sets the default scanner.</p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_action_table">action_table</a></h2><p><code>public short[][] <strong>action_table</strong>()</code></p><p>Access to parse-action table.</p><h3>Returns</h3><p><code>short[][]</code></p><hr><h2><a name="method_do_action">do_action</a></h2><p><code>public java_cup.runtime.Symbol <strong>do_action</strong>(int act_num
+         ,
+      java_cup.runtime.lr_parser parser
+         ,
+      java.util.Stack stack
+         ,
+      int top)</code></p><p>Invoke a user supplied parse action.</p><h3>Parameters</h3><p><code>act_num</code></p><p><code>parser</code></p><p><code>stack</code></p><p><code>top</code></p><h3>Returns</h3><p><code>java_cup.runtime.Symbol</code></p><h3>Throws:</h3><p><code>java.lang.Exception</code></p><hr><h2><a name="method_EOF_sym">EOF_sym</a></h2><p><code>public int <strong>EOF_sym</strong>()</code></p><p><code>EOF</code> Symbol index.</p><h3>Returns</h3><p><code>int</code></p><hr><h2><a name="method_error_sym">error_sym</a></h2><p><code>public int <strong>error_sym</strong>()</code></p><p><code>error</code> Symbol index.</p><h3>Returns</h3><p><code>int</code></p><hr><h2><a name="method_init_actions">init_actions</a></h2><p><code>protected void <strong>init_actions</strong>()</code></p><p>Action encapsulation object initializer.</p><hr><h2><a name="method_production_table">production_table</a></h2><p><code>public short[][] <strong>production_table</strong>()</code></p><p>Access to production table.</p><h3>Returns</h3><p><code>short[][]</code></p><hr><h2><a name="method_reduce_table">reduce_table</a></h2><p><code>public short[][] <strong>reduce_table</strong>()</code></p><p>Access to <code>reduce_goto</code> table.</p><h3>Returns</h3><p><code>short[][]</code></p><hr><h2><a name="method_report_error">report_error</a></h2><p><code>public void <strong>report_error</strong>(java.lang.String message
+         ,
+      java.lang.Object info)</code></p><p></p><h3>Parameters</h3><p><code>message</code></p><p><code>info</code></p><hr><h2><a name="method_start_production">start_production</a></h2><p><code>public int <strong>start_production</strong>()</code></p><p>Indicates start production.</p><h3>Returns</h3><p><code>int</code></p><hr><h2><a name="method_start_state">start_state</a></h2><p><code>public int <strong>start_state</strong>()</code></p><p>Indicates start state.</p><h3>Returns</h3><p><code>int</code></p><hr></body></html>

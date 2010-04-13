@@ -1,0 +1,35 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.processor.internal.utils</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.processor.internal.utils</strong></font><br>
+               Class CodePointIterator</h2><br><hr><pre>public class <strong>CodePointIterator</strong>
+extends </pre><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public static  int</code></td><td width="80%" align="left"><code><a href="#field_DONE">DONE</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Sentinel value returned from iterator when the end is reached.
+ The value is -1 which will never be a valid codepoint.</td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.Object</code></td><td width="" align="left"><code><a href="#method_clone">clone</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Create a copy of this code point iterator</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_current">current</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Gets the code point at the current position (as returned by getIndex()).</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_first">first</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Resets the position to 0 and returns the first code point.</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_getIndex">getIndex</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns the current index (as a codepoint, not a string index).</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_last">last</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Sets the position to the last possible position (or 0 if the text is empty)
+ and returns the code point at that position.</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_next">next</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Increments the iterator's code point index by one and returns the code point
+ at the new index.  If the resulting index is at the end of the string, the
+ index is not incremented, and DONE is returned.</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_previous">previous</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Decrements the iterator's index by one and returns the character
+ at the new index. If the current index is 0, the index
+ remains at 0 and a value of DONE is returned.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_DONE">DONE</a></h2><p><code>public static  int <strong>DONE</strong></code></p><table><tr><td>Sentinel value returned from iterator when the end is reached.
+ The value is -1 which will never be a valid codepoint.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_clone">clone</a></h2><p><code>public java.lang.Object <strong>clone</strong>()</code></p><p>Create a copy of this code point iterator</p><h3>Returns</h3><p><code>java.lang.Object</code> - A copy of this</p><hr><h2><a name="method_current">current</a></h2><p><code>public int <strong>current</strong>()</code></p><p>Gets the code point at the current position (as returned by getIndex()).</p><h3>Returns</h3><p><code>int</code> - the code point at the current position or DONE if the current  position is off the end of the text.</p><hr><h2><a name="method_first">first</a></h2><p><code>public int <strong>first</strong>()</code></p><p>Resets the position to 0 and returns the first code point.</p><h3>Returns</h3><p><code>int</code> - the first code point in the text, or DONE if the text is empty</p><hr><h2><a name="method_getIndex">getIndex</a></h2><p><code>public int <strong>getIndex</strong>()</code></p><p>Returns the current index (as a codepoint, not a string index).</p><h3>Returns</h3><p><code>int</code> - the current index.</p><hr><h2><a name="method_last">last</a></h2><p><code>public int <strong>last</strong>()</code></p><p>Sets the position to the last possible position (or 0 if the text is empty)
+ and returns the code point at that position.</p><h3>Returns</h3><p><code>int</code> - the last code point in the text, or DONE if the text is empty</p><hr><h2><a name="method_next">next</a></h2><p><code>public int <strong>next</strong>()</code></p><p>Increments the iterator's code point index by one and returns the code point
+ at the new index.  If the resulting index is at the end of the string, the
+ index is not incremented, and DONE is returned.</p><h3>Returns</h3><p><code>int</code> - the code point at the new position or DONE if the new  position is after the text range.</p><hr><h2><a name="method_previous">previous</a></h2><p><code>public int <strong>previous</strong>()</code></p><p>Decrements the iterator's index by one and returns the character
+ at the new index. If the current index is 0, the index
+ remains at 0 and a value of DONE is returned.</p><h3>Returns</h3><p><code>int</code> - the code point at the new position (or DONE if the current  position is 0)</p><hr></body></html>

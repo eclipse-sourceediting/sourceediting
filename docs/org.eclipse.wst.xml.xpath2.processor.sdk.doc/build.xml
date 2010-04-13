@@ -24,8 +24,13 @@
   	  	 <fileset dir="${workspaceloc}">
 	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/*.java"/>
 	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/ast/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/ast/*.java"/>
 	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/function/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/*.java"/>
 	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/types/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/functions/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/types/userdefined/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/utils/*.java"/>
   	  	 </fileset>
   	     <doclet name="com.jeldoclet.JELDoclet"/>
   	  </javadoc>
