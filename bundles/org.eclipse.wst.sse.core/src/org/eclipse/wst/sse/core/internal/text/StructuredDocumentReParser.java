@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver (Intalio) - bug 300427 - Comparison of String Objects using == or !=
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
 
@@ -425,7 +425,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		//		if (isContainerRegion(oldRegion) != isContainerRegion(oldRegion))
 		if (isCollectionRegion(oldRegion) != isCollectionRegion(newRegion))
 			result = false;
-		else if (oldRegion.getType() == newRegion.getType())
+		else if (oldRegion.getType().equals(newRegion.getType()))
 			result = true;
 		return result;
 	}

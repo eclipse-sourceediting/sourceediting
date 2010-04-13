@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     David Carver (Intalio) - bug 300430 - String concatenation
+ *     David Carver (Intalio) - bug 300427 - Comparison of String Objects == or !=
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
 
@@ -166,7 +167,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		StringBuffer sb = new StringBuffer(result);
 		for (int i = 0; i < length; i++) {
 			region = getRegions().get(i);
-			if (region.getType() == context)
+			if (region.getType().equals(context))
 				sb.append(getFullText(region));
 		}
 		result = sb.toString();
@@ -320,7 +321,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		int length = getRegions().size();
 		for (int i = 0; i < length; i++) {
 			region = getRegions().get(i);
-			if (region.getType() == context) {
+			if (region.getType().equals(context)) {
 				result = getText(region);
 				break;
 			}
@@ -397,7 +398,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 				// offset,
 				// since that would decide many cases right away and avoid the
 				// text comparison
-				if (getType() == region.getType()) {
+				if (getType().equals(region.getType())) {
 					if (sameOffsetsAs(region, shift) && sameTextAs(region, shift)) {
 						result = true;
 					}
@@ -422,7 +423,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 				// offset,
 				// since that would decide many cases right away and avoid the
 				// text comparison
-				if (oldRegion.getType() == newRegion.getType()) {
+				if (oldRegion.getType().equals(newRegion.getType())) {
 					if (sameOffsetsAs(oldRegion, newDocumentRegion, newRegion, shift)) {
 						if (sameTextAs(oldRegion, newDocumentRegion, newRegion, shift)) {
 							result = true;
