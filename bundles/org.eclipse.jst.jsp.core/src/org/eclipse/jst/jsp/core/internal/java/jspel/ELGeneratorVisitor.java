@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 BEA Systems and others.
+ * Copyright (c) 2005, 2010 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -254,21 +254,21 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		return node.childrenAccept(this, data);
 	}
 
-	public void startFunctionDefinition(int start) {
+	public void startFunctionDefinition() {
 		fGeneratedFunctionStart = fResult.length();
-		append(fExpressionHeader1, start, start);
-		append(Integer.toString(getMethodCounter()), start, start);
+		append(fExpressionHeader1);
+		append(Integer.toString(getMethodCounter()));
 		if (fUseParameterizedTypes)
-			append(fExpressionHeader2_param, start, start);
+			append(fExpressionHeader2_param);
 		else
-			append(fExpressionHeader2, start, start);
+			append(fExpressionHeader2);
 	}
 
-	public void endFunctionDefinition(int end) {
+	public void endFunctionDefinition() {
 		if (fGeneratedFunctionStart < 0) {
 			throw new IllegalStateException("Cannot end function definition because none has been started."); //$NON-NLS-1$
 		}
-		append(fFooter, end, end);
+		append(fFooter);
 
 		// something is preventing good code generation so empty out the result
 		// and the map.
@@ -461,7 +461,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 			if(isCompletingObject(node.firstToken.image)) {
 				append(node.firstToken);
 			} else {
-				fCanGenerate = false;
+				append("pageScope.get(\"" + node.firstToken + "\")"); //$NON-NLS-1$ //$NON-NLS-1$
 			}
 			return(null);
 		}

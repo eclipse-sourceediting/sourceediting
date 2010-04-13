@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 BEA Systems and others.
+ * Copyright (c) 2005, 2010 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,9 +47,9 @@ public final class ELGenerator {
      */
     public List generate(ASTExpression root, IStructuredDocumentRegion currentNode, StringBuffer result, Map codeMap, IStructuredDocument document, ITextRegionCollection jspReferenceRegion, int contentStart, int contentLength) {
 		ELGeneratorVisitor visitor = new ELGeneratorVisitor(result, currentNode, codeMap, document, jspReferenceRegion, contentStart);
-		visitor.startFunctionDefinition(root.getFirstToken().beginColumn - 1);
+		visitor.startFunctionDefinition();
 		root.jjtAccept(visitor, null);
-		visitor.endFunctionDefinition(root.getLastToken().endColumn - 1);
+		visitor.endFunctionDefinition();
 		
 		return visitor.getELProblems();
     }
