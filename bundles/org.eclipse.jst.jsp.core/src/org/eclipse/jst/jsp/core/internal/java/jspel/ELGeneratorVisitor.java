@@ -254,21 +254,21 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		return node.childrenAccept(this, data);
 	}
 
-	public void startFunctionDefinition() {
+	public void startFunctionDefinition(int start) {
 		fGeneratedFunctionStart = fResult.length();
-		append(fExpressionHeader1);
-		append(Integer.toString(getMethodCounter()));
+		append(fExpressionHeader1, start, start);
+		append(Integer.toString(getMethodCounter()), start, start);
 		if (fUseParameterizedTypes)
-			append(fExpressionHeader2_param);
+			append(fExpressionHeader2_param, start, start);
 		else
-			append(fExpressionHeader2);
+			append(fExpressionHeader2, start, start);
 	}
 
-	public void endFunctionDefinition() {
+	public void endFunctionDefinition(int end) {
 		if (fGeneratedFunctionStart < 0) {
 			throw new IllegalStateException("Cannot end function definition because none has been started."); //$NON-NLS-1$
 		}
-		append(fFooter);
+		append(fFooter, end, end);
 
 		// something is preventing good code generation so empty out the result
 		// and the map.
@@ -476,8 +476,9 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * @return
 	 */
 	private boolean isCompletingObject(String image) {
-		Boolean value = (Boolean)fJSPImplicitObjectMap.get(image);
-		return null == value ? false : value.booleanValue();
+		//Boolean value = (Boolean)fJSPImplicitObjectMap.get(image);
+		//return null == value ? false : value.booleanValue();
+		return fJSPImplicitObjectMap.containsKey(image);
 	}
 
 	/**
@@ -485,7 +486,10 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 */
 	public Object visit(ASTValueSuffix node, Object data) {
 		if(JSPELParserConstants.LBRACKET == node.firstToken.kind) {
-			fCanGenerate = false;
+			//if EL map syntax translate to Java map syntax
+			append(".get(");//$NON-NLS-1$
+			node.childrenAccept(this, data);
+			append(")");//$NON-NLS-1$
 		} else if(null != node.getPropertyNameToken()) {
 			Token suffix = node.getPropertyNameToken();
 			String ucaseName = suffix.image.substring(0, 1).toUpperCase() + suffix.image.substring(1, suffix.image.length()); 

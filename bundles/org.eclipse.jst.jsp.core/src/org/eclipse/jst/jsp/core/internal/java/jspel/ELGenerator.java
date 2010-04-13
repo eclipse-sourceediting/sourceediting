@@ -47,9 +47,9 @@ public final class ELGenerator {
      */
     public List generate(ASTExpression root, IStructuredDocumentRegion currentNode, StringBuffer result, Map codeMap, IStructuredDocument document, ITextRegionCollection jspReferenceRegion, int contentStart, int contentLength) {
 		ELGeneratorVisitor visitor = new ELGeneratorVisitor(result, currentNode, codeMap, document, jspReferenceRegion, contentStart);
-		visitor.startFunctionDefinition();
+		visitor.startFunctionDefinition(root.getFirstToken().beginColumn - 1);
 		root.jjtAccept(visitor, null);
-		visitor.endFunctionDefinition();
+		visitor.endFunctionDefinition(root.getLastToken().endColumn - 1);
 		
 		return visitor.getELProblems();
     }
