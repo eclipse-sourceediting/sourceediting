@@ -13,4 +13,3 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.wst.xsl.exslt.core.internal.resolver.tests;x-internal:=true,
  org.eclipse.wst.xsl.exslt.core.tests
-Import-Package: junit.framework;version="3.8.2"
