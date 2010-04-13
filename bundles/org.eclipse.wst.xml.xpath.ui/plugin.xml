@@ -9,7 +9,6 @@
 		<!-- ProjectExplorer on the left, XPath on the "bottom left" -->
 		<view id="org.eclipse.wst.xml.views.XPathView" relative="org.eclipse.ui.navigator.ProjectExplorer" relationship="bottom" ratio="0.55" />
 		<viewShortcut id="org.eclipse.wst.xml.views.XPathView"/>
-		<viewShortcut id="org.eclipse.wst.xml.views.XPathNavigatorView"/>
 	</perspectiveExtension>
  </extension>
 
