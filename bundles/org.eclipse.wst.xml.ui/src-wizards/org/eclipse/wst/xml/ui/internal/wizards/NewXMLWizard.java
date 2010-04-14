@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.wizards;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -19,10 +21,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,6 +36,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -40,8 +45,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorDescriptor;
@@ -80,6 +87,10 @@ public class NewXMLWizard extends NewModelWizard {
 	protected static final String[] filePageFilterExtensions = {".xml"}; //$NON-NLS-1$
 	protected static final String[] browseXSDFilterExtensions = {".xsd"}; //$NON-NLS-1$
 	protected static final String[] browseDTDFilterExtensions = {".dtd"}; //$NON-NLS-1$
+	
+	protected static final int OPTIONAL_ELEMENT_DEPTH_LIMIT_DEFAULT_VALUE = 2;
+	
+	protected static final long XML_EDITOR_FILE_SIZE_LIMIT = 26214400; // 25 mb
 
 	protected NewFilePage newFilePage;
 	/**
@@ -287,21 +298,33 @@ public class NewXMLWizard extends NewModelWizard {
 					newFilePage.setFileName(fileName.concat(newFilePage.defaultFileExtension));
 				}
 
-				IFile newFile = newFilePage.createNewFile();
-				String xmlFileName = newFile.getLocation().toOSString();
+				final IFile newFile = newFilePage.createNewFile();
+				final String xmlFileName = newFile.getLocation().toOSString();
+				final String grammarFileName = fileName;
 
 				if (getContainer().getCurrentPage() == selectRootElementPage) {
 
-					generator.createXMLDocument(newFile, xmlFileName);
+					int limit = selectRootElementPage.getOptionalElementDepthLimit();
+					generator.setOptionalElementDepthLimit(limit);
+					setNeedsProgressMonitor(true);
+					getContainer().run(true, false, new IRunnableWithProgress(){
+						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
+							progressMonitor.beginTask(XMLWizardsMessages._UI_WIZARD_GENERATING_XML_DOCUMENT, IProgressMonitor.UNKNOWN);
+							try {
+								generator.createXMLDocument(newFile, xmlFileName);
+							} catch (Exception exception) {
+								Logger.logException("Exception completing New XML wizard " + grammarFileName, exception); //$NON-NLS-1$
+							}
+							progressMonitor.done();
+						}
+					});
 				}
 				else {
 					// put template contents into file
 					String templateString = fNewXMLTemplatesWizardPage.getTemplateString();
 					generator.createTemplateXMLDocument(newFile, templateString);
 				}
-
 				newFile.refreshLocal(IResource.DEPTH_ONE, null);
-
 				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				BasicNewResourceWizard.selectAndReveal(newFile, workbenchWindow);
 				openEditor(newFile);
@@ -314,32 +337,39 @@ public class NewXMLWizard extends NewModelWizard {
 	}
 
 	public void openEditor(IFile file) {
-		// Open editor on new file.
-		String editorId = null;
-		try {
-			IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getFullPath().toString(), file.getContentDescription().getContentType());
-			if (editor != null) {
-				editorId = editor.getId();
-			}
+		long length = 0;
+		IPath location = file.getLocation();
+		if (location != null) {
+			File localFile = location.toFile();
+			length = localFile.length();
 		}
-		catch (CoreException e1) {
-			// editor id could not be retrieved, so we can not open editor
-			return;
-		}
-		IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		try {
-			if (dw != null) {
-				IWorkbenchPage page = dw.getActivePage();
-				if (page != null) {
-					page.openEditor(new FileEditorInput(file), editorId, true);
+		if(length < XML_EDITOR_FILE_SIZE_LIMIT) {
+			// Open editor on new file.
+			String editorId = null;
+			try {
+				IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getLocation().toOSString(), file.getContentDescription().getContentType());
+				if (editor != null) {
+					editorId = editor.getId();
 				}
 			}
+			catch (CoreException e1) {
+				// editor id could not be retrieved, so we can not open editor
+				return;
+			}
+			IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			try {
+				if (dw != null) {
+					IWorkbenchPage page = dw.getActivePage();
+					if (page != null) {
+						page.openEditor(new FileEditorInput(file), editorId, true);
+					}
+				}
+			}
+			catch (PartInitException e) {
+				// editor can not open for some reason
+				return;
+			}
 		}
-		catch (PartInitException e) {
-			// editor can not open for some reason
-			return;
-		}
-
 	}
 
 
@@ -450,6 +480,9 @@ public class NewXMLWizard extends NewModelWizard {
 		protected PageBook pageBook;
 		protected XSDOptionsPanel xsdOptionsPanel;
 		protected DTDOptionsPanel dtdOptionsPanel;
+		protected Text limitOptionalElementDepthTextControl;
+		protected Button limitOptionalElementDepthCheckButtonControl;
+		 
 
 
 		SelectRootElementPage() {
@@ -497,6 +530,51 @@ public class NewXMLWizard extends NewModelWizard {
 				radioButton[1].setSelection(false);
 				PlatformUI.getWorkbench().getHelpSystem().setHelp(radioButton[1], IXMLWizardHelpContextIds.XML_NEWWIZARD_SELECTROOTELEMENT2_HELPID);
 
+				radioButton[1].addSelectionListener(new SelectionAdapter(){
+					public void widgetSelected(SelectionEvent selectionEvent) {
+						boolean enabled = radioButton[1].getSelection();
+						limitOptionalElementDepthCheckButtonControl.setEnabled(enabled);
+						enabled = enabled && limitOptionalElementDepthCheckButtonControl.getSelection();
+						limitOptionalElementDepthTextControl.setEnabled(enabled);
+					}
+				});
+				Composite composite = new Composite(group, SWT.NONE);
+				GridLayout gridLayout = new GridLayout();
+				gridLayout.marginHeight = 0;
+				gridLayout.marginWidth = 0;
+				gridLayout.numColumns = 2;
+				gridLayout.marginLeft = 20;
+				composite.setLayout(gridLayout);
+				limitOptionalElementDepthCheckButtonControl = new Button(composite, SWT.CHECK);
+				limitOptionalElementDepthCheckButtonControl.setText(XMLWizardsMessages._UI_WIZARD_LIMIT_OPTIONAL_ELEMENT_DEPTH);
+				limitOptionalElementDepthCheckButtonControl.setEnabled(false);
+				limitOptionalElementDepthCheckButtonControl.setSelection(true);
+				limitOptionalElementDepthCheckButtonControl.addSelectionListener(new SelectionAdapter(){
+					public void widgetSelected(SelectionEvent selectionEvent) {
+						boolean enabled = limitOptionalElementDepthCheckButtonControl.getSelection();
+						limitOptionalElementDepthTextControl.setEnabled(enabled);
+					}
+				});
+				limitOptionalElementDepthTextControl = new Text(composite, SWT.BORDER);
+				limitOptionalElementDepthTextControl.setText(Integer.toString(OPTIONAL_ELEMENT_DEPTH_LIMIT_DEFAULT_VALUE));
+				limitOptionalElementDepthTextControl.setEnabled(false);
+				GridData gridaData = new GridData();
+				gridaData.widthHint = 25;
+				limitOptionalElementDepthTextControl.setLayoutData(gridaData);
+				limitOptionalElementDepthTextControl.addListener(SWT.Verify, new Listener() {
+					public void handleEvent(Event event) {
+						String string = event.text;
+						char[] chars = new char[string.length()];
+						string.getChars(0, chars.length, chars, 0);
+						for (int i = 0; i < chars.length; i++) {
+							if (!('0' <= chars[i] && chars[i] <= '9')) {
+								event.doit = false;
+								return;
+							}
+						}
+					}
+				});
+				
 				radioButton[2] = new Button(group, SWT.CHECK);
 				radioButton[2].setText(XMLWizardsMessages._UI_WIZARD_CREATE_FIRST_CHOICE);
 				radioButton[2].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -666,6 +744,16 @@ public class NewXMLWizard extends NewModelWizard {
 				return s;
 			}
 			return defaultPrefix;
+		}
+		
+		public int getOptionalElementDepthLimit() {
+			int depth = -1;
+			if(radioButton[1].getSelection() && limitOptionalElementDepthCheckButtonControl.getSelection()) {
+				try {
+					depth = Integer.parseInt(limitOptionalElementDepthTextControl.getText());
+				} catch( Exception exception) {}
+			}
+			return depth;
 		}
 
 		public boolean isPageComplete() {

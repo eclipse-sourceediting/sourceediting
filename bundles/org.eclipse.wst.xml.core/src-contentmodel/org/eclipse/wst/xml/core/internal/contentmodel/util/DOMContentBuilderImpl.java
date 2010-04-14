@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,7 +66,11 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
 
 	protected int numOfRepeatableElements = 1;
 	protected Stack cmGroupStack = new Stack();
+	protected int depthLimit = -1;
 
+	protected int domLevel;
+	private int originalBuildPolicy;
+	
 	public interface ExternalCMDocumentSupport {
 		public CMDocument getCMDocument(Element element, String uri);
 	}
@@ -186,6 +190,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
 	public void createDefaultContent(Node parent, CMElementDeclaration ed) {
 		currentParent = parent;
 		alwaysVisit = true;
+		originalBuildPolicy = buildPolicy;
 		visitCMElementDeclaration(ed);
 	}
 
@@ -209,9 +214,11 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
 	}
 
 	protected void handlePushParent(Element parent, CMElementDeclaration ed) {
+	  domLevel++;
 	}
 
 	protected void handlePopParent(Element element, CMElementDeclaration ed) {
+      domLevel--;
 	}
 
 	// The range must be between 1 and 99.
@@ -349,6 +356,16 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
 		linkNode(text);
 	}
 
+	public void visitCMNode(CMNode node) {
+		if (depthLimit != -1) {
+			if (domLevel > depthLimit) {
+				buildPolicy = buildPolicy &= ~BUILD_OPTIONAL_ELEMENTS;
+			} else {
+				buildPolicy = originalBuildPolicy;
+			}
+		}
+		super.visitCMNode(node);
+	}
 
 	public void visitCMGroup(CMGroup e) {
 		cmGroupStack.push(e);
@@ -581,6 +598,11 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
 			e.printStackTrace();
 		}
 	}
+	
+	public void setOptionalElementDepthLimit(int depth) {
+		depthLimit = depth;
+	}
+	
 
 	// test
 	//

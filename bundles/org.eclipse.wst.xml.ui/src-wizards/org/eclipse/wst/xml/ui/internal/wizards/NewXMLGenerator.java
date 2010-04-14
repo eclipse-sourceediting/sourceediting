@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,6 +56,7 @@ public class NewXMLGenerator {
 	protected String rootElementName;
 
 	protected ICatalogEntry xmlCatalogEntry;
+	protected int optionalElementDepthLimit = -1;
 
 	// info for dtd
 	protected String publicId;
@@ -119,11 +120,15 @@ public class NewXMLGenerator {
 	}
 	
 	private String applyLineDelimiter(IFile file, String text) {
-		String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, System.getProperty("line.separator"), new IScopeContext[] {new ProjectScope(file.getProject()), new InstanceScope() });//$NON-NLS-1$
-		String convertedText = StringUtils.replace(text, "\r\n", "\n");
-		convertedText = StringUtils.replace(convertedText, "\r", "\n");
-		convertedText = StringUtils.replace(convertedText, "\n", lineDelimiter);
-		return convertedText;
+		String systemLineSeparator = System.getProperty("line.separator");
+		String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, systemLineSeparator, new IScopeContext[] {new ProjectScope(file.getProject()), new InstanceScope() });//$NON-NLS-1$
+		if(!systemLineSeparator.equals(lineDelimiter)) {
+			String convertedText = StringUtils.replace(text, "\r\n", "\n");
+			convertedText = StringUtils.replace(convertedText, "\r", "\n");
+			convertedText = StringUtils.replace(convertedText, "\n", lineDelimiter);
+			return convertedText;
+		}
+		return text;
 	}
 
 	/**
@@ -211,6 +216,7 @@ public class NewXMLGenerator {
 		//
 		contentBuilder.supressCreationOfDoctypeAndXMLDeclaration = true;
 		contentBuilder.setBuildPolicy(buildPolicy);
+		contentBuilder.setOptionalElementDepthLimit(optionalElementDepthLimit);
 		contentBuilder.setExternalCMDocumentSupport(new MyExternalCMDocumentSupport(namespaceInfoList, xmlFileName));
 		contentBuilder.createDefaultRootContent(cmDocument, cmElementDeclaration, namespaceInfoList);
 
@@ -408,5 +414,9 @@ public class NewXMLGenerator {
 			}
 		}
 		return result;
+	}
+	
+	public void setOptionalElementDepthLimit(int optionalElementDepthLimit) {
+		this.optionalElementDepthLimit = optionalElementDepthLimit;
 	}
 }
