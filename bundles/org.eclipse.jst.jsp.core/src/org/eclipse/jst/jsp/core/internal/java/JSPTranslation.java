@@ -555,7 +555,7 @@ public class JSPTranslation implements IJSPTranslation {
 			try {
 				synchronized(cu) {
 					cu.makeConsistent(getProgressMonitor());
-					cu.reconcile(ICompilationUnit.NO_AST, true, getWorkingCopyOwner(), getProgressMonitor());
+					cu.reconcile(ICompilationUnit.NO_AST, false, getWorkingCopyOwner(), getProgressMonitor());
 				}
 			}
 			catch (JavaModelException e) {
