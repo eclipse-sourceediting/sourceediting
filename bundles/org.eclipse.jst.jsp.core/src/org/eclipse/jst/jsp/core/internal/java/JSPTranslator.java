@@ -1399,32 +1399,35 @@ public class JSPTranslator implements Externalizable {
 	 */
 	protected void translateXMLContent(ITextRegionContainer embeddedContainer) {
 		ITextRegionList embeddedRegions = embeddedContainer.getRegions();
-		for (int i = 0; i < embeddedRegions.size(); i++) {
+		int length = embeddedRegions.size();
+		for (int i = 0; i < length; i++) {
 			ITextRegion delim = embeddedRegions.get(i);
 			String type = delim.getType();
-			ITextRegion content = null;
-			
+
 			// check next region to see if it's EL content
-			if (i + 1 < embeddedRegions.size()) {
-				String regionType = embeddedRegions.get(i + 1).getType();
-				if (regionType == DOMJSPRegionContexts.JSP_EL_CONTENT || regionType == DOMJSPRegionContexts.JSP_VBL_CONTENT)
-					content = embeddedRegions.get(i + 1);
-			}
-			
-			//if found EL content
-			if(content != null) {
-				int contentStart = embeddedContainer.getStartOffset(content);
-				
-				//if the type is EL open then parse the EL
-				//else TODO other things to parse?
-				if (type == DOMJSPRegionContexts.JSP_EL_OPEN || type == DOMJSPRegionContexts.JSP_VBL_OPEN) {
+			if (i + 1 < length) {
+				if((type == DOMJSPRegionContexts.JSP_EL_OPEN || type == DOMJSPRegionContexts.JSP_VBL_OPEN)) {
+					ITextRegion region = null;
+					
+					int start = delim.getEnd();
+					while (++i < length) {
+						region = embeddedRegions.get(i);
+						if (region == null || !isELType(region.getType()))
+							break;
+					}
 					fLastJSPType = EXPRESSION;
-					translateEL(embeddedContainer.getText(content), embeddedContainer.getText(delim), fCurrentNode, contentStart, content.getLength());
+					String elText = embeddedContainer.getFullText().substring(start, (region != null ? region.getStart() : embeddedContainer.getLength() - 1));
+					translateEL(elText, embeddedContainer.getText(delim), fCurrentNode,
+							embeddedContainer.getEndOffset(delim), elText.length());
 				}
 			}
 		}
 	}
-	
+
+	private boolean isELType(String type) {
+		return DOMJSPRegionContexts.JSP_EL_CONTENT.equals(type) || DOMJSPRegionContexts.JSP_EL_DQUOTE.equals(type) || DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT.equals(type) || DOMJSPRegionContexts.JSP_EL_SQUOTE.equals(type);
+	}
+
 	/**
 	 * translates the various XMLJSP type nodes
 	 * 
