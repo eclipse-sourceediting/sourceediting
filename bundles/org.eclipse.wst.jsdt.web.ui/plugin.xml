@@ -10,10 +10,6 @@
 			class="org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT"
 			target="org.eclipse.wst.html.core.htmlsource.source" />	
 		<provisionalConfiguration
-			type="contentassistprocessor"
-			class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
-			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-		<provisionalConfiguration
 			type="linestyleprovider"
 			class="org.eclipse.wst.jsdt.web.ui.internal.style.java.LineStyleProviderForJSDT"
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
@@ -689,4 +685,35 @@
    		</objectContribution>
    </extension>  
    -->
+ <extension point="org.eclipse.wst.sse.ui.completionProposal">
+  <proposalCategory
+      id="org.eclipse.wst.jsdt.web.ui.ContentAssistProposals"
+      name="%javaScriptProposals"
+      icon="icons/full/elcl16/javaassist_co.gif">
+  </proposalCategory>
+  <proposalComputer
+      activate="true"
+      categoryId="org.eclipse.wst.jsdt.web.ui.ContentAssistProposals"
+      class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
+      id="org.eclipse.wst.jsdt.web.ui.ContentAssistProposals">
+     <contentType
+        id="org.eclipse.jst.jsp.core.jspsource">
+      <partitionType
+          id="org.eclipse.wst.html.SCRIPT">
+      </partitionType>
+            <partitionType
+          id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
+      </partitionType>
+    </contentType>
+     <contentType
+        id="org.eclipse.wst.html.core.htmlsource">
+      <partitionType
+          id="org.eclipse.wst.html.SCRIPT">
+      </partitionType>
+            <partitionType
+          id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
+      </partitionType>
+    </contentType>
+  </proposalComputer>
+</extension>
 </plugin>

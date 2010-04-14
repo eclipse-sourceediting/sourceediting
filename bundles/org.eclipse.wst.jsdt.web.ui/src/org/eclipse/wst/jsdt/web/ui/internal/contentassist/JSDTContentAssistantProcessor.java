@@ -43,7 +43,6 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 	protected String fErrorMessage = null;
 	protected int fJspSourcePosition, fJavaPosition;
 	private JSDTProposalCollector fProposalCollector;
-	private JsTranslationAdapter fTranslationAdapter = null;
 	protected ITextViewer fViewer = null;
 	
 	public JSDTContentAssistantProcessor() {
@@ -72,11 +71,10 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 			fViewer = viewer;
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
 			IDOMDocument xmlDoc = xmlModel.getDocument();
-			if (fTranslationAdapter == null) {
-				fTranslationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
-			}
-			if (fTranslationAdapter != null) {
-				IJsTranslation translation = fTranslationAdapter.getJsTranslation(true);
+			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
+			
+			if (translationAdapter != null) {
+				IJsTranslation translation = translationAdapter.getJsTranslation(true);
 				fJavaPosition = getDocumentPosition();
 				try {
 					IJavaScriptUnit cu = translation.getCompilationUnit();
@@ -238,11 +236,6 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 			// this is the expected result, we just want to
 			// nudge the bundle to be sure its activated.
 		}
-	}
-	
-	
-	public void release() {
-		fTranslationAdapter = null;
 	}
 	
 	public void setProposalCollector(JSDTProposalCollector translation) {
