@@ -506,4 +506,24 @@ public class TestHtmlTranslation extends TestCase {
 		// release model
 		structuredModel.releaseFromRead();
 	}
+	public void testCDATAInJS() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> var text = <![CDATA[ serverObject.getText() ]]> </script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("CDATA start found", translated.indexOf("CDATA") < 0);
+		assertTrue("CDATA start found", translated.indexOf("[") < 0);
+		assertTrue("CDATA end found", translated.indexOf("]") < 0);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
 }
