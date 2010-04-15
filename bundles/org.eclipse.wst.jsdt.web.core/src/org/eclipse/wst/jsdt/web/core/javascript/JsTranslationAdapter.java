@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -57,7 +58,7 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	private String baseLocation;
 	private boolean listenForChanges=false;
 	private static final String PRIORITY_ATTRIB = "priority";
-	private IJsTranslation fTranslationElement;
+	private IJsTranslation fTranslationAsFactory;
 	
 	public JsTranslationAdapter(IDOMModel xmlModel) {
 		fHtmlDocument = xmlModel.getStructuredDocument();
@@ -93,36 +94,44 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	 * @return a IJsTranslation
 	 */
 	public IJsTranslation getJsTranslation(boolean listenForChanges) {
+		/*
+		 * If no translation exists or switching from not listening to
+		 * listening
+		 */
 		if (fJSTranslation == null || (!this.listenForChanges && listenForChanges)) {
-			if(fJSTranslation!=null) fJSTranslation.release();
-			if(fTranslationElement==null) {
+			if (fJSTranslation != null)
+				fJSTranslation.release();
+			if (fTranslationAsFactory == null) {
 				/* load the translation factory from the extension point */
 				try {
 					IExtensionRegistry registry = Platform.getExtensionRegistry();
-				    IExtensionPoint extensionPoint =  registry.getExtensionPoint("org.eclipse.wst.jsdt.web.core.javascriptPreProcessor");
-				    IConfigurationElement points[] = extensionPoint.getConfigurationElements();
-				 //   int[] priorities = new int[points.length];
-				   
-				    int highestPriorityValue = -1;
-				    int highestPriorityIndex = -1;
-				    
-				    for(int i = 0;i < points.length;i++){
-				    	String priority = points[i].getAttribute(PRIORITY_ATTRIB);
-				    	int value = Integer.parseInt(priority);
-				    	if(value>highestPriorityValue) {
-				    		highestPriorityIndex = i;
-				    		highestPriorityValue = value;
-				    	}
-				       
-				    }
-				    fTranslationElement = (IJsTranslation)points[highestPriorityIndex].createExecutableExtension("class");
-				}catch(Exception e) {
-					System.out.println(e);
+					IExtensionPoint extensionPoint = registry.getExtensionPoint("org.eclipse.wst.jsdt.web.core.javascriptPreProcessor");
+					IConfigurationElement points[] = extensionPoint.getConfigurationElements();
+
+					int highestPriorityValue = -1;
+					int highestPriorityIndex = -1;
+
+					for (int i = 0; i < points.length; i++) {
+						String priority = points[i].getAttribute(PRIORITY_ATTRIB);
+						int value = Integer.parseInt(priority);
+						if (value > highestPriorityValue) {
+							highestPriorityIndex = i;
+							highestPriorityValue = value;
+						}
+					}
+					fTranslationAsFactory = (IJsTranslation) points[highestPriorityIndex].createExecutableExtension("class");
+				}
+				catch (Exception e) {
+					Logger.logException(e);
 				}
 			}
-			//fJSTranslation = new JsTranslation(fHtmlDocument, getJavaProject(),listenForChanges);
-			fJSTranslation = fTranslationElement.getInstance(fHtmlDocument, getJavaProject(), listenForChanges);
-			this.listenForChanges=listenForChanges;
+			if (fTranslationAsFactory != null) {
+				fJSTranslation = fTranslationAsFactory.getInstance(fHtmlDocument, getJavaProject(), listenForChanges);
+			}
+			else {
+				fJSTranslation = new JsTranslation(fHtmlDocument, getJavaProject(), listenForChanges);
+			}
+			this.listenForChanges = listenForChanges;
 		}
 		shouldListenForChanges(listenForChanges);
 		return fJSTranslation;

@@ -44,7 +44,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.DocumentRewriteSessionEvent;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IDocumentRewriteSessionListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.jsdt.core.IBuffer;
@@ -55,6 +58,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 /**
@@ -77,6 +81,12 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	private static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
 //	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
 	
+	private static final String CDATA_START = "<![CDATA["; //$NON-NLS-1$
+	private static final String CDATA_START_PAD = new String(Util.getPad(CDATA_START.length()));
+	private static final String CDATA_END = "]]>"; //$NON-NLS-1$
+	private static final String CDATA_END_PAD = new String(Util.getPad(CDATA_END.length()));
+	
+	
 	//TODO: should be an inclusive rule rather than exclusive
 	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<%?)!>]+/?>"); //$NON-NLS-1$
 
@@ -88,8 +98,21 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsjavamapping"); //$NON-NLS-1$
  		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
+	
+	private class DocumentRewriteSessionListener implements IDocumentRewriteSessionListener {
+		public void documentRewriteSessionChanged(DocumentRewriteSessionEvent event) {
+			if (DocumentRewriteSessionEvent.SESSION_START.equals(event.getChangeType())) {
+				fIsInRewriteSession = true;
+			}
+			else if (DocumentRewriteSessionEvent.SESSION_STOP.equals(event.getChangeType())) {
+				fIsInRewriteSession = false;
+				schedule();
+			}
+		}		
+	}
 
 	private IStructuredDocumentRegion fCurrentNode;
+	boolean fIsInRewriteSession = false;
 	protected StringBuffer fScriptText = new StringBuffer();
 	protected IStructuredDocument fStructuredDocument = null;
 	protected ArrayList importLocationsInHtml = new ArrayList();
@@ -106,6 +129,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	protected boolean cancelParse = false;
 	protected int missingEndTagRegionStart = -1;
 	protected static final boolean ADD_SEMICOLON_AT_INLINE=true;
+	private IDocumentRewriteSessionListener fDocumentRewriteSessionListener = new DocumentRewriteSessionListener();
 
 	/*
 	 * org.eclipse.jface.text.Regions that contain purely generated code, for
@@ -146,10 +170,13 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	}
 	
 	public JsTranslator(IStructuredDocument document, 	String fileName, boolean listenForChanges) {
-		super("JavaScript translation for : "  + fileName); //$NON-NLS-1$
+		super("JavaScript translation for : " + fileName); //$NON-NLS-1$
 		fStructuredDocument = document;
-		if(listenForChanges) {
+		if (listenForChanges) {
 			fStructuredDocument.addDocumentListener(this);
+			if (fStructuredDocument instanceof IDocumentExtension4) {
+				((IDocumentExtension4) fStructuredDocument).addDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
+			}
 			setPriority(Job.LONG);
 			setSystem(true);
 			schedule();
@@ -469,6 +496,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				int scriptStart = container.getStartOffset();
 				int scriptTextLength = container.getLength();
 				String regionText = container.getFullText(region);
+				regionText = StringUtils.replace(regionText, CDATA_START, CDATA_START_PAD);
+				regionText = StringUtils.replace(regionText, CDATA_END, CDATA_END_PAD);
 				int regionLength = region.getLength();
 				
 				spaces = Util.getPad(scriptStart - scriptOffset);
@@ -696,6 +725,10 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#documentChanged(org.eclipse.jface.text.DocumentEvent)
 	 */
 	public void documentChanged(DocumentEvent event) {
+		if (fIsInRewriteSession) {
+			return;
+		}
+
 		reset();
 	}
 
@@ -703,6 +736,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
+		reset();
 		return Status.OK_STATUS;
 	}
 	
@@ -711,6 +745,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 */
 	public void release() {
 		fStructuredDocument.removeDocumentListener(this);
+		if (fStructuredDocument instanceof IDocumentExtension4) {
+			((IDocumentExtension4) fStructuredDocument).removeDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
+		}
 	}
 
 	/**
