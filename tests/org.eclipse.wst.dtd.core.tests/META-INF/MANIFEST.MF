@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.dtd.core.tests;singleton:=true
-Bundle-Version: 1.0.100.qualifier
+Bundle-Version: 1.0.200.qualifier
 Bundle-ClassPath: dtdcoretests.jar
 Bundle-Activator: org.eclipse.wst.dtd.core.tests.internal.DTDCoreTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
@@ -19,5 +19,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit;bundle-version=3.8.2,
  com.ibm.icu,
  org.eclipse.emf.ecore
+Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
