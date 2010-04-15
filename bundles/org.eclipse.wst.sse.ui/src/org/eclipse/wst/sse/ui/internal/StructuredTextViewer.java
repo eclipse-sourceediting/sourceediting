@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,11 +46,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.wst.sse.core.internal.cleanup.StructuredContentCleanupHandler;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.undo.IDocumentSelectionMediator;
@@ -446,9 +441,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 						String err = fContentAssistant.showPossibleCompletions();
 						if (err != null) {
 							// don't wanna beep if there is no error
-							PlatformStatusLineUtil.displayErrorMessage(err);
+							PlatformStatusLineUtil.displayTemporaryErrorMessage(this, err);
 						}
-						PlatformStatusLineUtil.addOneTimeClearListener();
 					}
 					else
 						beep();
@@ -459,9 +453,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					String err = fContentAssistant.showContextInformation();
 					if (err != null) {
 						// don't wanna beep if there is no error
-						PlatformStatusLineUtil.displayErrorMessage(err);
+						PlatformStatusLineUtil.displayTemporaryErrorMessage(this, err);
 					}
-					PlatformStatusLineUtil.addOneTimeClearListener();
 				}
 				break;
 			case SHIFT_RIGHT :
@@ -820,26 +813,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	}
 
 	/**
-	 * Use the active editor to set a status line message
-	 * 
-	 * @param msg
-	 */
-	private void setErrorMessage(String msg) {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window != null) {
-			IWorkbenchPage page = window.getActivePage();
-			if (page != null) {
-				IEditorPart editor = page.getActiveEditor();
-				if (editor != null) {
-					IEditorStatusLine statusLine = (IEditorStatusLine) editor.getAdapter(IEditorStatusLine.class);
-					if (statusLine != null)
-						statusLine.setMessage(true, msg, null);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Uninstalls anything that was installed by configure
 	 */
 	public void unconfigure() {
@@ -861,10 +834,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (fOverviewRulerAnnotationHover instanceof StructuredTextAnnotationHover) {
 			((StructuredTextAnnotationHover) fOverviewRulerAnnotationHover).release();
 		}
-
-		// doesn't seem to be handled elsewhere, so we'll be sure error
-		// messages's are cleared.
-		setErrorMessage(null);
 
 		super.unconfigure();
 		fConfiguration = null;

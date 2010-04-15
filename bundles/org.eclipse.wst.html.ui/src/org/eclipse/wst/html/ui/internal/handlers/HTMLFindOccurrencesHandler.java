@@ -29,6 +29,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesProcessor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesProcessor;
@@ -70,8 +71,13 @@ public class HTMLFindOccurrencesHandler extends AbstractHandler implements IHand
 		}
 		else {
 			String errorMessage = SSEUIMessages.FindOccurrencesActionProvider_0; //$NON-NLS-1$
-			PlatformStatusLineUtil.displayErrorMessage(errorMessage);
-			PlatformStatusLineUtil.addOneTimeClearListener();
+			if (textEditor instanceof StructuredTextEditor) {
+				PlatformStatusLineUtil.displayTemporaryErrorMessage(((StructuredTextEditor) textEditor).getTextViewer(), errorMessage);
+			}
+			else {
+				PlatformStatusLineUtil.displayErrorMessage(errorMessage);
+				PlatformStatusLineUtil.addOneTimeClearListener();
+			}
 		}
 		return null;
 	}

@@ -30,6 +30,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
@@ -84,8 +85,14 @@ abstract public class FindOccurrencesActionDelegate implements IEditorActionDele
 		}
 		else {
 			String errorMessage = SSEUIMessages.FindOccurrencesActionProvider_0; //$NON-NLS-1$
-			PlatformStatusLineUtil.displayErrorMessage(errorMessage);
-			PlatformStatusLineUtil.addOneTimeClearListener();
+			if (fEditor instanceof StructuredTextEditor) {
+				PlatformStatusLineUtil.displayTemporaryErrorMessage(((StructuredTextEditor) fEditor).getTextViewer(), errorMessage);
+
+			}
+			else {
+				PlatformStatusLineUtil.displayErrorMessage(errorMessage);
+				PlatformStatusLineUtil.addOneTimeClearListener();
+			}
 		}
 	}
 

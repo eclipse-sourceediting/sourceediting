@@ -246,6 +246,7 @@ public class StructuredTextEditor extends TextEditor {
 			if (getTextViewer() != null) {
 				// getTextViewer().setRedraw(false);
 				getTextViewer().unconfigure();
+				setStatusLineMessage(null);
 			}
 		}
 
@@ -1761,6 +1762,8 @@ public class StructuredTextEditor extends TextEditor {
 			fStructuredSelectionProvider.dispose();
 		}
 
+		setStatusLineMessage(null);
+
 		super.dispose();
 
 		Logger.trace("Source Editor", "StructuredTextEditor::dispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -2259,6 +2262,15 @@ public class StructuredTextEditor extends TextEditor {
 			return super.getSelectionProvider();
 		}
 		return fStructuredSelectionProvider;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#getStatusLineManager()
+	 * 
+	 * Overridden to use the top-level editor part's status line
+	 */
+	protected IStatusLineManager getStatusLineManager() {
+		return getEditorPart().getEditorSite().getActionBars().getStatusLineManager();
 	}
 
 	/**
@@ -2873,6 +2885,7 @@ public class StructuredTextEditor extends TextEditor {
 			 */
 			removeReconcilingListeners(oldSourceViewerConfiguration, stv);
 			stv.unconfigure();
+			setStatusLineMessage(null);
 			stv.configure(config);
 			addReconcilingListeners(config, stv);
 		}
