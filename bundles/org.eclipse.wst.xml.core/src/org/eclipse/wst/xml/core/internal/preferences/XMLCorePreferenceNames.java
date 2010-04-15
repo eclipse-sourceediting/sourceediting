@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.core.internal.preferences;
+
 
 /**
  * Common preference keys used by XML core
@@ -247,4 +248,34 @@ public class XMLCorePreferenceNames {
      * Value is of type <code>boolean</code>
      */
     public static final String FORMAT_COMMENT_JOIN_LINES = "formatCommentJoinLines"; //$NON-NLS-1$
+    
+    
+    /**
+	 * Indicates whether or not MarkUpValidator should run as part of XMl Validation.
+	 * <p>
+	 * Value is of type <code>boolean</code>.<br />
+	 * Possible values: {TRUE, FALSE} 
+	 * </p>
+	 */
+    public static final String MARKUP_VALIDATION = "markupValidation"; //$NON-NLS-1$
+    
+    /**
+	 * Indicates whether or not a message should be produced when validating a
+	 * file that specifies following condition.
+	 * <p>
+	 * Value is of type <code>integer</code>.<br />
+	 * Possible values: {0, 1, 2} (none, warning, error)
+	 * </p>
+	 */
+    public static final String ATTRIBUTE_HAS_NO_VALUE = "attributeHasNoValue"; //$NON-NLS-1$
+    public static final String END_TAG_WITH_ATTRIBUTES = "endTagWithAttributes"; //$NON-NLS-1$
+    public static final String WHITESPACE_BEFORE_TAGNAME = "whitespaceBeforeTagName"; //$NON-NLS-1$
+    public static final String MISSING_CLOSING_BRACKET = "missingClosingBracket"; //$NON-NLS-1$
+    public static final String MISSING_CLOSING_QUOTE = "missingClosingQuote"; //$NON-NLS-1$
+    public static final String MISSING_END_TAG = "missingEndTag"; //$NON-NLS-1$
+    public static final String MISSING_START_TAG = "missingStartTag"; //$NON-NLS-1$
+    public static final String MISSING_QUOTES = "missingQuotes"; //$NON-NLS-1$
+    public static final String NAMESPACE_IN_PI_TARGET = "namespaceInPITarget"; //$NON-NLS-1$
+    public static final String MISSING_TAG_NAME = "missingTagName"; //$NON-NLS-1$
+    public static final String WHITESPACE_AT_START = "whitespaceAtStart"; //$NON-NLS-1$
 }

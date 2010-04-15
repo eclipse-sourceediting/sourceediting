@@ -22,10 +22,13 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.ui.internal.reconcile.validator.AnnotationInfo;
+import org.eclipse.wst.sse.ui.internal.reconcile.validator.IncrementalReporter;
 import org.eclipse.wst.validation.internal.core.IMessageAccess;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -40,6 +43,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
+import org.eclipse.wst.xml.core.internal.validation.AnnotationMsg;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -66,6 +70,9 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	protected static final String TEXT_ENTITY_REFERENCE = "TEXT_ENTITY_REFERENCE"; //$NON-NLS-1$
 	protected static final String VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE"; //$NON-NLS-1$
 	protected static final String END_TAG = "END_TAG"; //$NON-NLS-1$
+	private static final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
+	
+
 
 	/**
 	 * This constant specifies the attribute name that specifies the side of
@@ -270,20 +277,48 @@ public abstract class DelegatingSourceValidator implements IValidator {
 			try {
 				if (message.getAttribute(COLUMN_NUMBER_ATTRIBUTE) != null) {
 					int column = ((Integer) message.getAttribute(COLUMN_NUMBER_ATTRIBUTE)).intValue();
-					String selectionStrategy = (String) message.getAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE);
-					String nameOrValue = (String) message.getAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE);
-
-					// convert the line and Column numbers to an offset:
-					int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
-
-					// calculate the "better" start and end offset:
-					int[] result = computeStartAndEndLocation(start, selectionStrategy, getErrorSide(message), nameOrValue, document);
-					if (result != null) {
-						message.setOffset(result[0]);
-						message.setLength(result[1] - result[0]);
-						reporter.addMessage(this, message);
+					if (message.getAttribute(AnnotationMsg.PROBMLEM_ID) != null && reporter instanceof IncrementalReporter){
+						Integer problemId = (Integer)message.getAttribute(AnnotationMsg.PROBMLEM_ID);
+						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+						processor.setProblemId(problemId.intValue());
+						message.setOffset(column);
+						Integer length = (Integer) message.getAttribute(AnnotationMsg.LENGTH);
+						message.setLength( length.intValue());
+						Object attrValue = message.getAttribute(AnnotationMsg.ATTRVALUETEXT);
+						if (attrValue != null)
+							processor.setAdditionalFixInfo(attrValue);
+						else{
+							Object attrValueNo = message.getAttribute(AnnotationMsg.ATTRVALUENO);
+							if (attrValueNo != null){
+								int len = ((Integer)attrValueNo).intValue();
+								Object[] objArray = new Object[len];
+								for ( int j=0; j<len; j++){
+									objArray[j] = message.getAttribute(AnnotationMsg.ATTRNO + j);
+								}
+								processor.setAdditionalFixInfo(objArray);
+							}
+							
+						}
+						message.setAttribute(QUICKASSISTPROCESSOR, processor);
+						AnnotationInfo info = new AnnotationInfo(message);
+						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
 					}
-				}
+					else  {
+						String selectionStrategy = (String) message.getAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE);
+						String nameOrValue = (String) message.getAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE);
+
+						// convert the line and Column numbers to an offset:
+						int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
+						int[] result = computeStartAndEndLocation(start, selectionStrategy, getErrorSide(message), nameOrValue, document);
+						if (result != null) {
+							message.setOffset(result[0]);
+							message.setLength(result[1] - result[0]);
+						
+							reporter.addMessage(this, message);
+						}
+					}
+					}
+				
 			}
 			catch (BadLocationException e) { // this exception should not
 				// occur - it is thrown if

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2010 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -38,6 +38,19 @@ public class XMLCoreMessages {
 	public static String Catalog_resolution_malformed_url;
 	public static String Catalog_resolution_io_exception;
 	public static String CMDocument_load_exception;
+	public static String End_tag_has_attributes;
+	public static String Attribute__is_missing_a_value;
+	public static String Attribute__has_no_value;
+	public static String Missing_end_tag_;
+	public static String Missing_start_tag_;
+	public static String ReconcileStepForMarkup_0;
+	public static String ReconcileStepForMarkup_1;
+	public static String ReconcileStepForMarkup_2;
+	public static String ReconcileStepForMarkup_3;
+	public static String ReconcileStepForMarkup_4;
+	public static String ReconcileStepForMarkup_5;
+	public static String ReconcileStepForMarkup_6;
+	public static String Indicate_no_grammar_specified_severities_error;
 
 	static {
 		// load message values from bundle file

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,7 @@ import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -49,7 +50,12 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.internal.ValOperation;
+import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
+import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.xml.sax.Attributes;
@@ -82,7 +88,11 @@ public class XMLValidator
   protected static final String NO_GRAMMAR_FOUND = "NO_GRAMMAR_FOUND"; //$NON-NLS-1$
   
   private static final String FILE_NOT_FOUND_KEY = "FILE_NOT_FOUND"; //$NON-NLS-1$
-
+   
+  private MarkupValidator val = new MarkupValidator();
+  
+  private final String ANNOTATIONMSG = AnnotationMsg.class.getName();
+ 
   /**
    * Constructor.
    */
@@ -97,10 +107,10 @@ public class XMLValidator
     // Here we add some error keys that we need to adjust the location information for.
     // The location information will be adjusted to place the message on the line of the starting
     // element instead of on the line of the closing element.
-    adjustLocationErrorKeySet.add("MSG_CONTENT_INVALID");
-    adjustLocationErrorKeySet.add("MSG_CONTENT_INCOMPLETE");
-    adjustLocationErrorKeySet.add("cvc-complex-type.2.4.b");
-    adjustLocationErrorKeySet.add("cvc-complex-type.2.3");
+    adjustLocationErrorKeySet.add("MSG_CONTENT_INVALID"); //$NON-NLS-1$
+    adjustLocationErrorKeySet.add("MSG_CONTENT_INCOMPLETE"); //$NON-NLS-1$
+    adjustLocationErrorKeySet.add("cvc-complex-type.2.4.b"); //$NON-NLS-1$
+    adjustLocationErrorKeySet.add("cvc-complex-type.2.3"); //$NON-NLS-1$
   }
 
   /**
@@ -214,7 +224,7 @@ public class XMLValidator
     StringBuffer fileString = new StringBuffer();
     try
     {
-      InputStreamReader inputReader = new InputStreamReader(inputStream, "UTF-8");
+      InputStreamReader inputReader = new InputStreamReader(inputStream, "UTF-8"); //$NON-NLS-1$
       BufferedReader reader = new BufferedReader(inputReader);
       char[] chars = new char[1024];
       int numberRead = reader.read(chars);
@@ -296,7 +306,7 @@ public class XMLValidator
    */
   public XMLValidationReport validate(String uri, InputStream inputStream, XMLValidationConfiguration configuration, ValidationResult result, NestedValidatorContext context)
   {
-    String grammarFile = "";
+    String grammarFile = ""; //$NON-NLS-1$
     Reader reader1 = null; // Used for the preparse.
     Reader reader2 = null; // Used for validation parse.
     
@@ -380,11 +390,53 @@ public class XMLValidator
         Logger.logException(e.getLocalizedMessage(), e);
       }
     }
+
+    if ( XMLCorePlugin.getDefault().getPluginPreferences().getBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION)){
+	    IReporter reporter = executeMarkupValidator(uri);
+	    if (reporter != null){
+		    List msgList = reporter.getMessages();
+		    for (int i = 0;i < msgList.size();i++){
+		    	LocalizedMessage msg = (LocalizedMessage)msgList.get(i);
+		    	if (msg.getSeverity() == 2)
+		    		valinfo.addError(msg.getLocalizedMessage(), msg.getLineNumber(), msg.getOffset(),valinfo.getFileURI(),"null",getMsgArguments(msg) ); //$NON-NLS-1$
+		    	else if (msg.getSeverity() == 1)
+		    		valinfo.addWarning(msg.getLocalizedMessage(), msg.getLineNumber(), msg.getOffset(),valinfo.getFileURI(),"null", getMsgArguments(msg)); //$NON-NLS-1$
+		    }
+	    }
+    }
     
     return valinfo;
        
   }
 
+  private Object[] getMsgArguments(LocalizedMessage msg){
+	  Object obj = msg.getAttribute(ANNOTATIONMSG);
+	  return new Object[]{obj};
+  }
+ 
+
+	private IReporter executeMarkupValidator(String uri){
+		Path path = new Path(uri);
+		String fileProtocol = "file://"; //$NON-NLS-1$
+		int index = uri.indexOf(fileProtocol);
+		
+		IFile resource = null;
+		if (index == 0){
+			String transformedUri = uri.substring(fileProtocol.length());
+			Path transformedPath = new Path(transformedUri);
+			resource = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(transformedPath);
+		}
+		else {
+			resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			
+		}
+		IReporter reporter = null;
+		if (resource != null){
+		    reporter = val.validate(resource, 0, new ValOperation().getState()) ;
+		}
+		return reporter;
+	}
+  
   /**
    * Add a validation message to the specified list.
    * 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,5 +63,18 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 1);
 		node.putBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
 		node.putBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
+		
+		node.putBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION, false);
+		node.putInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE, 2);
+		node.putInt(XMLCorePreferenceNames.END_TAG_WITH_ATTRIBUTES, 2);
+		node.putInt(XMLCorePreferenceNames.MISSING_START_TAG, 2);
+		node.putInt(XMLCorePreferenceNames.MISSING_END_TAG, 2);
+		node.putInt(XMLCorePreferenceNames.MISSING_TAG_NAME, 2);
+		node.putInt(XMLCorePreferenceNames.MISSING_QUOTES, 2);
+		node.putInt(XMLCorePreferenceNames.MISSING_CLOSING_BRACKET, 2);
+		node.putInt(XMLCorePreferenceNames.MISSING_CLOSING_QUOTE, 2);
+		node.putInt(XMLCorePreferenceNames.NAMESPACE_IN_PI_TARGET, 2);
+		node.putInt(XMLCorePreferenceNames.WHITESPACE_AT_START, 2);
+		node.putInt(XMLCorePreferenceNames.WHITESPACE_BEFORE_TAGNAME, 2);
 	}
 }

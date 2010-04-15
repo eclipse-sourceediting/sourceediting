@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,8 @@ import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
 import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xml.core.internal.validation.ProblemIDsXML;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.ui.internal.correction.ProblemIDsXML;
 import org.eclipse.wst.xml.ui.internal.correction.RemoveUnknownElementQuickFixProposal;
 import org.eclipse.wst.xml.ui.internal.correction.RenameInFileQuickAssistProposal;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;

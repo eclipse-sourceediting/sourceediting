@@ -318,6 +318,22 @@ public class XMLUIMessages extends NLS {
     public static String Honour_all_schema_locations;   
 	public static String Open;
 	public static String _UI_BUTTON_SORT;
+	public static String MarkupValidation_files_label;
+	public static String MarkupValidation_files;
+	public static String Severity_error;
+	public static String Severity_warning;
+	public static String Severity_ignore;
+	public static String Empty_element_tag;
+	public static String End_tag_with_attributes;
+	public static String Invalid_whitespace_before_tagname;
+	public static String Missing_closing_bracket;
+	public static String Missing_closing_quote;
+	public static String Missing_end_tag;
+	public static String Missing_start_tag;
+	public static String Missing_quotes;
+	public static String Namespace_in_pi_target;
+	public static String Tag_name_missing;
+	public static String Whitespace_at_start;
 
 	static {
 		// load message values from bundle file

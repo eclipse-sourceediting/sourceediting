@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
+import org.eclipse.wst.xml.core.internal.validation.AnnotationMsg;
 
 /**
  * An abstract validator that assists validators in running and contributing
@@ -110,9 +111,9 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 	      { 
 	    	// The helper may not have a file stored in it but may have an InputStream if being
 	    	// called from a source other than the validation framework such as an editor.
-	        if (context.loadModel(GET_INPUTSTREAM) instanceof InputStream) //$NON-NLS-1$
+	        if (context.loadModel(GET_INPUTSTREAM) instanceof InputStream)
 	        {
-	          validate(file, (InputStream)context.loadModel(GET_INPUTSTREAM), null, reporter, nestedcontext); //do we need the fileName?  what is int ruleGroup? //$NON-NLS-1$
+	          validate(file, (InputStream)context.loadModel(GET_INPUTSTREAM), null, reporter, nestedcontext); //do we need the fileName?  what is int ruleGroup?
 	        }
 	        else
 	        {
@@ -416,7 +417,28 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
       
       message.setLineNo(validationMessage.getLineNumber());
       addInfoToMessage(validationMessage, message);
-      
+      Object[] objlist = validationMessage.getMessageArguments();
+      if (objlist != null && objlist.length ==1 ){
+    	  Object obj = objlist[0];
+    	  if (obj instanceof AnnotationMsg){
+	    	 message.setAttribute(AnnotationMsg.PROBMLEM_ID, new Integer(((AnnotationMsg)obj).getProblemId()));
+	    	 message.setAttribute(AnnotationMsg.LENGTH, new Integer(((AnnotationMsg)obj).getLength()));
+	    	  Object obj1 = ((AnnotationMsg)obj).getAttributeValueText();
+	    	  if (obj1 instanceof String){
+	    		  message.setAttribute(AnnotationMsg.ATTRVALUETEXT, obj1);
+	    	  }
+	    	  else if ( obj1 instanceof Object[]){
+	    		  Object[] objArray = (Object[])obj1;
+	    		  message.setAttribute(AnnotationMsg.ATTRVALUENO, new Integer(objArray.length));
+	    		  for (int j=0; j <objArray.length;j++){
+	    			  Object obj2 = objArray[j];
+	    			  String attrName = AnnotationMsg.ATTRNO + j;
+	    			  message.setAttribute(attrName, obj2);
+	    		  }
+	    		  
+	    	  }
+    	  }
+      }
       List nestederrors = validationMessage.getNestedMessages();
       if (nestederrors != null && !nestederrors.isEmpty())
       {

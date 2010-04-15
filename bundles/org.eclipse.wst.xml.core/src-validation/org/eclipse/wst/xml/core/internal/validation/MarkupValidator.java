@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.internal.validation;
+package org.eclipse.wst.xml.core.internal.validation;
 
 import java.util.Locale;
 
@@ -24,14 +24,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -40,11 +41,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
-import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
-import org.eclipse.wst.sse.ui.internal.reconcile.validator.AnnotationInfo;
-import org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator;
-import org.eclipse.wst.sse.ui.internal.reconcile.validator.IncrementalReporter;
 import org.eclipse.wst.validation.AbstractValidator;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
@@ -56,43 +52,40 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.core.internal.validation.ProblemIDsXML;
-import org.eclipse.wst.xml.ui.internal.Logger;
-import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Node;
 
 /**
  * Basic XML syntax checking step.
- * @deprecated No longer used as the source validator for XML documents. Instead {@link DelegatingSourceValidatorForXML}
- * is the source validator, and the markup validation is done as a step in {@link XMLValidator} by {@link org.eclipse.wst.xml.core.internal.validation.MarkupValidator}.
- * 
- *  @see org.eclipse.wst.xml.core.internal.validation.MarkupValidator
- *  @see DelegatingSourceValidatorForXML
- *  @see XMLValidator
  */
-public class MarkupValidator extends AbstractValidator implements IValidator, ISourceValidator {
+public class MarkupValidator extends AbstractValidator implements IValidator {
+	public static final int ELEMENT_ERROR_LIMIT = 25;
+    public static final int PARTIAL = 1;
+    public static final int TOTAL = 0;
 	private String DQUOTE = "\""; //$NON-NLS-1$
 	private String SQUOTE = "'"; //$NON-NLS-1$
-	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
+	
 
 	private IDocument fDocument;
 
 	private IContentType fRootContentType = null;
 
-    private int SEVERITY_ATTRIBUTE_HAS_NO_VALUE = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_END_TAG_WITH_ATTRIBUTES = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_INVALID_WHITESPACE_BEFORE_TAGNAME = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_MISSING_CLOSING_BRACKET = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_MISSING_CLOSING_QUOTE = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_MISSING_END_TAG = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_MISSING_START_TAG = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_MISSING_QUOTES = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_NAMESPACE_IN_PI_TARGET = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_TAG_NAME_MISSING = IMessage.HIGH_SEVERITY;
-	private int SEVERITY_WHITESPACE_AT_START = IMessage.HIGH_SEVERITY;
-        
+    private IReporter fReporter = null;
+  
+	private static final String ANNOTATIONMSG = AnnotationMsg.class.getName();
+
+	public void getAnnotationMsg(IReporter reporter, int problemId, LocalizedMessage message, Object attributeValueText, int len){
+		AnnotationMsg annotation = new AnnotationMsg(problemId, attributeValueText,len);
+		message.setAttribute(ANNOTATIONMSG, annotation);
+		reporter.addMessage(this, message);
+	}
+	
+		
 	private void addAttributeError(String messageText, String attributeValueText, int start, int length, int problemId, IStructuredDocumentRegion sdRegion, IReporter reporter, int messageSeverity) {
 
 		if (sdRegion.isDeleted()) {
@@ -104,19 +97,10 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		message.setOffset(start);
 		message.setLength(length);
 		message.setLineNo(lineNo);
+		
 
-
-		if (reporter instanceof IncrementalReporter) {
-			MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-			processor.setProblemId(problemId);
-			processor.setAdditionalFixInfo(attributeValueText);
-			message.setAttribute(QUICKASSISTPROCESSOR, processor);
-			AnnotationInfo info = new AnnotationInfo(message);
-			((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-		}
-		else {
-			reporter.addMessage(this, message);
-		}
+		getAnnotationMsg(reporter, problemId, message, attributeValueText,length);
+		
 	}
 
 	private void checkAttributesInEndTag(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
@@ -129,7 +113,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		int errorCount = 0;
 		int start = structuredDocumentRegion.getEndOffset();
 		int end = structuredDocumentRegion.getEndOffset();
-		for (int i = 0; (i < textRegions.size()) && (errorCount < AbstractStructuredTextReconcilingStrategy.ELEMENT_ERROR_LIMIT) && !structuredDocumentRegion.isDeleted(); i++) {
+		for (int i = 0; (i < textRegions.size()) && (errorCount < ELEMENT_ERROR_LIMIT) && !structuredDocumentRegion.isDeleted(); i++) {
 			ITextRegion textRegion = textRegions.get(i);
 			if ((textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 				if (start > structuredDocumentRegion.getStartOffset(textRegion)) {
@@ -142,23 +126,14 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		// create one error for all attributes in the end tag
 		if (errorCount > 0) {
 			// Position p = new Position(start, end - start);
-			String messageText = XMLUIMessages.End_tag_has_attributes;
-			LocalizedMessage message = new LocalizedMessage(SEVERITY_END_TAG_WITH_ATTRIBUTES, messageText);
+			String messageText = XMLCoreMessages.End_tag_has_attributes;
+			LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.END_TAG_WITH_ATTRIBUTES), messageText);
 			message.setOffset(start);
 			message.setLength(end - start);
 			message.setLineNo(getLineNumber(start));
 
-			if (reporter instanceof IncrementalReporter) {
-				MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-				processor.setProblemId(ProblemIDsXML.AttrsInEndTag);
-				message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-				AnnotationInfo info = new AnnotationInfo(message);
-				((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-			}
-			else {
-				reporter.addMessage(this, message);
-			}
+			getAnnotationMsg(reporter, ProblemIDsXML.AttrsInEndTag, message, null,end-start);
+			
 		}
 	}
 
@@ -180,28 +155,19 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		}
 		if (!closed) {
 
-			String messageText = XMLUIMessages.ReconcileStepForMarkup_6;
+			String messageText = XMLCoreMessages.ReconcileStepForMarkup_6;
 
 			int start = structuredDocumentRegion.getStartOffset();
 			int length = structuredDocumentRegion.getText().trim().length();
 			int lineNo = getLineNumber(start);
 
-			LocalizedMessage message = new LocalizedMessage(SEVERITY_MISSING_CLOSING_BRACKET , messageText);
+			LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.MISSING_CLOSING_BRACKET) , messageText);
 			message.setOffset(start);
 			message.setLength(length);
 			message.setLineNo(lineNo);
+			getAnnotationMsg(reporter, ProblemIDsXML.MissingClosingBracket, message, null,length);
 
-			if (reporter instanceof IncrementalReporter) {
-				MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-				processor.setProblemId(ProblemIDsXML.MissingClosingBracket);
-				message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-				AnnotationInfo info = new AnnotationInfo(message);
-				((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-			}
-			else {
-				reporter.addMessage(this, message);
-			}
+			
 		}
 	}
 
@@ -216,27 +182,17 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		if (regions.size() == 2) {
 			// missing name region
 			if ((regions.get(0).getType() == DOMRegionContext.XML_TAG_OPEN) && (regions.get(1).getType() == DOMRegionContext.XML_TAG_CLOSE)) {
-				String messageText = XMLUIMessages.ReconcileStepForMarkup_3;
+				String messageText = XMLCoreMessages.ReconcileStepForMarkup_3;
 				int start = structuredDocumentRegion.getStartOffset();
 				int length = structuredDocumentRegion.getLength();
 				int lineNo = getLineNumber(start);
 
-				LocalizedMessage message = new LocalizedMessage(SEVERITY_TAG_NAME_MISSING , messageText);
+				LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.MISSING_TAG_NAME) , messageText);
 				message.setOffset(start);
 				message.setLength(length);
 				message.setLineNo(lineNo);
 
-				if (reporter instanceof IncrementalReporter) {
-					MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-					processor.setProblemId(ProblemIDsXML.EmptyTag);
-					message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-					AnnotationInfo info = new AnnotationInfo(message);
-					((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-				}
-				else {
-					reporter.addMessage(this, message);
-				}
+				getAnnotationMsg(reporter, ProblemIDsXML.EmptyTag, message, null,length);
 			}
 		}
 	}
@@ -266,7 +222,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		// getScope());
 
 		int errorCount = 0;
-		for (int i = 0; (i < textRegions.size()) && (errorCount < AbstractStructuredTextReconcilingStrategy.ELEMENT_ERROR_LIMIT); i++) {
+		for (int i = 0; (i < textRegions.size()) && (errorCount < ELEMENT_ERROR_LIMIT); i++) {
 			ITextRegion textRegion = textRegions.get(i);
 			if ((textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || isTagCloseTextRegion(textRegion)) {
 				// dangling name and '='
@@ -275,14 +231,14 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 					ITextRegion nameRegion = textRegions.get(i - 2);
 					if (!(nameRegion instanceof ITextRegionContainer)) {
 						Object[] args = {structuredDocumentRegion.getText(nameRegion)};
-						String messageText = NLS.bind(XMLUIMessages.Attribute__is_missing_a_value, args);
+						String messageText = NLS.bind(XMLCoreMessages.Attribute__is_missing_a_value, args);
 
 						int start = structuredDocumentRegion.getStartOffset(nameRegion);
 						int end = structuredDocumentRegion.getEndOffset();
 						int lineNo = getLineNumber(start);
 						int textLength = structuredDocumentRegion.getText(nameRegion).trim().length();
 
-						LocalizedMessage message = new LocalizedMessage(SEVERITY_ATTRIBUTE_HAS_NO_VALUE , messageText);
+						LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE) , messageText);
 						message.setOffset(start);
 						message.setLength(textLength);
 						message.setLineNo(lineNo);
@@ -292,18 +248,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 						int insertOffset = structuredDocumentRegion.getTextEndOffset(equalsRegion) - end;
 						Object[] additionalFixInfo = {structuredDocumentRegion.getText(nameRegion), new Integer(insertOffset)};
 
-						if (reporter instanceof IncrementalReporter) {
-							MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-							processor.setProblemId(ProblemIDsXML.MissingAttrValue);
-							processor.setAdditionalFixInfo(additionalFixInfo);
-							message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-							AnnotationInfo info = new AnnotationInfo(message);
-							((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-						}
-						else {
-							reporter.addMessage(this, message);
-						}
+						getAnnotationMsg(reporter, ProblemIDsXML.MissingAttrValue, message, additionalFixInfo,textLength);
 						errorCount++;
 					}
 				}
@@ -313,28 +258,18 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 					ITextRegion previousRegion = textRegions.get(i - 1);
 					if (!(previousRegion instanceof ITextRegionContainer)) {
 						Object[] args = {structuredDocumentRegion.getText(previousRegion)};
-						String messageText = NLS.bind(XMLUIMessages.Attribute__has_no_value, args);
+						String messageText = NLS.bind(XMLCoreMessages.Attribute__has_no_value, args);
 						int start = structuredDocumentRegion.getStartOffset(previousRegion);
 						int textLength = structuredDocumentRegion.getText(previousRegion).trim().length();
 						int lineNo = getLineNumber(start);
 
-						LocalizedMessage message = new LocalizedMessage(SEVERITY_ATTRIBUTE_HAS_NO_VALUE, messageText);
+						LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE), messageText);
 						message.setOffset(start);
 						message.setLength(textLength);
 						message.setLineNo(lineNo);
 
-						if (reporter instanceof IncrementalReporter) {
-							MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-							processor.setProblemId(ProblemIDsXML.NoAttrValue);
-							processor.setAdditionalFixInfo(structuredDocumentRegion.getText(previousRegion));
-							message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-							AnnotationInfo info = new AnnotationInfo(message);
-							((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-						}
-						else {
-							reporter.addMessage(this, message);
-						}
+						getAnnotationMsg(reporter, ProblemIDsXML.NoAttrValue, message, structuredDocumentRegion.getText(previousRegion),textLength);
+				
 
 						errorCount++;
 					}
@@ -364,27 +299,16 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 				// this is possibly the case of "< tag"
 				if ((prev.getRegions().size() == 1) && isStartTag(prev)) {
 					// add the error for preceding space in tag name
-					String messageText = XMLUIMessages.ReconcileStepForMarkup_2;
+					String messageText = XMLCoreMessages.ReconcileStepForMarkup_2;
 					int start = structuredDocumentRegion.getStartOffset();
 					// find length of whitespace
 					int length = sdRegionText.trim().equals("") ? sdRegionText.length() : sdRegionText.indexOf(sdRegionText.trim()); //$NON-NLS-1$
 
-					LocalizedMessage message = new LocalizedMessage(SEVERITY_INVALID_WHITESPACE_BEFORE_TAGNAME , messageText);
+					LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.WHITESPACE_BEFORE_TAGNAME) , messageText);
 					message.setOffset(start);
 					message.setLength(length);
 					message.setLineNo(getLineNumber(start));
-
-					if (reporter instanceof IncrementalReporter) {
-						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-						processor.setProblemId(ProblemIDsXML.SpacesBeforeTagName);
-						message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-						AnnotationInfo info = new AnnotationInfo(message);
-						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-					}
-					else {
-						reporter.addMessage(this, message);
-					}
+					getAnnotationMsg(reporter, ProblemIDsXML.SpacesBeforeTagName, message, null,length);
 				}
 			}
 		}
@@ -400,32 +324,23 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
 		ITextRegion r = null;
 		int errorCount = 0;
-		for (int i = 0; (i < regions.size()) && (errorCount < AbstractStructuredTextReconcilingStrategy.ELEMENT_ERROR_LIMIT) && !structuredDocumentRegion.isDeleted(); i++) {
+		for (int i = 0; (i < regions.size()) && (errorCount < ELEMENT_ERROR_LIMIT) && !structuredDocumentRegion.isDeleted(); i++) {
 			r = regions.get(i);
 			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
 				String piText = structuredDocumentRegion.getText(r);
 				int index = piText.indexOf(":"); //$NON-NLS-1$
 				if (index != -1) {
-					String messageText = XMLUIMessages.ReconcileStepForMarkup_4;
+					String messageText = XMLCoreMessages.ReconcileStepForMarkup_4;
 					int start = structuredDocumentRegion.getStartOffset(r) + index;
 					int length = piText.trim().length() - index;
 
-					LocalizedMessage message = new LocalizedMessage(SEVERITY_NAMESPACE_IN_PI_TARGET , messageText);
+					LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.NAMESPACE_IN_PI_TARGET) , messageText);
 					message.setOffset(start);
 					message.setLength(length);
 					message.setLineNo(getLineNumber(start));
 
-					if (reporter instanceof IncrementalReporter) {
-						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-						processor.setProblemId(ProblemIDsXML.NamespaceInPI);
-						message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-						AnnotationInfo info = new AnnotationInfo(message);
-						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-					}
-					else {
-						reporter.addMessage(this, message);
-					}
+					
+					getAnnotationMsg(reporter, ProblemIDsXML.NamespaceInPI, message, null,length);
 
 					errorCount++;
 				}
@@ -438,7 +353,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		ITextRegion r = null;
 		String attrValueText = ""; //$NON-NLS-1$
 		int errorCount = 0;
-		for (int i = 0; (i < regions.size()) && (errorCount < AbstractStructuredTextReconcilingStrategy.ELEMENT_ERROR_LIMIT); i++) {
+		for (int i = 0; (i < regions.size()) && (errorCount < ELEMENT_ERROR_LIMIT); i++) {
 			r = regions.get(i);
 			if (r.getType() != DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				continue;
@@ -475,22 +390,22 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 			if (size == 1) {
 				if (one.equals(DQUOTE) || one.equals(SQUOTE)) {
 					// missing closing quote
-					String message = XMLUIMessages.ReconcileStepForMarkup_0;
-					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.Unclassified, structuredDocumentRegion, reporter, SEVERITY_MISSING_CLOSING_QUOTE);
+					String message = XMLCoreMessages.ReconcileStepForMarkup_0;
+					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.Unclassified, structuredDocumentRegion, reporter, getPluginPreference().getInt(XMLCorePreferenceNames.MISSING_CLOSING_QUOTE));
 					errorCount++;
 				}
 				else {
 					// missing both
-					String message = XMLUIMessages.ReconcileStepForMarkup_1;
-					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.AttrValueNotQuoted, structuredDocumentRegion, reporter, SEVERITY_MISSING_QUOTES);
+					String message = XMLCoreMessages.ReconcileStepForMarkup_1;
+					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.AttrValueNotQuoted, structuredDocumentRegion, reporter, getPluginPreference().getInt(XMLCorePreferenceNames.MISSING_CLOSING_QUOTE));
 					errorCount++;
 				}
 			}
 			else if (size == 2) {
 				if ((one.equals(SQUOTE) && !two.equals(SQUOTE)) || (one.equals(DQUOTE) && !two.equals(DQUOTE))) {
 					// missing closing quote
-					String message = XMLUIMessages.ReconcileStepForMarkup_0;
-					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.Unclassified, structuredDocumentRegion, reporter, SEVERITY_MISSING_CLOSING_QUOTE);
+					String message = XMLCoreMessages.ReconcileStepForMarkup_0;
+					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.Unclassified, structuredDocumentRegion, reporter, getPluginPreference().getInt(XMLCorePreferenceNames.MISSING_CLOSING_QUOTE));
 					errorCount++;
 				}
 			}
@@ -542,30 +457,17 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 
 					if (!selfClosed && (tagName != null)) {
 						Object[] args = {tagName};
-						String messageText = NLS.bind(XMLUIMessages.Missing_end_tag_, args);
+						String messageText = NLS.bind(XMLCoreMessages.Missing_end_tag_, args);
 
 						int lineNumber = getLineNumber(start);
 
-						IMessage message = new LocalizedMessage(SEVERITY_MISSING_END_TAG , messageText);
+						LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.MISSING_END_TAG) , messageText);
 						message.setOffset(start);
 						message.setLength(length);
 						message.setLineNo(lineNumber);
-
-						if (reporter instanceof IncrementalReporter) {
-							Object[] additionalFixInfo = getStartEndFixInfo(xmlNode, tagName, r);
-
-							MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-							processor.setProblemId(ProblemIDsXML.MissingEndTag);
-							processor.setAdditionalFixInfo(additionalFixInfo);
-							message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-							AnnotationInfo info = new AnnotationInfo(message);
-
-							((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-						}
-						else {
-							reporter.addMessage(this, message);
-						}
+						Object[] additionalFixInfo = getStartEndFixInfo(xmlNode, tagName, r);
+	
+						getAnnotationMsg(reporter, ProblemIDsXML.MissingEndTag, message, additionalFixInfo,length);
 					}
 				}
 			}
@@ -588,30 +490,18 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 
 					if (tagName != null) {
 						Object[] args = {tagName};
-						String messageText = NLS.bind(XMLUIMessages.Missing_start_tag_, args);
+						String messageText = NLS.bind(XMLCoreMessages.Missing_start_tag_, args);
 
 						int lineNumber = getLineNumber(start);
 
-						IMessage message = new LocalizedMessage(SEVERITY_MISSING_START_TAG, messageText);
+						LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.MISSING_START_TAG), messageText);
 						message.setOffset(start);
 						message.setLength(length);
 						message.setLineNo(lineNumber);
-
-						if (reporter instanceof IncrementalReporter) {
-							Object[] additionalFixInfo = getStartEndFixInfo(xmlNode, tagName, r);
-
-							MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-							processor.setProblemId(ProblemIDsXML.MissingStartTag);
-							processor.setAdditionalFixInfo(additionalFixInfo);
-							message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-							AnnotationInfo info = new AnnotationInfo(message);
-
-							((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-						}
-						else {
-							reporter.addMessage(this, message);
-						}
+						Object[] additionalFixInfo = getStartEndFixInfo(xmlNode, tagName, r);
+												
+						getAnnotationMsg(reporter, ProblemIDsXML.MissingStartTag, message, additionalFixInfo,length);
+						
 					}
 				}
 			}
@@ -636,7 +526,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 					}
 
 					if (!selfClosed && (tagName != null)) {
-						String messageText = XMLUIMessages.Indicate_no_grammar_specified_severities_error;
+						String messageText = XMLCoreMessages.Indicate_no_grammar_specified_severities_error;
 
 						int start = sdRegion.getStart();
 						int lineNumber = getLineNumber(start);
@@ -666,7 +556,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		while ((firstChild != null) && (firstChild.getNodeType() == Node.TEXT_NODE)) {
 			firstChild = (IDOMNode) firstChild.getNextSibling();
 		}
-		int endOffset = xmlNode.getEndOffset();
+		int endOffset = xmlNode.getEndOffset(); 
 		int firstChildStartOffset = firstChild == null ? endOffset : firstChild.getStartOffset();
 		Object[] additionalFixInfo = {tagName, tagClose, new Integer(tagCloseOffset), new Integer(xmlNode.getFirstStructuredDocumentRegion().getEndOffset()), // startTagEndOffset
 					new Integer(firstChildStartOffset), // firstChildStartOffset
@@ -683,26 +573,18 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		IStructuredDocumentRegion prev = structuredDocumentRegion.getPrevious();
 		if ((prev != null) && prev.getStartOffset() == 0) {
 			if (prev.getType() == DOMRegionContext.XML_CONTENT) {
-				String messageText = XMLUIMessages.ReconcileStepForMarkup_5;
+				String messageText = XMLCoreMessages.ReconcileStepForMarkup_5;
 				int start = prev.getStartOffset();
 				int length = prev.getLength();
 
-				LocalizedMessage message = new LocalizedMessage(SEVERITY_WHITESPACE_AT_START , messageText);
+				LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.WHITESPACE_AT_START) , messageText);
 				message.setOffset(start);
 				message.setLength(length);
 				message.setLineNo(getLineNumber(start));
 
-				if (reporter instanceof IncrementalReporter) {
-					MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-					processor.setProblemId(ProblemIDsXML.SpacesBeforePI);
-					message.setAttribute(QUICKASSISTPROCESSOR, processor);
-	
-					AnnotationInfo info = new AnnotationInfo(message);
-					((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-				}
-				else {
-					reporter.addMessage(this, message);
-				}
+			
+				getAnnotationMsg(reporter, ProblemIDsXML.SpacesBeforePI, message, null,length);
+				
 				// Position p = new Position(start, length);
 				//				
 				// ReconcileAnnotationKey key =
@@ -716,7 +598,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 	}
 
 	public int getScope() {
-		return ReconcileAnnotationKey.PARTIAL;
+		return PARTIAL;
 	}
 
 	private IDOMNode getXMLNode(IStructuredDocumentRegion sdRegion) {
@@ -804,40 +686,16 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		return structuredDocumentRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT;
 	}
 
-	private void setDocument(IDocument doc) {
-		fDocument = doc;
-	}
-
 	private IDocument getDocument() {
 		return fDocument;
 	}
 
 	public void connect(IDocument document) {
-		setDocument(document);
+		fDocument = document;
 	}
 
 	public void disconnect(IDocument document) {
-		setDocument(null);
-	}
-
-	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
-		if (getDocument() == null) {
-			return;
-		}
-		if (!(reporter instanceof IncrementalReporter)) {
-			return;
-		}
-		if (!(getDocument() instanceof IStructuredDocument)) {
-			return;
-		}
-
-		// remove old messages
-		reporter.removeAllMessages(this);
-
-		IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument).getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
-		for (int i = 0; i < regions.length; i++) {
-			validate(regions[i], reporter);
-		}
+		fDocument = null;
 	}
 
 	public void validate(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
@@ -928,7 +786,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 	private boolean shouldValidate(IResourceProxy proxy) {
 		if(proxy.getType() == IResource.FILE) {
 			String name = proxy.getName();
-			if(name.toLowerCase(Locale.US).endsWith(".xml")) {
+			if(name.toLowerCase(Locale.US).endsWith(".xml")) { //$NON-NLS-1$
 				return true;
 			}
 		}
@@ -940,7 +798,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 			return false;
 		if (checkExtension) {
 			String extension = file.getFileExtension();
-			if (extension != null && "xml".endsWith(extension.toLowerCase(Locale.US)))
+			if (extension != null && "xml".endsWith(extension.toLowerCase(Locale.US))) //$NON-NLS-1$
 				return true;
 		}
 
@@ -1023,7 +881,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 	 */
 	private IContentType getXMLContentType() {
 		if (fRootContentType == null) {
-			fRootContentType = Platform.getContentTypeManager().getContentType("org.eclipse.core.runtime.xml");
+			fRootContentType = Platform.getContentTypeManager().getContentType("org.eclipse.core.runtime.xml"); //$NON-NLS-1$
 		}
 		return fRootContentType;
 	}
@@ -1035,8 +893,37 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 		if (resource.getType() != IResource.FILE)
 			return null;
 		ValidationResult result = new ValidationResult();
-		IReporter reporter = result.getReporter(monitor);
-		validateV1File((IFile) resource, reporter);
+		fReporter = result.getReporter(monitor);
+
+		validateV1File((IFile) resource, fReporter);
+		
 		return result;
 	}
+	
+	public IReporter validate(IResource resource, int kind, ValidationState state) {
+		validate(resource,kind,state,new NullProgressMonitor());
+		return fReporter;
+	}
+	private Preferences getPluginPreference(){
+		return XMLCorePlugin.getDefault().getPluginPreferences();
+	}
+
+	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
+		if (getDocument() == null) {
+			return;
+		}
+		if (!(getDocument() instanceof IStructuredDocument)) {
+			return;
+		}
+
+		// remove old messages
+		reporter.removeAllMessages(this);
+
+		IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument).getStructuredDocumentRegions(dirtyRegion.getOffset(), dirtyRegion.getLength());
+		for (int i = 0; i < regions.length; i++) {
+			validate(regions[i], reporter);
+		}
+	}
+	
+
 }
