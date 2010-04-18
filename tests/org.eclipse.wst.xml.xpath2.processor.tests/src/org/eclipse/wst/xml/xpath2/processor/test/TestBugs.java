@@ -36,7 +36,8 @@
  *  Mukul Gandhi    - bug 298519   improvements to fn:number implementation, catering
  *                                 to node arguments.
  *  Mukul Gandhi    - bug 301539   fix for "context undefined" bug in case of zero
- *                                 arity of fn:name function.                             
+ *                                 arity of fn:name function.
+ *  Mukul Gandhi    - bug 309585   implementation of xs:normalizedString data type                             
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -52,6 +53,7 @@ import org.eclipse.wst.xml.xpath2.processor.CollationProvider;
 import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
@@ -1564,6 +1566,34 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
+	}
+	
+	public void testXSNormalizedString() throws Exception {
+		// Bug 309585
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "xs:normalizedString('abcs\t') eq xs:normalizedString('abcs')";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		
+		boolean testSuccess = false;
+		try {
+		  ResultSequence rs = eval.evaluate(path);
+		}
+		catch(DynamicError ex) {
+		  // a 'DynamicError' exception indicates, that this test is a success 
+		  testSuccess = true;
+		}
+		
+		assertTrue(testSuccess);
 	}
 
 	private CollationProvider createLengthCollatorProvider() {
