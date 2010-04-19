@@ -512,6 +512,42 @@
 				id="ERROR"
 				value="COLOR_LIST_FOREGROUND">
 			</colorOverride>
+			<colorOverride
+				id="UNIVERSAL"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ID"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="CLASS"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ATTRIBUTE_DELIM"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ATTRIBUTE_NAME"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ATTRIBUTE_OPERATOR"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ATTRIBUTE_VALUE"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="PSEUDO"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="COMBINATOR"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
 		</theme>
 		<colorDefinition
 			id="ATMARK_RULE"
@@ -566,6 +602,60 @@
 			isEditable="false"
 			label="%Colors.error"
 			value="191, 63, 63">
+		</colorDefinition>
+		<colorDefinition
+			id="UNIVERSAL"
+			isEditable="false"
+			label="%Colors.universal"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ID"
+			isEditable="false"
+			label="%Colors.id"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="CLASS"
+			isEditable="false"
+			label="%Colors.class"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ATTRIBUTE_DELIM"
+			isEditable="false"
+			label="%Colors.attrDelim"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ATTRIBUTE_NAME"
+			isEditable="false"
+			label="%Colors.attrName"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ATTRIBUTE_OPERATOR"
+			isEditable="false"
+			label="%Colors.attrOp"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ATTRIBUTE_VALUE"
+			isEditable="false"
+			label="%Colors.attrValue"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="PSEUDO"
+			isEditable="false"
+			label="%Colors.pseudo"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="COMBINATOR"
+			isEditable="false"
+			label="%Colors.combinator"
+			value="63, 127, 127">
 		</colorDefinition>
 	</extension>
 	
