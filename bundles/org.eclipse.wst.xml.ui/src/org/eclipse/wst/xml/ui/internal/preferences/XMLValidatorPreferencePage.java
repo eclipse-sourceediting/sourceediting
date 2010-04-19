@@ -103,8 +103,8 @@ public class XMLValidatorPreferencePage extends AbstractPreferencePage {
       ((GridData)fHonourAllSchemaLocations.getLayoutData()).horizontalSpan = 2;
     }
   }
-  private void handleMarkupSeveritySelection(){
-	  if (fExtendedMarkupValidation.getSelection()) {
+  private void handleMarkupSeveritySelection(boolean selection){
+	  if (selection) {
 		  fMarkupState.restore();
 	  }
 	  else {
@@ -119,7 +119,7 @@ public class XMLValidatorPreferencePage extends AbstractPreferencePage {
 		    ((GridData)fExtendedMarkupValidation.getLayoutData()).horizontalSpan = 2;
 		    fExtendedMarkupValidation.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					handleMarkupSeveritySelection();
+					handleMarkupSeveritySelection(fExtendedMarkupValidation.getSelection());
 				}
 			});
 		}
@@ -333,7 +333,11 @@ public class XMLValidatorPreferencePage extends AbstractPreferencePage {
 
 	    
 	    if (fExtendedMarkupValidation != null) {
+	    	if (fExtendedMarkupValidation.getSelection() != useExtendedMarkupValidation) {
+	    		handleMarkupSeveritySelection(useExtendedMarkupValidation);
+	    	}
 	    	fExtendedMarkupValidation.setSelection(useExtendedMarkupValidation);
+	    	
 	    }
 	    int emptyElementTag = modelPreferences.getDefaultInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE);
 	    
