@@ -460,5 +460,7 @@ public class SSEUIMessages extends NLS {
 	public static String CodeAssistAdvancedConfigurationBlock_separate_table_description;
 	public static String CodeAssistAdvancedConfigurationBlock_default_table_description;
 	public static String CodeAssistAdvancedConfigurationBlock_default_table_category_column_title;
+	public static String CodeAssistAdvancedConfigurationBlock_PagesDown;
+	public static String CodeAssistAdvancedConfigurationBlock_PagesUp;
 	public static String CodeAssistAdvancedConfigurationBlock_separate_table_category_column_title;
 }

@@ -447,7 +447,7 @@ public final class CodeAssistCyclingConfigurationBlock  {
 		composite.setLayout(layout);
 
 		fPageOrderUpButton= new Button(composite, SWT.PUSH | SWT.CENTER);
-        fPageOrderUpButton.setText(SSEUIMessages.CodeAssistAdvancedConfigurationBlock_Up);
+        fPageOrderUpButton.setText(SSEUIMessages.CodeAssistAdvancedConfigurationBlock_PagesUp);
         fPageOrderUpButton.addSelectionListener(new SelectionAdapter() {
         	public void widgetSelected(SelectionEvent e) {
         		int index = fOwnPageViewer.getTable().getSelectionIndex();
@@ -463,7 +463,7 @@ public final class CodeAssistCyclingConfigurationBlock  {
         SWTUtil.setButtonDimensionHint(fPageOrderUpButton);
 
         fPageOrderDownButton= new Button(composite, SWT.PUSH | SWT.CENTER);
-        fPageOrderDownButton.setText(SSEUIMessages.CodeAssistAdvancedConfigurationBlock_Down);
+        fPageOrderDownButton.setText(SSEUIMessages.CodeAssistAdvancedConfigurationBlock_PagesDown);
         fPageOrderDownButton.addSelectionListener(new SelectionAdapter() {
         	public void widgetSelected(SelectionEvent e) {
         		int index= fOwnPageViewer.getTable().getSelectionIndex();
