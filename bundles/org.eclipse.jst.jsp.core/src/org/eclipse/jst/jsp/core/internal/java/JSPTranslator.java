@@ -1027,7 +1027,7 @@ public class JSPTranslator implements Externalizable {
 			 */
 			addEndTagVariable(tagToAdd, customTag);
 		}
-		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
+		else if (prevRegion != null && prevRegion.getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
 			/*
 			 * Start tag
 			 */
