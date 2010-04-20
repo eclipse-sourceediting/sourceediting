@@ -60,6 +60,10 @@ public class ProductManager {
 		String value = null;
 		if (Platform.getProduct()!=null)
 			value = Platform.getProduct().getProperty(key);
+		if (value == null)
+		{
+			value = Platform.getPreferencesService().getString(WSTWebPlugin.PLUGIN_ID, key, null, null);
+		}
 		if (value == null) {
 			if (key.equals(IProductConstants.APPLICATION_CONTENT_FOLDER))
 				return APPLICATION_CONTENT_FOLDER;
