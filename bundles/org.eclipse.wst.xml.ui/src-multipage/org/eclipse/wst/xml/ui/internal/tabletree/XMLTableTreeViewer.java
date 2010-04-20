@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2010 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -19,7 +19,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,7 +26,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -164,23 +162,35 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	};
 
 	private ISelectionProvider fSelectionProvider = new SelectionProvider();
+	// node: 40%, content: 60%
+	private static final double[] WEIGHTS = { .4, .6 };
 
 	public XMLTableTreeViewer(Composite parent) {
 		super(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		
-		TableLayout layout = new TableLayout();
-		
-		layout.addColumnData(new ColumnWeightData(40));
 		TreeColumn column = new TreeColumn(this.getTree(), SWT.LEFT);
 		column.setText(XMLEditorMessages.XMLTableTreeViewer_1);
 
-		layout.addColumnData(new ColumnWeightData(60));
 		column = new TreeColumn(this.getTree(), SWT.LEFT);
 		column.setText(XMLEditorMessages.XMLTableTreeViewer_2);
 
 		this.getTree().setHeaderVisible(true);
 		this.getTree().setLinesVisible(true);
-		this.getTree().setLayout(layout);
+		int width = getTree().getSize().x;
+		if (width == 0) {
+			// Resize columns once the tree is ready to be painted
+			this.getTree().addPaintListener(new PaintListener() {
+	
+				public void paintControl(PaintEvent e) {
+					initColumns(getTree().getSize().x, WEIGHTS);
+					getTree().removePaintListener(this);
+				}
+				
+			});
+		}
+		else {
+			initColumns(width, WEIGHTS);
+		}
 
 		// set up providers
 		propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory();
@@ -203,6 +213,14 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		dropTarget.setTransfer(new Transfer[] {LocalSelectionTransfer.getTransfer()});
 
 		this.getTree().addPaintListener(fContentPaintListener);
+	}
+
+	private void initColumns(int width, double[] weights) {
+		TreeColumn[] columns = getTree().getColumns();
+		int size = columns.length;
+		for (int i = 0; i < size; i++) {
+			columns[i].setWidth((int)(weights[i] * width));
+		}
 	}
 
 	/**
