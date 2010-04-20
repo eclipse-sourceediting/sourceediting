@@ -10,18 +10,17 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.tests;
 
+import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.xml.xpath.core.tests.XPathCoreTests;
 import org.eclipse.wst.xml.xpath.ui.internal.hander.tests.TestXPathProcessorHandler;
-import org.eclipse.wst.xml.xpath.ui.tests.XPathUITestPlugin;
 import org.eclipse.wst.xml.xpath2.processor.test.AllPsychoPathTests;
+import org.eclipse.wst.xsl.core.tests.XSLCoreTestSuite;
+import org.eclipse.wst.xsl.exslt.core.tests.EXSLTCoreTestSuite;
 import org.eclipse.wst.xsl.jaxp.debug.test.AllJAXPDebugTests;
 import org.eclipse.wst.xsl.launching.tests.LaunchingSuite;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestSuite;
-import org.eclipse.wst.xsl.core.tests.XSLCoreTestSuite;
-import org.eclipse.wst.xsl.exslt.core.tests.EXSLTCoreTestSuite;
-import org.eclipse.wst.xsl.exslt.ui.tests.EXSLTUITestSuite;
 
 /**
  * This class specifies all the bundles of this component that provide a test
@@ -52,4 +51,12 @@ public class AllTestsSuite extends TestSuite {
 		// The rest it automatic from the tests added in constructor.
 
 	}
+	/* 
+	 * Added for strict JUnit 4 environment. (Not sure if "testAll" method is still required. 
+	 * See discussion for similar issue in bug 300951.
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=300951
+	 */
+    public static Test suite() {
+        return new AllTestsSuite();
+    }
 }
