@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.xml.core.internal.document.test.NodeImplTestCase;
+import org.eclipse.wst.xml.core.tests.cache.GlobalCMDocumentCacheTest;
 import org.eclipse.wst.xml.core.tests.cleanup.TestCleanupProcessorXML;
 import org.eclipse.wst.xml.core.tests.contentmodel.CMValidatorValidationTest;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestAttributesOrder;
@@ -73,5 +74,6 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(CMValidatorValidationTest.class));
 
 		addTest(new TestSuite(RegionChangedAdapterNotificationTests.class));
+		addTest(new TestSuite(GlobalCMDocumentCacheTest.class));
 	}
 }
