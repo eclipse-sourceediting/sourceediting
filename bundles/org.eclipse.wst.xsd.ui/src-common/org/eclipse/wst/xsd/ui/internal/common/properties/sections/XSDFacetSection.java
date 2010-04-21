@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -160,6 +160,7 @@ public class XSDFacetSection extends AbstractSection
       {
       	minLengthText.addListener(SWT.Modify, customListener);
       	minLengthText.addListener(SWT.KeyDown, customListener);
+      	minLengthText.addListener(SWT.FocusOut, customListener);
       }
       else
         applyAllListeners(minLengthText);
@@ -179,6 +180,7 @@ public class XSDFacetSection extends AbstractSection
       {
     	  maxLengthText.addListener(SWT.Modify, customListener);
     	  maxLengthText.addListener(SWT.KeyDown, customListener);
+    	  maxLengthText.addListener(SWT.FocusOut, customListener);
       }
       else
         applyAllListeners(maxLengthText);
