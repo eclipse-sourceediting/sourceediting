@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -156,37 +156,55 @@ public class XSDRedefineAdapter extends XSDSchemaDirectiveAdapter
     }
 
     Object newValue = msg.getNewValue();
+    Object oldValue = msg.getOldValue();
 
     if (XSDPackage.eINSTANCE.getXSDRedefine_Contents() == msg.getFeature())
     {
-      if (newValue instanceof XSDAttributeGroupDefinition)
+      if ((newValue instanceof XSDAttributeGroupDefinition) || oldValue instanceof XSDAttributeGroupDefinition)
       {
         CategoryAdapter adapter = getCategory(CategoryAdapter.ATTRIBUTES);
         Assert.isTrue(adapter != null);
         List list = getCategoryChildren(CategoryAdapter.ATTRIBUTES);
         adapter.setChildren(list);
         adapter.setAllChildren(list);
+       
+        if (adapter.getModel() instanceof XSDSchemaAdapter)
+        {
+        	XSDSchemaAdapter schemaAdapter = (XSDSchemaAdapter)adapter.getModel();
+        	schemaAdapter.notifyChanged(msg);
+        }
+       
         notifyListeners(new CategoryNotification(adapter), adapter.getText());
         return;
       }
-      else if (newValue instanceof XSDComplexTypeDefinition || newValue instanceof XSDSimpleTypeDefinition)
+      else if ((newValue instanceof XSDComplexTypeDefinition || newValue instanceof XSDSimpleTypeDefinition) || (oldValue instanceof XSDComplexTypeDefinition || oldValue instanceof XSDSimpleTypeDefinition))
       {
         CategoryAdapter adapter = getCategory(CategoryAdapter.TYPES);
         Assert.isTrue(adapter != null);
         List types = getCategoryChildren(CategoryAdapter.TYPES);
         adapter.setChildren(types);
         adapter.setAllChildren(types);
+        if (adapter.getModel() instanceof XSDSchemaAdapter)
+        {
+        	XSDSchemaAdapter schemaAdapter = (XSDSchemaAdapter)adapter.getModel();
+        	schemaAdapter.notifyChanged(msg);
+        }
         notifyListeners(new CategoryNotification(adapter), adapter.getText());
         return;
       }
-      else if (newValue instanceof XSDModelGroupDefinition)
+      else if (newValue instanceof XSDModelGroupDefinition || oldValue instanceof XSDModelGroupDefinition)
       {
         CategoryAdapter adapter = getCategory(CategoryAdapter.GROUPS);
         Assert.isTrue(adapter != null);
         List list = getCategoryChildren(CategoryAdapter.GROUPS);
         adapter.setChildren(list);
-        adapter.setAllChildren(list);
-        notifyListeners(new CategoryNotification(adapter), adapter.getText());
+        adapter.setAllChildren(list); 
+        if (adapter.getModel() instanceof XSDSchemaAdapter)
+        {
+        	XSDSchemaAdapter schemaAdapter = (XSDSchemaAdapter)adapter.getModel();
+        	schemaAdapter.notifyChanged(msg);
+        }
+        notifyListeners(new CategoryNotification(adapter), adapter.getText());       
         return;
       }
       else if (msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_Annotations())

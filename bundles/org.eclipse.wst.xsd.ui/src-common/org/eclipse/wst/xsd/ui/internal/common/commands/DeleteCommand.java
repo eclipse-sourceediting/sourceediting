@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,10 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeGroupDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDSimpleTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDVisitor;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
@@ -94,6 +98,12 @@ public class DeleteCommand extends BaseCommand
         }
         else if (parent instanceof XSDRedefine)
         {
+        	Object adapter = target.eAdapters().get(0);
+        	if (adapter instanceof XSDModelGroupDefinitionAdapter)
+            {
+          	 ((XSDModelGroupDefinitionAdapter) adapter).setReadOnly(true);
+          	 ((XSDModelGroupDefinitionAdapter) adapter).setChangeReadOnlyField(true);
+            }
           ((XSDRedefine) parent).getContents().remove(target);
         }      
       }
@@ -176,7 +186,26 @@ public class DeleteCommand extends BaseCommand
         else if(parent instanceof XSDRedefine)
         {
           doCleanup = false;
-          EList contents = ((XSDRedefine)parent).getContents();           
+          EList contents = ((XSDRedefine)parent).getContents();    
+          Object adapter = target.eAdapters().get(0);
+          if (adapter instanceof XSDComplexTypeDefinitionAdapter)
+          {
+        	  
+        	 ((XSDComplexTypeDefinitionAdapter) adapter).setReadOnly(true);
+        	 ((XSDComplexTypeDefinitionAdapter) adapter).setChangeReadOnlyField(true);
+          }
+          else if (adapter instanceof XSDSimpleTypeDefinitionAdapter)
+          {
+        	  
+        	 ((XSDSimpleTypeDefinitionAdapter) adapter).setReadOnly(true);
+        	 ((XSDSimpleTypeDefinitionAdapter) adapter).setChangeReadOnlyField(true);
+          }
+          else if (adapter instanceof XSDAttributeGroupDefinitionAdapter)
+          {
+        	  
+        	 ((XSDAttributeGroupDefinitionAdapter) adapter).setReadOnly(true);
+        	 ((XSDAttributeGroupDefinitionAdapter) adapter).setChangeReadOnlyField(true);
+          }
           contents.remove(target);
         }
       }

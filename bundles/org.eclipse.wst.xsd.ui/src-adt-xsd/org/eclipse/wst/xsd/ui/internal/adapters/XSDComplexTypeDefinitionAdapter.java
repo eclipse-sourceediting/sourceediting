@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -69,6 +70,9 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
 {
   protected List fields = null;
   protected List otherThingsToListenTo = null;
+  protected boolean readOnly;
+  protected boolean changeReadOnlyField =false;
+  protected HashMap deletedTypes = new HashMap();
 
   public XSDComplexTypeDefinition getXSDComplexTypeDefinition()
   {
@@ -450,8 +454,17 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     XSDTypeDefinition baseTypeDefinition = xsdComplexTypeDefinition.getBaseTypeDefinition();
     if (baseTypeDefinition != null && baseTypeDefinition != xsdComplexTypeDefinition.getContent() && baseTypeDefinition.getName() != null && !XSDConstants.isURType(baseTypeDefinition))
     {
-      result.append(" : "); //$NON-NLS-1$
-      result.append(baseTypeDefinition.getQName(xsdComplexTypeDefinition));
+    	
+   	try{
+    		String qName = baseTypeDefinition.getQName(xsdComplexTypeDefinition);
+    		result.append(" : "); //$NON-NLS-1$
+    	    result.append(qName);
+    	}
+    	catch (Exception e)    	
+    	{    		
+    		return result.toString();
+    	}
+    
     }
 
     return result.toString();
@@ -508,4 +521,46 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
   {
     return getXSDComplexTypeDefinition().getContent();
   }
+  public boolean isReadOnly()
+  {
+	  XSDComplexTypeDefinition xsdComplexTypeDefinition = (XSDComplexTypeDefinition) target;
+	  if (hasSetReadOnlyField())
+	  {
+		  deletedTypes.put(xsdComplexTypeDefinition.getName(), new Boolean(true));
+		  changeReadOnlyField = false;
+		  return readOnly;
+	  }
+	  else
+	  {
+		  if (deletedTypes!= null )
+		  {
+			  Boolean deleted = ((Boolean)deletedTypes.get(xsdComplexTypeDefinition.getName()));
+			  if (deleted != null && deleted.booleanValue())
+				  return true;
+			  else return super.isReadOnly();
+		  }
+		  else
+			  return super.isReadOnly();
+	  }
+  }
+
+public void setReadOnly(boolean readOnly) {
+	this.readOnly = readOnly;
+}
+
+public boolean hasSetReadOnlyField() {
+	return changeReadOnlyField;
+}
+
+public void setChangeReadOnlyField(boolean setReadOnlyField) {
+	this.changeReadOnlyField = setReadOnlyField;
+}
+
+public void updateDeletedMap(String addComponent)
+{
+	if (deletedTypes.get(addComponent) != null)
+	{
+		deletedTypes.clear();
+	}
+}
 }

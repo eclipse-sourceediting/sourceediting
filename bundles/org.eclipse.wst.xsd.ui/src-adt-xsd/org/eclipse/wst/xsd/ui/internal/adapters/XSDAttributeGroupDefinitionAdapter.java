@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,6 +52,9 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
 	  
   protected List fields = null;
   protected List otherThingsToListenTo = null;
+  protected boolean readOnly;
+  protected boolean changeReadOnlyField =false;
+  protected HashMap deletedTypes = new HashMap();
 
   public XSDAttributeGroupDefinitionAdapter()
   {
@@ -230,4 +234,52 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
     clearFields();
     notifyListeners(this, null);
   }
+  public boolean isReadOnly()
+  {
+	  XSDAttributeGroupDefinition xsdAttributeGroupDefinition = (XSDAttributeGroupDefinition) target;
+	  if (hasSetReadOnlyField())
+	  {
+		  deletedTypes.put(xsdAttributeGroupDefinition.getName(), new Boolean(true));
+		  changeReadOnlyField = false;
+		  return readOnly;
+	  }
+	  else
+	  {
+		  if (deletedTypes!= null )
+		  {
+			  Boolean deleted = ((Boolean)deletedTypes.get(xsdAttributeGroupDefinition.getName()));
+			  if (deleted != null && deleted.booleanValue())
+			  {
+				  return true;
+			  }
+			  else
+			  {
+				  return super.isReadOnly();
+			  }
+		  }
+		  else
+		  {
+			  return super.isReadOnly();
+		  }
+	  }
+  }
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public boolean hasSetReadOnlyField() {
+		return changeReadOnlyField;
+	}
+
+	public void setChangeReadOnlyField(boolean setReadOnlyField) {
+		this.changeReadOnlyField = setReadOnlyField;
+	}
+
+	public void updateDeletedMap(String addComponent) {
+		if (deletedTypes.get(addComponent) != null)
+		{
+			deletedTypes.clear();
+		}
+	}
 }

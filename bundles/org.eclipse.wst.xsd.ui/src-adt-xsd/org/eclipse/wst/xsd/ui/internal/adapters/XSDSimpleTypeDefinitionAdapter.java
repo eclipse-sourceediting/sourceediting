@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,13 @@
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.gef.commands.Command;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
@@ -41,6 +42,9 @@ import org.eclipse.xsd.util.XSDConstants;
 
 public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
 {
+	protected boolean readOnly;
+	protected boolean changeReadOnlyField =false;
+	protected HashMap deletedTypes = new HashMap();
   public Image getImage()
   {
     if (isReadOnly())
@@ -75,8 +79,14 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
       {
         if (baseTypeDefinition.getName() != null && !xsdSimpleTypeDefinition.getContents().contains(baseTypeDefinition) && !XSDConstants.isAnySimpleType(baseTypeDefinition))
         {
-          result.append(" : "); //$NON-NLS-1$
-          result.append(baseTypeDefinition.getQName(xsdSimpleTypeDefinition));
+        	try {
+        		String qName = baseTypeDefinition.getQName(xsdSimpleTypeDefinition);
+        		result.append(" : "); //$NON-NLS-1$
+                result.append(qName);
+        	}
+        	catch (Exception e)
+        	{
+        	}
         }
       }
       else
@@ -214,4 +224,45 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
     populateAdapterList(list, adapterList);
     return (ITreeElement[]) adapterList.toArray(new ITreeElement[0]);
   }
+  public boolean isReadOnly()
+  {
+	  XSDSimpleTypeDefinition xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) target;
+	  if (hasSetReadOnlyField())
+	  {
+		  deletedTypes.put(xsdSimpleTypeDefinition.getName(), new Boolean(true));
+		  changeReadOnlyField = false;
+		  return readOnly;
+	  }
+	  else
+	  {
+		  if (deletedTypes!= null )
+		  {
+			  Boolean deleted = ((Boolean)deletedTypes.get(xsdSimpleTypeDefinition.getName()));
+			  if (deleted != null && deleted.booleanValue())
+				  return true;
+			  else return super.isReadOnly();
+		  }
+		  else
+			  return super.isReadOnly();
+	  }
+	
+	  
+  }
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public boolean hasSetReadOnlyField() {
+		return changeReadOnlyField;
+	}
+
+	public void setChangeReadOnlyField(boolean setReadOnlyField) {
+		this.changeReadOnlyField = setReadOnlyField;
+	}
+
+	public void updateDeletedMap(String addComponent) {
+		if (deletedTypes.get(addComponent) != null)
+			deletedTypes.clear();
+	}
 }

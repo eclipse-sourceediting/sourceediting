@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -139,6 +139,10 @@ public abstract class AddXSDRedefinableContentAction extends XSDBaseAction
     {
       if (component instanceof XSDNamedComponent)
       {
+    	if (((XSDNamedComponent)component).getSchema() == null)
+    	{
+    	  return null;
+    	}
         String location = ((XSDNamedComponent)component).getSchema().getSchemaLocation();
         String platformResource = "platform:/resource"; //$NON-NLS-1$
         if (location != null && location.startsWith(platformResource))

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -52,6 +53,9 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
 
   protected List fields = null;
   protected List otherThingsToListenTo = null;
+  protected boolean readOnly;
+  protected boolean changeReadOnlyField =false;
+  protected HashMap deletedTypes = new HashMap();
   
   public XSDModelGroupDefinitionAdapter()
   {
@@ -88,7 +92,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
   public String getText()
   {
     XSDModelGroupDefinition xsdModelGroupDefinition = (XSDModelGroupDefinition) target;
-    if (xsdModelGroupDefinition.getResolvedModelGroupDefinition().getContainer() == null) return "";   // Removed
+    if (xsdModelGroupDefinition.getResolvedModelGroupDefinition().getContainer() == null && xsdModelGroupDefinition.getName() ==null) return "";   // Removed
     String result = xsdModelGroupDefinition.isModelGroupDefinitionReference() ? xsdModelGroupDefinition.getQName() : xsdModelGroupDefinition.getName();
     return result == null ? Messages._UI_LABEL_ABSENT : result;
   }
@@ -292,4 +296,45 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
     else
       return getGlobalXSDContainer(group);
   }
+  public boolean isReadOnly()
+  {
+	  XSDModelGroupDefinition xsdModelGroupDefinition = (XSDModelGroupDefinition) target;
+	  if (hasSetReadOnlyField())
+	  {
+		  deletedTypes.put(xsdModelGroupDefinition.getName(), new Boolean(true));
+		  changeReadOnlyField = false;
+		  return readOnly;
+	  }
+	  else
+	  {
+		  if (deletedTypes!= null )
+		  {
+			  Boolean deleted = ((Boolean)deletedTypes.get(xsdModelGroupDefinition.getName()));
+			  if (deleted != null && deleted.booleanValue())
+				  return true;
+			  else return super.isReadOnly();
+		  }
+		  else
+			  return super.isReadOnly();
+	  }
+	
+	  
+  }
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public boolean hasSetReadOnlyField() {
+		return changeReadOnlyField;
+	}
+
+	public void setChangeReadOnlyField(boolean setReadOnlyField) {
+		this.changeReadOnlyField = setReadOnlyField;
+	}
+
+	public void updateDeletedMap(String addComponent) {
+		if (deletedTypes.get(addComponent) != null)
+			deletedTypes.clear();
+	}
 }
