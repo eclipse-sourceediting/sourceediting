@@ -63,6 +63,7 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 1);
 		node.putBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
 		node.putBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
+		node.putBoolean(XMLCorePreferenceNames.CMDOCUMENT_GLOBAL_CACHE_ENABLED, true);
 		
 		node.putBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION, false);
 		node.putInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE, 2);

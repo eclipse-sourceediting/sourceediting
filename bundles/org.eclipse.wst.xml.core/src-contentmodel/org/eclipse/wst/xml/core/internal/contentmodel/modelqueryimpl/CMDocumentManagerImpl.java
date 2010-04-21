@@ -19,17 +19,21 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation.AnnotationUtility;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentReferenceProvider;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.GlobalCMDocumentCache.GlobalCacheQueryResponse;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -43,6 +47,7 @@ public class CMDocumentManagerImpl implements CMDocumentManager
   protected List listenerList = new Vector(); 
   protected Hashtable propertyTable = new Hashtable();
   protected Hashtable publicIdTable = new Hashtable();
+  private boolean globalCMDocumentCacheEnabled ;
 
        
   public CMDocumentManagerImpl(CMDocumentCache cmDocumentCache, CMDocumentReferenceProvider cmDocumentReferenceProvider)
@@ -52,6 +57,7 @@ public class CMDocumentManagerImpl implements CMDocumentManager
     setPropertyEnabled(PROPERTY_AUTO_LOAD, true);
     setPropertyEnabled(PROPERTY_USE_CACHED_RESOLVED_URI, false);
     setPropertyEnabled(PROPERTY_PERFORM_URI_RESOLUTION, true);
+    initializeGlobalCMDocumentCacheSettings();
   }         
 
        
@@ -260,7 +266,17 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
   public synchronized CMDocument buildCMDocument(String publicId, String resolvedURI, String type)
   {                                     
     cmDocumentCache.setStatus(resolvedURI, CMDocumentCache.STATUS_LOADING);
-  
+    boolean documentCacheable = false;
+    if(globalCMDocumentCacheEnabled) {
+    	GlobalCacheQueryResponse response = GlobalCMDocumentCache.getInstance().getCMDocument(resolvedURI);
+    	CMDocument cachedCMDocument = response.getCachedCMDocument();
+    	documentCacheable = response.isDocumentCacheable();
+    	if(cachedCMDocument != null) {
+    		cmDocumentCache.putCMDocument(resolvedURI, cachedCMDocument);
+    		return cachedCMDocument;
+    	}
+    }
+
     CMDocument result = null;         
     if (resolvedURI != null && resolvedURI.length() > 0)
     {
@@ -273,6 +289,9 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
       if (publicId != null)
       {    
         AnnotationUtility.loadAnnotationsForGrammar(publicId, result);
+      }
+      if(globalCMDocumentCacheEnabled && documentCacheable) {
+    	  GlobalCMDocumentCache.getInstance().putCMDocument(resolvedURI, result);
       }
       cmDocumentCache.putCMDocument(resolvedURI, result);
     }
@@ -288,4 +307,12 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
     // TODO... initiate a timed release of the entries in the CMDocumentCache
     publicIdTable = new Hashtable();
   }
+  
+  private void initializeGlobalCMDocumentCacheSettings() {
+	  Preferences preferences = XMLCorePlugin.getDefault().getPluginPreferences();
+	  if(preferences != null) {
+		  globalCMDocumentCacheEnabled = preferences.getBoolean(XMLCorePreferenceNames.CMDOCUMENT_GLOBAL_CACHE_ENABLED);
+	  }
+  }
+
 }                                            

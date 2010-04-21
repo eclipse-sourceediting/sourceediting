@@ -249,6 +249,12 @@ public class XMLCorePreferenceNames {
      */
     public static final String FORMAT_COMMENT_JOIN_LINES = "formatCommentJoinLines"; //$NON-NLS-1$
     
+    /**
+     * Indicates whether or not CMDocuments should be globally cached
+     * <p>
+     * Value is of type <code>boolean</code>
+     */
+    public static final String CMDOCUMENT_GLOBAL_CACHE_ENABLED = "cmDocumentGlobalCacheEnabled"; //$NON-NLS-1$
     
     /**
 	 * Indicates whether or not MarkUpValidator should run as part of XMl Validation.
