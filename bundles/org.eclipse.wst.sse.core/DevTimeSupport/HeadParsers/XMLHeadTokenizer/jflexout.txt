@@ -1,8 +1,0 @@
-Reading "XMLHeadTokenizer.jflex"
-
-Warning : Macro "SpaceChar" has been declared but never used.
-Constructing NFA : 358 states in NFA
-Converting NFA to DFA : 
-...................................................................
-79 states before minimization, 54 states in minimized DFA
-Writing code to "XMLHeadTokenizer.java"
