@@ -47,6 +47,8 @@ public final class CatalogReader
     {
       SAXParserFactory factory = SAXParserFactory.newInstance();
       factory.setNamespaceAware(true);
+      factory.setValidating(false);
+      factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);//$NON-NLS-1$
       SAXParser parser = factory.newSAXParser();
       parser.parse(new InputSource(input), new CatalogContentHandler(xmlCatalog));
     }
