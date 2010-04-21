@@ -72,7 +72,8 @@ public class XSDGraphViewerDialog extends PopupDialog
 
   public XSDGraphViewerDialog(Shell parentShell, String titleText, String infoText, Object model, String ID)
   {
-    super(parentShell, HOVER_SHELLSTYLE, true, true, true, true, false, titleText, infoText);
+    // INFOPOPUP_SHELLSTYLE works properly on both Windows and Linux.
+    super(parentShell, INFOPOPUP_SHELLSTYLE, true, true, true, true, false, titleText, infoText);
     setModel(model);
     linkListener = new OpenEditorLinkListener();
     this.infoText = infoText;
@@ -196,7 +197,9 @@ public class XSDGraphViewerDialog extends PopupDialog
     nsInfoLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
     link = new Hyperlink(infoComposite, SWT.RIGHT);
-    link.setText(Messages._UI_ACTION_OPEN_IN_NEW_EDITOR);
+    // Remove mnemonic ampersand. It would be better to have a separate string in the future.
+    String label = Messages._UI_ACTION_OPEN_IN_NEW_EDITOR.replaceAll("&", "");
+    link.setText(label);
     link.setFont(infoFont);
     link.addHyperlinkListener(linkListener);
     return infoComposite;
