@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
+import org.eclipse.jface.text.templates.TemplateVariable;
 
 /**
  * Just like DocumentTemplateContext except if an insert offset is passed in,
@@ -95,7 +96,15 @@ public class ReplaceNameTemplateContext extends DocumentTemplateContext {
 				if (!template.getName().startsWith(prefix)) {
 					// generate a new buffer that actually contains the
 					// text that was going to be overwritten
-					buffer = new TemplateBuffer(prefix + buffer.getString(), buffer.getVariables());
+					int prefixSize = prefix.length();
+					TemplateVariable[] newTemplateVar = buffer.getVariables();
+					for (int i =0; i < newTemplateVar.length; i++ ){
+						int[] offsets = newTemplateVar[i].getOffsets();
+						for (int j=0; j<offsets.length ;j++){
+							offsets[j] += prefixSize;
+						}
+					}
+					buffer = new TemplateBuffer(prefix + buffer.getString(), newTemplateVar);
 				}
 			}
 		}
