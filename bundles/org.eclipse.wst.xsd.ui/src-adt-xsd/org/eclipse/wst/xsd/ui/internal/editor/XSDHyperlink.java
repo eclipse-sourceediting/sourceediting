@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -63,7 +64,7 @@ public class XSDHyperlink implements IHyperlink
 
   public String getHyperlinkText()
   {
-    return Messages._UI_ACTION_SET_AS_FOCUS;
+    return NLS.bind(Messages._UI_HYPERLINK_TEXT, fComponent.getElement().getLocalName());
   }
 
   public void open()
