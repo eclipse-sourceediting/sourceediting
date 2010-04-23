@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xsd.ui.tests
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.100.qualifier
 Bundle-ClassPath: xsduitests.jar
 Bundle-Activator: org.eclipse.wst.xsd.ui.tests.Activator
 Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
