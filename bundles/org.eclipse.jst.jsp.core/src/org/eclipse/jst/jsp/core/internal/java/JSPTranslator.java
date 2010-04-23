@@ -962,16 +962,8 @@ public class JSPTranslator implements Externalizable {
 				appendToBuffer(decl, fUserCode, false, customTag);
 			}
 		}
-
-		boolean isEmptyTag = customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
-		if (!isEmptyTag){
-			if (customTag.getLastRegion().getType().equals(DOMRegionContext.WHITE_SPACE)){
-				int len = customTag.getRegions().size();
-				if (len >2){
-					isEmptyTag = customTag.getRegions().get(len-2).getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
-				}
-			}
-		}
+		boolean isEmptyTag = isEmptyTag(customTag);
+		
 		/*
 		 * Add a single  { to limit the scope of NESTED variables
 		 */
@@ -1019,6 +1011,21 @@ public class JSPTranslator implements Externalizable {
 		}
 		
 	}
+
+	private boolean isEmptyTag(ITextRegionCollection customTag) {
+		ITextRegion lastRegion = customTag.getLastRegion();
+		// custom tag is embedded
+		if (customTag instanceof ITextRegionContainer) {
+			ITextRegionList regions = customTag.getRegions();
+			int size = customTag.getNumberOfRegions() - 1;
+			while (size > 0 && !(DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(lastRegion.getType()) || DOMRegionContext.XML_TAG_NAME.equals(lastRegion.getType()) || DOMRegionContext.XML_TAG_CLOSE.equals(lastRegion.getType()) )) {
+				lastRegion = regions.get(--size);
+			}
+		}
+		
+		return DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(lastRegion.getType());
+	}
+
 	private void addCustomTaglibVariables(String tagToAdd, ITextRegionCollection customTag, ITextRegion prevRegion) {
 		//Can't judge by first region as start and end tag are part of same ContextRegionContainer		
 		if (prevRegion != null && prevRegion.getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
