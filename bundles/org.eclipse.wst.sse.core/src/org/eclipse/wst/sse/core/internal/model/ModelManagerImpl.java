@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
@@ -97,81 +98,88 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
  */
 public class ModelManagerImpl implements IModelManager {
 
-	private static long WAIT_INTERVAL_MS = 500; 
+	
+	
 	static class ReadEditType {
 		ReadEditType(String type) {
 		}
 	}
 
-	/**
-	 * A Data class to track our shared objects
-	 */
-	 static class SharedObject {
+	class SharedObject {
 		int referenceCountForEdit;
 		int referenceCountForRead;
-		IStructuredModel theSharedModel;
+		volatile IStructuredModel theSharedModel;
+		final ILock LOAD_LOCK = Job.getJobManager().newLock();
 		volatile boolean initializing = true;
 		volatile boolean doWait = true;
-		
-		SharedObject(IStructuredModel sharedModel) {
-			theSharedModel = sharedModel;
-			referenceCountForRead = 0;
-			referenceCountForEdit = 0;
+		// The field 'id' is only meant for debug
+		final String id;
+
+		SharedObject(String id) {
+			this.id=id;
+			// be aware, this lock will leak and cause the deadlock detector to be horrible if we never release it
+			LOAD_LOCK.acquire();
 		}
-		
+
 		/**
-		 * Waits until this shared object has been attempted to be loaded. 
-		 * The load is "attempted" because not all loads result in a model. 
-		 * However, upon leaving this method, theShareModel variable
-		 * is up-to-date.
+		 * Waits until this shared object has been attempted to be loaded. The
+		 * load is "attempted" because not all loads result in a model. However,
+		 * upon leaving this method, theShareModel variable is up-to-date.
 		 */
 		public void waitForLoadAttempt() {
+			final boolean allowInterrupt = PrefUtil.ALLOW_INTERRUPT_WAITING_THREAD;
+			final long timeLimit = (PrefUtil.WAIT_DELAY==0) ? Long.MAX_VALUE : PrefUtil.now() + PrefUtil.WAIT_DELAY;
+			final Job current = Job.getJobManager().currentJob();
 			boolean interrupted = false;
 			try {
-				// if we have a rule, then use a polling system with
-				// short-circuit, otherwise use wait/notify
-				if (Job.getJobManager().currentRule() != null) {
-					while (initializing) {
-						Job.getJobManager().currentJob().yieldRule(null);
-						synchronized (this) {
-							if (initializing) {
-								try {
-									wait(WAIT_INTERVAL_MS);
-								}
-								catch (InterruptedException e) {
-									interrupted = true;
-								}
-							}
+				while (initializing) {
+					if (current!=null) {
+						current.yieldRule(null);
+					}
+					try {
+						loop();
+					} catch (InterruptedException e) {
+						if (allowInterrupt) {
+							throw new OperationCanceledException("Waiting thread interrupted while waiting for model id: "+id + " to load");
+						} else {
+							interrupted=true;
 						}
 					}
-				}
-				else {
-					synchronized (this) {
-						while (initializing) {
-							try {
-								wait();
-							}
-							catch (InterruptedException e) {
-								interrupted = true;
-							}
-						}
-					}
+					if (PrefUtil.now() >= timeLimit	)
+						throw new OperationCanceledException("Waiting thread timeout exceeded while waiting for model id: "+id + " to load");
 				}
 			}
 			finally {
-				if (interrupted)
+				if (interrupted) {
 					Thread.currentThread().interrupt();
+				}
 			}
 		}
-		
+
+		private void loop() throws InterruptedException {	
+			if (initializing) {
+				if (LOAD_LOCK.acquire(PrefUtil.WAIT_INTERVAL_MS)) {
+					// if we got the lock, but initializing is still not true the deadlock detector gave us
+					// the lock and caused reentrancy into this critical section. This is invalid and the 
+					// sign of a cyclical load attempt. In this case, we through an 
+					// OperationCanceledException in lew of entering a spin-loop. 
+					if (initializing) {
+						LOAD_LOCK.release();
+						throw new OperationCanceledException("Aborted cyclic load attempt for model with id: "+ id );
+					} else {
+						LOAD_LOCK.release();
+					}
+				}
+			}
+		}
+
 		/**
-		 * Flags this model as loaded. All waiting methods on 
-		 * {@link #waitForLoadAttempt()} will proceed after this 
-		 * method returns. 
+		 * Flags this model as loaded. All waiting methods on
+		 * {@link #waitForLoadAttempt()} will proceed after this method returns.
 		 */
-		public synchronized void setLoaded() {
+		public void setLoaded() {
 			initializing = false;
-			notifyAll();
+			LOAD_LOCK.release();
 		}
 	}
 
@@ -239,7 +247,7 @@ public class ModelManagerImpl implements IModelManager {
 			SharedObject testObject = (SharedObject) fManagedObjects.get(id);
 			if (testObject==null) {
 				// null means it's been disposed, we need to do the work to reload it.
-				sharedObject = new SharedObject(null);
+				sharedObject = new SharedObject(id);
 				fManagedObjects.put(id, sharedObject);
 				SYNC.release();
 				_doCommonCreateModel(file, id, handler, resolver, rwType, encodingRule,
@@ -350,7 +358,7 @@ public class ModelManagerImpl implements IModelManager {
 			SharedObject testObject = (SharedObject) fManagedObjects.get(id);
 			if (testObject==null) {
 				// it was removed ,so lets create it
-				sharedObject = new SharedObject(null);
+				sharedObject = new SharedObject(id);
 				fManagedObjects.put(id, sharedObject);
 				SYNC.release();
 				_doCommonCreateModel(inputStream, id, handler, resolver, rwType,
@@ -491,7 +499,7 @@ public class ModelManagerImpl implements IModelManager {
 				SharedObject testObject = (SharedObject) fManagedObjects.get(id);
 				if (testObject==null) {
 					// it was removed ,so lets create it
-					sharedObject = new SharedObject(null);
+					sharedObject = new SharedObject(id);
 					fManagedObjects.put(id, sharedObject);
 					
 					SYNC.release();
@@ -567,7 +575,7 @@ public class ModelManagerImpl implements IModelManager {
 				throw new ResourceInUse();
 			}
 			
-			sharedObject = new SharedObject(null);
+			sharedObject = new SharedObject(id);
 			fManagedObjects.put(id, sharedObject);
 			
 		} finally {
@@ -612,7 +620,7 @@ public class ModelManagerImpl implements IModelManager {
 			SYNC.acquire();
 			SharedObject testObject = (SharedObject) fManagedObjects.get(id);
 			if (testObject==null) {
-				sharedObject = new SharedObject(null);
+				sharedObject = new SharedObject(id);
 				fManagedObjects.put(id, sharedObject);
 				SYNC.release();
 				synchronized(sharedObject) {
@@ -830,7 +838,7 @@ public class ModelManagerImpl implements IModelManager {
 			if (sharedObject != null) {
 				throw new ResourceInUse();
 			}
-			sharedObject = new SharedObject(null);
+			sharedObject = new SharedObject(newId);
 			fManagedObjects.put(newId,sharedObject);
 		} finally {
 			SYNC.release();
