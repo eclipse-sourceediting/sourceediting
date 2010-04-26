@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 BEA Systems and others.
+ * Copyright (c) 2005, 2006 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -461,7 +461,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 			if(isCompletingObject(node.firstToken.image)) {
 				append(node.firstToken);
 			} else {
-				append("pageScope.get(\"" + node.firstToken + "\")"); //$NON-NLS-1$ //$NON-NLS-1$
+				fCanGenerate = false;
 			}
 			return(null);
 		}
@@ -476,9 +476,8 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * @return
 	 */
 	private boolean isCompletingObject(String image) {
-		//Boolean value = (Boolean)fJSPImplicitObjectMap.get(image);
-		//return null == value ? false : value.booleanValue();
-		return fJSPImplicitObjectMap.containsKey(image);
+		Boolean value = (Boolean)fJSPImplicitObjectMap.get(image);
+		return null == value ? false : value.booleanValue();
 	}
 
 	/**
@@ -486,10 +485,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 */
 	public Object visit(ASTValueSuffix node, Object data) {
 		if(JSPELParserConstants.LBRACKET == node.firstToken.kind) {
-			//if EL map syntax translate to Java map syntax
-			append(".get(");//$NON-NLS-1$
-			node.childrenAccept(this, data);
-			append(")");//$NON-NLS-1$
+			fCanGenerate = false;
 		} else if(null != node.getPropertyNameToken()) {
 			Token suffix = node.getPropertyNameToken();
 			String ucaseName = suffix.image.substring(0, 1).toUpperCase() + suffix.image.substring(1, suffix.image.length()); 
