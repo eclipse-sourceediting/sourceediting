@@ -264,9 +264,13 @@
      </menuContribution>
   </extension>
 
- <extension point="org.eclipse.ui.navigator.navigatorContent">
-	<commonWizard type="new" wizardId="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
+ <extension point="org.eclipse.ui.navigator.navigatorContent" >
+	<commonWizard type="new" wizardId="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"  menuGroupId="org.eclipse.wst.xml.new.menuGroup">
 		<enablement>
+			<instanceof value="org.eclipse.core.resources.IResource"/>
+			<with variable="activeWorkbenchWindow.activePerspective">
+			   <equals value="org.eclipse.wst.xml.ui.perspective"/>
+			</with>
 		</enablement>
 	</commonWizard>
  </extension>
