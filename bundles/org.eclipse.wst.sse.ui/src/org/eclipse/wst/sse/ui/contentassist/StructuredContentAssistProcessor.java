@@ -106,7 +106,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	private static final String CONTENT_ASSIST_PROCESSOR_EXTENDED_ID = "contentassistprocessor"; //$NON-NLS-1$
 
 	/** Content assist processors added through the now legacy editor configuration extension point */
-	private final List fLegacyExtendedContentAssistProcessors;
+	private List fLegacyExtendedContentAssistProcessors;
 	
 	/**
 	 * Dialog settings key for the "all categories are disabled" warning dialog. See
@@ -140,7 +140,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	};
 
 	/** List of {@link CompletionProposalCategory}s supported by this processor */
-	private final List fCategories;
+	private List fCategories;
 	
 	/** content type ID this processor is associated with */
 	private String fContentTypeID;
@@ -192,6 +192,9 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		Assert.isNotNull(partitionTypeID);
 		Assert.isNotNull(assistant);
 		
+		//be sure the registry has been loaded, none blocking
+		CompletionProposalComputerRegistry.getDefault().initialize();
+		
 		//register on the preference store
 		this.fPreferenceStore = preferenceStore;
 		if(this.fPreferenceStore != null) {
@@ -216,15 +219,13 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		//set the associated partition type
 		this.fPartitionTypeID = partitionTypeID;
 		
-		//get the completion categories
-		fCategories = CompletionProposalComputerRegistry.getDefault().getProposalCategories();
+		//add completion listener
 		fAssistant = assistant;
 		fAssistant.addCompletionListener(new CompletionListener());
 		
-		//get the processors added by the legacy extension
-		fLegacyExtendedContentAssistProcessors =
-			ExtendedConfigurationBuilder.getInstance().getConfigurations(
-					CONTENT_ASSIST_PROCESSOR_EXTENDED_ID, this.fPartitionTypeID);
+		//lazy load these to speed up initial editor opening
+		fLegacyExtendedContentAssistProcessors = null;
+		fCategories = null;
 	}
 
 	/**
@@ -236,7 +237,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		clearState();
 
 		IProgressMonitor monitor= createProgressMonitor();
-		monitor.beginTask(SSEUIMessages.ContentAssist_computing_proposals, fCategories.size() + 1);
+		monitor.beginTask(SSEUIMessages.ContentAssist_computing_proposals, getProposalCategories().size() + 1);
 
 		CompletionProposalInvocationContext context = createContext(viewer, offset);
 
@@ -262,7 +263,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		clearState();
 
 		IProgressMonitor monitor= createProgressMonitor();
-		monitor.beginTask(SSEUIMessages.ContentAssist_computing_contexts, fCategories.size() + 1);
+		monitor.beginTask(SSEUIMessages.ContentAssist_computing_contexts, getProposalCategories().size() + 1);
 
 		monitor.subTask(SSEUIMessages.ContentAssist_collecting_contexts);
 		List proposals= collectContextInformation(viewer, offset, monitor);
@@ -446,8 +447,10 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		
 		// if default page
 		// Deal with adding in proposals from processors added through the legacy extension
-		if (isFirstPage() && this.fLegacyExtendedContentAssistProcessors != null && !fLegacyExtendedContentAssistProcessors.isEmpty()) {
-			Iterator iter = fLegacyExtendedContentAssistProcessors.iterator();
+		if (isFirstPage() && getLegacyExtendedContentAssistProcessors() != null &&
+				!getLegacyExtendedContentAssistProcessors().isEmpty()) {
+			
+			Iterator iter = getLegacyExtendedContentAssistProcessors().iterator();
 			while (iter.hasNext()) {
 				IContentAssistProcessor legacyProcessor = (IContentAssistProcessor) iter.next();
 				ICompletionProposal[] legacyComputed = legacyProcessor.computeCompletionProposals(viewer, offset);
@@ -482,8 +485,10 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		
 		// if default page
 		// Deal with adding in contexts from processors added through the legacy extension
-		if (getIteration() == 0 && this.fLegacyExtendedContentAssistProcessors != null && !fLegacyExtendedContentAssistProcessors.isEmpty()) {
-			Iterator iter = fLegacyExtendedContentAssistProcessors.iterator();
+		if (getIteration() == 0 && getLegacyExtendedContentAssistProcessors() != null &&
+				!getLegacyExtendedContentAssistProcessors().isEmpty()) {
+			
+			Iterator iter = getLegacyExtendedContentAssistProcessors().iterator();
 			while (iter.hasNext()) {
 				IContentAssistProcessor legacyProcessor = (IContentAssistProcessor) iter.next();
 				IContextInformation[] legacyComputed = legacyProcessor.computeContextInformation(viewer, offset);
@@ -500,7 +505,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	private List getCategories() {
 		List categories;
 		if (fCategoryIteration == null) {
-			categories =  fCategories;
+			categories =  getProposalCategories();
 		} else {
 			int iteration= fRepetition % fCategoryIteration.size();
 			fAssistant.setStatusMessage(createIterationMessage());
@@ -561,7 +566,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 */
 	private List getDefaultCategoriesUnchecked() {
 		List included = new ArrayList();
-		for (Iterator it = fCategories.iterator(); it.hasNext();) {
+		for (Iterator it = getProposalCategories().iterator(); it.hasNext();) {
 			CompletionProposalCategory category = (CompletionProposalCategory) it.next();
 			if (category.isIncludedOnDefaultPage(this.fContentTypeID) && category.hasComputers(fContentTypeID, fPartitionTypeID))
 				included.add(category);
@@ -668,7 +673,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 */
 	private List getSortedOwnPageCategories() {
 		ArrayList sorted= new ArrayList();
-		for (Iterator it= fCategories.iterator(); it.hasNext();) {
+		for (Iterator it= getProposalCategories().iterator(); it.hasNext();) {
 			CompletionProposalCategory category= (CompletionProposalCategory) it.next();
 			if (category.isDisplayedOnOwnPage(this.fContentTypeID) && 
 					category.hasComputers(fContentTypeID, fPartitionTypeID)) {
@@ -742,6 +747,38 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	}
 	
 	/**
+	 * <p><b>NOTE: </b>This method should be used over accessing the
+	 * {@link #fLegacyExtendedContentAssistProcessors} field directly so as to
+	 * facilitate the lazy initialization of the field.</p>
+	 * 
+	 * @return the legacy extended content assist processors
+	 */
+	private List getLegacyExtendedContentAssistProcessors() {
+		if(fLegacyExtendedContentAssistProcessors == null) {
+			fLegacyExtendedContentAssistProcessors =
+				ExtendedConfigurationBuilder.getInstance().getConfigurations(
+						CONTENT_ASSIST_PROCESSOR_EXTENDED_ID, fPartitionTypeID);
+		}
+		
+		return fLegacyExtendedContentAssistProcessors;
+	}
+	
+	/**
+	 * <p><b>NOTE: </b>This method should be used over accessing the {@link #fCategories}
+	 * field directly so as to facilitate the lazy initialization of the field.</p>
+	 * 
+	 * @return the categories associated with the content type this processor is associated with
+	 */
+	private List getProposalCategories() {
+		if(fCategories == null) {
+			fCategories =
+				CompletionProposalComputerRegistry.getDefault().getProposalCategories(fContentTypeID);
+		}
+		
+		return fCategories;
+	}
+	
+	/**
 	 * The completion listener class for this processor.
 	 */
 	private final class CompletionListener implements ICompletionListener, ICompletionListenerExtension {
@@ -758,7 +795,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	
 				// This may show the warning dialog if all categories are disabled
 				resetCategoryIteration();
-				for (Iterator it= fCategories.iterator(); it.hasNext();) {
+				for (Iterator it= StructuredContentAssistProcessor.this.getProposalCategories().iterator(); it.hasNext();) {
 					CompletionProposalCategory cat= (CompletionProposalCategory) it.next();
 					cat.sessionStarted();
 				}
@@ -789,7 +826,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		 */
 		public void assistSessionEnded(ContentAssistEvent event) {
 			if (event.processor == StructuredContentAssistProcessor.this) {
-				for (Iterator it= fCategories.iterator(); it.hasNext();) {
+				for (Iterator it= StructuredContentAssistProcessor.this.getProposalCategories().iterator(); it.hasNext();) {
 					CompletionProposalCategory cat= (CompletionProposalCategory) it.next();
 					cat.sessionEnded();
 				}

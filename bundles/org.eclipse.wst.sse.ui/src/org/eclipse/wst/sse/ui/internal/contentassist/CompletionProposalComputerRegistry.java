@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -63,6 +64,18 @@ public final class CompletionProposalComputerRegistry {
 	 * be associated with all partition types in a given content type.
 	 */
 	private static final String ALL_PARTITION_TYPES_ID = "all_partition_types_fake_ID"; //$NON-NLS-1$
+	
+	/** State where in the registry has not yet been loaded */
+	private static final byte NONE = 0;
+
+	/** State where the registry is being initialized */
+	private static final byte INITIALIZING = 1;
+	
+	/** State where in the registry is currently being loaded */
+	private static final byte LOADING = 2;
+	
+	/** State where in the registry has been loaded */
+	private static final byte LOADED = 3;
 
 	/** The singleton instance. */
 	private static CompletionProposalComputerRegistry fgSingleton= null;
@@ -102,8 +115,20 @@ public final class CompletionProposalComputerRegistry {
 	/** Unmodifiable public list of the {@link CompletionProposalCategory}s tracked by this registry */
 	private final List fPublicCategories = Collections.unmodifiableList(fCategories);
 	
-	/** <code>true</code> if this registry has been loaded. */
-	private boolean fLoaded = false;
+	/**
+	 * <p>The current state of the registry</p>
+	 * 
+	 * @see #NONE
+	 * @see #LOADING
+	 * @see #LOADED
+	 */
+	private byte fState;
+	
+	/**
+	 * Lock that is held while loading, operations waiting for
+	 * load to finish can lock on this as well
+	 */
+	private final Object fLoadingLock;
 
 	/** <code>true</code> if computers have been uninstalled since last load */
 	private boolean fHasUninstalledComputers= false;
@@ -113,6 +138,26 @@ public final class CompletionProposalComputerRegistry {
 	 */
 	private CompletionProposalComputerRegistry() {
 		this.fActivationContexts = new HashMap();
+		this.fState = CompletionProposalComputerRegistry.NONE;
+		this.fLoadingLock = new Object();
+	}
+	
+	/**
+	 * <p>Calling this when the registry has not yet been loaded will start a
+	 * {@link Thread} to start loading the registry.  All other operations on
+	 * the registry will be blocked until the loading has completed.  If
+	 * the registry has already been loaded or is loading then this
+	 * method does nothing.</p>
+	 */
+	public synchronized void initialize() {
+		if(fState == CompletionProposalComputerRegistry.NONE) {
+			fState = CompletionProposalComputerRegistry.INITIALIZING;
+			new Thread() {
+				public void run() {
+					CompletionProposalComputerRegistry.this.load();
+				}
+			}.start();
+		}
 	}
 	
 	/**
@@ -126,7 +171,7 @@ public final class CompletionProposalComputerRegistry {
 	 *         {@link CompletionProposalCategory})
 	 */
 	public List getProposalCategories() {
-		ensureExtensionPointRead();
+		internalEnsureLoaded();
 		return fPublicCategories;
 	}
 	
@@ -140,7 +185,7 @@ public final class CompletionProposalComputerRegistry {
 	 * @return the {@link CompletionProposalCategory}s associated with the given content type ID
 	 */
 	public List getProposalCategories(String contentTypeID) {
-		ensureExtensionPointRead();
+		internalEnsureLoaded();
 		List result = new ArrayList();
 		for(int i = 0; i < fCategories.size(); ++i) {
 			CompletionProposalCategory category = ((CompletionProposalCategory)fCategories.get(i));
@@ -199,7 +244,7 @@ public final class CompletionProposalComputerRegistry {
 	 * partition types in the given content type)
 	 */
 	List getProposalComputerDescriptors(String contentTypeID, String partitionTypeID) {
-		ensureExtensionPointRead();
+		internalEnsureLoaded();
 		
 		Set descriptorsSet = new HashSet();
 		List contexts = this.getContexts(contentTypeID);
@@ -224,7 +269,7 @@ public final class CompletionProposalComputerRegistry {
 	 * given content type
 	 */
 	List getProposalComputerDescriptors(String contentTypeID) {
-		ensureExtensionPointRead();
+		internalEnsureLoaded();
 		
 		Set descriptorsSet = new HashSet();
 		
@@ -246,103 +291,130 @@ public final class CompletionProposalComputerRegistry {
 	 * this registry
 	 */
 	List getProposalComputerDescriptors() {
-		ensureExtensionPointRead();
+		internalEnsureLoaded();
 		return Collections.unmodifiableList( new ArrayList(fDescriptors.values()));
 	}
 
 	/**
-	 * <p>Ensures that the extensions are read and this registry is built</p>
+	 * <p>This method performs differently depending on the state of the registry</p>
+	 * <ul>
+	 * <li>{@link #NONE} - forces the registry to load now on the current thread</li>
+	 * <li>{@link #LOADING} - blocks until the registry has finished loading on
+	 * whichever thread it is being loaded on</li>
+	 * <li>{@link #LOADED} - immediately returns</li>
+	 * </ul>
 	 */
-	private void ensureExtensionPointRead() {
-		boolean reload;
-		synchronized (this) {
-			reload= !fLoaded;
-			fLoaded= true;
-		}
-		if (reload) {
-			load();
-			updateUninstalledComputerCount();
+	private void internalEnsureLoaded() {
+		switch (fState) {
+			case CompletionProposalComputerRegistry.NONE:
+			case CompletionProposalComputerRegistry.INITIALIZING: {
+				load();
+				break;
+			}
+			case CompletionProposalComputerRegistry.LOADING: {
+				//as soon as this lock is released the loading process is done
+				synchronized (fLoadingLock) {
+					//sanity check
+					Assert.isTrue(fState == CompletionProposalComputerRegistry.LOADED,
+							"The state of the registry should be guaranteed to be LOADED " + //$NON-NLS-1$
+							" once the loading lock has been released."); //$NON-NLS-1$
+				}
+				break;
+			}
 		}
 	}
 	
 	/**
-	 * <p>Loads the extensions to the extension point.</p>
-	 * <p>This method can be called more than once in order to reload from
-	 * a changed extension registry.</p>
+	 * <p>Loads the completion proposal extension points if they
+	 * have not been loaded already</p>
 	 */
 	private void load() {
-		IExtensionRegistry registry= Platform.getExtensionRegistry();
-		List extensionElements= new ArrayList(Arrays.asList(registry.getConfigurationElementsFor(SSEUIPlugin.ID, EXTENSION_POINT)));
-
-		Map loadedDescriptors = new HashMap();
-		List extendedComputerActivations = new ArrayList();
-
-		//get the categories and remove them from the extension elements
-		List categories= getCategories(extensionElements);
+		/* hold this lock while loading, others waiting for load to
+		 * finish can synchronize on this lock to be guaranteed the load
+		 * will be done when the lock is released
+		 */
+		synchronized (fLoadingLock) {
+			if(fState == CompletionProposalComputerRegistry.NONE || fState == CompletionProposalComputerRegistry.INITIALIZING) {
+				//update the state
+				fState = CompletionProposalComputerRegistry.LOADING;
+				
+				IExtensionRegistry registry= Platform.getExtensionRegistry();
+				List extensionElements= new ArrayList(Arrays.asList(registry.getConfigurationElementsFor(SSEUIPlugin.ID, EXTENSION_POINT)));
 		
-		//deal with the proposal computers and set aside the proposal computer activation extensions
-		for (Iterator iter= extensionElements.iterator(); iter.hasNext();) {
-			IConfigurationElement element= (IConfigurationElement) iter.next();
-			try {
-				if (element.getName().equals(ELEM_PROPOSAL_COMPUTER)) {
-					//create the descriptor and add it to the registry
-					CompletionProposalComputerDescriptor desc = new CompletionProposalComputerDescriptor(element, categories);
-					desc.addToRegistry();
-					loadedDescriptors.put(desc.getId(), desc);
-				} else if(element.getName().equals(ELEM_PROPOSAL_COMPUTER_EXTENDED_ACTIVATION)) {
-					extendedComputerActivations.add(element);
-				}
-
-			} catch (InvalidRegistryObjectException x) {
-				/*
-				 * Element is not valid any longer as the contributing plug-in was unloaded or for
-				 * some other reason. Do not include the extension in the list and log it
-				 */
-				String message = "The extension ''" + element.toString() + "'' is invalid."; //$NON-NLS-1$ //$NON-NLS-2$
-				IStatus status= new Status(IStatus.WARNING, SSEUIPlugin.ID, IStatus.OK, message, x);
-				Logger.log(status);
-			} catch (CoreException x) {
-				Logger.log(x.getStatus());
-			}
-		}
+				Map loadedDescriptors = new HashMap();
+				List extendedComputerActivations = new ArrayList();
 		
-		//deal with extended computer activations
-		for(int i = 0; i < extendedComputerActivations.size(); ++i) {
-			IConfigurationElement element = (IConfigurationElement)extendedComputerActivations.get(i);
-			String proposalComputerID = element.getAttribute(ATTR_ID);
-			CompletionProposalComputerDescriptor descriptor =
-				(CompletionProposalComputerDescriptor)loadedDescriptors.get(proposalComputerID);
-			if(descriptor != null) {
-				try {
-					//add the extra activation contexts to the registry
-					CompletionProposalComputerDescriptor.parseActivationAndAddToRegistry(element, descriptor);
-				} catch (InvalidRegistryObjectException x) {
-					/*
-					 * Element is not valid any longer as the contributing plug-in was unloaded or for
-					 * some other reason. Do not include the extension in the list and log it
-					 */
-					String message = "The extension ''" + element.toString() + "'' is invalid."; //$NON-NLS-1$ //$NON-NLS-2$
-					IStatus status= new Status(IStatus.WARNING, SSEUIPlugin.ID, IStatus.OK, message, x);
-					Logger.log(status);
-				} catch (CoreException x) {
-					Logger.log(x.getStatus());
+				//get the categories and remove them from the extension elements
+				List categories= getCategories(extensionElements);
+				
+				//deal with the proposal computers and set aside the proposal computer activation extensions
+				for (Iterator iter= extensionElements.iterator(); iter.hasNext();) {
+					IConfigurationElement element= (IConfigurationElement) iter.next();
+					try {
+						if (element.getName().equals(ELEM_PROPOSAL_COMPUTER)) {
+							//create the descriptor and add it to the registry
+							CompletionProposalComputerDescriptor desc = new CompletionProposalComputerDescriptor(element, categories);
+							desc.addToRegistry();
+							loadedDescriptors.put(desc.getId(), desc);
+						} else if(element.getName().equals(ELEM_PROPOSAL_COMPUTER_EXTENDED_ACTIVATION)) {
+							extendedComputerActivations.add(element);
+						}
+		
+					} catch (InvalidRegistryObjectException x) {
+						/*
+						 * Element is not valid any longer as the contributing plug-in was unloaded or for
+						 * some other reason. Do not include the extension in the list and log it
+						 */
+						String message = "The extension ''" + element.toString() + "'' is invalid."; //$NON-NLS-1$ //$NON-NLS-2$
+						IStatus status= new Status(IStatus.WARNING, SSEUIPlugin.ID, IStatus.OK, message, x);
+						Logger.log(status);
+					} catch (CoreException x) {
+						Logger.log(x.getStatus());
+					}
 				}
 				
-			} else {
-				//activation extension has invalid computer ID
-				Logger.log(Logger.WARNING, "Configuration element " + element + //$NON-NLS-1$
-						" intented to extend an existing completion proposal computer" + //$NON-NLS-1$
-						" specified an invalid completion proposal computer ID " + //$NON-NLS-1$
-						proposalComputerID);
+				//deal with extended computer activations
+				for(int i = 0; i < extendedComputerActivations.size(); ++i) {
+					IConfigurationElement element = (IConfigurationElement)extendedComputerActivations.get(i);
+					String proposalComputerID = element.getAttribute(ATTR_ID);
+					CompletionProposalComputerDescriptor descriptor =
+						(CompletionProposalComputerDescriptor)loadedDescriptors.get(proposalComputerID);
+					if(descriptor != null) {
+						try {
+							//add the extra activation contexts to the registry
+							CompletionProposalComputerDescriptor.parseActivationAndAddToRegistry(element, descriptor);
+						} catch (InvalidRegistryObjectException x) {
+							/*
+							 * Element is not valid any longer as the contributing plug-in was unloaded or for
+							 * some other reason. Do not include the extension in the list and log it
+							 */
+							String message = "The extension ''" + element.toString() + "'' is invalid."; //$NON-NLS-1$ //$NON-NLS-2$
+							IStatus status= new Status(IStatus.WARNING, SSEUIPlugin.ID, IStatus.OK, message, x);
+							Logger.log(status);
+						} catch (CoreException x) {
+							Logger.log(x.getStatus());
+						}
+						
+					} else {
+						//activation extension has invalid computer ID
+						Logger.log(Logger.WARNING, "Configuration element " + element + //$NON-NLS-1$
+								" intented to extend an existing completion proposal computer" + //$NON-NLS-1$
+								" specified an invalid completion proposal computer ID " + //$NON-NLS-1$
+								proposalComputerID);
+					}
+				}
+		
+				fCategories.clear();
+				fCategories.addAll(categories);
+		
+				fDescriptors.clear();
+				fDescriptors.putAll(loadedDescriptors);
+				
+				updateUninstalledComputerCount();
+				
+				//update the state
+				fState = CompletionProposalComputerRegistry.LOADED;
 			}
-		}
-
-		synchronized (this) {
-			fCategories.clear();
-			fCategories.addAll(categories);
-
-			fDescriptors.clear();
-			fDescriptors.putAll(loadedDescriptors);
 		}
 	}
 
