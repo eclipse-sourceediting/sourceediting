@@ -24,13 +24,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.internal.flat.FlatVirtualComponent;
+import org.eclipse.wst.common.componentcore.internal.flat.FlatVirtualComponent.FlatComponentTaskModel;
 import org.eclipse.wst.common.componentcore.internal.flat.IChildModuleReference;
 import org.eclipse.wst.common.componentcore.internal.flat.IFlatFile;
 import org.eclipse.wst.common.componentcore.internal.flat.IFlatFolder;
 import org.eclipse.wst.common.componentcore.internal.flat.IFlatResource;
 import org.eclipse.wst.common.componentcore.internal.flat.IFlatVirtualComponent;
 import org.eclipse.wst.common.componentcore.internal.flat.IFlattenParticipant;
-import org.eclipse.wst.common.componentcore.internal.flat.FlatVirtualComponent.FlatComponentTaskModel;
 import org.eclipse.wst.common.componentcore.internal.util.VirtualReferenceUtilities;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
@@ -41,6 +41,7 @@ import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ModuleFile;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
@@ -241,8 +242,16 @@ public abstract class FlatComponentDeployable extends ProjectModule {
     	// Subclasses should extend 
     	IVirtualComponent targetComponent = child.getComponent();
     	if (targetComponent != null && targetComponent.getProject()!=component.getProject()) {
-			if (!targetComponent.isBinary())
-				return ServerUtil.getModule(targetComponent.getProject());
+			if (!targetComponent.isBinary()) {
+				IModule[] allMods = ServerUtil.getModules(targetComponent.getProject());
+				for( int i = 0; i < allMods.length; i++ ) {
+					ModuleDelegate md = (ModuleDelegate)allMods[i].loadAdapter(ModuleDelegate.class, new NullProgressMonitor());
+					if( md instanceof ProjectModule) {
+						return allMods[i];
+					}
+				}
+				return allMods.length > 0 ? allMods[0] : null;
+			}
 		}
 		return null;
     }
