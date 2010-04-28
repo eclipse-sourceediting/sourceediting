@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Sty _display FontColor="red"?>
 <task id="tedtsch" xml:lang="en-us">
 <title>Editing namespace information</title>
 <titlealts>
@@ -9,48 +10,52 @@
 </titlealts>
 <shortdesc>Your namespace information is used to provide various information
 about the XML file, such as the XML schema and namespace it is associated
-with. If desired, you can change the schema and namespace your XML file is
-associated with or add a new association. Modifying any associations can impact
-what content is allowed in the XML file.</shortdesc>
+with. If desired, you can change the schema and namespace your XML
+file is associated with or add a new association. Modifying any associations
+can impact what content is allowed in the XML file.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML editor<indexterm>namespace information</indexterm></indexterm>
 <indexterm>XML files<indexterm>namespace information</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>The following instructions were written for the Resource perspective,
-but they will also work in many other perspectives.</p><p>To edit your schema
-information, complete the following steps:</p></context>
+<context><p>The following instructions were written for the Resource
+perspective, but they will also work in many other perspectives.</p><p>To
+edit your schema information, complete the following steps:</p></context>
 <steps>
-<step><cmd>In the Design view of the XML editor, right-click your root element
-and click <uicontrol>Edit Namespaces</uicontrol>.</cmd></step>
-<step><cmd>Your XML file can be associated with more than one namespace or
-schema.</cmd><info>Select the entry you want to edit and click <uicontrol>Edit</uicontrol>.</info>
+<step><cmd>In the Design view of the XML editor, right-click your
+root element and click <uicontrol>Edit Namespaces</uicontrol>.</cmd>
 </step>
-<step><cmd>The value in the <uicontrol>Namespace Name</uicontrol> field is
-a namespace the XML file is associated with.</cmd><info>Your XML file should
-be associated with the same namespace(s) its XML schema is associated with.
-For more information about namespaces, refer to the related reference. For
-more information, see <xref format="html" href="../../org.eclipse.wst.xsdeditor.doc.user/topics/rnmspc.dita"
+<step><cmd>Your XML file can be associated with more than one namespace
+or schema.</cmd><info>Select the entry you want to edit and click <uicontrol>Edit</uicontrol>.</info>
+</step>
+<step><cmd>The value in the <uicontrol>Namespace Name</uicontrol> field
+is a namespace the XML file is associated with.</cmd><info>Your XML
+file should be associated with the same namespace(s) its XML schema
+is associated with. For more information about namespaces, refer to
+the related reference. For more information, see <xref
+href="../../org.eclipse.wst.xsdeditor.doc.user/topics/rnmspc.dita"
 scope="peer">XML namespaces</xref>.</info></step>
-<step><cmd>All qualified elements and attributes in the XML file associated
-with the namespace will be prefixed with the <uicontrol>Prefix</uicontrol> value.</cmd>
+<step><cmd>All qualified elements and attributes in the XM<?Pub Caret?>L
+file associated with the namespace will be prefixed with the <uicontrol>Prefix</uicontrol> value.</cmd>
 </step>
-<step><cmd>The <uicontrol>Location Hint</uicontrol> field contains the location
-of the XML schema the XML file is associated with.</cmd><info>An XML Catalog
-Key or a namespace name can be specified in this field. Click <uicontrol>Browse</uicontrol> to
-view all XML schemas in the workbench and XML Catalog.</info></step>
+<step><cmd>The <uicontrol>Location Hint</uicontrol> field contains
+the location of the XML schema the XML file is associated with.</cmd>
+<info>An XML Catalog Key or a namespace name can be specified in this
+field. Click <uicontrol>Browse</uicontrol> to view all XML schemas
+in the workbench and XML Catalog.</info></step>
 <step><cmd>Click <uicontrol>OK</uicontrol>, then click <uicontrol>OK</uicontrol> again.</cmd>
 </step>
 </steps>
 <result><p>If you want to create a new association, click <uicontrol>Add</uicontrol> instead
 of <uicontrol>Edit</uicontrol>. You can then either select the <uicontrol>Specify
-From Registered Namespace</uicontrol> radio button and select the namespace
-declarations you want to add or select the <uicontrol>Specify New Namespace</uicontrol> radio
-button and fill in the fields as necessary.</p></result>
-<postreq>If you do not have namespace information in your XML file, you can
-right-click your root element in the Design view and click <uicontrol>Edit
-Namespaces</uicontrol> to add it. If you do not have a root element, you must
-create one before you can add the namespace information.</postreq>
+From Registered Namespace</uicontrol> radio button and select the
+namespace declarations you want to add or select the <uicontrol>Specify
+New Namespace</uicontrol> radio button and fill in the fields as necessary.</p></result>
+<postreq>If you do not have namespace information in your XML file,
+you can right-click your root element in the Design view and click <uicontrol>Edit
+Namespaces</uicontrol> to add it. If you do not have a root element,
+you must create one before you can add the namespace information.</postreq>
 </taskbody>
 </task>
+<?Pub *0000003288?>

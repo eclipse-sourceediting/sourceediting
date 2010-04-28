@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -8,43 +8,50 @@
 <titlealts>
 <searchtitle>Using XML content assist</searchtitle>
 </titlealts>
-<shortdesc>You can use content assist to help you finish a tag or line of
-code in the Source view of the XML editor. You can also use content assist
-to insert templates into your XML code.</shortdesc>
+<shortdesc>You can use content assist to help you finish a tag or
+line of code in the Source view of the XML editor. You can also use
+content assist to insert templates into your XML code.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML editor<indexterm>content assist</indexterm></indexterm>
-<indexterm>XML files<indexterm>content assist</indexterm></indexterm></keywords>
+<indexterm>XML files<indexterm>content assist</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>The placement of the cursor in your source file provides the context
-for the content assist to offer suggestions for completion.</p><p>You can
-launch content assist in either of the following ways:</p><ul>
-<li>From the <uicontrol>Edit</uicontrol> menu, click <uicontrol>Content Assist</uicontrol>,
-or</li>
+<context><p>The placement of the cursor in your source file provides
+the context for the content assist to offer suggestions for completion.</p><p>You
+can launch content assist in either of the following ways:</p><ul>
+<li>From the <uicontrol>Edit</uicontrol> menu, click <uicontrol>Content
+Assist</uicontrol>, or</li>
 <li>Press Ctrl+Space</li>
-</ul><p>In addition, you can set up an option that causes content assist to
-pop up automatically when certain characters are typed. To set up this option,
-click <menucascade><uicontrol>Window</uicontrol><uicontrol> Preferences</uicontrol>
-</menucascade> to open the Preferences window, then select <menucascade><uicontrol>XML</uicontrol>
-<uicontrol>XML Files </uicontrol><uicontrol>Editor</uicontrol></menucascade> .
-In the <uicontrol>Content assist</uicontrol> group box, select the <uicontrol>Automatically
-make suggestions</uicontrol> check box, and supply any additional characters
-that should trigger content assist.</p><p>If your cursor is in a position
-where content assist is available, a pop-up list of available choices is displayed
-when you launch content assist. The list is based on the context and whether
-a DTD or XML schema is associated with the XML file being edited. For example,
-if you have an Address element that can contain any of the following children
-elements: Name, Street, City, Zip Code, Country, and Province, and you place
-your cursor after any of them and launch content assist, all of the child
-elements will be listed in the content assist list.</p><p>The content assist
-list displays all valid tags for the current cursor position, including templates.
-If your grammar constraints are turned off, all available tags, not just valid
-ones, are displayed. </p><p>As you type the first one or two letters of the
-tag that you want, the list automatically refreshes with alphabetized choices
-that match your input. Scroll down and select the tag that you want to use
-by double-clicking on it.<?Pub Caret?></p><note>The list only refreshes as
-described if you first type <userinput>&lt;</userinput> before prompting for
+</ul><p>In addition, you can set up an option that causes content
+assist to pop up automatically when certain characters are typed.
+To set up this option, click <menucascade><uicontrol>Window</uicontrol>
+<uicontrol> Preferences</uicontrol></menucascade> to open the Preferences
+window, then select <menucascade><uicontrol>XML</uicontrol><uicontrol>XML
+Files </uicontrol><uicontrol>Editor</uicontrol><uicontrol>Content
+assist</uicontrol></menucascade> . Select the <uicontrol>Automatically
+make suggestions</uicontrol> check box, and supply any additional
+characters that should trigger content assist.</p><p>If your cursor
+is in a position where content assist is available, a pop-up list
+of available choices is displayed when you launch content assist.
+The list is based on the context and whether a DTD or XML schema is
+associated with the XML file being edited. For example, if you have
+an Address element that can contain any of the following children
+elements: Name, Street, City, Zip Code, Country, and Province, and
+you place your cursor after any of them and launch content assist,
+all of the child elements will be listed in the content assist list.</p><p>Content
+assist cycling is available in the XML editor, offering multiple pages
+of content assist. You can set preferences for the proposal categories
+and the cycle order when repeatedly invoking content assist </p><?Pub
+Caret 53?><p>The content assist list displays all valid tags for the
+current cursor position, including templates. If your grammar constraints
+are turned off, all available tags, not just valid ones, are displayed. </p><p>As
+you type the first one or two letters of the tag that you want, the
+list automatically refreshes with alphabetized choices that match
+your input. Scroll down and select the tag that you want to use by
+double-clicking on it.</p><note>The list only refreshes as described
+if you first type <userinput>&lt;</userinput> before prompting for
 content assist.</note></context>
 </taskbody>
 </task>
-<?Pub *0000002891?>
+<?Pub *0000003092?>
