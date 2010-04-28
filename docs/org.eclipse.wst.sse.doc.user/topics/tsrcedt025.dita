@@ -1,86 +1,100 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "..\dtd\task.dtd">
+<?Pub Sty _display FontColor="red"?>
 <task id="tsrcedt025" xml:lang="en-us">
 <title>Setting preferences for structured text editors</title>
 <titlealts>
 <navtitle>Setting structured text editor preferences</navtitle>
 </titlealts>
 <prolog><metadata>
-<keywords><indexterm keyref="tsrcedt025|1|structuredtexteditorspreferencesetting"
+<keywords><indexterm
+keyref="tsrcedt025|1|structuredtexteditorspreferencesetting"
 status="changed">structured text editors<indexterm>preferences</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context>You can customize your working environment by specifying preferences
-for the structured text editor.</context>
+<context>You can customize your working environment by specifying
+preferences for the structured text editor.</context>
 <steps>
 <step><cmd>In the main menu, click <menucascade><uicontrol>Window</uicontrol>
 <uicontrol>Preferences</uicontrol></menucascade>.</cmd></step>
-<step><cmd>Select one of the choices that are shown in the following table:</cmd>
+<step><cmd>Select one of the choices that are shown in the following
+table:</cmd>
 <choicetable relcolwidth="10* 30*">
-<chhead><choptionhd>Item</choptionhd><chdeschd>Menu path</chdeschd></chhead>
-<chrow><choption>Annotation settings</choption><chdesc><menucascade><uicontrol>Workbench</uicontrol>
-<uicontrol>Editors</uicontrol><uicontrol>Annotations</uicontrol></menucascade></chdesc>
+<chhead><choptionhd>Item</choptionhd><chdeschd>Menu path</chdeschd>
+</chhead>
+<chrow><choption>Annotation settings</choption><chdesc><menucascade>
+<uicontrol>Workbench</uicontrol><uicontrol>Editors</uicontrol>
+<uicontrol>Annotations</uicontrol></menucascade></chdesc></chrow>
+<chrow><choption>Character encoding</choption><chdesc><uicontrol>Web
+and XML</uicontrol>, then one of the following choices: <uicontrol>CSS
+Files</uicontrol>, <uicontrol>HTML Files</uicontrol>, <uicontrol>JSP
+Files</uicontrol>, <uicontrol>*XML Files ( *not implemented in WTP)</uicontrol></chdesc>
 </chrow>
-<chrow><choption>Character encoding</choption><chdesc><uicontrol>Web and XML</uicontrol>,
-then one of the following choices: <uicontrol>CSS Files</uicontrol>, <uicontrol>HTML
-Files</uicontrol>, <uicontrol>JSP Files</uicontrol>, <uicontrol>*XML Files
-( *not implemented in WTP)</uicontrol></chdesc></chrow>
-<chrow><choption>Content assist: HTML</choption><chdesc><menucascade><uicontrol>Web
-and XML</uicontrol><uicontrol>HTML Files</uicontrol><uicontrol>HTML Source</uicontrol>
-</menucascade></chdesc></chrow>
+<chrow><choption>Code folding</choption><chdesc><menucascade><uicontrol>General</uicontrol>
+<uicontrol>Editors</uicontrol><uicontrol>Structured Text Editors</uicontrol>
+</menucascade></chdesc></chrow><?Pub Caret 58?>
+<chrow><choption>Content assist: HTML</choption><chdesc><menucascade>
+<uicontrol>Web and XML</uicontrol><uicontrol>HTML Files</uicontrol>
+<uicontrol>HTML Source</uicontrol></menucascade></chdesc></chrow>
 <chrow><choption>Content assist: JavaScript</choption><chdesc><menucascade>
 <uicontrol>Web and XML</uicontrol><uicontrol>JavaScript Files</uicontrol>
 <uicontrol>JavaScript Source</uicontrol></menucascade></chdesc></chrow>
-<chrow><choption>Content assist: XML</choption><chdesc><menucascade><uicontrol>Web
-and XML</uicontrol><uicontrol>*XML Files (*not implemented in WTP)</uicontrol>
-<uicontrol>XML Source</uicontrol></menucascade></chdesc></chrow>
-<chrow><choption>Editor appearance</choption><chdesc><menucascade><uicontrol>Workbench</uicontrol>
-<uicontrol>Editors</uicontrol><uicontrol>Structured Text Editor</uicontrol>
-<uicontrol>Appearance</uicontrol></menucascade></chdesc></chrow>
-<chrow><choption>Editor font</choption><chdesc><menucascade><uicontrol>Workbench</uicontrol>
-<uicontrol>Colors and Fonts</uicontrol><uicontrol>Structured Text Editor</uicontrol>
-</menucascade></chdesc></chrow>
-<chrow><choption>Editor navigation</choption><chdesc><menucascade><uicontrol>Workbench</uicontrol>
-<uicontrol>Editors</uicontrol><uicontrol>Structured Text Editor</uicontrol>
-<uicontrol>Navigation</uicontrol></menucascade></chdesc></chrow>
-<chrow><choption>File-type-specific settings</choption><chdesc><uicontrol>Web
-and XML</uicontrol>, then navigate to the file type and particular setting</chdesc>
+<chrow><choption>Content assist: XML</choption><chdesc><menucascade>
+<uicontrol>Web and XML</uicontrol><uicontrol>*XML Files (*not implemented
+in WTP)</uicontrol><uicontrol>XML Source</uicontrol></menucascade></chdesc>
 </chrow>
+<chrow><choption>Editor appearance</choption><chdesc><menucascade>
+<uicontrol>Workbench</uicontrol><uicontrol>Editors</uicontrol>
+<uicontrol>Structured Text Editor</uicontrol><uicontrol>Appearance</uicontrol>
+</menucascade></chdesc></chrow>
+<chrow><choption>Editor font</choption><chdesc><menucascade><uicontrol>Workbench</uicontrol>
+<uicontrol>Colors and Fonts</uicontrol><uicontrol>Structured Text
+Editor</uicontrol></menucascade></chdesc></chrow>
+<chrow><choption>Editor navigation</choption><chdesc><menucascade>
+<uicontrol>Workbench</uicontrol><uicontrol>Editors</uicontrol>
+<uicontrol>Structured Text Editor</uicontrol><uicontrol>Navigation</uicontrol>
+</menucascade></chdesc></chrow>
+<chrow><choption>File-type-specific settings</choption><chdesc><uicontrol>Web
+and XML</uicontrol>, then navigate to the file type and particular
+setting</chdesc></chrow>
 <chrow><choption>Hover help</choption><chdesc><menucascade><uicontrol>Workbench</uicontrol>
 <uicontrol>Editors</uicontrol><uicontrol>Structured Text Editor</uicontrol>
 <uicontrol>Hovers</uicontrol></menucascade></chdesc></chrow>
 <chrow><choption>Key bindings</choption><chdesc><menucascade><uicontrol>Workbench</uicontrol>
-<uicontrol>Keys</uicontrol><uicontrol>Keyboard Shortcuts</uicontrol></menucascade> then
-in the <uicontrol>Category</uicontrol> field specify <uicontrol>Source</uicontrol></chdesc>
+<uicontrol>Keys</uicontrol><uicontrol>Keyboard Shortcuts</uicontrol>
+</menucascade> then in the <uicontrol>Category</uicontrol> field specify <uicontrol>Source</uicontrol></chdesc>
 </chrow>
-<chrow><choption>Spell checking</choption><chdesc><uicontrol>Spell Check</uicontrol></chdesc>
-</chrow>
-<chrow><choption>Syntax checking</choption><chdesc><menucascade><uicontrol>Workbench</uicontrol>
-<uicontrol>Editors</uicontrol><uicontrol>Structured Text Editor</uicontrol>
-<uicontrol>Appearance</uicontrol></menucascade> then check or uncheck the <uicontrol>Analyze
-annotations while typing</uicontrol> box.</chdesc></chrow>
+<chrow><choption>Spell checking</choption><chdesc><uicontrol>Spell
+Check</uicontrol></chdesc></chrow>
+<chrow><choption>Syntax checking</choption><chdesc><menucascade>
+<uicontrol>Workbench</uicontrol><uicontrol>Editors</uicontrol>
+<uicontrol>Structured Text Editor</uicontrol><uicontrol>Appearance</uicontrol>
+</menucascade> then check or uncheck the <uicontrol>Analyze annotations
+while typing</uicontrol> box.</chdesc></chrow>
 </choicetable>
 <info><note>You cannot set <uicontrol>Web and XML</uicontrol> preferences
 unless the Core XML Support capability (<menucascade><uicontrol>Workbench</uicontrol>
-<uicontrol>Capabilities</uicontrol></menucascade>) is enabled, and you cannot
-set preferences for DTD files unless the XML Development capability is enabled.</note></info>
-</step>
+<uicontrol>Capabilities</uicontrol></menucascade>) is enabled, and
+you cannot set preferences for DTD files unless the XML Development
+capability is enabled.</note></info></step>
 </steps>
 </taskbody>
 <related-links>
 <linkpool type="concept">
-<link href="csrcedt004.dita"><linktext>Structured text editors for markup
-languages</linktext></link>
+<link href="csrcedt004.dita"><linktext>Structured text editors for
+markup languages</linktext></link>
 </linkpool>
 <linkpool type="task">
-<link href="tsrcedt001.dita"><linktext>Setting annotation preferences for
-markup languages</linktext></link>
-<link href="tsrcedt010.dita"><linktext>Checking spelling</linktext></link>
-<link href="tsrcedt000.dita"><linktext>Editing text coded in markup languages
-- overview</linktext></link>
+<link href="tsrcedt001.dita"><linktext>Setting annotation preferences
+for markup languages</linktext></link>
+<link href="tsrcedt010.dita"><linktext>Checking spelling</linktext>
+</link>
+<link href="tsrcedt000.dita"><linktext>Editing text coded in markup
+languages - overview</linktext></link>
 </linkpool>
 </related-links>
 </task>
+<?Pub *0000005160?>

@@ -1,27 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2009, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "..\dtd\concept.dtd">
+<?Pub Sty _display FontColor="red"?>
 <concept id="csrcedt004" xml:lang="en-us">
 <title>Structured text editors for markup languages</title>
 <titlealts>
 <navtitle>Structured text editors</navtitle>
 </titlealts>
-<shortdesc><q>Structured text editor</q> is any of several text editors that
-you can use to edit various markup languages such as HTML, JavaScript, or
-XML.</shortdesc>
+<shortdesc><q>Structured text editor</q> is any of several text editors
+that you can use to edit various markup languages such as HTML, JavaScript,
+or XML.</shortdesc>
 <prolog><metadata>
 <keywords><keyword>source editors</keyword></keywords>
 </metadata></prolog>
 <conbody>
-<p><indexterm>structured text editors<indexterm>overview</indexterm></indexterm>
-<indexterm>templates<indexterm>structured text editors</indexterm></indexterm>
-
-The structured text editor is represented by various editors that you can
-use to edit files coded with markup tags:</p>
+<p><indexterm>structured text editors<indexterm>overview</indexterm></indexterm> <indexterm>templates<indexterm>structured
+text editors</indexterm></indexterm>  The structured text editor is
+represented by various editors that you can use to edit files coded
+with markup tags:</p>
 <table>
-<tgroup cols="3"><colspec colname="col1" colwidth="89*"/><colspec colname="col2"
-colwidth="134*"/><colspec colname="COLSPEC0" colwidth="69*"/>
+<tgroup cols="3"><colspec colname="col1" colwidth="89*"/><colspec
+colname="col2" colwidth="134*"/><colspec colname="COLSPEC0"
+colwidth="69*"/>
 <thead>
 <row>
 <entry colname="col1" valign="top">File type</entry>
@@ -46,11 +47,11 @@ colwidth="134*"/><colspec colname="COLSPEC0" colwidth="69*"/>
 <entry colname="COLSPEC0">Yes</entry>
 </row>
 <row>
-<entry colname="col1"><tm tmclass="special" tmowner="Sun Microsystems, Inc."
-tmtype="tm" trademark="JavaScript">JavaScript</tm></entry>
-<entry colname="col2"><tm tmclass="special" tmowner="Sun Microsystems, Inc."
-tmtype="tm" trademark="JavaScript">JavaScript</tm> source page editor or source
-tab of JavaScript editor</entry>
+<entry colname="col1"><tm tmclass="special"
+tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaScript">JavaScript</tm></entry>
+<entry colname="col2"><tm tmclass="special"
+tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaScript">JavaScript</tm> source
+page editor or source tab of JavaScript editor</entry>
 <entry colname="COLSPEC0">Yes</entry>
 </row>
 <row>
@@ -71,48 +72,57 @@ tab of JavaScript editor</entry>
 </tbody>
 </tgroup>
 </table>
-<p>You can access the structured text editor by right-clicking on a relevant
-file name in Navigator or Package Explorer view and then clicking <uicontrol>Open
-With</uicontrol> and selecting the editor mentioned above.</p>
-<p>The structured text editor provides a consistent interface regardless of
-the markup language with which it is associated. It provides capabilities
-such as find and replace, undo, redo, a spelling checker, and coding assistance
-(unless otherwise noted). It also highlights syntax in different colors. Following
-is a brief description of some of the structured text editor's capabilities:</p>
+<p>You can access the structured text editor by right-clicking on
+a relevant file name in Navigator or Package Explorer view and then
+clicking <uicontrol>Open With</uicontrol> and selecting the editor
+mentioned above.</p>
+<p>The structured text editor provides a consistent interface regardless
+of the markup language with which it is associated. It provides capabilities
+such as find and replace, undo, redo, a spelling checker, and coding
+assistance (unless otherwise noted). It also highlights syntax in
+different colors. Following is a brief description of some of the
+structured text editor's capabilities:</p>
 <dl><dlentry>
 <dt>syntax highlighting</dt>
-<dd>Each keyword type and syntax type is highlighted differently, enabling
-you to easily find a certain kind of keyword for editing. For example, in
-HTML, element names, attribute names, attribute values, and comments have
-different colors; in <tm tmclass="special" tmowner="Sun Microsystems, Inc."
-tmtype="tm" trademark="JavaScript">JavaScript</tm>, function and variable
-names, quoted text strings, and comments have different colors.</dd>
+<dd>Each keyword type and syntax type is highlighted differently,
+enabling you to easily find a certain kind of keyword for editing.
+For example, in HTML, element names, attribute names, attribute values,
+and comments have different colors; in <tm tmclass="special"
+tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaScript">JavaScript</tm>,
+function and variable names, quoted text strings, and comments have
+different colors.</dd>
 </dlentry><dlentry>
 <dt>unlimited undo and redo</dt>
-<dd>These options allow you to incrementally undo and redo every change made
-to a file for the entire editing session. For text, changes are incremented
-one character or set of selected characters at a time.</dd>
+<dd>These options allow you to incrementally undo and redo every change
+made to a file for the entire editing session. For text, changes are
+incremented one character or set of selected characters at a time.</dd>
 </dlentry><dlentry>
 <dt>content assist</dt>
-<dd>Content assist helps you to insert <tm tmclass="special" tmowner="Sun Microsystems, Inc."
-tmtype="tm" trademark="JavaScript">JavaScript</tm> functions, HTML tags, or
-other keywords. Choices available in the content assist list are based on
-functions defined by the syntax of the language in which the file is coded.</dd>
+<dd>Content assist helps you to insert <tm tmclass="special"
+tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaScript">JavaScript</tm> functions,
+HTML tags, or other keywords. Choices available in the content assist
+list are based on functions defined by the syntax of the language
+in which the file is coded.</dd>
 </dlentry><dlentry>
 <dt>user-defined templates and snippets</dt>
 <dd>By using the Snippets view, you can access user-defined code snippets
-and (for all code types except <tm tmclass="special" tmowner="Sun Microsystems, Inc."
-tmtype="tm" trademark="JavaScript">JavaScript</tm>) templates to help you
-quickly add regularly used text strings.</dd>
+and (for all code types except <tm tmclass="special"
+tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="JavaScript">JavaScript</tm>)
+templates to help you quickly add regularly used text strings.</dd>
 </dlentry><dlentry>
 <dt>function selection</dt>
-<dd>Based on the location of your cursor, the function or tag selection indicator
-highlights the line numbers that include a function or tag in the vertical
-ruler on the left area of the Source page.</dd>
+<dd>Based on the location of your cursor, the function or tag selection
+indicator highlights the line numbers that include a function or tag
+in the vertical ruler on the left area of the Source page.</dd>
 </dlentry><dlentry>
 <dt>pop-up menu options</dt>
 <dd>These are the same editing options available in the workbench <uicontrol>Edit</uicontrol> menu.</dd>
-</dlentry></dl>
+</dlentry><dlentry>
+<dt>code folding</dt>
+<dd>Code folding allows collapsing and expanding of text and can be
+accessed by the <uicontrol>Folding</uicontrol> option in the pop-up
+menu.</dd>
+</dlentry></dl><?Pub Caret 1471?>
 </conbody>
 <related-links>
 <linkpool type="concept">
@@ -123,3 +133,4 @@ ruler on the left area of the Source page.</dd>
 </linkpool>
 </related-links>
 </concept>
+<?Pub *0000005543?>
