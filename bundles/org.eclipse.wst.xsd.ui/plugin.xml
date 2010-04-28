@@ -575,8 +575,13 @@
   </extension>
 
  <extension point="org.eclipse.ui.navigator.navigatorContent">
-	<commonWizard type="new" wizardId="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
-		<enablement></enablement>
+	<commonWizard type="new" wizardId="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard" menuGroupId="org.eclipse.wst.xml.new.menuGroup">
+		<enablement>
+			<instanceof value="org.eclipse.core.resources.IResource"/>
+			<with variable="activeWorkbenchWindow.activePerspective">
+			   <equals value="org.eclipse.wst.xml.ui.perspective"/>
+			</with>
+		</enablement>
 	</commonWizard>
  </extension>
  <extension

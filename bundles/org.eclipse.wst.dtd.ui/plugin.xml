@@ -490,8 +490,12 @@
   </extension>
 
  <extension point="org.eclipse.ui.navigator.navigatorContent">
-	<commonWizard type="new" wizardId="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
+	<commonWizard type="new" wizardId="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard" menuGroupId="org.eclipse.wst.xml.new.menuGroup">
 		<enablement>
+			<instanceof value="org.eclipse.core.resources.IResource"/>
+			<with variable="activeWorkbenchWindow.activePerspective">
+			   <equals value="org.eclipse.wst.xml.ui.perspective"/>
+			</with>
 		</enablement>
 	</commonWizard>
  </extension>
