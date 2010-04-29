@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: XPath UI Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath.ui.tests
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.xml.xpath.ui.tests.XPathUITestPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.wst.xml.xpath.core;bundle-version="1.1.0",
  org.eclipse.wst.xml.xpath.ui;bundle-version="1.1.0",
  org.eclipse.core.runtime,
