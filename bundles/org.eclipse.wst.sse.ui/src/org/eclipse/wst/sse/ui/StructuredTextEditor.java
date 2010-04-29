@@ -143,6 +143,7 @@ import org.eclipse.ui.texteditor.ITextEditorExtension;
 import org.eclipse.ui.texteditor.ITextEditorExtension2;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.ui.texteditor.ITextEditorExtension4;
+import org.eclipse.ui.texteditor.ITextEditorExtension5;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
@@ -1029,7 +1030,7 @@ public class StructuredTextEditor extends TextEditor {
 	/** The ruler context menu manager to be disposed. */
 	private MenuManager fRulerContextMenuManager;
 
-	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV};
+	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV, IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.ID_OUTLINE};
 
 	private IAction fShowPropertiesAction = null;
 	private IStructuredModel fStructuredModel;
@@ -1531,14 +1532,12 @@ public class StructuredTextEditor extends TextEditor {
 		if (!allIds.contains(IPageLayout.ID_RES_NAV)) {
 			allIds.add(IPageLayout.ID_RES_NAV);
 		}
+		if (!allIds.contains(IPageLayout.ID_PROJECT_EXPLORER)) {
+			allIds.add(IPageLayout.ID_PROJECT_EXPLORER);
+		}
 		if (!allIds.contains(IPageLayout.ID_OUTLINE)) {
 			allIds.add(IPageLayout.ID_OUTLINE);
 		}
-		// Copied from org.eclipse.ui.navigator.resources.ProjectExplorer.VIEW_ID
-//		String PE_VIEW_ID = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
-//		if (!allIds.contains(PE_VIEW_ID)) {
-//			allIds.add(PE_VIEW_ID);
-//		}
 		return (String[]) allIds.toArray(new String[0]);
 	}
 
@@ -1999,7 +1998,7 @@ public class StructuredTextEditor extends TextEditor {
 		Object result = null;
 		// text editor
 		IStructuredModel internalModel = getInternalModel();
-		if (ITextEditor.class.equals(required) || ITextEditorExtension4.class.equals(required) || ITextEditorExtension3.class.equals(required) || ITextEditorExtension2.class.equals(required) || ITextEditorExtension.class.equals(required)) {
+		if (ITextEditor.class.equals(required) || ITextEditorExtension5.class.equals(required) || ITextEditorExtension4.class.equals(required) || ITextEditorExtension3.class.equals(required) || ITextEditorExtension2.class.equals(required) || ITextEditorExtension.class.equals(required)) {
 			result = this;
 		}
 		else if (IWorkbenchSiteProgressService.class.equals(required)) {
