@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,8 @@ public final class FacetModuleCoreSupport {
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 
+	static final float DEFAULT_SERVLET_VERSION = 3f;
+
 	/**
 	 * @param project
 	 * @return the computed IPath to the "root" of the web contents, either from facet knowledge or hueristics, or null if one can not be determined
@@ -69,7 +71,7 @@ public final class FacetModuleCoreSupport {
 	 */
 	public static float getDynamicWebProjectVersion(IProject project) {
 		// In the absence of any facet information, assume the highest level
-		float version = 2.5f;
+		float version = DEFAULT_SERVLET_VERSION;
 		try {
 			version = FacetModuleCoreSupportDelegate.getDynamicWebProjectVersion(project);
 		}
@@ -230,6 +232,4 @@ public final class FacetModuleCoreSupport {
 
 		return basePath.uptoSegment(1);
 	}
-
-
 }

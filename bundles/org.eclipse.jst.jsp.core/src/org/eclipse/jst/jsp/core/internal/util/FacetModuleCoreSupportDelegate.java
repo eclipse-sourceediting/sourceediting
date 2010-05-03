@@ -43,8 +43,6 @@ final class FacetModuleCoreSupportDelegate {
 	 * @see org.eclipse.wst.common.componentcore.internal.util.IModuleConstants.JST_WEB_MODULE
 	 */
 	private final static String JST_WEB_MODULE = "jst.web"; //$NON-NLS-1$
-	private static final float JST_WEB_MODULE_DEFAULT_VERSION = 3f;
-
 	/**
 	 * @param project
 	 * @return -1 if the project does not have the JST Web facet, the version
@@ -53,10 +51,10 @@ final class FacetModuleCoreSupportDelegate {
 	 */
 	static float getDynamicWebProjectVersion(IProject project) {
 		if (project == null)
-			return JST_WEB_MODULE_DEFAULT_VERSION;
+			return FacetModuleCoreSupport.DEFAULT_SERVLET_VERSION;
 
 		// In the absence of any facet information, assume the highest level
-		float version = JST_WEB_MODULE_DEFAULT_VERSION;
+		float version = FacetModuleCoreSupport.DEFAULT_SERVLET_VERSION;
 		try {
 			IFacetedProject faceted = ProjectFacetsManager.create(project);
 			if (faceted != null && ProjectFacetsManager.isProjectFacetDefined(JST_WEB_MODULE)) {
