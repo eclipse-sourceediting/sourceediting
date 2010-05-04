@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,14 +10,28 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.document;
 
-
-
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
-/**
- */
 public class HTMLDocumentTypeRegistry {
+	static class HTMLDocumentTypeEntryComparator implements Comparator {
+		static Collator delegate = Collator.getInstance();
+
+		public int compare(Object o1, Object o2) {
+			if (o1 instanceof HTMLDocumentTypeEntry && o2 instanceof HTMLDocumentTypeEntry) {
+				if (((HTMLDocumentTypeEntry) o1).getDisplayName() != null && ((HTMLDocumentTypeEntry) o2).getDisplayName() != null) {
+					return delegate.compare(((HTMLDocumentTypeEntry) o1).getDisplayName(), ((HTMLDocumentTypeEntry) o2).getDisplayName());
+				}
+			}
+			return 0;
+		}
+	}
 
 	private static HTMLDocumentTypeRegistry instance = null;
 	private Hashtable entries = null;
@@ -121,7 +135,9 @@ public class HTMLDocumentTypeRegistry {
 	/**
 	 */
 	public Enumeration getEntries() {
-		return this.entries.elements();
+		List values = new ArrayList(this.entries.values());
+		Collections.sort(values, new HTMLDocumentTypeEntryComparator());
+		return new Vector(values).elements();
 	}
 
 	/**
