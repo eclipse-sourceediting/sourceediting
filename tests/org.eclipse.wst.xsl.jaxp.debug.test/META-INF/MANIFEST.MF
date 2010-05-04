@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JAXP Debug Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.wst.xsl.jaxp.debug.test
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.jaxp.debug.test.TestJaXPDebugPlugin
@@ -14,3 +14,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xsl.jaxp.debug.invoker.test,
  org.eclipse.wst.xsl.jaxp.debug.test
+Bundle-Vendor: %Bundle-Vendor
