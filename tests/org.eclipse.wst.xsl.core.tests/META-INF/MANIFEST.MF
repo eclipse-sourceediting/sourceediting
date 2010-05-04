@@ -17,3 +17,4 @@ Import-Package: org.eclipse.wst.xml.core.internal.validation.core
 Export-Package: org.eclipse.wst.xsl.core.tests;uses:="org.osgi.framework,junit.framework,org.eclipse.core.runtime",
  org.eclipse.wst.xsl.internal.core.tests;x-internal:=true
 Bundle-Localization: plugin
+Bundle-Vendor: %provider

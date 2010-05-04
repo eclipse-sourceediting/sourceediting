@@ -34,3 +34,4 @@ Export-Package: org.eclipse.wst.xsl.ui.internal.validation;x-internal:=true,
  org.eclipse.wst.xsl.ui.tests.style,
  org.eclipse.wst.xsl.ui.tests.templates
 Bundle-Localization: plugin
+Bundle-Vendor: %provider
