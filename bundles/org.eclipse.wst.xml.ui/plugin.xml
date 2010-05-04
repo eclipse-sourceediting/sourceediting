@@ -1578,7 +1578,7 @@
  <extension point="org.eclipse.ui.perspectiveExtensions">
 	<perspectiveExtension targetID="org.eclipse.wst.xml.ui.perspective">
 		<!-- ProjectExplorer on the left -->
-		<view id="org.eclipse.ui.navigator.ProjectExplorer" relative="org.eclipse.ui.editorss" relationship="left" ratio="0.23" />
+		<!--<view id="org.eclipse.ui.navigator.ProjectExplorer" relative="org.eclipse.ui.editorss" relationship="left" ratio="0.23" />-->
 		<!-- XPath on the "bottom" left from its own UI plug-in since neither this bundle nor its owning feature require it -->
 		<!-- Content Outline on the right -->
 		<view id="org.eclipse.ui.views.ContentOutline" relative="org.eclipse.ui.editorss" relationship="right" ratio="0.7" />

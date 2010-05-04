@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Standards for Technology in Automotive Retail
+ * Copyright (c) 2005, 2010 Standards for Technology in Automotive Retail
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,12 @@
 
 package org.eclipse.wst.xml.ui.internal.perspective;
 
+import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.xml.ui.internal.IProductConstants;
+import org.eclipse.wst.xml.ui.internal.ProductProperties;
 
 
 /**
@@ -28,6 +32,17 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 //	private static final String TEXTEDITOR_TEMPLATES_VIEW_ID = "org.eclipse.ui.texteditor.TemplatesView"; //$NON-NLS-1$
 //	private static final String ID_CONSOLE_VIEW = "org.eclipse.ui.console.ConsoleView"; //$NON-NLS-1$
 
+	private static String HIERARCHY_VIEW_ID = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
+
+	public XMLPerspectiveFactory() {
+		String viewerID = ProductProperties.getProperty(IProductConstants.PERSPECTIVE_EXPLORER_VIEW);
+		if (viewerID != null) {
+			// verify that the view actually exists
+			if (PlatformUI.getWorkbench().getViewRegistry().find(viewerID) != null){
+				HIERARCHY_VIEW_ID = viewerID;
+			}
+		}
+	}
 	/**
 	 * Creates the initial layout. This is what the layout is reset to when
 	 * the Reset Perspective is selected. It takes as input a IPageLayout
@@ -42,6 +57,11 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		// Turn on the Editor Area
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
+
+		layout.addShowViewShortcut(HIERARCHY_VIEW_ID);
+
+		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, 0.23f, layout.getEditorArea());//$NON-NLS-1$
+		topLeft.addView(HIERARCHY_VIEW_ID);
 
 		// Create the areas of the layout with their initial views
 //		IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, (float) 0.23, editorArea); //$NON-NLS-1$
