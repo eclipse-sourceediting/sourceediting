@@ -27,6 +27,7 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.swt.widgets.Shell;
@@ -59,7 +60,6 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	public ToggleBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
 		super(editor, rulerInfo);
 		setText(SSEUIMessages.ToggleBreakpointAction_0); //$NON-NLS-1$
-		setImageDescriptor(DebugUITools.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT));
 	}
 
 	public ToggleBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo, IAction fallbackAction) {
@@ -209,5 +209,20 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	 * @see org.eclipse.ui.texteditor.IUpdate#update()
 	 */
 	public void update() {
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.action.Action#getImageDescriptor()
+	 * overriding for lazy loading
+	 */
+	public ImageDescriptor getImageDescriptor() {
+		
+		ImageDescriptor image = super.getImageDescriptor();
+		if (image == null){
+			image = DebugUITools.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT);
+			setImageDescriptor(image);
+		}
+		return image;
 	}
 }
