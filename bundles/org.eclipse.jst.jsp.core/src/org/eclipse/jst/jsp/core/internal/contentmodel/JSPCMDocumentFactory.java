@@ -25,7 +25,7 @@ public final class JSPCMDocumentFactory {
 	}
 
 	public static CMDocument getCMDocument() {
-		return getCMDocument(CMDocType.JSP20_DOC_TYPE);
+		return getCMDocument(CMDocType.JSP21_DOC_TYPE);
 	}
 
 	/**
