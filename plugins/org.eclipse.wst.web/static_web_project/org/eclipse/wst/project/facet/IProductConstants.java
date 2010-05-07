@@ -33,6 +33,7 @@ public interface IProductConstants {
 	public static final String USE_SINGLE_ROOT_STRUCTURE = "useSingleRootStructure"; //$NON-NLS-1$
 	public static final String ID_PERSPECTIVE_HIERARCHY_VIEW = "idPerspectiveHierarchyView"; //$NON-NLS-1$
 	public static final String SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE = "showJavaEEModuleDependencyPage"; //$NON-NLS-1$
+	public static final String DYNAMIC_WEB_GENERATE_DD = "dynamic_web_generate_dd"; //$NON-NLS-1$
 	
 	public static final String DYN_WEB_OUTPUT_FOLDER = "dynWebOutput"; //$NON-NLS-1$
 	public static final String EJB_OUTPUT_FOLDER = "ejbOutput"; //$NON-NLS-1$
