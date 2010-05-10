@@ -37,6 +37,8 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -163,7 +165,21 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
 	private ISelectionProvider fSelectionProvider = new SelectionProvider();
 	// node: 40%, content: 60%
-	private static final double[] WEIGHTS = { .4, .6 };
+	static final double[] WEIGHTS = { .4, .6 };
+
+	private ControlAdapter fResizeAdapter = new ControlAdapter() {
+		public void controlResized(ControlEvent e) {
+			sizeColumns(getTree().getSize().x, WEIGHTS);
+		}
+
+		private void sizeColumns(int width, double[] weights) {
+			TreeColumn[] columns = getTree().getColumns();
+			int size = columns.length;
+			for (int i = 0; i < size; i++) {
+				columns[i].setWidth((int)(weights[i] * width));
+			}
+		}
+	};
 
 	public XMLTableTreeViewer(Composite parent) {
 		super(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -176,21 +192,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
 		this.getTree().setHeaderVisible(true);
 		this.getTree().setLinesVisible(true);
-		int width = getTree().getSize().x;
-		if (width == 0) {
-			// Resize columns once the tree is ready to be painted
-			this.getTree().addPaintListener(new PaintListener() {
-	
-				public void paintControl(PaintEvent e) {
-					initColumns(getTree().getSize().x, WEIGHTS);
-					getTree().removePaintListener(this);
-				}
-				
-			});
-		}
-		else {
-			initColumns(width, WEIGHTS);
-		}
+		getTree().addControlListener(fResizeAdapter);
 
 		// set up providers
 		propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory();
@@ -213,14 +215,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		dropTarget.setTransfer(new Transfer[] {LocalSelectionTransfer.getTransfer()});
 
 		this.getTree().addPaintListener(fContentPaintListener);
-	}
-
-	private void initColumns(int width, double[] weights) {
-		TreeColumn[] columns = getTree().getColumns();
-		int size = columns.length;
-		for (int i = 0; i < size; i++) {
-			columns[i].setWidth((int)(weights[i] * width));
-		}
 	}
 
 	/**
@@ -354,6 +348,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	protected void handleDispose(DisposeEvent event) {
 		super.handleDispose(event);
 		this.getTree().removePaintListener(fContentPaintListener);
+		getTree().removeControlListener(fResizeAdapter);
 		setDocument(null);
 	}
 
