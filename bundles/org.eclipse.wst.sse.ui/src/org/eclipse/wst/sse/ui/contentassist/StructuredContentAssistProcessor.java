@@ -825,7 +825,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		 * @see org.eclipse.jface.text.contentassist.ICompletionListener#assistSessionEnded(org.eclipse.jface.text.contentassist.ContentAssistEvent)
 		 */
 		public void assistSessionEnded(ContentAssistEvent event) {
-			if (event.processor == StructuredContentAssistProcessor.this) {
+			if (event.processor == StructuredContentAssistProcessor.this ||	(event.processor instanceof CompoundContentAssistProcessor && ((CompoundContentAssistProcessor)event.processor).containsProcessor(StructuredContentAssistProcessor.this))) {
 				for (Iterator it= StructuredContentAssistProcessor.this.getProposalCategories().iterator(); it.hasNext();) {
 					CompletionProposalCategory cat= (CompletionProposalCategory) it.next();
 					cat.sessionEnded();
