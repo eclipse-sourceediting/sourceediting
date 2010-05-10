@@ -155,7 +155,8 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor impleme
 	}
 
 	public void sessionEnded() {
-		// TODO Auto-generated method stub
-		
+		fContentAssistProcessor = null;
+		fTemplateAssistProcessor = null;
+		fHhtmlcomp = null;
 	}
 }
