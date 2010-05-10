@@ -209,15 +209,6 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 			if (disabledValidators != null) {
 				for (Iterator it = disabledValidators.iterator(); it.hasNext();) {
 					Validator v = (Validator) it.next();
-					IValidator iv = null;
-					try {
-						iv = v.asIValidator();
-					}
-					catch (Exception e) {
-						Logger.logException(e);
-					}
-					if (iv != null && v.getSourceId() != null)
-						disabledValsBySourceId.add(v.getSourceId());
 					Validator.V1 v1 = null;
 					try {
 						v1 = v.asV1Validator();
@@ -227,6 +218,9 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 					}
 					if (v1 != null)
 						disabledValsByClass.add(v1.getId());
+					// not a V1 validator
+					else if (v.getSourceId() != null)
+						disabledValsBySourceId.add(v.getSourceId());
 				}
 			}
 		}
