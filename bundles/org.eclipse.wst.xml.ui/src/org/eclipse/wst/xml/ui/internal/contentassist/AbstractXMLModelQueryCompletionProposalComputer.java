@@ -1217,7 +1217,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 		return isAfterXMLPI;
 	}
 	
-	private String getRequiredName(Node parentOrOwner, CMNode cmnode) {
+	protected String getRequiredName(Node parentOrOwner, CMNode cmnode) {
 		if ((cmnode == null) || (parentOrOwner == null)) {
 			if (Debug.displayWarnings) {
 				new IllegalArgumentException("Null declaration!").printStackTrace(); //$NON-NLS-1$
@@ -1239,7 +1239,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 		return buff.toString();
 	}
 	
-	private String getRequiredText(Node parentOrOwner, CMElementDeclaration elementDecl) {
+	protected String getRequiredText(Node parentOrOwner, CMElementDeclaration elementDecl) {
 		if (elementDecl == null) {
 			if (Debug.displayWarnings) {
 				new IllegalArgumentException("Null attribute declaration!").printStackTrace(); //$NON-NLS-1$
