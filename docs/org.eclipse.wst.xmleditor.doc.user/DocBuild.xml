@@ -50,8 +50,8 @@
 			<property name="args.copycss" value="no" />
 			<property name="args.csspath" value="../org.eclipse.wst.doc.user" />
 			<property name="args.eclipse.provider" value="Eclipse.org" />
-			<property name="args.eclipse.version" value="3.3.0" />
-			<property name="args.input" location="XMLBuildermap_toc.ditamap" />    		
+			<property name="args.eclipse.version" value="3.6.0" />
+			<property name="args.input" location="XMLBuilderrel.ditamap" />    		
 			<property name="clean.temp" value="true" />
 			<property name="dita.extname" value=".dita" />
 			<property name="dita.temp.dir" location="temp" />

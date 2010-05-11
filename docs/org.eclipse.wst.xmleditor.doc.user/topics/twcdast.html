@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
+<meta name="copyright" content="Copyright (c) 2000, 2009 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2009" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -30,47 +30,53 @@
 
 
 
-<div><p>You can use content assist to help you finish a tag or line of
-code in the Source view of the XML editor. You can also use content assist
-to insert templates into your XML code.</p>
+<div><p>You can use content assist to help you finish a tag or
+line of code in the Source view of the XML editor. You can also use
+content assist to insert templates into your XML code.</p>
 
-<div class="section"><p>The placement of the cursor in your source file provides the context
-for the content assist to offer suggestions for completion.</p>
-<p>You can
-launch content assist in either of the following ways:</p>
+<div class="section"><p>The placement of the cursor in your source file provides
+the context for the content assist to offer suggestions for completion.</p>
+<p>You
+can launch content assist in either of the following ways:</p>
 <ul>
-<li>From the <span class="uicontrol">Edit</span> menu, click <span class="uicontrol">Content Assist</span>,
-or</li>
+<li>From the <span class="uicontrol">Edit</span> menu, click <span class="uicontrol">Content
+Assist</span>, or</li>
 
 <li>Press Ctrl+Space</li>
 
 </ul>
-<p>In addition, you can set up an option that causes content assist to
-pop up automatically when certain characters are typed. To set up this option,
-click <span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol"> Preferences</span>
-</span> to open the Preferences window, then select <span class="menucascade"><span class="uicontrol">XML</span>
- &gt; <span class="uicontrol">XML Files </span> &gt; <span class="uicontrol">Editor</span></span> .
-In the <span class="uicontrol">Content assist</span> group box, select the <span class="uicontrol">Automatically
-make suggestions</span> check box, and supply any additional characters
-that should trigger content assist.</p>
-<p>If your cursor is in a position
-where content assist is available, a pop-up list of available choices is displayed
-when you launch content assist. The list is based on the context and whether
-a DTD or XML schema is associated with the XML file being edited. For example,
-if you have an Address element that can contain any of the following children
-elements: Name, Street, City, Zip Code, Country, and Province, and you place
-your cursor after any of them and launch content assist, all of the child
-elements will be listed in the content assist list.</p>
-<p>The content assist
-list displays all valid tags for the current cursor position, including templates.
-If your grammar constraints are turned off, all available tags, not just valid
-ones, are displayed. </p>
-<p>As you type the first one or two letters of the
-tag that you want, the list automatically refreshes with alphabetized choices
-that match your input. Scroll down and select the tag that you want to use
-by double-clicking on it.</p>
-<div class="note"><span class="notetitle">Note:</span> The list only refreshes as
-described if you first type <kbd class="userinput">&lt;</kbd> before prompting for
+<p>In addition, you can set up an option that causes content
+assist to pop up automatically when certain characters are typed.
+To set up this option, click <span class="menucascade"><span class="uicontrol">Window</span>
+ &gt; <span class="uicontrol"> Preferences</span></span> to open the Preferences
+window, then select <span class="menucascade"><span class="uicontrol">XML</span> &gt; <span class="uicontrol">XML
+Files </span> &gt; <span class="uicontrol">Editor</span> &gt; <span class="uicontrol">Content
+assist</span></span> . Select the <span class="uicontrol">Automatically
+make suggestions</span> check box, and supply any additional
+characters that should trigger content assist.</p>
+<p>If your cursor
+is in a position where content assist is available, a pop-up list
+of available choices is displayed when you launch content assist.
+The list is based on the context and whether a DTD or XML schema is
+associated with the XML file being edited. For example, if you have
+an Address element that can contain any of the following children
+elements: Name, Street, City, Zip Code, Country, and Province, and
+you place your cursor after any of them and launch content assist,
+all of the child elements will be listed in the content assist list.</p>
+<p>Content
+assist cycling is available in the XML editor, offering multiple pages
+of content assist. You can set preferences for the proposal categories
+and the cycle order when repeatedly invoking content assist </p>
+<p>The content assist list displays all valid tags for the
+current cursor position, including templates. If your grammar constraints
+are turned off, all available tags, not just valid ones, are displayed. </p>
+<p>As
+you type the first one or two letters of the tag that you want, the
+list automatically refreshes with alphabetized choices that match
+your input. Scroll down and select the tag that you want to use by
+double-clicking on it.</p>
+<div class="note"><span class="notetitle">Note:</span> The list only refreshes as described
+if you first type <kbd class="userinput">&lt;</kbd> before prompting for
 content assist.</div>
 </div>
 
