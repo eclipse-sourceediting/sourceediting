@@ -213,9 +213,14 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		}
 		else {
 			if (info.isXHTML) { // XHTML
-				if (!info.target.isEmptyTag()) {
+				if (!info.target.isEmptyTag() && DOMRegionContext.XML_TAG_OPEN.equals(info.target.getStartStructuredDocumentRegion().getFirstRegion().getType())) {
+					/*
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=261956 :
+					 * report empty tags not written as such, but only when
+					 * they follow actual XML/HTML syntax
+					 */
 					if (isEmptyContent(info.decl)) {
-						// EMPTY element should be written in <.../> form.
+						// EMPTY element should be written in <.../> form
 						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(INVALID_EMPTY_ELEMENT_TAG, errorSeg, info.target);
 					}
