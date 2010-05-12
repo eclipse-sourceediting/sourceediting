@@ -41,7 +41,7 @@ public class ProductManager {
 	private static final String SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE = "true"; //$NON-NLS-1$
 	private static final String FINAL_PERSPECTIVE = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
 	private static final String FINAL_WEB_PERSPECTIVE = "org.eclipse.wst.web.ui.webDevPerspective"; //$NON-NLS-1$
-	private static final String DYNAMIC_WEB_GENERATE_DD = "false"; //$NON-NLS-1$
+	private static final String DYNAMIC_WEB_GENERATE_DD = "true"; //$NON-NLS-1$
 	private static final char RUNTIME_SEPARATOR = ':';
 	private static final String[] DEFAULT_RUNTIME_KEYS = 
 							new String[]{IProductConstants.DEFAULT_RUNTIME_1,
