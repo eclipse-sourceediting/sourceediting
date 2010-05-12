@@ -1,16 +1,18 @@
 /*******************************************************************************
- * Copyright (c) 2002 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.util;
+
+import java.util.Stack;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -25,6 +27,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
 public class CMVisitor
 {
   protected int indent = 0;
+  protected Stack visitedCMGroupStack = new Stack();
 
   public void visitCMNode(CMNode node)
   {
@@ -62,7 +65,21 @@ public class CMVisitor
         }
         case CMNode.GROUP :
         {
-          visitCMGroup((CMGroup)node);
+          CMGroup group = (CMGroup)node;
+          
+          // This is to prevent recursion.
+          if (visitedCMGroupStack.contains(group))
+          {
+            break;
+          }
+          
+          // Push the current group to check later to avoid potential recursion
+          visitedCMGroupStack.push(group);
+          
+          visitCMGroup(group);
+
+          // Pop the current group
+          visitedCMGroupStack.pop();
           break;
         }
       }
