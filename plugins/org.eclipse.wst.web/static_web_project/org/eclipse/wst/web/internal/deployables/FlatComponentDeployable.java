@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -149,10 +150,11 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 	}
 
 	protected IModuleResource[] LEGACY_binaryMembers() {
+		IFile ifile = (IFile)component.getAdapter(IFile.class);
 		File file = (File)component.getAdapter(File.class);
-		return new IModuleResource[]{
-				new ModuleFile(file, file.getName(), new Path("")) //$NON-NLS-1$
-		};
+		ModuleFile mf = ifile != null ? new ModuleFile(ifile, ifile.getName(), new Path(""))  //$NON-NLS-1$
+		 		: new ModuleFile(file, file.getName(), new Path("")); //$NON-NLS-1$
+		return new IModuleResource[]{mf};
 	}
 	
 	 /**
