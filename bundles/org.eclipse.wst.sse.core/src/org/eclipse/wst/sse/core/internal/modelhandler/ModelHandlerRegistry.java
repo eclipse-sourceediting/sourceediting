@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,7 +110,7 @@ public class ModelHandlerRegistry {
 
 	/**
 	 * Finds the registered IModelHandler for a given named file's content
-	 * type.
+	 * type. This will provide a default handler in the absence of an explicit handler
 	 * 
 	 * @param file
 	 * @return The IModelHandler registered for the content type of the given
@@ -120,6 +120,22 @@ public class ModelHandlerRegistry {
 	 * @throws CoreException
 	 */
 	public IModelHandler getHandlerFor(IFile file) throws CoreException {
+		return getHandlerFor(file, true);
+	}
+
+	/**
+	 * Finds the registered IModelHandler for a given named file's content
+	 * type.
+	 * 
+	 * @param file
+	 * @param provideDefault should a suitable default be provided
+	 * @return The IModelHandler registered for the content type of the given
+	 *         file. If an exact match is not found, the most-specific match
+	 *         according to IContentType.isKindOf() will be returned. If none
+	 *         are found, either a default or null will be returned.
+	 * @throws CoreException
+	 */
+	public IModelHandler getHandlerFor(IFile file, boolean provideDefault) throws CoreException {
 		IModelHandler modelHandler = null;
 		IContentDescription contentDescription = null;
 		IContentType contentType = null;
@@ -169,14 +185,13 @@ public class ModelHandlerRegistry {
 		if (contentType != null) {
 			modelHandler = getHandlerForContentType(contentType);
 		}
-		else {
+		else if(contentType == null && provideDefault) {
 			// hard coding for null content type
 			modelHandler = getHandlerExtension(INTERNAL_DEFAULT_EXTENSION); //$NON-NLS-1$
 		}
 
 		return modelHandler;
 	}
-
 
 	/**
 	 * Finds the registered IModelHandler for a given named InputStream.
