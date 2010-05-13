@@ -12,6 +12,8 @@ package org.eclipse.wst.sse.ui.internal.style;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -489,6 +491,14 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 					}
 				}
 				fPositions= newPositions;
+				Collections.sort(fPositions, new Comparator() {
+					
+					public int compare(Object arg0, Object arg1) {
+						Position p1 = (Position) arg0;
+						Position p2 = (Position) arg1;
+						return p1.offset - p2.offset;
+					}
+				});
 			}
 		} catch (BadPositionCategoryException e) {
 			// Should not happen
