@@ -73,14 +73,18 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 	/** HighlightingStyle - cache for background thread, only valid during {@link #reconcile(IRegion)} */
 	private HighlightingStyle[] fJobHighlightings;
 
+	private boolean fIsInstalled;
+
 	public void install(ITextViewer sourceViewer, SemanticHighlightingPresenter presenter, ISemanticHighlighting[] semanticHighlightings, HighlightingStyle[] highlightings) {
 		fViewer = sourceViewer;
 		fPresenter = presenter;
 		fSemanticHighlightings = semanticHighlightings;
 		fHighlightings = highlightings;
+		fIsInstalled = true;
 	}
 
 	public void uninstall() {
+		fIsInstalled = false;
 		fViewer = null;
 		fPresenter = null;
 		fSemanticHighlightings = null;
@@ -109,11 +113,11 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 			IStructuredDocument document = (IStructuredDocument) fDocument;
 			model = ModelManagerImpl.getInstance().getModelForRead(document);
 			IStructuredDocumentRegion[] regions = document.getStructuredDocumentRegions(partition.getOffset(), partition.getLength());
-			for (int i = 0; i < regions.length; i++) {
+			for (int i = 0; i < regions.length && fIsInstalled; i++) {
 				if (document.containsReadOnly(regions[i].getStartOffset(), regions[i].getLength()))
 					addPosition(new Position(regions[i].getStartOffset(), regions[i].getLength()), null, true);
 				else {
-					for (int j = 0; j < fJobSemanticHighlightings.length; j++) {
+					for (int j = 0; j < fJobSemanticHighlightings.length && fIsInstalled; j++) {
 						if (fJobHighlightings[j].isEnabled()) {
 							Position[] consumes = null;
 							if (fJobSemanticHighlightings[j] instanceof ISemanticHighlightingExtension && model != null) {
@@ -130,22 +134,23 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 					}
 				}
 			}
-	
-			List oldPositions = fRemovedPositions;
-			List newPositions = new ArrayList(fNOfRemovedPositions);
-			for (int i = 0, n = oldPositions.size(); i < n; i++) {
-				Object current = oldPositions.get(i);
-				if (current != null)
-					newPositions.add(current);
+
+			if (fIsInstalled) {
+				List oldPositions = fRemovedPositions;
+				List newPositions = new ArrayList(fNOfRemovedPositions);
+				for (int i = 0, n = oldPositions.size(); i < n && fIsInstalled; i++) {
+					Object current = oldPositions.get(i);
+					if (current != null)
+						newPositions.add(current);
+				}
+				fRemovedPositions = newPositions;
+				
+				TextPresentation presentation = null;
+				if (!fJobPresenter.isCanceled())
+					presentation = fJobPresenter.createPresentation(fAddedPositions, fRemovedPositions);
+				if (!fJobPresenter.isCanceled())
+					updatePresentation(presentation, fAddedPositions, fRemovedPositions);
 			}
-			fRemovedPositions = newPositions;
-			
-			TextPresentation presentation = null;
-			if (!fJobPresenter.isCanceled())
-				presentation = fJobPresenter.createPresentation(fAddedPositions, fRemovedPositions);
-			if (!fJobPresenter.isCanceled())
-				updatePresentation(presentation, fAddedPositions, fRemovedPositions);
-	
 			stopReconcilingPositions();
 		}
 		finally {
@@ -179,7 +184,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 			}
 		}
 		if (!isExisting) {
-			fAddedPositions.add(fPresenter.createHighlightedPosition(position, highlighting, isReadOnly));
+			fAddedPositions.add(fJobPresenter.createHighlightedPosition(position, highlighting, isReadOnly));
 		}
 	}
 
@@ -194,7 +199,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 	 *            the removed positions
 	 */
 	private void updatePresentation(TextPresentation textPresentation, List addedPositions, List removedPositions) {
-		Runnable runnable = fPresenter.createUpdateRunnable(textPresentation, addedPositions, removedPositions);
+		Runnable runnable = fJobPresenter.createUpdateRunnable(textPresentation, addedPositions, removedPositions);
 		if (runnable == null)
 			return;
 
@@ -216,7 +221,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 	 * Start reconciling positions.
 	 */
 	private void startReconcilingPositions() {
-		fPresenter.addAllPositions(fRemovedPositions);
+		fJobPresenter.addAllPositions(fRemovedPositions);
 		fNOfRemovedPositions = fRemovedPositions.size();
 	}
 
