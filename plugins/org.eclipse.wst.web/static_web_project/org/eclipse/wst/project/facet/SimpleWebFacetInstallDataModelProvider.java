@@ -29,6 +29,7 @@ import org.eclipse.wst.common.frameworks.internal.plugin.WTPCommonMessages;
 import org.eclipse.wst.common.frameworks.internal.plugin.WTPCommonPlugin;
 import org.eclipse.wst.web.internal.ResourceHandler;
 
+import com.ibm.icu.text.UTF16;
 import com.ibm.icu.util.StringTokenizer;
 
 public class SimpleWebFacetInstallDataModelProvider extends FacetInstallDataModelProvider implements ISimpleWebFacetInstallDataModelProperties {
@@ -98,13 +99,24 @@ public class SimpleWebFacetInstallDataModelProvider extends FacetInstallDataMode
 			StringTokenizer stok = new StringTokenizer(contextRoot, "."); //$NON-NLS-1$
 			while (stok.hasMoreTokens()) {
 				String token = stok.nextToken();
-				for (int i = 0; i < token.length(); i++) {
+				int cp;
+		        for (int i = 0; i < token.length(); i += UTF16.getCharCount(cp)) {
+		            cp = UTF16.charAt(token, i);
 					if(token.charAt(i) == ' ')
 					{
 						return new ResourceStatus(IResourceStatus.INVALID_VALUE, null, ResourceHandler.Names_cannot_contain_whitespace);
 					}
 					else if (!(token.charAt(i) == '_') && !(token.charAt(i) == '-') && !(token.charAt(i) == '/') && Character.isLetterOrDigit(token.charAt(i)) == false) {
-						Object[] invalidChar = new Object[]{(new Character(token.charAt(i))).toString()};
+						String invalidCharString = null;
+						if (UTF16.getCharCount(cp)>1)
+						{
+							invalidCharString = UTF16.valueOf(cp); 
+						}
+						else
+						{
+							invalidCharString = (new Character(token.charAt(i))).toString();
+						}
+						Object[] invalidChar = new Object[]{invalidCharString};
 						String errorStatus = ResourceHandler.getString(ResourceHandler.The_character_is_invalid_in_a_context_root, invalidChar); 
 						return new ResourceStatus(IResourceStatus.INVALID_VALUE, null, errorStatus);
 					}
