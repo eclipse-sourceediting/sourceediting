@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates>
-<template name="%Templates.xmldeclaration.name" description="%Templates.xmldeclaration.desc" id="org.eclipse.wst.xml.ui.internal.templates.xmldeclaration" context="xml_new" enabled="true">&lt;?xml version="1.0" encoding="${encoding}"?&gt;</template>
-<template name="%Templates.comment.name" description="%Templates.comment.desc" id="org.eclipse.wst.xml.ui.internal.templates.comment" context="xml_tag" enabled="true">&lt;!-- ${cursor} --&gt;</template>
-<template name="%Templates.xslpi.name" description="%Templates.xslpi.desc" id="org.eclipse.wst.xml.ui.internal.templates.xslpi" context="xml_tag" enabled="true">&lt;?xml-stylesheet type="text/xsl" href="${cursor}"?&gt;</template>
-
-</templates>
