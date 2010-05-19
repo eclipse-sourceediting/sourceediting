@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.1"?>
+<?eclipse version="3.6"?>
+<?NLS TYPE="org.eclipse.help.toc"?> 
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -19,7 +20,5 @@
 	<extension point="org.eclipse.help.index">
 		<index file="org.eclipse.wst.dtdeditor.doc.userindex.xml"/>     
 	</extension>
-	<extension point="org.eclipse.help.base.luceneSearchParticipants">
-      <binding participantId="org.eclipse.help.base.xhtml"/>
-   </extension>
+
 </plugin>
