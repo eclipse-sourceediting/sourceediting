@@ -30,7 +30,6 @@ import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
-import org.eclipse.wst.jsdt.web.support.jsp.JSDTStructuredTextViewerConfigurationJSP;
 import org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT;
 import org.eclipse.wst.jsdt.web.ui.tests.internal.ProjectUtil;
 import org.eclipse.wst.jsdt.web.ui.tests.internal.StringUtils;
@@ -99,9 +98,9 @@ public class FormattingTests extends TestCase {
 		formatAndAssertEquals("test0.html", "test0.html", new StructuredTextViewerConfigurationJSDT());
 	}
 	
-	public void testFormatJSPScriptEvent() throws UnsupportedEncodingException, IOException, CoreException {
-		formatAndAssertEquals("test1.jsp", "test1.jsp", new JSDTStructuredTextViewerConfigurationJSP());
-	}
+//	public void testFormatJSPScriptEvent() throws UnsupportedEncodingException, IOException, CoreException {
+//		formatAndAssertEquals("test1.jsp", "test1.jsp", new JSDTStructuredTextViewerConfigurationJSP());
+//	}
 	
 	/**
 	 * @param beforePath
