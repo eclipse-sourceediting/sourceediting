@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2010 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -49,6 +49,7 @@ public class XMLWizardsMessages extends NLS {
 	public static String _UI_WIZARD_CREATE_OPTIONAL;// commented out
 	public static String _UI_WIZARD_CREATE_OPTIONAL_ATTRIBUTES;
 	public static String _UI_WIZARD_CREATE_OPTIONAL_ELEMENTS;
+	public static String _UI_WIZARD_LIMIT_OPTIONAL_ELEMENT_DEPTH;
 	public static String _UI_WIZARD_CREATE_FIRST_CHOICE;
 	public static String _UI_WIZARD_FILL_ELEMENTS_AND_ATTRIBUTES;
 	public static String _UI_LABEL_DOCTYPE_INFORMATION;
@@ -86,6 +87,7 @@ public class XMLWizardsMessages extends NLS {
 	public static String _UI_DIALOG_XMLCATALOG_EXPORT_TITLE;
 	public static String _UI_DIALOG_XMLCATALOG_EXPORT_DESCRIPTION;
     public static String _UI_DIALOG_XMLCATALOG_IMPORT_DESCRIPTION;
+    public static String _UI_WIZARD_GENERATING_XML_DOCUMENT;
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, XMLWizardsMessages.class);
