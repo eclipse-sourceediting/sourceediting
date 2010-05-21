@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ package org.eclipse.jst.jsp.core.internal.taglib;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
@@ -38,7 +38,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -46,6 +45,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
@@ -80,6 +80,9 @@ import com.ibm.icu.text.MessageFormat;
  */
 public class TaglibHelper {
 
+	private static final String ITERATION_QUALIFIER = "javax.servlet.jsp.tagext"; //$NON-NLS-1$
+	private static final String ITERATION_NAME = "IterationTag"; //$NON-NLS-1$
+
 	// for debugging
 	private static final boolean DEBUG;
 	static {
@@ -104,30 +107,115 @@ public class TaglibHelper {
 	 */
 	private Set fNotFoundClasses = null;
 
+	private Map fClassMap = null;
+
 	public TaglibHelper(IProject project) {
 		setProject(project);
 		fProjectEntries = new HashSet();
 		fContainerEntries = new HashSet();
 		fTranslationProblems = new HashMap();
 		fNotFoundClasses = new HashSet();
+		fClassMap = Collections.synchronizedMap(new HashMap());
+	}
+
+	/**
+	 * Checks that <code>type</code> implements an IterationTag
+	 * 
+	 * @param type
+	 * @return true if <code>type</code> implements IterationTag
+	 * @throws JavaModelException
+	 * @throws ClassNotFoundException thrown when the <code>type</code> is null
+	 */
+	private boolean isIterationTag(IType type) throws JavaModelException, ClassNotFoundException {
+		if (type == null) {
+			throw new ClassNotFoundException();
+		}
+		synchronized (fClassMap) {
+			if (fClassMap.containsKey(type.getFullyQualifiedName()))
+				return ((Boolean) fClassMap.get(type.getFullyQualifiedName())).booleanValue();
+		}
+	
+		String signature;
+		String qualifier;
+		String name;
+		String[] interfaces = type.getSuperInterfaceTypeSignatures();
+		boolean isIteration = false;
+		// Check any super interfaces for the iteration tag
+		for (int i = 0; i < interfaces.length; i++) {
+			// For source files, the interface may need to be resolved
+			String erasureSig = Signature.getTypeErasure(interfaces[i]);
+			qualifier = Signature.getSignatureQualifier(erasureSig);
+			name = Signature.getSignatureSimpleName(erasureSig);
+			// Interface type is unresolved
+			if (erasureSig.charAt(0) == Signature.C_UNRESOLVED) {
+				String[][] types = type.resolveType(getQualifiedType(qualifier, name));
+				// Type was resolved
+				if (types != null && types.length > 0) {
+					isIteration = handleInterface(type, types[0][0], types[0][1]);
+				}
+			}
+			else {
+				isIteration = handleInterface(type, qualifier, name);
+			}
+			if (isIteration)
+				return true;
+		}
+
+		signature = type.getSuperclassTypeSignature();
+		if (signature != null) {
+			String erasureSig = Signature.getTypeErasure(signature);
+			qualifier = Signature.getSignatureQualifier(erasureSig);
+			name = Signature.getSignatureSimpleName(erasureSig);
+			// superclass was unresolved
+			if (erasureSig.charAt(0) == Signature.C_UNRESOLVED) {
+				String[][] types = type.resolveType(getQualifiedType(qualifier, name));
+				// Type was resolved
+				if (types != null && types.length > 0) {
+					isIteration = isIterationTag(fJavaProject.findType(types[0][0], types[0][1]));
+				}
+			}
+			else {
+				isIteration = isIterationTag(fJavaProject.findType(qualifier, name));
+			}
+		}
+		fClassMap.put(type.getFullyQualifiedName(), Boolean.valueOf(isIteration));
+		return isIteration;
+	}
+
+	private boolean handleInterface(IType type, String qualifier, String name) throws JavaModelException, ClassNotFoundException {
+		boolean isIteration = false;
+		// Qualified interface is an iteration tag
+		if (ITERATION_QUALIFIER.equals(qualifier) && ITERATION_NAME.equals(name))
+			isIteration = true;
+		// Check ancestors of this interface
+		else
+			isIteration = isIterationTag(fJavaProject.findType(qualifier, name));
+			fClassMap.put(type.getFullyQualifiedName(), Boolean.valueOf(isIteration));
+		return isIteration;
+	}
+
+	private String getQualifiedType(String qualifier, String name) {
+		StringBuffer qual = new StringBuffer(qualifier);
+		if (qual.length() > 0)
+			qual.append('.');
+		qual.append(name);
+		return qual.toString();
 	}
 
 	private boolean isIterationTag(TLDElementDeclaration elementDecl, IStructuredDocument document, ITextRegionCollection customTag, List problems) {
 		String className = elementDecl.getTagclass();
-		if (className == null || className.length() == 0 || fJavaProject == null)
+		if (className == null || className.length() == 0 || fJavaProject == null || fNotFoundClasses.contains(className))
 			return false;
 
-		Class tagClass;
 		try {
 			/* check to be sure the class name is not one that can not currently be found on
 			 * the class path.
 			 */
-			if(!fNotFoundClasses.contains(className)) {
-				tagClass = Class.forName(className, true, getClassloader());
-				if (tagClass != null) {
-					return IterationTag.class.isInstance(tagClass.newInstance());
-				}
-			} 
+			synchronized (fClassMap) {
+				if (fClassMap.containsKey(className))
+					return ((Boolean) fClassMap.get(className)).booleanValue();
+			}
+			return isIterationTag(fJavaProject.findType(className));
 		} catch (ClassNotFoundException e) {
 			//the class could not be found so add it to the cache
 			fNotFoundClasses.add(className);
@@ -137,10 +225,7 @@ public class TaglibHelper {
 				problems.add(createdProblem);
 			if (DEBUG)
 				Logger.logException(className, e);
-		} catch (IllegalAccessException e) {
-			if (DEBUG)
-				Logger.logException(className, e);
-		} catch (InstantiationException e) {
+		} catch (JavaModelException e) {
 			if (DEBUG)
 				Logger.logException(className, e);
 		} catch (Exception e) {
@@ -988,6 +1073,10 @@ public class TaglibHelper {
 		return (Collection) fTranslationProblems.remove(path);
 	}
 
+	public void invalidateClass(String className) {
+		fClassMap.remove(className);
+	}
+
 	private void validateTagClass(IStructuredDocument document, ITextRegionCollection customTag, TLDElementDeclaration decl, List problems) {
 		// skip if from a tag file
 		if (TLDElementDeclaration.SOURCE_TAG_FILE.equals(decl.getProperty(TLDElementDeclaration.TAG_SOURCE))) {
@@ -998,7 +1087,7 @@ public class TaglibHelper {
 		IType tagClass = null;
 		if (tagClassname != null && tagClassname.length() > 0 && fJavaProject != null) {
 			try {
-				tagClass = fJavaProject.findType(tagClassname, new NullProgressMonitor());
+				tagClass = fJavaProject.findType(tagClassname);
 			}
 			catch (JavaModelException e) {
 				Logger.logException(e);

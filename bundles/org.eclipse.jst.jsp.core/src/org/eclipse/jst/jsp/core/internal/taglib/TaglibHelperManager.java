@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
 
 /**
  * Manages creation and caching (ordered MRU) of TaglibHelpers.
@@ -72,6 +73,15 @@ public class TaglibHelperManager implements IElementChangedListener {
                 }
             }
         }
+        else if (delta.getElement().getElementType() == IJavaElement.COMPILATION_UNIT) {
+        	IJavaElementDelta[] changed = delta.getChangedChildren();
+        	for (int i = 0; i < changed.length; i++) {
+        		if ((changed[i].getFlags() & IJavaElementDelta.F_SUPER_TYPES) != 0) {
+        			IJavaElement element = changed[i].getElement();
+        				handleSuperTypeChange(element);
+        		}
+        	}
+        }
     }
     
     /**
@@ -84,5 +94,12 @@ public class TaglibHelperManager implements IElementChangedListener {
 			String projectName = ((IJavaProject) proj).getProject().getName();
 			fCache.removeHelper(projectName);
 		}
+    }
+
+    private void handleSuperTypeChange(IJavaElement element) {
+    	IJavaProject project = element.getJavaProject();
+    	if (element instanceof IType) {
+    		fCache.invalidate(project.getProject().getName(), ((IType) element).getFullyQualifiedName());
+    	}
     }
 }
