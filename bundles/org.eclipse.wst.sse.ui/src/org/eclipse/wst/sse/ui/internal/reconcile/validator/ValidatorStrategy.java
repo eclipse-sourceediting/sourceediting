@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -184,12 +184,12 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		if (file != null) {
 			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(file).iterator(); it.hasNext();) {
 				Validator v = (Validator) it.next();
-				IValidator iv = v.asIValidator();
-				if (iv != null && v.getSourceId() != null)
-					disabledValsBySourceId.add(v.getSourceId());
 				Validator.V1 v1 = v.asV1Validator();
 				if (v1 != null)
 					disabledValsByClass.add(v1.getId());
+				// not a V1 validator
+				else if (v.getSourceId() != null)
+					disabledValsBySourceId.add(v.getSourceId());
 			}
 		}
 				
