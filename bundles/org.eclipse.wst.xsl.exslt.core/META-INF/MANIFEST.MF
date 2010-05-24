@@ -12,3 +12,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xsl.exslt.core.internal;x-internal:=true,
  org.eclipse.wst.xsl.exslt.core.internal.resolver;x-internal:=true
 Bundle-Vendor: %providerName
+Bundle-Localization: plugin
