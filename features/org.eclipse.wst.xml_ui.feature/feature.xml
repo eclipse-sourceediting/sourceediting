@@ -19,8 +19,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
-      <discovery label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/repository/helios"/>
    </url>
 
    <includes
