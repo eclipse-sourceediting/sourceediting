@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: %vendorName
 Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-Localization: plugin
