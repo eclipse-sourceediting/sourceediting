@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: XPath 2 Processor Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.processor.tests;singleton:=true
 Bundle-Version: 1.1.0
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
  org.eclipse.wst.xml.xpath2.processor;bundle-version="[1.0.0,2.0.0)",
