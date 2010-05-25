@@ -16,5 +16,14 @@
 				class="org.eclipse.wst.xml.core.tests.contentmodel.CMVisitorTest" />
 		</application>
 	</extension>
+	
+	<extension point="org.eclipse.wst.xml.core.catalogContributions">
+		<catalogContribution id="default">
+			<uri
+                name="http://www.example.org/GlobalCMDocumentCacheTestSchema.xsd"
+                uri="projecttestfiles/testfiles/GlobalCMDocumentCacheTestSchema.xsd" />
+		</catalogContribution>
+	</extension>
+                
 
 </plugin>

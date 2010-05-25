@@ -54,9 +54,10 @@ public class GlobalCMDocumentCacheTest extends TestCase {
 	/*
 	 * Test description:
 	 *  - Enable global cache.
-	 *  - Load documents "web1.xml" and "web2.xml".
+	 *  - Schema GlobalCMDocumentCacheTestSchema.xsd is contributed to the system catalog.
+	 *  - Load documents "GlobalCMDocumentCacheTest1.xml" and "GlobalCMDocumentCacheTest1.xml".
 	 *  - Verify that the associated CMDocuments are the same (cached).
-	 *  - Load documents "document1.xml" and "document2.xml".  
+	 *  - Load documents "document1.xml" and "document2.xml" (local schema, not in catalog).  
 	 *  - Verify that the associated CMDocuments are different (not cached, as the schema is not in system catalog).
 	 */
 	public void testGlobalCMDocumentCacheEnabled() {
@@ -65,11 +66,11 @@ public class GlobalCMDocumentCacheTest extends TestCase {
 		setGlobalCacheEnabled(true);
 		
 		// Load "web1.xml" and "web2.xml"
-		CMDocument webCMDocument_1 = getCMDocumentFromXMLFile(PROJECT_NAME + "/web1.xml"); //$NON-NLS-1$
-		CMDocument webCMDocument_2 = getCMDocumentFromXMLFile(PROJECT_NAME + "/web2.xml"); //$NON-NLS-1$
+		CMDocument globalCMDocumentCacheTest_1 = getCMDocumentFromXMLFile(PROJECT_NAME + "/GlobalCMDocumentCacheTest1.xml"); //$NON-NLS-1$
+		CMDocument globalCMDocumentCacheTest_2 = getCMDocumentFromXMLFile(PROJECT_NAME + "/GlobalCMDocumentCacheTest2.xml"); //$NON-NLS-1$
 		
 		// Ensure CMDocuments are different.
-		assertEquals(webCMDocument_1, webCMDocument_2);
+		assertEquals(globalCMDocumentCacheTest_1, globalCMDocumentCacheTest_2);
 		
 		// Load "document1.xml" and "document2.xml"
 		CMDocument localCMDocument_1 = getCMDocumentFromXMLFile(PROJECT_NAME + "/document1.xml"); //$NON-NLS-1$
@@ -82,9 +83,10 @@ public class GlobalCMDocumentCacheTest extends TestCase {
 	/*
 	 * Test description:
 	 *  - Disable global cache.
-	 *  - Load documents "web1.xml" and "web2.xml".
+	 *  - Schema GlobalCMDocumentCacheTestSchema.xsd is contributed to the system catalog.
+	 *  - Load documents "GlobalCMDocumentCacheTest1.xml" and "GlobalCMDocumentCacheTest1.xml".
 	 *  - Verify that the associated CMDocuments are different (not cached).
-	 *  - Load documents "document1.xml" and "document2.xml".  
+	 *  - Load documents "document1.xml" and "document2.xml".  (local schema, not in catalog).  
 	 *  - Verify that the associated CMDocuments are different (not cached, as the schema is not in system catalog).
 	 */
 	public void testGlobalCMDocumentCacheDisabled() {
@@ -93,11 +95,11 @@ public class GlobalCMDocumentCacheTest extends TestCase {
 		setGlobalCacheEnabled(false);
 		
 		// Load "web1.xml" and "web2.xml"
-		CMDocument webCMDocument_1 = getCMDocumentFromXMLFile(PROJECT_NAME + "/web1.xml"); //$NON-NLS-1$
-		CMDocument webCMDocument_2 = getCMDocumentFromXMLFile(PROJECT_NAME + "/web2.xml"); //$NON-NLS-1$
+		CMDocument globalCMDocumentCacheTest_1 = getCMDocumentFromXMLFile(PROJECT_NAME + "/GlobalCMDocumentCacheTest1.xml"); //$NON-NLS-1$
+		CMDocument globalCMDocumentCacheTest_2 = getCMDocumentFromXMLFile(PROJECT_NAME + "/GlobalCMDocumentCacheTest2.xml"); //$NON-NLS-1$
 		
 		// Ensure CMDocuments are different.
-		assertNotSame(webCMDocument_1, webCMDocument_2);
+		assertNotSame(globalCMDocumentCacheTest_1, globalCMDocumentCacheTest_2);
 		
 		// Load "document1.xml" and "document2.xml"
 		CMDocument localCMDocument_1 = getCMDocumentFromXMLFile(PROJECT_NAME + "/document1.xml"); //$NON-NLS-1$
