@@ -659,4 +659,33 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 				model.releaseFromRead();
 		}
 	}
+	
+	public void test_javaVariableIncludes() throws Exception {
+		String testFolderName = "jspx_javaVariable_includes";
+		// Create new project
+		IProject project = BundleResourceUtil.createSimpleProject(testFolderName, null, null);
+		assertTrue(project.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testFolderName, "/" + testFolderName);
+
+		waitForBuildAndValidation(project);
+		
+		ValidationFramework.getDefault().validate(new IProject[]{project}, true, false, new NullProgressMonitor());
+
+		assertNoProblemMarkers(project.getFile("/WebContent/test1.jsp"));
+		assertNoProblemMarkers(project.getFile("/WebContent/index.jspx"));
+
+		// clean up if we got to the end
+		project.delete(true, true, null);
+	}
+
+	private void assertNoProblemMarkers(IFile file) throws CoreException {
+		assertTrue("sample test file does not exist", file.isAccessible());
+		IMarker[] markers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+		StringBuffer markerText = new StringBuffer();
+		for (int i = 0; i < markers.length; i++) {
+			// line/start-end
+			markerText.append("\nL" + markers[i].getAttribute(IMarker.LINE_NUMBER) + "/o" + markers[i].getAttribute(IMarker.CHAR_START) + "-"  + markers[i].getAttribute(IMarker.CHAR_END) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
+		}
+		assertEquals("Problem markers reported found \n" + markerText, 0, markers.length);
+	}
 }
