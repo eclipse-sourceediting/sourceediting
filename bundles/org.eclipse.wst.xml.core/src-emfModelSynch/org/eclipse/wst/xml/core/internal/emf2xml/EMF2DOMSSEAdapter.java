@@ -286,7 +286,8 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 				}
 				adapter = null;
 			}
-		} else {
+		}
+		if (adapter == null) {
 			adapter = primCreateAdapter(node, childMap);
 		}
 		return adapter;
