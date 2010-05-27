@@ -394,10 +394,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			String fileLocation = getAttributeValue("file", sdRegion); //$NON-NLS-1$
 			this.fTranslator.handleIncludeFile(fileLocation);
 		}
-		else if (isPossibleCustomTag(fTagname)) {
-			// this custom tag may define variables
-			this.fTranslator.addTaglibVariables(fTagname, sdRegion);
-		}
 		else if (isTaglibDirective(fTagname)) {
 			// also add the ones created here to the parent document
 			String prefix = getAttributeValue("prefix", sdRegion); //$NON-NLS-1$
