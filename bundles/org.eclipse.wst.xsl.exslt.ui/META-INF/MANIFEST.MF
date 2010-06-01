@@ -19,4 +19,3 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xsl.exslt.ui.internal;x-internal:=true,
  org.eclipse.wst.xsl.exslt.ui.internal.contentassist;x-internal:=true
-Bundle-Localization: plugin
