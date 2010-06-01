@@ -20,6 +20,7 @@ import java.util.Enumeration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
@@ -66,9 +67,11 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
  * <p>
  * 
  * @noimplement This interface is not intended to be implemented by clients.
+ * Clients should obtain an instance of the IModelManager interface through
+ * {@link StructuredModelManager#getModelManager()}.</p>
  *              </p>
  *              <p>
- * @see StructuredModelManger</p>
+ * @see {@link StructuredModelManager}</p>
  */
 public interface IModelManager {
 

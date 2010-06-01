@@ -85,16 +85,18 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
 
 /**
- * Not intended to be subclassed, referenced or instantiated by clients.
+ * <p>Not intended to be subclassed, referenced or instantiated by clients.
+ * Clients should obtain an instance of the IModelManager interface through
+ * {@link StructuredModelManager#getModelManager()}.</p>
  * 
- * This class is responsible for creating, retrieving, and caching
+ * <p>This class is responsible for creating, retrieving, and caching
  * StructuredModels It retrieves the cached objects by an id which is
  * typically a String representing the resources URI. Note: Its important that
  * all clients that share a resource do so using <b>identical </b>
  * identifiers, or else different instances will be created and retrieved,
  * even if they all technically point to the same resource on the file system.
  * This class also provides a convenient place to register Model Loaders and
- * Dumpers based on 'type'.
+ * Dumpers based on 'type'.</p>
  */
 public class ModelManagerImpl implements IModelManager {
 
