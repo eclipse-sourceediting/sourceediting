@@ -130,11 +130,11 @@
                <documentation>
                   The class that implements the contributed computer. The
 class must be public and implement
-&lt;code&gt;org.eclipse.wst.sse.ui.internal.provisional.contentassist.ICompletionProposalComputer&lt;/code&gt;
+&lt;code&gt;org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer&lt;/code&gt;
 and must have a public 0-argument constructor.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.wst.sse.ui.internal.provisional.contentassist.ICompletionProposalComputer"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer"/>
                </appInfo>
             </annotation>
          </attribute>
