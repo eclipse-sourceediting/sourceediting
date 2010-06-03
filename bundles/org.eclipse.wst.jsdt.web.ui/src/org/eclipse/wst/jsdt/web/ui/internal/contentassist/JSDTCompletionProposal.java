@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.wst.jsdt.internal.ui.text.java.LazyJavaCompletionProposal;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
@@ -49,18 +51,32 @@ public class JSDTCompletionProposal extends JavaCompletionProposal implements IJ
 	}
 	
 	/**
-	 * Sets cursor position after applying.
+	 * <p>Uses the wrapped proposal if its lazy</p>
 	 */
-	
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
-		if (this.fJavaCompletionProposal instanceof LazyJavaCompletionProposal)
-		{
-			((LazyJavaCompletionProposal)this.fJavaCompletionProposal).apply(viewer.getDocument(), trigger, offset);
-		} else {
+		if (this.fJavaCompletionProposal instanceof LazyJavaCompletionProposal) {
+			((LazyJavaCompletionProposal) this.fJavaCompletionProposal).apply(viewer, trigger, stateMask, offset);
+		}
+		else {
 			super.apply(viewer, trigger, stateMask, offset);
 		}
 	}
 	
+	/**
+	 * <p>Uses the wrapped proposal if its lazy</p>
+	 *
+	 * @return the selection after the proposal has been applied
+	 */
+	public Point getSelection(IDocument document) {
+		Point selection;
+		if (this.fJavaCompletionProposal instanceof LazyJavaCompletionProposal) {
+			selection = this.fJavaCompletionProposal.getSelection(document);
+		}
+		else {
+			selection = super.getSelection(document);
+		}
+		return selection;
+	}
 	
 	public String getAdditionalProposalInfo() {
 		String additionalInfo = super.getAdditionalProposalInfo();
