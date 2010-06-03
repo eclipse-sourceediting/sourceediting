@@ -69,6 +69,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CompletionProposalCategory;
 import org.eclipse.wst.sse.ui.internal.contentassist.CompletionProposalComputerRegistry;
 import org.eclipse.wst.sse.ui.internal.contentassist.CompletionProposoalCatigoriesConfigurationRegistry;
 import org.eclipse.wst.sse.ui.internal.contentassist.CompoundContentAssistProcessor;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContextInformationValidator;
 import org.eclipse.wst.sse.ui.internal.contentassist.OptionalMessageDialog;
 import org.eclipse.wst.sse.ui.preferences.ICompletionProposalCategoriesConfigurationReader;
 import org.eclipse.wst.sse.ui.preferences.ICompletionProposalCategoriesConfigurationWriter;
@@ -143,7 +144,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	private List fCategories;
 	
 	/** content type ID this processor is associated with */
-	private String fContentTypeID;
+	String fContentTypeID;
 	
 	/** partition type ID this processor is associated with */
 	private final String fPartitionTypeID;
@@ -169,6 +170,9 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * a document is set for this processors associated viewer.
 	 */
 	private ITextInputListener fTextInputListener;
+	
+	/** the context information validator for this processor */
+	private IContextInformationValidator fContextInformationValidator;
 	
 	/**
 	 * <p>Create a new content assist processor for a specific partition type. 
@@ -311,10 +315,13 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	}
 
 	/**
-	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationValidator()
+	 * @see org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor#getContextInformationValidator()
 	 */
 	public IContextInformationValidator getContextInformationValidator() {
-		return null;
+		if (this.fContextInformationValidator == null) {
+			this.fContextInformationValidator = new ContextInformationValidator();
+		}
+		return this.fContextInformationValidator;
 	}
 	
 	/**
@@ -483,16 +490,17 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 			}
 		}
 		
-		// if default page
 		// Deal with adding in contexts from processors added through the legacy extension
-		if (getIteration() == 0 && getLegacyExtendedContentAssistProcessors() != null &&
+		if (getLegacyExtendedContentAssistProcessors() != null &&
 				!getLegacyExtendedContentAssistProcessors().isEmpty()) {
 			
 			Iterator iter = getLegacyExtendedContentAssistProcessors().iterator();
 			while (iter.hasNext()) {
 				IContentAssistProcessor legacyProcessor = (IContentAssistProcessor) iter.next();
 				IContextInformation[] legacyComputed = legacyProcessor.computeContextInformation(viewer, offset);
-				proposals.addAll(Arrays.asList(legacyComputed));
+				if(legacyComputed != null) {
+					proposals.addAll(Arrays.asList(legacyComputed));
+				}
 			}
 		}
 
@@ -731,13 +739,6 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 			return (KeySequence) binding;
 		return null;
     }
-	
-	/**
-	 * @return the page that should be displayed next to the user
-	 */
-	private int getIteration() {
-		return fRepetition % fCategoryIteration.size();
-	}
 	
 	/**
 	 * @return <code>true</code> if displaying first page, <code>false</code> otherwise
