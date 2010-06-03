@@ -12,10 +12,12 @@ package org.eclipse.wst.html.ui.internal.contentassist;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor;
+import org.eclipse.wst.xml.ui.internal.contentassist.AttributeContextInformationPresenter;
 
 /**
  * <p>Implementation of {@link StructuredContentAssistProcessor} for HTML documents</p>
@@ -27,6 +29,9 @@ public class HTMLStructuredContentAssistProcessor extends StructuredContentAssis
 	/** the auto activation characters for this processor, set by user preference */
 	private char[] fCompletionPropoaslAutoActivationCharacters;
 
+	/** the context information validator for this processor */
+	private IContextInformationValidator fContextInformationValidator;
+	
 	/**
 	 * <p>Constructor</p>
 	 * 
@@ -39,6 +44,16 @@ public class HTMLStructuredContentAssistProcessor extends StructuredContentAssis
 		
 		super(assistant, partitionTypeID, viewer, HTMLUIPlugin.getDefault().getPreferenceStore());
 		getAutoActivationCharacterPreferences();
+	}
+	
+	/**
+	 * @see org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor#getContextInformationValidator()
+	 */
+	public IContextInformationValidator getContextInformationValidator() {
+		if (this.fContextInformationValidator == null) {
+			this.fContextInformationValidator = new AttributeContextInformationPresenter();
+		}
+		return this.fContextInformationValidator;
 	}
 	
 	/**

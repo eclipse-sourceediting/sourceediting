@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentassist;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.wst.dtd.core.internal.contentmodel.DTDImpl.DTDBaseAdapter;
 import org.eclipse.wst.dtd.core.internal.contentmodel.DTDImpl.DTDElementReferenceContentAdapter;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocument;
@@ -44,6 +46,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer;
+import org.eclipse.wst.xml.ui.internal.contentassist.AttributeContextInformationPresenter;
+import org.eclipse.wst.xml.ui.internal.contentassist.AttributeContextInformationProvider;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentModelGenerator;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
@@ -61,6 +65,16 @@ public class HTMLTagsCompletionProposalComputer extends
 	
 	/** <code>true</code> if the document the proposal request is on is XHTML */
 	protected boolean isXHTML = false;
+	
+	/** the context information validator for this computer */
+	private IContextInformationValidator fContextInformationValidator;
+	
+	/**
+	 * TODO: IAN: Comment me
+	 */
+	public HTMLTagsCompletionProposalComputer() {
+		this.fContextInformationValidator = null;
+	}
 	
 	/**
 	 * <p>Determine if the document is XHTML or not, then compute the proposals</p>
@@ -82,6 +96,19 @@ public class HTMLTagsCompletionProposalComputer extends
 		
 		//compute the completion proposals
 		return super.computeCompletionProposals(context, monitor);
+	}
+	
+	/**
+	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLCompletionProposalComputer#computeContextInformation(org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public List computeContextInformation(
+			CompletionProposalInvocationContext context,
+			IProgressMonitor monitor) {
+		
+		AttributeContextInformationProvider attributeInfoProvider =
+			new AttributeContextInformationProvider((IStructuredDocument)context.getDocument(),
+					(AttributeContextInformationPresenter) getContextInformationValidator());
+		return Arrays.asList(attributeInfoProvider.getAttributeInformation(context.getInvocationOffset()));
 	}
 	
 	/**
@@ -267,5 +294,20 @@ public class HTMLTagsCompletionProposalComputer extends
 		// this should never be reached
 		DocumentType docType = doc.getDoctype();
 		return docType != null && docType.getPublicId() != null && docType.getPublicId().indexOf("-//W3C//DTD XHTML ") == 0; //$NON-NLS-1$
+	}
+	
+	/**
+	 * Returns a validator used to determine when displayed context
+	 * information should be dismissed. May only return <code>null</code> if
+	 * the processor is incapable of computing context information.
+	 * 
+	 * a context information validator, or <code>null</code> if the
+	 * processor is incapable of computing context information
+	 */
+	private IContextInformationValidator getContextInformationValidator() {
+		if (fContextInformationValidator == null) {
+			fContextInformationValidator = new AttributeContextInformationPresenter();
+		}
+		return fContextInformationValidator;
 	}
 }
