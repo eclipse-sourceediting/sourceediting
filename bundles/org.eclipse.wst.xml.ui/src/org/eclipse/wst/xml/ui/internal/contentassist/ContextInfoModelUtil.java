@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,9 @@ public class ContextInfoModelUtil {
 		IDOMNode xmlNode = null;
 		try {
 			xmlModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-			xmlNode = (IDOMNode) xmlModel.getIndexedRegion(offset);
+			if (xmlModel != null) {
+				xmlNode = (IDOMNode) xmlModel.getIndexedRegion(offset);
+			}
 		}
 		finally {
 			if (xmlModel != null)

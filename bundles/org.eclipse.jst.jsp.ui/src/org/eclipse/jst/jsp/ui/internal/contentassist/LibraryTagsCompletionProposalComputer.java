@@ -11,9 +11,11 @@
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.contentmodel.JSPCMDocumentFactory;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
@@ -68,6 +70,16 @@ public class LibraryTagsCompletionProposalComputer extends
 	
 	private int fDepthCount;
 
+	/**
+	 * @see org.eclipse.wst.html.ui.internal.contentassist.HTMLTagsCompletionProposalComputer#computeContextInformation(org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public List computeContextInformation(
+			CompletionProposalInvocationContext context,
+			IProgressMonitor monitor) {
+		
+		return Collections.EMPTY_LIST;
+	}
+	
 	/**
 	 * @see org.eclipse.wst.html.ui.internal.contentassist.HTMLTagsCompletionProposalComputer#validModelQueryNode(org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
 	 */

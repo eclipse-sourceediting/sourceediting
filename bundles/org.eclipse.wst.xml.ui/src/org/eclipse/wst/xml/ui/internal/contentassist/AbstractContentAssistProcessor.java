@@ -39,6 +39,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer;
 import org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
@@ -82,7 +83,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * @deprecated This class is no longer used locally and will be removed in the future
+ * @deprecated This class is no longer used locally and will be removed in the future.
+ * Implementers of this class should now use the <code>org.eclipse.wst.sse.ui.completionProposal</code>
+ * extension point in conjunction with the {@link ICompletionProposalComputer} interface.
+ * 
  * @see StructuredContentAssistProcessor
  */
 abstract public class AbstractContentAssistProcessor implements IContentAssistProcessor, IReleasable {
@@ -114,7 +118,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	protected static final String UNKNOWN_CONTEXT = XMLUIMessages.Content_Assist_not_availab_UI_;
 	protected char completionProposalAutoActivationCharacters[] = null;
 	protected char contextInformationAutoActivationCharacters[] = null;
-	private AttributeContextInformationProvider fAttributeInfoProvider = null;
 	private AttributeContextInformationPresenter fContextInformationPresenter = null;
 
 	protected String fErrorMessage = null;
@@ -1459,10 +1462,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 *            <code>null</code> if no context could be found
 	 */
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
-		if (fAttributeInfoProvider == null) {
-			fAttributeInfoProvider = new AttributeContextInformationProvider((IStructuredDocument) viewer.getDocument(), (AttributeContextInformationPresenter) getContextInformationValidator());
-		}
-		return fAttributeInfoProvider.getAttributeInformation(documentOffset);
+		return new IContextInformation[0];
 	}
 
 	protected ContentAssistRequest computeEndTagOpenProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {

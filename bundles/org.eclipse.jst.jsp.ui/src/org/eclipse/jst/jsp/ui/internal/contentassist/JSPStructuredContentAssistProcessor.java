@@ -14,11 +14,13 @@ import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor;
+import org.eclipse.wst.xml.ui.internal.contentassist.AttributeContextInformationPresenter;
 
 /**
  * <p>Implementation of {@link StructuredContentAssistProcessor} for JSP documents</p>
@@ -36,6 +38,9 @@ public class JSPStructuredContentAssistProcessor extends StructuredContentAssist
 	
 	/** property key for determining what the auto activation characters are */
 	private String fAutoActivationCharactersPropertyKey;
+	
+	/** the context information validator for this processor */
+	private IContextInformationValidator fContextInformationValidator;
 	
 	/**
 	 * <p>Constructor</p>
@@ -61,6 +66,16 @@ public class JSPStructuredContentAssistProcessor extends StructuredContentAssist
 		
 		//get the current user preference
 		getAutoActivationCharacterPreferences();
+	}
+	
+	/**
+	 * @see org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor#getContextInformationValidator()
+	 */
+	public IContextInformationValidator getContextInformationValidator() {
+		if (this.fContextInformationValidator == null) {
+			this.fContextInformationValidator = new AttributeContextInformationPresenter();
+		}
+		return this.fContextInformationValidator;
 	}
 	
 	/**

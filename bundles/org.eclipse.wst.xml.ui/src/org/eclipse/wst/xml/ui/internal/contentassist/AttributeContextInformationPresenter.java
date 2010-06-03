@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,13 +19,13 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
-import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContextInformationValidator;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
@@ -36,43 +36,22 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * 
  * @author pavery
  */
-public class AttributeContextInformationPresenter implements IContextInformationPresenter, IContextInformationValidator {
-	private int fDocumentPosition = -1;
+public class AttributeContextInformationPresenter extends ContextInformationValidator implements IContextInformationPresenter {
 
 	private IContextInformation fInfo = null;
 	private ContextInfoModelUtil fModelUtil = null;
-	private ITextViewer fViewer = null;
 
 	public AttributeContextInformationPresenter() {
 		super();
 	}
-
+	
 	/**
-	 * @see org.eclipse.jface.text.contentassist.IContextInformationValidator#install(org.eclipse.jface.text.contentassist.IContextInformation,
-	 *      org.eclipse.jface.text.ITextViewer, int)
+	 * @see org.eclipse.wst.sse.ui.internal.contentassist.ContextInformationValidator#install(org.eclipse.jface.text.contentassist.IContextInformation, org.eclipse.jface.text.ITextViewer, int)
 	 */
 	public void install(IContextInformation info, ITextViewer viewer, int documentPosition) {
-		fInfo = info;
-		fViewer = viewer;
-		fDocumentPosition = documentPosition;
-		fModelUtil = new ContextInfoModelUtil((IStructuredDocument) fViewer.getDocument());
-	}
-
-	/**
-	 * @see org.eclipse.jface.text.contentassist.IContextInformationValidator#isContextInformationValid(int)
-	 */
-	public boolean isContextInformationValid(int documentPosition) {
-		// determine whether or not this context info should still be
-		// showing...
-		// if cursor still within the element it's valid...
-		boolean result = false;
-		if (fModelUtil != null) {
-			IStructuredDocumentRegion startRegion = fModelUtil.getXMLNode(fDocumentPosition).getStartStructuredDocumentRegion();
-			int start = startRegion.getStartOffset();
-			int end = startRegion.getEndOffset();
-			result = (documentPosition < end) && (documentPosition > start + 1);
-		}
-		return result;
+		super.install(info, viewer, documentPosition);
+		this.fInfo = info;
+		this.fModelUtil = new ContextInfoModelUtil((IStructuredDocument) viewer.getDocument());
 	}
 
 	/**
@@ -88,6 +67,9 @@ public class AttributeContextInformationPresenter implements IContextInformation
 
 		// iterate existing attributes from current node
 		IDOMNode xmlNode = fModelUtil.getXMLNode(documentPosition);
+		if (xmlNode == null)
+			return false;
+		
 		IStructuredDocumentRegion sdRegion = xmlNode.getFirstStructuredDocumentRegion();
 		ITextRegionList regions = sdRegion.getRegions();
 		ITextRegion r = null;

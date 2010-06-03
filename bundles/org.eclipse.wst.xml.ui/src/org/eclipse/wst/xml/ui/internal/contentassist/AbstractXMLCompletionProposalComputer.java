@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.ui.internal.contentassist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -21,7 +22,6 @@ import java.util.Vector;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -76,15 +76,10 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 		private static final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
 	}
 
-	private AttributeContextInformationProvider fAttributeInfoProvider;
-	private AttributeContextInformationPresenter fContextInformationPresenter;
-
 	private String fErrorMessage;
 	private ITextViewer fTextViewer;
 
 	public AbstractXMLCompletionProposalComputer() {
-		fAttributeInfoProvider = null;
-		fContextInformationPresenter = null;
 		fErrorMessage = null;
 		fTextViewer = null;
 	}
@@ -200,11 +195,8 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 			CompletionProposalInvocationContext context,
 			IProgressMonitor monitor) {
 		
-		if (fAttributeInfoProvider == null) {
-			fAttributeInfoProvider = new AttributeContextInformationProvider((IStructuredDocument)context.getDocument(),
-					(AttributeContextInformationPresenter) getContextInformationValidator());
-		}
-		return Arrays.asList(fAttributeInfoProvider.getAttributeInformation(context.getInvocationOffset()));
+		//no default context info
+		return Collections.EMPTY_LIST;
 	}
 	
 	/**
@@ -1108,21 +1100,6 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 				(type == DOMRegionContext.XML_ATTLIST_DECL_NAME) ||
 				(type == DOMJSPRegionContextsPrivateCopy.JSP_ROOT_TAG_NAME) ||
 				type.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_NAME));
-	}
-
-	/**
-	 * Returns a validator used to determine when displayed context
-	 * information should be dismissed. May only return <code>null</code> if
-	 * the processor is incapable of computing context information.
-	 * 
-	 * a context information validator, or <code>null</code> if the
-	 * processor is incapable of computing context information
-	 */
-	private IContextInformationValidator getContextInformationValidator() {
-		if (fContextInformationPresenter == null) {
-			fContextInformationPresenter = new AttributeContextInformationPresenter();
-		}
-		return fContextInformationPresenter;
 	}
 	
 	/**
