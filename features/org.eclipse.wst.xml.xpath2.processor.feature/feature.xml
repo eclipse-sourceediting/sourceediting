@@ -2,8 +2,8 @@
 <feature
       id="org.eclipse.wst.xml.xpath2.processor.feature"
       label="%featureName"
-      version="1.1.004.qualifier"
-      provider-name="%provider"
+      version="1.1.4.qualifier"
+      provider-name="%providerName"
       plugin="org.eclipse.wst.xml.xpath2">
 
    <description>
