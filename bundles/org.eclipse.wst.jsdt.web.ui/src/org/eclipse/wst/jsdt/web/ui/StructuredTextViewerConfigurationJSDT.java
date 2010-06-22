@@ -10,12 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui;
 
-import org.eclipse.jface.text.formatter.IContentFormatter;
-import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSDT;
 
 /**
 *
@@ -41,22 +36,5 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 	public StructuredTextViewerConfigurationJSDT() {
 		// Must have empty constructor to createExecutableExtension
 		super();
-	}
-	
-	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final IContentFormatter formatter = super.getContentFormatter(sourceViewer);
-		if(formatter instanceof MultiPassContentFormatter) {
-		/*
-		 * Check for any externally supported auto edit strategies from EP.
-		 * [Bradley Childs - childsb@us.ibm.com]
-		 */
-		String[] contentTypes = getConfiguredContentTypes(sourceViewer);
-		for (int i = 0; i < contentTypes.length; i++) {
-				if (IHTMLPartitions.SCRIPT.equals(contentTypes[i])) {
-					((MultiPassContentFormatter) formatter).setSlaveStrategy(new FormattingStrategyJSDT(), contentTypes[i]);
-				}
-			}
-		}
-		return formatter;
 	}
 }
