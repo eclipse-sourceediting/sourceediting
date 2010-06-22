@@ -157,6 +157,7 @@
 				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE"/>
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+                <partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
