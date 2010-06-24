@@ -1,5 +1,5 @@
 // *******************************************************************************
-// * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+// * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
 // * All rights reserved. This program and the accompanying materials
 // * are made available under the terms of the Eclipse Public License v1.0
 // * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 // *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
 // *     David Carver (STAR) - bug 262765 - Fixed Wildcard and NCName issue. 
 // *     Jesper S Moller - bug 297707 - Missing the empty-sequence() type
+// *     Jesper S Moller - bug 311480 - fix problem with name matching on keywords 
 // *******************************************************************************/
 
 
@@ -71,11 +72,11 @@ terminal BigDecimal DECIMAL;
 terminal String STRING, NCNAME;
 
 
-non terminal String Prefix, LocalPart, NCName, UnqualifiedNCName, UnqualifiedLocalPart;
+non terminal String NCName, UnreservedNCName, Prefix, LocalPart;
 non terminal StringLiteral StringLiteral;
 non terminal QName ElementDeclaration, ElementNameOrWildcard, TypeName, ElementName;
 non terminal QName AttributeDeclaration, AttribNameOrWildcard, AttributeName;
-non terminal QName AtomicType, QName, VarName, Wildcard;
+non terminal QName AtomicType, QName, UnreservedQName, VarName, Wildcard;
 non terminal Integer OccurrenceIndicator, ReverseAxis, ForwardAxis, NodeComp;
 non terminal ItemType ItemType;
 non terminal Collection FunctionCallMiddle, ParenthesizedExpr, Expr;
@@ -125,7 +126,7 @@ non terminal Collection Predicate;
 precedence left PLUS, MINUS;
 precedence left STAR;
 precedence left COLON;
-precedence left NCNAME;
+precedence left COLONCOLON;
 precedence left CHILD, DESCENDANT, ATTRIBUTE, SELF, DESCENDANT_OR_SELF;
 precedence left FOLLOWING_SIBLING, FOLLOWING, NAMESPACE, PARENT;
 precedence left ANCESTOR, PRECEDING_SIBLING, PRECEDING, ANCESTOR_OR_SELF;
@@ -136,7 +137,7 @@ precedence left SOME, EVERY;
 precedence left IF, THEN, ELSE;
 precedence left AND, OR;
 precedence left DIV, IDIV, MOD;
-
+precedence left EQ, NE, LT, LE, GT, GE;
 
 
 
@@ -428,7 +429,7 @@ NameTest            ::= QName:n    {: RESULT = new NameTest(n); :}
 Wildcard            ::= STAR 		    {: RESULT = new QName("*","*"); :}
 // XXX: some1 disambiguate the grammar
 // i.e. give higher precedence to a QName rather than to a wildcard
-//                      | NCName:n COLON STAR {: RESULT = new QName(n, "*"); :}
+                      | NCName:n COLON STAR {: RESULT = new QName(n, "*"); :}
                       | STAR COLON NCName:n {: RESULT = new QName("*", n); :}
 		      ;
 
@@ -472,11 +473,11 @@ ParenthesizedExpr   ::= LPAR RPAR	 {: RESULT = new ArrayList(); :}
 
 ContextItemExpr     ::= DOT {: RESULT = new CntxItemExpr(); :};
    
-FunctionCall        ::= QName:n LPAR RPAR
+FunctionCall        ::= UnreservedQName:n LPAR RPAR
 			{:
 			   RESULT = new FunctionCall(n,new ArrayList());
 			:}
-                      | QName:n LPAR FunctionCallMiddle:a RPAR
+                      | UnreservedQName:n LPAR FunctionCallMiddle:a RPAR
 			{:
 			   RESULT = new FunctionCall(n,a);
 			:}
@@ -652,15 +653,17 @@ StringLiteral         ::= STRING:s {: RESULT = new StringLiteral(s); :};
 
 VarName               ::= QName:n {: RESULT = n; :};
 
-QName                 ::= UnqualifiedLocalPart:l {: RESULT = new QName(l); :}
-                        | Prefix:p COLON LocalPart:l {: RESULT = new QName(p,l); :}
+QName                 ::= NCName:l {: RESULT = new QName(l); :}
+                        | NCName:p COLON NCName:l {: RESULT = new QName(p,l); :}
 						;
 
 Prefix                ::= NCName:n {: RESULT = n; :};
 
 LocalPart             ::= NCName:n {: RESULT = n; :};
 
-UnqualifiedLocalPart  ::= UnqualifiedNCName:n {: RESULT = n; :};
+UnreservedQName       ::= UnreservedNCName:l {: RESULT = new QName(l); :}
+                        | NCName:p COLON NCName:l {: RESULT = new QName(p,l); :}
+						;
 
 NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  TO:n	   {: RESULT = new String("to"); :} |
@@ -682,6 +685,7 @@ NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  EXCEPT:n {: RESULT = new String("except"); :} |
 						  INSTANCE:n {: RESULT = new String("instance"); :} |
 						  OF:n {: RESULT = new String("of"); :} |
+						  AS:n {: RESULT = new String("as"); :} |
 						  TREAT:n {: RESULT = new String("as"); :} |
 						  CASTABLE:n {: RESULT = new String("castable"); :} |
 						  CAST:n {: RESULT = new String("cast"); :} |
@@ -711,10 +715,15 @@ NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  TEXT:n {: RESULT = new String("text"); :} |
 						  TYPESWITCH:n {: RESULT = new String("typeswitch"); :} |
 						  MOD:n {: RESULT = new String("mod"); :} |
-						  STAR:n {: RESULT = new String("*"); :}
+						  EQ:n {: RESULT = new String("eq"); :} |
+						  NE:n {: RESULT = new String("ne"); :} |
+						  LT:n {: RESULT = new String("lt"); :} |
+						  LE:n {: RESULT = new String("le"); :} |
+						  GT:n {: RESULT = new String("gt"); :} |
+						  GE:n {: RESULT = new String("ge"); :}
 			; 
 
-UnqualifiedNCName     ::= NCNAME:n {: RESULT = n; :} |
+UnreservedNCName      ::= NCNAME:n {: RESULT = n; :} |
 						  TO:n	   {: RESULT = new String("to"); :} |
 						  CHILD:n  {: RESULT = new String("child"); :} |
 						  DESCENDANT:n {: RESULT = new String("descendant"); :} |
@@ -733,6 +742,7 @@ UnqualifiedNCName     ::= NCNAME:n {: RESULT = n; :} |
 						  EXCEPT:n {: RESULT = new String("except"); :} |
 						  INSTANCE:n {: RESULT = new String("instance"); :} |
 						  OF:n {: RESULT = new String("of"); :} |
+						  AS:n {: RESULT = new String("as"); :} |
 						  TREAT:n {: RESULT = new String("as"); :} |
 						  CASTABLE:n {: RESULT = new String("castable"); :} |
 						  CAST:n {: RESULT = new String("cast"); :} |
@@ -749,8 +759,13 @@ UnqualifiedNCName     ::= NCNAME:n {: RESULT = n; :} |
 						  OR:n {: RESULT = new String("or"); :} |
 						  DIV:n {: RESULT = new String("div"); :} |
 						  IDIV:n {: RESULT = new String("idiv"); :} |
-						  MOD:n {: RESULT = new String("mod"); :}
-						  STAR:n {: RESULT = new String("*"); :}
+						  MOD:n {: RESULT = new String("mod"); :} |
+						  EQ:n {: RESULT = new String("eq"); :} |
+						  NE:n {: RESULT = new String("ne"); :} |
+						  LT:n {: RESULT = new String("lt"); :} |
+						  LE:n {: RESULT = new String("le"); :} |
+						  GT:n {: RESULT = new String("gt"); :} |
+						  GE:n {: RESULT = new String("ge"); :}
 						  
 			; 
 			

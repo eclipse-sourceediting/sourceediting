@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.processor
-Bundle-Version: 1.1.001.qualifier
+Bundle-Version: 1.1.002.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
  org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
  java_cup.runtime;bundle-version="0.10.0",
