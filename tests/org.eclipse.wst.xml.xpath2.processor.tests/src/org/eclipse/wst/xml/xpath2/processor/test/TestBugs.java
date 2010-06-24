@@ -39,6 +39,7 @@
  *                                 arity of fn:name function.
  *  Mukul Gandhi    - bug 309585   implementation of xs:normalizedString data type                             
  * Jesper S Moller  - bug 311480 - fix problem with name matching on keywords 
+ * Jesper S Moller  - bug 312191 - instance of test fails with partial matches
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -1272,7 +1273,99 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
+	public void testXPathInstanceOf5_2() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "(/Example/x, /Example) instance of element(x, x_Type)+";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		assertEquals(false, result.value());
+	}
+
+	public void testXPathInstanceOf5_3() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "(/Example/x, /Example/x) instance of element(x, x_Type)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		assertFalse(result.value());
+	}
+
+	public void testXPathInstanceOf5_4() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "(/Example/x, /Example/x) instance of element(x, x_Type)+";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		assertTrue(result.value());
+	}
+
+	public void testXPathInstanceOf5_5() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "(/Example/x instance of x_Type+) and (/Example/x[2]/@mesg instance of mesg_Type)";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		assertEquals(true, result.value());
+	}
+
 	public void testXPathInstanceOf6() throws Exception {
 		// Bug 298267
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
