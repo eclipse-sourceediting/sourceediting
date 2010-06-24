@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009-2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@
  *  Mukul Gandhi    - bug 301539   fix for "context undefined" bug in case of zero
  *                                 arity of fn:name function.
  *  Mukul Gandhi    - bug 309585   implementation of xs:normalizedString data type                             
+ * Jesper S Moller  - bug 311480 - fix problem with name matching on keywords 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -79,6 +80,33 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	}
 
+	
+
+
+	public void testNamesWhichAreKeywords() throws Exception {
+		// Bug 273719
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug311480.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+//		String xpath = "($input-context/atomic:root/atomic:integer) union ($input-context/atomic:root/atomic:integer)";
+		String xpath = "(/element/eq eq 'eq') or //child::xs:*";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
 	public void testStringLengthWithElementArg() throws Exception {
 		// Bug 273719
 		URL fileURL = bundle.getEntry("/bugTestFiles/bug273719.xml");
@@ -1611,4 +1639,20 @@ public class TestBugs extends AbstractPsychoPathTest {
 			}
 		};
 	}
+	
+	public void testParseElementKeywordsAsNodes() throws Exception {
+		// Bug 311480
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "/element/attribute";
+		XPath path = compileXPath(dc, xpath);
+	}
+	
 }
