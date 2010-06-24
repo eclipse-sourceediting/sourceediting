@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moller - bug 312191 - instance of test fails with partial matches
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
@@ -78,5 +79,18 @@ public class SequenceType extends XPathNode {
 	 */
 	public ItemType item_type() {
 		return _it;
+	}
+
+	public boolean isLengthValid(int length) {
+		switch (occurrence()) {
+		case EMPTY: return length == 0;
+		case NONE: return length == 1;
+		case QUESTION: return length <= 1;
+		case STAR: return true;
+		case PLUS: return length >= 1;
+		default:
+			assert false;
+			return false;
+		}
 	}
 }

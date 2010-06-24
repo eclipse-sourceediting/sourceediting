@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,14 +14,20 @@
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *     Jesper Steen Moller  - bug 281938 - undefined context should raise error
  *     Jesper Steen Moller  - bug 262765 - use correct 'effective boolean value'
+ *     Jesper Steen Moller  - bug 312191 - instance of test fails with partial matches
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
 
 import java.math.BigInteger;
-import java.util.*;
-import org.w3c.dom.*;
-import org.apache.xerces.xs.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.apache.xerces.xs.ItemPSVI;
+import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.Axis;
 import org.eclipse.wst.xml.xpath2.processor.internal.DescendantOrSelfAxis;
@@ -34,14 +40,107 @@ import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticTypeNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AddExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AndExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AnyKindTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AttributeTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AxisStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.BinExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CastExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CastableExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CmpExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CntxItemExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CommentTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DecimalLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DivExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DocumentTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DoubleLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ElementTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ExceptExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.Expr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.FilterExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ForExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ForwardStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.FunctionCall;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IDivExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IfExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.InstOfExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntegerLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntersectExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ItemType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.MinusExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ModExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.MulExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.NameTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.OrExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PITest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ParExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PipeExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PlusExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.QuantifiedExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.RangeExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ReverseStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SchemaAttrTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SchemaElemTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SequenceType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SingleType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.StepExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.StringLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SubExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.TextTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.TreatAsExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.UnionExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.VarExprPair;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.VarRef;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathNode;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FnBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FnData;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FnRoot;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsDiv;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsGe;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsGt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsIDiv;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsLe;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsLt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsMinus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsMod;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsNe;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsPlus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FsTimes;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.OpExcept;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.OpIntersect;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.OpTo;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.OpUnion;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AttrType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.CommentType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.PIType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.TextType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Default evaluator interface
  */
 public class DefaultEvaluator implements XPathVisitor, Evaluator {
+
+	private static final String XML_SCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
+
+	private static final QName ANY_ATOMIC_TYPE = new QName("xs",
+			"anyAtomicType", XML_SCHEMA_NS);
 
 	static class DummyError extends Error {
 		/**
@@ -741,16 +840,25 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// get the sequence type
 		SequenceType seqt = (SequenceType) ioexp.right();
-		SeqType st = new SeqType(seqt, _dc, rs);
-
-		// see if they match
+		return ResultSequenceFactory.create_new(new XSBoolean(isInstanceOf(rs, seqt)));
+	}
+		
+	private boolean isInstanceOf(ResultSequence rs, SequenceType seqt) {
+		Object oldParam = this._param;
 		try {
-			st.match(rs);
-		} catch (DynamicError err) {
-			return ResultSequenceFactory.create_new(new XSBoolean(false));
+			this._param = new Pair(null, rs);
+			int sequenceLength = rs.size();
+			// Run the matcher
+			seqt.accept(this);
+			int lengthAfter = rs.size();
+		
+			if (sequenceLength != lengthAfter)
+				return false; // Something didn't match, so it's not an instance of it
+			
+			return seqt.isLengthValid(sequenceLength);
+		} finally {
+			this._param = oldParam;
 		}
-
-		return ResultSequenceFactory.create_new(new XSBoolean(true));
 	}
 
 	/**
@@ -1450,9 +1558,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			if (!_dc.type_defined(e.qname()))
 				report_error(new StaticTypeNameError("Type not defined: "
 						+ e.qname().string()));
-			/*
-			 * } catch(StaticNsNameError ns) { report_error(ns); }
-			 */
+			
+			ResultSequence arg = (ResultSequence) ((Pair) _param)._two;
+			item_test(arg, e.qname());
 			break;
 
 		case ItemType.KINDTEST:
@@ -1463,6 +1571,31 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		return null;
 	}
 
+	private ResultSequence item_test(ResultSequence rs, QName qname) {
+		for (Iterator i = rs.iterator(); i.hasNext();) {
+			AnyType item = (AnyType) i.next();
+			
+			if (item instanceof NodeType) {
+				NodeType node = ((NodeType)item);
+				if (node.node_value() instanceof ItemPSVI) {
+					if (_dc.derives_from(node , qname)) continue;
+				}
+				// fall through => non-match
+			} else {
+				// atomic of some sort
+				if (qname.equals(ANY_ATOMIC_TYPE)) continue; // match !
+				
+				final AnyAtomicType aat = _dc.make_atomic(qname);
+				if (aat.getClass().isInstance(item)) continue;
+				
+				// fall through => non-match
+			}
+			i.remove();
+		}
+		return rs;
+	}
+
+	
 	private ResultSequence kind_test(ResultSequence rs, Class kind) {
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			if (!kind.isInstance(i.next()))
