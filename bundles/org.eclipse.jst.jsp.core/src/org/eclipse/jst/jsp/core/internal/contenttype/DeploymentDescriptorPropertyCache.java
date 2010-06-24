@@ -59,7 +59,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * A cache fo property group information stored in web.xml files. Information
+ * A cache for property group information stored in web.xml files. Information
  * is not persisted.
  */
 public final class DeploymentDescriptorPropertyCache {
@@ -255,7 +255,9 @@ public final class DeploymentDescriptorPropertyCache {
 						if (_debugResolutionCache) {
 							System.out.println("Removing DeploymentDescriptorPropertyCache resolution cache for project " + name); //$NON-NLS-1$ 
 						}
-						getInstance().resolvedMap.remove(name);
+						synchronized (LOCK) {
+							getInstance().resolvedMap.remove(name);
+						}
 					}
 					return true;
 				}
@@ -627,6 +629,8 @@ public final class DeploymentDescriptorPropertyCache {
 
 	Map resolvedMap = new HashMap();
 
+	final static Object LOCK = new Object();
+
 	private DeploymentDescriptorPropertyCache() {
 		super();
 	}
@@ -908,15 +912,16 @@ public final class DeploymentDescriptorPropertyCache {
 		 */
 		IPath resolved = null;
 		Map mapForProject = null;
-		mapForProject = (Map) resolvedMap.get(fullPath.segment(0));
-		if (mapForProject != null) {
-			resolved = (IPath) mapForProject.get(fullPath);
+		synchronized (LOCK) {
+			mapForProject = (Map) resolvedMap.get(fullPath.segment(0));
+			if (mapForProject != null) {
+				resolved = (IPath) mapForProject.get(fullPath);
+			}
+			else {
+				mapForProject = new HashMap();
+				resolvedMap.put(fullPath.segment(0), mapForProject);
+			}
 		}
-		else {
-			mapForProject = new HashMap();
-			resolvedMap.put(fullPath.segment(0), mapForProject);
-		}
-
 		if (resolved != null) {
 			if (_debugResolutionCache) {
 				System.out.println("DeploymentDescriptorPropertyCache resolution cache hit for " + fullPath); //$NON-NLS-1$ 
