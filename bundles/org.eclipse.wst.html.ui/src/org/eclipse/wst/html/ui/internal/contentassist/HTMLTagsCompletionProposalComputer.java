@@ -18,6 +18,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.wst.dtd.core.internal.contentmodel.DTDImpl.DTDBaseAdapter;
 import org.eclipse.wst.dtd.core.internal.contentmodel.DTDImpl.DTDElementReferenceContentAdapter;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLAttributeDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocument;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLPropertyDeclaration;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
@@ -139,6 +140,9 @@ public class HTMLTagsCompletionProposalComputer extends
 				String spec = dtd.getSpec();
 				isValid = spec.indexOf("html") != -1;
 			}
+		} else if (node.supports(HTMLAttributeDeclaration.IS_HTML)) {
+			Boolean isHTML = (Boolean) node.getProperty(HTMLAttributeDeclaration.IS_HTML);
+			isValid = isHTML == null || isHTML.booleanValue();
 		} else if(node instanceof HTMLPropertyDeclaration) {
 			HTMLPropertyDeclaration propDec = (HTMLPropertyDeclaration)node;
 			isValid = !propDec.isJSP();
