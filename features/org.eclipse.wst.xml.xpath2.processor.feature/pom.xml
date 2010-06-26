@@ -7,7 +7,7 @@
 		<groupId>org.eclipse.wst.xml.xpath2</groupId>
 		<artifactId>org.eclipse.wst.xml.xpath2-parent</artifactId>
 		<version>1.1.001-SNAPSHOT</version>
-		<relativePath>../development/org.eclipse.wst.xml.xpath2.releng</relativePath>
+		<relativePath>../development/athena/org.eclipse.wst.xml.xpath2.releng</relativePath>
 	</parent>
 
 	<artifactId>org.eclipse.wst.xml.xpath2.processor.feature</artifactId>
