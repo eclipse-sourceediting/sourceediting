@@ -2467,7 +2467,7 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
    public void test_fn_distinct_values_mixed_args_028() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-028.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc//fn-distinct-values-mixed-args-028.txt";
+      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-028.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
