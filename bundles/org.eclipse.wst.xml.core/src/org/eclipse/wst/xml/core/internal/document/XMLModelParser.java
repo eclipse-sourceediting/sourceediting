@@ -1321,6 +1321,15 @@ public class XMLModelParser {
 						next = parent.getNextSibling();
 						parent = parent.getParentNode();
 					}
+					else {
+						ModelParserAdapter adapter = getParserAdapter();
+						if (adapter != null) {
+							while (parent.getNodeType() == Node.ELEMENT_NODE && !adapter.canContain( (Element) parent, node) && adapter.isEndTagOmissible((Element) parent)) {
+								next = parent.getNextSibling();
+								parent = parent.getParentNode();
+							}
+						}
+					}
 				}	
 				insertNode(parent, node, next);
 				next = node.getNextSibling();
