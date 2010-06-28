@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.wst.html.core.tests.parser.EntityTest6;
 import org.eclipse.wst.html.core.tests.parser.EntityTest7;
 import org.eclipse.wst.html.core.tests.parser.EntityTest8;
 import org.eclipse.wst.html.core.tests.parser.EntityTest9;
+import org.eclipse.wst.html.core.tests.parser.OmissibleTest;
 import org.eclipse.wst.html.core.tests.parser.PITest;
 import org.eclipse.wst.html.core.tests.parser.ParserTest;
 import org.eclipse.wst.html.core.tests.parser.ParserTest2;
@@ -128,6 +129,7 @@ public class ModelParserTests extends TestSuite {
 		addTest(new TestSuite(CDATASectionTest2.class, "CDATASectionTest2"));
 		addTest(new TestSuite(CDATASectionTest3.class, "CDATASectionTest3"));
 		addTest(new TestSuite(PITest.class, "PITest"));
+		addTest(new TestSuite(OmissibleTest.class, "Omissible tags test"));
 
 	}
 }
