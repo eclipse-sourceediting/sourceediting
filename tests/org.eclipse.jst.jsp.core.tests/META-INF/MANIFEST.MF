@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.jst.jsp.core.tests
-Bundle-Version: 1.0.400.qualifier
+Bundle-Version: 1.0.500.qualifier
 Bundle-ClassPath: jspcoretests.jar
 Bundle-Activator: org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
