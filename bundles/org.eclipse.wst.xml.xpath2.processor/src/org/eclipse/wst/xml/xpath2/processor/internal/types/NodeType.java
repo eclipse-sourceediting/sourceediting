@@ -218,45 +218,123 @@ public abstract class NodeType extends AnyType {
 	}
 
 	protected Object getTypedValueForPrimitiveType(XSTypeDefinition typeDef) {		
-		Object schemaTypeValue = null;
+		Object schemaTypeValue = null;		
+		String strValue = string_value();
+
 		if (typeDef == null) {
-			return new XSUntypedAtomic(string_value());
+			return new XSUntypedAtomic(strValue);
 		}
+
 		String typeName = typeDef.getName();
-		if ("date".equals(typeName)) {		
-		   schemaTypeValue = XSDate.parse_date(string_value());
+		if ("anyURI".equals(typeName)) {
+			schemaTypeValue = new XSAnyURI(strValue);
 		}
-		else if ("int".equals(typeName)) {		
-		   schemaTypeValue = new XSInt(new BigInteger(string_value()));
+		else if ("boolean".equals(typeName)) {
+			schemaTypeValue = new XSBoolean(Boolean.valueOf(strValue).
+					booleanValue());
 		}
-		else if ("long".equals(typeName)) {		
-		  schemaTypeValue = new XSLong(new BigInteger(string_value()));
-	    }
-		else if ("integer".equals(typeName)) {		
-		  schemaTypeValue = new XSInteger(new BigInteger(string_value()));
+		else if ("date".equals(typeName)) {       
+			schemaTypeValue = XSDate.parse_date(strValue);
 		}
-		else if ("double".equals(typeName)) {		
-		  schemaTypeValue = new XSDouble(Double.parseDouble(string_value()));
+		else if ("dateTime".equals(typeName)) {
+			schemaTypeValue = XSDateTime.parseDateTime(strValue);
 		}
-		else if ("float".equals(typeName)) {		
-		  schemaTypeValue = new XSFloat(Float.parseFloat(string_value()));
-	    }
-		else if ("decimal".equals(typeName)) {		
-		  schemaTypeValue = new XSDecimal(new BigDecimal(string_value()));
-		} else if ("dateTime".equals(typeName)) {
-		  schemaTypeValue = XSDateTime.parseDateTime(string_value());
-		} else if ("time".equals(typeName)) {
-			schemaTypeValue = XSTime.parse_time(string_value());
-		} else if ("date".equals(typeName)) {
-			schemaTypeValue = XSDate.parse_date(string_value());
-		} else if ("boolean".equals(typeName)) {
-			schemaTypeValue = new XSBoolean(Boolean.valueOf(string_value()));
-		} else if ("NOTATION".equals(typeName)) {
-			schemaTypeValue = new XSString(string_value());
+		// decimal and it's subtypes
+		else if ("decimal".equals(typeName)) {      
+			schemaTypeValue = new XSDecimal(new BigDecimal(strValue));
 		}
-		
+		else if ("integer".equals(typeName)) {      
+			schemaTypeValue = new XSInteger(new BigInteger(strValue));
+		}
+		else if ("long".equals(typeName)) {     
+			schemaTypeValue = new XSLong(new BigInteger(strValue));
+		}
+		else if ("int".equals(typeName)) {      
+			schemaTypeValue = new XSInt(new BigInteger(strValue));
+		}
+		else if ("short".equals(typeName)) {      
+			schemaTypeValue = new XSShort(new BigInteger(strValue));
+		}
+		else if ("byte".equals(typeName)) {      
+			schemaTypeValue = new XSByte(new BigInteger(strValue));
+		}
+		else if ("nonNegativeInteger".equals(typeName)) {      
+			schemaTypeValue = new XSNonNegativeInteger(new BigInteger(strValue));
+		}
+		else if ("positiveInteger".equals(typeName)) {      
+			schemaTypeValue = new XSPositiveInteger(new BigInteger(strValue));
+		}
+		else if ("unsignedLong".equals(typeName)) {      
+			schemaTypeValue = new XSUnsignedLong(new BigInteger(strValue));
+		}
+		else if ("unsignedInt".equals(typeName)) {      
+			schemaTypeValue = new XSUnsignedInt(new BigInteger(strValue));
+		}
+		else if ("unsignedShort".equals(typeName)) {      
+			schemaTypeValue = new XSUnsignedShort(new BigInteger(strValue));
+		}
+		else if ("unsignedByte".equals(typeName)) {      
+			schemaTypeValue = new XSUnsignedByte(new BigInteger(strValue));
+		}
+		else if ("nonPositiveInteger".equals(typeName)) {      
+			schemaTypeValue = new XSNonPositiveInteger(new BigInteger(strValue));
+		}
+		else if ("negativeInteger".equals(typeName)) {      
+			schemaTypeValue = new XSNegativeInteger(new BigInteger(strValue));
+		}
+		// end of, decimal types
+		else if ("double".equals(typeName)) {       
+			schemaTypeValue = new XSDouble(Double.parseDouble(strValue));
+		}
+		// duration and it's subtypes
+		else if ("duration".equals(typeName)) {       
+			schemaTypeValue = XSDuration.parseDTDuration(strValue);
+		}
+		else if ("dayTimeDuration".equals(typeName)) {       
+			schemaTypeValue = XSDayTimeDuration.parseDTDuration(strValue);
+		}
+		else if ("yearMonthDuration".equals(typeName)) {       
+			schemaTypeValue = XSYearMonthDuration.parseYMDuration(strValue);
+		}
+		// end of, duration types
+		else if ("float".equals(typeName)) {        
+			schemaTypeValue = new XSFloat(Float.parseFloat(strValue));
+		}
+		else if ("gDay".equals(typeName)) {        
+			schemaTypeValue = XSGDay.parse_gDay(strValue);
+		}
+		else if ("gMonth".equals(typeName)) {        
+			schemaTypeValue = XSGMonth.parse_gMonth(strValue);
+		}
+		else if ("gMonthDay".equals(typeName)) {        
+			schemaTypeValue = XSGMonthDay.parse_gMonthDay(strValue);
+		}
+		else if ("gYear".equals(typeName)) {        
+			schemaTypeValue = XSGYear.parse_gYear(strValue);
+		}
+		else if ("gYearMonth".equals(typeName)) {        
+			schemaTypeValue = XSGYearMonth.parse_gYearMonth(strValue);
+		}
+		else if ("NOTATION".equals(typeName)) {
+			schemaTypeValue = new XSString(strValue);
+		}
+		else if ("QName".equals(typeName)) {
+			schemaTypeValue = QName.parse_QName(strValue);
+		}
+		else if ("string".equals(typeName)) {
+			schemaTypeValue = new XSString(strValue);   
+		}                        
+		else if ("time".equals(typeName)) {
+			schemaTypeValue = XSTime.parse_time(strValue);
+		}               
+		else {
+			// create a XSString value, as fallback option 
+			schemaTypeValue = new XSString(strValue);
+		} 
+
 		return schemaTypeValue;
-	}
+		
+	} // getTypedValueForPrimitiveType
 	
 	public abstract boolean isID();
 	
