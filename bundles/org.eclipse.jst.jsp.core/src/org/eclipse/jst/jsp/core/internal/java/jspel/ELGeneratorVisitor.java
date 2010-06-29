@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 BEA Systems and others.
+ * Copyright (c) 2005, 2010 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,7 +58,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	"java.util.Map requestScope = null;" + ENDL + //$NON-NLS-1$
 	"java.util.Map sessionScope = null;" + ENDL + //$NON-NLS-1$
 	"java.util.Map applicationScope = null;" + ENDL + //$NON-NLS-1$
-	"return \"\"+"; //$NON-NLS-1$
+	"return \"\"+( "; //$NON-NLS-1$
 
 	private static final String fExpressionHeader2_param = "()" + ENDL + //$NON-NLS-1$
 	"\t\tthrows java.io.IOException, javax.servlet.ServletException, javax.servlet.jsp.JspException {" + ENDL + //$NON-NLS-1$
@@ -73,7 +73,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	"java.util.Map<String, Object> requestScope = null;" + ENDL + //$NON-NLS-1$
 	"java.util.Map<String, Object> sessionScope = null;" + ENDL + //$NON-NLS-1$
 	"java.util.Map<String, Object> applicationScope = null;" + ENDL + //$NON-NLS-1$
-	"return \"\"+"; //$NON-NLS-1$
+	"return \"\"+( "; //$NON-NLS-1$
 	
 	private static final String fJspImplicitObjects[] = { "pageContext" }; //$NON-NLS-1$
 	
@@ -92,7 +92,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		}
 	}
 	
-	private static final String fFooter = " ;" + ENDL + "}" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String fFooter = " );" + ENDL + "}" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private StringBuffer fResult;
 	private Map fCodeMap;
