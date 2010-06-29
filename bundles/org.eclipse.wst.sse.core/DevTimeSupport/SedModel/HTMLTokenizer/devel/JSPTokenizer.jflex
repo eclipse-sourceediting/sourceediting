@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,8 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 	private String fBufferedContext = null;
 	private int fBufferedStart = 1;
 	private int fBufferedLength = 0;
-	private ContextRegionContainer fBufferedEmbeddedContainer = null;
+	private ITextRegion fBufferedEmbeddedContainer = null;
+	private ITextRegion fProxyUnknownRegion = null;
 	private String f_context = null;
 
 	// state stack for handling embedded regions
@@ -54,6 +55,7 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 	// the container used to create embedded regions
 	private ContextRegionContainer fEmbeddedContainer = null;
 	private static final String PROXY_CONTEXT = "PROXY_CONTEXT";
+	private static final String PROXY_UNKNOWN_CONTEXT = "PROXY_UNKNOWN_CONTEXT";
 
 	private String context = null;
 	private int start = 0;
@@ -706,6 +708,8 @@ private final String doBlockTagScan() throws IOException {
 			fIsBlockingEnabled = true;
 		} else if (f_context == XML_END_TAG_OPEN) {
 			fIsBlockingEnabled = false;
+		} else if (f_context == PROXY_UNKNOWN_CONTEXT) {
+			fBufferedEmbeddedContainer = fProxyUnknownRegion;
 		}
 		fBufferedContext = f_context;
 		fBufferedStart = yychar;
@@ -1407,6 +1411,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
 	yybegin(ST_XML_ATTRIBUTE_NAME);
+	if (fEmbeddedContainer.getLastRegion().getType() == UNDEFINED) {
+		fProxyUnknownRegion = fRegionFactory.createToken(XML_TAG_ATTRIBUTE_VALUE, fEmbeddedContainer.getStart(), fEmbeddedContainer.getTextLength(), fEmbeddedContainer.getLength());
+		return PROXY_UNKNOWN_CONTEXT;
+	}
 	return PROXY_CONTEXT;
 }
 <ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> ['] {
@@ -1425,6 +1433,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_XML_ATTRIBUTE_NAME);
+    if (fEmbeddedContainer.getLastRegion().getType() == UNDEFINED) {
+		fProxyUnknownRegion = fRegionFactory.createToken(XML_TAG_ATTRIBUTE_VALUE, fEmbeddedContainer.getStart(), fEmbeddedContainer.getTextLength(), fEmbeddedContainer.getLength());
+		return PROXY_UNKNOWN_CONTEXT;
+	}
 	return PROXY_CONTEXT;
 }
 
@@ -1609,8 +1621,8 @@ jspDirectiveStart        = {jspScriptletStart}@
 		dump("inappropriate tag name");//$NON-NLS-1$
 	if(!fStateStack.empty() && (fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_SQUOTED||fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_DQUOTED)) {
 		yybegin(ST_ABORT_EMBEDDED);
-		yypushback(yylength()-1);
-		return XML_TAG_ATTRIBUTE_VALUE;
+		//yypushback(yylength()-1);
+		return UNDEFINED;
 	}
 	yybegin(YYINITIAL);
         return XML_CONTENT;
