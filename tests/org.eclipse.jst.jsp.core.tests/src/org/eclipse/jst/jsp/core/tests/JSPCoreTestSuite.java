@@ -18,6 +18,7 @@ import org.eclipse.jst.jsp.core.tests.contentmodels.TestFixedCMDocuments;
 import org.eclipse.jst.jsp.core.tests.contentmodels.TestTaglibCMTests;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestContentTypeHandlers;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestModelHandlers;
+import org.eclipse.jst.jsp.core.tests.dom.AttrValueTest;
 import org.eclipse.jst.jsp.core.tests.dom.TestImportedNodes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelIncludes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
@@ -56,6 +57,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		// temporarily removed since unstable, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=213754 
 		// addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
 		addTest(new TestSuite(JSPTokenizerTest.class, "Special Parsing Tests"));
+		addTest(new TestSuite(AttrValueTest.class, "JSP Attribute Tests"));
 		addTest(new TestSuite(JSPJavaTranslatorCoreTest.class, "Core Translator Tests"));
 		addTest(new TestSuite(TestModelIncludes.class, "Core Fragment Inclusion Tests"));
 		addTest(new TestSuite(JSPCorePreferencesTest.class, "Preference Tests"));
