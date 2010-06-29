@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,7 +90,7 @@ abstract public class AbstractCharacterPairInserter {
 			LinkedModeUI ui = new LinkedModeUI(model, viewer);
 			ui.setCyclingMode(LinkedModeUI.CYCLE_NEVER);
 			ui.setExitPosition(viewer, offset + 2, 0, Integer.MAX_VALUE);
-			ui.setExitPolicy(new ExitPolicy(mc, getEscapeChar(c), document));
+			ui.setExitPolicy(getExitPolicy(mc, getEscapeChar(c), document));
 			ui.setSimpleMode(true);
 			ui.enter();
 
@@ -140,5 +140,9 @@ abstract public class AbstractCharacterPairInserter {
 	}
 
 	public void dispose() {
+	}
+
+	protected IExitPolicy getExitPolicy(char exit, char escape, IDocument document) {
+		return new ExitPolicy(exit, escape, document);
 	}
 }
