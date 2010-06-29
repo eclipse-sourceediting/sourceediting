@@ -1,9 +1,0 @@
-devel     - the active development environment (sans JDK)
-            - latest version of HTMLTokenizer specification and generated code
-            - modified skeleton to prevent VM exits on unmatched input
-            - "flex" scripts to run JFlex with modified skeleton
-            - active RCS archive
-resources - backup/pristine resources
-            - Unmodified JFlex 1.2.2 download
-            - Separate modifications to the JFlex skeleton
-            - W3C XML recommendation used for several of the HTMLTokenizer rules
