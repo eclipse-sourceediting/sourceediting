@@ -178,6 +178,27 @@ public class JSPBatchValidatorTest extends TestCase {
 		assertTrue("Problem markers not found while fragment validation was preferences were default", (((ReporterHelper)result.getReporter(null)).getMessages().size()) != 0);
 	}
 
+	public void testELConditional() throws Exception {
+		if (!ResourcesPlugin.getWorkspace().getRoot().getProject("testIterationTags").exists()) {
+			BundleResourceUtil.createSimpleProject("testIterationTags", null, new String[]{JavaCore.NATURE_ID});
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + PROJECT_NAME, "/" + PROJECT_NAME);
+		}
+		assertTrue("project could not be created", ResourcesPlugin.getWorkspace().getRoot().getProject("testIterationTags").exists());
+
+
+		JSPValidator validator = new JSPJavaValidator();
+		IReporter reporter = new ReporterForTest();
+		ValidationContextForTest helper = new ValidationContextForTest();
+		String filePath1 = "/testIterationTags/WebContent/default.jspx";
+		IFile file1 = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath1));
+		assertTrue(file1.exists());
+
+		helper.setURIs(new String[]{filePath1});
+
+		validator.validate(helper, reporter);
+		assertTrue("expected jsp errors were not found in both files: " + reporter.getMessages().size(), reporter.getMessages().size() == 0);
+	}
+
 	/**
 	 * @return
 	 */
