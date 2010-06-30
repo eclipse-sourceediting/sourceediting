@@ -887,6 +887,10 @@ public class JSPTranslator implements Externalizable {
 		return fJspTextBuffer.toString();
 	}
 
+	
+	protected void addTaglibVariables(String tagToAdd, ITextRegionCollection customTag) {
+		addTaglibVariables(tagToAdd, customTag, -1);
+	}
 	/**
 	 * Add the server-side scripting variables used by this tag, along with
 	 * any scoping.
@@ -894,12 +898,12 @@ public class JSPTranslator implements Externalizable {
 	 * @param tagToAdd
 	 * @param customTag
 	 */
-	protected void addTaglibVariables(String tagToAdd, ITextRegionCollection customTag) {
+	protected void addTaglibVariables(String tagToAdd, ITextRegionCollection customTag, int index) {
 		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
 			/*
 			 * Start tag
 			 */
-			addStartTagVariable(tagToAdd, customTag);
+			addStartTagVariable(tagToAdd, customTag,index);
 		}
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
 			/*
@@ -942,7 +946,7 @@ public class JSPTranslator implements Externalizable {
 			fTranslationProblems.add(missingStartTag);
 		}
 	}
-	private void addStartTagVariable(String tagToAdd,ITextRegionCollection customTag){
+	private void addStartTagVariable(String tagToAdd,ITextRegionCollection customTag, int index){
 		IFile f = getFile();
 
 		if (f == null || !f.exists())
@@ -962,7 +966,11 @@ public class JSPTranslator implements Externalizable {
 				appendToBuffer(decl, fUserCode, false, customTag);
 			}
 		}
-		boolean isEmptyTag = isEmptyTag(customTag);
+		boolean isEmptyTag = false;
+		if (index != -1)
+			isEmptyTag= isEmptyTag(customTag, index);
+		else
+			isEmptyTag= isEmptyTag(customTag);
 		
 		/*
 		 * Add a single  { to limit the scope of NESTED variables
@@ -1012,6 +1020,21 @@ public class JSPTranslator implements Externalizable {
 		
 	}
 
+	private boolean isEmptyTag(ITextRegionCollection customTag, int index) {
+		String type = null;
+		// custom tag is embedded
+		ITextRegionList regions = customTag.getRegions();
+		ITextRegion nextRegion = regions.get(index);
+		int size = customTag.getNumberOfRegions() ;
+		type = nextRegion.getType();
+		while (index <= size && !(DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(type) || DOMRegionContext.XML_TAG_NAME.equals(type) || DOMRegionContext.XML_TAG_CLOSE.equals(type) )) {
+				nextRegion = regions.get(++index);
+				type = nextRegion.getType();
+		}
+		
+		return DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(type);
+	}
+	
 	private boolean isEmptyTag(ITextRegionCollection customTag) {
 		ITextRegion lastRegion = customTag.getLastRegion();
 		// custom tag is embedded
@@ -1026,7 +1049,7 @@ public class JSPTranslator implements Externalizable {
 		return DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(lastRegion.getType());
 	}
 
-	private void addCustomTaglibVariables(String tagToAdd, ITextRegionCollection customTag, ITextRegion prevRegion) {
+	private void addCustomTaglibVariables(String tagToAdd, ITextRegionCollection customTag, ITextRegion prevRegion, int index) {
 		//Can't judge by first region as start and end tag are part of same ContextRegionContainer		
 		if (prevRegion != null && prevRegion.getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
 			/*
@@ -1038,7 +1061,7 @@ public class JSPTranslator implements Externalizable {
 			/*
 			 * Start tag
 			 */
-			addStartTagVariable(tagToAdd,customTag);
+			addStartTagVariable(tagToAdd,customTag, index);
 		}
 	}
 
@@ -1453,7 +1476,7 @@ public class JSPTranslator implements Externalizable {
 			{
 				String fullTagName = container.getText(r);
 				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith(JSP_PREFIX)) {
-					addTaglibVariables(fullTagName, container); // it
+					addTaglibVariables(fullTagName, container,-1); // it
 					// may
 					// be a
 					// custom
@@ -1875,7 +1898,7 @@ public class JSPTranslator implements Externalizable {
 					ITextRegion prevRegion =null;
 					if (i>0)
 						prevRegion = embeddedRegions.get(i-1);
-					addCustomTaglibVariables(fullTagName, embeddedContainer,prevRegion); // it may be a custom tag
+					addCustomTaglibVariables(fullTagName, embeddedContainer,prevRegion,i+1); // it may be a custom tag
 				}
 			}
 			if(type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE
