@@ -9,6 +9,7 @@
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 284306 - removed truncation of string value.
  *     David Carver (Intalio) - bug 303349 - fix NPE when Adaptor not found.
+ *     Jesper Steen Moller - bug 313992 - XPath evaluation does not show atomics
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
@@ -24,6 +25,7 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Text;
 
 public class JFaceNodeLabelProviderXPath extends LabelProvider implements
 		IFontProvider {
@@ -45,7 +47,8 @@ public class JFaceNodeLabelProviderXPath extends LabelProvider implements
 		if (element instanceof EmptyNodeList) {
 			return null;
 		}
-		return getAdapter(element).getLabelImage(element);
+		IJFaceNodeAdapter adapter = getAdapter(element);
+		return adapter != null ? adapter.getLabelImage(element) : null;
 	}
 
 	public String getText(Object element) {
@@ -55,7 +58,12 @@ public class JFaceNodeLabelProviderXPath extends LabelProvider implements
 		
 		IJFaceNodeAdapter adapter = getAdapter(element);
 		if (adapter == null) {
-			return NO_MATCHES;
+			// Could be our fake "AnyValue" Text node
+			if (element instanceof Text) {
+				return ((Text)element).getData();
+			} else {
+				return element.toString();
+			}
 		}
 		
 		StringBuffer sb = new StringBuffer(adapter.getLabelText(element));

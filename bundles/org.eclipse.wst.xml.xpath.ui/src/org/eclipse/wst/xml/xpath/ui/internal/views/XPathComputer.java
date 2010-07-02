@@ -8,14 +8,17 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 261428 - XPath View not respecting namespaces.
+ *     Jesper Steen Moller - bug 313992 - XPath evaluation does not show atomics
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
 import java.util.List;
+
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
+
 import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -44,6 +47,8 @@ import org.eclipse.wst.xml.xpath2.processor.StaticNameResolver;
 import org.eclipse.wst.xml.xpath2.processor.XPathParser;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.DefaultResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -164,11 +169,7 @@ public class XPathComputer {
 	private IStatus doCompute(String xp) {
 		IStatus status = executeXPath(xp);
 
-		xpathView.getSite().getShell().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				xpathView.xpathRecomputed(nodeList);
-			}
-		});
+		xpathView.xpathRecomputed(nodeList);
 		return status;
 	}
 
@@ -192,7 +193,7 @@ public class XPathComputer {
 		return status;
 	}
 
-	private IStatus evaluateXPath(String xp) throws XPathExpressionException {
+	protected IStatus evaluateXPath(String xp) throws XPathExpressionException {
 		XPath newXPath = new XPathFactoryImpl().newXPath();
 		IDOMDocument doc = null;
 		if (node.getNodeType() == Node.DOCUMENT_NODE) {
@@ -212,7 +213,16 @@ public class XPathComputer {
 			this.nodeList = (NodeList) xpExp.evaluate(node,
 					XPathConstants.NODESET);
 		} catch (XPathExpressionException xee) {
-			return Status.CANCEL_STATUS;
+			if (xee.getCause() != null && xee.getCause().getMessage().indexOf("Can not convert ") >= 0) {
+				try {
+					String value = (String) xpExp.evaluate(node, XPathConstants.STRING);
+					this.nodeList = new NodeListImpl(new DefaultResultSequence(new XSString(value)));
+				} catch (XPathExpressionException xee2) {
+					return Status.CANCEL_STATUS;
+				}
+			} else {
+				return Status.CANCEL_STATUS;
+			}
 		}
 		return Status.OK_STATUS;
 	}

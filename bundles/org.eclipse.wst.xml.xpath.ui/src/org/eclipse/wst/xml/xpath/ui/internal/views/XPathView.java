@@ -10,6 +10,7 @@
  *     David Carver (STAR) - bug 261588 - Add Edit Namespace support for XPath view
  *     David Carver (Intalio) - bug 246110 - Clean up XPath UI.
  *     David Carver (Intalio) - bug 271288 - Set ContextNode for XPath Evaluation
+ *     Jesper Steen Moller - bug 313992 - XPath evaluation does not show atomics
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
@@ -303,14 +304,18 @@ public class XPathView extends ViewPart {
 		}
 	}
 
-	void xpathRecomputed(final NodeList nodeList) {
-		Control refreshControl = treeViewer.getControl();
-		if ((refreshControl != null) && !refreshControl.isDisposed()) {
-			refreshControl.setRedraw(false);
-			treeViewer.setInput(nodeList);
-			treeViewer.setSelection(currentSelection, true);
-			refreshControl.setRedraw(true);
-		}
+	protected void xpathRecomputed(final NodeList nodeList) {
+		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				Control refreshControl = treeViewer.getControl();
+				if ((refreshControl != null) && !refreshControl.isDisposed()) {
+					refreshControl.setRedraw(false);
+					treeViewer.setInput(nodeList);
+					treeViewer.setSelection(currentSelection, true);
+					refreshControl.setRedraw(true);
+				}
+			}
+		});
 	}
 
 	private void updateLocationText() {
