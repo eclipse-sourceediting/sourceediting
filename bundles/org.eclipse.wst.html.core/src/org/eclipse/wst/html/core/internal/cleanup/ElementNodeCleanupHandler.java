@@ -256,7 +256,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				int startTagNameStartOffset = startTagStructuredDocumentRegion.getStartOffset(startTagNameRegion);
 				int startTagNameLength = startTagStructuredDocumentRegion.getTextEndOffset(startTagNameRegion) - startTagNameStartOffset;
 
-				replaceSource(structuredModel, structuredDocument, startTagNameStartOffset, startTagNameLength, newTagName);
+				if (!newTagName.equals(oldTagName))
+					replaceSource(structuredModel, structuredDocument, startTagNameStartOffset, startTagNameLength, newTagName);
 				newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagNameStartOffset); // save
 				// new
 				// node
@@ -271,7 +272,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				int endTagNameStartOffset = endTagStructuredDocumentRegion.getStartOffset(endTagNameRegion);
 				int endTagNameLength = endTagStructuredDocumentRegion.getTextEndOffset(endTagNameRegion) - endTagNameStartOffset;
 
-				if (startTagStructuredDocumentRegion != endTagStructuredDocumentRegion)
+				if (startTagStructuredDocumentRegion != endTagStructuredDocumentRegion && !newTagName.equals(oldTagName))
 					replaceSource(structuredModel, structuredDocument, endTagNameStartOffset, endTagNameLength, newTagName);
 			}
 		}
