@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.TransferBuilder.TransferProxyForDelayLoading;
 
 /**
@@ -162,6 +163,11 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 		for (int i = 0; i < ts.length; i++) {
 			if (ts[i].isSupportedType(event.currentDataType)) {
 				if (doDrop(ts[i], event)) {
+					IEditorPart part = targetEditor;
+					if (targetEditor instanceof StructuredTextEditor){
+						part = ((StructuredTextEditor) targetEditor).getEditorPart();
+					}
+					targetEditor.getSite().getPage().activate(part);
 					break;
 				}
 			}
