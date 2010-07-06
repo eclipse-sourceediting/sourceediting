@@ -20,6 +20,7 @@ import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.jst.jsp.core.tests.validation.ReporterForTest;
 import org.eclipse.jst.jsp.core.tests.validation.ValidationContextForTest;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
 public class JSPJavaTranslatorCustomTagTest extends TestCase {
@@ -52,7 +53,7 @@ public class JSPJavaTranslatorCustomTagTest extends TestCase {
 
 	/**
 	 * Tests jsp translation when custom tag used
-	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=31
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=310085
 	 * 
 	 * @throws Exception
 	 */
@@ -68,10 +69,10 @@ public class JSPJavaTranslatorCustomTagTest extends TestCase {
 		JSPValidator validator = new JSPJavaValidator();
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
-		helper.setURI(file.getFullPath().toOSString());
+		helper.setURI(file.getFullPath().toString());
 		validator.validate(helper, reporter);
 		
-		assertTrue("found jsp java error for custom tag", reporter.getMessages().isEmpty());
+		assertTrue("Found JSP Java problem for custom tag "+reporter.getMessages().size()+":[" + ((IMessage)reporter.getMessages().get(0)).getText() + "]", reporter.getMessages().isEmpty());
 		
 	}
 
