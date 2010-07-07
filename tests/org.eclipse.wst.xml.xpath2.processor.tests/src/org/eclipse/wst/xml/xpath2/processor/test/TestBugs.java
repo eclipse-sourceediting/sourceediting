@@ -40,6 +40,8 @@
  *  Mukul Gandhi    - bug 309585   implementation of xs:normalizedString data type                             
  * Jesper S Moller  - bug 311480 - fix problem with name matching on keywords 
  * Jesper S Moller  - bug 312191 - instance of test fails with partial matches
+ *  Mukul Gandhi    - bug 318313 - improvements to computation of typed values of nodes,
+ *                                 when validated by XML Schema primitive types
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -80,9 +82,6 @@ public class TestBugs extends AbstractPsychoPathTest {
 				.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
 
 	}
-
-	
-
 
 	public void testNamesWhichAreKeywords() throws Exception {
 		// Bug 273719
@@ -1716,22 +1715,6 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		assertTrue(testSuccess);
 	}
-
-	private CollationProvider createLengthCollatorProvider() {
-		return new CollationProvider() {
-			@SuppressWarnings("unchecked")
-			public Comparator get_collation(String name) {
-				if (name.equals(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR)) {
-					return new Comparator<String>() {
-						public int compare(String o1, String o2) {
-							return o1.length() - o2.length();
-						}
-					};
-				}
-				return null;
-			}
-		};
-	}
 	
 	public void testParseElementKeywordsAsNodes() throws Exception {
 		// Bug 311480
@@ -1746,6 +1729,47 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		String xpath = "/element/attribute";
 		XPath path = compileXPath(dc, xpath);
+	}
+	
+	public void testTypedValueEnhancement_primitiveTypes() throws Exception {
+		// Bug 318313
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug318313.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug318313.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "X gt 99";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	private CollationProvider createLengthCollatorProvider() {
+		return new CollationProvider() {
+			@SuppressWarnings("unchecked")
+			public Comparator get_collation(String name) {
+				if (name.equals(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR)) {
+					return new Comparator<String>() {
+						public int compare(String o1, String o2) {
+							return o1.length() - o2.length();
+						}
+					};
+				}
+				return null;
+			}
+		};
 	}
 	
 }
