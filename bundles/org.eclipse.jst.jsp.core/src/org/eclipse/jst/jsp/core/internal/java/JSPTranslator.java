@@ -127,7 +127,7 @@ public class JSPTranslator implements Externalizable {
 	private static final long serialVersionUID = 1L;
 	
 	/** for debugging */
-	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")); //$NON-NLS-1$  //$NON-NLS-2$
+	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")).booleanValue(); //$NON-NLS-1$
 	
 	/** handy plugin ID constant */
 	private static final String JSP_CORE_PLUGIN_ID = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$
@@ -686,7 +686,7 @@ public class JSPTranslator implements Externalizable {
 		javaOffset += fUserImports.length();
 
 		// class header
-		fResult.append(fClassHeader); //$NON-NLS-1$
+		fResult.append(fClassHeader);
 		javaOffset += fClassHeader.length();
 		fResult.append(fSuperclass + "{" + ENDL); //$NON-NLS-1$
 		javaOffset += fSuperclass.length() + 2;
@@ -928,7 +928,7 @@ public class JSPTranslator implements Externalizable {
 			text.append("} // </"); //$NON-NLS-1$
 			text.append(tagToAdd);
 			text.append(">\n"); //$NON-NLS-1$
-			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag);
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 					decl = taglibVars[i].getDeclarationString();
@@ -942,7 +942,7 @@ public class JSPTranslator implements Externalizable {
 			 * start tag, its absence now means an unbalanced end tag.
 			 * Extras will be checked later to flag unbalanced start tags.
 			 */
-			IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.StartCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "No start tag for " + tagToAdd, customTag.getStartOffset(), customTag.getEndOffset());
+			IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.StartCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, NLS.bind(JSPCoreMessages.JSPTranslator_4, tagToAdd), customTag.getStartOffset(), customTag.getEndOffset());
 			fTranslationProblems.add(missingStartTag);
 		}
 	}
@@ -986,7 +986,7 @@ public class JSPTranslator implements Externalizable {
 		else
 			text.append(">\n"); //$NON-NLS-1$
 
-		appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+		appendToBuffer(text.toString(), fUserCode, false, customTag);
 
 		for (int i = 0; i < taglibVars.length; i++) {
 			if (taglibVars[i].getScope() == VariableInfo.NESTED) {
@@ -1002,7 +1002,7 @@ public class JSPTranslator implements Externalizable {
 			text.append("} // <"); //$NON-NLS-1$
 			text.append(tagToAdd);
 			text.append("/>\n"); //$NON-NLS-1$
-			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag);
 			/* Treat this as the end for empty tags */
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
@@ -1154,7 +1154,7 @@ public class JSPTranslator implements Externalizable {
 		while (regionAndTaglibVariables.hasNext()) {
 			RegionTags regionTag = (RegionTags) regionAndTaglibVariables.next();
 			ITextRegionCollection extraStartRegion = regionTag.region;
-			IJSPProblem missingEndTag = createJSPProblem(IJSPProblem.EndCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraStartRegion.getStartOffset(), extraStartRegion.getEndOffset());
+			IJSPProblem missingEndTag = createJSPProblem(IJSPProblem.EndCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, NLS.bind(JSPCoreMessages.JSPTranslator_5,regionTag.tag.getTagName()), extraStartRegion.getStartOffset(), extraStartRegion.getEndOffset());
 			fTranslationProblems.add(missingEndTag);
 
 			StringBuffer text = new StringBuffer();
@@ -1173,9 +1173,9 @@ public class JSPTranslator implements Externalizable {
 		 * { & }
 		 */
 		while (!fUseBeansStack.isEmpty()) {
-			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
+			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion()); //$NON-NLS-1$
 			ITextRegionCollection extraStartRegion = (ITextRegionCollection) fUseBeansStack.pop();
-			IJSPProblem missingEndTag = createJSPProblem(IJSPProblem.UseBeanEndTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraStartRegion.getStartOffset(), extraStartRegion.getEndOffset());
+			IJSPProblem missingEndTag = createJSPProblem(IJSPProblem.UseBeanEndTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, NLS.bind(JSPCoreMessages.JSPTranslator_5,JSP11Namespace.ElementName.USEBEAN), extraStartRegion.getStartOffset(), extraStartRegion.getEndOffset());
 			fTranslationProblems.add(missingEndTag);
 		}
 
@@ -1637,7 +1637,7 @@ public class JSPTranslator implements Externalizable {
 		ITextRegion r = null;
 		while (regions.hasNext()) {
 			r = (ITextRegion) regions.next();
-			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals(attrName)) { //$NON-NLS-1$
+			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals(attrName)) {
 				// skip to attribute value
 				while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null) {
 					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
@@ -2076,9 +2076,9 @@ public class JSPTranslator implements Externalizable {
 		if (varName != null) {
 			if (isFragment) {
 				// 2.0:JSP.8.5.2
-				varType = "javax.servlet.jsp.tagext.JspFragment";
+				varType = "javax.servlet.jsp.tagext.JspFragment"; //$NON-NLS-1$
 			}
-			String declaration = new TaglibVariable(varType, varName, "", description).getDeclarationString(true, TaglibVariable.M_PRIVATE);
+			String declaration = new TaglibVariable(varType, varName, "", description).getDeclarationString(true, TaglibVariable.M_PRIVATE); //$NON-NLS-1$
 			appendToBuffer(declaration, fUserDeclarations, false, fCurrentNode);
 		}
 	}
@@ -2151,7 +2151,7 @@ public class JSPTranslator implements Externalizable {
 			CMDocumentTracker tracker = null;
 			while (it.hasNext()) {
 				tracker = (CMDocumentTracker) it.next();
-				addBlockMarkers(prefix + ":", tracker.getDocument());
+				addBlockMarkers(prefix + ":", tracker.getDocument()); //$NON-NLS-1$
 			}
 		}
 	}
@@ -2253,7 +2253,7 @@ public class JSPTranslator implements Externalizable {
 		}
 		else if (attrName.equals("session")) //$NON-NLS-1$
 		{
-			fIsInASession = "true".equalsIgnoreCase(attrValue);
+			fIsInASession = Boolean.valueOf(attrValue).booleanValue();
 		}
 		else if (attrName.equals("buffer")) //$NON-NLS-1$
 		{
@@ -2269,7 +2269,7 @@ public class JSPTranslator implements Externalizable {
 		}
 		else if (attrName.equals("isErrorPage")) //$NON-NLS-1$
 		{
-			fIsErrorPage = "true".equalsIgnoreCase(attrValue);
+			fIsErrorPage = Boolean.valueOf(attrValue).booleanValue();
 		}
 	}
 
@@ -2915,7 +2915,7 @@ public class JSPTranslator implements Externalizable {
 			else {
 				// no useBean start tag being remembered
 				ITextRegionCollection extraEndRegion = container;
-				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.UseBeanStartTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraEndRegion.getStartOffset(), extraEndRegion.getEndOffset());
+				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.UseBeanStartTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, NLS.bind(JSPCoreMessages.JSPTranslator_4,JSP11Namespace.ElementName.USEBEAN), extraEndRegion.getStartOffset(), extraEndRegion.getEndOffset());
 				fTranslationProblems.add(missingStartTag);
 			}
 			return;
@@ -3050,10 +3050,10 @@ public class JSPTranslator implements Externalizable {
 				if (types[i] != null) {
 					// remove any array suffixes 
 					if (types[i].indexOf('[') > 0) {
-						types[i] = types[i].substring(0, types[i].indexOf('[')); //$NON-NLS-1$
+						types[i] = types[i].substring(0, types[i].indexOf('['));
 					}
 					// remove any "extends" prefixes (JSR 14)
-					if (types[i].indexOf("extends") > 0) {
+					if (types[i].indexOf("extends") > 0) { //$NON-NLS-1$
 						types[i] = StringUtils.strip(types[i].substring(types[i].indexOf("extends"))); //$NON-NLS-1$
 					}
 
