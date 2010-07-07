@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -59,9 +60,18 @@ public class CMImageUtil {
 			return null;
 		}
 		Image image = null;
-		ImageDescriptor descriptor = getImageDescriptor(cmnode);
-		if (descriptor != null) {
-			image = descriptor.createImage(false);
+		// cache CM-specified images with the XML UI plugin
+		String imageURLString = (String) cmnode.getProperty(SMALL_ICON_URL);
+		if ((imageURLString != null) && (imageURLString.length() > 0)) {
+			/* First ensure that the descriptor itself is cached */
+			ImageDescriptor imageDescriptor = getImageDescriptor(imageURLString);
+			if (imageDescriptor != null) {
+				/*
+				 * Then obtain the image from the registry so that it is both
+				 * cached and properly disposed of later
+				 */
+				image = getImageRegistry().get(imageURLString);
+			}
 		}
 		return image;
 	}
@@ -74,34 +84,43 @@ public class CMImageUtil {
 		String imageURLString = (String) cmnode.getProperty(SMALL_ICON_URL);
 		ImageDescriptor descriptor = null;
 		if ((imageURLString != null) && (imageURLString.length() > 0)) {
-			descriptor = XMLUIPlugin.getInstance().getImageRegistry().getDescriptor(imageURLString);
-			if (descriptor == null) {
+			descriptor = getImageDescriptor(imageURLString);
+		}
+		return descriptor;
+	}
+
+	private static ImageDescriptor getImageDescriptor(String imageURLString) {
+		ImageDescriptor descriptor = getImageRegistry().getDescriptor(imageURLString);
+		if (descriptor == null) {
+			try {
+				URL imageURL = new URL(imageURLString);
+				InputStream inputStream = JarUtilities.getInputStream(imageURL);
 				try {
-					URL imageURL = new URL(imageURLString);
-					InputStream inputStream = JarUtilities.getInputStream(imageURL);
-					try {
-						ImageData data = new ImageData(inputStream);
-						descriptor = ImageDescriptor.createFromImageData(data);
-						XMLUIPlugin.getInstance().getImageRegistry().put(imageURLString, descriptor);
-					}
-					catch (SWTException e) {
-						/*
-						 * There was a problem loading image from stream
-						 * (corrupt, missing, etc.)
-						 */
-						if (inputStream != null)
-							inputStream.close();
-					}
+					ImageData data = new ImageData(inputStream);
+					descriptor = ImageDescriptor.createFromImageData(data);
+					getImageRegistry().put(imageURLString, descriptor);
 				}
-				catch (MalformedURLException e) {
-					descriptor = null;
+				catch (SWTException e) {
+					/*
+					 * There was a problem loading image from stream
+					 * (corrupt, missing, etc.)
+					 */
+					if (inputStream != null)
+						inputStream.close();
 				}
-				catch (IOException e) {
-					descriptor = null;
-				}
+			}
+			catch (MalformedURLException e) {
+				descriptor = null;
+			}
+			catch (IOException e) {
+				descriptor = null;
 			}
 		}
 		return descriptor;
+	}
+
+	private static final ImageRegistry getImageRegistry() {
+		return XMLUIPlugin.getInstance().getImageRegistry();
 	}
 
 	/**
