@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.web_tests.feature"
       label="%featureName"
-      version="3.2.0.qualifier"
+      version="3.2.1.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -16,8 +16,6 @@
    <license url="%licenseURL">
       %license
    </license>
-
-
 
    <plugin
          id="org.eclipse.wst.jsdt.web.core.tests"
