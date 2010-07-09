@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.html.core.internal.document;
 
 
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLPropertyDeclaration;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
@@ -23,6 +24,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
 import org.eclipse.wst.xml.core.internal.document.CMNodeUtil;
 import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
+import org.eclipse.wst.xml.core.internal.document.ModelParserAdapterExtension;
 import org.eclipse.wst.xml.core.internal.document.TagAdapter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
@@ -33,7 +35,7 @@ import org.w3c.dom.Node;
 /**
  * HTMLDocumentImpl class
  */
-public class HTMLModelParserAdapter implements ModelParserAdapter {
+public class HTMLModelParserAdapter implements ModelParserAdapter, ModelParserAdapterExtension {
 	/**
 	 * note: I made public, temparily, so could be used by JSPLoader
 	 */
@@ -60,6 +62,14 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 				return true;
 		}
 		return false;
+	}
+
+	public boolean isEndTagOmissible(Element element) {
+		CMElementDeclaration dec = CMNodeUtil.getElementDeclaration(element);
+		if (dec == null || !(dec instanceof HTMLPropertyDeclaration))
+			return false;
+		int type = ((HTMLPropertyDeclaration)dec ).getOmitType();
+		return type == HTMLElementDeclaration.OMIT_BOTH || type == HTMLElementDeclaration.OMIT_END || type == HTMLElementDeclaration.OMIT_END_DEFAULT || type == HTMLElementDeclaration.OMIT_END_MUST;
 	}
 
 	/**
