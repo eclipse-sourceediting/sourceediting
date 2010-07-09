@@ -79,7 +79,7 @@ public class JSPContentValidator extends JSPValidator {
 	/*
 	 * Mostly copied from HTMLValidator
 	 */
-	private void validate(IReporter reporter, IFile file, IDOMModel model) {
+	protected void validate(IReporter reporter, IFile file, IDOMModel model) {
 		if (file == null || model == null)
 			return; // error
 		IDOMDocument document = model.getDocument();
@@ -98,6 +98,10 @@ public class JSPContentValidator extends JSPValidator {
 			rep.clear();
 			adapter.setReporter(rep);
 			adapter.validate(document);
+
+			MarkupValidatorDelegate delegate = (MarkupValidatorDelegate) Platform.getAdapterManager().getAdapter(model, MarkupValidatorDelegate.class);
+			if (delegate != null)
+				delegate.validate(file, reporter);
 		}
 	}
 
