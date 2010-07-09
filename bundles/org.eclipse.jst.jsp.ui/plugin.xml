@@ -1011,5 +1011,14 @@
 			</iterate>
 		</definition>
 	</extension>
-	
+
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory
+			adaptableType="org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel"
+			class="org.eclipse.jst.jsp.ui.internal.validation.MarkupValidatorAdapterFactory">
+			<adapter
+            	type="org.eclipse.jst.jsp.core.internal.validation.MarkupValidatorDelegate"/>
+		</factory>
+	</extension>
+
 </plugin>

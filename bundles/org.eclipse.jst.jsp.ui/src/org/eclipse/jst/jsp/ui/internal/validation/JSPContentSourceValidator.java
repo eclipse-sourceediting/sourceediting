@@ -107,6 +107,28 @@ public class JSPContentSourceValidator extends JSPContentValidator implements IS
 		fDocument = null;
 	}
 
+	protected void validate(IReporter reporter, IFile file, IDOMModel model) {
+		if (file == null || model == null)
+			return; // error
+		IDOMDocument document = model.getDocument();
+		if (document == null)
+			return; // error
+
+		// This validator currently only handles validating HTML content in
+		// JSP
+		if (hasHTMLFeature(document)) {
+			INodeAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();
+			ValidationAdapter adapter = (ValidationAdapter) factory.adapt(document);
+			if (adapter == null)
+				return; // error
+
+			HTMLValidationReporter rep = getReporter(reporter, file, model);
+			rep.clear();
+			adapter.setReporter(rep);
+			adapter.validate(document);
+		}
+	}
+
 	/**
 	 * This validate call is for the ISourceValidator partial document
 	 * validation approach
