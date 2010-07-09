@@ -1291,7 +1291,15 @@ public class XMLModelParser {
 			Node parent = this.context.getParentNode();
 			if(parent != null) {
 				Node next = this.context.getNextNode();
-	
+				ModelParserAdapter parserAdapter = getParserAdapter();
+				if (parserAdapter != null && parserAdapter instanceof ModelParserAdapterExtension) {
+					ModelParserAdapterExtension adapter = (ModelParserAdapterExtension) parserAdapter;
+					// Make sure to check that parent is an Element
+					while (parent.getNodeType() == Node.ELEMENT_NODE && !parserAdapter.canContain( (Element) parent, node) && adapter.isEndTagOmissible((Element) parent)) {
+						next = parent.getNextSibling();
+						parent = parent.getParentNode();
+					}
+				}
 				insertNode(parent, node, next);
 				next = node.getNextSibling();
 				if (next != null) {
