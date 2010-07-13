@@ -34,6 +34,7 @@ public interface IProductConstants {
 	public static final String ID_PERSPECTIVE_HIERARCHY_VIEW = "idPerspectiveHierarchyView"; //$NON-NLS-1$
 	public static final String SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE = "showJavaEEModuleDependencyPage"; //$NON-NLS-1$
 	public static final String DYNAMIC_WEB_GENERATE_DD = "dynamic_web_generate_dd"; //$NON-NLS-1$
+	public static final String EE6_CONNECTOR_GENERATE_DD = "ee6_connector_generate_dd"; //$NON-NLS-1$
 	public static final String ALLOW_CLASSPATH_DEP = "allowClasspathDep"; //$NON-NLS-1$
 	
 	public static final String DYN_WEB_OUTPUT_FOLDER = "dynWebOutput"; //$NON-NLS-1$
