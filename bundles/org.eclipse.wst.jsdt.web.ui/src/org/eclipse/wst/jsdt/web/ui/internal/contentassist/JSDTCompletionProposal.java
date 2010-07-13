@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.wst.jsdt.internal.ui.text.java.LazyJavaCompletionProposal;
+import org.eclipse.wst.jsdt.internal.ui.text.java.LazyJavaTypeCompletionProposal;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 
 /**
@@ -93,5 +94,12 @@ public class JSDTCompletionProposal extends JavaCompletionProposal implements IJ
 	
 	final public void setJavaCompletionProposal(ICompletionProposal javaCompletionProposal) {
 		fJavaCompletionProposal = javaCompletionProposal;
+	}
+	
+	protected boolean isValidPrefix(String prefix) {
+		if (this.fJavaCompletionProposal instanceof LazyJavaTypeCompletionProposal) {
+			return ((LazyJavaTypeCompletionProposal) this.fJavaCompletionProposal).isValidTypePrefix(prefix);
+		}
+		return super.isValidPrefix(prefix);
 	}
 }

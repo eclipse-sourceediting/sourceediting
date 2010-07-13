@@ -13,14 +13,13 @@
  */
 package org.eclipse.wst.jsdt.web.support.jsp;
 
-import org.eclipse.jface.text.formatter.IContentFormatter;
-import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT;
-import org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSDT;
+import org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForJs;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 /**
@@ -39,23 +38,6 @@ public class JSDTStructuredTextViewerConfigurationJSP extends StructuredTextView
 			fHTMLSourceViewerConfiguration = new StructuredTextViewerConfigurationJSDT();
 		}
 		return fHTMLSourceViewerConfiguration;
-	}
-	
-	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final IContentFormatter formatter = super.getContentFormatter(sourceViewer);
-		if(formatter instanceof MultiPassContentFormatter) {
-		/*
-		 * Check for any externally supported auto edit strategies from EP.
-		 * [Bradley Childs - childsb@us.ibm.com]
-		 */
-		String[] contentTypes = getConfiguredContentTypes(sourceViewer);
-		for (int i = 0; i < contentTypes.length; i++) {
-				if (IHTMLPartitions.SCRIPT.equals(contentTypes[i]) || IJSPPartitions.JSP_CONTENT_JAVASCRIPT.equals(contentTypes[i])) {
-					((MultiPassContentFormatter) formatter).setSlaveStrategy(new FormattingStrategyJSDT(), contentTypes[i]);
-				}
-			}
-		}
-		return formatter;
 	}
 	
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
@@ -77,5 +59,18 @@ public class JSDTStructuredTextViewerConfigurationJSP extends StructuredTextView
 		}
 
 		return providers;
+	}
+	
+	/**
+	 * @see org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	 */
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
+		if(contentType.equals(IHTMLPartitions.SCRIPT) || contentType.equals(IHTMLPartitions.SCRIPT_EVENTHANDLER)) {
+			IAutoEditStrategy[] strategies = new IAutoEditStrategy[1];
+			strategies[0] = new AutoEditStrategyForJs();
+			return strategies;
+		} else {
+			return super.getAutoEditStrategies(sourceViewer, contentType);
+		}
 	}
 }
