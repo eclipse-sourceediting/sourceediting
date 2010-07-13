@@ -536,22 +536,31 @@ public class ModelManagerImpl implements IModelManager {
 
 	private void _doCommonGetModel(IFile file, String id, SharedObject sharedObject,ReadEditType rwType) {
 		boolean doRemove = true;
-		synchronized(sharedObject) {
-			sharedObject.doWait=false;
-			IStructuredModel model = FileBufferModelManager.getInstance().getModel(file);
-			sharedObject.doWait=true;
-			if (model != null) {
-				sharedObject.theSharedModel=model;
-				_initCount(sharedObject, rwType);
-				doRemove = false;
+		try {
+			synchronized(sharedObject) {
+				sharedObject.doWait=false;
+				IStructuredModel model = null;
+				try {
+					model = FileBufferModelManager.getInstance().getModel(file);
+				}
+				finally {
+					sharedObject.doWait=true;
+				}
+				if (model != null) {
+					sharedObject.theSharedModel=model;
+					_initCount(sharedObject, rwType);
+					doRemove = false;
+				}
 			}
 		}
-		if (doRemove) {
-			SYNC.acquire();
-			fManagedObjects.remove(id);
-			SYNC.release();
+		finally {
+			if (doRemove) {
+				SYNC.acquire();
+				fManagedObjects.remove(id);
+				SYNC.release();
+			}
+			sharedObject.setLoaded();
 		}
-		sharedObject.setLoaded();
 	}
 
 	private SharedObject _commonNewModel(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
