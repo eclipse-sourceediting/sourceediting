@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -46,6 +47,9 @@ public class RenameElementHandler extends AbstractHandler {
 						break;
 					case IJavaElement.PACKAGE_FRAGMENT:
 						renameSupport= RenameSupport.create((IPackageFragment)element, element.getElementName(), RenameSupport.UPDATE_REFERENCES);
+						break;
+					case IJavaElement.FIELD:
+						renameSupport = RenameSupport.create((IField)element, element.getElementName(), RenameSupport.UPDATE_REFERENCES);
 						break;
 				}
 				if(renameSupport != null) {

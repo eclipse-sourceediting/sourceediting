@@ -331,6 +331,23 @@
 				</with>
 			</enablement>
 		</renameParticipant>
+		  <renameParticipant
+		        class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPFieldRenameParticipant"
+		        id="org.eclipse.jst.jsp.ui.java.refactoring.JSFieldRenameParticipant"
+		        name="%JSP_Field_Rename_Participant_Extension_Element.name">
+		     <enablement>
+		        <with variable="affectedNatures">
+		           <iterate operator="or">
+		              <equals value="org.eclipse.jdt.core.javanature">
+		              </equals>
+		           </iterate>
+		        </with>
+		        <with variable="element">
+		           <instanceof value="org.eclipse.jdt.core.IField">
+		           </instanceof>
+		        </with>
+		     </enablement>
+		  </renameParticipant>
 	</extension>
 
 	<!--======================================================================================-->

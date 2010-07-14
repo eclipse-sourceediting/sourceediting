@@ -58,6 +58,7 @@ public class JSPUIMessages extends NLS {
 	public static String BasicRefactorSearchRequestor_4;
 	public static String BasicRefactorSearchRequestor_5;
 	public static String BasicRefactorSearchRequestor_6;
+	public static String BasicRefactorSearchRequestor_7;
 	public static String BreakpointNotAllowed;
 	public static String _UI_WIZARD_NEW_TITLE;
 	public static String _UI_WIZARD_NEW_HEADING;
