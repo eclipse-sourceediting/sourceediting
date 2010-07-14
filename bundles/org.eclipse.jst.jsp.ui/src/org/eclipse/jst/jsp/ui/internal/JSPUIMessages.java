@@ -164,6 +164,7 @@ public class JSPUIMessages extends NLS {
 	public static String VALIDATION_HEADER_EL;
 	public static String VALIDATION_EL_SYNTAX;
 	public static String VALIDATION_EL_LEXER;
+	public static String VALIDATION_EL_FUNCTION_UNDEFINED;
 
 	public static String VALIDATION_HEADER_CUSTOM_ACTIONS;
 	public static String VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE;

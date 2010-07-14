@@ -60,6 +60,7 @@ public class JSPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 
 		node.putInt(JSPCorePreferenceNames.VALIDATION_EL_SYNTAX, ValidationMessage.ERROR);
 		node.putInt(JSPCorePreferenceNames.VALIDATION_EL_LEXER, ValidationMessage.IGNORE);
+		node.putInt(JSPCorePreferenceNames.VALIDATION_EL_FUNCTION_UNDEFINED, ValidationMessage.ERROR);
 
 		node.putInt(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE, ValidationMessage.ERROR);
 		node.putInt(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE, ValidationMessage.WARNING);

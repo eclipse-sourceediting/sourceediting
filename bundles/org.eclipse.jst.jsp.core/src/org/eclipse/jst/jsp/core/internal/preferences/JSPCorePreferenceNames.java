@@ -66,6 +66,7 @@ public class JSPCorePreferenceNames {
 	
 	public static final String VALIDATION_EL_SYNTAX  ="validation.el-general-syntax";
 	public static final String VALIDATION_EL_LEXER  ="validation.el-lexical-failure";
+	public static final String VALIDATION_EL_FUNCTION_UNDEFINED = "validation.el-function-undefined";
 
 	public static final String VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE = "validation.actions-missing-required-attribute";
 	public static final String VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE = "validation.actions-unknown-attribute";

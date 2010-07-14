@@ -22,26 +22,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDFunction;
+import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.jspel.ELProblem;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 
 public class ELGeneratorVisitor implements JSPELParserVisitor {
 	
+	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
 	private static final String ENDL = "\n"; //$NON-NLS-1$
 	
 	private static final String fExpressionHeader1 = "public String _elExpression"; //$NON-NLS-1$
@@ -113,6 +127,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	private boolean fUseParameterizedTypes;
 
 	private List fELProblems;
+	private IScopeContext[] fScopeContexts = null;
 
 	/**
 	 * Tranlsation of XML-style operators to java
@@ -150,6 +165,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		fGeneratedFunctionStart = -1; //set when generating function definition
 		fUseParameterizedTypes = compilerSupportsParameterizedTypes();
 		fELProblems = new ArrayList();
+		fScopeContexts = getScopeContexts();
 	}
 
 	/**
@@ -552,12 +568,15 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 			append(")"); //$NON-NLS-1$
 		}
 		else {
-			//column offsets are 1 based not 0 based, thus subtract one
-			final int problemOffset = fContentStart + node.getFirstToken().beginColumn - 1;
-			final int problemLength = node.getLastToken().endColumn - 1;
-
-			//could not find function translation so report error
-			fELProblems.add(new ELProblem(new Position(problemOffset, problemLength), NLS.bind(JSPCoreMessages.JSPELTranslator_0, node.getFullFunctionName())));
+			final int sev = getProblemSeverity(JSPCorePreferenceNames.VALIDATION_EL_FUNCTION_UNDEFINED);
+			if (sev != ValidationMessage.IGNORE) {
+				//column offsets are 1 based not 0 based, thus subtract one
+				final int problemOffset = fContentStart + node.getFirstToken().beginColumn - 1;
+				final int problemLength = node.getLastToken().endColumn - 1;
+	
+				//could not find function translation so report error
+				fELProblems.add(new ELProblem(sev, new Position(problemOffset, problemLength), NLS.bind(JSPCoreMessages.JSPELTranslator_0, node.getFullFunctionName())));
+			}
 			
 			//error message to be injected into translation purely for debugging purposes
 			String errorMsg = "\"Could not find function translation for: " + node.getFullFunctionName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
@@ -657,5 +676,46 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 			
 		
 		return funcNameToken;
+	}
+	
+	/**
+	 * @param key preference key used to get the severity for a problem
+	 * @param contexts preference service contexts
+	 * @return The severity of the problem represented by the given preference key
+	 */
+	private int getProblemSeverity(String key) {
+		return Platform.getPreferencesService().getInt(PREFERENCE_NODE_QUALIFIER, key, IMessage.NORMAL_SEVERITY, fScopeContexts);
+	}
+
+	private IScopeContext[] getScopeContexts() {
+		IScopeContext[] scopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+		final IFile file = getFile();
+		if (file != null && file.exists()) {
+			final IProject project = file.getProject();
+			if (project.exists()) {
+				final ProjectScope projectScope = new ProjectScope(project);
+				if (projectScope.getNode(PREFERENCE_NODE_QUALIFIER).getBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, false)) {
+					scopes = new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+				}
+			}
+		}
+		return scopes;
+	}
+
+	private IFile getFile() {
+		IFile f = null;
+		if (fDocument != null) {
+			final ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(fDocument);
+			if (buffer != null) {
+				final IPath path = buffer.getLocation();
+				if (path.segmentCount() > 1) {
+					f = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				}
+				if (f != null && f.isAccessible()) {
+					return f;
+				}
+			}
+		}
+		return null;
 	}
 }

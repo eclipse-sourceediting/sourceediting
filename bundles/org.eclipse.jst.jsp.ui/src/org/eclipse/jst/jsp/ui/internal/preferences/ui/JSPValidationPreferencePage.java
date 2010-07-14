@@ -196,6 +196,7 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		section = createStyleSectionWithContentComposite(composite, JSPUIMessages.VALIDATION_HEADER_EL, nColumns);
 		addComboBox(section, JSPUIMessages.VALIDATION_EL_SYNTAX, JSPCorePreferenceNames.VALIDATION_EL_SYNTAX, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_EL_LEXER, JSPCorePreferenceNames.VALIDATION_EL_LEXER, SEVERITIES, errorWarningIgnoreLabels, 0);
+		addComboBox(section, JSPUIMessages.VALIDATION_EL_FUNCTION_UNDEFINED, JSPCorePreferenceNames.VALIDATION_EL_FUNCTION_UNDEFINED, SEVERITIES, errorWarningIgnoreLabels, 0);
 		// end EL section
 
 		restoreSectionExpansionStates(getDialogSettings().getSection(SETTINGS_SECTION_NAME));
