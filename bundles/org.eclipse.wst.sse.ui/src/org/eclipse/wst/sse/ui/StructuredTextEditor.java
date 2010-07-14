@@ -1072,10 +1072,12 @@ public class StructuredTextEditor extends TextEditor {
 		initializeDocumentProvider(null);
 	}
 
-	private void aboutToSaveModel() {
-		if (getInternalModel() != null) {
-			getInternalModel().aboutToChangeModel();
+	private IStructuredModel aboutToSaveModel() {
+		IStructuredModel model = getInternalModel();
+		if (model != null) {
+			model.aboutToChangeModel();
 		}
+		return model;
 	}
 
 	protected void addSourceMenuActions(IMenuManager menu) {
@@ -1817,13 +1819,14 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor progressMonitor) {
+		IStructuredModel model = null;
 		try {
-			aboutToSaveModel();
+			model = aboutToSaveModel();
 			updateEncodingMemento();
 			super.doSave(progressMonitor);
 		}
 		finally {
-			savedModel();
+			savedModel(model);
 		}
 	}
 
@@ -2809,9 +2812,9 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	private void savedModel() {
-		if (getInternalModel() != null) {
-			getInternalModel().changedModel();
+	private void savedModel(IStructuredModel model) {
+		if (model != null) {
+			model.changedModel();
 		}
 	}
 
