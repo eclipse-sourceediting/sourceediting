@@ -243,27 +243,35 @@ public abstract class FlatComponentDeployable extends ProjectModule {
     	// Handle workspace project module components
     	// Subclasses should extend 
     	IVirtualComponent targetComponent = child.getComponent();
-    	if (targetComponent != null && targetComponent.getProject()!=component.getProject()) {
+    	if (targetComponent != null && targetComponent.getProject()!= component.getProject()) {
 			if (!targetComponent.isBinary()) {
-				IModule[] allMods = ServerUtil.getModules(targetComponent.getProject());
-				for( int i = 0; i < allMods.length; i++ ) {
-					ModuleDelegate md = (ModuleDelegate)allMods[i].loadAdapter(ModuleDelegate.class, new NullProgressMonitor());
-					if( md instanceof ProjectModule) {
-						return allMods[i];
-					}
-				}
-				return allMods.length > 0 ? allMods[0] : null;
+				return filterModuleDelegates(ServerUtil.getModules(targetComponent.getProject()));
 			}
 		}
 		return null;
     }
     	
-    
+    /**
+     * An extender may wish to override this method in order to control which
+     * delegate is returned in the scenario where more than one exist.  By default
+     * the first one found is returned.
+     * 
+     * @param IModule[] modules
+     * @return IModule[]
+     */
+    protected IModule filterModuleDelegates(IModule[] modules) {
+    	for (int i = 0; i < modules.length; i++) {
+			ModuleDelegate md = (ModuleDelegate)modules[i].loadAdapter(ModuleDelegate.class, new NullProgressMonitor());
+			if (md instanceof ProjectModule) {
+				return modules[i];
+			}
+		}
+    	return modules.length > 0 ? modules[0] : null;
+	}
     
     /*
      * Below are STATIC utility classes and methods
      */
-
 	protected static IModuleResource[] convert(IFlatResource[] resources) {
 		ArrayList<IModuleResource> list = new ArrayList<IModuleResource>();
 		for( int i = 0; i < resources.length; i++ ) {
