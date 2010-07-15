@@ -18,6 +18,7 @@ import junit.framework.TestSuite;
 import org.eclipse.wst.xml.ui.internal.validation.TestDelegatingSourceValidatorForXML;
 import org.eclipse.wst.xml.ui.internal.validation.TestMarkupValidator;
 import org.eclipse.wst.xml.ui.tests.contentassist.TestXMLContentAssistComputers;
+import org.eclipse.wst.xml.ui.tests.contentmodel.TestInferredContentModel;
 import org.eclipse.wst.xml.ui.tests.viewer.TestViewerConfigurationXML;
 
 
@@ -41,6 +42,7 @@ public class XMLUITestSuite extends TestSuite {
 		addTestSuite(TestReconcilerXML.class);
 		addTestSuite(TestSourceValidationFramework.class);
 		addTest(new TestSuite(TestSpellcheckDelegateAdapaterFactory.class, "Test Spellcheck Delegate Adapter Factory"));
+		addTest(new TestSuite(TestInferredContentModel.class, "Test Inferred Grammar Support"));
 		addTest(TestXMLContentAssistComputers.suite());
 	}
 }
