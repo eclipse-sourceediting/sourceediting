@@ -310,7 +310,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						 * language=javascripttype <script src=''> global js type.
 						 * <script> (global js type)
 						 */
-						if (NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("type")) || NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("language")) || isGlobalJs()) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("type")) || NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("language")) || (nh.getAttributeValue("type")==null && nh.getAttributeValue("language")==null && isGlobalJs())) { //$NON-NLS-1$ //$NON-NLS-2$
 							if (nh.containsAttribute(new String[] { "src" })) { //$NON-NLS-1$
 								// Handle import
 								translateScriptImportNode(getCurrentNode());
