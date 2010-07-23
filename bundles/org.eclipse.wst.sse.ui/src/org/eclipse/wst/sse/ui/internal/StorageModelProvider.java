@@ -224,10 +224,13 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 					IPath storagePath = storage.getFullPath();
 					String name = storage.getName();
 					if (storagePath != null) {
-						// If they are different, the IStorage contract is not
-						// being honored
-						// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=73098).
-						// Favor the name.
+						/*
+						 * If the path's last segment and the name are
+						 * different, the IStorage contract is not being
+						 * honored
+						 * (https://bugs.eclipse.org/bugs/show_bug.cgi?
+						 * id=73098). Favor the name
+						 */
 						if (!storagePath.lastSegment().equals(name)) {
 							IPath workingPath = storagePath.addTrailingSeparator();
 							location = workingPath.append(name).toString();
