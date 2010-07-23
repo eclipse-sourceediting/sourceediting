@@ -86,7 +86,7 @@ public class TestStructuredTextEditor extends TestCase {
 			 * This should take care of testing init, createPartControl,
 			 * beginBackgroundOperation, endBackgroundOperation methods
 			 */
-			IEditorPart part = page.openEditor(input, "org.eclipse.wst.sse.ui.StructuredTextEditor", true);
+			IEditorPart part = page.openEditor(input, "org.eclipse.wst.sse.ui.StructuredTextEditor.test", true);
 			if (part instanceof StructuredTextEditor)
 				fEditor = (StructuredTextEditor) part;
 			else
