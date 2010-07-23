@@ -216,6 +216,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				// disable the content assist operation if no content
 				// assistant
 				enableOperation(CONTENTASSIST_PROPOSALS, false);
+				fContentAssistantInstalled = false;
 			}
 		}
 
@@ -235,6 +236,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				// disable the content assist operation if no content
 				// assistant
 				enableOperation(QUICK_ASSIST, false);
+				fQuickAssistAssistantInstalled = false;
 			}
 		}
 

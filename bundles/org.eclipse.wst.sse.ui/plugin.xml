@@ -431,18 +431,6 @@
 			annotationType="org.eclipse.wst.sse.ui.temp.info">
 		</specification>
 	</extension>
-	<!-- dynamic content type supporting editor, no supported file extensions by default -->
-	<extension point="org.eclipse.ui.editors">
-		<editor
-			name="%Standalone_Structured_Source_Editor.name"
-			icon="$nl$/icons/sourceEditor.gif"
-			contributorClass="org.eclipse.wst.sse.ui.internal.actions.ActionContributor"
-			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
-			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
-			id="org.eclipse.wst.sse.ui.StructuredTextEditor">
-		</editor>
-	</extension>
-	
 <!--	<extension point="org.eclipse.ui.popupMenus">
 		<objectContribution
 			objectClass="org.eclipse.core.resources.IContainer"
