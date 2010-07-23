@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -117,6 +117,8 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	private String fContentTypeId = null;
 
 	private SpellingProblemCollector fProblemCollector = new SpellingProblemCollector();
+	
+	IStructuredModel structuredModel = null;
 
 	/*
 	 * Keying our Temporary Annotations based on the partition doesn't help
@@ -321,7 +323,16 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			Logger.log(Logger.INFO, "Spell checking [" + regionToBeChecked.getOffset() + "-" + (regionToBeChecked.getOffset() + regionToBeChecked.getLength()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		if (getDocument() != null) {
-			EditorsUI.getSpellingService().check(getDocument(), new IRegion[]{regionToBeChecked}, fSpellingContext, fProblemCollector, null);
+			try {
+				EditorsUI.getSpellingService().check(getDocument(), new IRegion[]{regionToBeChecked}, fSpellingContext, fProblemCollector, null);
+			}
+			finally {
+				// corresponding "get" is in #shouldSpellCheck(int) 
+				if (structuredModel != null) {
+					structuredModel.releaseFromRead();
+					structuredModel = null;
+				}
+			}
 		}
 		annotationsToAdd = fProblemCollector.getAnnotations();
 		fProblemCollector.clear();
@@ -383,22 +394,19 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	private boolean shouldSpellcheck(int offset) {
 		boolean decision = true;
 		
-		IStructuredModel model = null;
-		try {
-			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-			
-			/* use an an adapter factory to get a spell-check decision maker,
-			 * and ask it if the  offset should be spell-checked.  It is done
-			 * this way so content type specific decisions can be made without this
-			 * plugin being aware of any content type specifics.
+		if (structuredModel == null)
+			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+
+		if (structuredModel != null) {
+			/*
+			 * use an an adapter factory to get a spell-check decision maker,
+			 * and ask it if the offset should be spell-checked. It is done
+			 * this way so content type specific decisions can be made without
+			 * this plugin being aware of any content type specifics.
 			 */
-			ISpellcheckDelegate delegate = (ISpellcheckDelegate)Platform.getAdapterManager().getAdapter(model, ISpellcheckDelegate.class);
-			if(delegate != null) {
-				decision = delegate.shouldSpellcheck(offset, model);
-			}
-		}  finally {
-			if(model != null) {
-				model.releaseFromRead();
+			ISpellcheckDelegate delegate = (ISpellcheckDelegate) Platform.getAdapterManager().getAdapter(structuredModel, ISpellcheckDelegate.class);
+			if (delegate != null) {
+				decision = delegate.shouldSpellcheck(offset, structuredModel);
 			}
 		}
 		

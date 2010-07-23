@@ -114,7 +114,7 @@
 			file-extensions="jsp,jsv,jtpl,jspx"
 			priority="high"
 			name="%JSP_Content_Type_Extension_Element.name"
-			id="jspsource"
+			id="org.eclipse.jst.jsp.core.jspsource"
 			base-type="org.eclipse.core.runtime.text"
 			default-charset="ISO-8859-1">
 			<describer
@@ -125,7 +125,7 @@
 			file-extensions="jspf,jsf"
 			priority="high"
 			name="%JSP_Fragment_Content_Type_Extension_Element.name"
-			id="jspfragmentsource"
+			id="org.eclipse.jst.jsp.core.jspfragmentsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource"
 			default-charset="ISO-8859-1">
 			<describer
@@ -136,7 +136,7 @@
 			file-extensions="tag,tagx,tagf"
 			priority="high"
 			name="%JSP_Tag_Content_Type_Extension_Element.name"
-			id="tagsource"
+			id="org.eclipse.jst.jsp.core.tagsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource"
 			default-charset="ISO-8859-1"/>
 		<!-- create content type for .tld files -->
@@ -144,7 +144,7 @@
 			file-extensions="tld"
 			priority="high"
 			name="%JSP_TLD_Content_Type_Extension_Element.name"
-			id="tldsource"
+			id="org.eclipse.jst.jsp.core.tldsource"
 			base-type="org.eclipse.core.runtime.xml"
 			default-charset="UTF-8">
 			<!-- add the describer so it's properly detected when opened from within .jar files -->
@@ -161,7 +161,7 @@
 			file-extensions="jsp"
 			priority="high"
 			name="%contentTypeCSSJSPName"
-			id="cssjspsource"
+			id="org.eclipse.jst.jsp.core.cssjspsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource">
 			<describer
 				class="org.eclipse.jst.jsp.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />
@@ -170,7 +170,7 @@
 	        file-extensions="jspf"
 			priority="high"
 			name="%contentTypeCSSJSPFName"
-			id="cssjspfragmentsource"
+			id="org.eclipse.jst.jsp.core.cssjspfragmentsource"
 			base-type="org.eclipse.jst.jsp.core.cssjspsource">
 			<describer
 				class="org.eclipse.jst.jsp.css.core.internal.contenttype.ContentDescriberForJSPedCSS" />

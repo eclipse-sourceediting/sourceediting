@@ -16,6 +16,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.spelling.ISpellcheckDelegate;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Comment;
+import org.w3c.dom.Text;
 
 /**
  * An <code>IAdapterFactory</code> to adapt an <code>IDOMModel</code> to a
@@ -48,7 +49,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 			
 			IndexedRegion region = model.getIndexedRegion(offset);
 			if(region != null) {
-				shouldSpellcheck = (region instanceof Comment);
+				shouldSpellcheck = (region instanceof Comment || region instanceof Text);
 			}
 			
 			return shouldSpellcheck;
