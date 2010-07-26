@@ -35,6 +35,7 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
@@ -154,9 +155,15 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		/*
 		 * Abort if no workspace file is known (new validation framework does
 		 * not support that scenario) or no validators have been specified
+		 * or validation has been disabled
 		 */
-		if (isCanceled() || fMetaData.isEmpty())
+		IFile file = getFile();
+		if (isCanceled() || fMetaData.isEmpty() || (file != null && (
+				ValidationFramework.getDefault().isSuspended() ||
+				ValidationFramework.getDefault().isSuspended(file.getProject()) ||
+				ValidationFramework.getDefault().getProjectSettings(file.getProject()).getSuspend()))) {
 			return;
+		}
 
 		IDocument doc = getDocument();
 		// for external files, this can be null
@@ -180,19 +187,18 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		 * validators.
 		 */
 		Set disabledValsByClass = new HashSet(20);
-		IFile file = getFile();
 		if (file != null) {
-			if (ValidationFramework.getDefault().isSuspended() || ValidationFramework.getDefault().isSuspended(file.getProject()))
-				return;
-
 			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(file).iterator(); it.hasNext();) {
 				Validator v = (Validator) it.next();
 				Validator.V1 v1 = v.asV1Validator();
 				if (v1 != null)
 					disabledValsByClass.add(v1.getId());
 				// not a V1 validator
-				else if (v.getSourceId() != null)
-					disabledValsBySourceId.add(v.getSourceId());
+				else if (v.getSourceId() != null) {
+					//could be more then one sourceid per batch validator
+					String[] sourceIDs = StringUtils.unpack(v.getSourceId());
+					disabledValsBySourceId.addAll(Arrays.asList(sourceIDs));
+				}
 			}
 		}
 				
@@ -240,7 +246,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 				}
 			}
 		}
-
+		
 		TemporaryAnnotation[] annotationsToRemove = getAnnotationsToRemove(dr, stepsRanOnThisDirtyRegion);
 		if (annotationsToRemove.length + annotationsToAdd.size() > 0)
 			smartProcess(annotationsToRemove, (IReconcileResult[]) annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
