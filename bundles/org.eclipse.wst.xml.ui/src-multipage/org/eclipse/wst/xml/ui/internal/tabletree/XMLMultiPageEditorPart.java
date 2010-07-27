@@ -40,8 +40,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -997,13 +995,6 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		super.setFocus();
 		Control control = fDesignViewer.getControl();
 		control.setFocus();
-
-		if (control instanceof Tree) {
-			if (((Tree) control).getItemCount() > 0) {
-				TreeItem item = ((Tree) control).getItem(0);
-				((Tree) control).setSelection(item);
-			}
-		}
 		// 271382 - Focus not set properly after activating XML editor
 		control.forceFocus();
 	}
