@@ -520,52 +520,32 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
 			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
-					((MultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
+					if (getActivePage() != fSourcePageIndex) {
+						((MultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
+					}
 				}
 			});
 		}
 		fDesignViewer.getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				((MultiPageSelectionProvider) getSite().getSelectionProvider()).fireSelectionChanged(event);
+				if (getActivePage() != fSourcePageIndex) {
+					((MultiPageSelectionProvider) getSite().getSelectionProvider()).fireSelectionChanged(event);
+				}
 			}
 		});
 
-		/*
-		 * Connect selection from the Design page to the selection provider of
-		 * the Source page so that selection in the Design page will drive
-		 * selection in the Source page. Prefer post selection.
-		 */
-		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
-			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(final SelectionChangedEvent event) {
-					/*
-					 * Only force selection update if source page is not
-					 * active
-					 */
-					if (getActivePage() != fSourcePageIndex) {
-						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
+		fDesignViewer.getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (getActivePage() != fSourcePageIndex) {
+					try {
+						updateStatusLine(event.getSelection());
 					}
+					catch (Exception exception) {
+						Logger.logException(exception);
+					}						
 				}
-			});
-		}
-		else {
-			fDesignViewer.getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-					/*
-					 * Only force selection update if source page is not
-					 * active
-					 */
-					if (getActivePage() != fSourcePageIndex) {
-						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
-					}
-					/*
-					 * Bug 210481 - Removed call to updateStatusLine because
-					 * this is already handled by the selection in the source
-					 * page
-					 */
-				}
-			});
-		}
+			}
+		});
 
 		/*
 		 * Handle double-click in the Design page by selecting the
@@ -987,6 +967,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 * @see org.eclipse.ui.part.MultiPageEditorPart#pageChange(int)
 	 */
 	protected void pageChange(int newPageIndex) {
+		if (newPageIndex == fSourcePageIndex) {
+			ISelectionProvider provider = fDesignViewer.getSelectionProvider();
+			if (provider != null) {
+				getTextEditor().getSelectionProvider().setSelection(provider.getSelection());
+			}
+		}
 		super.pageChange(newPageIndex);
 		saveLastActivePageIndex(newPageIndex);
 
