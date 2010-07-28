@@ -80,7 +80,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				RegionIterator it = new RegionIterator(toAppend.getDocumentRegion(), toAppend.getTextRegion());
 				it.prev();
 				ITextRegion prev = it.prev();
-				if (prev == null || (prev.getType() == CSSRegionContexts.CSS_S && TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0)[0] >= 0)) {
+				if (prev == null || (prev.getType() == CSSRegionContexts.CSS_S && TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0)[0] >= 0) ||
+						(prev.getType() == CSSRegionContexts.CSS_COMMENT)) {
 					source.append(delim);
 					source.append(getIndent(node));
 					if (needIndent)
