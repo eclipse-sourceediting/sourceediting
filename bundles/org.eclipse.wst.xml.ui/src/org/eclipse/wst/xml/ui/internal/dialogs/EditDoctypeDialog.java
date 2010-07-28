@@ -155,7 +155,7 @@ public class EditDoctypeDialog extends Dialog {
 
 
 		systemIdBrowseButton = new Button(composite, SWT.NONE);
-		systemIdBrowseButton.setText(XMLUIMessages._UI_LABEL_BROWSE);
+		systemIdBrowseButton.setText(XMLUIMessages._UI_LABEL_BROWSE_1);
 		systemIdBrowseButton.addSelectionListener(selectionListener);
 
 		// error message

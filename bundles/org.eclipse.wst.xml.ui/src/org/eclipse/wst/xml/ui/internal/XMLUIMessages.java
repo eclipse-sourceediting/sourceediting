@@ -92,6 +92,7 @@ public class XMLUIMessages extends NLS {
 	public static String _UI_LABEL_PUBLIC_ID_COLON;
 	public static String _UI_LABEL_SYSTEM_ID_COLON;
 	public static String _UI_LABEL_BROWSE;
+	public static String _UI_LABEL_BROWSE_1;
 	public static String _UI_LABEL_SELECT_XML_CATALOG_ENTRY;
 	public static String _UI_LABEL_SPECIFY_SYSTEM_ID;
 	public static String _UI_LABEL_SELECT_FILE;
