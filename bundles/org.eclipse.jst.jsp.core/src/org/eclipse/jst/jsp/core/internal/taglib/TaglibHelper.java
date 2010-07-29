@@ -21,9 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.jsp.tagext.FunctionInfo;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.TagFileInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.ValidationMessage;
@@ -44,10 +46,12 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDAttributeDeclaration;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.NotImplementedException;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -716,12 +720,72 @@ public class TaglibHelper {
 	 * @return the TagInfo for the TLDELementDeclaration if the declaration is
 	 *         valid, otherwise null
 	 */
-	private TagInfo getTagInfo(TLDElementDeclaration decl, TagExtraInfo tei, String prefix, String uri) {
+	private TagInfo getTagInfo(final TLDElementDeclaration decl, TagExtraInfo tei, String prefix, String uri) {
 
-		TagLibraryInfo libInfo = new TagLibraryInfo(prefix, uri) { /*
-																	 * dummy
-																	 * impl
-																	 */
+		TagLibraryInfo libInfo = new TagLibraryInfo(prefix, uri) {
+
+			public String getURI() {
+				if (Platform.inDebugMode())
+					new NotImplementedException().printStackTrace();
+				return super.getURI();
+			}
+
+			public String getPrefixString() {
+				if (Platform.inDebugMode())
+					new NotImplementedException().printStackTrace();
+				return super.getPrefixString();
+			}
+
+			public String getShortName() {
+				return ((TLDDocument)decl.getOwnerDocument()).getShortname();
+			}
+
+			public String getReliableURN() {
+				return ((TLDDocument)decl.getOwnerDocument()).getUri();
+			}
+
+			public String getInfoString() {
+				return ((TLDDocument)decl.getOwnerDocument()).getInfo();
+			}
+
+			public String getRequiredVersion() {
+				return ((TLDDocument)decl.getOwnerDocument()).getJspversion();
+			}
+
+			public TagInfo[] getTags() {
+				if (Platform.inDebugMode())
+					new NotImplementedException().printStackTrace();
+				return super.getTags();
+			}
+
+			public TagFileInfo[] getTagFiles() {
+				if (Platform.inDebugMode())
+					new NotImplementedException().printStackTrace();
+				return super.getTagFiles();
+			}
+
+			public TagInfo getTag(String shortname) {
+				if (Platform.inDebugMode())
+					new NotImplementedException().printStackTrace();
+				return super.getTag(shortname);
+			}
+
+			public TagFileInfo getTagFile(String shortname) {
+				if (Platform.inDebugMode())
+					new NotImplementedException().printStackTrace();
+				return super.getTagFile(shortname);
+			}
+
+			public FunctionInfo[] getFunctions() {
+				if (Platform.inDebugMode())
+					new NotImplementedException().printStackTrace();
+				return super.getFunctions();
+			}
+
+			public FunctionInfo getFunction(String name) {
+				new NotImplementedException(name).printStackTrace();
+				return super.getFunction(name);
+			}
 		};
 
 		CMNamedNodeMap attrs = decl.getAttributes();
