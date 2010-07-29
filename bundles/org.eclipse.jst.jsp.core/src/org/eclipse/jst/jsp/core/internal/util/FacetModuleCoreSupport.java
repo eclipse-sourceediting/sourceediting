@@ -65,8 +65,8 @@ public final class FacetModuleCoreSupport {
 
 	/**
 	 * @param project
-	 * @return -1 if the project does not have the JST Web facet, the version
-	 *         number of it otherwise
+	 * @return a default value if the project does not have the JST Web facet, the version
+	 *         number of the installed facet otherwise
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public static float getDynamicWebProjectVersion(IProject project) {
@@ -102,10 +102,10 @@ public final class FacetModuleCoreSupport {
 	}
 
 	/**
-	 * @param path -
-	 *            the full path to a resource within the workspace
-	 * @return - the runtime path of the resource if one exists, null
-	 *         otherwise
+	 * @param path
+	 *            - the full path to a resource within the workspace
+	 * @return - the runtime path of the resource if one exists, an
+	 *         approximation otherwise
 	 */
 	public static IPath getRuntimePath(IPath path) {
 		IPath result = null;
@@ -125,7 +125,7 @@ public final class FacetModuleCoreSupport {
 
 	/**
 	 * @param project
-	 * @return
+	 * @return whether this project has the jst.web facet installed on it
 	 * @throws CoreException
 	 */
 	public static boolean isDynamicWebProject(IProject project) {
@@ -175,7 +175,7 @@ public final class FacetModuleCoreSupport {
 
 	/**
 	 * @param basePath
-	 * @return the applicable Web context root path, if one exists
+	 * @return an approximation of the applicable Web context root path, if one could be found
 	 */
 	private static IPath getLocalRoot(IPath basePath) {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
