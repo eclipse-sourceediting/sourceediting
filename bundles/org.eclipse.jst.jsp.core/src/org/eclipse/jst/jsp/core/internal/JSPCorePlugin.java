@@ -14,6 +14,7 @@ import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ISavedState;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -74,31 +75,38 @@ public class JSPCorePlugin extends Plugin {
 		// listen for classpath changes
 		JavaCore.addElementChangedListener(TaglibHelperManager.getInstance());
 
-		//restore save state and process any events that happened before plugin loaded
+		/*
+		 * Restore save state and process any events that happened before
+		 * plug-in loaded. Don't do it immediately since adding the save
+		 * participant requires a lock on the workspace to compute the
+		 * accumulated deltas, and if the tree is not already locked it
+		 * becomes a blocking call.
+		 */
 		if (JSPTranslatorPersister.ACTIVATED) {
-			try {
-				final ISavedState savedState = ResourcesPlugin.getWorkspace().addSaveParticipant(plugin.getBundle().getSymbolicName(), this.fSaveParticipant);
-				if (savedState != null) {
-					Job persister = new Job(JSPCoreMessages.Initializing) {
-						protected IStatus run(IProgressMonitor monitor) {
-							try {
-								Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-							}
-							finally {
-								savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
-							}
-							return Status.OK_STATUS;
+			Job persister = new WorkspaceJob(JSPCoreMessages.Initializing) {
+				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+					ISavedState savedState = null;
+					try {
+						savedState = ResourcesPlugin.getWorkspace().addSaveParticipant(getBundle().getSymbolicName(), fSaveParticipant);
+					}
+					catch (CoreException e) {
+						Logger.logException("Could not load previous save state", e);
+					}
+					if (savedState != null) {
+						try {
+							Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 						}
-					};
-					persister.setUser(false);
-					persister.schedule(2000);
+						finally {
+							savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
+						}
+					}
+					// set up persister to listen to resource change events
+					ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPTranslatorPersister.getDefault());
+					return Status.OK_STATUS;
 				}
-				//set up persister to listen to resource change events
-				ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPTranslatorPersister.getDefault());
-			}
-			catch (CoreException e) {
-				Logger.logException("Could not load previous save state", e);
-			}
+			};
+			persister.setUser(false);
+			persister.schedule(2000);
 		}
 		
 		//init the JSP index
