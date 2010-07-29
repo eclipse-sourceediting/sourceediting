@@ -335,7 +335,7 @@ public class TestStructuredTextEditor extends TestCase {
 				state[0] = mod++;
 			}
 		};
-		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor.test");
 		try {
 			assertTrue("Not a StructuredTextEditor", editor instanceof StructuredTextEditor);
 			addReconcilingListener((StructuredTextEditor) editor, listener);
@@ -368,7 +368,7 @@ public class TestStructuredTextEditor extends TestCase {
 				state[0] = mod++;
 			}
 		};
-		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor.test");
 		try {
 			assertTrue("Not a StructuredTextEditor", editor instanceof StructuredTextEditor);
 			addReconcilingListener((StructuredTextEditor) editor, listener);
@@ -410,7 +410,7 @@ public class TestStructuredTextEditor extends TestCase {
 				state[0] = mod++;
 			}
 		};
-		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+		IEditorPart editor = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor.test");
 		try {
 			assertTrue("Not a StructuredTextEditor", editor instanceof StructuredTextEditor);
 			addReconcilingListener((StructuredTextEditor) editor, listener);
@@ -418,9 +418,9 @@ public class TestStructuredTextEditor extends TestCase {
 			assertTrue("Initial: Reconciling did not complete in a timely fashion", state[0] != -1 && state[1] != -1);
 			assertTrue("Initial: aboutToBeReconciled not invoked first (" + state[0] +")", state[0] == 0);
 			assertTrue("Initial: reconciled not invoked after aboutToBeReconciled (" + state[1] +")", state[1] == 1);
-			IDE.openEditor(activePage, fileAlt, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+			IDE.openEditor(activePage, fileAlt, "org.eclipse.wst.sse.ui.StructuredTextEditor.test");
 			Arrays.fill(state, -1);
-			IEditorPart editorPart = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor");
+			IEditorPart editorPart = IDE.openEditor(activePage, file, "org.eclipse.wst.sse.ui.StructuredTextEditor.test");
 			assertEquals("Didn't get the original editor back.", editor, editorPart);
 			waitForReconcile(state);
 			assertTrue("Modified: Reconciling did not complete in a timely fashion", state[0] != -1 && state[1] != -1);

@@ -16,6 +16,17 @@
 			class="org.eclipse.jst.jsp.ui.tests.TaglibIndexDeltaTraceView"
 			id="org.eclipse.jst.jsp.ui.tests.TaglibIndexDeltaTraceView" />
 	</extension>
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="%editor.name.0"
+			extensions="project, classpath, websettings, serverPreference"
+			icon="$nl$/icons/sourceEditor.gif"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
+			contributorClass="org.eclipse.wst.sse.ui.internal.actions.ActionContributor"
+			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+			id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+		</editor>
+	</extension>
     <extension
        point="org.eclipse.ui.commands">
 	    <command

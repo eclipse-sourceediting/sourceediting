@@ -43,7 +43,7 @@ public class JSPELContentAssistTest extends TestCase {
 	private static final String TEST_PROJECT_NAME = "testJSPELContentAssist";
 	private static final String CONTENT_DIR = "WebContent";
 	
-	private static final String STRUCTURED_EDITOR_TYPE = "org.eclipse.wst.sse.ui.StructuredTextEditor";
+	private static final String STRUCTURED_EDITOR_TYPE = "org.eclipse.wst.sse.ui.StructuredTextEditor.test";
 	
 	private static final String FILE_0_PATH = CONTENT_DIR + IPath.SEPARATOR + "Test0.jsp";
 	private static final String FILE_1_PATH = CONTENT_DIR + IPath.SEPARATOR + "Test1.jsp";
