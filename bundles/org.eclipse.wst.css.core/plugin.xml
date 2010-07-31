@@ -76,7 +76,7 @@
 			file-extensions="css"
 			priority="high"
 			name="%CSS_Content_Type_Extension_Element.name"
-			id="csssource"
+			id="org.eclipse.wst.css.core.csssource"
 			base-type="org.eclipse.core.runtime.text">
 			<describer
 				class="org.eclipse.wst.css.core.internal.contenttype.ContentDescriberForCSS" />

@@ -6,7 +6,7 @@
 		<content-type
 			priority="high"
 			name="%XSD_Content_Type"
-			id="xsdsource"
+			id="org.eclipse.wst.xsd.core.xsdsource"
 			base-type="org.eclipse.core.runtime.xml"
 			default-charset="UTF-8"
 			file-extensions="xsd" />

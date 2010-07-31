@@ -126,7 +126,7 @@
 			file-extensions="html,htm,xhtml,htpl,wml,shtml,shtm"
 			priority="high"
 			name="%HTML_Content_Type_Extension_Element.name"
-			id="htmlsource"
+			id="org.eclipse.wst.html.core.htmlsource"
 			base-type="org.eclipse.core.runtime.text">
 			<!-- note: no default-charset for HTML, should use 'platform' -->
 			<describer

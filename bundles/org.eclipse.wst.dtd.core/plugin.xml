@@ -57,7 +57,7 @@
 			file-extensions="dtd,mod,ent"
 			priority="normal"
 			name="%DTD_Content_Type_Extension_Element.name"
-			id="dtdsource"
+			id="org.eclipse.wst.dtd.core.dtdsource"
 			base-type="org.eclipse.core.runtime.text"
 			default-charset="UTF-8">
 			<describer

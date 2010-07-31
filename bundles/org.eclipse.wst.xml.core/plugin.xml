@@ -117,7 +117,7 @@
 			file-extensions="xmi"
 			priority="low"
 			name="%XMI_Content_Type"
-			id="xmisource"
+			id="org.eclipse.wst.xml.core.xmisource"
 			base-type="org.eclipse.core.runtime.xml">
 		</content-type>
 
@@ -125,7 +125,7 @@
 			file-extensions="xml,xsl,xslt,wsdl,xsd,exsd,xmi"
 			priority="low"
 			name="%XML_Content_Type_Extension_Element.name"
-			id="xmlsource"
+			id="org.eclipse.wst.xml.core.xmlsource"
 			base-type="org.eclipse.core.runtime.text"
 			default-charset="UTF-8">
 			<describer class="org.eclipse.wst.xml.core.internal.contenttype.ContentDescriberForXML" />
@@ -135,7 +135,7 @@
 			file-extensions="xsl,xslt"
 			priority="high"
 			name="%XSL_Content_Type_Extension_Element.name"
-			id="xslsource"
+			id="org.eclipse.wst.xml.core.xslsource"
 			base-type="org.eclipse.core.runtime.xml"
 			default-charset="UTF-8">
 		</content-type>
