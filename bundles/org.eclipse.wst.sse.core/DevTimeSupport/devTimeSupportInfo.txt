@@ -3,8 +3,7 @@
 This directory, DevTimeSupport, normally contains
 the source for some of our parser generators. 
 
-See wst/components/sse/plugins/
-org.eclipse.wst.sse.core\DevTimeSupport
+See :pserver:dev.eclipse.org:/cvsroot/webtools/sourceediting/plugins/org.eclipse.wst.sse.core/DevTimeSupport
 
 This particular text file you are reading 
 is the only one shipped 
