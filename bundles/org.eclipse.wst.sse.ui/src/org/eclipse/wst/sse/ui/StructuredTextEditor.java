@@ -3520,7 +3520,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * @return
 	 */
 	private int calculatePriority(IContentType type, IContentType targetType, int priority) {
-		if (type == null)
+		if (type == null || targetType == null)
 			return -1;
 		if (type.getId().equals(targetType.getId()))
 			return priority;
