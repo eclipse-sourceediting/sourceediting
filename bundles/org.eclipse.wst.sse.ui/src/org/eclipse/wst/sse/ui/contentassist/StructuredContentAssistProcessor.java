@@ -150,7 +150,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	private final String fPartitionTypeID;
 	
 	/** Content assistant used for giving the user status messages and listening to completion results*/
-	private final ContentAssistant fAssistant;
+	private ContentAssistant fAssistant;
 
 	/* cycling stuff */
 	private int fRepetition= -1;
@@ -170,6 +170,8 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * a document is set for this processors associated viewer.
 	 */
 	private ITextInputListener fTextInputListener;
+
+	private CompletionListener fCompletionListener;
 	
 	/** the context information validator for this processor */
 	private IContextInformationValidator fContextInformationValidator;
@@ -225,7 +227,8 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		
 		//add completion listener
 		fAssistant = assistant;
-		fAssistant.addCompletionListener(new CompletionListener());
+		fCompletionListener = new CompletionListener();
+		fAssistant.addCompletionListener(fCompletionListener);
 		
 		//lazy load these to speed up initial editor opening
 		fLegacyExtendedContentAssistProcessors = null;
@@ -338,6 +341,10 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		if(this.fViewer != null) {
 			this.fViewer.removeTextInputListener(this.fTextInputListener);
 			this.fViewer = null;
+		}
+		if (this.fAssistant != null) {
+			this.fAssistant.removeCompletionListener(fCompletionListener);
+			this.fAssistant = null;
 		}
 	}
 	
@@ -713,7 +720,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * @return the label of the category
 	 */
 	private String getCategoryLabel(int repetition) {
-		int iteration= repetition % fCategoryIteration.size();
+		int iteration= (fCategoryIteration != null ? repetition % fCategoryIteration.size() : 0);
 		if (iteration == 0)
 			return SSEUIMessages.ContentAssist_defaultProposalCategory_title;
 		return ((CompletionProposalCategory) ((List) fCategoryIteration.get(iteration)).get(0)).getDisplayName();
@@ -744,7 +751,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * @return <code>true</code> if displaying first page, <code>false</code> otherwise
 	 */
 	private boolean isFirstPage() {
-		return fCategoryIteration.size() == 1 || fRepetition % fCategoryIteration.size() == 1;
+		return fCategoryIteration == null || fCategoryIteration.size() == 1 || fRepetition % fCategoryIteration.size() == 1;
 	}
 	
 	/**
