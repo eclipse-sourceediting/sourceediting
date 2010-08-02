@@ -722,14 +722,10 @@
 </extension>
 <extension point="org.eclipse.wst.sse.ui.characterPairing">
 	<inserter class="org.eclipse.wst.jsdt.web.ui.internal.text.JsCharacterPairInserter" id="org.eclipse.wst.jsdt.web.ui.inserter">
-  <contentTypeIdentifier
-        id="org.eclipse.wst.html.core.htmlsource"
-        partitions="org.eclipse.wst.html.SCRIPT, org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
-  </contentTypeIdentifier>
-  <contentTypeIdentifier
-        id="org.eclipse.jst.jsp.core.jspsource"
-        partitions="org.eclipse.wst.html.SCRIPT, org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
-  </contentTypeIdentifier>
+	  <contentTypeIdentifier
+	        id="org.eclipse.wst.html.core.htmlsource"
+	        partitions="org.eclipse.wst.html.SCRIPT, org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
+	  </contentTypeIdentifier>
 	</inserter>
 </extension>
 </plugin>
