@@ -110,8 +110,8 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		// use group for radio buttons so that associated label is read
 		Group selectorGroup = createGroup(caseGroup, 1);
 		selectorGroup.setText(CSSUIMessages.PrefsLabel_SelectorTagName);
-		fSelectorUpper = createRadioButton(selectorGroup, CSSUIMessages.PrefsLabel_CaseIdentUpper);
-		fSelectorLower = createRadioButton(selectorGroup, CSSUIMessages.PrefsLabel_CaseIdentLower);
+		fSelectorUpper = createRadioButton(selectorGroup, CSSUIMessages.PrefsLabel_SelectorTagNameUpper);
+		fSelectorLower = createRadioButton(selectorGroup, CSSUIMessages.PrefsLabel_SelectorTagNameLower);
 
 		// use group for radio buttons so that associated label is read
 		Group propNameGroup = createGroup(caseGroup, 1);
