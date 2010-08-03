@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,7 @@ public class XMLEditorPluginImages {
 	public static final String IMG_OBJ_TAG_MACRO = "icons/full/obj16/tag-macro.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_TXTEXT = "icons/full/obj16/text.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_WARNING_OBJ = "icons/full/obj16/warning_obj.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJ_ERROR_OBJ = "icons/full/obj16/error_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_XSDFILE = "icons/full/obj16/XSDFile.gif"; //$NON-NLS-1$
 
 	public static final String IMG_OVR_ERROR = "icons/full/ovr16/error_ovr.gif"; //$NON-NLS-1$

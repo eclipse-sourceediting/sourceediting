@@ -135,6 +135,7 @@ public class XMLUIMessages extends NLS {
 	public static String _UI_NAMESPACE_DECLARATIONS;
 	public static String _UI_TARGET_NAMESPACE;
 	public static String _ERROR_XML_ATTRIBUTE_ALREADY_EXISTS;
+	public static String _ERROR_XML_ATTRIBUTE_IS_INVALID;
 	public static String error_message_goes_here;
 	public static String SurroundWithNewElementQuickAssistProposal_0;
 	public static String SurroundWithNewElementQuickAssistProposal_1;
