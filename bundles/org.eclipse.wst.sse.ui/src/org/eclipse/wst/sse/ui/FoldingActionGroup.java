@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,8 +39,10 @@ class FoldingActionGroup extends ActionGroup {
 	private ProjectionViewer fViewer;
 
 	private final PreferenceAction fToggle;
+	private final TextOperationAction fExpand;
 	private final TextOperationAction fExpandAll;
 	private final IProjectionListener fProjectionListener;
+	private final TextOperationAction fCollapse;
 	private final TextOperationAction fCollapseAll;
 
 
@@ -57,7 +59,9 @@ class FoldingActionGroup extends ActionGroup {
 	public FoldingActionGroup(final ITextEditor editor, ITextViewer viewer) {
 		if (!(viewer instanceof ProjectionViewer)) {
 			fToggle = null;
+			fExpand = null;
 			fExpandAll = null;
+			fCollapse = null;
 			fCollapseAll = null;
 			fProjectionListener = null;
 			return;
@@ -99,9 +103,17 @@ class FoldingActionGroup extends ActionGroup {
 		fToggle.setActionDefinitionId(IFoldingCommandIds.FOLDING_TOGGLE);
 		editor.setAction("FoldingToggle", fToggle); //$NON-NLS-1$
 
+		fExpand = new TextOperationAction(SSEUIMessages.getResourceBundle(), "Projection_Expand_", editor, ProjectionViewer.EXPAND, true); //$NON-NLS-1$
+		fExpand.setActionDefinitionId(IFoldingCommandIds.FOLDING_EXPAND);
+		editor.setAction("FoldingExpand", fExpand); //$NON-NLS-1$
+
 		fExpandAll = new TextOperationAction(SSEUIMessages.getResourceBundle(), "Projection_ExpandAll_", editor, ProjectionViewer.EXPAND_ALL, true); //$NON-NLS-1$
 		fExpandAll.setActionDefinitionId(IFoldingCommandIds.FOLDING_EXPAND_ALL);
 		editor.setAction("FoldingExpandAll", fExpandAll); //$NON-NLS-1$
+
+		fCollapse = new TextOperationAction(SSEUIMessages.getResourceBundle(), "Projection_Collapse_", editor, ProjectionViewer.COLLAPSE, true); //$NON-NLS-1$
+		fCollapse.setActionDefinitionId(IFoldingCommandIds.FOLDING_COLLAPSE);
+		editor.setAction("FoldingCollapse", fCollapse); //$NON-NLS-1$
 
 		fCollapseAll = new TextOperationAction(SSEUIMessages.getResourceBundle(), "Projection_CollapseAll_", editor, ProjectionViewer.COLLAPSE_ALL, true); //$NON-NLS-1$
 		fCollapseAll.setActionDefinitionId(IFoldingCommandIds.FOLDING_COLLAPSE_ALL);
@@ -139,7 +151,9 @@ class FoldingActionGroup extends ActionGroup {
 		if (isEnabled()) {
 			fToggle.update();
 			fToggle.setChecked(fViewer.isProjectionMode());
+			fExpand.update();
 			fExpandAll.update();
+			fCollapse.update();
 			fCollapseAll.update();
 		}
 	}
@@ -154,7 +168,9 @@ class FoldingActionGroup extends ActionGroup {
 		if (isEnabled()) {
 			update();
 			manager.add(fToggle);
+			manager.add(fExpand);
 			manager.add(fExpandAll);
+			manager.add(fCollapse);
 			manager.add(fCollapseAll);
 		}
 	}
