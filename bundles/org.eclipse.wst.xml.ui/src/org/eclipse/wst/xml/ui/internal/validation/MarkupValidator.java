@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,11 +37,15 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
+import org.eclipse.wst.xml.core.internal.document.ModelParserAdapterExtension;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.correction.ProblemIDsXML;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -473,6 +477,15 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 					}
 
 					if (!selfClosed && (tagName != null)) {
+						IDOMDocument document = (IDOMDocument) xmlNode.getOwnerDocument();
+						if (document != null) {
+							Object adapter = document.getAdapterFor(ModelParserAdapter.class);
+							if ((adapter instanceof ModelParserAdapterExtension) && (xmlNode instanceof Element)) {
+								if (((ModelParserAdapterExtension)adapter).isEndTagOmissible((Element) xmlNode)) {
+									return;
+								}
+							}
+						}
 						Object[] args = {tagName};
 						String messageText = NLS.bind(XMLUIMessages.Missing_end_tag_, args);
 
