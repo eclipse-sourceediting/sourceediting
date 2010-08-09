@@ -37,6 +37,7 @@ import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.w3c.dom.Node;
 
 public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuickAssistProposal {
+	private static final String ELEMENT_NAME = "element"; //$NON-NLS-1$
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -64,9 +65,9 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 			MultiTextEdit multiTextEdit = new MultiTextEdit();
 			// element tag name cannot be DBCS, do not translate "<element>"
 			// and "</element>"
-			final String startElement = "<element>"; //$NON-NLS-1$
+			final String startElement = "<" + ELEMENT_NAME + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 			multiTextEdit.addChild(new InsertEdit(startTagOffset, startElement));
-			multiTextEdit.addChild(new InsertEdit(endTagOffset, "</element>")); //$NON-NLS-1$
+			multiTextEdit.addChild(new InsertEdit(endTagOffset, "</"+ELEMENT_NAME +">")); //$NON-NLS-1$ //$NON-NLS-2$
 			multiTextEdit.apply(viewer.getDocument());
 			Position start = new Position(startTagOffset);
 			Position end = new Position(endTagOffset + startElement.length());
@@ -81,7 +82,7 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 				formatProcessor.formatNode(newElementNode);
 
 				// rename new element
-				apply(viewer, trigger, stateMask, start, end, 7);
+				apply(viewer, trigger, stateMask, start, end, ELEMENT_NAME.length());
 			} finally {
 				viewer.getDocument().removePosition(start);
 				viewer.getDocument().removePosition(end);
@@ -101,8 +102,8 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 		IDocument document = viewer.getDocument();
 		LinkedPositionGroup group = new LinkedPositionGroup();
 		try {
-				group.addPosition(new LinkedPosition(document, start.offset + 1, length, 0));
-				group.addPosition(new LinkedPosition(document, end.offset + 2, length, 1));
+				group.addPosition(new LinkedPosition(document, start.offset + 1, length, 0)); // offset by 1 for <
+				group.addPosition(new LinkedPosition(document, end.offset + 2, length, 1)); // offset by 2 for </
 			
 			if(viewer instanceof ITextViewerExtension)
 				((ITextViewerExtension) viewer).setRedraw(true);
