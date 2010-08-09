@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -2262,56 +2262,58 @@ class ProjectDescription {
 		JarRecord jarRecord = createJARRecord(jar);
 		fJARReferences.put(jar.getFullPath().toString(), jarRecord);
 		ZipInputStream zip = getZipInputStream(jar);
-		try {
-			ZipEntry entry;
-			while ((entry = zip.getNextEntry()) != null) {
-				if (entry.getName().endsWith(".tld")) { //$NON-NLS-1$
-					if (entry.getName().equals(JarUtilities.JSP11_TAGLIB)) {
-						jarRecord.has11TLD = true;
-					}
-					InputStream contents = copyZipEntry(zip);
-					if (contents != null) {
-						TaglibInfo info = extractInfo(jarLocationString, contents);
-	
-						if (info != null && info.uri != null && info.uri.length() > 0) {
-							URLRecord record = new URLRecord();
-							record.info = info;
-							record.baseLocation = jarLocationString;
-							try {
-								record.url = new URL("jar:file:" + jarLocationString + "!/" + entry.getName()); //$NON-NLS-1$ //$NON-NLS-2$
-								jarRecord.urlRecords.add(record);
-	
-								int taglibDeltaKind = ITaglibIndexDelta.ADDED;
-								Hashtable table = getImplicitReferences(jar.getFullPath().toString());
-								if (table != null && table.get(record.getURI()) != null) {
-									taglibDeltaKind = ITaglibIndexDelta.CHANGED;
+		if(zip != null) {
+			try {
+				ZipEntry entry;
+				while ((entry = zip.getNextEntry()) != null) {
+					if (entry.getName().endsWith(".tld")) { //$NON-NLS-1$
+						if (entry.getName().equals(JarUtilities.JSP11_TAGLIB)) {
+							jarRecord.has11TLD = true;
+						}
+						InputStream contents = copyZipEntry(zip);
+						if (contents != null) {
+							TaglibInfo info = extractInfo(jarLocationString, contents);
+		
+							if (info != null && info.uri != null && info.uri.length() > 0) {
+								URLRecord record = new URLRecord();
+								record.info = info;
+								record.baseLocation = jarLocationString;
+								try {
+									record.url = new URL("jar:file:" + jarLocationString + "!/" + entry.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+									jarRecord.urlRecords.add(record);
+		
+									int taglibDeltaKind = ITaglibIndexDelta.ADDED;
+									Hashtable table = getImplicitReferences(jar.getFullPath().toString());
+									if (table != null && table.get(record.getURI()) != null) {
+										taglibDeltaKind = ITaglibIndexDelta.CHANGED;
+									}
+		
+									getImplicitReferences(jar.getFullPath().toString()).put(info.uri, record);
+									TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, taglibDeltaKind));
+									if (_debugIndexCreation)
+										Logger.log(Logger.INFO, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 								}
-	
-								getImplicitReferences(jar.getFullPath().toString()).put(info.uri, record);
-								TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, taglibDeltaKind));
-								if (_debugIndexCreation)
-									Logger.log(Logger.INFO, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
+								catch (MalformedURLException e) {
+									// don't record this URI
+									Logger.logException(e);
+								}
 							}
-							catch (MalformedURLException e) {
-								// don't record this URI
-								Logger.logException(e);
+							try {
+								contents.close();
+							}
+							catch (IOException e) {
+								Logger.log(Logger.ERROR_DEBUG, null, e);
 							}
 						}
-						try {
-							contents.close();
+						else {
+							Logger.log(Logger.ERROR_DEBUG, getClass().getName() + "could not read resource " + jar.getFullPath()); //$NON-NLS-1$
 						}
-						catch (IOException e) {
-							Logger.log(Logger.ERROR_DEBUG, null, e);
-						}
-					}
-					else {
-						Logger.log(Logger.ERROR_DEBUG, getClass().getName() + "could not read resource " + jar.getFullPath()); //$NON-NLS-1$
 					}
 				}
+			} catch (IOException e) { }
+			finally {
+				closeInputStream(zip);
 			}
-		} catch (IOException e) { }
-		finally {
-			closeInputStream(zip);
 		}
 		if (jarRecord.has11TLD) {
 			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, jarRecord, deltaKind));
