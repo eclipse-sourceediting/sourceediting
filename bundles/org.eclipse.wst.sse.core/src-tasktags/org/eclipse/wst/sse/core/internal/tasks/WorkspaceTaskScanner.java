@@ -365,7 +365,7 @@ class WorkspaceTaskScanner {
 		monitor.beginTask("", 8);//$NON-NLS-1$
 		monitor.subTask(file.getFullPath().toString().substring(1));
 
-		List markerAttributes = null;
+		final List markerAttributes = new ArrayList();
 		IContentType[] types = detectContentTypes(file);
 		Set markerTypes = new HashSet(3);
 		// Always included for safety and migration
@@ -373,6 +373,7 @@ class WorkspaceTaskScanner {
 		monitor.worked(1);
 
 		IFileTaskScanner[] fileScanners = null;
+		IFileTaskScanner[] ignoredFileScanners = null;
 		if (types != null) {
 			if (fCurrentIgnoreContentTypes.length == 0) {
 				fileScanners = registry.getFileTaskScanners(types);
@@ -388,10 +389,17 @@ class WorkspaceTaskScanner {
 					if (!ignoreContentType) {
 						validTypes.add(types[i]);
 					}
+					else {
+						ignoredFileScanners = registry.getFileTaskScanners(new IContentType[] {types[i]});
+					}
 				}
 				fileScanners = registry.getFileTaskScanners((IContentType[]) validTypes.toArray(new IContentType[validTypes.size()]));
 			}
 			monitor.worked(1);
+			if (ignoredFileScanners != null && ignoredFileScanners.length > 0) {
+				for (int i = 0; i < ignoredFileScanners.length; i++)
+					markerTypes.add(ignoredFileScanners[i].getMarkerType());
+			}
 
 			if (fileScanners.length > 0) {
 				IProgressMonitor scannerMonitor = new SubProgressMonitor(monitor, 3, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
@@ -411,9 +419,6 @@ class WorkspaceTaskScanner {
 						 * operation creating them
 						 */
 						for (int i = 0; i < taskMarkerAttributes.length; i++) {
-							if (markerAttributes == null) {
-								markerAttributes = new ArrayList();
-							}
 							if (!taskMarkerAttributes[i].containsKey(IMarker.TASK)) {
 								taskMarkerAttributes[i].put(IMarker.TASK, fileScanners[j].getMarkerType());
 							}
@@ -435,11 +440,11 @@ class WorkspaceTaskScanner {
 		if (monitor.isCanceled())
 			return;
 		// only update markers if we ran a scanner on this file
-		if (fileScanners != null && fileScanners.length > 0) {
+		if (fileScanners != null && fileScanners.length > 0 ||
+				ignoredFileScanners != null && ignoredFileScanners.length > 0) {
 			IProgressMonitor markerUpdateMonitor = new SubProgressMonitor(monitor, 3, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
-			if (markerAttributes != null) {
-				replaceTaskMarkers(file, (String[]) markerTypes.toArray(new String[markerTypes.size()]), (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
-			}
+			if (markerAttributes != null)
+			replaceTaskMarkers(file, (String[]) markerTypes.toArray(new String[markerTypes.size()]), (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
 		}
 		else {
 			monitor.worked(3);
