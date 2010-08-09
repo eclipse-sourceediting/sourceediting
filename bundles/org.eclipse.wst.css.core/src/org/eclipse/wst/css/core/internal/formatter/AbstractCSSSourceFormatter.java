@@ -80,12 +80,32 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				RegionIterator it = new RegionIterator(toAppend.getDocumentRegion(), toAppend.getTextRegion());
 				it.prev();
 				ITextRegion prev = it.prev();
-				if (prev == null || (prev.getType() == CSSRegionContexts.CSS_S && TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0)[0] >= 0) ||
-						(prev.getType() == CSSRegionContexts.CSS_COMMENT)) {
+				if (prev == null || (prev.getType() == CSSRegionContexts.CSS_S && TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0)[0] >= 0)) {
 					source.append(delim);
 					source.append(getIndent(node));
 					if (needIndent)
 						source.append(getIndentString());
+				}
+				else if (prev.getType() == CSSRegionContexts.CSS_COMMENT) {
+					String fullText = toAppend.getDocumentRegion().getFullText(prev);
+					String trimmedText = toAppend.getDocumentRegion().getText(prev);
+					String whiteSpaces = "";//$NON-NLS-1$
+					if (fullText != null && trimmedText != null)
+					    whiteSpaces = fullText.substring(trimmedText.length());
+					int[] delimiterFound = TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, whiteSpaces, 0);
+					if (delimiterFound[0] != -1) {
+						source.append(delim);	
+					}
+					else {
+						appendSpaceBefore(node, toAppend.getText(), source);
+						
+						/*If two comments can't be adjusted in one line(combined length exceeds line width),
+						 * a tab is also appended along with next line delimiter , we need to remove that. 
+						 */
+						if (source.toString().endsWith(getIndentString())) {
+							source.delete((source.length() - getIndentString().length()), source.length());
+						}
+					}
 				}
 				else {
 					appendSpaceBefore(node, toAppend.getText(), source);
