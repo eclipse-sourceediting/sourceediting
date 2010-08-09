@@ -38,7 +38,8 @@ A:visited {
 }  /* visited links */
 A:active {
 	color: lime
-}  /* active links */ /* Pseudo-class combined with normal class */
+}  /* active links */
+/* Pseudo-class combined with normal class */
 A.external:visited {
 	color: blue
 }
