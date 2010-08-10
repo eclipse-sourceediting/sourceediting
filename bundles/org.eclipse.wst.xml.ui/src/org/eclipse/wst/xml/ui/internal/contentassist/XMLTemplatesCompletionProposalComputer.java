@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.contentassist;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeIdsXML;
@@ -101,5 +105,20 @@ public class XMLTemplatesCompletionProposalComputer extends
 				}
 			}
 		}
+	}
+
+	public List computeCompletionProposals(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
+		List list = new ArrayList(super.computeCompletionProposals(context, monitor));
+
+		if (fTemplateProcessor != null) {
+			fTemplateProcessor.setContextType(TemplateContextTypeIdsXML.ALL);
+			ICompletionProposal[] proposals = fTemplateProcessor.computeCompletionProposals(context.getViewer(), context.getInvocationOffset());
+			if (proposals != null) {
+				for (int i = 0; i < proposals.length; i++) {
+					list.add(proposals[i]);
+				}
+			}
+		}
+		return list;
 	}
 }
