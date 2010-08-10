@@ -327,6 +327,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		if (validatorStrategy != null) {
 			validatorStrategy.setDocument(doc);
 		}
+		if (fSemanticHighlightingStrategy != null) {
+			fSemanticHighlightingStrategy.setDocument(doc);
+		}
 		
 		fSpellcheckStrategy = null;
 		if(fFoldingStrategy != null) {

@@ -240,7 +240,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 
 	public void setDocument(IDocument document) {
 		fDocument = document;
-		refresh();
+//		refresh();
 	}
 
 	public void initialReconcile() {

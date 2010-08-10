@@ -2979,7 +2979,14 @@ public class StructuredTextEditor extends TextEditor {
 			fStatusLineLabelProvider.dispose();
 		}
 
+		String configurationId = fViewerConfigurationTargetId;
 		updateSourceViewerConfiguration();
+
+		/* Only reinstall if the configuration id has changed */
+		if (configurationId != null && !configurationId.equals(fViewerConfigurationTargetId)) {
+			uninstallSemanticHighlighting();
+			installSemanticHighlighting();
+		}
 
 		if (getSourceViewerConfiguration() instanceof StructuredTextViewerConfiguration) {
 			fStatusLineLabelProvider = ((StructuredTextViewerConfiguration) getSourceViewerConfiguration()).getStatusLineLabelProvider(getSourceViewer());
