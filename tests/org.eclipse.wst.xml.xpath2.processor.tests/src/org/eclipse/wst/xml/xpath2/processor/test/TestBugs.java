@@ -67,6 +67,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.osgi.framework.Bundle;
+import org.xml.sax.InputSource;
 
 public class TestBugs extends AbstractPsychoPathTest {
 
@@ -276,22 +277,22 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		// DocumentBuilder docBuilder = dbf.newDocumentBuilder();
-		loadDOMDocument(new URL("http://www.w3schools.com/xml/note.xml"));
+		loadDOMDocument(new URL("http://resolved-locally/xml/note.xml"));
 
 		// for testing this bug, we read the XML document from the web.
 		// this ensures, that base-uri property of DOM is not null.
-		// domDoc = docBuilder.parse("http://www.w3schools.com/xml/note.xml");
+		// domDoc = docBuilder.parse("http://resolved-locally/xml/note.xml");
 
 		// we pass XSModel as null for this test case. Otherwise, we would
 		// get an exception.
 		DynamicContext dc = setupDynamicContext(null);
 
-		String xpath = "base-uri(note) eq xs:anyURI('http://www.w3schools.com/xml/note.xml')";
+		String xpath = "base-uri(note) eq xs:anyURI('http://resolved-locally/xml/note.xml')";
 
 		// please note: The below XPath would also work, with base-uri using
 		// arity 0.
 		// String xpath =
-		// "note/base-uri() eq xs:anyURI('http://www.w3schools.com/xml/note.xml')";
+		// "note/base-uri() eq xs:anyURI('http://resolved-locally/xml/note.xml')";
 
 		XPath path = compileXPath(dc, xpath);
 
@@ -309,12 +310,13 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Bug 274731
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = dbf.newDocumentBuilder();
-
-		domDoc = docBuilder.parse("http://www.w3schools.com/xml/note.xml");
+		
+		InputSource inputSource = getTestSource("http://resolved-locally/xml/note.xml");
+		domDoc = docBuilder.parse(inputSource);
 
 		DynamicContext dc = setupDynamicContext(null);
 
-		String xpath = "document-uri(/) eq xs:anyURI('http://www.w3schools.com/xml/note.xml')";
+		String xpath = "document-uri(/) eq xs:anyURI('http://resolved-locally/xml/note.xml')";
 
 		XPath path = compileXPath(dc, xpath);
 

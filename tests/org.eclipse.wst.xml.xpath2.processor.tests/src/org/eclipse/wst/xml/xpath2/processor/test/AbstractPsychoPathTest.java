@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -80,7 +81,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.EntityResolver2;
 
 public class AbstractPsychoPathTest extends XMLTestCase {
 
@@ -116,15 +120,72 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
 	protected void loadDOMDocument(URL fileURL) throws IOException,
 			DOMLoaderException {
-		InputStream is = fileURL.openStream();
+		InputStream is = testResolve(fileURL);
 		DOMLoader domloader = new XercesLoader();
 		domloader.set_validating(false);
 		domDoc = domloader.load(is);
 		domDoc.setDocumentURI(fileURL.toString());
 	}
+
+	private InputStream testResolve(URL url) throws IOException {
+		if (url.getProtocol().equals("http")) {
+			return AbstractPsychoPathTest.class.getResourceAsStream("/org/eclipse/wst/xml/xpath2/processor/test/" + url.getFile());
+		} else {
+			return url.openStream();
+		}
+	}
+	
+	protected InputSource getTestSource(String systemId) {
+		if (systemId.startsWith("http://")) {
+			try {
+				URL u = new URL(systemId);
+				InputSource inputSource = new InputSource(testResolve(u));
+				inputSource.setSystemId(systemId);
+				return inputSource;
+			} catch (MalformedURLException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return new InputSource(systemId);
+	}
+	
+	protected EntityResolver makeTestResolver() {
+		return new EntityResolver2() {
+			
+			public InputSource resolveEntity(String publicId, String systemId) {
+				if (systemId.startsWith("http://")) {
+					URL u;
+					try {
+						u = new URL(systemId);
+						return new InputSource(testResolve(u));
+					} catch (MalformedURLException e) {
+						throw new RuntimeException(e);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}
+				return new InputSource(systemId);
+			}
+
+			public InputSource getExternalSubset(String publicId, String systemId)
+					throws SAXException, IOException {
+				return resolveEntity(publicId, systemId);
+			}
+
+			public InputSource resolveEntity(String name,
+                    String publicId,
+                    String baseURI,
+                    String systemId) throws SAXException, IOException {
+				return resolveEntity(publicId, systemId);
+			}
+			
+		};
+	}
 	
 	protected void loadDOMDocument(URL fileURL, Schema schema) throws IOException, DOMLoaderException {
-		InputStream is = fileURL.openStream();
+		InputStream is = testResolve(fileURL);
 		DOMLoader domloader = new XercesLoader(schema);
 		domloader.set_validating(false);
 		domDoc = domloader.load(is);
@@ -134,8 +195,8 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	
 	protected void load2DOMDocument(URL fileURL, URL fileURL2) throws IOException,
 			DOMLoaderException {
-		InputStream is = fileURL.openStream();
-		InputStream is2 = fileURL2.openStream();
+		InputStream is = testResolve(fileURL);
+		InputStream is2 = testResolve(fileURL2);
 		
 		DOMLoader domloader = new XercesLoader();
 		domloader.set_validating(false);
@@ -163,8 +224,8 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
 	protected void loadDOMDocument(URL fileURL, URL schemaURL)
 			throws IOException, DOMLoaderException, SAXException {
-		InputStream is = fileURL.openStream();
-		InputStream schemaIs = schemaURL.openStream();
+		InputStream is = testResolve(fileURL);
+		InputStream schemaIs = testResolve(schemaURL);
 		Schema jaxpSchema = getSchema(schemaIs);
 		DOMLoader domloader = new XercesLoader(jaxpSchema);
 		domloader.set_validating(false);
@@ -182,7 +243,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
 	protected XSModel getGrammar(URL schemaURL) throws IOException,
 			SAXException {
-		InputStream schemaIs = schemaURL.openStream();
+		InputStream schemaIs = testResolve(schemaURL);
 		SchemaFactory sf = SchemaFactory
 				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		Schema schema = sf.newSchema(new StreamSource(schemaIs));
@@ -303,7 +364,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
 		try {
 			URL entryUrl = bundle.getEntry(xqFile);
-			InputStream isxq = entryUrl.openStream();
+			InputStream isxq = testResolve(entryUrl);
 			if (dynamicContext.base_uri().string_value() == null)
 				dynamicContext.set_base_uri(entryUrl.toString());
 			BufferedReader xqreader = new BufferedReader(new InputStreamReader(

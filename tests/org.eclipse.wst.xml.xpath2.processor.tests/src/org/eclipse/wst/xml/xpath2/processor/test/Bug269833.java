@@ -37,7 +37,7 @@ public class Bug269833 extends AbstractPsychoPathTest{
     
     @Override
 	protected void setUp() throws Exception {
-        URL fileURL = new URL("http://www.w3schools.com/xml/note.xml");
+        URL fileURL = new URL("http://resolve-locally/xml/note.xml");
         loadDOMDocument(fileURL);
      }
  	
@@ -56,6 +56,6 @@ public class Bug269833 extends AbstractPsychoPathTest{
  		    	    
  		   String actual = rs.first().string_value();
  		   
- 		   assertEquals("Tove", actual); 		     
+ 		   assertEquals("Self", actual);	     
  		}  
 }
