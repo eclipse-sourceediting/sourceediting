@@ -14,7 +14,7 @@
 )
     ContextRegion--> S: 0-2, 
 [52, 87] (@import /* comment */ url(hoge.css))
-    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> COMMENT: 8-21/22, ContextRegion--> URI: 22-35, 
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> COMMENT: 8-21, ContextRegion--> S: 21-22, ContextRegion--> URI: 22-35, 
 [87, 88] (;)
     ContextRegion--> DELIMITER: 0-1, 
 [88, 90] (

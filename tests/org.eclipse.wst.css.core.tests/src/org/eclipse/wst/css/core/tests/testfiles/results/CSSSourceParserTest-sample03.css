@@ -7,7 +7,7 @@
 /* Sample Styles */
 
 )
-    ContextRegion--> S: 0-4, ContextRegion--> COMMENT: 4-23/27, 
+    ContextRegion--> S: 0-4, ContextRegion--> COMMENT: 4-23, ContextRegion--> S: 23-27, 
 [57, 62] (BODY )
     ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/5, 
 [62, 66] ({

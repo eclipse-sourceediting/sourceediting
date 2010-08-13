@@ -6,7 +6,7 @@
 )
     ContextRegion--> S: 0-2, 
 [26, 61] (@import /* comment */ url(hoge.css))
-    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> COMMENT: 8-21/22, ContextRegion--> URI: 22-35, 
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> COMMENT: 8-21, ContextRegion--> S: 21-22, ContextRegion--> URI: 22-35, 
 [61, 62] (;)
     ContextRegion--> DELIMITER: 0-1, 
 [62, 64] (
@@ -33,7 +33,7 @@
 
 /* comment 2 */
 )
-    ContextRegion--> S: 0-4, ContextRegion--> CDO: 4-8/9, ContextRegion--> COMMENT: 9-23/27, ContextRegion--> CDC: 27-30/34, ContextRegion--> COMMENT: 34-49/51, 
+    ContextRegion--> S: 0-4, ContextRegion--> CDO: 4-8/9, ContextRegion--> COMMENT: 9-23, ContextRegion--> S: 23-27, ContextRegion--> CDC: 27-30/34, ContextRegion--> COMMENT: 34-49, ContextRegion--> S: 49-51, 
 [221, 227] (kuso
 )
     ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/6, 
