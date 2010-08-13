@@ -52,7 +52,13 @@ public class JSPImportCompletionProposalComputer extends
 	private ICompletionProposal adjustImportProposal(JSPCompletionProposal importProposal) {
 		// just need to remove the ";"
 		// and adjust offsets for the change
-		String newReplace = importProposal.getReplacementString().replaceAll(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		String newReplace;
+		if (importProposal instanceof AutoImportProposal){
+			newReplace =((AutoImportProposal)importProposal).getImportDeclaration() .replaceAll(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		else{
+			 newReplace = importProposal.getReplacementString().replaceAll(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		importProposal.setReplacementString(newReplace);
 
 		String newDisplay = importProposal.getDisplayString().replaceAll(";", ""); //$NON-NLS-1$ //$NON-NLS-2$

@@ -19,6 +19,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP20TLDNames;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.swt.graphics.Image;
@@ -28,10 +30,12 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -54,8 +58,24 @@ public class AutoImportProposal extends JSPCompletionProposal {
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		super.apply(viewer, trigger, stateMask, offset);
 		// if the import doesn't exist, add it
-		if (fImportContainer == null || !fImportContainer.getImport(getImportDeclaration()).exists())
+		String importDecl = getImportDeclaration().replaceAll(";", "");  //$NON-NLS-1$//$NON-NLS-2$
+		if (fImportContainer == null || !(fImportContainer.getImport(importDecl).exists() || isImportPageDirective(viewer, offset)))
 			addImportDeclaration(viewer);
+	}
+	
+	private boolean isImportPageDirective(ITextViewer viewer, int offset){
+		Node node = (Node) ContentAssistUtils.getNodeAt(viewer, offset);
+		
+		while ((node != null) && (node.getNodeType() == Node.TEXT_NODE) && (node.getParentNode() != null)) {
+			node = node.getParentNode();
+		}
+		if (node.getNodeName().equalsIgnoreCase(JSP11Namespace.ElementName.DIRECTIVE_PAGE)){
+			NamedNodeMap nodeMap = node.getAttributes();
+			if (nodeMap != null)
+				return nodeMap.getNamedItem(JSP20TLDNames.IMPORT) != null;
+		}
+		
+		return false ;
 	}
 	/**
 	 * adds the import declaration to the document in the viewer in the appropriate position
