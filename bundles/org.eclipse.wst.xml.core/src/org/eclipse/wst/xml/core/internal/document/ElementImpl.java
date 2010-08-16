@@ -708,7 +708,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (!isContainer()) { // never be container
 			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, DOMMessages.HIERARCHY_REQUEST_ERR);
 		}
-		if (newChild.getNodeType() != TEXT_NODE) {
+		if (newChild.getNodeType() != TEXT_NODE && newChild.getNodeType() != CDATA_SECTION_NODE) {
 			if (isJSPContainer() || isCDATAContainer()) { // accepts only
 				// Text
 				// child
