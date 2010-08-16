@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 
@@ -213,6 +214,16 @@ public class FileContentCache {
 	public String getContents(IPath filePath) {
 		if (DEBUG)
 			System.out.println("getContents:" + filePath);
+		
+		// use an text file buffer if one is already open
+		ITextFileBuffer existingBuffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(filePath, LocationKind.IFILE);
+		if (existingBuffer != null) {
+			IDocument document = existingBuffer.getDocument();
+			if (document != null) {
+				return document.get();
+			}
+		}
+		
 		CacheEntry entry = null;
 		Object o = fContentMap.get(filePath);
 		if (o instanceof Reference) {
