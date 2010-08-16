@@ -89,13 +89,16 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		
 		// ignore constructor proposals (they're not relevant for our JSP proposal list)
 		if(!proposal.isConstructor()) {
-			
-			if(proposal.getKind() == CompletionProposal.TYPE_REF) {
+			int kind = proposal.getKind();
+			if(kind == CompletionProposal.TYPE_REF) {
 				String signature = String.valueOf(proposal.getDeclarationSignature());
 				String completion = String.valueOf(proposal.getCompletion());
 				if(completion.indexOf(signature + ".") != -1) { //$NON-NLS-1$
 					jspProposal = createAutoImportProposal(proposal);			
 				}
+			}
+			else if (kind == CompletionProposal.METHOD_REF) {
+				jspProposal = createMethodProposal(proposal);
 			}
 			
 			// default behavior
@@ -193,6 +196,50 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		boolean updateLengthOnValidate = true;
 		
 		jspProposal = new JSPCompletionProposal(completion, offset, length, positionAfter, image, displayString, contextInformation, null, relevance, updateLengthOnValidate);
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
+		// set wrapped java proposal so additional info can be calculated on demand
+		jspProposal.setJavaCompletionProposal(javaProposal);
+		
+		return jspProposal;
+	}
+
+	private JSPCompletionProposal createMethodProposal(CompletionProposal proposal) {
+		
+		JSPCompletionProposal jspProposal;
+		String completion = String.valueOf(proposal.getCompletion());
+		// java offset
+		int offset = proposal.getReplaceStart();
+		// replacement length
+		int length = proposal.getReplaceEnd() - offset;
+		// translate offset from Java > JSP
+		offset = fTranslation.getJspOffset(offset);
+		// cursor position after must be calculated
+		int positionAfter = calculatePositionAfter(proposal, completion, offset);
+		
+		// from java proposal
+		IJavaCompletionProposal javaProposal = super.createJavaCompletionProposal(proposal);
+		proposal.getDeclarationSignature();
+		Image image = javaProposal.getImage();
+		String displayString = javaProposal.getDisplayString();
+		displayString = getTranslation().fixupMangledName(displayString);
+		IContextInformation contextInformation = javaProposal.getContextInformation();
+		// String additionalInfo = javaProposal.getAdditionalProposalInfo();
+		
+		/* the context information is calculated with respect to the java document
+		 * thus it needs to be updated in respect of the JSP document.
+		 */
+		if(contextInformation instanceof ProposalContextInformation) {
+			ProposalContextInformation proposalInfo = (ProposalContextInformation)contextInformation;
+			int contextInfoJSPOffset = fTranslation.getJspOffset(proposalInfo.getContextInformationPosition());
+			proposalInfo.setContextInformationPosition(contextInfoJSPOffset);
+		}
+		
+		int relevance = javaProposal.getRelevance();
+		
+		boolean updateLengthOnValidate = true;
+		
+		jspProposal = new JSPMethodCompletionProposal(proposal, fTranslation.getJavaProject(), completion, offset, length, positionAfter, image, displayString, contextInformation, null, relevance, updateLengthOnValidate);
 		
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
 		// set wrapped java proposal so additional info can be calculated on demand
