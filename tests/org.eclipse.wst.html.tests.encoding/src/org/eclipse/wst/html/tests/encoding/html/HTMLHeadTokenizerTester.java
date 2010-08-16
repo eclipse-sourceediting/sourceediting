@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,20 +10,23 @@
  *******************************************************************************/
 package org.eclipse.wst.html.tests.encoding.html;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.html.core.internal.contenttype.HTMLHeadTokenizer;
 import org.eclipse.wst.html.core.internal.contenttype.HTMLHeadTokenizerConstants;
 import org.eclipse.wst.html.core.internal.contenttype.HeadParserToken;
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin;
 import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
+import org.eclipse.wst.xml.tests.encoding.ZippedTest;
 
 public class HTMLHeadTokenizerTester extends TestCase {
-	private boolean DEBUG = false;
+	boolean DEBUG = false;
 	private String fCharset;
 
 	private String fContentTypeValue;
@@ -37,21 +40,18 @@ public class HTMLHeadTokenizerTester extends TestCase {
 		doTestFile(filename, expectedName, null);
 	}
 
-	private void doTestFile(String filename, String expectedName, String finalTokenType) throws IOException {
-		HTMLHeadTokenizer tokenizer = null;
-		Reader fileReader = null;
+	private void doTestFile(String filename, String expectedName, String finalTokenType) {
 		try {
-			if (this.DEBUG) {
-				System.out.println();
-				System.out.println("       " + filename);
-				System.out.println();
-			}
-			fileReader = HTMLEncodingTestsPlugin.getTestReader(filename);
-			tokenizer = new HTMLHeadTokenizer(fileReader);
+			doTestFile(HTMLEncodingTestsPlugin.getTestReader(filename), expectedName, finalTokenType);
 		}
 		catch (IOException e) {
-			System.out.println("Error opening file \"" + filename + "\"");
+			System.out.println("Error opening file \"" + filename +"\"");
 		}
+	}
+
+	private void doTestFile(Reader fileReader, String expectedName, String finalTokenType) throws IOException {
+		HTMLHeadTokenizer tokenizer = null;
+		tokenizer = new HTMLHeadTokenizer(fileReader);
 
 		HeadParserToken resultToken = null;
 		HeadParserToken token = parseHeader(tokenizer);
@@ -304,9 +304,14 @@ public class HTMLHeadTokenizerTester extends TestCase {
 		at org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester.testUTF16BOM(HTMLHeadTokenizerTester.java:293)
 	*/
 
-	public void testUTF16BOM() throws IOException {
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=243735
-//		String filename = this.fileLocation + "utf16BOM.html";
-//		doTestFile(filename, "UTF-16");
+	public void testUTF16BOM() throws Exception {
+		String filename = this.fileLocation + "utf16BOM.html";
+		ZippedTest test = new ZippedTest();
+		test.setUp();
+		IFile file = test.getFile(filename);
+		assertNotNull(file);
+		Reader fileReader = new FileReader(file.getLocationURI().getPath());
+		doTestFile(fileReader, "UTF-16", null);
+		test.shutDown();
 	}
 }

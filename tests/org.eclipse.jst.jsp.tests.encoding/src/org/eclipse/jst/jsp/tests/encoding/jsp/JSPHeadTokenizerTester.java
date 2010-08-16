@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.tests.encoding.jsp;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.StringTokenizer;
@@ -17,6 +18,7 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jst.jsp.core.internal.contenttype.HeadParserToken;
 import org.eclipse.jst.jsp.core.internal.contenttype.JSPHeadTokenizer;
 import org.eclipse.jst.jsp.core.internal.contenttype.JSPHeadTokenizerConstants;
@@ -24,9 +26,10 @@ import org.eclipse.jst.jsp.tests.encoding.JSPEncodingTestsPlugin;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
+import org.eclipse.wst.xml.tests.encoding.ZippedTest;
 
 public class JSPHeadTokenizerTester extends TestCase {
-	private boolean DEBUG = false;
+	boolean DEBUG = false;
 	private String fCharset;
 	private String fContentType;
 	private String fContentTypeValue;
@@ -42,21 +45,17 @@ public class JSPHeadTokenizerTester extends TestCase {
 	}
 
 	private void doTestFile(String filename, String expectedName, String finalTokenType, String expectedContentType) throws Exception {
-		JSPHeadTokenizer tokenizer = null;
-		Reader fileReader = null;
 		try {
-			if (DEBUG) {
-				System.out.println();
-				System.out.println("       " + filename);
-				System.out.println();
-			}
-			fileReader = JSPEncodingTestsPlugin.getTestReader(filename);
-			tokenizer = new JSPHeadTokenizer(fileReader);
+			doTestFile(JSPEncodingTestsPlugin.getTestReader(filename), expectedName, finalTokenType, expectedContentType);
 		}
 		catch (IOException e) {
-			System.out.println("Error opening file \"" + filename + "\"");
+			System.out.println("Error opening file \"" + filename +"\"");
 		}
+	}
 
+	private void doTestFile(Reader fileReader, String expectedName, String finalTokenType, String expectedContentType) throws Exception {
+		JSPHeadTokenizer tokenizer = null;
+		tokenizer = new JSPHeadTokenizer(fileReader);
 		HeadParserToken token = parseHeader(tokenizer);
 		String resultValue = getAppropriateEncoding();
 		fileReader.close();
@@ -354,9 +353,14 @@ public class JSPHeadTokenizerTester extends TestCase {
 	*/
 
 	public void testUTF16BOM() throws Exception {
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=243735
-//		String filename = fileLocation + "utf16BOM.jsp";
-//		dotestfile(filename, "utf-16", null, null);
+		String filename = fileLocation + "utf16BOM.jsp";
+		ZippedTest test = new ZippedTest();
+		test.setUp();
+		IFile file = test.getFile(filename);
+		assertNotNull(file);
+		Reader fileReader = new FileReader(file.getLocationURI().getPath());
+		doTestFile(fileReader, "UTF-16", null, null);
+		test.shutDown();
 	}
 	
 	public void testUTF16leXmlStyle() throws Exception {

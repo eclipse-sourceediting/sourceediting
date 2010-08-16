@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,18 +10,21 @@
  *******************************************************************************/
 package org.eclipse.wst.css.tests.encoding.css;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.css.core.internal.contenttype.CSSHeadTokenizer;
 import org.eclipse.wst.css.core.internal.contenttype.CSSHeadTokenizerConstants;
 import org.eclipse.wst.css.core.internal.contenttype.HeadParserToken;
 import org.eclipse.wst.css.tests.encoding.CSSEncodingTestsPlugin;
+import org.eclipse.wst.xml.tests.encoding.ZippedTest;
 
 public class CSSHeadTokenizerTester extends TestCase {
-	private boolean DEBUG = false;
+	boolean DEBUG = false;
 	private String fcharset;
 	private final String fileDir = "css/";
 	private final String fileHome = "testfiles/";
@@ -31,22 +34,18 @@ public class CSSHeadTokenizerTester extends TestCase {
 		doTestFile(filename, expectedName, null);
 	}
 
-	private void doTestFile(String filename, String expectedName, String finalTokenType) throws IOException {
-		CSSHeadTokenizer tokenizer = null;
-		Reader fileReader = null;
+	private void doTestFile(String filename, String expectedName, String finalTokenType) {
 		try {
-			if (this.DEBUG) {
-				System.out.println();
-				System.out.println("       " + filename);
-				System.out.println();
-			}
-			fileReader = CSSEncodingTestsPlugin.getTestReader(filename);
-			tokenizer = new CSSHeadTokenizer(fileReader);
+			doTestFile(CSSEncodingTestsPlugin.getTestReader(filename), expectedName, finalTokenType);
 		}
 		catch (IOException e) {
-			System.out.println("Error opening file \"" + filename + "\"");
-			throw e;
+			System.out.println("Error opening file \"" + filename +"\"");
 		}
+	}
+
+	private void doTestFile(Reader fileReader, String expectedName, String finalTokenType) throws IOException {
+		CSSHeadTokenizer tokenizer = null;
+		tokenizer = new CSSHeadTokenizer(fileReader);
 
 		HeadParserToken resultToken = null;
 		HeadParserToken token = parseHeader(tokenizer);
@@ -197,9 +196,14 @@ public class CSSHeadTokenizerTester extends TestCase {
 		at org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester.testUTF16BOM(CSSHeadTokenizerTester.java:186)
 	*/
 
-	public void testUTF16BOM() throws IOException {
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=243735
-//		String filename = fileLocation + "utf16BOM.css";
-//		doTestFile(filename, "UTF-16");
+	public void testUTF16BOM() throws Exception {
+		String filename = fileLocation + "utf16BOM.css";
+		ZippedTest test = new ZippedTest();
+		test.setUp();
+		IFile file = test.getFile(filename);
+		assertNotNull(file);
+		Reader fileReader = new FileReader(file.getLocationURI().getPath());
+		doTestFile(fileReader, "UTF-16", null);
+		test.shutDown();
 	}
 }
