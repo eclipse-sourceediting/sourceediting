@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.spelling.ISpellcheckDelegate;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Text;
 import org.w3c.dom.Comment;
 
 /**
@@ -48,7 +49,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 			
 			IndexedRegion region = model.getIndexedRegion(offset);
 			if(region != null) {
-				shouldSpellcheck = (region instanceof Comment);
+				shouldSpellcheck = (region instanceof Comment || region instanceof Text);
 			}
 			
 			return shouldSpellcheck;
