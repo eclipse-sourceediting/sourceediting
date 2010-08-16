@@ -219,8 +219,11 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 					if (v1 != null)
 						disabledValsByClass.add(v1.getId());
 					// not a V1 validator
-					else if (v.getSourceId() != null)
-						disabledValsBySourceId.add(v.getSourceId());
+					else if (v.getSourceId() != null) {
+						//could be more then one sourceid per batch validator
+						String[] sourceIDs = StringUtils.unpack(v.getSourceId());
+						disabledValsBySourceId.addAll(Arrays.asList(sourceIDs));
+					}
 				}
 			}
 		}
