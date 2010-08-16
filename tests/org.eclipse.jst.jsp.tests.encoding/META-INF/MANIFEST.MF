@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.jst.jsp.tests.encoding
-Bundle-Version: 1.0.400.qualifier
+Bundle-Version: 1.0.401.qualifier
 Bundle-ClassPath: jspencodingtests.jar
 Bundle-Activator: org.eclipse.jst.jsp.tests.encoding.JSPEncodingTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
