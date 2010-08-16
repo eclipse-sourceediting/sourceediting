@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -117,26 +118,40 @@ public class StructuredAutoEditStrategyCSS implements IAutoEditStrategy {
 			return;
 		}
 
-		// get current region
-		CompoundRegion currentRegion = getRegion(command.offset + command.length);
+		IStructuredDocumentRegion prev = getPreviousRegion(position);
+		if (prev == null || !CSSRegionContexts.CSS_LBRACE.equals(prev.getType()))
+			return;
 
-		// get key region
-		CompoundRegion keyRegion = getPrevKeyRegion(position, currentRegion);
-
-		// get indent string
-		String str = getIndentFor(keyRegion, true);
-
-		// check another indentation
-		int shift = needShift(keyRegion, command.offset + command.length);
+		IStructuredDocumentRegion next = prev.getNext();
 
 		// create text to replace
 		StringBuffer buf = new StringBuffer(command.text);
-		if (str != null)
-			buf.append(str);
-		while (shift-- != 0)
+		try {
+			IRegion line = structuredDocument.getLineInformationOfOffset(position);
+			int contentStart = findEndOfWhiteSpace(structuredDocument, position, line.getOffset() + line.getLength());
+			command.length =  Math.max(contentStart - position, 0);
 			buf.append(getIndentString());
-		command.text = buf.toString();
+			if (next != null && CSSRegionContexts.CSS_RBRACE.equals(next.getType()) && !isOneLine(prev)) {
+				command.shiftsCaret = false;
+				command.caretOffset = contentStart + buf.length();
+				buf.append(TextUtilities.getDefaultLineDelimiter(structuredDocument));
+			}
+			command.text = buf.toString();
+		}
+		catch (BadLocationException e) {
+		}
 
+	}
+
+	private boolean isOneLine(IStructuredDocumentRegion prev) {
+		return endsWith(structuredDocument.getLegalLineDelimiters(), prev.getFullText()) != -1;
+	}
+
+	private IStructuredDocumentRegion getPreviousRegion(int offset) {
+		IStructuredDocumentRegion prev = null;
+		if (offset > 0)
+			prev = structuredDocument.getRegionAtCharacterOffset(offset - 1);
+		return prev;
 	}
 
 	/**
