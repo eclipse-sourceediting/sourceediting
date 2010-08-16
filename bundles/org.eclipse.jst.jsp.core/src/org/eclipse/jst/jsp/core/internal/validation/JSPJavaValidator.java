@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -165,23 +165,23 @@ public class JSPJavaValidator extends JSPValidator {
 			sourceEnd = translation.getJspOffset(problem.getSourceEnd());
 			switch (problem.getID()) {
 				case IProblem.LocalVariableIsNeverUsed : {
-					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED);
+					sev = getSourceSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED, sourceStart, sourceEnd);
 				}
 					break;
 				case IProblem.NullLocalVariableReference : {
-					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE);
+					sev = getSourceSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE, sourceStart, sourceEnd);
 				}
 					break;
 				case IProblem.ArgumentIsNeverUsed : {
-					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED);
+					sev = getSourceSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED, sourceStart, sourceEnd);
 				}
 					break;
 				case IProblem.PotentialNullLocalVariableReference : {
-					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE);
+					sev = getSourceSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE, sourceStart, sourceEnd);
 				}
 					break;
 				case IProblem.UnusedImport : {
-					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT);
+					sev = getSourceSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT, sourceStart, sourceEnd);
 				}
 					break;
 				case IProblem.UnusedPrivateField:
@@ -257,6 +257,17 @@ public class JSPJavaValidator extends JSPValidator {
 		}
 
 		return m;
+	}
+
+	/**
+	 * Provides the severity for the given message key only when it's within the source range of the JSP (i.e., not boilerplate code).
+	 * @param key the key to get the severity of
+	 * @param start start within the JSP source
+	 * @param end end wtihin the JSP source
+	 * @return The message severity for the key if it is part of the JSP's source. IGNORE if it's boilerplate code.
+	 */
+	private int getSourceSeverity(String key, int start, int end) {
+		return (start >= 0 && end >= 0 ) ? getMessageSeverity(key) : ValidationMessage.IGNORE;
 	}
 
 	int getMessageSeverity(String key) {
