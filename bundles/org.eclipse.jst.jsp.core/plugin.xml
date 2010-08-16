@@ -192,7 +192,8 @@
             class="org.eclipse.jst.jsp.core.internal.validation.JSPBatchValidator"
             manual="true"
             version="1"
-            markerId="org.eclipse.jst.jsp.core.validationMarker">
+            markerId="org.eclipse.jst.jsp.core.validationMarker"
+            sourceid="org.eclipse.jst.jsp.jspelsourcevalidator, org.eclipse.jst.jsp.ui.internal.validation.jspactionvalidator, org.eclipse.jst.jsp.tldsourcevalidator, org.eclipse.jst.jsp.jspsourcevalidator">
          <include>
             <rules>
 	           <projectNature id="org.eclipse.jdt.core.javanature"/>
@@ -244,7 +245,8 @@
             class="org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator"
             manual="true"
             version="1"
-            markerId="org.eclipse.jst.jsp.core.validationMarker">
+            markerId="org.eclipse.jst.jsp.core.validationMarker"
+            sourceid="org.eclipse.jst.jsp.ui.internal.validation.markupvalidator, org.eclipse.jst.jsp.ui.internal.validation.htmlsyntaxvalidator">
          <include>
             <rules>
 				<contentType id="org.eclipse.jst.jsp.core.jspsource"/>
