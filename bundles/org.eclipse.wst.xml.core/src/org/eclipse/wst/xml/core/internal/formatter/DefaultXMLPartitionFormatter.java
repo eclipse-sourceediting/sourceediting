@@ -549,7 +549,7 @@ public class DefaultXMLPartitionFormatter {
 					DOMRegion childDOMRegion = new DOMRegion();
 					childDOMRegion.documentRegion = nextRegion;
 					childDOMRegion.domNode = childDOMNode;
-					if (childDOMNode.getFirstStructuredDocumentRegion().equals(nextRegion)) {
+					if (nextRegion.equals(childDOMNode.getFirstStructuredDocumentRegion())) {
 						// format children. pass in child constraints
 						childDOMRegion = formatRegion(textEdit, formatRange, childrenConstraints, childDOMRegion, previousDocumentRegion);
 					}
