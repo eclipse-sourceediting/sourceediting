@@ -19,6 +19,7 @@ import org.eclipse.wst.html.core.tests.parser.AttrValueTest;
 import org.eclipse.wst.html.core.tests.parser.CDATASectionTest;
 import org.eclipse.wst.html.core.tests.parser.CDATASectionTest2;
 import org.eclipse.wst.html.core.tests.parser.CDATASectionTest3;
+import org.eclipse.wst.html.core.tests.parser.CDATASectionTest4;
 import org.eclipse.wst.html.core.tests.parser.DocTypeTest;
 import org.eclipse.wst.html.core.tests.parser.ElementTest;
 import org.eclipse.wst.html.core.tests.parser.ElementTest2;
@@ -130,6 +131,7 @@ public class ModelParserTests extends TestSuite {
 		addTest(new TestSuite(CDATASectionTest.class, "CDATASectionTest"));
 		addTest(new TestSuite(CDATASectionTest2.class, "CDATASectionTest2"));
 		addTest(new TestSuite(CDATASectionTest3.class, "CDATASectionTest3"));
+		addTest(new TestSuite(CDATASectionTest4.class, "CDATASectionTest4"));
 		addTest(new TestSuite(PITest.class, "PITest"));
 		addTest(new TestSuite(OmissibleTest.class, "Omissible tags test"));
 
