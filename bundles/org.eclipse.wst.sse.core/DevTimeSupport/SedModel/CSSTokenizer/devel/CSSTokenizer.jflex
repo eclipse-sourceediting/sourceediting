@@ -103,7 +103,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 					spaceFollows = (nextTokenType == CSS_S);
 				}
 				if (nextTokenType != null) { // nextToken is retrieved
-					if (spaceFollows) {
+					if (spaceFollows && (context != CSS_COMMENT)) {
 						// next is space -> append
 //						text.append(yytext());
 						length += yylength();
