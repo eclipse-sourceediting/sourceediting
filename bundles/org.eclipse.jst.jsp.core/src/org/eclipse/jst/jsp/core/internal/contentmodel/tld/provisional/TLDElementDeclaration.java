@@ -17,10 +17,10 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 
 public interface TLDElementDeclaration extends CMElementDeclaration {
 	/** 
-	 * Property stating weather the {@link CMElementDeclaration}
+	 * Property stating whether the {@link CMElementDeclaration}
 	 * is a library tag or not
 	 */
-	String IS_LIBRARY_TAG = "isLibraryTag";
+	String IS_LIBRARY_TAG = "isLibraryTag"; //$NON-NLS-1$
 	
 	String TAG_SOURCE = "Tag Definition Source"; //$NON-NLS-1$
 	String SOURCE_JSP_TLD = "JSP Tag Library Descriptor"; //$NON-NLS-1$
