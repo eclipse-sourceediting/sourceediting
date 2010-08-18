@@ -105,6 +105,8 @@
 			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLValidationPreferencePage"
 			id="org.eclipse.wst.xsl.ui.preferences.Validation" 
 			name="%pageNameValidation">
+			<keywordReference id="org.eclipse.wst.xsl.ui.severity"/>
+			<keywordReference id="org.eclipse.wst.xsl.ui.xpath"/>
 		</page>
 		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 		    class="org.eclipse.wst.xsl.ui.internal.preferences.XSLSyntaxColoringPage"
@@ -323,4 +325,12 @@
     </highlighting>
  </extension>
   
+	<extension point="org.eclipse.ui.keywords">
+		<keyword
+			label="%preferenceKeywords.severity"
+			id="org.eclipse.wst.xsl.ui.severity"/>
+		<keyword
+			label="%preferenceKeywords.xpath"
+			id="org.eclipse.wst.xsl.ui.xpath"/>
+ </extension>
 </plugin>
