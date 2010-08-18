@@ -62,6 +62,8 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 	private IValidator fMessageOriginator;
 	private Set fValidFileExts = new HashSet();
 	
+	private static final String[] METADATA_FILES = new String[]{".settings/.jsdtscope",".settings/org.eclipse.wst.jsdt.ui.superType.container",".settings/org.eclipse.wst.jsdt.ui.superType.name"};
+	
 //	private static String [] jsdtValidator = {"org.eclipse.wst.jsdt.web.core.internal.validation.JsBatchValidator"}; //$NON-NLS-1$
 
 	
@@ -350,7 +352,17 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 			return null;
 		ValidationResult result = new ValidationResult();
 		IReporter reporter = result.getReporter(monitor);
-		validateFile((IFile) resource, reporter);
+		IFile file = (IFile) resource;
+		validateFile(file, reporter);
+		result.setDependsOn(createDependencies(file));
 		return result;
+	}
+
+	private IResource[] createDependencies(IFile file) {
+		IFile[] depends = new IFile[METADATA_FILES.length];
+		for (int i = 0; i < METADATA_FILES.length; i++) {
+			depends[i] = file.getProject().getFile(METADATA_FILES[i]);
+		}
+		return depends;
 	}
 }
