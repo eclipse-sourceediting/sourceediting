@@ -194,6 +194,7 @@ public class JSPHeadTokenizerTester extends TestCase {
 		fPageEncodingValue = null;
 		fCharset = null;
 		fContentType = null;
+		fContentTypeValue = null;
 		HeadParserToken token = null;
 		HeadParserToken finalToken = null;
 		do {
