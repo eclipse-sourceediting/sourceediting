@@ -468,7 +468,9 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 			while (iter.hasNext()) {
 				IContentAssistProcessor legacyProcessor = (IContentAssistProcessor) iter.next();
 				ICompletionProposal[] legacyComputed = legacyProcessor.computeCompletionProposals(viewer, offset);
-				proposals.addAll(Arrays.asList(legacyComputed));
+				if (legacyComputed != null) {
+					proposals.addAll(Arrays.asList(legacyComputed));
+				}
 			}
 		}
 		
