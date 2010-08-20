@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,7 @@ public class XSDTypeUtil
     defaultValue.put("anySimpleType", null);
     defaultValue.put("anyType", null);
     defaultValue.put("anyURI", "http://tempuri.org");
-    defaultValue.put("base64Binary", "0");
+    defaultValue.put("base64Binary", "MA==");
     defaultValue.put("boolean", "true");
     defaultValue.put("byte", "0");
     defaultValue.put("date", "2001-01-01");
