@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -431,6 +431,27 @@ public class BugFixesTest extends BaseTestCase
 		}
 		assertNull("globalAttr4 returned data when non expected.", ((DocumentationImpl)documentation.item(0)).getValue());
 	}
-	
-		
+
+	/**
+	 * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=322841
+	 */
+	public void testBase64BinaryDefaultValue()
+	{
+	  Bundle bundle = Platform.getBundle(XSDCoreTestsPlugin.PLUGIN_ID);
+	  URL url = bundle.getEntry("/testresources/samples/base64Binary/Test.xsd"); //$NON-NLS-1$
+
+	  CMDocument cmDocument = XSDImpl.buildCMDocument(url.toExternalForm());
+	  assertNotNull(cmDocument);
+
+	  CMNamedNodeMap elements = cmDocument.getElements();
+
+	  CMElementDeclaration cmElementDeclaration = (CMElementDeclaration)elements.getNamedItem("Test"); //$NON-NLS-1$
+	  assertNotNull(cmElementDeclaration);
+
+	  CMDataType dataType = cmElementDeclaration.getDataType();
+	  assertNotNull(dataType);
+
+	  String impliedValue = dataType.generateInstanceValue();
+	  assertEquals("MA==", impliedValue); //$NON-NLS-1$
+	}  		
 }
