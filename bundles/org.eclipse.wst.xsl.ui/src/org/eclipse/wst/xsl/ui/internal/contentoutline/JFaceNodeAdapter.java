@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009,2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Carver (STAR) - based work on org.eclipse.wst.xml.ui.internal. JFaceNodeAdapter 
- *     
+ *     IBM Corporation - bug 319226 - fix GDI memory leak.
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentoutline;
 
@@ -45,29 +45,37 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	}
 
 	protected ImageDescriptor getXSLImage(Element node) {
+		return XSLPluginImageHelper.getInstance().getImageDescriptor(getImagePath(node));
+	}
+
+	protected ImageDescriptor getImageDescriptor(String path) {
+		return XSLPluginImageHelper.getInstance().getImageDescriptor(path);
+	}
+
+	protected String getImagePath(Element node) {
 		String name = node.getLocalName();
 		if (name.equals("import") || name.equals("include")) {  //$NON-NLS-1$//$NON-NLS-2$
-			return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_IMPORT_INCLUDE);
+			return XSLPluginImages.IMG_ELM_IMPORT_INCLUDE;
 		}
 		if (name.equals("template")) { //$NON-NLS-1$
 			if (node.hasAttribute("name")) { //$NON-NLS-1$
-				return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_TEMPLATE_NAME);
+				return XSLPluginImages.IMG_ELM_TEMPLATE_NAME;
 			} else {
-				return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_TEMPLATE);
+				return XSLPluginImages.IMG_ELM_TEMPLATE;
 			}
 		}
 		
 		if (name.equals("variable") || name.equals("param")) { //$NON-NLS-1$ //$NON-NLS-2$
-			return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_VARIABLE);
+			return XSLPluginImages.IMG_ELM_VARIABLE;
 		}
 		
 		if (name.equals("function")) { //$NON-NLS-1$
-			return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_FUNCTION);
+			return XSLPluginImages.IMG_ELM_FUNCTION;
 		}
 		
-		return XSLPluginImageHelper.getInstance().getImageDescriptor(XSLPluginImages.IMG_ELM_STYLESHET);
+		return XSLPluginImages.IMG_ELM_STYLESHET;
 	}
-	
+
 	protected Image createImage(Object object) {
 		Image image = null;
 		Node node = (Node) object;
@@ -75,11 +83,12 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 			case Node.ELEMENT_NODE : {
 				if (XSLCore.XSL_NAMESPACE_URI.equals(node.getNamespaceURI())) {
 					Element elem = (Element) node;
-					ImageDescriptor imgDesc = getXSLImage(elem); 
+					String path = getImagePath(elem);
+					ImageDescriptor imgDesc = getImageDescriptor(path); 
 					if (imgDesc == null) {
 						image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_ELEMENT);
 					} else {
-						image = imgDesc.createImage();
+						image = XSLPluginImageHelper.getInstance().getImage(path);
 					}
 				} else {
 					image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_ELEMENT);
