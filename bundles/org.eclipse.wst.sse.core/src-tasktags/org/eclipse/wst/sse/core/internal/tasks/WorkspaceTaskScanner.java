@@ -53,6 +53,7 @@ class WorkspaceTaskScanner {
 	private static WorkspaceTaskScanner _instance = null;
 	static final String SYNTHETIC_TASK = "org.eclipse.wst.sse.task-synthetic";
 	static final String MODIFICATION_STAMP = "org.eclipse.wst.sse.modification-stamp";
+	private boolean proceed = false;
 
 	static synchronized WorkspaceTaskScanner getInstance() {
 		if (_instance == null) {
@@ -283,7 +284,7 @@ class WorkspaceTaskScanner {
 						finally {
 							progressMonitor.worked(1);
 						}
-						if (markerAttributeMaps != null && markerAttributeMaps.length > 0) {
+						if (proceed && markerAttributeMaps != null && markerAttributeMaps.length > 0) {
 							if (Logger.DEBUG_TASKS) {
 								System.out.println("" + markerAttributeMaps.length + " tasks for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
@@ -332,10 +333,10 @@ class WorkspaceTaskScanner {
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			time0 = System.currentTimeMillis();
 		}
-		if (init(project)) {
-			internalScan(project, project, scanMonitor);
-			shutdownDelegates(project);
-		}
+		proceed = init(project);
+		internalScan(project, project, scanMonitor);
+		shutdownDelegates(project);
+		
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + project.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
