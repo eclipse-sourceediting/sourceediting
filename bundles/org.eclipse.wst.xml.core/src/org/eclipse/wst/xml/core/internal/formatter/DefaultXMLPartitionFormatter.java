@@ -1105,7 +1105,7 @@ public class DefaultXMLPartitionFormatter {
 
 	private int formatCommentStart(TextEdit textEdit, XMLFormattingConstraints parentConstraints, int indentLevel, IStructuredDocumentRegion currentRegion, IStructuredDocumentRegion previousRegion, ITextRegion region) {
 		int lineWidth = parentConstraints.getAvailableLineWidth();
-		if (previousRegion.getType() == DOMRegionContext.XML_CONTENT) {
+		if (previousRegion!=null&&(DOMRegionContext.XML_CONTENT.equals(previousRegion.getType()))) {
 			String previousText = previousRegion.getFullText();
 			String trailingWhitespace = getTrailingWhitespace(previousText);
 			String delimiters = extractLineDelimiters(trailingWhitespace, previousRegion);
