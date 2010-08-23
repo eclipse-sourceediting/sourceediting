@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,8 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorExtension;
+import org.eclipse.ui.texteditor.ITextEditorExtension2;
 import org.eclipse.wst.xml.ui.internal.Logger;
 
 public class CommentHandler extends AbstractHandler implements IHandler {
@@ -44,7 +46,7 @@ public class CommentHandler extends AbstractHandler implements IHandler {
 			if (o != null)
 				textEditor = (ITextEditor) o;
 		}
-		if (textEditor != null) {
+		if (textEditor != null && validateEditorInput(textEditor)) {
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			if (document != null) {
 				// get current text selection
@@ -58,6 +60,17 @@ public class CommentHandler extends AbstractHandler implements IHandler {
 		}
 
 		return null;
+	}
+
+	protected boolean validateEditorInput(ITextEditor textEditor) {
+		if (textEditor instanceof ITextEditorExtension2)
+			return ((ITextEditorExtension2)textEditor).validateEditorInputState();
+		else if (textEditor instanceof ITextEditorExtension)
+			return ((ITextEditorExtension)textEditor).isEditorInputReadOnly();
+		else if (textEditor != null)
+			return textEditor.isEditable();
+		return true;
+		
 	}
 
 	protected ITextSelection getCurrentSelection(ITextEditor textEditor) {

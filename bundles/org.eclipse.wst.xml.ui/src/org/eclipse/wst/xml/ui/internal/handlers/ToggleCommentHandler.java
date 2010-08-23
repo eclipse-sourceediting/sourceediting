@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 			if (o != null)
 				textEditor = (ITextEditor) o;
 		}
-		if (textEditor != null) {
+		if (textEditor != null && validateEditorInput(textEditor)) {
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			if (document != null) {
 				// get current text selection
