@@ -203,7 +203,16 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 
 	public void widgetSelected(SelectionEvent e) {
 
-		getButton(OK).setEnabled(((fRadioButtonTagNameCaseLower != null) && (fRadioButtonTagNameCaseLower.getSelection() || fRadioButtonTagNameCaseUpper.getSelection())) || ((fRadioButtonAttrNameCaseLower != null) && (fRadioButtonAttrNameCaseLower.getSelection() || fRadioButtonAttrNameCaseUpper.getSelection())) || fCheckBoxInsertMissingTags.getSelection() || fCheckBoxQuoteAttrValues.getSelection() || fCheckBoxFormatSource.getSelection() || fCheckBoxConvertEOLCodes.getSelection() || ((fRadioButtonConvertEOLUnix != null) && (fRadioButtonConvertEOLUnix.getSelection() || fRadioButtonConvertEOLMac.getSelection() || fRadioButtonConvertEOLWindows.getSelection())));
+		getButton(OK).setEnabled(((fRadioButtonTagNameCaseLower != null) && (fRadioButtonTagNameCaseLower.getSelection() || fRadioButtonTagNameCaseUpper.getSelection())) 
+				|| ((fRadioButtonAttrNameCaseLower != null) && (fRadioButtonAttrNameCaseLower.getSelection() || fRadioButtonAttrNameCaseUpper.getSelection()))
+				|| fCheckBoxInsertMissingTags.getSelection()
+				|| fCheckBoxQuoteAttrValues.getSelection() 
+				|| fCheckBoxFormatSource.getSelection() 
+				|| fCheckBoxInsertXMLDeclaration.getSelection()
+				|| fCheckBoxCompressEmptyElementTags.getSelection()
+				|| fCheckBoxInsertRequiredAttrs.getSelection()
+				|| (( fCheckBoxConvertEOLCodes.getSelection() && fRadioButtonConvertEOLUnix != null ) && (fRadioButtonConvertEOLUnix.getSelection() || fRadioButtonConvertEOLMac.getSelection()
+						|| fRadioButtonConvertEOLWindows.getSelection())));
 		if (e.widget == fCheckBoxConvertEOLCodes) {
 			enableEOLCodeRadios(fCheckBoxConvertEOLCodes.getSelection());
 		}
