@@ -1291,7 +1291,7 @@ public class StructuredTextEditor extends TextEditor {
 		// override the cut/paste/delete action to make
 		// them run on read-only
 		// files
-		Action action = new TextOperationAction(resourceBundle, "Editor_Cut_", this, ITextOperationTarget.CUT, true); //$NON-NLS-1$
+		Action action = new TextOperationAction(resourceBundle, "Editor_Cut_", this, ITextOperationTarget.CUT); //$NON-NLS-1$
 		action.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
 		setAction(ITextEditorActionConstants.CUT, action);
 		helpSystem.setHelp(action, IAbstractTextEditorHelpContextIds.CUT_ACTION);
@@ -1301,7 +1301,7 @@ public class StructuredTextEditor extends TextEditor {
 		// override the cut/paste/delete action to make
 		// them run on read-only
 		// files
-		action = new TextOperationAction(resourceBundle, "Editor_Paste_", this, ITextOperationTarget.PASTE, true); //$NON-NLS-1$
+		action = new TextOperationAction(resourceBundle, "Editor_Paste_", this, ITextOperationTarget.PASTE); //$NON-NLS-1$
 		action.setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
 		setAction(ITextEditorActionConstants.PASTE, action);
 		helpSystem.setHelp(action, IAbstractTextEditorHelpContextIds.PASTE_ACTION);
@@ -1312,14 +1312,14 @@ public class StructuredTextEditor extends TextEditor {
 		// override the cut/paste/delete action to make
 		// them run on read-only
 		// files
-		action = new TextOperationAction(resourceBundle, "Editor_Delete_", this, ITextOperationTarget.DELETE, true); //$NON-NLS-1$
+		action = new TextOperationAction(resourceBundle, "Editor_Delete_", this, ITextOperationTarget.DELETE); //$NON-NLS-1$
 		action.setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
 		setAction(ITextEditorActionConstants.DELETE, action);
 		helpSystem.setHelp(action, IAbstractTextEditorHelpContextIds.DELETE_ACTION);
 		// SourceView Action - requesting content assist to
 		// show completetion
 		// proposals for the current insert position
-		action = new TextOperationAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS + UNDERSCORE, this, ISourceViewer.CONTENTASSIST_PROPOSALS, true);
+		action = new TextOperationAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS + UNDERSCORE, this, ISourceViewer.CONTENTASSIST_PROPOSALS);
 		helpSystem.setHelp(action, IHelpContextIds.CONTMNU_CONTENTASSIST_HELPID);
 		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS, action);
