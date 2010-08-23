@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -399,6 +399,9 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				}
 				else if (nodeName.equals(JSP20TLDNames.TAG_EXTENSION) && child.getNodeType() == Node.ELEMENT_NODE) {
 					ed.getExtensions().add(child);
+				}
+				else if (nodeName.equals(JSP20TLDNames.DYNAMIC_ATTRIBUTES) && child.hasChildNodes()) {
+					ed.setDynamicAttributes(getContainedText(child));
 				}
 			}
 			child = child.getNextSibling();
