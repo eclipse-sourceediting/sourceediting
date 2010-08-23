@@ -69,8 +69,7 @@ public class CommentHandler extends AbstractHandler implements IHandler {
 			return ((ITextEditorExtension)textEditor).isEditorInputReadOnly();
 		else if (textEditor != null)
 			return textEditor.isEditable();
-		else
-			return false;
+		return true;
 		
 	}
 
