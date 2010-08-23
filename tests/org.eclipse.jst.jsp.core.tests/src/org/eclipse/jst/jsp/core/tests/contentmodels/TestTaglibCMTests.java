@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,11 +23,18 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentFactoryTLD;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMElementDeclarationImpl;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
+import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
+import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.w3c.dom.Element;
@@ -190,5 +197,25 @@ public class TestTaglibCMTests extends TestCase {
 			}
 		}
 		project.delete(true, null);
+	}
+
+	public void testDynamicAttributes() throws Exception {
+		final String testName = "testDynamicAttributes";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		if (!project.exists()) {
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace(TESTFILES_PATHSTRING + "testDynamicAttributes", "/testDynamicAttributes");
+		}
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+		CMDocumentFactoryTLD factory = new CMDocumentFactoryTLD();
+		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/"+ testName + "/"));
+		assertEquals("There should only be one taglib record", 1, records.length);
+		CMDocument document = factory.createCMDocument(records[0]);
+		CMNamedNodeMap elements = document.getElements();
+		assertNotNull("No elements for the CM Document", elements);
+		CMNode node = elements.getNamedItem("bar");
+		assertTrue("Node must be a CMElementDeclarationImpl", node instanceof CMElementDeclarationImpl);
+		assertEquals("Dynamic attributes must be set to 'true'", "true", ((CMElementDeclarationImpl) node).getDynamicAttributes());
 	}
 }
