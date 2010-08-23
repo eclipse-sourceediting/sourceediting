@@ -107,7 +107,13 @@ public class XMLUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
-	
+
+	/**
+	 * The initial template ID to be used in the new XML file wizard. In the absence
+	 * of {@link NEW_FILE_TEMPLATE_NAME}, this ID is used to find a template name
+	 */
+	public static final String NEW_FILE_TEMPLATE_ID = "newFileTemplateId"; //$NON-NLS-1$
+
 	/**
 	 * The key to store the option for auto-completing comments while
 	 * typing.

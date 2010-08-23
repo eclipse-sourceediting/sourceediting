@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -443,15 +443,24 @@ public class NewHTMLTemplatesWizardPage extends WizardPage {
 	 * Load the last template name used in New HTML File wizard.
 	 */
 	private void loadLastSavedPreferences() {
+		fLastSelectedTemplateName = ""; //$NON-NLS-1$
+		boolean setSelection = false;
 		String templateName = HTMLUIPlugin.getDefault().getPreferenceStore().getString(HTMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME);
 		if (templateName == null || templateName.length() == 0) {
-			fLastSelectedTemplateName = ""; //$NON-NLS-1$
-			fUseTemplateButton.setSelection(false);
+			templateName = HTMLUIPlugin.getDefault().getPreferenceStore().getString(HTMLUIPreferenceNames.NEW_FILE_TEMPLATE_ID);
+			if (templateName != null && templateName.length() > 0) {
+				Template template = fTemplateStore.findTemplateById(templateName);
+				if (template != null) {
+					fLastSelectedTemplateName = template.getName();
+					setSelection = true;
+				}
+			}
 		}
 		else {
 			fLastSelectedTemplateName = templateName;
-			fUseTemplateButton.setSelection(true);
+			setSelection = true;
 		}
+		fUseTemplateButton.setSelection(setSelection);
 		enableTemplates();
 	}
 

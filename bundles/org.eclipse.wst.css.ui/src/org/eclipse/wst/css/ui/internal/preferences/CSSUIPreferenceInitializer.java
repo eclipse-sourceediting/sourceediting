@@ -3,7 +3,6 @@ package org.eclipse.wst.css.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.text.templates.Template;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.style.IStyleConstantsCSS;
@@ -81,13 +80,9 @@ public class CSSUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		// set default new css file template to use in new file wizard
 		/*
 		 * Need to find template name that goes with default template id (name
-		 * may change for differnt language)
+		 * may change for different language)
 		 */
-		String templateName = ""; //$NON-NLS-1$
-		Template template = CSSUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.wst.css.ui.internal.templates.newcss"); //$NON-NLS-1$
-		if (template != null)
-			templateName = template.getName();
-		store.setDefault(CSSUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		store.setDefault(CSSUIPreferenceNames.NEW_FILE_TEMPLATE_ID, "org.eclipse.wst.css.ui.internal.templates.newcss"); //$NON-NLS-1$
 		
 		// Defaults for Content Assist preference page
 		store.setDefault(CSSUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_DEFAULT_PAGE, "");
