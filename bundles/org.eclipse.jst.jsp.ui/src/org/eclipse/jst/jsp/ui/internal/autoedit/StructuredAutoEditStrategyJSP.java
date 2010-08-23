@@ -28,8 +28,10 @@ import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Node;
 
 public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
@@ -45,7 +47,7 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 			if (model != null) {
 				if (command.text != null) {
 					smartInsertForEndTag(command, document, model);
-
+					smartRemoveEndTag(command, document, model);
 					if (command.text.equals("%") && isPreferenceEnabled(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS)) { //$NON-NLS-1$
 						// scriptlet - add end %>
 						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
@@ -156,6 +158,51 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 							String suffix = toAdd.toString();
 							if ((document.getLength() < command.offset + suffix.length()) || (!suffix.equals(document.get(command.offset, suffix.length())))) {
 								command.text += suffix;
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (BadLocationException e) {
+			Logger.logException(e);
+		}
+	}
+
+	/**
+	 * Attempts to clean up an end-tag if a start-tag is converted into an empty-element
+	 * tag (e.g., <node />) and the original element was empty.
+	 * 
+	 * @param command the document command describing the change
+	 * @param document the document that will be changed
+	 * @param model the model based on the document
+	 */
+	private void smartRemoveEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
+		try {
+			// An opening tag is now a self-terminated end-tag
+			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1)) && command.length == 0 && HTMLUIPlugin.getDefault().getPreferenceStore().getBoolean(HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
+				IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
+				if (node != null && !node.hasChildNodes()) {
+					IStructuredDocumentRegion region = node.getFirstStructuredDocumentRegion();
+					if(region.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN && command.offset <= region.getEnd()) {
+						
+						/* if the region before the command offset is a an attribute value region
+						 * check to see if it has both and opening and closing quote
+						 */
+						ITextRegion prevTextRegion = region.getRegionAtCharacterOffset(command.offset-1);
+						boolean inUnclosedAttValueRegion = false;
+						if(prevTextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+							//get the text of the attribute value region
+							String prevText = region.getText(prevTextRegion);
+							inUnclosedAttValueRegion = (prevText.startsWith("'") && ((prevText.length() == 1) || !prevText.endsWith("'"))) ||
+								(prevText.startsWith("\"") && ((prevText.length() == 1) || !prevText.endsWith("\"")));
+						} 
+					
+						//if command offset is in an unclosed attribute value region then done remove the end tag
+						if(!inUnclosedAttValueRegion) {
+							region = node.getEndStructuredDocumentRegion();
+							if (region != null && region.isEnded()) {
+								document.replace(region.getStartOffset(), region.getLength(), ""); //$NON-NLS-1$
 							}
 						}
 					}
