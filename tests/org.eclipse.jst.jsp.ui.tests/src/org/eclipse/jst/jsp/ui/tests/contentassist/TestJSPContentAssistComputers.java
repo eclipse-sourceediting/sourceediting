@@ -187,6 +187,30 @@ public class TestJSPContentAssistComputers extends TestCase {
 		runProposalTest("test6.jsp", 2, 0, expectedProposalCounts);
 	}
 	
+	public void testFinishClosingHTMLTagNamePropsoals() throws Exception {
+		//default, jsp template, html template, html, jsp, default
+		int[] expectedProposalCounts = new int[] {2, 1, 0, 1, 0, 2};
+		runProposalTest("test4.jsp", 11, 9, expectedProposalCounts);
+	}
+	
+	public void testFinishClosingHTMLTagPropsoals() throws Exception {
+		//default, jsp template, html template, html, jsp, default
+		int[] expectedProposalCounts = new int[] {3, 1, 0, 2, 0, 3};
+		runProposalTest("test4.jsp", 12, 0, expectedProposalCounts);
+	}
+	
+	public void testFinishClosingJSPTagNamePropsoals() throws Exception {
+		//default, xml template, html tag, jsp, jsp java, default
+		int[] expectedProposalCounts = new int[] {1, 0, 0, 1, 0, 1};
+		runProposalTest("test5.jsp", 11, 9, expectedProposalCounts);
+	}
+	
+	public void testFinishClosingJSPTagPropsoals() throws Exception {
+		//default, xml template, html tag, jsp, jsp java, default
+		int[] expectedProposalCounts = new int[] {5, 4, 2, 0, 0, 5};
+		runProposalTest("test5.jsp", 12, 0, expectedProposalCounts);
+	}
+	
 	/**
 	 * <p>Run a proposal test by opening the given file and invoking content assist for
 	 * each expected proposal count at the given line number and line character

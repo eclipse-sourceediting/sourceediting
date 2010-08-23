@@ -142,6 +142,30 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		runProposalTest("test1.html", 17, 5, expectedProposalCounts);
 	}
 	
+	public void testFinishClosingTagNamePropsoals() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[] {1, 0, 1, 1};
+		runProposalTest("test4.html", 9, 9, expectedProposalCounts);
+	}
+	
+	public void testFinishClosingTagPropsoals() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[] {2, 0, 2, 2};
+		runProposalTest("test4.html", 10, 0, expectedProposalCounts);
+	}
+	
+	public void testFinishClosingTagNamePropsoalsXHTML() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[] {1, 0, 1, 1};
+		runProposalTest("test5.xhtml", 9, 9, expectedProposalCounts);
+	}
+	
+	public void testFinishClosingTagPropsoalsXHTML() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[] {2, 0, 2, 2};
+		runProposalTest("test5.xhtml", 10, 0, expectedProposalCounts);
+	}
+	
 	/**
 	 * <p>Run a proposal test by opening the given file and invoking content assist for
 	 * each expected proposal count at the given line number and line character

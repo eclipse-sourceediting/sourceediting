@@ -109,6 +109,18 @@ public class TestXMLContentAssistComputers extends TestCase {
 		runProposalTest("test1.xml", 10, 10, expectedProposalCounts);
 	}
 	
+	public void testFinishClosingTagNamePropsoals() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[] {1, 0, 1, 1};
+		runProposalTest("test2.xml", 2, 19, expectedProposalCounts);
+	}
+	
+	public void testFinishClosingTagPropsoals() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[] {6, 4, 2, 6};
+		runProposalTest("test2.xml", 3, 0, expectedProposalCounts);
+	}
+	
 	/**
 	 * <p>Run a proposal test by opening the given file and invoking content assist for
 	 * each expected proposal count at the given line number and line character
