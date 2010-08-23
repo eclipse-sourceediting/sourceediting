@@ -121,6 +121,13 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		setRedraw(false);
 	}
 
+	protected void createControl(Composite parent, int styles) {
+		// Forces LEFT_TO_RIGHT orientation unless otherwise suggested
+		if ((styles & SWT.LEFT_TO_RIGHT) == 0 && (styles & SWT.RIGHT_TO_LEFT) == 0)
+			styles |= SWT.LEFT_TO_RIGHT;
+		super.createControl(parent, styles);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
