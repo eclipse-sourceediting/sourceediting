@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.html.ui.tests; singleton:=true
-Bundle-Version: 1.0.400.qualifier
+Bundle-Version: 1.0.500.qualifier
 Bundle-ClassPath: htmluitests.jar
 Bundle-Activator: org.eclipse.wst.html.ui.tests.HTMLUITestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
