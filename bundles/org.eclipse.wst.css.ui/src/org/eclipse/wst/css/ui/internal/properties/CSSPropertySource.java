@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -294,7 +294,8 @@ public class CSSPropertySource implements IPropertySource, IPropertySourceExtens
 					declaration.removeProperty(nameString);
 				}
 				else {
-					declaration.setProperty(nameString, valueString, ""); //$NON-NLS-1$
+					String priority = declaration.getPropertyPriority(nameString);
+					declaration.setProperty(nameString, valueString, (priority == null || priority.length() == 0) ? "" : " " + priority); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			catch (Exception e) {
