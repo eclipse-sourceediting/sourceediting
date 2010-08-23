@@ -13,8 +13,9 @@ package org.eclipse.jst.jsp.core.internal;
 import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ISavedState;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -83,25 +84,40 @@ public class JSPCorePlugin extends Plugin {
 		 * becomes a blocking call.
 		 */
 		if (JSPTranslatorPersister.ACTIVATED) {
-			Job persister = new WorkspaceJob(JSPCoreMessages.Initializing) {
-				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-					ISavedState savedState = null;
+			Job persister = new Job(JSPCoreMessages.Initializing) {
+				protected IStatus run(IProgressMonitor monitor) {
+					final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 					try {
-						savedState = ResourcesPlugin.getWorkspace().addSaveParticipant(getBundle().getSymbolicName(), fSaveParticipant);
+						workspace.run(new IWorkspaceRunnable() {
+							public void run(IProgressMonitor monitor) throws CoreException {
+								ISavedState savedState = null;
+								try {
+									savedState = workspace.addSaveParticipant(getBundle().getSymbolicName(), fSaveParticipant);
+								}
+								catch (CoreException e) {
+									Logger.logException("Could not load previous save state", e);
+								}
+								if (savedState != null) {
+									try {
+										Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+									}
+									finally {
+										savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
+									}
+								}
+							}
+						}, monitor);
 					}
 					catch (CoreException e) {
-						Logger.logException("Could not load previous save state", e);
+						return e.getStatus();
 					}
-					if (savedState != null) {
-						try {
-							Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-						}
-						finally {
-							savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
-						}
+					finally {
+						/*
+						 * set up persister to listen to resource change
+						 * events
+						 */
+						workspace.addResourceChangeListener(JSPTranslatorPersister.getDefault());
 					}
-					// set up persister to listen to resource change events
-					ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPTranslatorPersister.getDefault());
 					return Status.OK_STATUS;
 				}
 			};
