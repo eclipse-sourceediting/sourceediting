@@ -443,15 +443,24 @@ public class NewTagTemplatesWizardPage extends WizardPage {
 	 * Load the last template name used in New JSP File wizard.
 	 */
 	private void loadLastSavedPreferences() {
+		fLastSelectedTemplateName = ""; //$NON-NLS-1$
+		boolean setSelection = false;
 		String templateName = JSPUIPlugin.getDefault().getPreferenceStore().getString(JSPUIPreferenceNames.NEW_TAG_FILE_TEMPLATE_NAME);
 		if (templateName == null || templateName.length() == 0) {
-			fLastSelectedTemplateName = ""; //$NON-NLS-1$
-			fUseTemplateButton.setSelection(false);
+			templateName = JSPUIPlugin.getDefault().getPreferenceStore().getString(JSPUIPreferenceNames.NEW_TAG_FILE_TEMPLATE_ID);
+			if (templateName != null && templateName.length() > 0) {
+				Template template = fTemplateStore.findTemplateById(templateName);
+				if (template != null) {
+					fLastSelectedTemplateName = template.getName();
+					setSelection = true;
+				}
+			}
 		}
 		else {
 			fLastSelectedTemplateName = templateName;
-			fUseTemplateButton.setSelection(true);
+			setSelection = true;
 		}
+		fUseTemplateButton.setSelection(setSelection);
 		enableTemplates();
 	}
 

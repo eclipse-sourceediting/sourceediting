@@ -62,7 +62,13 @@ public class JSPUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
-	
+
+	/**
+	 * The initial template ID to be used in the new JSP file wizard. In the absence
+	 * of {@link NEW_FILE_TEMPLATE_NAME}, this ID is used to find a template name
+	 */
+	public static final String NEW_FILE_TEMPLATE_ID = "newFileTemplateId"; //$NON-NLS-1$
+
 	/**
 	 * The key to store the last template name used in new JSP Tag file wizard.
 	 * Template name is stored instead of template id because user-created
@@ -72,6 +78,12 @@ public class JSPUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String NEW_TAG_FILE_TEMPLATE_NAME = "newTagFileTemplateName"; //$NON-NLS-1$
+
+	/**
+	 * The initial template ID to be used in the new JSP file wizard. In the absence
+	 * of {@link NEW_FILE_TEMPLATE_NAME}, this ID is used to find a template name
+	 */
+	public static final String NEW_TAG_FILE_TEMPLATE_ID = "newTagFileTemplateId"; //$NON-NLS-1$
 
 	/**
 	 * The key to store the option for auto-completing EL braces after entering

@@ -3,7 +3,6 @@ package org.eclipse.jst.jsp.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.ui.PlatformUI;
@@ -63,20 +62,12 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		// set default new jsp file template to use in new file wizard
 		/*
 		 * Need to find template name that goes with default template id (name
-		 * may change for differnt language)
+		 * may change for different language)
 		 */
-		String templateName = ""; //$NON-NLS-1$
-		Template template = JSPUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.jst.jsp.ui.templates.jsphtml"); //$NON-NLS-1$
-		if (template != null)
-			templateName = template.getName();
-		store.setDefault(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		store.setDefault(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_ID, "org.eclipse.jst.jsp.ui.templates.jsphtml"); //$NON-NLS-1$
 		
 		// set default new jsp tag file template to use in new tag file wizard
-		templateName = ""; //$NON-NLS-1$
-		template = JSPUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.jst.jsp.ui.templates.simpletag"); //$NON-NLS-1$
-		if (template != null)
-			templateName = template.getName();
-		store.setDefault(JSPUIPreferenceNames.NEW_TAG_FILE_TEMPLATE_NAME, templateName);
+		store.setDefault(JSPUIPreferenceNames.NEW_TAG_FILE_TEMPLATE_ID, "org.eclipse.jst.jsp.ui.templates.simpletag"); //$NON-NLS-1$
 		
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES, true);
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS, true);

@@ -15,7 +15,6 @@ package org.eclipse.wst.html.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.text.templates.Template;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
@@ -100,13 +99,9 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		// set default new html file template to use in new file wizard
 		/*
 		 * Need to find template name that goes with default template id (name
-		 * may change for differnt language)
+		 * may change for different language)
 		 */
-		String templateName = ""; //$NON-NLS-1$
-		Template template = HTMLUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.wst.html.ui.templates.html"); //$NON-NLS-1$
-		if (template != null)
-			templateName = template.getName();
-		store.setDefault(HTMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		store.setDefault(HTMLUIPreferenceNames.NEW_FILE_TEMPLATE_ID, "org.eclipse.wst.html.ui.templates.html"); //$NON-NLS-1$
 		
 		// Defaults for the Typing preference page
 		store.setDefault(HTMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS, true);

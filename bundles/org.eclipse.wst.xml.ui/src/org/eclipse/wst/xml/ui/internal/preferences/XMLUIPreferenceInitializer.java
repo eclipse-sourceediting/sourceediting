@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.text.templates.Template;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
@@ -102,13 +101,9 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		// set default new xml file template to use in new file wizard
 		/*
 		 * Need to find template name that goes with default template id (name
-		 * may change for differnt language)
+		 * may change for different language)
 		 */
-		String templateName = ""; //$NON-NLS-1$
-		Template template = XMLUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.wst.xml.ui.internal.templates.xmldeclaration"); //$NON-NLS-1$
-		if (template != null)
-			templateName = template.getName();
-		store.setDefault(XMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		store.setDefault(XMLUIPreferenceNames.NEW_FILE_TEMPLATE_ID, "org.eclipse.wst.xml.ui.internal.templates.xmldeclaration"); //$NON-NLS-1$
 		
 		// Defaults for the Typing preference page
 		store.setDefault(XMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS, true);
