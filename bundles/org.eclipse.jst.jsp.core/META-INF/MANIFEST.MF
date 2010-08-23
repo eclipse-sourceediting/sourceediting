@@ -59,5 +59,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.wst.common.project.facet.core;bundle-version="[1.4.0,2.0.0)";resolution:=optional,
  org.eclipse.wst.common.modulecore;bundle-version="[1.1.300,2.0.0)";resolution:=optional,
  org.eclipse.osgi.services;bundle-version="3.2.0"
-Bundle-ActivationPolicy: lazy; exclude:="org.eclipse.jst.jsp.core.internal.contenttype,org.eclipse.jst.jsp.css.core.internal.contenttype"
+Bundle-ActivationPolicy: lazy; exclude:="org.eclipse.jst.jsp.core.internal.contenttype,org.eclipse.jst.jsp.css.core.internal.contenttype,org.eclipse.jst.jsp.core.internal.provisional.contenttype"
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
