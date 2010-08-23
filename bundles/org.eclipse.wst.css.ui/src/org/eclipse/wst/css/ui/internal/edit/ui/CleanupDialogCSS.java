@@ -12,6 +12,8 @@ package org.eclipse.wst.css.ui.internal.edit.ui;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -24,7 +26,7 @@ import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategyImpl;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 
-public class CleanupDialogCSS extends Dialog {
+public class CleanupDialogCSS extends Dialog implements SelectionListener{
 
 	private boolean embeddedCSS;
 	protected Button fRadioButtonIdentCaseAsis;
@@ -85,10 +87,13 @@ public class CleanupDialogCSS extends Dialog {
 		identCase.setLayout(hLayout);
 		fRadioButtonIdentCaseAsis = new Button(identCase, SWT.RADIO);
 		fRadioButtonIdentCaseAsis.setText(CSSUIMessages.As_is_UI_);
+		fRadioButtonIdentCaseAsis.addSelectionListener(this);
 		fRadioButtonIdentCaseLower = new Button(identCase, SWT.RADIO);
 		fRadioButtonIdentCaseLower.setText(CSSUIMessages.Lower_UI_);
+		fRadioButtonIdentCaseLower.addSelectionListener(this);
 		fRadioButtonIdentCaseUpper = new Button(identCase, SWT.RADIO);
 		fRadioButtonIdentCaseUpper.setText(CSSUIMessages.Upper_UI_);
+		fRadioButtonIdentCaseUpper.addSelectionListener(this);
 
 		// Convert property name case
 		// ACC: Group radio buttons together so associated label is read
@@ -103,10 +108,13 @@ public class CleanupDialogCSS extends Dialog {
 		propNameCase.setLayout(hLayout);
 		fRadioButtonPropNameCaseAsis = new Button(propNameCase, SWT.RADIO);
 		fRadioButtonPropNameCaseAsis.setText(CSSUIMessages.As_is_UI_);
+		fRadioButtonPropNameCaseAsis.addSelectionListener(this);
 		fRadioButtonPropNameCaseLower = new Button(propNameCase, SWT.RADIO);
 		fRadioButtonPropNameCaseLower.setText(CSSUIMessages.Lower_UI_);
+		fRadioButtonPropNameCaseLower.addSelectionListener(this);
 		fRadioButtonPropNameCaseUpper = new Button(propNameCase, SWT.RADIO);
 		fRadioButtonPropNameCaseUpper.setText(CSSUIMessages.Upper_UI_);
+		fRadioButtonPropNameCaseUpper.addSelectionListener(this);
 
 		// Convert property Value case
 		// ACC: Group radio buttons together so associated label is read
@@ -121,10 +129,13 @@ public class CleanupDialogCSS extends Dialog {
 		propValueCase.setLayout(hLayout);
 		fRadioButtonPropValueCaseAsis = new Button(propValueCase, SWT.RADIO);
 		fRadioButtonPropValueCaseAsis.setText(CSSUIMessages.As_is_UI_);
+		fRadioButtonPropValueCaseAsis.addSelectionListener(this);
 		fRadioButtonPropValueCaseLower = new Button(propValueCase, SWT.RADIO);
 		fRadioButtonPropValueCaseLower.setText(CSSUIMessages.Lower_UI_);
+		fRadioButtonPropValueCaseLower.addSelectionListener(this);
 		fRadioButtonPropValueCaseUpper = new Button(propValueCase, SWT.RADIO);
 		fRadioButtonPropValueCaseUpper.setText(CSSUIMessages.Upper_UI_);
+		fRadioButtonPropValueCaseUpper.addSelectionListener(this);
 
 		if (!isEmbeddedCSS()) {
 			// Convert selector tag case
@@ -140,20 +151,25 @@ public class CleanupDialogCSS extends Dialog {
 			selectorTagCase.setLayout(hLayout);
 			fRadioButtonSelectorTagCaseAsis = new Button(selectorTagCase, SWT.RADIO);
 			fRadioButtonSelectorTagCaseAsis.setText(CSSUIMessages.As_is_UI_);
+			fRadioButtonSelectorTagCaseAsis.addSelectionListener(this);
 			fRadioButtonSelectorTagCaseLower = new Button(selectorTagCase, SWT.RADIO);
 			fRadioButtonSelectorTagCaseLower.setText(CSSUIMessages.Lower_UI_);
+			fRadioButtonSelectorTagCaseLower.addSelectionListener(this);
 			fRadioButtonSelectorTagCaseUpper = new Button(selectorTagCase, SWT.RADIO);
 			fRadioButtonSelectorTagCaseUpper.setText(CSSUIMessages.Upper_UI_);
+			fRadioButtonSelectorTagCaseUpper.addSelectionListener(this);
 		}
 
 		// Quote attribute values
 		fCheckBoxQuoteValues = new Button(panel, SWT.CHECK);
 		fCheckBoxQuoteValues.setText(CSSUIMessages.Quote_values_UI_);
+		fCheckBoxQuoteValues.addSelectionListener(this);
 
 		if (!isEmbeddedCSS()) {
 			// Format source
 			fCheckBoxFormatSource = new Button(panel, SWT.CHECK);
 			fCheckBoxFormatSource.setText(CSSUIMessages.Format_source_UI_);
+			fCheckBoxFormatSource.addSelectionListener(this);
 		}
 
 		setCleanupOptions();
@@ -288,5 +304,22 @@ public class CleanupDialogCSS extends Dialog {
 
 		// save these values to preferences
 		((CSSCleanupStrategyImpl) stgy).saveOptions();
+	}
+
+	public void widgetSelected(SelectionEvent e) {
+		boolean okEnabled = fCheckBoxFormatSource.getSelection()
+		|| fCheckBoxQuoteValues.getSelection()
+		|| ((fRadioButtonIdentCaseLower != null && fRadioButtonIdentCaseLower.getSelection()) || (fRadioButtonIdentCaseUpper != null && fRadioButtonIdentCaseUpper.getSelection()))
+		|| ((fRadioButtonPropNameCaseLower != null && fRadioButtonPropNameCaseLower.getSelection()) || (fRadioButtonPropNameCaseUpper != null && fRadioButtonPropNameCaseUpper.getSelection()))
+		|| ((fRadioButtonPropValueCaseLower != null && fRadioButtonPropValueCaseLower.getSelection()) || (fRadioButtonPropValueCaseUpper != null && fRadioButtonPropValueCaseUpper.getSelection()))
+		|| ((fRadioButtonSelectorTagCaseLower != null && fRadioButtonSelectorTagCaseLower.getSelection()) || (fRadioButtonSelectorTagCaseUpper != null && fRadioButtonSelectorTagCaseUpper.getSelection()))
+		;
+		getButton(OK).setEnabled(okEnabled);
+		
+	}
+
+	public void widgetDefaultSelected(SelectionEvent e) {
+		widgetSelected(e);
+		
 	}
 }
