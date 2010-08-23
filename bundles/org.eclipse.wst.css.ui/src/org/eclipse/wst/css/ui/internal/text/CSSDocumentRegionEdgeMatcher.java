@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,6 +55,7 @@ public class CSSDocumentRegionEdgeMatcher implements ICharacterPairMatcher {
 	}
 
 	public IRegion match(IDocument document, int offset) {
+		short braceCount = 1;
 		if (document instanceof IStructuredDocument) {
 			IStructuredDocumentRegion r = ((IStructuredDocument) document).getRegionAtCharacterOffset(offset);
 			if (r != null) {
@@ -62,15 +63,27 @@ public class CSSDocumentRegionEdgeMatcher implements ICharacterPairMatcher {
 					r = r.getPrevious();
 				}
 				if (r.getType().equals(CSSRegionContexts.CSS_RBRACE)) {
-					while (r != null && !r.getType().equals(CSSRegionContexts.CSS_LBRACE)) {
+					while (r != null && (braceCount != 0)) {
 						r = r.getPrevious();
+						if (r.getType().equals(CSSRegionContexts.CSS_RBRACE)) {
+						       braceCount++;
+							}
+						else if (r.getType().equals(CSSRegionContexts.CSS_LBRACE)) {
+						   braceCount--;
+						}
 					}
 					if (r != null) {
 						return new Region(r.getStartOffset(), 1);
 					}
 				} else if (r.getType().equals(CSSRegionContexts.CSS_LBRACE)) {
-					while (r != null && !r.getType().equals(CSSRegionContexts.CSS_RBRACE)) {
+					while (r != null && (braceCount != 0)) {
 						r = r.getNext();
+						if (r.getType().equals(CSSRegionContexts.CSS_LBRACE)) {
+					       braceCount++;
+						}
+						else if (r.getType().equals(CSSRegionContexts.CSS_RBRACE)) {
+						   braceCount--;
+						}
 					}
 					if (r != null) {
 						return new Region(r.getEndOffset() - 1, 1);
