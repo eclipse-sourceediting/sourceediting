@@ -38,7 +38,7 @@ public class JSPCorePlugin extends Plugin {
 	private static JSPCorePlugin plugin;
 	
 	/** Save participant for this plugin */
-	private ISaveParticipant fSaveParticipant;
+	ISaveParticipant fSaveParticipant;
 
 	/**
 	 * The constructor.
@@ -76,29 +76,30 @@ public class JSPCorePlugin extends Plugin {
 
 		//restore save state and process any events that happened before plugin loaded
 		if (JSPTranslatorPersister.ACTIVATED) {
-			try {
-				final ISavedState savedState = ResourcesPlugin.getWorkspace().addSaveParticipant(plugin.getBundle().getSymbolicName(), this.fSaveParticipant);
-				if (savedState != null) {
-					Job persister = new Job(JSPCoreMessages.Initializing) {
-						protected IStatus run(IProgressMonitor monitor) {
-							try {
-								Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-							}
-							finally {
-								savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
-							}
-							return Status.OK_STATUS;
+			Job persister = new Job(JSPCoreMessages.Initializing) {
+				protected IStatus run(IProgressMonitor monitor) {
+					ISavedState savedState = null;
+					try {
+						savedState = ResourcesPlugin.getWorkspace().addSaveParticipant(plugin.getBundle().getSymbolicName(), fSaveParticipant);
+					}
+					catch (CoreException e) {
+						Logger.logException("Could not load previous save state", e);
+					}
+					if (savedState != null) {
+						try {
+							Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 						}
-					};
-					persister.setUser(false);
-					persister.schedule(2000);
+						finally {
+							savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
+						}
+					}
+					return Status.OK_STATUS;
 				}
-				//set up persister to listen to resource change events
-				ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPTranslatorPersister.getDefault());
-			}
-			catch (CoreException e) {
-				Logger.logException("Could not load previous save state", e);
-			}
+			};
+			persister.setUser(false);
+			persister.schedule(2000);
+			// set up persister to listen to resource change events
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPTranslatorPersister.getDefault());
 		}
 		
 		//init the JSP index
