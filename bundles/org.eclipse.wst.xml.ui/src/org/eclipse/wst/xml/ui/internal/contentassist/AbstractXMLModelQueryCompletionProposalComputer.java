@@ -440,7 +440,8 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 					if (aNode.getNodeName().startsWith(matchString)) {
 						IDOMNode aXMLNode = (IDOMNode) aNode;
 						CMElementDeclaration ed = getCMElementDeclaration(aNode);
-						if ((aXMLNode.getEndStructuredDocumentRegion() == null) && ((ed == null) || (ed.getContentType() != CMElementDeclaration.EMPTY))) {
+						//declaration must be valid for this computer to make proposal
+						if ((aXMLNode.getEndStructuredDocumentRegion() == null) && (ed == null || (validModelQueryNode(ed) && ed.getContentType() != CMElementDeclaration.EMPTY))) {
 							String replacementText = aNode.getNodeName();
 							String displayText = replacementText;
 							String proposedInfo = (ed != null) ? getAdditionalInfo(null, ed) : null;

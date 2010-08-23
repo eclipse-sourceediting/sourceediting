@@ -40,6 +40,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMElementDeclarationImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -146,8 +147,11 @@ public class HTMLTagsCompletionProposalComputer extends
 		} else if(node instanceof HTMLPropertyDeclaration) {
 			HTMLPropertyDeclaration propDec = (HTMLPropertyDeclaration)node;
 			isValid = !propDec.isJSP();
-		} else if (node instanceof CMAttributeDeclaration) {
+		} else if (node instanceof CMAttributeDeclaration || node instanceof CMElementDeclarationImpl) {
 			isValid = true;
+		} else if(node instanceof CMElementDeclaration) {
+			Boolean isXHTML = ((Boolean)node.getProperty(HTMLCMProperties.IS_XHTML));
+			isValid = isXHTML != null && isXHTML.booleanValue();
 		}
 		return isValid;
 	}
