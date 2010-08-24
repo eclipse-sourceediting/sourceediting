@@ -48,8 +48,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
@@ -305,7 +307,12 @@ public class XPathView extends ViewPart {
 	}
 
 	protected void xpathRecomputed(final NodeList nodeList) {
-		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+		if (getSite() == null) return;
+		Shell shell = getSite().getShell();
+		if (shell == null) return;
+		Display display = shell.getDisplay();
+		if (display == null) return;
+		display.asyncExec(new Runnable() {
 			public void run() {
 				Control refreshControl = treeViewer.getControl();
 				if ((refreshControl != null) && !refreshControl.isDisposed()) {
