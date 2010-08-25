@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.tasks.FileTaskScannerRegistryReader;
 import org.eclipse.wst.sse.core.internal.tasks.TaskTagPreferenceKeys;
@@ -234,7 +233,7 @@ class ExclusionsTab implements IPreferenceTab {
 	public Control createContents(Composite tabFolder) {
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		composite.setLayout(new GridLayout(2, true));
-		Text description = new Text(composite, SWT.READ_ONLY | SWT.SINGLE);
+		Label description = new Label(composite, SWT.NONE);
 		description.setText(SSEUIMessages.TaskTagExclusionTab_02);
 //		description.setBackground(composite.getBackground());
 
@@ -269,7 +268,7 @@ class ExclusionsTab implements IPreferenceTab {
 
 		new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
-		Text affectedTypesLabel = new Text(composite, SWT.READ_ONLY | SWT.SINGLE);
+		Label affectedTypesLabel = new Label(composite, SWT.NONE);
 		affectedTypesLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 //		affectedTypesLabel.setBackground(composite.getBackground());
 		affectedTypesLabel.setText(SSEUIMessages.TaskTagExclusionTab_03);

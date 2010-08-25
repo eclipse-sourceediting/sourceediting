@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -207,7 +207,7 @@ class MainTab implements IPreferenceTab {
 		composite.setLayout(new GridLayout(2, false));
 		fControl = composite;
 
-		Text description = new Text(composite, SWT.READ_ONLY | SWT.SINGLE);
+		Label description = new Label(composite, SWT.NONE);
 		description.setText(SSEUIMessages.TaskTagPreferenceTab_33); //$NON-NLS-1$
 //		description.setBackground(composite.getBackground());
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
