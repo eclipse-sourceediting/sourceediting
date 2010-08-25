@@ -478,7 +478,7 @@
               icon="icons/full/etool16/newdtd_wiz.gif"
               id="org.eclipse.wst.dtd.ui.newDTDFile"
               style="push"
-              tooltip="%DTD_New_context_type_Extension_Element.name">
+              tooltip="%DTD_New_File.tooltip">
              <parameter name="newWizardId" value="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard"/>
           <visibleWhen checkEnabled="false">
 			<with variable="activeWorkbenchWindow.activePerspective">

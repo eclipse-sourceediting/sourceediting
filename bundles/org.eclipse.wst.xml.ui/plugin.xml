@@ -1644,7 +1644,7 @@
 				icon="$nl$/icons/full/etool16/new_xml.gif"
 				id="org.eclipse.wst.xml.ui.newXMLFile"
 				style="push"
-				tooltip="%XML_New_context_type_Extension_Element.name">
+				tooltip="%XML_New_File.tooltip">
 			 <parameter name="newWizardId" value="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"/>
           <visibleWhen checkEnabled="false">
 			<with variable="activeWorkbenchWindow.activePerspective">
