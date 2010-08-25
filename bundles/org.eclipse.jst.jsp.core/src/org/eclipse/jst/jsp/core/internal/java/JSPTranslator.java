@@ -2980,10 +2980,15 @@ public class JSPTranslator implements Externalizable {
 			// or
 			// Type id = null; // if there is no classname or beanname
 			if ((type != null || className != null)) {
+				if (className != null)
+					className = decodeType(className);
+
 				if (type == null) {
 					type = className;
 					typeRegion = classnameRegion;
 				}
+				else
+					type = decodeType(type);
 
 				/* Now check the types (multiple of generics may be involved) */
 				List errorTypeNames = new ArrayList(2);
@@ -3012,6 +3017,33 @@ public class JSPTranslator implements Externalizable {
 			fUseBeansStack.push(container);
 			appendToBuffer("{", fUserCode, false, fCurrentNode); //$NON-NLS-1$ 
 		}
+	}
+
+	/**
+	 * Decodes type strings for XML-style JSPs
+	 * 
+	 * @param type the string to decode
+	 * @return the decoded string
+	 */
+	private String decodeType(String type) {
+		final int length = type.length();
+		final StringBuffer buffer = new StringBuffer(length);
+		for (int i = 0; i < length; i++) {
+			final char c = type.charAt(i);
+			if (c == '&') {
+				if (length > i + 3) {
+					final String code = type.substring(i + 1, i + 4);
+					final boolean isGt = "gt;".equals(code); //$NON-NLS-1$
+					if (isGt || "lt;".equals(code)) { //$NON-NLS-1$
+						i+=3;
+						buffer.append(isGt ? '>' : '<');
+						continue;
+					}
+				}
+			}
+			buffer.append(c);
+		}
+		return buffer.toString();
 	}
 
 	/**
