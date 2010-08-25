@@ -478,10 +478,11 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 			IDOMNode nodeAtOffset, IDOMNode node, CompletionProposalInvocationContext context) {
 		
 		int documentPosition = context.getInvocationOffset();
-		
+		ITextViewer viewer = context.getViewer();
 		ContentAssistRequest contentAssistRequest = null;
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
-		if (documentPosition < sdRegion.getStartOffset(completionRegion)) {
+		// if the attribute name is selected, replace it instead of creating a new attribute
+		if (documentPosition <= sdRegion.getStartOffset(completionRegion) && (viewer != null && viewer.getSelectedRange().y != (sdRegion.getEndOffset(completionRegion) - sdRegion.getStartOffset(completionRegion)))) {
 			// setup to insert new attributes
 			contentAssistRequest = new ContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, documentPosition, 0, matchString);
 		}
