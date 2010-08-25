@@ -1099,6 +1099,10 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 		}
 		else if (parent.getNodeType() == Node.DOCUMENT_NODE) {
 			List childElements = getAvailableRootChildren((Document) parent, childPosition);
+			if ( childElements.size() == 0) {
+				//No doctype available , treat it as empty document
+				addEmptyDocumentProposals(contentAssistRequest, context);
+			}
 			for (int i = 0; i < childElements.size(); i++) {
 				CMNode ed = (CMNode) childElements.get(i);
 				if (ed == null) {
