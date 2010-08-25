@@ -133,20 +133,25 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 			addModelQueryAttributeDeclarations(node, elementDecl,attributes);
 
 			String matchString = contentAssistRequest.getMatchString();
-
+			int cursorOffset = context.getInvocationOffset();
 			// check whether an attribute really exists for the replacement
 			// offsets AND if it possesses a value
 			boolean attrAtLocationHasValue = false;
+			boolean proposalNeedsSpace = false;
 			NamedNodeMap attrs = node.getAttributes();
 			for (int i = 0; i < attrs.getLength(); i++) {
 				AttrImpl existingAttr = (AttrImpl) attrs.item(i);
 				ITextRegion name = existingAttr.getNameRegion();
-
+				
 				if ((sdRegion.getStartOffset(name) <= contentAssistRequest.getReplacementBeginPosition()) &&
 						(sdRegion.getStartOffset(name) + name.getLength() >= contentAssistRequest.getReplacementBeginPosition() + contentAssistRequest.getReplacementLength()) &&
 						(existingAttr.getValueRegion() != null)) {
-					
-					attrAtLocationHasValue = true;
+					// selected region is attribute name
+					if (cursorOffset >= sdRegion.getStartOffset(name) && contentAssistRequest.getReplacementLength() != 0)
+						attrAtLocationHasValue = true;
+					// propose new attribute, cursor is at the start of another attribute name
+					else if (cursorOffset == sdRegion.getStartOffset(name))
+						proposalNeedsSpace = true;
 					break;
 				}
 			}
@@ -170,7 +175,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						// matches against the full name of an existing Attr
 						showAttribute = showAttribute && ((attr == null) ||
 								((nameRegion != null) &&
-										(sdRegion.getStartOffset(nameRegion) <=
+										(sdRegion.getStartOffset(nameRegion) <
 											contentAssistRequest.getReplacementBeginPosition()) &&
 										(sdRegion.getStartOffset(nameRegion) + nameRegion.getLength() >=
 											(contentAssistRequest.getReplacementBeginPosition() +
@@ -213,6 +218,8 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 								else {
 									proposedText = getRequiredText(node, attrDecl);
 								}
+								if (proposalNeedsSpace)
+									proposedText += " "; //$NON-NLS-1$
 								proposal = new CustomCompletionProposal(proposedText,
 										contentAssistRequest.getReplacementBeginPosition(),
 										contentAssistRequest.getReplacementLength(),
