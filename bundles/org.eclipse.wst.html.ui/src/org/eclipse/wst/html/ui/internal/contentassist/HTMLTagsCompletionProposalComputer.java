@@ -33,6 +33,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -46,6 +47,7 @@ import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.AttributeContextInformationPresenter;
@@ -249,9 +251,23 @@ public class HTMLTagsCompletionProposalComputer extends
 
 							String proposedText = proposedTextBuffer.toString();
 							String requiredName = getContentGenerator().getRequiredName(doc, htmlDecl);
-
+							
+							IStructuredDocumentRegion region = contentAssistRequest.getDocumentRegion();
+							if (region != null) {
+								if (region.getFirstRegion() != null && 
+										region.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
+									//in order to differentiate between content assist on 
+									//completely empty document and the one with xml open tag
+									proposedText = proposedText.substring(1);
+								}
+							}
+							if (!beginsWith(proposedText, contentAssistRequest.getMatchString())) {
+								return;
+							}
+							int cursorAdjustment = getCursorPositionForProposedText(proposedText);
 							CustomCompletionProposal proposal = new CustomCompletionProposal(
-									proposedText, context.getInvocationOffset(), 0, requiredName.length() + 2, 
+									proposedText, contentAssistRequest.getReplacementBeginPosition(),
+									contentAssistRequest.getReplacementLength(), cursorAdjustment, 
 									HTMLEditorPluginImageHelper.getInstance().getImage(HTMLEditorPluginImages.IMG_OBJ_TAG_GENERIC),
 									requiredName, null, null, XMLRelevanceConstants.R_TAG_NAME);
 							contentAssistRequest.addProposal(proposal);
