@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -364,6 +364,12 @@ public interface IStructuredModel extends IAdaptable {
 
 	void save(OutputStream outputStream) throws UnsupportedEncodingException, IOException, CoreException;
 
+	/**
+	 * Sets the base location of this model to the new value, also updating
+	 * the value in its URI resolution helper if one is present.
+	 * 
+	 * @param newBaseLocation
+	 */
 	void setBaseLocation(String newBaseLocation);
 
 	public void setDirtyState(boolean dirtyState);
