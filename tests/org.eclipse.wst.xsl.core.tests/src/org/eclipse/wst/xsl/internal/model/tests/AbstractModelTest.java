@@ -12,6 +12,7 @@
 package org.eclipse.wst.xsl.internal.model.tests;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.tests.XSLCoreTestsPlugin;
+import org.osgi.framework.Bundle;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -69,32 +71,42 @@ public abstract class AbstractModelTest extends TestCase
 	private static final String TEST_PROJECT_NAME = "testproject";
 
 	@Override
-	protected void setUp() throws Exception
-	{
+	protected void setUp() throws Exception {
 		super.setUp();
-		if (!fTestProjectInitialized)
-		{
+		if (!fTestProjectInitialized) {
 			getAndCreateProject();
 
-			// URL installLocation = Platform.getBundle(XSLCoreTestsPlugin.PLUGIN_ID).getEntry("/");
-			Enumeration<String> e = Platform.getBundle(XSLCoreTestsPlugin.PLUGIN_ID).getEntryPaths("/projectfiles");// (path, filePattern, recurse)("/projectfiles", null, true);
-			while (e.hasMoreElements())
-			{
+			Bundle coreBundle = Platform
+					.getBundle(XSLCoreTestsPlugin.PLUGIN_ID);
+			Enumeration<String> e = coreBundle.getEntryPaths("/projectfiles");
+			while (e.hasMoreElements()) {
 				String path = e.nextElement();
-				URL url = Platform.getBundle(XSLCoreTestsPlugin.PLUGIN_ID).getEntry(path);
-				if (!url.getFile().endsWith("/"))
-				{
+				URL url = coreBundle.getEntry(path);
+				if (!url.getFile().endsWith("/")) {
+					String relativePath = path;
 					url = FileLocator.resolve(url);
 					path = path.substring("projectfiles".length());
 					IFile destFile = fTestProject.getFile(path);
-					System.out.println(destFile.getLocation()+" --> "+url.toExternalForm());
-					destFile.createLink(url.toURI(), IResource.REPLACE, new NullProgressMonitor());
+					if (url.toExternalForm().startsWith("jar:file")) {
+						InputStream source = FileLocator.openStream(coreBundle,
+								new Path(relativePath), false);
+						if (destFile.exists()) {
+							destFile.delete(true, new NullProgressMonitor());
+						}
+						destFile.create(source, true, new NullProgressMonitor());
+					} else {
+						// if resource is not compressed, link
+						destFile.createLink(url.toURI(), IResource.REPLACE,
+								new NullProgressMonitor());
+					}
 				}
 			}
-			fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
-			fTestProjectInitialized = true;
 		}
+
+		fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
+		fTestProjectInitialized = true;
 	}
+	
 	
 	@Override
 	protected void tearDown() throws Exception {
