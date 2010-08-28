@@ -56,7 +56,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 	public void testXHTMLNamespacePropsoalAvailable() throws Exception {
 		fileName = "TestResultPrefixesEmpty.xsl";
 		int column = 29;
-		int line = 2;
+		int line = 3;
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 		IStructuredDocument document = (IStructuredDocument) sourceViewer
@@ -72,7 +72,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 	public void testAllPropsoalAvailable() throws Exception {
 		fileName = "TestResultPrefixesEmpty.xsl";
 		int column = 29;
-		int line = 2;
+		int line = 3;
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 		IStructuredDocument document = (IStructuredDocument) sourceViewer
@@ -103,7 +103,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 	public void testTestProposal() throws Exception {
 		fileName = "TestResultPrefixesWithXhtml.xsl";
 		int column = 35;
-		int line = 2;
+		int line = 3;
 		ICompletionProposal[] proposals = setupProposals(column, line);
 		assertNotNull("Did not find proposals.", proposals);
 		assertFalse("Proposals returned more than one.", proposals.length > 1);

@@ -46,12 +46,10 @@ public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 		IStructuredDocument document = (IStructuredDocument) sourceViewer
 				.getDocument();
 		// Column is off by one when calculating for the offset position
-		int column = 16;
-		int line = 5;
+		int column = 13;
+		int line = 6;
 
-		int offset = document.getLineOffset(line) + column;
-
-		ICompletionProposal[] proposals = getProposals(offset);
+		ICompletionProposal[] proposals = getProposals(line, column);
 		assertNotNull("Did not find proposals.", proposals);
 
 		String proposalName = "";
@@ -72,12 +70,10 @@ public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 		IStructuredDocument document = (IStructuredDocument) sourceViewer
 				.getDocument();
 		// Column is off by one when calculating for the offset position
-		int column = 16;
-		int line = 5;
+		int column = 13;
+		int line = 6;
 
-		int offset = document.getLineOffset(line) + column;
-
-		ICompletionProposal[] proposals = getProposals(offset);
+		ICompletionProposal[] proposals = getProposals(line, column);
 		assertNotNull("Did not find proposals.", proposals);
 
 		String proposalName = "";

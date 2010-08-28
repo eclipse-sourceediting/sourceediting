@@ -27,7 +27,7 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getProposals(5, 24);
+		ICompletionProposal[] proposals = getProposals(5, 29);
 		assertNotNull("Did not find proposals.", proposals);
 
 		for (int i = 0; i < proposals.length; i++) {
@@ -75,7 +75,7 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getProposals(4, 28);
+		ICompletionProposal[] proposals = getProposals(5, 25);
 		assertNotNull("Did not find proposals.", proposals);
 
 		for (int i = 0; i < proposals.length; i++) {
@@ -91,7 +91,7 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getProposals(4, 12);
+		ICompletionProposal[] proposals = getProposals(5, 16);
 		assertNotNull("Did not find proposals.", proposals);
 
 		for (int i = 0; i < proposals.length; i++) {

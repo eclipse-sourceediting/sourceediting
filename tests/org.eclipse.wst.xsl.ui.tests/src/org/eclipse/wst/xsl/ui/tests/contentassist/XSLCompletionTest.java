@@ -25,36 +25,36 @@ import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
  */
 public class XSLCompletionTest extends AbstractSourceViewerTest {
 
-	public void testGetNodeAtLine15() throws Exception {
+	public void testGetNodeAtLine10() throws Exception {
 
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
-				sourceViewer.getDocument().getLineOffset(14) + 1);
+				sourceViewer.getDocument().getLineOffset(9) + 1);
 		assertEquals("Wrong node name returned:", "xsl:stylesheet", node
 				.getNodeName());
 	}
 
-	public void testGetNodeAtLine16() throws Exception {
+	public void testGetNodeAtLine12() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
-				sourceViewer.getDocument().getLineOffset(15) + 11);
+				sourceViewer.getDocument().getLineOffset(11) + 11);
 		assertEquals("Wrong node name returned:", "xsl:template", node
 				.getNodeName());
 	}
 
-	public void testGetNodeAtLine17() throws Exception {
+	public void testGetNodeAtLine13() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
-				sourceViewer.getDocument().getLineOffset(16) + 14);
+				sourceViewer.getDocument().getLineOffset(12) + 14);
 		assertEquals("Wrong node name returned:", "xsl:param", node
 				.getNodeName());
 	}
@@ -64,7 +64,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getProposals(838);
+		ICompletionProposal[] proposals = getProposals(14, 42);
 
 		assertTrue(proposals.length > 1);
 		ICompletionProposal proposal = proposals[0];
@@ -78,11 +78,11 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		int offset = sourceViewer.getDocument().getLineOffset(18) + 44;
+		int offset = sourceViewer.getDocument().getLineOffset(14) + 42;
 		String s = sourceViewer.getDocument().get(offset - 1, 6);
 		assertEquals("number", s);
 
-		ICompletionProposal[] proposals = getProposals(18, 43);
+		ICompletionProposal[] proposals = getProposals(14, 41);
 
 		assertTrue(proposals.length > 1);
 		ICompletionProposal proposal = proposals[3];
@@ -100,7 +100,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		int offset = sourceViewer.getDocument().getLineOffset(18) + 44;
+		int offset = sourceViewer.getDocument().getLineOffset(14) + 42;
 		String s = sourceViewer.getDocument().get(offset - 9, 9);
 		assertEquals("select=\"n", s);
 
@@ -115,7 +115,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getXMLProposals(37, 18);
+		ICompletionProposal[] proposals = getXMLProposals(58, 60);
 		assertTrue(proposals.length >= 1);
 		ICompletionProposal proposal = proposals[0];
 		assertTrue("Wrong attribute proposal returned:", proposal
@@ -127,7 +127,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getXMLProposals(31, 58);
+		ICompletionProposal[] proposals = getXMLProposals(51, 20);
 		assertTrue(proposals.length >= 2);
 
 		ICompletionProposal proposal = proposals[1];
@@ -153,7 +153,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getProposals(4, 25);
+		ICompletionProposal[] proposals = getProposals(7, 29);
 		assertTrue("Did not find any proposals.", proposals.length > 0);
 		CustomCompletionProposal testprop = null;
 		for (int cnt = 0; cnt < proposals.length; cnt++) {
@@ -165,7 +165,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		if (testprop == null) {
 			fail("Didn't find the $test proposal");
 		}
-		int startoffset = calculateOffset(4, 24);
+		int startoffset = calculateOffset(7, 28);
 		if (testprop.getReplacementOffset() != startoffset) {
 			fail("Replacement Offset position worng expected " + startoffset
 					+ "but received " + testprop.getReplacementOffset());

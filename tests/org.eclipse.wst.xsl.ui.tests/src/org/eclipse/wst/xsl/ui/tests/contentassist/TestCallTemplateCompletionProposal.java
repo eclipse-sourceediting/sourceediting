@@ -23,7 +23,7 @@ public class TestCallTemplateCompletionProposal extends
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getProposals(16, 27);
+		ICompletionProposal[] proposals = getProposals(12, 31);
 
 		assertNotNull("Did not find proposals.", proposals);
 	}
@@ -33,7 +33,7 @@ public class TestCallTemplateCompletionProposal extends
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
-		ICompletionProposal[] proposals = getProposals(16, 27);
+		ICompletionProposal[] proposals = getProposals(12, 31);
 		assertNotNull("Did not find proposals.", proposals);
 		assertTrue("Empty proposals returned.", proposals.length > 0);
 		assertEquals("Wrong proposal found.", "long_date", proposals[0]

@@ -34,13 +34,13 @@ public class TestTemplateModeCompletionProposal extends
 		IStructuredDocument document = (IStructuredDocument) sourceViewer
 				.getDocument();
 		// Line is off by one when calculating for the offset position
-		int chars = 36;
-		int line = 16;
+		int chars = 35;
+		int line = 17;
 
 			int offset = document.getLineOffset(line) + chars;
 			// assertEquals("Wrong offset returned", 471, offset);
 
-			ICompletionProposal[] proposals = getProposals(offset);
+			ICompletionProposal[] proposals = getProposals(line, chars);
 			assertProposalExists("mode1", proposals);
 			assertProposalExists("mode2", proposals);
 			assertProposalExists("mode3", proposals);

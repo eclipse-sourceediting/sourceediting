@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ====================================================================== 
-     Sep 6, 2008 5:28:40 PM                                                        
-
-     ProjectZipFile
-     
-     ============================ -->
+   Sep 6, 2008 5:28:40 PM ProjectZipFile ============================ -->
 <project name="ProjectZipFile" default="default">
-	
-    <target name="default" description="description">
-    	<zip destfile="projectfiles.zip" compress="true" update="true" >
-    		<zipfileset dir=".">
-    		   <include name="*.xsl"/>
-    		</zipfileset>
-    	</zip>
-    </target>
+
+   <target name="default" description="description">
+      <zip destfile="projectfiles.zip" compress="true" update="true">
+         <zipfileset dir=".">
+            <include name="*.xsl" />
+         </zipfileset>
+      </zip>
+   </target>
 
 </project>
