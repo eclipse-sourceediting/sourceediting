@@ -118,8 +118,9 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		ICompletionProposal[] proposals = getXMLProposals(58, 60);
 		assertTrue(proposals.length >= 1);
 		ICompletionProposal proposal = proposals[0];
-		assertTrue("Wrong attribute proposal returned:", proposal
-				.getDisplayString().contains("disable-output-escaping"));
+		assertEquals("Wrong attribute proposal returned:", "disable-output-escaping=\"no\"", proposal.getDisplayString());
+//		assertTrue("Wrong attribute proposal returned:", proposal
+//				.getDisplayString().contains("disable-output-escaping"));
 	}
 
 	public void testXSLElementProposalsAvailable() throws Exception {
