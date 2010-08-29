@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsl.launching.tests.testcase;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.internal.ui.launchConfigurations.LaunchShortcutExtension;
@@ -18,33 +19,31 @@ import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.tests.AbstractLaunchingTest;
 import org.eclipse.wst.xsl.launching.tests.MockXSLLaunchShortCut;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests the capabilities of launch shortcuts from the <code>LaunchShortcuts</code> extension point
  * 
- * @since 1.0
+ * @since 1.2
  */
 public class LaunchShortcutTests extends AbstractLaunchingTest {
 
 	
-	/**
-	 * Constructor
-	 * @param name
-	 */
-	public LaunchShortcutTests(String name) {
-		super(name);
-	}
-	
+	@Before
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		super.setUp();
 		IPath path = folder.getFullPath();
 		copyConfigurationToWorkspace(path, "SimpleTransform.launch");
 	}
 	
+	@After
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		env.dispose();
 		super.tearDown();
 	}
@@ -52,11 +51,13 @@ public class LaunchShortcutTests extends AbstractLaunchingTest {
 	/**
 	 * Tests that the short cut is defined via the extension point.
 	 */
+	@Test
 	public void testShortcutExtensionPointConfigured() {
 		LaunchShortcutExtension ext = getLaunchShortcutExtension(XSL_LAUNCH_SHORTCUT_ID);
 		assertNotNull("XSLT stylesheet shortcut not found", ext); //$NON-NLS-1$
 	}
 	
+	@Test
 	public void testXSLLaunchConfigTypeDefined() {
 		MockXSLLaunchShortCut shortCut = new MockXSLLaunchShortCut();
 
@@ -67,6 +68,7 @@ public class LaunchShortcutTests extends AbstractLaunchingTest {
 	/**
 	 * Tests that the local java app shortcut does not support some fake type id 'foo'
 	 */
+	@Test
 	public void testAssociatedConfigurationTypeNotSupported() {
 		LaunchShortcutExtension ext = getLaunchShortcutExtension(XSL_LAUNCH_SHORTCUT_ID);
 		assertNotNull("XSLT shortcut not found", ext); //$NON-NLS-1$

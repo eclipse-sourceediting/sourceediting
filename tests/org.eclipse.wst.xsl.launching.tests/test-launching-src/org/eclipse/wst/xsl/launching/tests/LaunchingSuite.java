@@ -16,7 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.xsl.launching.tests.testcase.LaunchShortcutTests;
 import org.eclipse.wst.xsl.launching.tests.testcase.ResultRunnableTest;
-import org.eclipse.wst.xsl.launching.tests.testcase.TestInputFileBlock;
+import org.eclipse.wst.xsl.launching.tests.testcase.InputFileBlockTest;
 import org.eclipse.wst.xsl.launching.tests.testcase.XSLLaunchingTests;
 
 
@@ -34,7 +34,7 @@ public class LaunchingSuite extends TestSuite {
 	public LaunchingSuite() {
 		super("XSL Launching Test Suite");
 		addTest(new TestSuite(XSLLaunchingTests.class));
-		addTest(new TestSuite(TestInputFileBlock.class));
+		addTest(new TestSuite(InputFileBlockTest.class));
 		addTest(new TestSuite(LaunchShortcutTests.class));
 		addTest(new TestSuite(ResultRunnableTest.class));
 	}

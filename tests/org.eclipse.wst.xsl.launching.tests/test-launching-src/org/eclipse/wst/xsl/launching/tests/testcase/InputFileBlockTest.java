@@ -10,11 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching.tests.testcase;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 
-public class TestInputFileBlock extends TestCase {
+public class InputFileBlockTest {
 	
+	@Test
 	public void testXMLFileExtensions() throws Exception {
 		MockInputFileBlock fileBlock = new MockInputFileBlock(null);
 		String[] fileExtensions = fileBlock.getAvailableFileExtensions();

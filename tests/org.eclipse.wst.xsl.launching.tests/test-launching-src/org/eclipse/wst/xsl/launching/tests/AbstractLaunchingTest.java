@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009,2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,13 @@
  * 
  * Contributors:
  *     David Carver (STAR) - bug 262046 - initial API and implementation
+ *     David Carver (Intalio)-  upgraded to junit 4 during maven3/tycho migration
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.launching.tests;
 
 import java.io.*;
+import static org.junit.Assert.*;
 import java.net.URL;
 import java.util.List;
 
@@ -24,11 +26,13 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
 import org.eclipse.debug.internal.ui.launchConfigurations.LaunchShortcutExtension;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
+import org.junit.After;
+import org.junit.Before;
 import org.w3c.dom.Document;
 
 import junit.framework.TestCase;
 
-public abstract class AbstractLaunchingTest extends TestCase {
+public abstract class AbstractLaunchingTest {
 	private static final String XSL_TEST_PROJECT = "XSLTestProject";
 	protected static final String XSL_LAUNCH_SHORTCUT_ID = "org.eclipse.wst.xsl.debug.ui.launchshortcut";
 	protected static final String LAUNCHCONFIGS = "launchConfigs";
@@ -40,13 +44,8 @@ public abstract class AbstractLaunchingTest extends TestCase {
 		super();
 	}
 
-	public AbstractLaunchingTest(String name) {
-		super(name);
-	}
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		createProject();
 		createEmptyLaunchConfigsFolder();
 		deleteExistingLaunchConfigs();
@@ -74,9 +73,8 @@ public abstract class AbstractLaunchingTest extends TestCase {
 		}
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		testProject.delete(true, new NullProgressMonitor());
 	}
 

@@ -13,6 +13,7 @@
 package org.eclipse.wst.xsl.launching.tests.testcase;
 
 import java.io.*;
+import static org.junit.Assert.*;
 import javax.xml.parsers.*;
 
 import org.eclipse.core.resources.*;
@@ -21,14 +22,18 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 import org.eclipse.wst.xsl.launching.tests.AbstractLaunchingTest;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class XSLLaunchingTests extends AbstractLaunchingTest {
 
 	private static final String TRANSFORM_COMMENTS = "TransformComments";
 	private static final String SIMPLE_TRANSFORM = "SimpleTransform";
 
+	@Before
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 
 		IPath path = folder.getFullPath();
@@ -41,12 +46,14 @@ public class XSLLaunchingTests extends AbstractLaunchingTest {
 		}
 	}
 
+	@After
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		env.dispose();
 		super.tearDown();
 	}
 	
+	@Test
 	public synchronized void testSimpleTransformation() throws Exception {
 		IPath folder = testProject.getFullPath();
 		env.addFileFromResource(folder, "1-input.xml", "1-input.xml");
@@ -69,6 +76,7 @@ public class XSLLaunchingTests extends AbstractLaunchingTest {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
+	@Test
 	public synchronized void testTransformComments() throws Exception {
 		IPath folder = testProject.getFullPath();
 		env.addFileFromResource(folder, "testCommentInput.xml",
