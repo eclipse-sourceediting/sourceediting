@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,20 +15,19 @@
  *     Jesper Steen Moller - bug 262765 - fix type tests
  *     David Carver (STAR) - bug 262765 - fixed abs value tests.
  *     Jesper Steen Moller - bug 281028 - fixed division of zero (no, not by)
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Iterator;
 
 /**
  * A representation of the Decimal datatype
@@ -43,7 +42,7 @@ public class XSDecimal extends NumericType {
 	 * Initiates a representation of 0.0
 	 */
 	public XSDecimal() {
-		this(BigDecimal.ZERO);
+		this(BigDecimal.valueOf(0));
 	}
 
 	/**
@@ -57,7 +56,8 @@ public class XSDecimal extends NumericType {
 	}
 	
 	public XSDecimal(String x) {
-		_value = new BigDecimal(x, MathContext.DECIMAL128);
+		//_value = new BigDecimal(x, MathContext.DECIMAL128);
+		_value = new BigDecimal(x);
 	}
 
 	/**
@@ -65,7 +65,6 @@ public class XSDecimal extends NumericType {
 	 * 
 	 * @return "xs:decimal" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_DECIMAL;
 	}
@@ -75,7 +74,6 @@ public class XSDecimal extends NumericType {
 	 * 
 	 * @return "decimal" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "decimal";
 	}
@@ -85,14 +83,15 @@ public class XSDecimal extends NumericType {
 	 * 
 	 * @return String representation of the Decimal value stored
 	 */
-	@Override
 	public String string_value() {
 		
 		if (zero()) {
 			return "0";
 		}
 		
-		_value = _value.stripTrailingZeros();
+		// strip trailing zeros
+		_value = new BigDecimal((_value.toString()).replaceFirst("0*", ""));
+		
 		return format.xpathFormat(_value);
 	}
 
@@ -101,9 +100,8 @@ public class XSDecimal extends NumericType {
 	 * 
 	 * @return True if this XSDecimal represents 0. False otherwise
 	 */
-	@Override
 	public boolean zero() {
-		return (_value.compareTo(BigDecimal.valueOf(0.0)) == 0);
+		return (_value.compareTo(new BigDecimal(0.0)) == 0);
 	}
 
 	/**
@@ -115,7 +113,6 @@ public class XSDecimal extends NumericType {
 	 * @throws DynamicError
 	 * @return A new result sequence consisting of the decimal number supplied.
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -130,7 +127,7 @@ public class XSDecimal extends NumericType {
 			throw DynamicError.invalidType();
 		}
 		
-		if (aat.string_value().contains("-INF")) {
+		if (aat.string_value().indexOf("-INF") != -1) {
 			throw DynamicError.cant_cast(null);
 		}
 		
@@ -170,7 +167,8 @@ public class XSDecimal extends NumericType {
 			return true;
 		}		
 		
-		if (aat.string_value().contains("E") || aat.string_value().contains("e") && !(aat instanceof XSBoolean)) {
+		if ((aat.string_value().indexOf("E") != -1) || 
+			(aat.string_value().indexOf("e") != -1)) {
 			return false;
 		}
 
@@ -184,9 +182,9 @@ public class XSDecimal extends NumericType {
 	private XSDecimal castDecimal(AnyType aat) {
 		if (aat instanceof XSBoolean) {
 			if (aat.string_value().equals("true")) {
-				return new XSDecimal(BigDecimal.ONE);
+				return new XSDecimal(new BigDecimal("1"));
 			} else {
-				return new XSDecimal(BigDecimal.ZERO);
+				return new XSDecimal(new BigDecimal("0"));
 			}
 		}
 		return new XSDecimal(aat.string_value());
@@ -198,7 +196,6 @@ public class XSDecimal extends NumericType {
 	 * @return The actual value of the number stored
 	 * @deprecated Use getValue() instead.
 	 */
-	@Deprecated
 	public double double_value() {
 		return _value.doubleValue();
 	}
@@ -214,7 +211,7 @@ public class XSDecimal extends NumericType {
 	 *            Number to be stored
 	 */
 	public void set_double(double x) {
-		_value = BigDecimal.valueOf(x);
+		_value = new BigDecimal(x);
 	}
 
 	// comparisons
@@ -377,7 +374,7 @@ public class XSDecimal extends NumericType {
 		if (val.zero()) {
 			throw DynamicError.div_zero(null);
 		}
-		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_EVEN);
+		BigDecimal result = getValue().divide(val.getValue(), 18, BigDecimal.ROUND_HALF_EVEN);
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 
@@ -418,16 +415,28 @@ public class XSDecimal extends NumericType {
 		ResultSequence carg = convertResultSequence(arg);
 
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
-		BigDecimal result = _value.remainder(val.getValue());
+		
+		// BigDecimal result = _value.remainder(val.getValue());
+		BigDecimal result = remainder(_value, val.getValue()); 
+		
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 
+	public static BigDecimal remainder(BigDecimal value, BigDecimal divisor) {
+		// return value.remainder(divisor);
+		
+		// appx as of now. JDK 1.4 doesn't support BigDecimal.remainder(..)
+		BigDecimal dividend = value.divide(divisor, BigDecimal.ROUND_DOWN);
+		BigDecimal ceilDividend = new BigDecimal(dividend.toBigInteger());
+		
+		return value.subtract(ceilDividend.multiply(divisor)); 
+	}
+	
 	/**
 	 * Negation of the number stored
 	 * 
 	 * @return A XSDecimal representing the negation of this XSDecimal
 	 */
-	@Override
 	public ResultSequence unary_minus() {
 		BigDecimal result = _value.negate();
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
@@ -439,7 +448,6 @@ public class XSDecimal extends NumericType {
 	 * 
 	 * @return A XSDecimal representing the absolute value of the number stored
 	 */
-	@Override
 	public NumericType abs() {
 		return new XSDecimal(_value.abs());
 	}
@@ -450,9 +458,8 @@ public class XSDecimal extends NumericType {
 	 * @return A XSDecimal representing the smallest integer greater than the
 	 *         number stored
 	 */
-	@Override
 	public NumericType ceiling() {
-		BigDecimal ceiling = _value.setScale(0, RoundingMode.CEILING);
+		BigDecimal ceiling = _value.setScale(0, BigDecimal.ROUND_CEILING);
 		return new XSDecimal(ceiling);
 	}
 
@@ -462,9 +469,8 @@ public class XSDecimal extends NumericType {
 	 * @return A XSDecimal representing the largest integer smaller than the
 	 *         number stored
 	 */
-	@Override
 	public NumericType floor() {
-		BigDecimal floor = _value.setScale(0, RoundingMode.FLOOR);
+		BigDecimal floor = _value.setScale(0, BigDecimal.ROUND_FLOOR);
 		return new XSDecimal(floor);
 	}
 
@@ -473,9 +479,8 @@ public class XSDecimal extends NumericType {
 	 * 
 	 * @return A XSDecimal representing the closest long of the number stored.
 	 */
-	@Override
 	public NumericType round() {
-		BigDecimal round = _value.setScale(0, RoundingMode.UP);
+		BigDecimal round = _value.setScale(0, BigDecimal.ROUND_UP);
 		return new XSDecimal(round);
 	}
 
@@ -484,7 +489,6 @@ public class XSDecimal extends NumericType {
 	 * 
 	 * @return A XSDecimal representing the closest long of the number stored.
 	 */
-	@Override
 	public NumericType round_half_to_even() {
 		return round_half_to_even(0);
 	}
@@ -495,9 +499,8 @@ public class XSDecimal extends NumericType {
 	 * @param precision An integer precision 
 	 * @return A XSDecimal representing the closest long of the number stored.
 	 */
-	@Override
 	public NumericType round_half_to_even(int precision) {
-		BigDecimal round = _value.setScale(precision, RoundingMode.HALF_EVEN);
+		BigDecimal round = _value.setScale(precision, BigDecimal.ROUND_HALF_EVEN);
 		return new XSDecimal(round);
 	}
 }
