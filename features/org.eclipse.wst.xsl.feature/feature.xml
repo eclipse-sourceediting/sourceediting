@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xsl.feature"
       label="%featureName"
-      version="1.1.100.qualifier"
+      version="1.2.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.wst.xsl">
 
@@ -21,6 +21,10 @@
    <includes
          id="org.eclipse.wst.xml.xpath2.processor.feature"
          version="0.0.0"/>
+
+   <requires>
+      <import feature="org.eclipse.wst.xml_ui.feature" version="3.1.0" match="greaterOrEqual"/>
+   </requires>
 
    <plugin
          id="org.eclipse.wst.xsl.core"
