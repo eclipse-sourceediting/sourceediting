@@ -54,7 +54,7 @@ public class XSLLaunchingTests extends AbstractLaunchingTest {
 	}
 	
 	@Test
-	public synchronized void testSimpleTransformation() throws Exception {
+	public void testSimpleTransformation() throws Exception {
 		IPath folder = testProject.getFullPath();
 		env.addFileFromResource(folder, "1-input.xml", "1-input.xml");
 		env.addFileFromResource(folder, "1-transform.xsl", "1-transform.xsl");
@@ -77,7 +77,7 @@ public class XSLLaunchingTests extends AbstractLaunchingTest {
 	 * @throws IOException
 	 */
 	@Test
-	public synchronized void testTransformComments() throws Exception {
+	public void testTransformComments() throws Exception {
 		IPath folder = testProject.getFullPath();
 		env.addFileFromResource(folder, "testCommentInput.xml",
 				"testCommentInput.xml");
