@@ -43,8 +43,7 @@ public class EXSLTCommonContentAssistTest extends AbstractSourceViewerTest {
 		
 	}
 
-	@Ignore @Test
-	//FIXME: fails when run under maven3/tycho
+	@Test
 	public void testDocumentElementPropsoalAvailable() throws Exception {
 		fileName = "commonElements.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
