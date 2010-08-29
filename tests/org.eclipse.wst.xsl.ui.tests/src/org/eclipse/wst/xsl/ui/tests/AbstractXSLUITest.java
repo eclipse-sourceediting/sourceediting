@@ -72,6 +72,7 @@ public abstract class AbstractXSLUITest extends TestCase {
 						destFile.delete(true, new NullProgressMonitor());
 					}
 					destFile.create(source, true, new NullProgressMonitor());
+					source.close();
 				} else {
 					// if resource is not compressed, link
 					destFile.createLink(url.toURI(), IResource.REPLACE,
