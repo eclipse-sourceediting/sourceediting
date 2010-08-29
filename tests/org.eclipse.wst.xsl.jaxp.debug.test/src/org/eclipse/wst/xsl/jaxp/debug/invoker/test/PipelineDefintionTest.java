@@ -12,28 +12,32 @@ package org.eclipse.wst.xsl.jaxp.debug.invoker.test;
 
 import java.util.List;
 
-import org.apache.xerces.jaxp.SAXParserImpl.JAXPSAXParser;
+
 import org.eclipse.wst.xsl.jaxp.debug.invoker.PipelineDefinition;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.TransformDefinition;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.TypedValue;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.internal.JAXPSAXProcessorInvoker;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 
-import junit.framework.TestCase;
-
-public class PipelineDefintionTest extends TestCase {
+public class PipelineDefintionTest {
 	PipelineDefinition pldef = null;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		pldef = new PipelineDefinition();
 	}
 	
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		pldef = null;
 	}
 	
+	@Test
 	public void testAddTransformDefinition() throws Exception {
 		setupTransformDefinition();
 		List<TransformDefinition> tdefs = pldef.getTransformDefs();
@@ -47,6 +51,7 @@ public class PipelineDefintionTest extends TestCase {
 		return tdef;
 	}
 	
+	@Test
 	public void testRemoveTransformDefintion() throws Exception {
 		TransformDefinition tdef = setupTransformDefinition();
 		assertEquals(1, pldef.getTransformDefs().size());
@@ -54,6 +59,7 @@ public class PipelineDefintionTest extends TestCase {
 		assertEquals(0, pldef.getTransformDefs().size());
 	}
 	
+	@Test
 	public void testAddAttribute() throws Exception {
 		setupAttribute();
 		assertEquals(1, pldef.getAttributes().size());
@@ -65,6 +71,7 @@ public class PipelineDefintionTest extends TestCase {
 		return attr;
 	}
 	
+	@Test
 	public void testRemoveAttribute() throws Exception {
 		TypedValue attr = setupAttribute();
 		pldef.addAttribute(attr);
@@ -73,6 +80,7 @@ public class PipelineDefintionTest extends TestCase {
 		assertEquals(0, pldef.getAttributes().size());
 	}
 	
+	@Test
 	public void testConfigureInvoker() throws Exception {
 		JAXPSAXProcessorInvoker invoker = new JAXPSAXProcessorInvoker();
 		pldef.configure(invoker);

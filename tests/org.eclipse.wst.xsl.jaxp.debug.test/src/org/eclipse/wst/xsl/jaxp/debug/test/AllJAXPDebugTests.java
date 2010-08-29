@@ -3,20 +3,12 @@ package org.eclipse.wst.xsl.jaxp.debug.test;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.test.PipelineDefintionTest;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.test.TestJAXPProcessorInvoker;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.test.TransformDefinitonTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+@RunWith(Suite.class)
+@Suite.SuiteClasses( { TransformDefinitonTest.class, PipelineDefintionTest.class, TestJAXPProcessorInvoker.class})
 public class AllJAXPDebugTests {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllJAXPDebugTests.class.getName());
-		//$JUnit-BEGIN$
-		   suite.addTestSuite(TransformDefinitonTest.class);
-		   suite.addTestSuite(PipelineDefintionTest.class);
-		   suite.addTestSuite(TestJAXPProcessorInvoker.class);
-		//$JUnit-END$
-		return suite;
-	}
 
 }

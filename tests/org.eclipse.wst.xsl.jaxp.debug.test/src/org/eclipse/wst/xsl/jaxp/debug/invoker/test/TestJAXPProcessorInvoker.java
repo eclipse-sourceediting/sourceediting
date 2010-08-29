@@ -2,27 +2,27 @@ package org.eclipse.wst.xsl.jaxp.debug.invoker.test;
 
 import java.net.URL;
 
-import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.sax.SAXSource;
 
 import org.eclipse.wst.xsl.jaxp.debug.invoker.PipelineDefinition;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.TransformDefinition;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.internal.JAXPSAXProcessorInvoker;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+import static org.junit.Assert.*;
 
-import junit.framework.TestCase;
 
-public class TestJAXPProcessorInvoker extends TestCase {
+public class TestJAXPProcessorInvoker {
 	JAXPSAXProcessorInvoker invoker = null;
 	
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		invoker = new JAXPSAXProcessorInvoker();
 	}
 	
+	@Test
 	public void testSimpleTransform() throws Exception {
 		URL surl = TestJAXPProcessorInvoker.class.getResource("1-input.xml");
 		URL xslt = TestJAXPProcessorInvoker.class.getResource("1-transform.xsl");
