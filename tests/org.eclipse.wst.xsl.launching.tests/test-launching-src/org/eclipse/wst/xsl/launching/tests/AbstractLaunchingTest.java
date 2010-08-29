@@ -32,7 +32,7 @@ public abstract class AbstractLaunchingTest extends TestCase {
 	private static final String XSL_TEST_PROJECT = "XSLTestProject";
 	protected static final String XSL_LAUNCH_SHORTCUT_ID = "org.eclipse.wst.xsl.debug.ui.launchshortcut";
 	protected static final String LAUNCHCONFIGS = "launchConfigs";
-	protected TestEnvironment env;
+	protected EnvironmentTestSetup env;
 	protected IProject testProject;
 	protected IFolder folder;
 
@@ -53,7 +53,7 @@ public abstract class AbstractLaunchingTest extends TestCase {
 	}
 
 	private void createProject() throws CoreException {
-		env = new TestEnvironment();
+		env = new EnvironmentTestSetup();
 		testProject = env.createProject(XSL_TEST_PROJECT);
 	}
 	

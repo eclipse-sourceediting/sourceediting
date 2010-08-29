@@ -29,14 +29,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 
-public class TestEnvironment {
+public class EnvironmentTestSetup {
 	
 	public static final boolean DEBUG = true;
 	
 	private IWorkspace	_workspace;
 	private HashMap<String, IProject> _projects = new HashMap<String, IProject>(20);
 	
-	public TestEnvironment() throws CoreException {
+	public EnvironmentTestSetup() throws CoreException {
 		_workspace = ResourcesPlugin.getWorkspace();
 		if (DEBUG){
 			_workspace.getRoot().delete(true, true, null);
@@ -126,7 +126,7 @@ public class TestEnvironment {
 
 	private IFile createFileFromResource(IPath filePath, String path) throws CoreException {
 		IFile file = _workspace.getRoot().getFile(filePath);
-		InputStream in = TestEnvironment.class.getResourceAsStream(path);
+		InputStream in = EnvironmentTestSetup.class.getResourceAsStream(path);
 		if (file.exists())file.setContents(in, true, false, null);
 		else file.create(in, true, null);
 		return file;
