@@ -12,42 +12,23 @@
 
 package org.eclipse.wst.xsl.launching.tests;
 
-import junit.framework.TestSuite;
-
-import org.eclipse.wst.xsl.launching.tests.testcase.LaunchShortcutTests;
+import org.eclipse.wst.xsl.launching.tests.testcase.LaunchShortcutTest;
 import org.eclipse.wst.xsl.launching.tests.testcase.ResultRunnableTest;
 import org.eclipse.wst.xsl.launching.tests.testcase.InputFileBlockTest;
-import org.eclipse.wst.xsl.launching.tests.testcase.XSLLaunchingTests;
+import org.eclipse.wst.xsl.launching.tests.testcase.XSLLaunchingTest;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
- * This class does specifies all the classes in this bundle
- * that provide tests. It is primarily for the convenience of 
- * the AllTestsSuite.
- *  
+ * This class does specifies all the classes in this bundle that provide tests.
+ * It is primarily for the convenience of the AllTestsSuite.
+ * 
+ * @since 1.2
  */
-public class LaunchingSuite extends TestSuite {
-	public static TestSuite suite() {
-		return new LaunchingSuite();
-	}
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ XSLLaunchingTest.class, InputFileBlockTest.class,
+		LaunchShortcutTest.class, ResultRunnableTest.class })
+public class LaunchingSuite {
 
-	public LaunchingSuite() {
-		super("XSL Launching Test Suite");
-		addTest(new TestSuite(XSLLaunchingTests.class));
-		addTest(new TestSuite(InputFileBlockTest.class));
-		addTest(new TestSuite(LaunchShortcutTests.class));
-		addTest(new TestSuite(ResultRunnableTest.class));
-	}
-
-	public LaunchingSuite(Class theClass, String name) {
-		super(theClass, name);
-	}
-
-	public LaunchingSuite(Class theClass) {
-		super(theClass);
-	}
-
-	public LaunchingSuite(String name) {
-		super(name);
-	}
 }

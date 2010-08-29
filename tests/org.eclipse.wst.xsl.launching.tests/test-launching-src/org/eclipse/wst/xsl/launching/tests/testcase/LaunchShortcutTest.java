@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  * 
  * @since 1.2
  */
-public class LaunchShortcutTests extends AbstractLaunchingTest {
+public class LaunchShortcutTest extends AbstractLaunchingTest {
 
 	
 	@Before

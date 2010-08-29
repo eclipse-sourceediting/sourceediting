@@ -26,7 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class XSLLaunchingTests extends AbstractLaunchingTest {
+public class XSLLaunchingTest extends AbstractLaunchingTest {
 
 	private static final String TRANSFORM_COMMENTS = "TransformComments";
 	private static final String SIMPLE_TRANSFORM = "SimpleTransform";
