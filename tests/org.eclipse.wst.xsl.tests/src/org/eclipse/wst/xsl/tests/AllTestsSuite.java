@@ -10,53 +10,24 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
-import org.eclipse.wst.xml.xpath.core.tests.XPathCoreTests;
-import org.eclipse.wst.xml.xpath.ui.internal.hander.tests.TestXPathProcessorHandler;
-import org.eclipse.wst.xml.xpath2.processor.test.AllPsychoPathTests;
 import org.eclipse.wst.xsl.core.tests.XSLCoreTestSuite;
 import org.eclipse.wst.xsl.exslt.core.tests.EXSLTCoreTestSuite;
+import org.eclipse.wst.xsl.exslt.ui.tests.EXSLTUITestSuite;
 import org.eclipse.wst.xsl.jaxp.debug.test.AllJAXPDebugTests;
 import org.eclipse.wst.xsl.launching.tests.LaunchingSuite;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
 
 /**
  * This class specifies all the bundles of this component that provide a test
  * suite to run during automated testing.
  */
-public class AllTestsSuite extends TestSuite {
+@RunWith(Suite.class)
+@Suite.SuiteClasses( { XSLUITestSuite.class, XSLCoreTestSuite.class, LaunchingSuite.class, 
+	                   AllJAXPDebugTests.class, EXSLTCoreTestSuite.class, EXSLTUITestSuite.class})
 
-
-	public AllTestsSuite() {
-		super("All XSL Test Suites");
-		addTest(XSLUITestSuite.suite());
-		addTest(XSLCoreTestSuite.suite());
-		addTest(XPathCoreTests.suite());
-		addTest(LaunchingSuite.suite());
-		addTest(AllJAXPDebugTests.suite());
-		addTest(AllPsychoPathTests.suite());
-		addTest(EXSLTCoreTestSuite.suite());
-		addTestSuite(TestXPathProcessorHandler.class);
-	//	addTest(EXSLTUITestSuite.suite());
-	}
-
-	/**
-	 * This is just need to run in a development environment workbench.
-	 */
-	public void testAll() {
-		// this method needs to exist, but doesn't really do anything
-		// other than to signal to create an instance of this class.
-		// The rest it automatic from the tests added in constructor.
-
-	}
-	/* 
-	 * Added for strict JUnit 4 environment. (Not sure if "testAll" method is still required. 
-	 * See discussion for similar issue in bug 300951.
-	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=300951
-	 */
-    public static Test suite() {
-        return new AllTestsSuite();
-    }
+public class AllTestsSuite {
 }

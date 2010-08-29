@@ -2,21 +2,19 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xsl.tests;singleton:=true
-Bundle-Version: 1.1.100.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.wst.xsl.launching.tests;bundle-version="1.0.0",
  org.eclipse.wst.xsl.ui.tests;bundle-version="1.0.0",
  org.eclipse.wst.xsl.core.tests;bundle-version="1.0.0",
- org.eclipse.wst.xml.xpath.core.tests;bundle-version="1.0.0",
- org.eclipse.wst.xml.xpath2.processor.tests;bundle-version="1.0.0",
  org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.wst.xsl.exslt.core.tests;bundle-version="1.0.0",
  org.eclipse.wst.xsl.exslt.ui.tests;bundle-version="1.0.0",
  org.eclipse.wst.xml.xpath.ui.tests;bundle-version="1.0.0",
  org.eclipse.wst.xsl.jaxp.debug.test;bundle-version="1.0.0",
- org.junit
+ org.junit;bundle-version="4.8.1"
 Export-Package: org.eclipse.wst.xsl.tests
 Bundle-ClassPath: .
 Bundle-ActivationPolicy: lazy
