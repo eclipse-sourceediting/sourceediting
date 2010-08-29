@@ -6,18 +6,18 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class TestJaXPDebugPlugin extends Plugin {
+public class JAXPDebugTestPlugin extends Plugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.jaxp.debug.test"; //$NON-NLS-1$
 
 	// The shared instance
-	private static TestJaXPDebugPlugin plugin;
+	private static JAXPDebugTestPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public TestJaXPDebugPlugin() {
+	public JAXPDebugTestPlugin() {
 	}
 
 	/*
@@ -43,7 +43,7 @@ public class TestJaXPDebugPlugin extends Plugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static TestJaXPDebugPlugin getDefault() {
+	public static JAXPDebugTestPlugin getDefault() {
 		return plugin;
 	}
 
