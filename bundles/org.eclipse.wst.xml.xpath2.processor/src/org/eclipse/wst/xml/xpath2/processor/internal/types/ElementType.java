@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,13 +13,17 @@
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *     David Carver (STAR) - bug 289304 - fix schema awarness of types on elements
  *     Jesper Moller - bug 297958 - Fix fn:nilled for elements
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *     Mukul Gandhi - bug 323900 - improvements to computation of typed values of nodes.
+ *                                 (this patch attempts to implement the algorithm described at,
+ *                                  http://www.w3.org/TR/xpath-datamodel/#TypedValueDetermination 
+ *                                  in entirety). particularly improving the handling of 
+ *                                  "simple content" with variety list & union.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.dom.PSVIElementNSImpl;
-import org.apache.xerces.xs.XSComplexTypeDefinition;
-import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -67,7 +71,6 @@ public class ElementType extends NodeType {
 	 * @param nodePosition
 	 * @deprecated Use ElementType(Element v) instead.
 	 */
-	@Deprecated
 	public ElementType(Element v, int nodePosition) {
 		// unused parameter, nodePosition!
 		super(v);
@@ -89,7 +92,6 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return "element" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return ELEMENT;
 	}
@@ -99,7 +101,6 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return String representation of the element being stored
 	 */
-	@Override
 	public String string_value() {
 		// XXX can we cache ?
 		if (_string_value != null)
@@ -111,39 +112,37 @@ public class ElementType extends NodeType {
 	}
 
 	/**
-	 * Creates a new ResultSequence consisting of the element stored
+	 * Creates a new ResultSequence consisting of the typed value of an
+	 * element node.
 	 * 
-	 * @return New ResultSequence consisting of the element stored
+	 * NOTE: The typed value is determined as per an algorithm described here:
+     * http://www.w3.org/TR/xpath-datamodel/#TypedValueDetermination.
+	 * 
+	 * @return New ResultSequence consisting of the typed-value sequence.
 	 */
-	@Override
 	public ResultSequence typed_value() {
+		
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
 		if (!(_value instanceof PSVIElementNSImpl)) {
 			rs.add(new XSUntypedAtomic(string_value()));
-			return rs;
 		}
+		else {
+		   PSVIElementNSImpl typeInfo = (PSVIElementNSImpl) _value;
 
-		PSVIElementNSImpl typeInfo = (PSVIElementNSImpl) _value;
-
-		XSTypeDefinition typeDef = typeInfo.getTypeDefinition();
-
-		if (typeDef != null) {
-			XSSimpleTypeDefinition simpType = null;
-			if (typeDef instanceof XSComplexTypeDefinition) {
-				XSComplexTypeDefinition complexTypeDefinition = (XSComplexTypeDefinition) typeDef;
-				simpType = complexTypeDefinition.getSimpleType();
-			} else {
-				simpType = (XSSimpleTypeDefinition) typeDef;
-			}
-			Object schemaTypeValue = getTypedValueForPrimitiveType(simpType);
-			if (schemaTypeValue != null) {
-				rs.add((AnyType) schemaTypeValue);
-			} else {
-				rs.add(new XSUntypedAtomic(string_value()));
-			}
-		} else {
-			rs.add(new XSUntypedAtomic(string_value()));
+		   // if the 'nilled' property of the node is 'false', attempt to
+		   // construct the typed-value as per the algorithm described in
+		   // XDM spec. if the 'nilled' property is 'true', the typed-value
+		   // is an empty sequence.
+		   if (!typeInfo.getNil()) {
+		      XSTypeDefinition typeDef = typeInfo.getTypeDefinition();		   
+		      if (typeDef != null) {
+		         rs = getXDMTypedValue(typeDef);
+		      }
+		      else {
+			     rs.add(new XSUntypedAtomic(string_value()));  
+		      }
+		   }
 		}
 
 		return rs;
@@ -184,7 +183,6 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return QName representation of the name of the node
 	 */
-	@Override
 	public QName node_name() {
 		QName name = new QName(_value.getPrefix(), _value.getLocalName(),
 				_value.getNamespaceURI());
@@ -192,7 +190,6 @@ public class ElementType extends NodeType {
 		return name;
 	}
 
-	@Override
 	public ResultSequence nilled() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -209,7 +206,6 @@ public class ElementType extends NodeType {
 	/**
 	 * @since 1.1
 	 */
-	@Override
 	public boolean isID() {
 		return isElementType(SCHEMA_TYPE_ID);
 	}
@@ -217,7 +213,6 @@ public class ElementType extends NodeType {
 	/**
 	 * @since 1.1
 	 */
-	@Override
 	public boolean isIDREF() {
 		return isElementType(SCHEMA_TYPE_IDREF);
 	}

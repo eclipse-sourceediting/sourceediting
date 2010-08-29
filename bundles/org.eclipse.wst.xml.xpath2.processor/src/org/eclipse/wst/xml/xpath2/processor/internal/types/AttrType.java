@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,12 +13,17 @@
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
  *     David Carver (STAR) - bug 289304 - fixe schema awarness of types on attributes
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *     Mukul Gandhi - bug 323900 - improvements to computation of typed values of nodes.
+ *                                 (this patch attempts to implement the algorithm described at,
+ *                                  http://www.w3.org/TR/xpath-datamodel/#TypedValueDetermination 
+ *                                  in entirety). particularly improving the handling of 
+ *                                  "simple content" with variety list & union.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.dom.PSVIAttrNSImpl;
-import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -57,7 +62,6 @@ public class AttrType extends NodeType {
 	 * 
 	 * @return "attribute" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return ATTRIBUTE;
 	}
@@ -67,38 +71,35 @@ public class AttrType extends NodeType {
 	 * 
 	 * @return String representation of the attribute being stored
 	 */
-	@Override
 	public String string_value() {
 		return _value.getValue();
 	}
 
 	/**
-	 * Creates a new ResultSequence consisting of the attribute being stored
+	 * Creates a new ResultSequence consisting of the typed value of an
+	 * attribute node.
 	 * 
-	 * @return New ResultSequence consisting of the attribute being stored
+	 * NOTE: The typed value is determined as per an algorithm described here:
+     * http://www.w3.org/TR/xpath-datamodel/#TypedValueDetermination.
+	 * 
+	 * @return New ResultSequence consisting of the typed-value sequence.
 	 */
-	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		if (!(_value instanceof PSVIAttrNSImpl)) {
 			rs.add(new XSUntypedAtomic(string_value()));
-			return rs;
 		}
-		
-		PSVIAttrNSImpl psviAttr = (PSVIAttrNSImpl) _value;
-		XSTypeDefinition typeDef = psviAttr.getTypeDefinition();
-
-		if (typeDef != null) {
-			XSSimpleTypeDefinition simpType = (XSSimpleTypeDefinition) typeDef;
-			Object schemaTypeValue = getTypedValueForPrimitiveType(simpType);
-			if (schemaTypeValue != null) {
-				rs.add((AnyType) schemaTypeValue);
-			} else {
-				rs.add(new XSUntypedAtomic(string_value()));
+		else {
+			PSVIAttrNSImpl typeInfo = (PSVIAttrNSImpl) _value;
+			
+			XSTypeDefinition typeDef = typeInfo.getTypeDefinition();		   
+			if (typeDef != null) {
+			   rs = getXDMTypedValue(typeDef);
 			}
-		} else {
-			rs.add(new XSUntypedAtomic(string_value()));
+			else {
+			   rs.add(new XSUntypedAtomic(string_value()));  
+			}
 		}
 
 		return rs;
@@ -109,7 +110,6 @@ public class AttrType extends NodeType {
 	 * 
 	 * @return Name of the node
 	 */
-	@Override
 	public QName node_name() {
 		QName name = new QName(_value.getPrefix(), _value.getLocalName(),
 				_value.getNamespaceURI());
@@ -117,7 +117,6 @@ public class AttrType extends NodeType {
 		return name;
 	}
 
-	@Override
 	/**
 	 * Checks if the current node is of type ID
 	 * @since 1.1;
@@ -130,7 +129,6 @@ public class AttrType extends NodeType {
 	 * 
 	 * @since 1.1
 	 */
-	@Override
 	public boolean isIDREF() {
 		return isAttrType(SCHEMA_TYPE_IDREF);
 	}

@@ -15,6 +15,11 @@
  *     David Carver (STAR) - bug 289304 - fixed schema awareness on elements
  *     Mukul Gandhi - bug 318313 - improvements to computation of typed values of nodes,
  *                                 when validated by XML Schema primitive types
+ *     Mukul Gandhi - bug 323900 - improvements to computation of typed values of nodes.
+ *                                 (this patch attempts to implement the algorithm described at,
+ *                                  http://www.w3.org/TR/xpath-datamodel/#TypedValueDetermination 
+ *                                  in entirety). particularly improving the handling of 
+ *                                  "simple content" with variety list & union.                                 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -23,6 +28,14 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.apache.xerces.impl.dv.InvalidDatatypeValueException;
+import org.apache.xerces.impl.dv.ValidatedInfo;
+import org.apache.xerces.impl.dv.ValidationContext;
+import org.apache.xerces.impl.dv.XSSimpleType;
+import org.apache.xerces.impl.validation.ValidationState;
+import org.apache.xerces.xs.XSComplexTypeDefinition;
+import org.apache.xerces.xs.XSObjectList;
+import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -227,6 +240,161 @@ public abstract class NodeType extends AnyType {
 		return SchemaTypeValueFactory.newSchemaTypeValue(typeDef.getName(), strValue);
 		
 	}
+	
+	/*
+	 * Construct the "typed value" from a "string value", given the simpleType
+     * of the node.
+     */
+	protected ResultSequence getXDMTypedValue(XSTypeDefinition typeDef) {
+		
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		if ("anySimpleType".equals(typeDef.getName()) || 
+		    "anyAtomicType".equals(typeDef.getName())) {
+			rs.add(new XSUntypedAtomic(string_value()));
+		}
+		else {
+			XSSimpleTypeDefinition simpType = null;
+			ResultSequence rsSimpleContent = null;
+
+			if (typeDef instanceof XSComplexTypeDefinition) {
+				XSComplexTypeDefinition complexTypeDefinition = 
+					                      (XSComplexTypeDefinition) typeDef;
+				simpType = complexTypeDefinition.getSimpleType();
+				if (simpType != null) {
+					// element has a complexType with a "simple content model"
+					rsSimpleContent = getTypedValueForSimpleContent(simpType);
+				}
+				else {
+					// element has a complexType with "complex content"
+					rs.add(new XSUntypedAtomic(string_value()));
+				}
+			} else {
+				// element has a simpleType
+				simpType = (XSSimpleTypeDefinition) typeDef;
+				rsSimpleContent = getTypedValueForSimpleContent(simpType);
+			}
+
+			if (rsSimpleContent != null) {
+				rs =  rsSimpleContent;
+			}
+		}
+			
+		return rs;
+		
+	} // getXDMTypedValue
+	
+	
+    /*
+     * Helper method to construct typed value of an XDM node.
+     */
+	private ResultSequence getTypedValueForSimpleContent(
+			                                         XSSimpleTypeDefinition 
+			                                         simpType) {
+		
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		if (simpType.getVariety() == XSSimpleTypeDefinition.VARIETY_ATOMIC) {
+		   Object schemaTypeValue = SchemaTypeValueFactory.newSchemaTypeValue
+		                                 (simpType.getName(), string_value());
+		   if (schemaTypeValue != null) {
+				rs.add((AnyType) schemaTypeValue);
+			} else {
+				rs.add(new XSUntypedAtomic(string_value()));
+			}
+		}
+		else if (simpType.getVariety() == XSSimpleTypeDefinition.
+				                                          VARIETY_LIST) {
+			// tokenize the string value by a 'longest sequence' of
+			// white-spaces. this gives us the list items as string values.
+			String[] listItemsStrValues = string_value().split("\\s+");
+			XSSimpleTypeDefinition itemType = simpType.getItemType();
+			if (itemType.getVariety() == XSSimpleTypeDefinition.
+					                                  VARIETY_ATOMIC) {
+				for (int listItemIdx = 0; listItemIdx < listItemsStrValues.
+				                                  length; listItemIdx++) {
+				   // add an atomic typed value (whose type is the "item 
+				   // type" of the list, and "string value" is the "string 
+				   // value of the list item") to the "result sequence".
+			       rs.add((AnyType) SchemaTypeValueFactory.newSchemaTypeValue
+                                                         (itemType.getName(), 
+                                            listItemsStrValues[listItemIdx]));
+				}
+			}
+			else if (itemType.getVariety() == XSSimpleTypeDefinition.
+                                                       VARIETY_UNION) {
+			    // here the list items may have different atomic types
+				for (int listItemIdx = 0; listItemIdx < listItemsStrValues.
+                                                 length; listItemIdx++) {
+					String listItem = listItemsStrValues[listItemIdx];
+					XSObjectList memberTypes = itemType.getMemberTypes();
+					// check member types in order, to find that which one can
+					// successfully validate the list item.
+					for (int memTypeIdx = 0; memTypeIdx < memberTypes.getLength(); 
+					                                           memTypeIdx++) {
+						XSSimpleType memSimpleType = (XSSimpleType) 
+						                          memberTypes.item(memTypeIdx);
+						if (isValueValidForASimpleType(listItem, 
+								                       memSimpleType)) {
+							rs.add((AnyType) SchemaTypeValueFactory.
+									                         newSchemaTypeValue
+                                                       (memSimpleType.getName(), 
+                                                    		         listItem));
+							// no more memberTypes need to be checked
+						    break;	
+						}						
+					}
+				}
+			}
+		}
+		else if (simpType.getVariety() == XSSimpleTypeDefinition.
+				                                          VARIETY_UNION) {
+			XSObjectList memberTypes = simpType.getMemberTypes();
+			// check member types in order, to find that which one can
+			// successfully validate the string value.
+			for (int memTypeIdx = 0; memTypeIdx < memberTypes.getLength(); 
+                                                            memTypeIdx++) {
+               XSSimpleType memSimpleType = (XSSimpleType) memberTypes.item
+                                                                (memTypeIdx);
+               if (isValueValidForASimpleType(string_value(), memSimpleType)) {
+            	  
+            	   rs.add((AnyType) SchemaTypeValueFactory.newSchemaTypeValue
+                                    (memSimpleType.getName(), string_value()));
+            	   // no more memberTypes need to be checked
+				   break; 
+               }
+			}
+		}
+		
+		return rs;
+		
+	} // getTypedValueForSimpleContent
+	
+	
+	/*
+	 * Determine if a "string value" is valid for a given simpleType definition.
+	 * Helper method for getTypedValueForSimpleContent.
+	 */
+	private boolean isValueValidForASimpleType (String value, XSSimpleType 
+			                                                  simplType) {
+		
+		boolean isValueValid = true;
+		
+		try {
+			ValidatedInfo validatedInfo = new ValidatedInfo();
+			ValidationContext validationState = new ValidationState();
+     		
+			// attempt to validate the value with the simpleType
+			simplType.validate(value, validationState, validatedInfo);
+	    } 
+		catch(InvalidDatatypeValueException ex){
+			isValueValid = false;
+	    }
+		
+		return isValueValid;
+		
+	} // isValueValidForASimpleType
+	
 	
 	public abstract boolean isID();
 	
