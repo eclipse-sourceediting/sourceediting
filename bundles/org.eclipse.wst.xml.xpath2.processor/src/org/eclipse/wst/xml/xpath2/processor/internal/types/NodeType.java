@@ -295,10 +295,10 @@ public abstract class NodeType extends AnyType {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
 		if (simpType.getVariety() == XSSimpleTypeDefinition.VARIETY_ATOMIC) {
-		   Object schemaTypeValue = SchemaTypeValueFactory.newSchemaTypeValue
+		   AnyType schemaTypeValue = SchemaTypeValueFactory.newSchemaTypeValue
 		                                 (simpType.getName(), string_value());
 		   if (schemaTypeValue != null) {
-				rs.add((AnyType) schemaTypeValue);
+				rs.add(schemaTypeValue);
 			} else {
 				rs.add(new XSUntypedAtomic(string_value()));
 			}
@@ -316,7 +316,7 @@ public abstract class NodeType extends AnyType {
 				   // add an atomic typed value (whose type is the "item 
 				   // type" of the list, and "string value" is the "string 
 				   // value of the list item") to the "result sequence".
-			       rs.add((AnyType) SchemaTypeValueFactory.newSchemaTypeValue
+			       rs.add(SchemaTypeValueFactory.newSchemaTypeValue
                                                          (itemType.getName(), 
                                             listItemsStrValues[listItemIdx]));
 				}
@@ -336,8 +336,7 @@ public abstract class NodeType extends AnyType {
 						                          memberTypes.item(memTypeIdx);
 						if (isValueValidForASimpleType(listItem, 
 								                       memSimpleType)) {
-							rs.add((AnyType) SchemaTypeValueFactory.
-									                         newSchemaTypeValue
+							rs.add(SchemaTypeValueFactory.newSchemaTypeValue
                                                        (memSimpleType.getName(), 
                                                     		         listItem));
 							// no more memberTypes need to be checked
@@ -358,8 +357,9 @@ public abstract class NodeType extends AnyType {
                                                                 (memTypeIdx);
                if (isValueValidForASimpleType(string_value(), memSimpleType)) {
             	  
-            	   rs.add((AnyType) SchemaTypeValueFactory.newSchemaTypeValue
-                                    (memSimpleType.getName(), string_value()));
+            	   rs.add(SchemaTypeValueFactory.newSchemaTypeValue
+                                                        (memSimpleType.getName(), 
+                                                         string_value()));
             	   // no more memberTypes need to be checked
 				   break; 
                }

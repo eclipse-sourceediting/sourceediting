@@ -22,7 +22,7 @@ import java.math.BigInteger;
  */
 public class SchemaTypeValueFactory {
 
-	public static Object newSchemaTypeValue(String typeName, String strValue) {
+	public static AnyType newSchemaTypeValue(String typeName, String strValue) {
 		
 		if (XSConstants.ANY_URI.equals(typeName)) {
 			return new XSAnyURI(strValue);
