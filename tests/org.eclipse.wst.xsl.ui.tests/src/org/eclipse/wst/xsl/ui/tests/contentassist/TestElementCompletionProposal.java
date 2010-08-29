@@ -12,10 +12,12 @@
 package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
+import static org.junit.Assert.*;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
+import org.junit.Test;
 
 /**
  * Tests everything about code completion and code assistance.
@@ -23,6 +25,7 @@ import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
  */
 public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 
+	@Test
 	public void testXSLPropsoalAvailable() throws Exception {
 		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -39,6 +42,7 @@ public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 		assertNotNull("Did not find proposals.", proposals);
 	}
 
+	@Test
 	public void testXSLApplyTemplatesPropsoalAvailable() throws Exception {
 		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -63,6 +67,7 @@ public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 				proposalName);
 	}
 
+	@Test
 	public void testXSLChoosePropsoalAvailable() throws Exception {
 		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -87,6 +92,7 @@ public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 				proposalName);
 	}
 
+	@Test
 	public void testXSLWhenPropsoalNotAvailable() throws Exception {
 		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

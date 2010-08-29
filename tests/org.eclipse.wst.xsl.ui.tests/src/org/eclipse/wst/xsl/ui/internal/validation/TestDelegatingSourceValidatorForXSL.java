@@ -37,6 +37,9 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test the XML delegating source validator.
@@ -49,20 +52,11 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 
 	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	private String getxslTestFilesProjectName() {
 		return "xsltestfiles";
 	}
 
+	@Test
 	public void testXSLT2XPathPasses() throws Exception {
 		String fileName1 = "ChangeRequestsByResponsibility.xsl";
 		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName1);
@@ -74,6 +68,7 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 				reporter.isMessageReported());
 	}
 	
+	@Test
 	public void testXSLT2_2Passes() throws Exception {
 		String fileName1 = "ChangeRequestsByStatus.xsl";
 		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName1);
@@ -86,6 +81,7 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 	}
 	
 
+	@Test
 	public void testValidXSLT() throws Exception {
 		String fileName1 = "ListAllChangeRequests.xsl"; 
 		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName1);
@@ -96,6 +92,7 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 				.isMessageReported());
 	}
 	
+	@Test
 	public void testXSLFunctionsWithParms() throws Exception {
 		String fileName = "bug290286.xsl";
 		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName);
@@ -154,6 +151,7 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 
 	}
 
+	@Test
 	public void testDelegatingSourceValidatorNPEwithNoAttributeValue() throws Exception {
 		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), "bug272760.xsl");
 		TestReporter reporter = new TestReporter();

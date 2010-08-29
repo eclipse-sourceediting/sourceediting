@@ -16,6 +16,8 @@ import java.io.File;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests everything about code completion and code assistance.
@@ -27,6 +29,7 @@ public class TestTemplateModeCompletionProposal extends
 	public TestTemplateModeCompletionProposal() {
 	}
 
+	@Test
 	public void testModeProposals() throws Exception {
 		fileName = "modeTest.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

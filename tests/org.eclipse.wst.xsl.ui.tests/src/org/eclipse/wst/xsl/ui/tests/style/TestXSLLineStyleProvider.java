@@ -12,10 +12,10 @@
 package org.eclipse.wst.xsl.ui.tests.style;
 
 import java.io.File;
+import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import junit.framework.Assert;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -54,6 +54,9 @@ import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 import org.eclipse.wst.xsl.core.internal.text.rules.StructuredTextPartitionerForXSL;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests everything about code completion and code assistance.
@@ -83,8 +86,8 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 	/**
 	 * Setup the necessary projects, files, and source viewer for the tests.
 	 */
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 		setupProject();
 
@@ -96,7 +99,7 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		file = ResourcesPlugin.getWorkspace().getRoot().getFile(
 				new Path(xslFilePath));
 		if (file != null && !file.exists()) {
-			Assert.fail("Unable to locate " + fileName + " stylesheet.");
+			fail("Unable to locate " + fileName + " stylesheet.");
 		}
 
 		loadXSLFile();
@@ -120,8 +123,7 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 			sourceViewer = new StructuredTextViewer(parent, null, null, false,
 					SWT.NONE);
 		} else {
-			Assert
-					.fail("Unable to run the test as a display must be available.");
+			fail("Unable to run the test as a display must be available.");
 		}
 
 		configureSourceViewer();
@@ -160,8 +162,8 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		}
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		super.tearDown();
 		parent.dispose();
 		if (model != null) {
@@ -231,6 +233,7 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		}
 	}
 
+	@Test
 	public void testHasLineStyleProvider() throws Exception {
 		setUpTest("utils.xsl");
 
@@ -239,11 +242,13 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		assertEquals("Wrong number of providers", 1, lineStyleProviders.length);
 	}
 
+	@Test
 	public void testInitializeLineStyleProvider() throws Exception {
 		setUpTest("utils.xsl");
 		initializeProvider();
 	}
 
+	@Test
 	public void testPrepareRegion() throws Exception {
 		setUpTest("utils.xsl");
 		LineStyleProvider provider = initializeProvider();

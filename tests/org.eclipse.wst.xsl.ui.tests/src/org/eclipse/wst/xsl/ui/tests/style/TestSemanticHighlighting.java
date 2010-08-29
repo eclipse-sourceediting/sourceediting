@@ -11,28 +11,28 @@
 package org.eclipse.wst.xsl.ui.tests.style;
 
 import org.eclipse.jface.text.Position;
+import static org.junit.Assert.*;
+
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocumentRegion;
 import org.eclipse.wst.xsl.ui.internal.style.XSLTagDelimsSemanticHighlighting;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import junit.framework.TestCase;
 
-public class TestSemanticHighlighting extends TestCase {
+public class TestSemanticHighlighting {
 
     XSLTagDelimsSemanticHighlighting semantich = null;
     
-    @Override
-    protected void setUp() throws Exception {
-    	super.setUp();
+    @Before
+    public void setUp() throws Exception {
     	semantich = new XSLTagDelimsSemanticHighlighting();
     }
-    
-    @Override
-    protected void tearDown() throws Exception {
-    	super.tearDown();
-    }
-    
+        
     //bug 307924
+    @Test
     public void testNPECheck() throws Exception{
     	IStructuredDocumentRegion region = new FakeStructuredRegion();
     	Position[] p = semantich.consumes(region);

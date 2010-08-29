@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2007, 2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,12 @@
  *
  * Contributors:
  *     David Carver - (STAR) - initial API and implementation
+ *     David Carver - (Intalio) - convert to junit 4
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.tests;
 
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 import org.eclipse.wst.xsl.ui.internal.validation.TestDelegatingSourceValidatorForXSL;
 import org.eclipse.wst.xsl.ui.tests.contentassist.TestCallTemplateCompletionProposal;
@@ -32,30 +32,19 @@ import org.eclipse.wst.xsl.ui.tests.style.TestXSLLineStyleProvider;
 import org.eclipse.wst.xsl.ui.tests.style.TestXSLRegionMap;
 import org.eclipse.wst.xsl.ui.tests.templates.TestTemplateContextTypeXSL;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ TestDelegatingSourceValidatorForXSL.class,
+		XSLCompletionTest.class,
+		TestExcludeResultPrefixesCompletionProposal.class,
+		TestTemplateModeCompletionProposal.class,
+		TestHrefCompletionProposal.class, TestElementCompletionProposal.class,
+		TestXSLLineStyleProvider.class, TestXMLRegionMap.class,
+		TestXSLRegionMap.class, TestXSLHyperlinkDetector.class,
+		TestNamedTemplateCompletionProposal.class,
+		TestCallTemplateCompletionProposal.class,
+		TestXPathXMLCompletionProposal.class, TestTemplateContextTypeXSL.class,
+		TestEmptyFileCompletionProposal.class,
+		TestContentAssistProcessorFactory.class, TestSemanticHighlighting.class })
+public class XSLUITestSuite {
 
-public class XSLUITestSuite extends TestSuite {
-	public static Test suite() {
-		return new XSLUITestSuite();
-	}
-
-	public XSLUITestSuite() {
-		super("XSL UI Test Suite");
-		addTestSuite(TestDelegatingSourceValidatorForXSL.class);
-		addTestSuite(XSLCompletionTest.class);
-		addTestSuite(TestExcludeResultPrefixesCompletionProposal.class);
-		addTestSuite(TestTemplateModeCompletionProposal.class);
-		addTestSuite(TestHrefCompletionProposal.class);
-		addTestSuite(TestElementCompletionProposal.class);
-		addTestSuite(TestXSLLineStyleProvider.class);
-		addTestSuite(TestXMLRegionMap.class);
-		addTestSuite(TestXSLRegionMap.class);
-		addTestSuite(TestXSLHyperlinkDetector.class);
-		addTestSuite(TestNamedTemplateCompletionProposal.class);
-		addTestSuite(TestCallTemplateCompletionProposal.class);
-		addTestSuite(TestXPathXMLCompletionProposal.class);
-		addTestSuite(TestTemplateContextTypeXSL.class);
-		addTestSuite(TestEmptyFileCompletionProposal.class);
-		addTestSuite(TestContentAssistProcessorFactory.class);
-		addTestSuite(TestSemanticHighlighting.class);
-	}
 }

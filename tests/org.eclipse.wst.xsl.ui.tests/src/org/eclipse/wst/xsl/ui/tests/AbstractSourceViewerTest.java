@@ -42,6 +42,7 @@ import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
+import org.junit.After;
 
 /**
  * This class is an abstract class for Content Completion Tests. It provides all
@@ -171,16 +172,9 @@ public class AbstractSourceViewerTest extends AbstractXSLUITest {
 		return offset;
 	}	
 
-	/**
-	 * Setup the necessary projects, files, and source viewer for the tests.
-	 */
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
+	
+	@After
+	public void tearDown() throws Exception {
 		super.tearDown();
 		parent.dispose();
 		if (model != null) {

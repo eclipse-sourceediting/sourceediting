@@ -18,6 +18,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class TestNamedTemplateCompletionProposal extends
 		AbstractSourceViewerTest {
@@ -28,6 +30,7 @@ public class TestNamedTemplateCompletionProposal extends
 		loadFileForTesting(xslFilePath);
 	}
 
+	@Test
 	public void testXSLPropsoalAvailable() throws Exception {
 		setupTestFile("TestNamedTemplatesAssist.xsl");
 

@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xsl.ui.tests;
 
+import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -33,19 +34,21 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.junit.After;
+import org.junit.Before;
 import org.osgi.framework.Bundle;
 
 /* 
  * Made abstract, so won't be automatically picked up as test (since intended to be subclassed).
  */
-public abstract class AbstractXSLUITest extends TestCase {
+public abstract class AbstractXSLUITest {
 	protected static IProject fTestProject;
 	protected static boolean fTestProjectInitialized;
 	protected static final String PROJECT_FILES = "projectfiles";
 	protected static final String TEST_PROJECT_NAME = "xsltestfiles";
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		getWorkspace().getRoot().delete(true, true, new NullProgressMonitor());
 		setupTestProjectFiles(XSLUITestsPlugin.PLUGIN_ID);
 		fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -120,7 +123,8 @@ public abstract class AbstractXSLUITest extends TestCase {
 		}
 	}
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		String projName = TEST_PROJECT_NAME;
 
 		IProject project = ResourcesPlugin.getWorkspace().getRoot()

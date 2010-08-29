@@ -13,6 +13,7 @@ package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
 import java.io.IOException;
+import static org.junit.Assert.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
@@ -21,6 +22,7 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyE
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
+import org.junit.Test;
 
 /**
  * Tests everything about code completion and code assistance.
@@ -44,6 +46,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		return proposals;
 	}
 
+	@Test
 	public void testAllDefaultValueNoProposals() throws Exception {
 		fileName = "TestResultPrefixes.xsl";
 		int column = 29;
@@ -53,6 +56,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 				proposals.length);
 	}
 
+	@Test
 	public void testXHTMLNamespacePropsoalAvailable() throws Exception {
 		fileName = "TestResultPrefixesEmpty.xsl";
 		int column = 29;
@@ -69,6 +73,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 				proposals[1].getDisplayString());
 	}
 
+	@Test
 	public void testAllPropsoalAvailable() throws Exception {
 		fileName = "TestResultPrefixesEmpty.xsl";
 		int column = 29;
@@ -85,6 +90,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 				proposals[0].getDisplayString());
 	}
 
+	@Test
 	public void testExcludeXHTMLProposal() throws Exception {
 		fileName = "TestResultPrefixesWithXhtml.xsl";
 		int column = 35;
@@ -100,6 +106,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		}
 	}
 
+	@Test
 	public void testTestProposal() throws Exception {
 		fileName = "TestResultPrefixesWithXhtml.xsl";
 		int column = 35;

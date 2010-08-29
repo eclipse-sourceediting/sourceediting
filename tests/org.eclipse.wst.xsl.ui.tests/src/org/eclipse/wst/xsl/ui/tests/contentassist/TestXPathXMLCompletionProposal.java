@@ -15,6 +15,9 @@ import java.io.File;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests everything about code completion and code assistance.
@@ -22,6 +25,7 @@ import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
  */
 public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 
+	@Test
 	public void testProposalsIncludeXSD() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -38,6 +42,7 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 		fail("Did not find XSD proposals.");
 	}
 
+	@Test
 	public void testProposalsIncludeAfterColon() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -54,6 +59,7 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 		fail("Did not find XSD proposals.");
 	}
 
+	@Test
 	public void testProposalsIncludeXSDAfterForwardSlash() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -70,6 +76,7 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 		fail("Did not find XSD proposals.");
 	}
 
+	@Test
 	public void testTestAttributeProposal() throws Exception {
 		fileName = "TestTestAttributeProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -86,6 +93,7 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 		fail("Did not find XPath proposals for the test attribute.");
 	}
 
+	@Test
 	public void testCurlyBraceProposal() throws Exception {
 		fileName = "bug294079.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

@@ -11,17 +11,12 @@
 package org.eclipse.wst.xsl.exslt.ui.tests;
 
 import org.eclipse.wst.xsl.exslt.ui.internal.contentassist.test.EXSLTCommonContentAssistTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
-public class EXSLTUITestSuite extends TestSuite {
-	public static Test suite() {
-		return new EXSLTUITestSuite();
-	}
+@RunWith(Suite.class)
+@Suite.SuiteClasses( {EXSLTCommonContentAssistTest.class })
+public class EXSLTUITestSuite{
 
-	public EXSLTUITestSuite() {
-		super("EXSLT UI Test Suite");
-		addTestSuite(EXSLTCommonContentAssistTest.class);
-	}
 }

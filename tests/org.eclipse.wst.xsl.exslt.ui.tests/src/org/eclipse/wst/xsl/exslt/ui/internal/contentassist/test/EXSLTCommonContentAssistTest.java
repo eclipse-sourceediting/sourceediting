@@ -11,17 +11,23 @@
 package org.eclipse.wst.xsl.exslt.ui.internal.contentassist.test;
 
 import java.io.File;
+import static org.junit.Assert.*;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.xsl.exslt.ui.internal.contentassist.EXSLTCommonContentAssistProcessor;
 import org.eclipse.wst.xsl.exslt.ui.tests.EXSLTUITestsPlugin;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class EXSLTCommonContentAssistTest extends AbstractSourceViewerTest {
 
 	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		if (!fTestProjectInitialized) {
 			setupTestProjectFiles(EXSLTUITestsPlugin.PLUGIN_ID);
 
@@ -29,7 +35,14 @@ public class EXSLTCommonContentAssistTest extends AbstractSourceViewerTest {
 			fTestProjectInitialized = true;
 		}
 	}
+	
+	@After
+	@Override
+	public void tearDown() {
+		
+	}
 
+	@Test
 	public void testDocumentElementPropsoalAvailable() throws Exception {
 		fileName = "commonElements.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -50,6 +63,7 @@ public class EXSLTCommonContentAssistTest extends AbstractSourceViewerTest {
 		fail("Did not find EXSLT Commond document element in proposal list.");
 	}
 
+	@Test
 	public void testNodeSetFunctionExists() throws Exception {
 		fileName = "commonXpathFunctions.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -71,6 +85,7 @@ public class EXSLTCommonContentAssistTest extends AbstractSourceViewerTest {
 
 	}
 
+	@Test
 	public void testNodeSetFunctionExistsSelect() throws Exception {
 		fileName = "commonXpathFunctions.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -92,6 +107,7 @@ public class EXSLTCommonContentAssistTest extends AbstractSourceViewerTest {
 
 	}
 
+	@Test
 	public void testObjectTypeFunctionExistsSelect() throws Exception {
 		fileName = "commonXpathFunctions.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

@@ -11,12 +11,15 @@
 package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
+import static org.junit.Assert.*;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
+import org.junit.Test;
 
 public class TestEmptyFileCompletionProposal extends AbstractSourceViewerTest {
 
+	@Test
 	public void testXSLPropsoalAvailable() throws Exception {
 		fileName = "EmptyXSLFile.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

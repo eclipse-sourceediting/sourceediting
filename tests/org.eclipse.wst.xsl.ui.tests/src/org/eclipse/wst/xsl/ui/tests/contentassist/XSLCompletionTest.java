@@ -18,6 +18,9 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests everything about code completion and code assistance.
@@ -25,6 +28,7 @@ import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
  */
 public class XSLCompletionTest extends AbstractSourceViewerTest {
 
+	@Test
 	public void testGetNodeAtLine10() throws Exception {
 
 		fileName = "utils.xsl";
@@ -37,6 +41,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 				.getNodeName());
 	}
 
+	@Test
 	public void testGetNodeAtLine12() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -48,6 +53,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 				.getNodeName());
 	}
 
+	@Test
 	public void testGetNodeAtLine13() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -59,6 +65,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 				.getNodeName());
 	}
 
+	@Test
 	public void testAttributeNotValueAvailable() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -73,6 +80,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 				.equals("\"number(substring($date, 6, 2))\""));
 	}
 
+	@Test
 	public void testSelectAttributeProposalsAvailable() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -95,6 +103,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testSelectAttributeProposalsNarrow() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -111,6 +120,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		assertEquals("Wrong Number of items returned: ", 6, proposals.length);
 	}
 
+	@Test
 	public void testTestAttributeProposalsAvailable() throws Exception {
 		fileName = "simple.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -118,10 +128,16 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 
 		ICompletionProposal[] proposals = getXMLProposals(4, 30);
 		assertTrue(proposals.length >= 1);
-		ICompletionProposal proposal = proposals[0];
-		assertEquals("Wrong attribute proposal returned:", "disable-output-escaping=\"no\"", proposal.getDisplayString());
+		for (int i = 0; i < proposals.length; i++) {
+			ICompletionProposal proposal = proposals[i];
+			if (proposal.getDisplayString().contains("disable-output-escaping")) {
+				return;
+			}
+		}
+		fail("Did not find disable-output-escaping=\"no\"");
 	}
 
+	@Test
 	public void testXSLElementProposalsAvailable() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -138,6 +154,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 	/*
 	 * Bug 259575
 	 */
+	@Test
 	public void testXPathProposalAvaialbleAfterComma() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -148,6 +165,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 	}
 
 	// Bug 281420 - Variable inserts wrong.
+	@Test
 	public void testVariableInsertPositionOffset() throws Exception {
 		fileName = "bug281420.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
