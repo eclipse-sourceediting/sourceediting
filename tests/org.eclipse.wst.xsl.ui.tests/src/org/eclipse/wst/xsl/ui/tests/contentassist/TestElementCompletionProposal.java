@@ -43,8 +43,7 @@ public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 		assertNotNull("Did not find proposals.", proposals);
 	}
 
-	@Ignore @Test
-	//FIXME: for some reason under Maven this test fails
+	@Test
 	public void testXSLApplyTemplatesPropsoalAvailable() throws Exception {
 		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -69,8 +68,7 @@ public class TestElementCompletionProposal extends AbstractSourceViewerTest {
 				proposalName);
 	}
 
-	@Ignore @Test
-	//FIXME: this test fails when run under maven/tycho
+	@Test
 	public void testXSLChoosePropsoalAvailable() throws Exception {
 		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

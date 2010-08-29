@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
 public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 
 	@Test
-	//FIXME: fails when running under Maven3/Tycho
 	public void testProposalsIncludeXSD() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -45,7 +44,6 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 	}
 
 	@Test
-	//FIXME: fails when running under Maven3/Tycho
 	public void testProposalsIncludeAfterColon() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -63,7 +61,6 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 	}
 
 	@Test
-	//FIXME: Fails after running under Maven3/Tycho
 	public void testProposalsIncludeXSDAfterForwardSlash() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

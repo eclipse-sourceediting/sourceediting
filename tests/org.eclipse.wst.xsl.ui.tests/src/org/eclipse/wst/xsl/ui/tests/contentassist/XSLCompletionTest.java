@@ -121,8 +121,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		assertEquals("Wrong Number of items returned: ", 6, proposals.length);
 	}
 
-	@Ignore @Test
-	//FIXME: Fails when running under Maven3/Tycho
+	@Test
 	public void testTestAttributeProposalsAvailable() throws Exception {
 		fileName = "simple.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
@@ -139,8 +138,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		fail("Did not find disable-output-escaping=\"no\"");
 	}
 
-	@Ignore @Test
-	//FIXME: Fails when running under Maven3/Tycho
+	@Test
 	public void testXSLElementProposalsAvailable() throws Exception {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

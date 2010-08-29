@@ -30,9 +30,7 @@ public class TestTemplateModeCompletionProposal extends
 	public TestTemplateModeCompletionProposal() {
 	}
 
-	@Ignore
 	@Test
-	// FIXME: this test fails under maven/tycho
 	public void testModeProposals() throws Exception {
 		fileName = "modeTest.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
