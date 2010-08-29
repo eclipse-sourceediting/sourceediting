@@ -99,6 +99,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
+		Thread.sleep(6000);
 
 		int offset = sourceViewer.getDocument().getLineOffset(14) + 42;
 		String s = sourceViewer.getDocument().get(offset - 9, 9);

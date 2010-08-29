@@ -46,16 +46,13 @@ public abstract class AbstractXSLUITest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		if (!fTestProjectInitialized) {
-			setupTestProjectFiles(XSLUITestsPlugin.PLUGIN_ID);
-
-			fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
-			fTestProjectInitialized = true;
-		}
+		getWorkspace().getRoot().delete(true, true, new NullProgressMonitor());
+		setupTestProjectFiles(XSLUITestsPlugin.PLUGIN_ID);
+		fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 	}
 
-	protected void setupTestProjectFiles(String bundleId) throws CoreException, IOException,
-			URISyntaxException {
+	protected void setupTestProjectFiles(String bundleId) throws CoreException,
+			IOException, URISyntaxException {
 		getAndCreateProject();
 
 		Bundle coreBundle = Platform.getBundle(bundleId);
@@ -131,7 +128,6 @@ public abstract class AbstractXSLUITest extends TestCase {
 			project.delete(true, true, new NullProgressMonitor());
 		}
 		getWorkspace().getRoot().refreshLocal(2, new NullProgressMonitor());
-		fTestProjectInitialized = false;
 	}
 
 	/**
