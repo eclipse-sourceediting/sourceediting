@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standard for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2010 Standard for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -88,7 +88,7 @@ public class TestPluginXMLRequirements extends TestCase{
 		XPathExpression xpathExpr = xpath.compile(xpathString);
 		Element element = (Element) xpathExpr.evaluate(pluginDoc.getDocumentElement(), XPathConstants.NODE);
 		String toolTip = element.getAttribute("tooltip");
-		assertEquals("Unexpected value for DTD tooltip", "%DTD_New_context_type_Extension_Element.name", toolTip);
+		assertEquals("Unexpected value for DTD tooltip", "%DTD_New_File.tooltip", toolTip);
 	}
 
 }
