@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.wst.jsdt.internal.ui.text.java.LazyJavaCompletionProposal;
+import org.eclipse.wst.jsdt.internal.ui.text.java.LazyJavaTypeCompletionProposal;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 
 /**
@@ -77,5 +78,14 @@ public class JSDTCompletionProposal extends JavaCompletionProposal implements IJ
 	
 	final public void setJavaCompletionProposal(ICompletionProposal javaCompletionProposal) {
 		fJavaCompletionProposal = javaCompletionProposal;
+	}
+
+	protected boolean isValidPrefix(String prefix) {
+		if (this.fJavaCompletionProposal instanceof LazyJavaTypeCompletionProposal) {
+
+			return ((LazyJavaTypeCompletionProposal) this.fJavaCompletionProposal)
+					.isValidTypePrefix(prefix);
+		}
+		return super.isValidPrefix(prefix);
 	}
 }
