@@ -16,6 +16,7 @@ import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLPropertyDeclaration;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
+import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -28,8 +29,10 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 class SyntaxValidator extends PrimeValidator implements ErrorState {
@@ -80,6 +83,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		public boolean hasStartTag() {return startTag != null;}
 		public boolean hasEndTag() {return endTag != null;}
 		public boolean isXHTML = false;
+		public boolean isXHTML5 = false;
 	}
 
 	public void validate(IndexedRegion indexedNode) {
@@ -116,9 +120,39 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			return;
 		String typeid = ((IDOMDocument) doc).getDocumentTypeId();
 		if (typeid != null) {
-			HTMLDocumentTypeEntry entry = HTMLDocumentTypeRegistry.getInstance().getEntry(typeid);
-			info.isXHTML = (entry != null && entry.isXMLType());
+			if (typeid.trim().length()!= 0){
+				HTMLDocumentTypeEntry entry = HTMLDocumentTypeRegistry.getInstance().getEntry(typeid);
+				info.isXHTML = (entry != null && entry.isXMLType());
+			}
+			else {
+				info.isXHTML = getXMLTarget(doc);
+				info.isXHTML5 = info.isXHTML;
+			}
 		}
+	}
+	
+	private boolean getXMLTarget(Document doc) {
+		if (doc == null)
+			return false;
+		Node child = doc.getFirstChild();
+		while (child != null) {
+			if (child.getNodeType() == Node.ELEMENT_NODE) {
+				if (child.getNodeName().equalsIgnoreCase("html")){
+					if (child.getAttributes()!= null){
+						NamedNodeMap attrs = child.getAttributes();
+						for (int i = 0; i < attrs.getLength(); i++) {
+							Attr a = (Attr) attrs.item(i);
+							if (a.getName().equalsIgnoreCase(HTML50Namespace.ATTR_NAME_XMLNS))
+									return true;
+						}
+					}
+					return false;
+				}
+				
+			}
+			child = child.getNextSibling();
+		}
+		return false;
 	}
 
 	class TagErrorInfoImpl extends AbstractErrorInfo {
@@ -287,24 +321,41 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		if (declared == null)
 			return;
 
-		// start tag
-		if (info.hasStartTag()) {
-			startTagName = getTagName(info.startTag);
-			if (!declared.equals(startTagName)) {
-				TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.startTag, startTagName);
-				this.reporter.report(error);
+		if (info.isXHTML5){
+			if (info.hasStartTag()) {
+				startTagName = getTagName(info.startTag);
+				if (info.hasEndTag()) {
+					endTagName = getTagName(info.endTag);
+					if (!endTagName.equals(startTagName)){
+						TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.endTag, endTagName);
+						this.reporter.report(error);
+					}
+				}
 			}
+			
 		}
-		// end tag
-		if (info.hasEndTag()) {
-			endTagName = getTagName(info.endTag);
-			if (!info.hasStartTag() || (!endTagName.equals(startTagName))) {
-				if (!declared.equals(endTagName)) {
-					TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.endTag, endTagName);
+		else
+		{
+			// start tag
+			if (info.hasStartTag()) {
+				startTagName = getTagName(info.startTag);
+				if (!declared.equals(startTagName)) {
+					TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.startTag, startTagName);
 					this.reporter.report(error);
 				}
 			}
+			// end tag
+			if (info.hasEndTag()) {
+				endTagName = getTagName(info.endTag);
+				if (!info.hasStartTag() || (!endTagName.equals(startTagName))) {
+					if (!declared.equals(endTagName)) {
+						TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.endTag, endTagName);
+						this.reporter.report(error);
+					}
+				}
+			}
 		}
+		
 	}
 
 	private void validateChildren(Node target) {

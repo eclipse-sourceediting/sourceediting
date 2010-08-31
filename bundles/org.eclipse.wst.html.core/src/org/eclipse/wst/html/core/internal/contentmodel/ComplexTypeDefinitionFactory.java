@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,8 @@ final class ComplexTypeDefinitionFactory {
 	public final static String CTYPE_COLUMN_GROUP = "CTYPE_COLUMN_GROUP";//$NON-NLS-1$
 	/** for DL. */
 	public final static String CTYPE_DEFINITION_LIST = "CTYPE_DEFINITION_LIST";//$NON-NLS-1$
+	/** for DETAILS */
+	public final static String CTYPE_DETAILS_CONTAINER = "CTYPE_DETAILS_CONTAINER";//$NON-NLS-1$
 	/** for EMBED. */
 	public final static String CTYPE_EMBED = "CTYPE_EMBED";//$NON-NLS-1$
 	/** empty content. No ComplexTypeDefinition instance should be created. */
@@ -64,7 +66,17 @@ final class ComplexTypeDefinitionFactory {
 	public final static String CTYPE_TCELL_CONTAINER = "CTYPE_TCELL_CONTAINER";//$NON-NLS-1$
 	/** table record container. (TR)+ */
 	public final static String CTYPE_TR_CONTAINER = "CTYPE_TR_CONTAINER";//$NON-NLS-1$
-
+	/** heading group container. (H1|h2|H3|H4|H5|H6)+ */
+	public final static String CTYPE_HEADING_CONTAINER = "CTYPE_HGROUP_CONTAINER"; //$NON-NLS-1$
+	/** media content. (AUDIO|VIDEO) */
+	public final static String CTYPE_MEDIA_ELEMENT = "CTYPE_MEDIA";//$NON-NLS-1$
+	/** for DATALIST. */
+	public final static String CTYPE_DATALIST = "CTYPE_DATALIST";//$NON-NLS-1$
+	/** for FIGURE. */
+	public final static String CTYPE_FIGURE = "CTYPE_FIGURE";//$NON-NLS-1$
+	/** for RUBY. */
+	public final static String CTYPE_RUBY = "CTYPE_RUBY";//$NON-NLS-1$
+	
 	/**
 	 * ComplexTypeDefinitionFactory constructor comment.
 	 */
@@ -81,8 +93,17 @@ final class ComplexTypeDefinitionFactory {
 	 * @param elementCollection ElementCollection
 	 */
 	public ComplexTypeDefinition createTypeDefinition(String definitionName, ElementCollection elementCollection) {
+		ComplexTypeDefinition[] defs = null;
 		if (definitions.containsKey(definitionName)) {
-			return (ComplexTypeDefinition) definitions.get(definitionName);
+			defs =  (ComplexTypeDefinition[]) definitions.get(definitionName);
+			for (int i = 0; i < defs.length; i++) {
+				if (defs[i].collection == elementCollection)
+					return defs[i];
+			}
+		}
+		else {
+			// initialize a new definition
+			defs = new ComplexTypeDefinition[0];
 		}
 
 		ComplexTypeDefinition def = null;
@@ -94,9 +115,16 @@ final class ComplexTypeDefinitionFactory {
 			def = new CtdColumnGroup(elementCollection);
 
 		}
+		else if (definitionName == CTYPE_DATALIST) {
+			def = new CtdDatalist(elementCollection);
+
+		}
 		else if (definitionName == CTYPE_DEFINITION_LIST) {
 			def = new CtdDl(elementCollection);
 
+		}
+		else if (definitionName == CTYPE_DETAILS_CONTAINER) {
+			def = new CtdDetails(elementCollection);
 		}
 		else if (definitionName == CTYPE_EMBED) {
 			def = new CtdEmbed(elementCollection);
@@ -104,6 +132,10 @@ final class ComplexTypeDefinitionFactory {
 		}
 		else if (definitionName == CTYPE_FIELDSET) {
 			def = new CtdFieldset(elementCollection);
+
+		}
+		else if (definitionName == CTYPE_FIGURE) {
+			def = new CtdFigure(elementCollection);
 
 		}
 		else if (definitionName == CTYPE_FLOW_CONTAINER) {
@@ -117,6 +149,9 @@ final class ComplexTypeDefinitionFactory {
 		else if (definitionName == CTYPE_HEAD) {
 			def = new CtdHead(elementCollection);
 
+		}
+		else if (definitionName == CTYPE_HEADING_CONTAINER) {
+			def = new CtdHeadingContainer(elementCollection);
 		}
 		else if (definitionName == CTYPE_HTML) {
 			def = new CtdHtml(elementCollection);
@@ -134,6 +169,10 @@ final class ComplexTypeDefinitionFactory {
 			def = new CtdMap(elementCollection);
 
 		}
+		else if (definitionName == CTYPE_MEDIA_ELEMENT) {
+			def = new CtdMediaElement(elementCollection);
+			
+		}
 		else if (definitionName == CTYPE_NOFRAMES_CONTENT) {
 			def = new CtdNoframesContent(elementCollection);
 
@@ -144,6 +183,10 @@ final class ComplexTypeDefinitionFactory {
 		}
 		else if (definitionName == CTYPE_PARAM_CONTAINER) {
 			def = new CtdParamContainer(elementCollection);
+
+		}
+		else if (definitionName == CTYPE_RUBY) {
+			def = new CtdRuby(elementCollection);
 
 		}
 		else if (definitionName == CTYPE_SELECT) {
@@ -167,7 +210,11 @@ final class ComplexTypeDefinitionFactory {
 		}
 		if (def == null)
 			return null; // fail to create.
-		definitions.put(definitionName, def);
+		ComplexTypeDefinition[] temp = defs;
+		defs = new ComplexTypeDefinition[defs.length + 1];
+		System.arraycopy(temp, 0, defs, 0, temp.length);
+		defs[temp.length] = def;
+		definitions.put(definitionName, defs);
 		return def;
 	}
 

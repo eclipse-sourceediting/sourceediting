@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,8 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	// <<D210422
 	private static final char SINGLE_QUOTE = '\'';
 	private static final char DOUBLE_QUOTE = '\"';
+
+	private static final String ATTR_NAME_DATA = "data-";
 
 	// D210422
 	/**
@@ -122,6 +124,10 @@ public class HTMLAttributeValidator extends PrimeValidator {
 					continue; // skip futher validation and begin next loop.
 			}
 
+			String attrName = a.getName().toLowerCase(Locale.US);
+			if (attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length())
+				continue;
+
 			CMAttributeDeclaration adec = (CMAttributeDeclaration) declarations.getNamedItem(a.getName());
 			
 			/* Check the modelquery if nothing is declared by the element declaration */
@@ -129,7 +135,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				if (modelQueryNodes == null)
 					modelQueryNodes = ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getAvailableContent((Element) node, edec, ModelQuery.INCLUDE_ATTRIBUTES);
 				
-				String attrName = a.getName().toLowerCase(Locale.US);
+				
 				for (int k = 0; k < modelQueryNodes.size(); k++) {
 					CMNode cmnode = (CMNode) modelQueryNodes.get(k);
 					if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION && cmnode.getNodeName().toLowerCase(Locale.US).equals(attrName)) {
@@ -151,6 +157,9 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			} else {
 				// The attr declaration was found.
 				// At 1st, the name should be checked.
+				if (CMUtil.isObsolete(adec)){
+					state = ErrorState.OBSOLETE_ATTR_NAME_ERROR;
+				}
 				if (CMUtil.isHTML(edec) && (!CMUtil.isXHTML(edec))) {
 					// If the target element is pure HTML (not XHTML), some
 					// attributes

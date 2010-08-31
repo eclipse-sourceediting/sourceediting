@@ -155,6 +155,13 @@ public class HTMLTagsCompletionProposalComputer extends
 			Boolean isXHTML = ((Boolean)node.getProperty(HTMLCMProperties.IS_XHTML));
 			isValid = isXHTML != null && isXHTML.booleanValue();
 		}
+
+		// Do not propose obsolete tags, regardless
+		if (isValid && node.supports(HTMLCMProperties.IS_OBSOLETE)) {
+			Boolean isObsolete = ((Boolean) node.getProperty(HTMLCMProperties.IS_OBSOLETE));
+			isValid = !(isObsolete != null && isObsolete.booleanValue());
+		}
+
 		return isValid;
 	}
 	

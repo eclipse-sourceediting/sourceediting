@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,8 @@ public class HTMLCoreMessages extends NLS {
 	public static String HTMLContentPropertiesManager_Updating;
 	public static String HTMLContentPropertiesManager_Problems_Updating;
 	public static String _ERROR_Resource_not_found_0;
+	public static String Obsolete_attribute_name___ERROR_;
+	public static String Obsolete_tag___ERROR_;
 
 	static {
 		// load message values from bundle file

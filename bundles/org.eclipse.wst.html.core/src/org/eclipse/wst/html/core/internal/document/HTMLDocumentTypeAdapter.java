@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,9 +72,11 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 
 		// find DOCTYPE delcaration and Public ID
 		String publicId = null;
+		String systemId = null;
 		DocumentType newDocumentType = findDocumentType(document);
 		if (newDocumentType != null) {
 			publicId = newDocumentType.getPublicId();
+			systemId = newDocumentType.getSystemId();
 		}
 		else {
 			// lookup default set by contentsettings
@@ -85,6 +87,9 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 		HTMLDocumentTypeEntry newEntry = null;
 		if (publicId != null) {
 			newEntry = HTMLDocumentTypeRegistry.getInstance().getEntry(publicId);
+		}
+		else if (systemId == null){
+				newEntry = HTMLDocumentTypeRegistry.getInstance().getDefaultEntry(HTMLDocumentTypeRegistry.DEFAULT_HTML5);
 		}
 
 		boolean newXMLType = (newEntry != null ? newEntry.isXMLType() : false);
@@ -137,7 +142,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 				if (impl != null) {
 					String name = newEntry.getName();
 					publicId = newEntry.getPublicId();
-					String systemId = newEntry.getSystemId();
+					systemId = newEntry.getSystemId();
 					newDocumentType = impl.createDocumentType(name, publicId, systemId);
 				}
 			}

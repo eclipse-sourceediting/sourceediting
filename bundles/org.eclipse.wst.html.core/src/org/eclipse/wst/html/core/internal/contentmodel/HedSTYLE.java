@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,8 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 
 
-import java.util.Arrays;
-
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 
 /**
@@ -35,11 +31,7 @@ final class HedSTYLE extends HTMLElemDeclImpl {
 
 	/**
 	 * STYLE
-	 * %i18n;
-	 * (type %ContentType; #REQUIRED) ... should be defined locally.
-	 * (media %MediaDesc; #IMPLIED)
-	 * (title %Text; #IMPLIED)
-	 */
+	*/
 	protected void createAttributeDeclarations() {
 		if (attributes != null)
 			return; // already created.
@@ -47,17 +39,11 @@ final class HedSTYLE extends HTMLElemDeclImpl {
 			return; // fatal
 
 		attributes = new CMNamedNodeMapImpl();
-
-		// %i18n;
-		attributeCollection.getI18n(attributes);
-
-		String[] names = {HTML40Namespace.ATTR_NAME_MEDIA, HTML40Namespace.ATTR_NAME_TITLE};
-		attributeCollection.getDeclarations(attributes, Arrays.asList(names).iterator());
-		// (type %ContentType; #REQUIRED) ... should be defined locally.
-		HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.CONTENT_TYPE);
-		atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, "text/css"); //$NON-NLS-1$
-		HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(HTML40Namespace.ATTR_NAME_TYPE, atype, CMAttributeDeclaration.REQUIRED);
-		attributes.putNamedItem(HTML40Namespace.ATTR_NAME_TYPE, attr);
+		
+		//different sets of attributes for html 4 & 5
+		attributeCollection.createAttributeDeclarations(HTML40Namespace.ElementName.STYLE, attributes);
+	
+		
 	}
 
 	/**

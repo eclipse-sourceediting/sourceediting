@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -146,7 +146,15 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 		}
 		while (tokenizer.hasMoreTokens());
 		if (contentTypeValue != null) {
-			parseContentTypeValue(contentTypeValue);
+			if (tokenizer.hasCharsetAttr()) {
+				contentTypeValue = contentTypeValue.trim();
+				if (contentTypeValue.length() > 0) {
+					createEncodingMemento(contentTypeValue, EncodingMemento.FOUND_ENCODING_IN_CONTENT);
+				}
+			}
+			else {
+				parseContentTypeValue(contentTypeValue);
+			}
 		}
 	}
 

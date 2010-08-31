@@ -128,7 +128,11 @@ public class HTMLElementContentValidator extends PrimeValidator {
 				// type of the parent content model. -- 10/12/2001
 				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)))
 					return;
-
+				if (CMUtil.isObsolete(ced)){
+					error = ErrorState.OBSOLETE_TAG_NAME_ERROR;
+					break;
+				}
+				
 				switch (contentType) {
 					case CMElementDeclaration.ANY :
 						// Keep going.

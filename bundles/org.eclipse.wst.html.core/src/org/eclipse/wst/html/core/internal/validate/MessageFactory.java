@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,6 +94,7 @@ public class MessageFactory implements ErrorState {
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_MISMATCH, attrTable, MISMATCHED_VALUE_ERROR, MSG_MISMATCHED_ATTR_VALUE_ERROR);
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_UNCLOSED, attrTable, UNCLOSED_ATTR_VALUE, MSG_UNCLOSED_ATTR_VALUE_ERROR);
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND, attrTable, RESOURCE_NOT_FOUND, MSG_RESOURCE_NOT_FOUND);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_OBSOLETE_NAME, attrTable, OBSOLETE_ATTR_NAME_ERROR, MSG_OBSOLETE_ATTR_ERROR);
 
 		// element error map
 		ErrorTable elemTable = errTables[NodeType.ELEMENT];// short hand
@@ -112,6 +113,8 @@ public class MessageFactory implements ErrorState {
 		mapToKey(HTMLCorePreferenceNames.ELEM_UNCLOSED_START_TAG, elemTable, UNCLOSED_TAG_ERROR, MSG_UNCLOSED_START_TAG_ERROR);
 		mapToKey(HTMLCorePreferenceNames.ELEM_UNCLOSED_END_TAG, elemTable, UNCLOSED_END_TAG_ERROR, MSG_UNCLOSED_END_TAG_ERROR);
 		mapToKey(HTMLCorePreferenceNames.ELEM_INVALID_EMPTY_TAG, elemTable, INVALID_EMPTY_ELEMENT_TAG, MSG_INVALID_EMPTY_ELEMENT_TAG);
+		mapToKey(HTMLCorePreferenceNames.ELEM_OBSOLETE_NAME, elemTable, OBSOLETE_TAG_NAME_ERROR, MSG_OBSOLETE_TAG_ERROR);
+
 
 		// document type error map
 		ErrorTable docTable = errTables[NodeType.DOCUMENT_TYPE];// short hand
@@ -237,6 +240,8 @@ public class MessageFactory implements ErrorState {
 	private static final String MSG_INVALID_EMPTY_ELEMENT_TAG = HTMLCoreMessages._ERROR_Tag___0___should_be_an_empty_element_tag_1;
 	private static final String MSG_UNCLOSED_ATTR_VALUE_ERROR = HTMLCoreMessages._ERROR_Attribute_value___0___not_closed__1;
 	private static final String MSG_RESOURCE_NOT_FOUND = HTMLCoreMessages._ERROR_Resource_not_found_0;
+	private static final String MSG_OBSOLETE_ATTR_ERROR = HTMLCoreMessages.Obsolete_attribute_name___ERROR_;
+	private static final String MSG_OBSOLETE_TAG_ERROR = HTMLCoreMessages.Obsolete_tag___ERROR_;
 	
 	private ErrorTable[] errTables = new ErrorTable[NodeType.MAX_TYPE];
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 import java.util.Arrays;
 
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -317,6 +318,53 @@ final class CtdHtml extends ComplexTypeDefinition {
 			content.appendChild(edec);
 
 	    edec = collection.getNamedItem(HTML40Namespace.ElementName.STRONG);
+		if (edec != null)
+			content.appendChild(edec);
+		edec = collection.getNamedItem(HTML50Namespace.ElementName.ARTICLE);
+		if (edec != null)
+			content.appendChild(edec);
+
+	    edec = collection.getNamedItem(HTML50Namespace.ElementName.ASIDE);
+		if (edec != null)
+			content.appendChild(edec);
+		edec = collection.getNamedItem(HTML50Namespace.ElementName.NAV);
+		if (edec != null)
+			content.appendChild(edec);
+
+	    edec = collection.getNamedItem(HTML50Namespace.ElementName.SECTION);
+		if (edec != null)
+			content.appendChild(edec);
+		edec = collection.getNamedItem(HTML50Namespace.ElementName.AUDIO);
+		if (edec != null)
+			content.appendChild(edec);
+
+	    edec = collection.getNamedItem(HTML50Namespace.ElementName.VIDEO);
+		if (edec != null)
+			content.appendChild(edec);
+		edec = collection.getNamedItem(HTML50Namespace.ElementName.CANVAS);
+		if (edec != null)
+			content.appendChild(edec);
+
+	    edec = collection.getNamedItem(HTML50Namespace.ElementName.COMMAND);
+		if (edec != null)
+			content.appendChild(edec);
+		
+	    edec = collection.getNamedItem(HTML50Namespace.ElementName.HEADER);
+		if (edec != null)
+			content.appendChild(edec);
+		
+	    edec = collection.getNamedItem(HTML50Namespace.ElementName.FOOTER);
+		if (edec != null)
+			content.appendChild(edec);
+		
+	    edec = collection.getNamedItem(HTML50Namespace.ElementName.MARK);
+		if (edec != null)
+			content.appendChild(edec);
+		
+		edec = collection.getNamedItem(HTML50Namespace.ElementName.FIGURE);
+		if (edec != null)
+			content.appendChild(edec);
+		edec = collection.getNamedItem(HTML50Namespace.ElementName.RUBY);
 		if (edec != null)
 			content.appendChild(edec);
 	}

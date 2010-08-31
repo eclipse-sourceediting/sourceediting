@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,6 +78,11 @@ public interface HTMLCMProperties {
 	 * "isScriptable" returns java.lang.Boolean object.
 	 */
 	public static final String IS_SCRIPTABLE = "isScriptable"; //$NON-NLS-1$
+	/**
+	 * "isObsolete" returns java.lang.Boolean object.
+	 */
+	public static final String IS_OBSOLETE = "isObsolete";//$NON-NLS-1$
+	
 
 	public static interface Values {
 		/*

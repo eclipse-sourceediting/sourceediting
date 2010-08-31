@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.wst.html.core.internal.contentmodel.chtml.CHCMDocImpl;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 
@@ -27,7 +28,7 @@ import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 public final class HTMLCMDocumentFactory {
 
 	private static Hashtable cmdocs = new Hashtable();
-	private static List supportedCMtypes = Arrays.asList(new Object[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE, CMDocType.JSP21_DOC_TYPE});
+	private static List supportedCMtypes = Arrays.asList(new Object[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE, CMDocType.JSP21_DOC_TYPE, CMDocType.HTML5_DOC_TYPE});
 
 	private static JCMDocImpl jsp11doc = null;
 
@@ -62,6 +63,12 @@ public final class HTMLCMDocumentFactory {
 			return html40doc;
 		}
 
+		else if (CMDocType.HTML5_DOC_TYPE.equals(cmtype)) {
+			CMNamespaceImpl h50ns = new CMNamespaceImpl(HTML50Namespace.HTML50_URI, HTML50Namespace.HTML50_TAG_PREFIX);
+			H5CMDocImpl html50doc = new H5CMDocImpl(CMDocType.HTML5_DOC_TYPE, h50ns);
+			return html50doc;
+		}
+		
 		else if (CMDocType.JSP20_DOC_TYPE.equals(cmtype)) {
 			CMNamespaceImpl j20ns = new CMNamespaceImpl(JSP20Namespace.JSP20_URI, JSP11Namespace.JSP_TAG_PREFIX);
 			JCM20DocImpl jsp20doc = new JCM20DocImpl(CMDocType.JSP20_DOC_TYPE, j20ns);

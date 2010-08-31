@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,9 @@ interface ErrorState {
 	static final int UNDEFINED_NAME_ERROR = 11;
 	static final int UNDEFINED_VALUE_ERROR = 12;
 	static final int MISMATCHED_VALUE_ERROR = 13;
+	static final int OBSOLETE_ATTR_NAME_ERROR = 14;
+	static final int OBSOLETE_TAG_NAME_ERROR = 15;
+	
 	// format error
 	static final int FORMAT_ERROR_LEVEL = 100;
 	static final int INVALID_NAME_ERROR = 101;

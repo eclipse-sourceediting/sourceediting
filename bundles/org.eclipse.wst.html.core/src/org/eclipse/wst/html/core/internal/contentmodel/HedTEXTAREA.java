@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,6 @@
 package org.eclipse.wst.html.core.internal.contentmodel;
 
 
-
-import java.util.Arrays;
 
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -35,19 +33,6 @@ final class HedTEXTAREA extends HedPcdata {
 	/**
 	 * TEXTAREA.
 	 * %attrs;
-	 * %reserved; ... empty
-	 * (name CDATA #IMPLIED)
-	 * (rows NUMBER #REQUIRED)
-	 * (cols NUMBER #REQUIRED)
-	 * (disabled (disabled) #IMPLIED)
-	 * (readonly (readonly) #IMPLIED)
-	 * (tabindex NUMBER #IMPLIED)
-	 * (accesskey %Character; #IMPLIED)
-	 * (onfocus %Script; #IMPLIED)
-	 * (onblur %Script; #IMPLIED)
-	 * (onselect %Script; #IMPLIED)
-	 * (onchange %Script; #IMPLIED)
-	 * (istyle CDATA #IMPLIED)
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)
@@ -58,10 +43,10 @@ final class HedTEXTAREA extends HedPcdata {
 
 		// %attrs;
 		attributeCollection.getAttrs(attributes);
-
-		String[] names = {HTML40Namespace.ATTR_NAME_NAME, HTML40Namespace.ATTR_NAME_ROWS, HTML40Namespace.ATTR_NAME_COLS, HTML40Namespace.ATTR_NAME_DISABLED, HTML40Namespace.ATTR_NAME_READONLY, HTML40Namespace.ATTR_NAME_TABINDEX, HTML40Namespace.ATTR_NAME_ACCESSKEY, HTML40Namespace.ATTR_NAME_ONFOCUS, HTML40Namespace.ATTR_NAME_ONBLUR, HTML40Namespace.ATTR_NAME_ONSELECT, HTML40Namespace.ATTR_NAME_ONCHANGE, HTML40Namespace.ATTR_NAME_ISTYLE};
-		attributeCollection.getDeclarations(attributes, Arrays.asList(names).iterator());
-	}
+		//different sets of attributes for html 4 & 5
+		attributeCollection.createAttributeDeclarations(HTML40Namespace.ElementName.TEXTAREA, attributes);
+	
+		}
 
 	/**
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,11 +22,11 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 /**
  * Factory for element declarations.
  */
-final class ElementCollection extends DeclCollection implements org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.ElementName {
+class ElementCollection extends DeclCollection implements org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.ElementName {
 
 
 	// Element IDs
-	private static class Ids {
+	protected static class Ids {
 		public static final int ID_A = 0;
 		public static final int ID_ABBR = 1;
 		public static final int ID_ACRONYM = 2;
@@ -183,123 +183,18 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	private static final String[] LIST = {UL, OL, DIR, MENU};
 	/** %preformatted;. PRE */
 	private static final String[] PREFORMATTED = {PRE};
-	private AttributeCollection attributeCollection = null;
+	protected AttributeCollection attributeCollection = null;
 	private static String[] fNames = null;
-
-	static {
-		fNames = new String[Ids.getNumOfIds()];
-		fNames[Ids.ID_A] = A;
-		fNames[Ids.ID_ABBR] = ABBR;
-		fNames[Ids.ID_ACRONYM] = ACRONYM;
-		fNames[Ids.ID_ADDRESS] = ADDRESS;
-		fNames[Ids.ID_APPLET] = APPLET;
-		fNames[Ids.ID_AREA] = AREA;
-		fNames[Ids.ID_B] = B;
-		fNames[Ids.ID_BASE] = BASE;
-		fNames[Ids.ID_BASEFONT] = BASEFONT;
-		fNames[Ids.ID_BDO] = BDO;
-		fNames[Ids.ID_BIG] = BIG;
-		fNames[Ids.ID_BLINK] = BLINK;
-		fNames[Ids.ID_BLOCKQUOTE] = BLOCKQUOTE;
-		fNames[Ids.ID_BODY] = BODY;
-		fNames[Ids.ID_BR] = BR;
-		fNames[Ids.ID_BUTTON] = BUTTON;
-		fNames[Ids.ID_CAPTION] = CAPTION;
-		fNames[Ids.ID_CENTER] = CENTER;
-		fNames[Ids.ID_CITE] = CITE;
-		fNames[Ids.ID_CODE] = CODE;
-		fNames[Ids.ID_COL] = COL;
-		fNames[Ids.ID_COLGROUP] = COLGROUP;
-		fNames[Ids.ID_DD] = DD;
-		fNames[Ids.ID_DEL] = DEL;
-		fNames[Ids.ID_DFN] = DFN;
-		fNames[Ids.ID_DIR] = DIR;
-		fNames[Ids.ID_DIV] = DIV;
-		fNames[Ids.ID_DL] = DL;
-		fNames[Ids.ID_DT] = DT;
-		fNames[Ids.ID_EM] = EM;
-		fNames[Ids.ID_EMBED] = EMBED;
-		fNames[Ids.ID_FIELDSET] = FIELDSET;
-		fNames[Ids.ID_FONT] = FONT;
-		fNames[Ids.ID_FORM] = FORM;
-		fNames[Ids.ID_FRAME] = FRAME;
-		fNames[Ids.ID_FRAMESET] = FRAMESET;
-		fNames[Ids.ID_H1] = H1;
-		fNames[Ids.ID_H2] = H2;
-		fNames[Ids.ID_H3] = H3;
-		fNames[Ids.ID_H4] = H4;
-		fNames[Ids.ID_H5] = H5;
-		fNames[Ids.ID_H6] = H6;
-		fNames[Ids.ID_HEAD] = HEAD;
-		fNames[Ids.ID_HR] = HR;
-		fNames[Ids.ID_HTML] = HTML;
-		fNames[Ids.ID_I] = I;
-		fNames[Ids.ID_IFRAME] = IFRAME;
-		fNames[Ids.ID_IMG] = IMG;
-		fNames[Ids.ID_INPUT] = INPUT;
-		fNames[Ids.ID_INS] = INS;
-		fNames[Ids.ID_ISINDEX] = ISINDEX;
-		fNames[Ids.ID_KBD] = KBD;
-		fNames[Ids.ID_LABEL] = LABEL;
-		fNames[Ids.ID_LEGEND] = LEGEND;
-		fNames[Ids.ID_LI] = LI;
-		fNames[Ids.ID_LINK] = LINK;
-		fNames[Ids.ID_MAP] = MAP;
-		fNames[Ids.ID_MENU] = MENU;
-		fNames[Ids.ID_META] = META;
-		fNames[Ids.ID_NOEMBED] = NOEMBED;
-		fNames[Ids.ID_NOFRAMES] = NOFRAMES;
-		fNames[Ids.ID_NOSCRIPT] = NOSCRIPT;
-		fNames[Ids.ID_OBJECT] = OBJECT;
-		fNames[Ids.ID_OL] = OL;
-		fNames[Ids.ID_OPTGROUP] = OPTGROUP;
-		fNames[Ids.ID_OPTION] = OPTION;
-		fNames[Ids.ID_P] = P;
-		fNames[Ids.ID_PARAM] = PARAM;
-		fNames[Ids.ID_PRE] = PRE;
-		fNames[Ids.ID_Q] = Q;
-		fNames[Ids.ID_S] = S;
-		fNames[Ids.ID_SAMP] = SAMP;
-		fNames[Ids.ID_SCRIPT] = SCRIPT;
-		fNames[Ids.ID_SELECT] = SELECT;
-		fNames[Ids.ID_SMALL] = SMALL;
-		fNames[Ids.ID_SPAN] = SPAN;
-		fNames[Ids.ID_STRIKE] = STRIKE;
-		fNames[Ids.ID_STRONG] = STRONG;
-		fNames[Ids.ID_STYLE] = STYLE;
-		fNames[Ids.ID_SUB] = SUB;
-		fNames[Ids.ID_SUP] = SUP;
-		fNames[Ids.ID_TABLE] = TABLE;
-		fNames[Ids.ID_TBODY] = TBODY;
-		fNames[Ids.ID_TD] = TD;
-		fNames[Ids.ID_TEXTAREA] = TEXTAREA;
-		fNames[Ids.ID_TFOOT] = TFOOT;
-		fNames[Ids.ID_TH] = TH;
-		fNames[Ids.ID_THEAD] = THEAD;
-		fNames[Ids.ID_TITLE] = TITLE;
-		fNames[Ids.ID_TR] = TR;
-		fNames[Ids.ID_TT] = TT;
-		fNames[Ids.ID_U] = U;
-		fNames[Ids.ID_UL] = UL;
-		fNames[Ids.ID_VAR] = VAR;
-		fNames[Ids.ID_MARQUEE] = MARQUEE;
-		fNames[Ids.ID_SSI_CONFIG] = SSI_CONFIG;
-		fNames[Ids.ID_SSI_ECHO] = SSI_ECHO;
-		fNames[Ids.ID_SSI_EXEC] = SSI_EXEC;
-		fNames[Ids.ID_SSI_FSIZE] = SSI_FSIZE;
-		fNames[Ids.ID_SSI_FLASTMOD] = SSI_FLASTMOD;
-		fNames[Ids.ID_SSI_INCLUDE] = SSI_INCLUDE;
-		fNames[Ids.ID_SSI_PRINTENV] = SSI_PRINTENV;
-		fNames[Ids.ID_SSI_SET] = SSI_SET;
-		fNames[Ids.ID_BGSOUND] = BGSOUND;
-		fNames[Ids.ID_NOBR] = NOBR;
-		fNames[Ids.ID_WBR] = WBR;
-	}
 
 	/**
 	 */
 	public ElementCollection(AttributeCollection collection) {
-		super(fNames, TOLERANT_CASE);
+		super(getNames(), TOLERANT_CASE);
+		attributeCollection = collection;
+	}
+
+	public ElementCollection(String[] names, AttributeCollection collection) {
+		super(names, TOLERANT_CASE);
 		attributeCollection = collection;
 	}
 
@@ -747,7 +642,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 		return attributeCollection;
 	}
 
-	public final Collection getNamesOfBlock() {
+	public Collection getNamesOfBlock() {
 		// P, DL, DIV, CENTER, NOSCRIPT, NOFRAMES, BLOCKQUOTE, FORM, ISINDEX, HR,
 		// TABLE, FIELDSET, ADDRESS
 		String[] blockMisc = {P, DL, DIV, CENTER, NOSCRIPT, NOFRAMES, BLOCKQUOTE, FORM, ISINDEX, HR, TABLE, FIELDSET, ADDRESS};
@@ -781,7 +676,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * into a <code>CMGroupImpl</code> instance.
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getFlow(CMGroupImpl group) {
+	public void getFlow(CMGroupImpl group) {
 		if (group == null)
 			return;
 		getBlock(group);
@@ -793,7 +688,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * instance.<br>
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getFontstyle(CMGroupImpl group) {
+	public void getFontstyle(CMGroupImpl group) {
 		if (group == null)
 			return;
 		getDeclarations(group, Arrays.asList(FONTSTYLE).iterator());
@@ -804,7 +699,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * instance.<br>
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getFormctrl(CMGroupImpl group) {
+	public void getFormctrl(CMGroupImpl group) {
 		if (group == null)
 			return;
 		getDeclarations(group, Arrays.asList(FORMCTL).iterator());
@@ -814,7 +709,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * %heading;.
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getHeading(CMGroupImpl group) {
+	public void getHeading(CMGroupImpl group) {
 		if (group == null)
 			return;
 
@@ -826,7 +721,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * into a <code>CMGroupImpl</code> instance.
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getInline(CMGroupImpl group) {
+	public void getInline(CMGroupImpl group) {
 		if (group == null)
 			return;
 		getFontstyle(group);
@@ -839,7 +734,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * %list;.
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getList(CMGroupImpl group) {
+	public void getList(CMGroupImpl group) {
 		if (group == null)
 			return;
 
@@ -851,7 +746,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * instance.<br>
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getPhrase(CMGroupImpl group) {
+	public void getPhrase(CMGroupImpl group) {
 		if (group == null)
 			return;
 		getDeclarations(group, Arrays.asList(PHRASE).iterator());
@@ -861,7 +756,7 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * %preformatted;
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getPreformatted(CMGroupImpl group) {
+	public void getPreformatted(CMGroupImpl group) {
 		if (group == null)
 			return;
 
@@ -873,9 +768,122 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 	 * instance.<br>
 	 * @param group CMGroupImpl Return values.
 	 */
-	public final void getSpecial(CMGroupImpl group) {
+	public void getSpecial(CMGroupImpl group) {
 		if (group == null)
 			return;
 		getDeclarations(group, Arrays.asList(SPECIAL).iterator());
+	}
+
+	private static String[] getNames() {
+		if (fNames == null) {
+			fNames = new String[Ids.getNumOfIds()];
+			fNames[Ids.ID_A] = A;
+			fNames[Ids.ID_ABBR] = ABBR;
+			fNames[Ids.ID_ACRONYM] = ACRONYM;
+			fNames[Ids.ID_ADDRESS] = ADDRESS;
+			fNames[Ids.ID_APPLET] = APPLET;
+			fNames[Ids.ID_AREA] = AREA;
+			fNames[Ids.ID_B] = B;
+			fNames[Ids.ID_BASE] = BASE;
+			fNames[Ids.ID_BASEFONT] = BASEFONT;
+			fNames[Ids.ID_BDO] = BDO;
+			fNames[Ids.ID_BIG] = BIG;
+			fNames[Ids.ID_BLINK] = BLINK;
+			fNames[Ids.ID_BLOCKQUOTE] = BLOCKQUOTE;
+			fNames[Ids.ID_BODY] = BODY;
+			fNames[Ids.ID_BR] = BR;
+			fNames[Ids.ID_BUTTON] = BUTTON;
+			fNames[Ids.ID_CAPTION] = CAPTION;
+			fNames[Ids.ID_CENTER] = CENTER;
+			fNames[Ids.ID_CITE] = CITE;
+			fNames[Ids.ID_CODE] = CODE;
+			fNames[Ids.ID_COL] = COL;
+			fNames[Ids.ID_COLGROUP] = COLGROUP;
+			fNames[Ids.ID_DD] = DD;
+			fNames[Ids.ID_DEL] = DEL;
+			fNames[Ids.ID_DFN] = DFN;
+			fNames[Ids.ID_DIR] = DIR;
+			fNames[Ids.ID_DIV] = DIV;
+			fNames[Ids.ID_DL] = DL;
+			fNames[Ids.ID_DT] = DT;
+			fNames[Ids.ID_EM] = EM;
+			fNames[Ids.ID_EMBED] = EMBED;
+			fNames[Ids.ID_FIELDSET] = FIELDSET;
+			fNames[Ids.ID_FONT] = FONT;
+			fNames[Ids.ID_FORM] = FORM;
+			fNames[Ids.ID_FRAME] = FRAME;
+			fNames[Ids.ID_FRAMESET] = FRAMESET;
+			fNames[Ids.ID_H1] = H1;
+			fNames[Ids.ID_H2] = H2;
+			fNames[Ids.ID_H3] = H3;
+			fNames[Ids.ID_H4] = H4;
+			fNames[Ids.ID_H5] = H5;
+			fNames[Ids.ID_H6] = H6;
+			fNames[Ids.ID_HEAD] = HEAD;
+			fNames[Ids.ID_HR] = HR;
+			fNames[Ids.ID_HTML] = HTML;
+			fNames[Ids.ID_I] = I;
+			fNames[Ids.ID_IFRAME] = IFRAME;
+			fNames[Ids.ID_IMG] = IMG;
+			fNames[Ids.ID_INPUT] = INPUT;
+			fNames[Ids.ID_INS] = INS;
+			fNames[Ids.ID_ISINDEX] = ISINDEX;
+			fNames[Ids.ID_KBD] = KBD;
+			fNames[Ids.ID_LABEL] = LABEL;
+			fNames[Ids.ID_LEGEND] = LEGEND;
+			fNames[Ids.ID_LI] = LI;
+			fNames[Ids.ID_LINK] = LINK;
+			fNames[Ids.ID_MAP] = MAP;
+			fNames[Ids.ID_MENU] = MENU;
+			fNames[Ids.ID_META] = META;
+			fNames[Ids.ID_NOEMBED] = NOEMBED;
+			fNames[Ids.ID_NOFRAMES] = NOFRAMES;
+			fNames[Ids.ID_NOSCRIPT] = NOSCRIPT;
+			fNames[Ids.ID_OBJECT] = OBJECT;
+			fNames[Ids.ID_OL] = OL;
+			fNames[Ids.ID_OPTGROUP] = OPTGROUP;
+			fNames[Ids.ID_OPTION] = OPTION;
+			fNames[Ids.ID_P] = P;
+			fNames[Ids.ID_PARAM] = PARAM;
+			fNames[Ids.ID_PRE] = PRE;
+			fNames[Ids.ID_Q] = Q;
+			fNames[Ids.ID_S] = S;
+			fNames[Ids.ID_SAMP] = SAMP;
+			fNames[Ids.ID_SCRIPT] = SCRIPT;
+			fNames[Ids.ID_SELECT] = SELECT;
+			fNames[Ids.ID_SMALL] = SMALL;
+			fNames[Ids.ID_SPAN] = SPAN;
+			fNames[Ids.ID_STRIKE] = STRIKE;
+			fNames[Ids.ID_STRONG] = STRONG;
+			fNames[Ids.ID_STYLE] = STYLE;
+			fNames[Ids.ID_SUB] = SUB;
+			fNames[Ids.ID_SUP] = SUP;
+			fNames[Ids.ID_TABLE] = TABLE;
+			fNames[Ids.ID_TBODY] = TBODY;
+			fNames[Ids.ID_TD] = TD;
+			fNames[Ids.ID_TEXTAREA] = TEXTAREA;
+			fNames[Ids.ID_TFOOT] = TFOOT;
+			fNames[Ids.ID_TH] = TH;
+			fNames[Ids.ID_THEAD] = THEAD;
+			fNames[Ids.ID_TITLE] = TITLE;
+			fNames[Ids.ID_TR] = TR;
+			fNames[Ids.ID_TT] = TT;
+			fNames[Ids.ID_U] = U;
+			fNames[Ids.ID_UL] = UL;
+			fNames[Ids.ID_VAR] = VAR;
+			fNames[Ids.ID_MARQUEE] = MARQUEE;
+			fNames[Ids.ID_SSI_CONFIG] = SSI_CONFIG;
+			fNames[Ids.ID_SSI_ECHO] = SSI_ECHO;
+			fNames[Ids.ID_SSI_EXEC] = SSI_EXEC;
+			fNames[Ids.ID_SSI_FSIZE] = SSI_FSIZE;
+			fNames[Ids.ID_SSI_FLASTMOD] = SSI_FLASTMOD;
+			fNames[Ids.ID_SSI_INCLUDE] = SSI_INCLUDE;
+			fNames[Ids.ID_SSI_PRINTENV] = SSI_PRINTENV;
+			fNames[Ids.ID_SSI_SET] = SSI_SET;
+			fNames[Ids.ID_BGSOUND] = BGSOUND;
+			fNames[Ids.ID_NOBR] = NOBR;
+			fNames[Ids.ID_WBR] = WBR;
+		}
+		return fNames;
 	}
 }
