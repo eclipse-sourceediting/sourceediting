@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ import org.w3c.dom.Node;
 public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 
 
+	private static CMDocument staticHTML5 = HTMLCMDocumentFactory.getCMDocument(CMDocType.HTML5_DOC_TYPE);
 	private static CMDocument staticHTML = HTMLCMDocumentFactory.getCMDocument(CMDocType.HTML_DOC_TYPE);
 	private static CMDocument staticCHTML = HTMLCMDocumentFactory.getCMDocument(CMDocType.CHTML_DOC_TYPE);
 	private static HTMLDocumentTypeRegistry doctypeRegistry = HTMLDocumentTypeRegistry.getInstance();
@@ -60,8 +61,10 @@ public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 			return null;
 
 		String pid = getPublicId(owner);
-		if (pid == null)
-			return staticHTML;
+		// no PID, always return the currently-supported HTML version
+		if (pid == null || "".equals(pid)){
+			return staticHTML5;
+		}
 
 		HTMLDocumentTypeEntry entry = doctypeRegistry.getEntry(pid);
 		if (entry == null)
@@ -112,6 +115,10 @@ public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 		if (doc == null)
 			return null;
 		DocumentType doctype = doc.getDoctype();
+		//doctype.
 		return (doctype != null) ? doctype.getPublicId() : doc.getDocumentTypeId();
 	}
+	
+	
+	
 }

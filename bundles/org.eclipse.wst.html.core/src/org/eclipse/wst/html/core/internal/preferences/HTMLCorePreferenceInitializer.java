@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,6 +80,8 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_MISMATCH, ValidationMessage.ERROR);
 		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_UNCLOSED, ValidationMessage.WARNING);
 		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND, ValidationMessage.IGNORE);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_OBSOLETE_NAME, ValidationMessage.WARNING);
+		
 		
 		// Elements
 		node.putInt(HTMLCorePreferenceNames.ELEM_UNKNOWN_NAME, ValidationMessage.WARNING);
@@ -96,6 +98,8 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 		node.putInt(HTMLCorePreferenceNames.ELEM_UNCLOSED_START_TAG, ValidationMessage.ERROR);
 		node.putInt(HTMLCorePreferenceNames.ELEM_UNCLOSED_END_TAG, ValidationMessage.ERROR);
 		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_EMPTY_TAG, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_OBSOLETE_NAME, ValidationMessage.WARNING);
+		
 		
 		// DOCTYPE
 		node.putInt(HTMLCorePreferenceNames.DOC_DUPLICATE, ValidationMessage.ERROR);

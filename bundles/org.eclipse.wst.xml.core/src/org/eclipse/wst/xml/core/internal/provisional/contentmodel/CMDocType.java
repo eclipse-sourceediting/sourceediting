@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,10 @@ public interface CMDocType {
 	 * HTML files
 	 */
 	public final static String HTML_DOC_TYPE = "HTML";//$NON-NLS-1$
+	/**
+	 * HTML5 files
+	 */
+	public final static String HTML5_DOC_TYPE = "HTML5";//$NON-NLS-1$
 	/**
 	 * JSP 1.1 files (currently includes 1.2 elements for backward behavioral compatibility)
 	 */

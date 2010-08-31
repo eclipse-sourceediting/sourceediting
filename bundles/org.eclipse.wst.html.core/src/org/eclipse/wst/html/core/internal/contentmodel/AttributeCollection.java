@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,10 +23,10 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 /**
  * Factory for attribute declarations.
  */
-final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Namespace {
+class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Namespace {
 
 	/** bodycolors. */
-	private static final String[] BODYCOLORS = {ATTR_NAME_BGCOLOR, ATTR_NAME_TEXT, ATTR_NAME_LINK, ATTR_NAME_VLINK, HTML40Namespace.ATTR_NAME_ALINK};
+	private static final String[] BODYCOLORS = {ATTR_NAME_BGCOLOR, ATTR_NAME_TEXT, ATTR_NAME_LINK, ATTR_NAME_VLINK, ATTR_NAME_ALINK};
 	/** coreattrs. */
 	private static final String[] CORE = {ATTR_NAME_ID, ATTR_NAME_CLASS, ATTR_NAME_STYLE, ATTR_NAME_TITLE};
 	/** events. */
@@ -49,7 +49,7 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	 * @param attrName
 	 *            java.lang.String
 	 */
-	private HTMLAttrDeclImpl create(String attrName) {
+	protected HTMLAttrDeclImpl create(String attrName) {
 		HTMLAttrDeclImpl attr = null;
 		HTMLCMDataTypeImpl atype = null;
 
@@ -1209,7 +1209,7 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 		atype.setEnumValues(values);
 
 		HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_ALIGN, atype, CMAttributeDeclaration.OPTIONAL);
-		declarations.putNamedItem(HTML40Namespace.ATTR_NAME_ALIGN, attr);
+		declarations.putNamedItem(ATTR_NAME_ALIGN, attr);
 
 		// the rest.
 		Iterator names = Arrays.asList(CELLHALIGN).iterator();
@@ -1221,9 +1221,9 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	 * (top|middle|bottom|baseline) #IMPLIED)
 	 */
 	public void getCellvalign(CMNamedNodeMapImpl declarations) {
-		HTMLAttributeDeclaration dec = getDeclaration(HTML40Namespace.ATTR_NAME_VALIGN);
+		HTMLAttributeDeclaration dec = getDeclaration(ATTR_NAME_VALIGN);
 		if (dec != null)
-			declarations.putNamedItem(HTML40Namespace.ATTR_NAME_VALIGN, dec);
+			declarations.putNamedItem(ATTR_NAME_VALIGN, dec);
 	}
 
 	/**
@@ -1281,5 +1281,411 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	public void getI18n(CMNamedNodeMapImpl declarations) {
 		Iterator names = Arrays.asList(I18N).iterator();
 		getDeclarations(declarations, names);
+	}
+	
+	/**
+	 * create declarations.
+	 */
+	public void createAttributeDeclarations(String elementName, CMNamedNodeMapImpl attributes) {
+		 /* (type %InputType; TEXT) ... should be defined locally.
+		 * (name CDATA #IMPLIED)
+		 * (value CDATA #IMPLIED)
+		 * (checked (checked) #IMPLIED)
+		 * (disabled (disabled) #IMPLIED)
+		 * (readonly (readonly) #IMPLIED)
+		 * (size CDATA #IMPLIED) ... should be defined locally.
+		 * (maxlength NUMBER #IMPLIED)
+		 * (src %URI; #IMPLIED)
+		 * (alt CDATA #IMPLIED) ... should be defined locally.
+		 * (usemap %URI; #IMPLIED)
+		 * (ismap (ismap) #IMPLIED)
+		 * (tabindex NUMBER #IMPLIED)
+		 * (accesskey %Character; #IMPLIED)
+		 * (onfocus %Script; #IMPLIED)
+		 * (onblur %Script; #IMPLIED)
+		 * (onselect %Script; #IMPLIED)
+		 * (onchange %Script; #IMPLIED)
+		 * (accept %ContentTypes; #IMPLIED)
+		 * (align %IAlign; #IMPLIED) ... should be defined locally.
+		 * (istyle CDATA #IMPLIED)
+		 * <<D215684
+		 * (width CDATA; #IMPLIED)
+		 * (height CDATA; #IMPLIED)
+		 * (border CDATA; #IMPLIED)
+		 * D215684
+		 */
+		if (elementName.equals(HTML40Namespace.ElementName.INPUT)){
+			HTMLCMDataTypeImpl atype = null;
+			HTMLAttrDeclImpl attr = null;
+			// (type %InputType; TEXT) ... should be defined locally.
+			// NOTE: %InputType is ENUM;
+			// (text | password | checkbox | radio | submit | reset |
+			//  file | hidden | image | button)
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] values = {ATTR_VALUE_TEXT, ATTR_VALUE_PASSWORD, ATTR_VALUE_CHECKBOX, ATTR_VALUE_RADIO, ATTR_VALUE_SUBMIT, ATTR_VALUE_RESET, ATTR_VALUE_FILE, ATTR_VALUE_HIDDEN, ATTR_VALUE_IMAGE, ATTR_VALUE_BUTTON};
+			atype.setEnumValues(values);
+			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_TEXT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
+
+			// (size CDATA #IMPLIED) ... should be defined locally.
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_SIZE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_SIZE, attr);
+
+			// (alt CDATA #IMPLIED) ... should be defined locally.
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ALT, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_ALT, attr);
+
+			// (align %IAlign; #IMPLIED) ... should be defined locally.
+			attr = AttributeCollection.createAlignForImage();
+			attributes.putNamedItem(ATTR_NAME_ALIGN, attr);
+
+			// the rest.
+			String[] names = {ATTR_NAME_NAME, ATTR_NAME_VALUE, ATTR_NAME_CHECKED, ATTR_NAME_DISABLED, ATTR_NAME_READONLY, ATTR_NAME_SIZE, ATTR_NAME_MAXLENGTH, ATTR_NAME_SRC, ATTR_NAME_ALT, ATTR_NAME_USEMAP, ATTR_NAME_ISMAP, ATTR_NAME_TABINDEX, ATTR_NAME_ACCESSKEY, ATTR_NAME_ONFOCUS, ATTR_NAME_ONBLUR, ATTR_NAME_ONSELECT, ATTR_NAME_ONCHANGE, ATTR_NAME_ACCEPT, ATTR_NAME_ALIGN, ATTR_NAME_ISTYLE,
+			//<<D215684
+						ATTR_NAME_WIDTH, ATTR_NAME_HEIGHT, ATTR_NAME_BORDER
+			//<D215684
+			};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+		}
+		 /* (charset %Charset; #IMPLIED)
+		 * (href %URI; #IMPLIED)
+		 * (hreflang %LanguageCode; #IMPLIED)
+		 * (type %ContentType; #IMPLIED): should be defined locally.
+		 * (rel %LinkTypes; #IMPLIED)
+		 * (rev %LinkTypes; #IMPLIED)
+		 * (media %MediaDesc; #IMPLIED)
+		 * (target %FrameTarget; #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.LINK)){
+			String[] names = {ATTR_NAME_CHARSET, ATTR_NAME_HREF, ATTR_NAME_HREFLANG, ATTR_NAME_REL, ATTR_NAME_REV, ATTR_NAME_MEDIA, ATTR_NAME_TARGET};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+
+			// (type %ContentType; #IMPLIED)
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.CONTENT_TYPE);
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
+		
+		}
+		/* (charset %Charset; #IMPLIED)
+		 * (type %ContentType; #IMPLIED)
+		 * (name CDATA #IMPLIED)
+		 * (href %URI; #IMPLIED)
+		 * (hreflang %LanguageCode; #IMPLIED)
+		 * (target %FrameTarget; #IMPLIED)
+		 * (rel %LinkTypes; #IMPLIED)
+		 * (rev %LinkTypes; #IMPLIED)
+		 * (accesskey %Character; #IMPLIED)
+		 * (directkey %Character; #IMPLIED)
+		 * (shape %Shape; rect)
+		 * (coords %Coords; #IMPLIED)
+		 * (tabindex NUMBER #IMPLIED)
+		 * (onfocus %Script; #IMPLIED)
+		 * (onblur %Script; #IMPLIED) 
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.A)){
+			String[] names = {ATTR_NAME_CHARSET, ATTR_NAME_TYPE, ATTR_NAME_NAME, ATTR_NAME_HREF, ATTR_NAME_HREFLANG, ATTR_NAME_TARGET, ATTR_NAME_REL, ATTR_NAME_REV, ATTR_NAME_ACCESSKEY, ATTR_NAME_DIRECTKEY, ATTR_NAME_SHAPE, ATTR_NAME_COORDS, ATTR_NAME_TABINDEX, ATTR_NAME_ONFOCUS, ATTR_NAME_ONBLUR};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+		
+		}
+		/*
+		 * (shape %Shape; rect)
+		 * (coords %Coords; #IMPLIED)
+		 * (href %URI; #IMPLIED)
+		 * (target %FrameTarget; #IMPLIED)
+		 * (nohref (nohref) #IMPLIED)
+		 * (alt %Text; #REQUIRED)
+		 * (tabindex NUMBER #IMPLIED)
+		 * (accesskey %Character; #IMPLIED)
+		 * (onfocus %Script; #IMPLIED)
+		 * (onblur %Script; #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.AREA)){
+			String[] names = {ATTR_NAME_SHAPE, ATTR_NAME_COORDS, ATTR_NAME_HREF, ATTR_NAME_TARGET, ATTR_NAME_NOHREF, ATTR_NAME_ALT, ATTR_NAME_TABINDEX, ATTR_NAME_ACCESSKEY, ATTR_NAME_ONFOCUS, ATTR_NAME_ONBLUR};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+		}
+		/*
+		 *  %i18n;
+		 * (http-equiv NAME #IMPLIED)
+		 * (name NAME #IMPLIED) ... should be defined locally.
+		 * (content CDATA #REQUIRED)
+		 * (scheme CDATA #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.META)){
+			// %i18n;
+			getI18n(attributes);
+
+			// (name NAME #IMPLIED) ... should be defined locally.
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.NAME);
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_NAME, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_NAME, attr);
+
+			String[] names = {ATTR_NAME_HTTP_EQUIV, ATTR_NAME_CONTENT, ATTR_NAME_SCHEME};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+		}
+		/*
+		 * (src %URI; #REQUIRED): should be defined locally.
+		 * (alt %Text; #REQUIRED)
+		 * (longdesc %URI; #IMPLIED)
+		 * (name CDATA #IMPLIED)
+		 * (height %Length; #IMPLIED)
+		 * (width %Length; #IMPLIED)
+		 * (usemap %URI; #IMPLIED)
+		 * (ismap (ismap) #IMPLIED)
+		 * (align %IAlign; #IMPLIED): should be defined locally.
+		 * (border %Pixels; #IMPLIED)
+		 * (hspace %Pixels; #IMPLIED)
+		 * (vspace %Pixels; #IMPLIED)
+		 * (mapfile %URI; #IMPLIED)
+	 
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.IMG)){
+			// (src %URI; #REQUIRED): should be defined locally.
+			HTMLCMDataTypeImpl atype = null;
+			HTMLAttrDeclImpl attr = null;
+			atype = new HTMLCMDataTypeImpl(CMDataType.URI);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_SRC, atype, CMAttributeDeclaration.REQUIRED);
+			attributes.putNamedItem(ATTR_NAME_SRC, attr);
+
+			String[] names = {ATTR_NAME_ALT, ATTR_NAME_LONGDESC, ATTR_NAME_NAME, ATTR_NAME_HEIGHT, ATTR_NAME_WIDTH, ATTR_NAME_USEMAP, ATTR_NAME_ISMAP, ATTR_NAME_BORDER, ATTR_NAME_HSPACE, ATTR_NAME_VSPACE, ATTR_NAME_MAPFILE};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+
+			// align (local); should be defined locally.
+			attr = AttributeCollection.createAlignForImage();
+			attributes.putNamedItem(ATTR_NAME_ALIGN, attr);
+		
+		}
+		/*
+		 * (id ID #IMPLIED)
+		 * (name CDATA #REQUIRED) ... should be defined locally.
+		 * (value CDATA #IMPLIED)
+		 * (valuetype (DATA|REF|OBJECT) DATA)
+		 * (type %ContentType; #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.PARAM)){
+			String[] names = {ATTR_NAME_ID, ATTR_NAME_VALUE, ATTR_NAME_VALUETYPE, ATTR_NAME_TYPE};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+
+			// (name CDATA #REQUIRED) ... should be defined locally.
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_NAME, atype, CMAttributeDeclaration.REQUIRED);
+			attributes.putNamedItem(ATTR_NAME_NAME, attr);
+		}
+		/*
+		 * %reserved; ... empty
+		 * (name CDATA #IMPLIED)
+		 * (rows NUMBER #REQUIRED)
+		 * (cols NUMBER #REQUIRED)
+		 * (disabled (disabled) #IMPLIED)
+		 * (readonly (readonly) #IMPLIED)
+		 * (tabindex NUMBER #IMPLIED)
+		 * (accesskey %Character; #IMPLIED)
+		 * (onfocus %Script; #IMPLIED)
+		 * (onblur %Script; #IMPLIED)
+		 * (onselect %Script; #IMPLIED)
+		 * (onchange %Script; #IMPLIED)
+		 * (istyle CDATA #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.TEXTAREA)){
+			String[] names = {ATTR_NAME_NAME, ATTR_NAME_ROWS, ATTR_NAME_COLS, ATTR_NAME_DISABLED, ATTR_NAME_READONLY, ATTR_NAME_TABINDEX, ATTR_NAME_ACCESSKEY, ATTR_NAME_ONFOCUS, ATTR_NAME_ONBLUR, ATTR_NAME_ONSELECT, ATTR_NAME_ONCHANGE, ATTR_NAME_ISTYLE};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+		}
+		/*
+		 * (charset %Charset; #IMPLIED)
+		 * (type %ContentType; #REQUIRED) ... should be defined locally.
+		 * (language CDATA #IMPLIED)
+		 * (src %URI; #IMPLIED)
+		 * (defer (defer) #IMPLIED)
+		 * (event CDATA #IMPLIED)
+		 * (for %URI; #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.SCRIPT)){
+			String[] names = {ATTR_NAME_CHARSET, ATTR_NAME_LANGUAGE, ATTR_NAME_SRC, ATTR_NAME_DEFER, ATTR_NAME_EVENT, ATTR_NAME_FOR};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+
+			// (type %ContentType; #REQUIRED) ... should be defined locally.
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.CONTENT_TYPE);
+			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, "text/javascript"); //$NON-NLS-1$
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.REQUIRED);
+			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
+		
+		}
+		/*
+		 *  %i18n;
+		 * (type %ContentType; #REQUIRED) ... should be defined locally.
+		 * (media %MediaDesc; #IMPLIED)
+		 * (title %Text; #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.STYLE)){
+			// %i18n;
+			getI18n(attributes);
+
+			String[] names = {ATTR_NAME_MEDIA, ATTR_NAME_TITLE};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+			// (type %ContentType; #REQUIRED) ... should be defined locally.
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.CONTENT_TYPE);
+			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, "text/css"); //$NON-NLS-1$
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.REQUIRED);
+			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
+		
+		}
+		/*
+		 * %reserved;
+		 * (name CDATA #IMPLIED)
+		 * (size NUMBER #IMPLIED) ... should be defined locally.
+		 * (multiple (multiple) #IMPLIED)
+		 * (disabled (disabled) #IMPLIED)
+		 * (tabindex NUMBER #IMPLIED)
+		 * (onfocus %Script; #IMPLIED)
+		 * (onblur %Script; #IMPLIED)
+		 * (onchange %Script; #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.SELECT)){
+			// (size NUMBER #IMPLIED) ... should be defined locally.
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_SIZE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_SIZE, attr);
+
+			String[] names = {ATTR_NAME_NAME, ATTR_NAME_MULTIPLE, ATTR_NAME_DISABLED, ATTR_NAME_TABINDEX, ATTR_NAME_ONFOCUS, ATTR_NAME_ONBLUR, ATTR_NAME_ONCHANGE};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+		
+		}
+		/*
+		 * 	(type %LIStyle; #IMPLIED) ... should be defined locally.
+		 * (value NUMBER #IMPLIED) ... should be defined locally.
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.LI)){
+			// (type %LIStyle; #IMPLIED) ... should be defined locally.
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.LI_STYLE);
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
+
+			// (value NUMBER #IMPLIED) ... should be defined locally.
+			atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_VALUE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_VALUE, attr);
+		
+		}
+		/*
+		 * (type %OLStyle; #IMPLIED) ... should be defined locally.
+		 * (compact (compact) #IMPLIED)
+		 * (start NUMBER #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.OL)){
+			// (type %OLStyle; #IMPLIED) ... should be defined locally.
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.OL_STYLE);
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
+
+			// the rest.
+			String[] names = {ATTR_NAME_COMPACT, ATTR_NAME_START};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+		
+		}
+		/**
+		 * %coreattrs;
+		 * (longdesc %URI; #IMPLIED)
+		 * (name CDATA #IMPLIED)
+		 * (src %URI; #IMPLIED)
+		 * (frameborder (1|0) 1)
+		 * (marginwidth %Pixels; #IMPLIED)
+		 * (marginheight %Pixels; #IMPLIED)
+		 * (scrolling (yes|no|auto) auto)
+		 * (align %IAlign; #IMPLIED) ... should be defined locally.
+		 * (height %Length; #IMPLIED)
+		 * (width %Length; #IMPLIED)
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.IFRAME)){
+			// %coreattrs;
+			getCore(attributes);
+
+			String[] names = {ATTR_NAME_LONGDESC, ATTR_NAME_NAME, ATTR_NAME_SRC, ATTR_NAME_FRAMEBORDER, ATTR_NAME_MARGINWIDTH, ATTR_NAME_MARGINHEIGHT, ATTR_NAME_SCROLLING, ATTR_NAME_HEIGHT, ATTR_NAME_WIDTH};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+
+			// align
+			HTMLAttrDeclImpl attr = AttributeCollection.createAlignForImage();
+			if (attr != null)
+				attributes.putNamedItem(ATTR_NAME_ALIGN, attr);
+		
+		}
+		/*
+		 * %i18n attrs
+		 * %version
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.HTML)){
+			// %i18n;
+			getI18n(attributes);
+			// version
+			HTMLAttributeDeclaration adec = getDeclaration(ATTR_NAME_VERSION);
+			if (adec != null)
+				attributes.putNamedItem(ATTR_NAME_VERSION, adec);
+		
+		}
+		/*
+		 * (compact (compact) #IMPLIED)
+	 	 */
+		else if (elementName.equals(HTML40Namespace.ElementName.MENU)){
+			String[] names = {ATTR_NAME_COMPACT};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+		
+		}
+		/*
+		 * %reserved; ... empty.
+		 * (name CDATA #IMPLIED)
+		 * (value CDATA #IMPLIED)
+		 * (type (button|submit|reset) submit) ... should be defined locally.
+		 * (disabled (disabled) #IMPLIED)
+		 * (tabindex NUMBER #IMPLIED)
+		 * (accesskey %Character; #IMPLIED)
+		 * (onfocus %Script; #IMPLIED)
+		 * (onblur %Script; #IMPLIED)
+	 	 */
+		else if (elementName.equals(HTML40Namespace.ElementName.BUTTON)){
+			String[] names = {ATTR_NAME_NAME, ATTR_NAME_VALUE, ATTR_NAME_DISABLED, ATTR_NAME_TABINDEX, ATTR_NAME_ACCESSKEY, ATTR_NAME_ONFOCUS, ATTR_NAME_ONBLUR};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+
+			// (type (button|submit|reset) submit) ... should be defined locally.
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] values = {ATTR_VALUE_BUTTON, ATTR_VALUE_SUBMIT, ATTR_VALUE_RESET};
+			atype.setEnumValues(values);
+
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
+		
+		}
+		/*
+		 * %reserved;
+		 * (summary %Text; #IMPLIED)
+		 * (width %Length; #IMPLIED)
+		 * (border %Pixels; #IMPLIED)
+		 * (frame %TFrame; #IMPLIED)
+		 * (rules %TRules; #IMPLIED)
+		 * (cellspacing %Length; #IMPLIED)
+		 * (cellpadding %Length; #IMPLIED)
+		 * (align %TAlign; #IMPLIED)
+		 * (bgcolor %Color; #IMPLIED)
+		 * (datapagesize CDATA #IMPLIED)
+		 * (height %Pixels; #IMPLIED)
+		 * (background %URI; #IMPLIED)
+		 * (bordercolor %Color #IMPLIED) ... D205514
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.TABLE)){
+			// %reserved;
+			// ... %reserved; is empty in the current DTD.
+
+			String[] names = {ATTR_NAME_SUMMARY, ATTR_NAME_WIDTH, ATTR_NAME_BORDER, ATTR_NAME_FRAME, ATTR_NAME_RULES, ATTR_NAME_CELLSPACING, ATTR_NAME_CELLPADDING, ATTR_NAME_BGCOLOR, ATTR_NAME_DATAPAGESIZE, ATTR_NAME_HEIGHT, ATTR_NAME_BACKGROUND, ATTR_NAME_BORDERCOLOR // D205514
+			};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
+
+			// align (local)
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] alignValues = {ATTR_VALUE_LEFT, ATTR_VALUE_CENTER, ATTR_VALUE_RIGHT};
+			atype.setEnumValues(alignValues);
+			HTMLAttrDeclImpl adec = new HTMLAttrDeclImpl(ATTR_NAME_ALIGN, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_ALIGN, adec);
+			
+		}
 	}
 }

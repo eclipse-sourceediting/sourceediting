@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,5 +42,7 @@
 <template name="%Templates.script.name" description="%Templates.script.desc" id="org.eclipse.wst.html.ui.templates.script" context="html_tag" enabled="true">%Templates.script.content</template>
 
 <template name="%Templates.style.name" description="%Templates.style.desc" id="org.eclipse.wst.html.ui.templates.style" context="html_tag" enabled="true">%Templates.style.content</template>
+
+<template name="%Templates.html5.name" description="%Templates.html5.desc" id="org.eclipse.wst.html.ui.templates.html5" context="html_new" enabled="true">%Templates.html5.content</template>
 
 </templates>

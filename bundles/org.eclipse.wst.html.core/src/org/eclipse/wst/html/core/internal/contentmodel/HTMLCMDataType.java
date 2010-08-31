@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,4 +63,9 @@ public interface HTMLCMDataType extends CMDataType {
 	public static final String STYLE_SHEET = CMDataType.CDATA;
 	/** %Text; == CDATA */
 	public static final String TEXT = CMDataType.CDATA;
+	/** %MediaType; == CDATA */
+	public static final String MEDIA_TYPE = CMDataType.CDATA;
+	/** %BrowsingContext; == CDATA */
+	public static final String BROWSING_CONTEXT = CMDataType.CDATA;
+	
 }

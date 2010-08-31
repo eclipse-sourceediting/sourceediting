@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,7 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	protected boolean indentChild = false;
 	protected ElementCollection elementCollection = null;
 	protected AttributeCollection attributeCollection = null;
+	private boolean is_obsolete = false;
 	protected final static CMNamedNodeMap EMPTY_MAP = new CMNamedNodeMap() {
 		public int getLength() {
 			return 0;
@@ -282,6 +283,9 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 			ComplexTypeDefinition def = getComplexTypeDefinition();
 			return (def != null);
 		}
+		if (propertyName.equals(HTMLCMProperties.IS_OBSOLETE)) {
+			return is_obsolete;
+		}
 		else {
 			PropertyProvider pp = PropertyProviderFactory.getProvider(propertyName);
 			if (pp == null)
@@ -300,6 +304,9 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 		else if (propertyName.equals(HTMLCMProperties.CONTENT_HINT)) {
 			ComplexTypeDefinition def = getComplexTypeDefinition();
 			return (def != null) ? def.getPrimaryCandidate() : null;
+		}
+		else if (propertyName.equals(HTMLCMProperties.IS_OBSOLETE)){
+			return new Boolean(is_obsolete);
 		}
 		else {
 			PropertyProvider pp = PropertyProviderFactory.getProvider(propertyName);
@@ -362,5 +369,9 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 				return true;
 		}
 		return false;
+	}
+	
+	public void obsolete(boolean is_obsolete){
+		this.is_obsolete = is_obsolete;
 	}
 }

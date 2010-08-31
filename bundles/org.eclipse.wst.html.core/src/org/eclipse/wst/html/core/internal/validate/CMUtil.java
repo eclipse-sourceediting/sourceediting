@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -197,4 +197,16 @@ final class CMUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * The method to distinguish HTML and XHTML from other mark up.
+	 * This method returns true if the target is,
+	 * (1) not JSP,
+	 * (2) not SSI.
+	 */
+	public static boolean isObsolete(CMNode decl) {
+		return decl.supports(HTMLCMProperties.IS_OBSOLETE) && ((Boolean)(decl.getProperty(HTMLCMProperties.IS_OBSOLETE))).booleanValue();
+	}
+	
+	
 }

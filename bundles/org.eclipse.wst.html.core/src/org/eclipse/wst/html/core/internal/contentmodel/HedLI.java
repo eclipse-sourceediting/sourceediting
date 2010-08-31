@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 
 /**
  * LI.
@@ -36,8 +34,6 @@ final class HedLI extends HedFlowContainer {
 
 	/**
 	 * %attrs;
-	 * (type %LIStyle; #IMPLIED) ... should be defined locally.
-	 * (value NUMBER #IMPLIED) ... should be defined locally.
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)
@@ -50,15 +46,9 @@ final class HedLI extends HedFlowContainer {
 		// %attrs;
 		attributeCollection.getAttrs(attributes);
 
-		// (type %LIStyle; #IMPLIED) ... should be defined locally.
-		HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(HTMLCMDataType.LI_STYLE);
-		HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(HTML40Namespace.ATTR_NAME_TYPE, atype, CMAttributeDeclaration.OPTIONAL);
-		attributes.putNamedItem(HTML40Namespace.ATTR_NAME_TYPE, attr);
-
-		// (value NUMBER #IMPLIED) ... should be defined locally.
-		atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
-		attr = new HTMLAttrDeclImpl(HTML40Namespace.ATTR_NAME_VALUE, atype, CMAttributeDeclaration.OPTIONAL);
-		attributes.putNamedItem(HTML40Namespace.ATTR_NAME_VALUE, attr);
+		//different sets of attributes for html 4 & 5
+		attributeCollection.createAttributeDeclarations(HTML40Namespace.ElementName.LI, attributes);
+	
 	}
 
 	/**
