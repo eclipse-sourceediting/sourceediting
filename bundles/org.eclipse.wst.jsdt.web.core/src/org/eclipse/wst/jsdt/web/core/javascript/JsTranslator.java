@@ -189,6 +189,14 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 */
 	public String getJsText() {
 		synchronized(finished) {
+			/* if mid re-write session doc changes have been ignored,
+			 * but if jsText is specifically request we should re-translate
+			 * to pick up any changes thus far
+			 */
+			if(this.fIsInRewriteSession) {
+				this.reset();
+			}
+			
 			return fScriptText.toString();
 		}
 	}
@@ -655,7 +663,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 								}
 							}
 							serverSideStart = validJSstart < regionLength - fShortestServerSideDelimiterPairLength ? serverSideStartGuess : -1;
-							clientMatchStart = validJSstart < regionLength ? (matcher.find(validJSstart + 1) ? matcher.start() : -1) : -1;
+							clientMatchStart = validJSstart < regionLength ? (matcher.find(validJSstart) ? matcher.start() : -1) : -1;
 						}
 						else {
 							serverSideStart = clientMatchStart = -1;
@@ -753,7 +761,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	/**
 	 * @return the fGeneratedRanges
 	 */
-	Region[] getGeneratedRanges() {
+	public Region[] getGeneratedRanges() {
 		return (Region[]) fGeneratedRanges.toArray(new Region[fGeneratedRanges.size()]);
 	}
 }
