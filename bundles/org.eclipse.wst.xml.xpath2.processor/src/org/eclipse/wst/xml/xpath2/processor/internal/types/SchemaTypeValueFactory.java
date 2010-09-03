@@ -7,8 +7,9 @@
  *
  * Contributors:
  *     Mukul Gandhi - initial API and implementation
- *     Mukul Gandhi - bug 318313 - improvements to computation of typed values of nodes,
- *                                 when validated by XML Schema primitive types
+ *     Mukul Gandhi - bug 318313 - improvements to computation of typed values 
+ *                                 of nodes, when validated by XML Schema 
+ *                                 primitive types.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -16,149 +17,157 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.apache.xerces.xs.XSConstants;
+
 /**
- * A factory class implementation, to construct PsychoPath schema type representation
- * corresponding to XML Schema types.
+ * A factory class implementation, to construct PsychoPath schema type
+ * representation corresponding to XML Schema types.
  */
 public class SchemaTypeValueFactory {
+	
+	// PsychoPath engine specific constants to support new built-in types, 
+	// introduced in XML Schema 1.1.
+	public static short DAYTIMEDURATION_DT = 100;
+	public static short YEARMONTHDURATION_DT = 101;
 
-	public static AnyType newSchemaTypeValue(String typeName, String strValue) {
+	public static AnyType newSchemaTypeValue(short typeDef, String strValue) {
 		
-		if (XSConstants.ANY_URI.equals(typeName)) {
+		if (typeDef == XSConstants.ANYURI_DT) {
 			return new XSAnyURI(strValue);
 		}
 		
-		if (XSConstants.BOOLEAN.equals(typeName)) {
+		if (typeDef == XSConstants.BOOLEAN_DT) {
 			return new XSBoolean(Boolean.valueOf(strValue).
 					                 booleanValue());
 		}
 		
-		if (XSConstants.DATE.equals(typeName)) {       
+		if (typeDef == XSConstants.DATE_DT) {       
 			return XSDate.parse_date(strValue);
 		}
 		
-		if (XSConstants.DATE_TIME.equals(typeName)) {
+		if (typeDef == XSConstants.DATETIME_DT) {
 			return XSDateTime.parseDateTime(strValue);
 		}
 		
 		// decimal and it's subtypes		
-		if (XSConstants.DECIMAL.equals(typeName)) {      
+		if (typeDef == XSConstants.DECIMAL_DT) {      
 			return new XSDecimal(new BigDecimal(strValue));
 		}
 		
-		if (XSConstants.INTEGER.equals(typeName)) {      
+		if (typeDef == XSConstants.INTEGER_DT) {      
 			return new XSInteger(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.LONG.equals(typeName)) {     
+		if (typeDef == XSConstants.LONG_DT) {     
 			return new XSLong(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.INT.equals(typeName)) {      
+		if (typeDef == XSConstants.INT_DT) {      
 			return new XSInt(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.SHORT.equals(typeName)) {      
+		if (typeDef == XSConstants.SHORT_DT) {      
 			return new XSShort(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.BYTE.equals(typeName)) {      
+		if (typeDef == XSConstants.BYTE_DT) {      
 			return new XSByte(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.NON_NEGATIVE_INTEGER.equals(typeName)) {      
+		if (typeDef == XSConstants.NONNEGATIVEINTEGER_DT) {      
 			return new XSNonNegativeInteger(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.POSITIVE_INTEGER.equals(typeName)) {      
+		if (typeDef == XSConstants.POSITIVEINTEGER_DT) {      
 			return new XSPositiveInteger(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.UNSIGNED_LONG.equals(typeName)) {      
+		if (typeDef == XSConstants.UNSIGNEDLONG_DT) {      
 			return new XSUnsignedLong(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.UNSIGNED_INT.equals(typeName)) {      
+		if (typeDef == XSConstants.UNSIGNEDINT_DT) {      
 			return new XSUnsignedInt(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.UNSIGNED_SHORT.equals(typeName)) {      
+		if (typeDef == XSConstants.UNSIGNEDSHORT_DT) {      
 			return new XSUnsignedShort(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.UNSIGNED_BYTE.equals(typeName)) {      
+		if (typeDef == XSConstants.UNSIGNEDBYTE_DT) {      
 			return new XSUnsignedByte(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.NON_POSITIVE_INTEGER.equals(typeName)) {      
+		if (typeDef == XSConstants.NONPOSITIVEINTEGER_DT) {      
 			return new XSNonPositiveInteger(new BigInteger(strValue));
 		}
 		
-		if (XSConstants.NEGATIVE_INTEGER.equals(typeName)) {      
+		if (typeDef == XSConstants.NEGATIVEINTEGER_DT) {      
 			return new XSNegativeInteger(new BigInteger(strValue));
 		}
 		// end of, decimal types
 		
-		if (XSConstants.DOUBLE.equals(typeName)) {       
+		if (typeDef == XSConstants.DOUBLE_DT) {       
 			return new XSDouble(Double.parseDouble(strValue));
 		}
 		
 		// duration and it's subtypes
-		if (XSConstants.DURATION.equals(typeName)) {       
+		if (typeDef == XSConstants.DURATION_DT) {       
 			return XSDuration.parseDTDuration(strValue);
 		}
 		
-		if (XSConstants.DAY_TIME_DURATION.equals(typeName)) {       
+		if (typeDef == DAYTIMEDURATION_DT) {       
 			return XSDayTimeDuration.parseDTDuration(strValue);
 		}
 		
-		if (XSConstants.YEAR_MONTH_DURATION.equals(typeName)) {       
+		if (typeDef == YEARMONTHDURATION_DT) {       
 			return XSYearMonthDuration.parseYMDuration(strValue);
 		}
 		// end of, duration types
 		
-		if (XSConstants.FLOAT.equals(typeName)) {        
+		if (typeDef == XSConstants.FLOAT_DT) {        
 			return new XSFloat(Float.parseFloat(strValue));
 		}
 		
-		if (XSConstants.G_DAY.equals(typeName)) {        
+		if (typeDef == XSConstants.GDAY_DT) {        
 			return XSGDay.parse_gDay(strValue);
 		}
 		
-		if (XSConstants.G_MONTH.equals(typeName)) {        
+		if (typeDef == XSConstants.GMONTH_DT) {        
 			return XSGMonth.parse_gMonth(strValue);
 		}
 		
-		if (XSConstants.G_MONTH_DAY.equals(typeName)) {        
+		if (typeDef == XSConstants.GMONTHDAY_DT) {        
 			return XSGMonthDay.parse_gMonthDay(strValue);
 		}
 		
-		if (XSConstants.G_YEAR.equals(typeName)) {        
+		if (typeDef == XSConstants.GYEAR_DT) {        
 			return XSGYear.parse_gYear(strValue);
 		}
 		
-		if (XSConstants.G_YEAR_MONTH.equals(typeName)) {        
+		if (typeDef == XSConstants.GYEARMONTH_DT) {        
 			return XSGYearMonth.parse_gYearMonth(strValue);
 		}
 		
-		if (XSConstants.NOTATION.equals(typeName)) {
+		if (typeDef == XSConstants.NOTATION_DT) {
 			return new XSString(strValue);
 		}
 		
-		if (XSConstants.Q_NAME.equals(typeName)) {
+		if (typeDef == XSConstants.QNAME_DT) {
 			return QName.parse_QName(strValue);
 		}
 		
-		if (XSConstants.STRING.equals(typeName)) {
+		if (typeDef == XSConstants.STRING_DT) {
 			return new XSString(strValue);   
 		}                        
 		
-		if (XSConstants.TIME.equals(typeName)) {
+		if (typeDef == XSConstants.TIME_DT) {
 			return XSTime.parse_time(strValue);
 		}  
 		
 	    // create a XSString value, as fallback option 
 		return new XSString(strValue);
 		
-	}
+	} // newSchemaTypeValue
+	
 }

@@ -15,10 +15,8 @@
  *     David Carver (STAR) - bug 289304 - fixe schema awarness of types on attributes
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *     Mukul Gandhi - bug 323900 - improvements to computation of typed values of nodes.
- *                                 (this patch attempts to implement the algorithm described at,
- *                                  http://www.w3.org/TR/xpath-datamodel/#TypedValueDetermination 
- *                                  in entirety). particularly improving the handling of 
- *                                  "simple content" with variety list & union.
+ *                                 particularly improving the handling of "simple content"
+ *                                 with variety list & union. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -79,9 +77,6 @@ public class AttrType extends NodeType {
 	 * Creates a new ResultSequence consisting of the typed value of an
 	 * attribute node.
 	 * 
-	 * NOTE: The typed value is determined as per an algorithm described here:
-     * http://www.w3.org/TR/xpath-datamodel/#TypedValueDetermination.
-	 * 
 	 * @return New ResultSequence consisting of the typed-value sequence.
 	 */
 	public ResultSequence typed_value() {
@@ -95,7 +90,7 @@ public class AttrType extends NodeType {
 			
 			XSTypeDefinition typeDef = typeInfo.getTypeDefinition();		   
 			if (typeDef != null) {
-			   rs = getXDMTypedValue(typeDef);
+			   rs = getXDMTypedValue(typeDef, typeInfo.getItemValueTypes());
 			}
 			else {
 			   rs.add(new XSUntypedAtomic(string_value()));  
