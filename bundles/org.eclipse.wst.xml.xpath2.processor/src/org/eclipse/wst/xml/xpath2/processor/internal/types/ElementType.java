@@ -14,9 +14,9 @@
  *     David Carver (STAR) - bug 289304 - fix schema awarness of types on elements
  *     Jesper Moller - bug 297958 - Fix fn:nilled for elements
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
- *     Mukul Gandhi - bug 323900 - improvements to computation of typed values of nodes.
- *                                 particularly improving the handling of "simple content"
- *                                 with variety list & union.
+ *     Mukul Gandhi - bug 323900 - improving computing the typed value of element &
+ *                                 attribute nodes, where the schema type of nodes
+ *                                 are simple, with varieties 'list' and 'union'. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;

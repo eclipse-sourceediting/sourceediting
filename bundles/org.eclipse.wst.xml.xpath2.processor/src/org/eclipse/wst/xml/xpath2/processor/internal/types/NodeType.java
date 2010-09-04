@@ -15,9 +15,9 @@
  *     David Carver (STAR) - bug 289304 - fixed schema awareness on elements
  *     Mukul Gandhi - bug 318313 - improvements to computation of typed values of nodes,
  *                                 when validated by XML Schema primitive types
- *     Mukul Gandhi - bug 323900 - improvements to computation of typed values of nodes.
- *                                 particularly improving the handling of "simple content"
- *                                 with variety list & union.                                 
+ *     Mukul Gandhi - bug 323900 - improving computing the typed value of element &
+ *                                 attribute nodes, where the schema type of nodes
+ *                                 are simple, with varieties 'list' and 'union'.                                 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -38,6 +38,7 @@ import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.PsychoPathTypeHelper;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -55,10 +56,7 @@ public abstract class NodeType extends AnyType {
 	protected static final String SCHEMA_TYPE_IDREF = "IDREF";
 	protected static final String SCHEMA_TYPE_ID = "ID";
 	private Node _node;
-	
-	// a dummy short code value, to support XML Schema 1.1 types
-	private static short DUMMY_TYPE_CODE = -100;
-
+		
 	/**
 	 * Initialises according to the supplied parameters
 	 * 
@@ -240,9 +238,9 @@ public abstract class NodeType extends AnyType {
 		   return new XSUntypedAtomic(strValue);
 		}
 		
-		return SchemaTypeValueFactory.newSchemaTypeValue(getTypeShortCode
-				                                           (typeDef), 
-				                                            strValue);
+		return SchemaTypeValueFactory.newSchemaTypeValue(PsychoPathTypeHelper.
+				                                       getXSDTypeShortCode
+				                                           (typeDef), strValue);
 		
 	} // getTypedValueForPrimitiveType 
 
@@ -306,8 +304,8 @@ public abstract class NodeType extends AnyType {
 		
 		if (simpType.getVariety() == XSSimpleTypeDefinition.VARIETY_ATOMIC) {
 		   AnyType schemaTypeValue = SchemaTypeValueFactory.newSchemaTypeValue
-		                                          (getTypeShortCode(simpType), 
-		                                           string_value());
+		                                     (PsychoPathTypeHelper.getXSDTypeShortCode
+		                                    		 (simpType), string_value());
 		   if (schemaTypeValue != null) {
 				rs.add(schemaTypeValue);
 		   } else {
@@ -349,8 +347,9 @@ public abstract class NodeType extends AnyType {
 			   // type" of the list, and "string value" is the "string 
 			   // value of the list item") to the "result sequence".
 		       rs.add(SchemaTypeValueFactory.newSchemaTypeValue
-		                                       (getTypeShortCode(itemType), 
-		                                listItemsStrValues[listItemIdx]));
+		                                  (PsychoPathTypeHelper.getXSDTypeShortCode
+		                                		                  (itemType), 
+		                                   listItemsStrValues[listItemIdx]));
 			}
 		}
 		else if (itemType.getVariety() == XSSimpleTypeDefinition.
@@ -388,8 +387,9 @@ public abstract class NodeType extends AnyType {
 		   if (isValueValidForSimpleType(string_value(), memSimpleType)) {
 			  
 			   rs.add(SchemaTypeValueFactory.newSchemaTypeValue
-		                                  (getTypeShortCode(memSimpleType), 
-		                                   string_value()));
+		                                  (PsychoPathTypeHelper.getXSDTypeShortCode
+		                                		            (memSimpleType), 
+		                                                   string_value()));
 			   // no more memberTypes need to be checked
 			   break; 
 		   }
@@ -444,28 +444,5 @@ public abstract class NodeType extends AnyType {
 		}
 		return false;
 	}
-	
-	
-	/* 
-	 * Get Xerces type short code, given a type definition instance object.
-	 * PsychoPath engine uses few custom type 'short codes', to support 
-	 * XML Schema 1.1.
-	 */
-	private short getTypeShortCode(XSTypeDefinition typeDef) {
-		
-		short typeCode = DUMMY_TYPE_CODE;
-		
-		if ("dayTimeDuration".equals(typeDef.getName())) {
-			typeCode = SchemaTypeValueFactory.DAYTIMEDURATION_DT; 
-		}
-		else if ("yearMonthDuration".equals(typeDef.getName())) {
-			typeCode = SchemaTypeValueFactory.YEARMONTHDURATION_DT; 
-		}
-		
-		return (typeCode != DUMMY_TYPE_CODE) ? typeCode : (
-				                (XSSimpleTypeDefinition) typeDef).
-				                   getBuiltInKind();
-		
-	} // getTypeShortCode
 	
 }

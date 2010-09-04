@@ -10,6 +10,10 @@
  *     Mukul Gandhi - bug 318313 - improvements to computation of typed values 
  *                                 of nodes, when validated by XML Schema 
  *                                 primitive types.
+ *     Mukul Gandhi - bug 323900 - improving computing the typed value of
+ *                                 element & attribute nodes, where the schema
+ *                                 type of nodes are simple, with varieties 
+ *                                 'list' and 'union'.                                 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -18,17 +22,13 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.apache.xerces.xs.XSConstants;
+import org.eclipse.wst.xml.xpath2.processor.PsychoPathTypeHelper;
 
 /**
  * A factory class implementation, to construct PsychoPath schema type
  * representation corresponding to XML Schema types.
  */
 public class SchemaTypeValueFactory {
-	
-	// PsychoPath engine specific constants to support new built-in types, 
-	// introduced in XML Schema 1.1.
-	public static short DAYTIMEDURATION_DT = 100;
-	public static short YEARMONTHDURATION_DT = 101;
 
 	public static AnyType newSchemaTypeValue(short typeDef, String strValue) {
 		
@@ -116,11 +116,11 @@ public class SchemaTypeValueFactory {
 			return XSDuration.parseDTDuration(strValue);
 		}
 		
-		if (typeDef == DAYTIMEDURATION_DT) {       
+		if (typeDef == PsychoPathTypeHelper.DAYTIMEDURATION_DT) {       
 			return XSDayTimeDuration.parseDTDuration(strValue);
 		}
 		
-		if (typeDef == YEARMONTHDURATION_DT) {       
+		if (typeDef == PsychoPathTypeHelper.YEARMONTHDURATION_DT) {       
 			return XSYearMonthDuration.parseYMDuration(strValue);
 		}
 		// end of, duration types
