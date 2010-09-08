@@ -16,8 +16,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.wst.dtd.core.internal.contentmodel.DTDImpl.DTDBaseAdapter;
-import org.eclipse.wst.dtd.core.internal.contentmodel.DTDImpl.DTDElementReferenceContentAdapter;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLAttributeDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocument;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLPropertyDeclaration;
@@ -135,15 +133,12 @@ public class HTMLTagsCompletionProposalComputer extends
 	 */
 	protected boolean validModelQueryNode(CMNode node) {
 		boolean isValid = false;
-		if(node instanceof DTDElementReferenceContentAdapter) {
-			DTDElementReferenceContentAdapter content = (DTDElementReferenceContentAdapter)node;
-			if(content.getCMDocument() instanceof DTDBaseAdapter) {
-				DTDBaseAdapter dtd = (DTDBaseAdapter)content.getCMDocument();
-				//this maybe a little hacky, but it works, if you have a better idea go for it
-				String spec = dtd.getSpec();
-				isValid = spec.indexOf("html") != -1;
-			}
-		} else if (node.supports(HTMLAttributeDeclaration.IS_HTML)) {
+		Object cmdoc = node.getProperty("CMDocument"); //$NON-NLS-1$
+		if (cmdoc instanceof CMNode) {
+			String name = ((CMNode) cmdoc).getNodeName();
+			isValid = name != null && name.endsWith(".dtd") && name.indexOf("html") != -1; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		else if (node.supports(HTMLAttributeDeclaration.IS_HTML)) {
 			Boolean isHTML = (Boolean) node.getProperty(HTMLAttributeDeclaration.IS_HTML);
 			isValid = isHTML == null || isHTML.booleanValue();
 		} else if(node instanceof HTMLPropertyDeclaration) {
