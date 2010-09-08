@@ -110,7 +110,10 @@ public class FileBufferModelManager {
 		}
 
 		public String getFileBaseLocation() {
-			return fLocation.toString();
+			if (fLocation == null)
+				return null;
+			else
+				return fLocation.toString();
 		}
 
 		public String getLocationByURI(String uri) {
@@ -153,7 +156,10 @@ public class FileBufferModelManager {
 		}
 
 		public void setFileBaseLocation(String newLocation) {
-			fLocation = new Path(newLocation);
+			if (newLocation != null)
+				fLocation = new Path(newLocation);
+			else
+				fLocation = null;
 		}
 
 		public void setProject(IProject newProject) {
