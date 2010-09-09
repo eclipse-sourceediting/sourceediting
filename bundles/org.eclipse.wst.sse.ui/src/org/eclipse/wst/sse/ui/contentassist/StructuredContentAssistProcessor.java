@@ -722,7 +722,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * @return the label of the category
 	 */
 	private String getCategoryLabel(int repetition) {
-		int iteration= (fCategoryIteration != null ? repetition % fCategoryIteration.size() : 0);
+		int iteration= repetition % fCategoryIteration.size();
 		if (iteration == 0)
 			return SSEUIMessages.ContentAssist_defaultProposalCategory_title;
 		return ((CompletionProposalCategory) ((List) fCategoryIteration.get(iteration)).get(0)).getDisplayName();
@@ -753,7 +753,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * @return <code>true</code> if displaying first page, <code>false</code> otherwise
 	 */
 	private boolean isFirstPage() {
-		return fCategoryIteration == null || fCategoryIteration.size() == 1 || fRepetition % fCategoryIteration.size() == 1;
+		return fCategoryIteration.size() == 1 || fRepetition % fCategoryIteration.size() == 1;
 	}
 	
 	/**
