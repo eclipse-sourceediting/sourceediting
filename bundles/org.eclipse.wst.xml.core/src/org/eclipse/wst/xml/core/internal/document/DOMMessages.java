@@ -23,21 +23,21 @@ class DOMMessages extends NLS {
 	private DOMMessages() {
 	}
 
-	static String DOMSTRING_SIZE_ERR;
-	static String HIERARCHY_REQUEST_ERR;
-	static String INDEX_SIZE_ERR;
-	static String INUSE_ATTRIBUTE_ERR;
-	static String INVALID_ACCESS_ERR;
-	static String INVALID_CHARACTER_ERR;
-	static String INVALID_MODIFICATION_ERR;
-	static String INVALID_STATE_ERR;
-	static String NAMESPACE_ERR;
-	static String NO_DATA_ALLOWED_ERR;
-	static String NO_MODIFICATION_ALLOWED_ERR;
-	static String NOT_FOUND_ERR;
-	static String NOT_SUPPORTED_ERR;
-	static String SYNTAX_ERR;
-	static String TYPE_MISMATCH_ERR;
-	static String VALIDATION_ERR;
-	static String WRONG_DOCUMENT_ERR;
+	public static String DOMSTRING_SIZE_ERR;
+	public static String HIERARCHY_REQUEST_ERR;
+	public static String INDEX_SIZE_ERR;
+	public static String INUSE_ATTRIBUTE_ERR;
+	public static String INVALID_ACCESS_ERR;
+	public static String INVALID_CHARACTER_ERR;
+	public static String INVALID_MODIFICATION_ERR;
+	public static String INVALID_STATE_ERR;
+	public static String NAMESPACE_ERR;
+	public static String NO_DATA_ALLOWED_ERR;
+	public static String NO_MODIFICATION_ALLOWED_ERR;
+	public static String NOT_FOUND_ERR;
+	public static String NOT_SUPPORTED_ERR;
+	public static String SYNTAX_ERR;
+	public static String TYPE_MISMATCH_ERR;
+	public static String VALIDATION_ERR;
+	public static String WRONG_DOCUMENT_ERR;
 }
