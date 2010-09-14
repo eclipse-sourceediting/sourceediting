@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -308,15 +308,15 @@ public class DocumentProvider {
 		if (errorHandler == null) {
 			errorHandler = new ErrorHandler() {
 				public void error(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException with " + fBaseReference + "/" + getJarFileName() + "/" + getFileName() + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					Logger.log(Logger.WARNING_DEBUG, "SAXParseException with " + fBaseReference + "/" + getJarFileName() + "/" + getFileName() + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				}
 
 				public void fatalError(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException with " + fBaseReference + "/" + getJarFileName() + "/" + getFileName() + " (fatalError) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Logger.log(Logger.WARNING_DEBUG, "SAXParseException with " + fBaseReference + "/" + getJarFileName() + "/" + getFileName() + " (fatalError) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 
 				public void warning(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException with " + fBaseReference + "/" + getJarFileName() + "/" + getFileName() + " (warning) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					Logger.log(Logger.WARNING_DEBUG, "SAXParseException with " + fBaseReference + "/" + getJarFileName() + "/" + getFileName() + " (warning) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			};
 		}

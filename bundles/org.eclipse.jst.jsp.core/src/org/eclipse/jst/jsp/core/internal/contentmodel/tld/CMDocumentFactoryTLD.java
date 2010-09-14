@@ -709,7 +709,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		return document;
 	}
 
-	private void loadTagXFile(final CMElementDeclarationImpl ed, IFile tagxFile, boolean allowIncludes) {
+	void loadTagXFile(final CMElementDeclarationImpl ed, IFile tagxFile, boolean allowIncludes) {
 		ed.setPath(tagxFile.getFullPath().toString());
 		ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
 		try {
@@ -804,16 +804,16 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			input.close();
 		}
 		catch (ParserConfigurationException e) {
-			Logger.logException(e);
+			Logger.log(Logger.ERROR_DEBUG, e.getMessage(), e);
 		}
 		catch (SAXException e) {
-			Logger.logException(e);
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 		catch (IOException e) {
-			Logger.logException(e);
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 		catch (CoreException e) {
-			Logger.logException(e);
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 		ed.setLocationString(tagxFile.getFullPath().toString());
 	}
