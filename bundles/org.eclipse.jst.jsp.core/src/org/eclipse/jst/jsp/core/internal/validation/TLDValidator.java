@@ -214,7 +214,9 @@ public class TLDValidator extends AbstractValidator {
 				monitor.beginTask("", 3);
 				org.eclipse.wst.xml.core.internal.validation.eclipse.Validator xmlValidator = new org.eclipse.wst.xml.core.internal.validation.eclipse.Validator();
 				ValidationResult result3 = new MarkupValidator().validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
+				if(monitor.isCanceled()) return result;
 				ValidationResult result2 = xmlValidator.validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
+				if(monitor.isCanceled()) return result;
 				ValidationResult result1 = new JSPActionValidator().validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
 				List messages = new ArrayList(result1.getReporter(new NullProgressMonitor()).getMessages());
 				messages.addAll(result2.getReporter(new NullProgressMonitor()).getMessages());
