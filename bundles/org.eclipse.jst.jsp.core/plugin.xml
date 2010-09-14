@@ -133,11 +133,19 @@
 		</content-type>
 		<!-- create content type for JSP 2.0 Tag file types -->
 		<content-type
-			file-extensions="tag,tagx,tagf"
+			file-extensions="tag,tagf"
 			priority="high"
 			name="%JSP_Tag_Content_Type_Extension_Element.name"
 			id="org.eclipse.jst.jsp.core.tagsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource"
+			default-charset="ISO-8859-1"/>
+		<!-- create content type for JSP 2.0 TagX file types -->
+		<content-type
+			file-extensions="tagx,tagxf"
+			priority="high"
+			name="%JSP_TagX_Content_Type_Extension_Element.name"
+			id="org.eclipse.jst.jsp.core.tagxsource"
+			base-type="org.eclipse.jst.jsp.core.tagsource"
 			default-charset="ISO-8859-1"/>
 		<!-- create content type for .tld files -->
 		<content-type
@@ -292,14 +300,14 @@
             class="org.eclipse.jst.jsp.core.internal.validation.TLDValidator"
             manual="true"
             version="1"
+            sourceid="org.eclipse.jst.jsp.ui.internal.validation.jspactionvalidator, org.eclipse.jst.jsp.tldsourcevalidator">
             markerId="org.eclipse.jst.jsp.core.validationMarker">
          <include>
             <rules>
 				<contentType id="org.eclipse.jst.jsp.core.tldsource"/>
-               <fileext
-                     caseSensitive="false"
-                     ext="tld">
-               </fileext>
+				<contentType id="org.eclipse.jst.jsp.core.tagxsource"/>
+               <fileext caseSensitive="false" ext="tld"/>
+               <fileext caseSensitive="false" ext="tagx"/>
            </rules>
          </include>
          <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>

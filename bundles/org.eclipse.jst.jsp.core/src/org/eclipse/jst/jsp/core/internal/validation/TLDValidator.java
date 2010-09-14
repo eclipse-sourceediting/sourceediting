@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.internal.validation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.content.IContentTypeSettings;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -67,12 +71,23 @@ public class TLDValidator extends AbstractValidator {
 	private static final String[] missingClassMessages = new String[]{JSPCoreMessages.TaglibHelper_3, JSPCoreMessages.TaglibHelper_3, JSPCoreMessages.TaglibHelper_0, JSPCoreMessages.TaglibHelper_0, JSPCoreMessages.TLDValidator_MissingValidator, JSPCoreMessages.TLDValidator_MissingVariable, JSPCoreMessages.TLDValidator_MissingListener};
 	private static final String[] missingClassSeverityPreferenceKeys = new String[]{JSPCorePreferenceNames.VALIDATION_TRANSLATION_TAG_HANDLER_CLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_TRANSLATION_TAG_HANDLER_CLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_CLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_CLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_TRANSLATION_TAG_HANDLER_CLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_TRANSLATION_TAG_HANDLER_CLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_TRANSLATION_TAG_HANDLER_CLASS_NOT_FOUND};
 
+	private static final String TAGX_CONTENT_TYPE_ID = "org.eclipse.jst.jsp.core.tagxsource"; //$NON-NLS-1$
+	private List fTagXexts = null;
+	private List fTagXnames = null;
+
 	public TLDValidator() {
 		super();
 
 		Assert.isTrue(classElementNames.length == missingClassMessages.length, "mismanaged arrays"); //$NON-NLS-1$
 		Assert.isTrue(classElementNames.length == missingClassSeverityPreferenceKeys.length, "mismanaged arrays"); //$NON-NLS-1$
 		Assert.isTrue(missingClassMessages.length == missingClassSeverityPreferenceKeys.length, "mismanaged arrays"); //$NON-NLS-1$
+		
+		initContentTypes();
+	}
+
+	private void initContentTypes() {
+		fTagXexts = new ArrayList(Arrays.asList(Platform.getContentTypeManager().getContentType(TAGX_CONTENT_TYPE_ID).getFileSpecs(IContentTypeSettings.FILE_EXTENSION_SPEC)));
+		fTagXnames = new ArrayList(Arrays.asList(Platform.getContentTypeManager().getContentType(TAGX_CONTENT_TYPE_ID).getFileSpecs(IContentTypeSettings.FILE_NAME_SPEC)));
 	}
 
 	private Map checkClass(IJavaProject javaProject, Node classSpecifier, IScopeContext[] preferenceScopes, String preferenceKey, String errorMessage) {
@@ -190,27 +205,64 @@ public class TLDValidator extends AbstractValidator {
 			return null;
 		ValidationResult result = new ValidationResult();
 
-		IFile tld = (IFile) resource;
-		if (tld.isAccessible()) {
-			try {
-				final IJavaProject javaProject = JavaCore.create(tld.getProject());
-				if (javaProject.exists()) {
-					IScopeContext[] scopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
-					ProjectScope projectScope = new ProjectScope(tld.getProject());
-					if (projectScope.getNode(PREFERENCE_NODE_QUALIFIER).getBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, false)) {
-						scopes = new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+		IFile file = (IFile) resource;
+		if (file.isAccessible()) {
+			// TAGX
+			if (fTagXexts.contains(file.getFileExtension()) || fTagXnames.contains(file.getName())) {
+				org.eclipse.wst.xml.core.internal.validation.eclipse.Validator xmlValidator = new org.eclipse.wst.xml.core.internal.validation.eclipse.Validator();
+				ValidationResult result2 =  xmlValidator.validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
+				ValidationResult result1 = new JSPActionValidator().validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
+				List messages = new ArrayList(result1.getReporter(new NullProgressMonitor()).getMessages());
+				messages.addAll(result2.getReporter(new NullProgressMonitor()).getMessages());
+				for (int i = 0; i < messages.size(); i++) {
+					IMessage message = (IMessage) messages.get(i);
+					ValidatorMessage vmessage = ValidatorMessage.create(message.getText(), resource);
+					vmessage.setAttributes(message.getAttributes());
+					vmessage.setAttribute(IMarker.LINE_NUMBER, message.getLineNumber());
+					vmessage.setAttribute(IMarker.MESSAGE, message.getText());
+					if (message.getOffset() > -1) {
+						vmessage.setAttribute(IMarker.CHAR_START, message.getOffset());
+						vmessage.setAttribute(IMarker.CHAR_END, message.getOffset() + message.getLength());
 					}
-					Map[] problems = detectProblems(javaProject, tld, scopes);
-					for (int i = 0; i < problems.length; i++) {
-						ValidatorMessage message = ValidatorMessage.create(problems[i].get(IMarker.MESSAGE).toString(), resource);
-						message.setType(MARKER_TYPE);
-						message.setAttributes(problems[i]);
-						result.add(message);
+					int severity = 0;
+					switch (message.getSeverity()) {
+						case IMessage.HIGH_SEVERITY :
+							severity = IMarker.SEVERITY_ERROR;
+							break;
+						case IMessage.NORMAL_SEVERITY :
+							severity = IMarker.SEVERITY_WARNING;
+							break;
+						case IMessage.LOW_SEVERITY :
+							severity = IMarker.SEVERITY_INFO;
+							break;
 					}
+					vmessage.setAttribute(IMarker.SEVERITY, severity);
+					vmessage.setType(MARKER_TYPE);
+					result.add(vmessage);
 				}
 			}
-			catch (Exception e) {
-				Logger.logException(e);
+			// TLD
+			else {
+				try {
+					final IJavaProject javaProject = JavaCore.create(file.getProject());
+					if (javaProject.exists()) {
+						IScopeContext[] scopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+						ProjectScope projectScope = new ProjectScope(file.getProject());
+						if (projectScope.getNode(PREFERENCE_NODE_QUALIFIER).getBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, false)) {
+							scopes = new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+						}
+						Map[] problems = detectProblems(javaProject, file, scopes);
+						for (int i = 0; i < problems.length; i++) {
+							ValidatorMessage message = ValidatorMessage.create(problems[i].get(IMarker.MESSAGE).toString(), resource);
+							message.setType(MARKER_TYPE);
+							message.setAttributes(problems[i]);
+							result.add(message);
+						}
+					}
+				}
+				catch (Exception e) {
+					Logger.logException(e);
+				}
 			}
 		}
 

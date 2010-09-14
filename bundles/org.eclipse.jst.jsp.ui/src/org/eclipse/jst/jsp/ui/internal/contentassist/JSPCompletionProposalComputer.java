@@ -28,8 +28,10 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -219,8 +221,23 @@ public class JSPCompletionProposalComputer extends DefaultXMLCompletionProposalC
 		if (doc == null)
 			return false;
 		Element docElement = doc.getDocumentElement();
-		return docElement != null && ((docElement.getNodeName().equals("jsp:root")) ||
+		return docElement != null && ((docElement.getNodeName().equals("jsp:root")) || //$NON-NLS-1$
 				((((IDOMNode) docElement).getStartStructuredDocumentRegion() == null &&
-						((IDOMNode) docElement).getEndStructuredDocumentRegion() == null))); //$NON-NLS-1$
+						((IDOMNode) docElement).getEndStructuredDocumentRegion() == null))) ||
+						declaresNameSpacesInRoot(docElement);
+	}
+
+	private boolean declaresNameSpacesInRoot(Element docElement) {
+		if (docElement.hasAttribute("xmlns:jsp"))
+			return true;
+		NamedNodeMap attributes = docElement.getAttributes();
+		for (int i = 0; i < attributes.getLength(); i++) {
+			Attr attr = (Attr) attributes.item(i);
+			String prefix = attr.getPrefix();
+			if (prefix != null && "xmlns".equals(prefix)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
