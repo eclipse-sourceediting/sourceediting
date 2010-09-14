@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.validation.MarkupValidator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -209,37 +211,53 @@ public class TLDValidator extends AbstractValidator {
 		if (file.isAccessible()) {
 			// TAGX
 			if (fTagXexts.contains(file.getFileExtension()) || fTagXnames.contains(file.getName())) {
+				monitor.beginTask("", 3);
 				org.eclipse.wst.xml.core.internal.validation.eclipse.Validator xmlValidator = new org.eclipse.wst.xml.core.internal.validation.eclipse.Validator();
-				ValidationResult result2 =  xmlValidator.validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
+				ValidationResult result3 = new MarkupValidator().validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
+				ValidationResult result2 = xmlValidator.validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
 				ValidationResult result1 = new JSPActionValidator().validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
 				List messages = new ArrayList(result1.getReporter(new NullProgressMonitor()).getMessages());
 				messages.addAll(result2.getReporter(new NullProgressMonitor()).getMessages());
+				messages.addAll(result3.getReporter(new NullProgressMonitor()).getMessages());
 				for (int i = 0; i < messages.size(); i++) {
 					IMessage message = (IMessage) messages.get(i);
-					ValidatorMessage vmessage = ValidatorMessage.create(message.getText(), resource);
-					vmessage.setAttributes(message.getAttributes());
-					vmessage.setAttribute(IMarker.LINE_NUMBER, message.getLineNumber());
-					vmessage.setAttribute(IMarker.MESSAGE, message.getText());
-					if (message.getOffset() > -1) {
-						vmessage.setAttribute(IMarker.CHAR_START, message.getOffset());
-						vmessage.setAttribute(IMarker.CHAR_END, message.getOffset() + message.getLength());
+					if (message.getText() != null && message.getText().length() > 0) {
+						ValidatorMessage vmessage = ValidatorMessage.create(message.getText(), resource);
+						if (message.getAttributes() != null) {
+							Map attrs = message.getAttributes();
+							Iterator it = attrs.entrySet().iterator();
+							while (it.hasNext()) {
+								Map.Entry entry = (Map.Entry) it.next();
+								if (!(entry.getValue() instanceof String || entry.getValue() instanceof Integer || entry.getValue() instanceof Boolean)) {
+									it.remove();
+								}
+							}
+							vmessage.setAttributes(attrs);
+						}
+						vmessage.setAttribute(IMarker.LINE_NUMBER, message.getLineNumber());
+						vmessage.setAttribute(IMarker.MESSAGE, message.getText());
+						if (message.getOffset() > -1) {
+							vmessage.setAttribute(IMarker.CHAR_START, message.getOffset());
+							vmessage.setAttribute(IMarker.CHAR_END, message.getOffset() + message.getLength());
+						}
+						int severity = 0;
+						switch (message.getSeverity()) {
+							case IMessage.HIGH_SEVERITY :
+								severity = IMarker.SEVERITY_ERROR;
+								break;
+							case IMessage.NORMAL_SEVERITY :
+								severity = IMarker.SEVERITY_WARNING;
+								break;
+							case IMessage.LOW_SEVERITY :
+								severity = IMarker.SEVERITY_INFO;
+								break;
+						}
+						vmessage.setAttribute(IMarker.SEVERITY, severity);
+						vmessage.setType(MARKER_TYPE);
+						result.add(vmessage);
 					}
-					int severity = 0;
-					switch (message.getSeverity()) {
-						case IMessage.HIGH_SEVERITY :
-							severity = IMarker.SEVERITY_ERROR;
-							break;
-						case IMessage.NORMAL_SEVERITY :
-							severity = IMarker.SEVERITY_WARNING;
-							break;
-						case IMessage.LOW_SEVERITY :
-							severity = IMarker.SEVERITY_INFO;
-							break;
-					}
-					vmessage.setAttribute(IMarker.SEVERITY, severity);
-					vmessage.setType(MARKER_TYPE);
-					result.add(vmessage);
 				}
+				monitor.done();
 			}
 			// TLD
 			else {
