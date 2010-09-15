@@ -408,6 +408,15 @@ public class DefaultXMLPartitionFormatter {
 				int availableLineWidth = indentIfPossible(textEdit, constraints, currentDocumentRegion, previousDocumentRegion, whitespaceStrategy, indentStrategy, false);
 				constraints.setAvailableLineWidth(availableLineWidth);
 			}
+			else if ( XMLFormattingConstraints.INLINE.equals(indentStrategy)){
+				IStructuredDocument doc = currentDocumentRegion.getParentDocument();
+				int currentLine = doc.getLineOfOffset(currentDocumentRegion.getStartOffset());
+				int prevLine = doc.getLineOfOffset(previousDocumentRegion.getStartOffset());
+				if ( currentLine != prevLine){
+					int availableLineWidth = indentIfPossible(textEdit, constraints, currentDocumentRegion, previousDocumentRegion, whitespaceStrategy, indentStrategy, false);
+					constraints.setAvailableLineWidth(availableLineWidth);
+				}
+			}
 		}
 		// format the end tag itself
 		formatWithinEndTag(textEdit, constraints, currentDocumentRegion, previousDocumentRegion);
