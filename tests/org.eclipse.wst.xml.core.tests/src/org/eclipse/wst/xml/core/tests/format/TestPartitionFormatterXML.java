@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -391,5 +391,9 @@ public class TestPartitionFormatterXML extends TestCase {
 
 	public void testFormatDocumentLevelShortComment() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/xml/xml-format-document-level-short-comment.xml", "testfiles/xml/xml-format-document-level-short-comment-fmt.xml");
+	}
+	
+	public void testNestedEndTag() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/xml/nested-endtag.xml", "testfiles/xml/nested-endtag-fmt.xml");
 	}
 }
