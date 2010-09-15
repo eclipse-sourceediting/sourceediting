@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.jface.text.DocumentRewriteSession;
 import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocumentExtension4;
+import org.eclipse.jface.text.Region;
 import org.eclipse.wst.css.core.internal.formatter.CSSFormatUtil;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatter;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
@@ -27,6 +28,7 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Node;
 
@@ -57,12 +59,15 @@ public class FormatProcessorCSS extends AbstractStructuredFormatProcessor {
 				rewriteSession = (docExt4 == null || docExt4.getActiveRewriteSession() != null) ? null : docExt4.startRewriteSession(rewriteType);
 
 				ICSSDocument doc = ((ICSSModel) structuredModel).getDocument();
+				IStructuredDocumentRegion startRegion = 
+					structuredModel.getStructuredDocument().getRegionAtCharacterOffset(start);
+				IStructuredDocumentRegion endRegion = 
+					structuredModel.getStructuredDocument().getRegionAtCharacterOffset(start + length);
+				start = startRegion.getStart();
 				CSSSourceFormatter formatter = CSSSourceFormatterFactory.getInstance().getSourceFormatter((INodeNotifier) doc);
-				StringBuffer buf = formatter.format(doc);
+				StringBuffer buf = formatter.format(doc, new Region(start, (endRegion.getEnd() - start)));
 				if (buf != null) {
-					int startOffset = ((IndexedRegion) doc).getStartOffset();
-					int endOffset = ((IndexedRegion) doc).getEndOffset();
-					formatUtil.replaceSource(doc.getModel(), startOffset, endOffset - startOffset, buf.toString());
+					formatUtil.replaceSource(doc.getModel(), start, endRegion.getEnd() - start, buf.toString());
 				}
 			}
 			finally {
