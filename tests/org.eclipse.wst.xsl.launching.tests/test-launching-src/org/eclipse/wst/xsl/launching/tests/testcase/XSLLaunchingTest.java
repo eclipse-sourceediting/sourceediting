@@ -54,7 +54,7 @@ public class XSLLaunchingTest extends AbstractLaunchingTest {
 		super.tearDown();
 	}
 	
-	@Test
+	@Ignore @Test
 	public void testSimpleTransformation() throws Exception {
 		IPath folder = testProject.getFullPath();
 		env.addFileFromResource(folder, "1-input.xml", "1-input.xml");
@@ -77,7 +77,7 @@ public class XSLLaunchingTest extends AbstractLaunchingTest {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	@Test
+	@Ignore @Test
 	public void testTransformComments() throws Exception {
 		IPath folder = testProject.getFullPath();
 		env.addFileFromResource(folder, "testCommentInput.xml",
