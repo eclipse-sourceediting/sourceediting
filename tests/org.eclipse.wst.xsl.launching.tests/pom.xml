@@ -31,9 +31,9 @@
                      <version>0.0.0</version>
                   </dependency>
                   <dependency>
-                     <type>p2-installable-unit</type>
-                     <artifactId>org.eclipse.wst.xalan</artifactId>
-                     <version>0.0.0</version>
+                        <groupId>org.eclipse.wst.xsl</groupId>
+                        <artifactId>org.eclipse.wst.xsl.xalan</artifactId>
+                        <version>1.0.1-SNAPSHOT</version>
                   </dependency>
                </dependencies>
             </configuration>
