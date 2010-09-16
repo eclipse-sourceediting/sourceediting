@@ -32,7 +32,7 @@
                   </dependency>
                   <dependency>
                      <type>p2-installable-unit</type>
-                     <actifactId>org.apache.xalan</actifactId>
+                     <artifactId>org.apache.xalan</artifactId>
                      <version>0.0.0</version>
                   </dependency>
                   <dependency>
