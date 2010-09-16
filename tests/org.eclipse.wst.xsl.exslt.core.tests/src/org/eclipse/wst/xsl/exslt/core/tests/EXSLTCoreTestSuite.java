@@ -11,17 +11,13 @@
 package org.eclipse.wst.xsl.exslt.core.tests;
 
 import org.eclipse.wst.xsl.exslt.core.internal.resolver.tests.EXSLTResolverTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
-public class EXSLTCoreTestSuite extends TestSuite {
-	public static Test suite() {
-		return new EXSLTCoreTestSuite();
-	}
 
-	public EXSLTCoreTestSuite() {
-		super("EXSLT Core Test Suite");
-		addTestSuite(EXSLTResolverTest.class);
-	}
+@RunWith(Suite.class)
+@Suite.SuiteClasses( {EXSLTResolverTest.class })
+public class EXSLTCoreTestSuite{
+	
 }
