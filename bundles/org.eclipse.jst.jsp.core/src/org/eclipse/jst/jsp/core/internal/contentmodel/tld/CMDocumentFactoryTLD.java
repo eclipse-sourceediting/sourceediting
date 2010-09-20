@@ -1034,7 +1034,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 					String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getLocation().toString() + "!/META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
 					document.setProperty(JSP12TLDNames.LARGE_ICON, "jar:file:" + iconPath); //$NON-NLS-1$
 				}
-				if (document != null && document.getElements().getLength() == 0) {
+				if (_debug && document != null && document.getElements().getLength() == 0) {
 					System.out.println("failure parsing " + record.getLocation()); //$NON-NLS-1$
 				}
 			}
