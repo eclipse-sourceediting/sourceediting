@@ -35,6 +35,7 @@ public class CSSUIMessages extends NLS {
 		return fResourceBundle;
 	}
 	
+	public static String ID_Selector_Case__UI_;
 	public static String INFO_Not_Categorized_1;
 	public static String PrefsLabel_WrappingWithoutAttr;
 	public static String PrefsLabel_WrappingInsertLineBreak;
@@ -83,6 +84,7 @@ public class CSSUIMessages extends NLS {
 	public static String Title_InvalidValue;
 	public static String Message_InvalidValue;
 	public static String FormatMenu_label;
+	public static String Class_Selector_Case__UI_;
 	public static String CleanupDocument_label; // resource bundle
 	public static String CleanupDocument_tooltip; // resource bundle
 	public static String CleanupDocument_description; // resource bundle

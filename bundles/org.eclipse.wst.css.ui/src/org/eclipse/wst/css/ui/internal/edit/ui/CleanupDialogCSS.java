@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,12 @@ public class CleanupDialogCSS extends Dialog implements SelectionListener{
 	protected Button fRadioButtonSelectorTagCaseAsis;
 	protected Button fRadioButtonSelectorTagCaseLower;
 	protected Button fRadioButtonSelectorTagCaseUpper;
+	protected Button fRadioButtonSelectorIdCaseAsis;
+	protected Button fRadioButtonSelectorIdCaseLower;
+	protected Button fRadioButtonSelectorIdCaseUpper;
+	protected Button fRadioButtonSelectorClassCaseAsis;
+	protected Button fRadioButtonSelectorClassCaseLower;
+	protected Button fRadioButtonSelectorClassCaseUpper;
 	protected Button fCheckBoxQuoteValues;
 	protected Button fCheckBoxFormatSource;
 
@@ -158,6 +164,36 @@ public class CleanupDialogCSS extends Dialog implements SelectionListener{
 			fRadioButtonSelectorTagCaseUpper = new Button(selectorTagCase, SWT.RADIO);
 			fRadioButtonSelectorTagCaseUpper.setText(CSSUIMessages.Upper_UI_);
 			fRadioButtonSelectorTagCaseUpper.addSelectionListener(this);
+
+			Group selectorIdCase = new Group(panel, SWT.NULL);
+			selectorIdCase.setText(CSSUIMessages.ID_Selector_Case__UI_);
+			hLayout = new GridLayout();
+			hLayout.numColumns = 3;
+			selectorIdCase.setLayout(hLayout);
+			fRadioButtonSelectorIdCaseAsis = new Button(selectorIdCase, SWT.RADIO);
+			fRadioButtonSelectorIdCaseAsis.setText(CSSUIMessages.As_is_UI_);
+			fRadioButtonSelectorIdCaseAsis.addSelectionListener(this);
+			fRadioButtonSelectorIdCaseLower = new Button(selectorIdCase, SWT.RADIO);
+			fRadioButtonSelectorIdCaseLower.setText(CSSUIMessages.Lower_UI_);
+			fRadioButtonSelectorIdCaseLower.addSelectionListener(this);
+			fRadioButtonSelectorIdCaseUpper = new Button(selectorIdCase, SWT.RADIO);
+			fRadioButtonSelectorIdCaseUpper.setText(CSSUIMessages.Upper_UI_);
+			fRadioButtonSelectorIdCaseUpper.addSelectionListener(this);
+
+			Group selectorClassCase = new Group(panel, SWT.NULL);
+			selectorClassCase.setText(CSSUIMessages.Class_Selector_Case__UI_);
+			hLayout = new GridLayout();
+			hLayout.numColumns = 3;
+			selectorClassCase.setLayout(hLayout);
+			fRadioButtonSelectorClassCaseAsis = new Button(selectorClassCase, SWT.RADIO);
+			fRadioButtonSelectorClassCaseAsis.setText(CSSUIMessages.As_is_UI_);
+			fRadioButtonSelectorClassCaseAsis.addSelectionListener(this);
+			fRadioButtonSelectorClassCaseLower = new Button(selectorClassCase, SWT.RADIO);
+			fRadioButtonSelectorClassCaseLower.setText(CSSUIMessages.Lower_UI_);
+			fRadioButtonSelectorClassCaseLower.addSelectionListener(this);
+			fRadioButtonSelectorClassCaseUpper = new Button(selectorClassCase, SWT.RADIO);
+			fRadioButtonSelectorClassCaseUpper.setText(CSSUIMessages.Upper_UI_);
+			fRadioButtonSelectorClassCaseUpper.addSelectionListener(this);
 		}
 
 		// Quote attribute values
@@ -236,6 +272,24 @@ public class CleanupDialogCSS extends Dialog implements SelectionListener{
 				fRadioButtonSelectorTagCaseAsis.setSelection(true);
 		}
 
+		if (fRadioButtonSelectorIdCaseAsis != null) {
+			if (stgy.getIdSelectorCase() == CSSCleanupStrategy.UPPER)
+				fRadioButtonSelectorIdCaseUpper.setSelection(true);
+			else if (stgy.getIdSelectorCase() == CSSCleanupStrategy.LOWER)
+				fRadioButtonSelectorIdCaseLower.setSelection(true);
+			else
+				fRadioButtonSelectorIdCaseAsis.setSelection(true);
+		}
+
+		if (fRadioButtonSelectorClassCaseAsis != null) {
+			if (stgy.getClassSelectorCase() == CSSCleanupStrategy.UPPER)
+				fRadioButtonSelectorClassCaseUpper.setSelection(true);
+			else if (stgy.getClassSelectorCase() == CSSCleanupStrategy.LOWER)
+				fRadioButtonSelectorClassCaseLower.setSelection(true);
+			else
+				fRadioButtonSelectorClassCaseAsis.setSelection(true);
+		}
+
 		if (fCheckBoxQuoteValues != null)
 			fCheckBoxQuoteValues.setSelection(stgy.isQuoteValues());
 
@@ -296,6 +350,24 @@ public class CleanupDialogCSS extends Dialog implements SelectionListener{
 				stgy.setSelectorTagCase(CSSCleanupStrategy.ASIS);
 		}
 
+		if (fRadioButtonSelectorIdCaseAsis != null) {
+			if (fRadioButtonSelectorIdCaseUpper.getSelection())
+				stgy.setIdSelectorCase(CSSCleanupStrategy.UPPER);
+			else if (fRadioButtonSelectorIdCaseLower.getSelection())
+				stgy.setIdSelectorCase(CSSCleanupStrategy.LOWER);
+			else
+				stgy.setIdSelectorCase(CSSCleanupStrategy.ASIS);
+		}
+
+		if (fRadioButtonSelectorClassCaseAsis != null) {
+			if (fRadioButtonSelectorClassCaseUpper.getSelection())
+				stgy.setClassSelectorCase(CSSCleanupStrategy.UPPER);
+			else if (fRadioButtonSelectorClassCaseLower.getSelection())
+				stgy.setClassSelectorCase(CSSCleanupStrategy.LOWER);
+			else
+				stgy.setClassSelectorCase(CSSCleanupStrategy.ASIS);
+		}
+
 		if (fCheckBoxQuoteValues != null)
 			stgy.setQuoteValues(fCheckBoxQuoteValues.getSelection());
 
@@ -313,6 +385,8 @@ public class CleanupDialogCSS extends Dialog implements SelectionListener{
 		|| ((fRadioButtonPropNameCaseLower != null && fRadioButtonPropNameCaseLower.getSelection()) || (fRadioButtonPropNameCaseUpper != null && fRadioButtonPropNameCaseUpper.getSelection()))
 		|| ((fRadioButtonPropValueCaseLower != null && fRadioButtonPropValueCaseLower.getSelection()) || (fRadioButtonPropValueCaseUpper != null && fRadioButtonPropValueCaseUpper.getSelection()))
 		|| ((fRadioButtonSelectorTagCaseLower != null && fRadioButtonSelectorTagCaseLower.getSelection()) || (fRadioButtonSelectorTagCaseUpper != null && fRadioButtonSelectorTagCaseUpper.getSelection()))
+		|| ((fRadioButtonSelectorIdCaseLower != null && fRadioButtonSelectorIdCaseLower.getSelection()) || (fRadioButtonSelectorIdCaseUpper != null && fRadioButtonSelectorIdCaseUpper.getSelection()))
+		|| ((fRadioButtonSelectorClassCaseLower != null && fRadioButtonSelectorClassCaseLower.getSelection()) || (fRadioButtonSelectorClassCaseUpper != null && fRadioButtonSelectorClassCaseUpper.getSelection()))
 		;
 		getButton(OK).setEnabled(okEnabled);
 		

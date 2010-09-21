@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,8 @@ public class CSSCleanupStrategyImpl implements CSSCleanupStrategy {
 	protected short fSelectorTagCase = UPPER;
 	protected boolean fQuoteValues = true;
 	protected boolean fFormatSource = true;
+	protected short fClassCase = ASIS;
+	protected short fIdCase = ASIS;
 
 	/**
 	 * CSSCleanupStrategyImpl constructor comment.
@@ -86,6 +88,8 @@ public class CSSCleanupStrategyImpl implements CSSCleanupStrategy {
 		fPropNameCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_PROPERTY_NAME));
 		fPropValueCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_PROPERTY_VALUE));
 		fSelectorTagCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_SELECTOR));
+		fIdCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_ID_SELECTOR));
+		fClassCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_CLASS_SELECTOR));
 		fQuoteValues = prefs.getBoolean(CSSCorePreferenceNames.QUOTE_ATTR_VALUES);
 		fFormatSource = prefs.getBoolean(CSSCorePreferenceNames.FORMAT_SOURCE);
 	}
@@ -183,8 +187,26 @@ public class CSSCleanupStrategyImpl implements CSSCleanupStrategy {
 		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_PROPERTY_NAME, fPropNameCase);
 		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_PROPERTY_VALUE, fPropValueCase);
 		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_SELECTOR, fSelectorTagCase);
+		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_ID_SELECTOR, fIdCase);
+		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_CLASS_SELECTOR, fClassCase);
 		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.QUOTE_ATTR_VALUES, fQuoteValues);
 		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.FORMAT_SOURCE, fFormatSource);
 		CSSCorePlugin.getDefault().savePluginPreferences();
+	}
+
+	public short getClassSelectorCase() {
+		return fClassCase;
+	}
+
+	public short getIdSelectorCase() {
+		return fIdCase;
+	}
+
+	public void setClassSelectorCase(short classSelectorCase) {
+		fClassCase = classSelectorCase;
+	}
+
+	public void setIdSelectorCase(short idSelectorCase) {
+		fIdCase = idSelectorCase;
 	}
 }

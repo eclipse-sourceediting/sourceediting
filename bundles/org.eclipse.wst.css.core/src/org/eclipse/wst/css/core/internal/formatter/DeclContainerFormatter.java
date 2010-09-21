@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,14 +48,24 @@ public class DeclContainerFormatter extends DefaultCSSSourceFormatter {
 			text = region.getText();
 		
 		String type = region.getType();
-		if (type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE || type == CSSRegionContexts.CSS_SELECTOR_CLASS || type == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || type == CSSRegionContexts.CSS_SELECTOR_ID || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO) {
-			short selCase = stgy.getSelectorTagCase();
-			if (selCase == org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy.UPPER) {
-				return text.toUpperCase();
-			}
-			else if (selCase == org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy.LOWER) {
-				return text.toLowerCase();
-			}
+		short selCase = -1;
+		if (type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE || type == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO) {
+			selCase = stgy.getSelectorTagCase();
+		}
+		else if (type == CSSRegionContexts.CSS_SELECTOR_CLASS) {
+			selCase = stgy.getClassSelectorCase();
+		}
+		else if (type == CSSRegionContexts.CSS_SELECTOR_ID) {
+			selCase = stgy.getIdSelectorCase();
+		}
+
+		if (selCase == org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy.UPPER) {
+			return text.toUpperCase();
+		}
+		else if (selCase == org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy.LOWER) {
+			return text.toLowerCase();
+		}
+		else if (selCase == org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy.ASIS) {
 			return text;
 		}
 
