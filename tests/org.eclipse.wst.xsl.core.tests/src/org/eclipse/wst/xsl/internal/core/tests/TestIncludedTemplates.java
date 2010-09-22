@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.core.tests;
 
-public class TestIncludedTemplates extends AbstractValidationTest
-{
-	public void test1() throws Exception
-	{
+import org.junit.Test;
+
+public class TestIncludedTemplates extends AbstractValidationTest {
+	
+	@Test
+	public void test1() throws Exception {
 		validate(getFile("style1.xsl"));
 	}
 }

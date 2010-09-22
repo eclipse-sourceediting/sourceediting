@@ -11,12 +11,13 @@
 package org.eclipse.wst.xsl.internal.core.tests;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
+import static org.junit.Assert.*;
 import org.eclipse.wst.xsl.core.internal.text.rules.StructuredTextPartitionerForXSL;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+public class TestStructuredTextPartitionerForXSL  {
 
-public class TestStructuredTextPartitionerForXSL extends TestCase {
-
+	@Test
 	public void testXSLNewInstance() {
 		StructuredTextPartitionerForXSL textPartioner = new StructuredTextPartitionerForXSL();
 		IDocumentPartitioner documentPartitioner = textPartioner.newInstance();

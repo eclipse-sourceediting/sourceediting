@@ -1,6 +1,8 @@
 package org.eclipse.wst.xsl.internal.model.tests;
 
 import java.util.List;
+import static org.junit.Assert.*;
+
 import java.util.Map;
 
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
@@ -11,6 +13,9 @@ import org.eclipse.wst.xsl.core.model.Stylesheet;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.Variable;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class TestStylesheet extends AbstractModelTest {
 	StylesheetBuilder builder = null;
@@ -19,23 +24,27 @@ public class TestStylesheet extends AbstractModelTest {
 		// TODO Auto-generated constructor stub
 	}
 	
+	@Before
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		builder = StylesheetBuilder.getInstance();
 	}
 	
+	@After
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 		builder.release();
 	}
 
+	@Test
 	public void testLoadModel() {
 		Stylesheet model = builder.getStylesheet(getFile("style1.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", model);
 	}
 
+	@Test
 	public void testgetLocalTemplatesTemplates() {
 		Stylesheet model = builder.getStylesheet(getFile("style1.xsl"), false);
 		assertNotNull("Model failed to load, returned NULL", model);
@@ -45,6 +54,7 @@ public class TestStylesheet extends AbstractModelTest {
 				.size());
 	}
 
+	@Test
 	public void testGetIncludes() {
 		Stylesheet stylesheet = builder.getStylesheet(getFile("style1.xsl"),
 				false);
@@ -55,6 +65,7 @@ public class TestStylesheet extends AbstractModelTest {
 				.size());
 	}
 
+	@Test
 	public void testGetImports() {
 		Stylesheet stylesheet = builder.getStylesheet(getFile("style1.xsl"),
 				false);
@@ -66,6 +77,7 @@ public class TestStylesheet extends AbstractModelTest {
 
 	}
 
+	@Test
 	public void testGetGlobalVariables() {
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
@@ -76,6 +88,7 @@ public class TestStylesheet extends AbstractModelTest {
 				globalVariablesList.size());
 	}
 
+	@Test
 	public void testGetLineNumber() {
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
@@ -84,6 +97,7 @@ public class TestStylesheet extends AbstractModelTest {
 		assertEquals("Incorrect line number.", 12, stylesheet.getLineNumber());
 	}
 
+	@Test
 	public void testGetColumnNumber() {
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
@@ -93,6 +107,7 @@ public class TestStylesheet extends AbstractModelTest {
 				.getColumnNumber());
 	}
 
+	@Test
 	public void testGetVersion() {
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
@@ -103,6 +118,7 @@ public class TestStylesheet extends AbstractModelTest {
 				.getVersion());
 	}
 
+	@Test
 	public void testXSLT2GetVersion() {
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("XSLT20Test.xsl"), false);
@@ -112,6 +128,7 @@ public class TestStylesheet extends AbstractModelTest {
 				.getVersion());
 	}
 
+	@Test
 	public void testGetAttributes() {
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("globalVariablesTest.xsl"), false);
@@ -126,6 +143,7 @@ public class TestStylesheet extends AbstractModelTest {
 
 	}
 
+	@Test
 	public void testGetFunction() {
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("XSLT20FunctionTest.xsl"), false);
@@ -136,6 +154,7 @@ public class TestStylesheet extends AbstractModelTest {
 				functionList.size());
 	}
 	
+	@Test
 	public void testGetFunctionFunc1() {
 		Stylesheet stylesheet = builder.getStylesheet(
 				getFile("XSLT20FunctionTest.xsl"), false);

@@ -12,6 +12,8 @@
 package org.eclipse.wst.xsl.internal.core.tests;
 
 import java.io.IOException;
+import static org.junit.Assert.*;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
@@ -22,8 +24,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import junit.framework.TestCase;
 
 import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.eclipse.core.resources.IFile;
@@ -51,6 +51,7 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.tests.XSLCoreTestsPlugin;
+import org.junit.Before;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,14 +66,13 @@ import org.w3c.dom.NodeList;
  * 
  * @author Doug Satchwell
  */
-public abstract class AbstractValidationTest extends TestCase {
+public abstract class AbstractValidationTest {
 	protected static IProject fTestProject;
 	private static boolean fTestProjectInitialized;
 	private static final String TEST_PROJECT_NAME = "testproject";
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (!fTestProjectInitialized) {
 			getAndCreateProject();
 

@@ -1,18 +1,14 @@
 package org.eclipse.wst.xsl.internal.core.tests;
 
-import junit.framework.TestCase;
+
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.junit.Test;
 
-public class TestXSLCore extends TestCase {
+import static org.junit.Assert.*;
 
-	public TestXSLCore() {
-		super();
-	}
+public class TestXSLCore {
 
-	public TestXSLCore(String name) {
-		super(name);
-	}
-	
+	@Test
 	public void testisXSLNamespaceNullFalse() {
 		assertFalse(XSLCore.isXSLNamespace(null));
 	}

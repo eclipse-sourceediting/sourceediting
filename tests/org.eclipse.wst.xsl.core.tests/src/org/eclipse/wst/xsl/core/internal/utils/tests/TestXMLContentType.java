@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009,2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,15 @@
 package org.eclipse.wst.xsl.core.internal.utils.tests;
 
 import org.eclipse.wst.xsl.core.internal.util.XMLContentType;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class TestXMLContentType extends TestCase {
 
-	public TestXMLContentType() {
-		super();
-	}
-	
+public class TestXMLContentType {
+
+
+	@Test
 	public void testGetFileExtensions() {
 		XMLContentType xmlContentType = new XMLContentType();
 		String[] exts = xmlContentType.getFileExtensions();

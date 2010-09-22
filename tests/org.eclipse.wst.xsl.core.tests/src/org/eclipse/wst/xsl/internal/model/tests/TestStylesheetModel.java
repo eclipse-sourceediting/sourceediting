@@ -8,6 +8,10 @@ import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
+import org.junit.After;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TestStylesheetModel extends AbstractModelTest {
     private StylesheetModel model = null;
@@ -15,14 +19,16 @@ public class TestStylesheetModel extends AbstractModelTest {
 		
 	}
 	
+	@After
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		builder.release();
 		model = null;
 	}
-	
+
+	@Test
 	public void testStyleSheetModel() {
 		
 		model = XSLCore.getInstance().getStylesheet(getFile("globalVariablesTest.xsl"));
@@ -38,6 +44,7 @@ public class TestStylesheetModel extends AbstractModelTest {
 		
 	}
 	
+	@Test
 	public void testFindAvailableTemplateModes() {
 		ArrayList<String> modes = new ArrayList();
 		model = XSLCore.getInstance().getStylesheet(getFile("modeTest.xsl"));
@@ -54,12 +61,14 @@ public class TestStylesheetModel extends AbstractModelTest {
 		}
 		assertEquals("Wrong number of mode templates returned.", 3, modes.size());
 	}
-		
+	
+	@Test
 	public void testCircularReference() {
 		model = XSLCore.getInstance().getStylesheet(getFile("circularref.xsl"));
 		assertTrue("Undettected circular reference", model.hasCircularReference());
 	}
 	
+	@Test
 	public void testNoCircularReference() {
 		model = XSLCore.getInstance().getStylesheet(getFile("modeTest.xsl"));
 		assertFalse("Undettected circular reference", model.hasCircularReference());

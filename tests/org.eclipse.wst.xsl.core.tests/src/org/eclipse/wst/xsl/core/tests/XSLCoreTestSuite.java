@@ -17,23 +17,14 @@ import org.eclipse.wst.xsl.internal.core.tests.TestStructuredTextPartitionerForX
 import org.eclipse.wst.xsl.internal.core.tests.TestXSLCore;
 import org.eclipse.wst.xsl.internal.model.tests.TestStylesheet;
 import org.eclipse.wst.xsl.internal.model.tests.TestStylesheetModel;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 
-public class XSLCoreTestSuite extends TestSuite {
-	public static Test suite() {
-		return new XSLCoreTestSuite();
-	}
-
-	public XSLCoreTestSuite() {
-		super("XSL Core Test Suite");
-		addTestSuite(TestIncludedTemplates.class);
-		addTestSuite(TestXSLCore.class);
-		addTestSuite(TestStylesheet.class);
-		addTestSuite(TestStylesheetModel.class);
-		addTestSuite(TestXMLContentType.class);
-		addTestSuite(TestStructuredTextPartitionerForXSL.class);
-	}
+@RunWith(Suite.class)
+@Suite.SuiteClasses({TestIncludedTemplates.class, TestXSLCore.class, TestStylesheet.class, TestStylesheetModel.class, TestXMLContentType.class,
+	 TestStructuredTextPartitionerForXSL.class})
+public class XSLCoreTestSuite {
+	
 }

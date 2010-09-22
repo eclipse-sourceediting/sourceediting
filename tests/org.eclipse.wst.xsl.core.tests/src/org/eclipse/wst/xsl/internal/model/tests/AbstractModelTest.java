@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2010 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,14 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (Intalio) - convert to Junit 4 - bug 313510
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.internal.model.tests;
 
 import java.io.IOException;
+import static org.junit.Assert.*;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
@@ -23,7 +26,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import junit.framework.TestCase;
 
 import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.eclipse.core.resources.IFile;
@@ -52,6 +54,8 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.tests.XSLCoreTestsPlugin;
+import org.junit.After;
+import org.junit.Before;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -64,15 +68,14 @@ import org.w3c.dom.NodeList;
  * 
  * @author Doug Satchwell
  */
-public abstract class AbstractModelTest extends TestCase
+public abstract class AbstractModelTest
 {
 	protected static IProject fTestProject;
 	private static boolean fTestProjectInitialized;
 	private static final String TEST_PROJECT_NAME = "testproject";
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (!fTestProjectInitialized) {
 			getAndCreateProject();
 
@@ -108,9 +111,8 @@ public abstract class AbstractModelTest extends TestCase
 	}
 	
 	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		StylesheetBuilder builder = StylesheetBuilder.getInstance();
 		builder.release();
 	}
