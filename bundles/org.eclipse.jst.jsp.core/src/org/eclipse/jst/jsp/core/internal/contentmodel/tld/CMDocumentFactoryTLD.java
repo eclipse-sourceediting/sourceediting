@@ -73,9 +73,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * CMDocumentBuilder for Taglib Descriptors
+ * CMDocumentBuilder for Tag Library Descriptors and tag files
  * 
- * Returns namespace-less CMDocuments for a taglib descriptor, loading it
+ * Returns namespace-less CMDocuments for a tag library descriptor, loading it
  * directly from a file or extracted from a JAR archive. Content Model objects
  * will implement the TLDCMDocument, TLDElementDeclaration, and
  * TLDAttributeDeclaration interfaces for extended properties.
