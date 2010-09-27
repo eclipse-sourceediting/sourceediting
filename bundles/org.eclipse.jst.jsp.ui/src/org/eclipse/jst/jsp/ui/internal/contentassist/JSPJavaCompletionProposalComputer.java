@@ -341,6 +341,8 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 		int documentPosition = context.getInvocationOffset();
 		
 		String partitionType = getPartitionType(viewer, documentPosition);
+		if (partitionType == IJSPPartitions.JSP_CONTENT_JAVA)
+			return true;
 		IStructuredDocument structuredDocument = (IStructuredDocument) viewer.getDocument();
 		IStructuredDocumentRegion fn = structuredDocument.getRegionAtCharacterOffset(documentPosition);
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(viewer, documentPosition);
