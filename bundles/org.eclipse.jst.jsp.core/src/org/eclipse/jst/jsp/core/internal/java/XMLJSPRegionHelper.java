@@ -273,7 +273,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		if(regionList != null) {
 			ITextRegion region = regionList.get(start);
 			String text = sdRegion.getFullText();
-			if (text != null && region.getStart() <= text.length())
+			if (text != null && region != null && region.getStart() <= text.length())
 				fTranslator.decodeScriptBlock(text.substring(region.getStart(), text.length()), 0);
 		}
 	}
