@@ -15,6 +15,8 @@
  *     Jesper Steen Moller  - bug 281938 - undefined context should raise error
  *     Jesper Steen Moller  - bug 262765 - use correct 'effective boolean value'
  *     Jesper Steen Moller  - bug 312191 - instance of test fails with partial matches
+  *    Mukul Gandhi         - bug 325262 - providing ability to store an XPath2 sequence into
+ *                                         an user-defined variable.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -1394,11 +1396,16 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	public Object visit(VarRef e) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		AnyType var = _dc.get_variable(e.name());
+		Object var = _dc.get_variable(e.name());
 
 		assert var != null;
 
-		rs.add(var);
+		if (var instanceof AnyType) {
+		   rs.add((AnyType) var);
+		}
+		else if (var instanceof ResultSequence) {
+		   rs.concat((ResultSequence) var);	
+		}
 
 		return rs;
 	}

@@ -14,6 +14,8 @@
  *     Jesper Moller- bug 286452 - always return the stable date/time from dynamic context
  *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
  *     Jesper Moller- bug 280555 - Add pluggable collation support
+  *    Mukul Gandhi - bug 325262 - providing ability to store an XPath2 sequence into
+ *                                 an user-defined variable.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -137,7 +139,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * 
 	 * @return an AnyType result from get_var(name) or return NULL
 	 */
-	public AnyType get_variable(QName name) {
+	public Object get_variable(QName name) {
 		// XXX: built-in variables
 		if ("fs".equals(name.prefix())) {
 			if (name.local().equals("dot"))
@@ -242,6 +244,14 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 */
 	@Override
 	public void set_variable(QName var, AnyType val) {
+		super.set_variable(var, val);
+	}
+	
+	
+	/*
+	 * Set a XPath2 sequence into a variable.
+	 */
+	public void set_variable(QName var, ResultSequence val) {
 		super.set_variable(var, val);
 	}
 
