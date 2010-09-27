@@ -15,8 +15,8 @@ import java.io.File;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.CRC32;
@@ -332,43 +332,6 @@ public final class TaglibIndex {
 	}
 
 	/**
-	 * An implementation of {@link Map} that has a limit to the number
-	 * of {@link Map.Entry}s it can store.  If the limit is reached then the
-	 * oldest {@link Map.Entry}s are automatically removed.
-	 */
-	private class LimitedHashMap extends LinkedHashMap {
-		/**
-		 * Default
-		 */
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * the maximum number of {@link Map.Entry}s this map can store
-		 */
-		private int fLimit;
-
-		LimitedHashMap(int limit) {
-			super(limit, .75f, true);
-			fLimit = limit;
-		}
-
-		/**
-		 * If the size of this map has increased passed the limit then return
-		 * <code>true</code>, <code>false</code> otherwise.
-		 * 
-		 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
-		 */
-		protected boolean removeEldestEntry(Map.Entry eldest) {
-			boolean willRemove = this.size() > fLimit;
-			if (willRemove) {
-				// save its references to disk before it gets bumped
-				((ProjectDescription) eldest.getValue()).saveReferences();
-			}
-			return willRemove;
-		}
-	}
-
-	/**
 	 * <p>A {@link AbstractMemoryListener} that clears the {@link ProjectDescription} cache
 	 * whenever specific memory events are received.</p>
 	 * 
@@ -422,11 +385,6 @@ public final class TaglibIndex {
 	private static final String DIRTY = "DIRTY";
 	static boolean ENABLED = false;
 
-	/**
-	 * The minimum limitation on the number of project descriptions to keep cached.
-	 */
-	private static final int MINIMUM_LIMIT_FOR_PROJECT_DESCRIPTIONS_CACHE = 3;
-	
 	static final ILock LOCK = Job.getJobManager().newLock();
 
 	/**
@@ -687,7 +645,7 @@ public final class TaglibIndex {
 					removeIndexes(false);
 				}
 
-				fProjectDescriptions = new LimitedHashMap(calculateCacheLimit());
+				fProjectDescriptions = new Hashtable();
 				fResourceChangeListener = new ResourceChangeListener();
 				fClasspathChangeListener = new ClasspathChangeListener();
 				fMemoryListener = new MemoryListener();
@@ -1061,23 +1019,5 @@ public final class TaglibIndex {
 
 	private void setIntialized(boolean intialized) {
 		this.initialized = intialized;
-	}
-	
-	/**
-	 * <p>Calculate the maximum number of project descriptions to keep cached.</p>
-	 * <p>Calculated as:<br />
-	 * <code>MINIMUM_LIMIT_FOR_PROJECT_DESCRIPTIONS_CACHE + log(currentWorkspaceProjectCount)</code></p>
-	 * 
-	 * @return the maximum number of project descriptions to keep cached
-	 */
-	private int calculateCacheLimit() {
-		int limit = MINIMUM_LIMIT_FOR_PROJECT_DESCRIPTIONS_CACHE;
-		
-		int projectCount = ResourcesPlugin.getWorkspace().getRoot().getProjects().length;
-		if(projectCount > 0) {
-			limit += Math.log(projectCount);
-		}
-		
-		return limit;
 	}
 }
