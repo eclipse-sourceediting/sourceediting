@@ -42,9 +42,15 @@
  * Jesper S Moller  - bug 312191 - instance of test fails with partial matches
  *  Mukul Gandhi    - bug 318313 - improvements to computation of typed values of nodes,
  *                                 when validated by XML Schema primitive types
+ *  Mukul Gandhi    - bug 323900 - improving computing the typed value of element &
+ *                                 attribute nodes, where the schema type of nodes
+ *                                 are simple, with varieties 'list' and 'union'.
+ *  Mukul Gandhi    - bug 325262 - providing ability to store an XPath2 sequence into
+ *                                 an user-defined variable.                               
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.Comparator;
 
@@ -60,12 +66,16 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.osgi.framework.Bundle;
 import org.xml.sax.InputSource;
 
@@ -1756,6 +1766,186 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
+	}
+	
+	public void testTypedValueEnhancement_Bug323900_1() throws Exception {
+		// Bug 323900
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug323900_1.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug323900_1.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "data(X) instance of xs:integer+";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testTypedValueEnhancement_Bug323900_2() throws Exception {
+		// Bug 323900
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug323900_2.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug323900_2.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// 1st test
+		String xpath = "data(X) instance of xs:integer+";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("false", actual);
+	}
+	
+	public void testTypedValueEnhancement_Bug323900_3() throws Exception {
+		// Bug 323900
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug323900_2.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug323900_2.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+		String xpath = "data(X)";
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+		
+		boolean result1 = ((XSInteger) rs.get(0)).eq(new XSInteger(BigInteger.
+				                                     valueOf(1)), dc);
+		boolean result2 = ((XSInteger) rs.get(1)).eq(new XSInteger(BigInteger.
+				                                     valueOf(2)), dc);
+		boolean result3 = ((XSString) rs.get(2)).eq(new XSString("3.3"), dc);
+		
+		assertEquals(true, result1 && result2 && result3);
+	}
+	
+	public void testTypedValueEnhancement_Bug323900_4() throws Exception {
+		// Bug 323900
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug323900_3.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug323900_3.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+		String xpath = "data(X)";
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+        
+		XSString result = (XSString) rs.get(0);
+		assertEquals("3.3", result.string_value());
+	}
+	
+	public void testTypedValueEnhancement_Bug323900_5() throws Exception {
+		// Bug 323900
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug323900_4.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug323900_3.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+		String xpath = "data(X)";
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+        
+		XSInteger result = (XSInteger) rs.get(0);
+		assertEquals("10", result.string_value());
+	}
+	
+	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_1() 
+	                                                       throws Exception {
+		// Bug 325262
+		DynamicContext dc = setupDynamicContext(null);
+		
+        ResultSequence rs = ResultSequenceFactory.create_new();
+        dc.set_variable(new QName("value"), rs);
+        
+		String xpath = "deep-equal($value,())";
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rsRes = eval.evaluate(path);
+        
+		XSBoolean result = (XSBoolean) rsRes.get(0);
+		assertEquals("true", result.string_value());
+	}
+	
+	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_2() 
+	                                                       throws Exception {
+		// Bug 325262
+		DynamicContext dc = setupDynamicContext(null);
+		
+        ResultSequence rs = ResultSequenceFactory.create_new();
+        rs.add(new XSInteger(BigInteger.valueOf(2)));
+        rs.add(new XSInteger(BigInteger.valueOf(4)));
+        rs.add(new XSInteger(BigInteger.valueOf(6)));
+        dc.set_variable(new QName("value"), rs);
+        
+        // test a
+		String xpath = "$value instance of xs:integer+";
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rsRes = eval.evaluate(path);        
+		XSBoolean result = (XSBoolean) rsRes.get(0);
+		assertEquals("true", result.string_value());
+		
+		// test b
+		xpath = "deep-equal($value, (2, 4, 6))";
+		path = compileXPath(dc, xpath);
+		eval = new DefaultEvaluator(dc, domDoc);
+		rsRes = eval.evaluate(path);        
+		result = (XSBoolean) rsRes.get(0);
+		assertEquals("true", result.string_value());
+	}
+	
+	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_3() 
+	                                                      throws Exception {
+		// Bug 325262
+		DynamicContext dc = setupDynamicContext(null);
+		
+		ResultSequence rs = ResultSequenceFactory.create_new();
+        rs.add(new XSInteger(BigInteger.valueOf(2)));
+        rs.add(new XSInteger(BigInteger.valueOf(4)));
+        rs.add(new XSInteger(BigInteger.valueOf(6)));
+        dc.set_variable(new QName("value"), rs);
+        
+		String xpath = "count(data($value)) = 3";
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rsRes = eval.evaluate(path);        
+		XSBoolean result = (XSBoolean) rsRes.get(0);
+		assertEquals("true", result.string_value());
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {
