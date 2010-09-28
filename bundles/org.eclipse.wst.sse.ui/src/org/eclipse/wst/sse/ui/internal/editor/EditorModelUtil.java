@@ -30,6 +30,9 @@ import org.eclipse.wst.sse.ui.internal.util.Assert;
 /**
  * INTERNAL USAGE ONLY
  * 
+ * Adds adapter factories intended solely for use when the model is
+ * interacting with a UI.
+ * 
  * @author nsd
  */
 public class EditorModelUtil {
