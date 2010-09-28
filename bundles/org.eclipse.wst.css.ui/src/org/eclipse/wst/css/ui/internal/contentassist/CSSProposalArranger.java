@@ -27,6 +27,7 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.w3c.dom.css.CSSFontFaceRule;
 
 class CSSProposalArranger {
@@ -120,14 +121,35 @@ class CSSProposalArranger {
 	 */
 	void buildProposalsForAnyRule() {
 		CSSProposalGenerator generator;
-		generator = new CSSProposalGeneratorForAtmarkRule(fContext);
-		fProposals.addAll(generator.getProposals());
+		if (isFirstRegion()){
+			generator = new CSSProposalGeneratorForAtmarkRule(fContext);
+			fProposals.addAll(generator.getProposals());
+		}
 		generator = new CSSProposalGeneratorForHTMLTag(fContext);
 		fProposals.addAll(generator.getProposals());
 		generator = new CSSProposalGeneratorForPseudoSelector(fContext);
 		fProposals.addAll(generator.getProposals());
 	}
 
+	private boolean isFirstRegion(){
+		if (fContext.getCursorPos() == 0)
+			return true;
+
+		ITextRegion region = fContext.getTargetRegion();
+		ITextRegion currRegion = fContext.getRegionByOffset(fContext.getCursorPos());
+		String type = null;
+	    String crType = null;
+		if(region != null) {
+			type = region.getType();
+		}
+		if(currRegion != null) {
+			crType = currRegion.getType();
+		}
+		if (type == null || crType == null || (crType == type))
+			return true;
+		else 
+			return false;
+	}
 	/**
 	 *  
 	 */
