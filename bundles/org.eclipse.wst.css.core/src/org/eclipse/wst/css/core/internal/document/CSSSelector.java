@@ -109,7 +109,7 @@ class CSSSelector implements ICSSSelector {
 	 */
 	private Element getParentElement(Element element) {
 		Node node = element.getParentNode();
-		if (node.getNodeType() == Node.ELEMENT_NODE) {
+		if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
 			return (Element) node;
 		}
 		return null;
