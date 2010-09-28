@@ -167,4 +167,13 @@ public class JSPUIPreferenceNames {
 	 * character (<tt>\0</tt>) in the desired sort order.</p>
 	 */
 	public static final String CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER= "jsp_content_assist_default_page_sort_order"; //$NON-NLS-1$
+	
+	/**
+	 * <p>preference key to store the option for auto insertion of page imports</p>
+	 * 
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String AUTO_IMPORT_INSERT = "autoImportinsertion"; //$NON-NLS-1$
 }

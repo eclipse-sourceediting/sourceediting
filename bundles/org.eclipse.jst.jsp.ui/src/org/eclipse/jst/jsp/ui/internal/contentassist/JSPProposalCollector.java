@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,8 @@ import org.eclipse.jdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -90,7 +92,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		// ignore constructor proposals (they're not relevant for our JSP proposal list)
 		if(!proposal.isConstructor()) {
 			int kind = proposal.getKind();
-			if(kind == CompletionProposal.TYPE_REF) {
+			if(proposal.getKind() == CompletionProposal.TYPE_REF && JSPUIPlugin.getDefault().getPreferenceStore().getBoolean(JSPUIPreferenceNames.AUTO_IMPORT_INSERT)) {
 				String signature = String.valueOf(proposal.getDeclarationSignature());
 				String completion = String.valueOf(proposal.getCompletion());
 				if(completion.indexOf(signature + ".") != -1) { //$NON-NLS-1$

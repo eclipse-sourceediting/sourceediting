@@ -11,9 +11,14 @@
 package org.eclipse.jst.jsp.ui.internal.preferences.ui;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.contentassist.CompletionProposoalCatigoriesConfigurationRegistry;
@@ -30,6 +35,9 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 
 	private static final String JSP_CONTENT_TYPE_ID = "org.eclipse.jst.jsp.core.jspsource"; //$NON-NLS-1$
 	
+	/* Checkbox to store Auto Insertion preference */
+	private Button fAutoImport;
+	
 	/** configuration block for changing preference having to do with the content assist categories */
 	private CodeAssistCyclingConfigurationBlock fConfigurationBlock;
 	
@@ -39,6 +47,7 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	protected Control createContents(Composite parent) {
 		final Composite composite = super.createComposite(parent, 1);
 		
+		createContentsForAutoInsertionGroup(composite);
 		createContentsForCyclingGroup(composite);
 		
 		setSize(composite);
@@ -51,6 +60,7 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#performDefaults()
 	 */
 	protected void performDefaults() {
+		performDefaultsForAutoInsertionGroup();
 		performDefaultsForCyclingGroup();
 
 		validateValues();
@@ -63,6 +73,7 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#initializeValues()
 	 */
 	protected void initializeValues() {
+		initializeValuesForAutoInsertionGroup();
 		initializeValuesForCyclingGroup();
 	}
 	
@@ -70,6 +81,7 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#storeValues()
 	 */
 	protected void storeValues() {
+		storeValuesForAutoInsertionGroup();
 		storeValuesForCyclingGroup();
 	}
 	
@@ -81,6 +93,21 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	}
 	
 	/**
+	 * <p>Create the contents for the content assist Auto Insertion preference group</p>
+	 * @param parent {@link Composite} parent of the group
+	 */
+	private void createContentsForAutoInsertionGroup(Composite parent) {
+		Group group = createGroup(parent, 2);
+		
+		group.setText(JSPUIMessages.JSPCodeAssist_Insertion);
+		
+		fAutoImport = createCheckBox(group, JSPUIMessages.JSPCodeAssist_Auto_Import);
+		((GridData) fAutoImport.getLayoutData()).horizontalSpan = 2;
+		
+	
+	}
+	
+	/**
 	 * <p>Create the contents for the content assist cycling preference group</p>
 	 * @param parent {@link Composite} parent of the group
 	 */
@@ -89,12 +116,20 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 		
 		if(configurationWriter != null) {
 			fConfigurationBlock = new CodeAssistCyclingConfigurationBlock(JSP_CONTENT_TYPE_ID, configurationWriter);
-			fConfigurationBlock.createContents(parent, null);
+			fConfigurationBlock.createContents(parent, JSPUIMessages.Cycling_UI);
 		} else {
 			Logger.log(Logger.ERROR, "There should be an ICompletionProposalCategoriesConfigurationWriter" + //$NON-NLS-1$
 					" specified for the JSP content type, but can't fine it, thus can't create user" + //$NON-NLS-1$
 					" preference block for editing proposal categories preferences."); //$NON-NLS-1$
 		}
+	}
+	
+	
+	/**
+	 * <p>Store the values for the auto insertion group</p>
+	 */
+	private void storeValuesForAutoInsertionGroup() {
+		getPreferenceStore().setValue(JSPUIPreferenceNames.AUTO_IMPORT_INSERT, (fAutoImport != null) ? fAutoImport.getSelection() : false);
 	}
 	
 	/**
@@ -107,12 +142,26 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	}
 	
 	/**
+	 * <p>Initialize the values for the auto insertion group</p>
+	 */
+	private void initializeValuesForAutoInsertionGroup() {
+		initCheckbox(fAutoImport, JSPUIPreferenceNames.AUTO_IMPORT_INSERT);
+	}
+	
+	/**
 	 * <p>Initialize the values for the cycling group</p>
 	 */
 	private void initializeValuesForCyclingGroup() {
 		if(fConfigurationBlock != null) {
 			fConfigurationBlock.initializeValues();
 		}
+	}
+	
+	/**
+	 * <p>Load the defaults for the auto activation group</p>
+	 */
+	private void performDefaultsForAutoInsertionGroup() {
+		defaultCheckbox(fAutoImport, JSPUIPreferenceNames.AUTO_IMPORT_INSERT);
 	}
 	
 	/**
