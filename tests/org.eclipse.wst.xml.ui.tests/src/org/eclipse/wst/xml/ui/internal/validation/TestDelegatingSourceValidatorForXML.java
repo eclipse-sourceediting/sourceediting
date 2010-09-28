@@ -178,6 +178,36 @@ public class TestDelegatingSourceValidatorForXML extends TestCase
 	}
 	
 	/**
+	 * Regression test for Bug 276337
+	 */
+	public void testValidateAgainstDTD() throws Exception{
+		String projectName = "TestValidateAgainstDTD";
+		IProject project = ProjectUtil.createProject(projectName, XMLUITestsPlugin.getDefault().getStateLocation().append(getName()), null);
+		
+		IFile testFile = null;
+		try {
+			//get test file
+			ProjectUtil.copyBundleEntriesIntoWorkspace("testresources/TestValidateAgainstDTD", projectName);
+			testFile = project.getFile("simple.xml");
+			assertTrue("Test file " + testFile + " does not exist", testFile.exists());
+			
+			//set up for validator
+			WorkbenchContext context = new WorkbenchContext();
+			List fileList = new ArrayList();
+			fileList.add(testFile.getFullPath().toPortableString());
+			context.setValidationFileURIs(fileList);
+			
+			//validate file, there should be one error
+			TestReporter reporter = new TestReporter();
+			sourceValidator.validate(context, reporter);
+			assertFalse("There should be an error message reported for not conforming to the DTD " + testFile, !reporter.isMessageReported());
+		} catch(ValidationException e) {
+			fail("Could not validate test file " + testFile + ": " + e.getMessage());
+		}
+		project.delete(true, null);
+	}
+	
+	/**
 	 * A <code>IReporter</code> for testing validators
 	 */
 	private class TestReporter implements IReporter {
