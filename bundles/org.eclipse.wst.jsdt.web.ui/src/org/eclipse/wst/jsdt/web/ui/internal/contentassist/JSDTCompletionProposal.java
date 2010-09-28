@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension5;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -77,6 +79,15 @@ public class JSDTCompletionProposal extends JavaCompletionProposal implements IJ
 			selection = super.getSelection(document);
 		}
 		return selection;
+	}
+	
+	public Object getAdditionalProposalInfo(IProgressMonitor monitor) {
+		Object additionalInfo = super.getAdditionalProposalInfo(monitor);
+		ICompletionProposal javaProposal = getJavaCompletionProposal();
+		if ((javaProposal != null) && (javaProposal instanceof ICompletionProposalExtension5)) {
+			additionalInfo = ((ICompletionProposalExtension5) javaProposal).getAdditionalProposalInfo(monitor);
+		}
+		return additionalInfo;
 	}
 	
 	public String getAdditionalProposalInfo() {
