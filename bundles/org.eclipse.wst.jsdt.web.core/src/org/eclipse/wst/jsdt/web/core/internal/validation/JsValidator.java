@@ -348,7 +348,7 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 		}
 	}
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
-		if (resource.getType() != IResource.FILE)
+		if (resource.getType() != IResource.FILE || !shouldValidate((IFile) resource))
 			return null;
 		ValidationResult result = new ValidationResult();
 		IReporter reporter = result.getReporter(monitor);

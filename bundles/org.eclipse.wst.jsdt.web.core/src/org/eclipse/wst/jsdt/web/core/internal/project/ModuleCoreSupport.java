@@ -70,7 +70,7 @@ public final class ModuleCoreSupport {
 		if (project == null)
 			return null;
 
-		IPath path = null;
+		IPath path = project.getFullPath();
 		try {
 			path = ModuleCoreSupportDelegate.getWebContentRootPath(project);
 		}

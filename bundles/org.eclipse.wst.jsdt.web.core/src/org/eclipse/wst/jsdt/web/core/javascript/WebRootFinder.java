@@ -40,6 +40,10 @@ public class WebRootFinder {
 		return Path.ROOT;
 	}
 	
+	/**
+	 * @param project
+	 * @return project-relative path to the web content root
+	 */
 	public static IPath getWebContentFolder(IProject project) {
 		IPath root = ModuleCoreSupport.getWebContentRootPath(project);
 		if (root != null)

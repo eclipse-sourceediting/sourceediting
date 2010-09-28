@@ -173,13 +173,13 @@ public class JsTranslation implements IJsTranslation {
 		return getTranslator().getMissingEndTagRegionStart();
 	}
 
-	private String getWebRoot() {
-		return WebRootFinder.getWebContentFolder(fJavaProject.getProject()).toString();
+	private IPath getWebRoot() {
+		return WebRootFinder.getWebContentFolder(fJavaProject.getProject());
 	}
 
 
 	public String getDirectoryUnderRoot() {
-		String webRoot = getWebRoot();
+		IPath webRoot = getWebRoot();
 		IPath projectWebRootPath = getJavaProject().getPath().append(webRoot);
 		IPath filePath = new Path(fModelBaseLocation).removeLastSegments(1);
 		return filePath.removeFirstSegments(projectWebRootPath.matchingFirstSegments(filePath)).toString();

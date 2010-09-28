@@ -197,8 +197,8 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 	}
 	
 	public static IPath getWebContextRoot(IJavaScriptProject javaProject) {
-		String webRoot = WebRootFinder.getWebContentFolder(javaProject.getProject()).toString();	
-		IPath webRootPath = javaProject.getPath().append(webRoot);
+		IPath projectRelativeWebRoot = WebRootFinder.getWebContentFolder(javaProject.getProject());	
+		IPath webRootPath = javaProject.getPath().append(projectRelativeWebRoot);
 		return webRootPath;
 	}
 	
