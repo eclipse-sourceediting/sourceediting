@@ -644,9 +644,9 @@ public class XMLValidator
     	int columnNumber = exception.getColumnNumber();
     	
     	// For the following three errors the line number will be modified to use that of the start
-    	// tag instead of the end tag.
+    	// tag instead of the end tag. Unless its a self ending tag and in that case the startElementLocations will be empty
     	String currentErrorKey = valinfo.currentErrorKey;
-    	if (currentErrorKey != null && adjustLocationErrorKeySet.contains(currentErrorKey))  
+    	if (currentErrorKey != null && adjustLocationErrorKeySet.contains(currentErrorKey) && valinfo.getStartElementLocations().size() > 0)  
     	{
     	  LocationCoordinate adjustedCoordinates = (LocationCoordinate)valinfo.getStartElementLocations().peek();
     	  lineNumber = adjustedCoordinates.getLineNumber();
