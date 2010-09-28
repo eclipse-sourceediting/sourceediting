@@ -851,7 +851,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 		 * (event CDATA #IMPLIED)
 		 * (for %URI; #IMPLIED)
 		 */
-		else if (elementName.equals(HTML40Namespace.ElementName.TEXTAREA)){
+		else if (elementName.equals(HTML40Namespace.ElementName.SCRIPT)){
 			String[] names = {ATTR_NAME_CHARSET,  ATTR_NAME_SRC, ATTR_NAME_DEFER};
 			getDeclarations(attributes, Arrays.asList(names).iterator());
 
