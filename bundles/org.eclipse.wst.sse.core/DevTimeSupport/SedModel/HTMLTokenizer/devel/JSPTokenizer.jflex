@@ -277,18 +277,18 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 				Logger.logException(f);
 			}
 			boolean isEndingType = yystate() == ST_ABORT_EMBEDDED;
+			ITextRegionList embeddedList = fEmbeddedContainer.getRegions();
 			if(!isEndingType) {
 				// check for ending context
 				if (endTagName == null) {
 					for (int i = 0; i < endTypes.length; i++) {
-						isEndingType = isEndingType || (internalContext == endTypes[i]);
+						isEndingType = isEndingType || (internalContext == endTypes[i]) || (embeddedList.size() >=2 && (embeddedList.get(embeddedList.size()-1)).getType() == endTypes[i]);
 					}
 				}
 				else {
 					isEndingType = ((isInEndTag && internalContext == XML_TAG_CLOSE) || (isInFirstTag && internalContext == XML_EMPTY_TAG_CLOSE)) && internalTagName != null && internalTagName.equals(endTagName);
 				}
 			}
-			ITextRegionList embeddedList = fEmbeddedContainer.getRegions();
 			notFinished = notFinished && ((!isEndingType) && !isEOF() && (endTagName != null || internalContext != UNDEFINED) && !(internalContext == PROXY_CONTEXT && (embeddedList.get(embeddedList.size()-1)).getType() == UNDEFINED));
 		}
 		// finish adding the last context
@@ -1621,8 +1621,15 @@ jspDirectiveStart        = {jspScriptletStart}@
 		dump("inappropriate tag name");//$NON-NLS-1$
 	if(!fStateStack.empty() && (fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_SQUOTED||fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_DQUOTED)) {
 		yybegin(ST_ABORT_EMBEDDED);
-		//yypushback(yylength()-1);
-		return UNDEFINED;
+		char c = yy_buffer[yy_markedPos - 1];
+		if (fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_DQUOTED && c == '\"') {
+			return XML_TAG_ATTRIBUTE_VALUE_DQUOTE;
+		}		
+		if (fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_SQUOTED && c == '\'') {
+			return XML_TAG_ATTRIBUTE_VALUE_SQUOTE;
+		}
+		yypushback(yylength()-1);
+		return XML_TAG_ATTRIBUTE_VALUE;
 	}
 	yybegin(YYINITIAL);
         return XML_CONTENT;
