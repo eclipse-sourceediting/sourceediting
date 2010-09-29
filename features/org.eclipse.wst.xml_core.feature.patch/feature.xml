@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xml_core.feature.patch"
       label="%featureName"
-      version="3.0.5.qualifier"
+      version="3.2.2.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -22,29 +22,8 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.wst.xml_core.feature" version="3.0.5.v200903310029-7A7NEH6E7QYGHRHvLuKlbZ" patch="true"/>
+      <import feature="org.eclipse.wst.xml_core.feature" version="3.2.2.v201008170029-7C7OFXYF7RZHQHI5PyJwPT" patch="true"/>
    </requires>
-
-   <plugin
-         id="org.eclipse.wst.xml.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.wst.dtd.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.wst.xsd.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.wst.sse.core"
