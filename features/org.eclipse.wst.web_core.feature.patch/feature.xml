@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.web_core.feature.patch"
       label="%featureName"
-      version="3.0.5.qualifier"
+      version="3.2.2.qualifier"
       provider-name="%providerName">
 
       <description>%description</description>
@@ -14,18 +14,11 @@
 
 
    <requires>
-      <import feature="org.eclipse.wst.web_core.feature" version="3.0.5.v200904070030-7G2EBCAM217nJZPEYxjAcnk40uRS" patch="true"/>
+      <import feature="org.eclipse.wst.web_core.feature" version="3.2.2.v201008100100-7E7AFHwAJrn5PM15pUYBwJLkSG8j" patch="true"/>
    </requires>
 
    <plugin
          id="org.eclipse.wst.html.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.wst.web"
          download-size="0"
          install-size="0"
          version="0.0.0"
