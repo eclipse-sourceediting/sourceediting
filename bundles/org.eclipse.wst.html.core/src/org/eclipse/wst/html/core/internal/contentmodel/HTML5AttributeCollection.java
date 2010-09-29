@@ -640,7 +640,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 		 * (coords %Coords; #IMPLIED)
 		 */
 		else if (elementName.equals(HTML40Namespace.ElementName.A)){
-			String[] names = { ATTR_NAME_MEDIA, ATTR_NAME_TYPE, ATTR_NAME_HREF, ATTR_NAME_HREFLANG, ATTR_NAME_REL};
+			String[] names = { ATTR_NAME_MEDIA, ATTR_NAME_TYPE, ATTR_NAME_HREF, ATTR_NAME_HREFLANG, ATTR_NAME_REL, ATTR_NAME_TARGET};
 			getDeclarations(attributes, Arrays.asList(names).iterator());
 			
 			
@@ -656,12 +656,6 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_REV, atype, CMAttributeDeclaration.OPTIONAL);
 			attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_REV, attr);
-			
-			// (target %FrameTarget; #IMPLIED)
-			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.FRAME_TARGET);
-			attr = new HTMLAttrDeclImpl(ATTR_NAME_TARGET, atype, CMAttributeDeclaration.OPTIONAL);
-			attr.obsolete(true);
-			attributes.putNamedItem(ATTR_NAME_TARGET, attr);
 			
 			// (directkey %Character; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.CHARACTER);
