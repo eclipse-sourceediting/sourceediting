@@ -7,6 +7,7 @@ Bundle-Activator: org.eclipse.wst.jsdt.web.ui.internal.JsUIPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.jsdt.web.ui;x-internal:=true,
+ org.eclipse.wst.jsdt.web.ui.contentassist,
  org.eclipse.wst.jsdt.web.ui.internal;x-internal:=true,
  org.eclipse.wst.jsdt.web.ui.internal.autoedit;x-internal:=true,
  org.eclipse.wst.jsdt.web.ui.internal.contentassist;x-internal:=true,
