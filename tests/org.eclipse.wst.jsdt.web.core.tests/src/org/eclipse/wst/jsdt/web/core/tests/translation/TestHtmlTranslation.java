@@ -350,6 +350,30 @@ public class TestHtmlTranslation extends TestCase {
 	public void testMangleMultipleMixedServerSideInJSwithXMLcomment_and_CheckProblems() {
 		// get model
 		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> <!-- \nvar text = <? serverObject.getText() ?>; <%=\"a\"%> <%=\"b\"%> <? serverObject.getText() ?><%=\"c\"%> </script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertEquals("translated contents not as expected", "              \nvar text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
+		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
+		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
+		assertTrue("server-side script block included", translated.indexOf("%>") < 0);
+		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	
+	public void testMangleMultipleMixedServerSideInJSwithXMLcommentOnSameLine() {
+		// get model
+		String fileName = getName() + ".html";
 		IStructuredModel structuredModel = getSharedModel(fileName, "<script> <!-- var text = <? serverObject.getText() ?>; <%=\"a\"%> <%=\"b\"%> <? serverObject.getText() ?><%=\"c\"%> </script>");
 		assertNotNull("missing test model", structuredModel);
 		
@@ -358,13 +382,13 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "              var text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected",
+				"                                                                                                              ",translated);
 		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
 		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
 		assertTrue("server-side script block included", translated.indexOf("%>") < 0);
-		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
 		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
 
 		// release model
