@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,11 +24,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIPlugin;
 import org.eclipse.wst.jsdt.web.ui.internal.style.IStyleConstantsJs;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
@@ -67,17 +68,17 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 	 * 
 	 * @param colorKey
 	 */
-	private void addJavaTextAttribute(String colorKey) {
-		IPreferenceStore store = getJavaColorPreferences();
-		if (store != null && colorKey != null) {
+	protected void addTextAttribute(String colorKey) {
+		IPreferenceStore javaStore = getJavaColorPreferences();
+		if (javaStore != null && colorKey != null) {
 			TextAttribute ta = null;
 			if (colorKey == IStyleConstantsJSDT.JAVA_KEYWORD) {
 				// keyword
-				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_JAVA_KEYWORD_COLOR);
-				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_BOLD);
-				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_ITALIC);
-				boolean strikethrough = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_STRIKETHROUGH);
-				boolean underline = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_UNDERLINE);
+				RGB foreground = PreferenceConverter.getColor(javaStore, PreferenceConstants.EDITOR_JAVA_KEYWORD_COLOR);
+				boolean bold = javaStore.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_BOLD);
+				boolean italics = javaStore.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_ITALIC);
+				boolean strikethrough = javaStore.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_STRIKETHROUGH);
+				boolean underline = javaStore.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_UNDERLINE);
 				int style = SWT.NORMAL;
 				if (bold) {
 					style = style | SWT.BOLD;
@@ -94,11 +95,11 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 				ta = createTextAttribute(foreground, null, style);
 			} else if (colorKey == IStyleConstantsJSDT.JAVA_STRING) {
 				// string
-				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_STRING_COLOR);
-				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_STRING_BOLD);
-				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_STRING_ITALIC);
-				boolean strikethrough = store.getBoolean(PreferenceConstants.EDITOR_STRING_STRIKETHROUGH);
-				boolean underline = store.getBoolean(PreferenceConstants.EDITOR_STRING_UNDERLINE);
+				RGB foreground = PreferenceConverter.getColor(javaStore, PreferenceConstants.EDITOR_STRING_COLOR);
+				boolean bold = javaStore.getBoolean(PreferenceConstants.EDITOR_STRING_BOLD);
+				boolean italics = javaStore.getBoolean(PreferenceConstants.EDITOR_STRING_ITALIC);
+				boolean strikethrough = javaStore.getBoolean(PreferenceConstants.EDITOR_STRING_STRIKETHROUGH);
+				boolean underline = javaStore.getBoolean(PreferenceConstants.EDITOR_STRING_UNDERLINE);
 				int style = SWT.NORMAL;
 				if (bold) {
 					style = style | SWT.BOLD;
@@ -115,11 +116,32 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 				ta = createTextAttribute(foreground, null, style);
 			} else if (colorKey == IStyleConstantsJSDT.JAVA_SINGLE_LINE_COMMENT) {
 				// single line comment
-				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR);
-				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_BOLD);
-				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_ITALIC);
-				boolean strikethrough = store.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_STRIKETHROUGH);
-				boolean underline = store.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_UNDERLINE);
+				RGB foreground = PreferenceConverter.getColor(javaStore, PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR);
+				boolean bold = javaStore.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_BOLD);
+				boolean italics = javaStore.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_ITALIC);
+				boolean strikethrough = javaStore.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_STRIKETHROUGH);
+				boolean underline = javaStore.getBoolean(PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_UNDERLINE);
+				int style = SWT.NORMAL;
+				if (bold) {
+					style = style | SWT.BOLD;
+				}
+				if (italics) {
+					style = style | SWT.ITALIC;
+				}
+				if (strikethrough) {
+					style = style | TextAttribute.STRIKETHROUGH;
+				}
+				if (underline) {
+					style = style | TextAttribute.UNDERLINE;
+				}
+				ta = createTextAttribute(foreground, null, style);
+			} else if (colorKey == IStyleConstantsJSDT.JAVA_MULTI_LINE_COMMENT) {
+				// multi line comment
+				RGB foreground = PreferenceConverter.getColor(javaStore, PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_COLOR);
+				boolean bold = javaStore.getBoolean(PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_BOLD);
+				boolean italics = javaStore.getBoolean(PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_ITALIC);
+				boolean strikethrough = javaStore.getBoolean(PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_STRIKETHROUGH);
+				boolean underline = javaStore.getBoolean(PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_UNDERLINE);
 				int style = SWT.NORMAL;
 				if (bold) {
 					style = style | SWT.BOLD;
@@ -136,11 +158,11 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 				ta = createTextAttribute(foreground, null, style);
 			} else if (colorKey == IStyleConstantsJSDT.JAVA_DEFAULT) {
 				// default
-				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_JAVA_DEFAULT_COLOR);
-				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_BOLD);
-				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_ITALIC);
-				boolean strikethrough = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_STRIKETHROUGH);
-				boolean underline = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_UNDERLINE);
+				RGB foreground = PreferenceConverter.getColor(javaStore, PreferenceConstants.EDITOR_JAVA_DEFAULT_COLOR);
+				boolean bold = javaStore.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_BOLD);
+				boolean italics = javaStore.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_ITALIC);
+				boolean strikethrough = javaStore.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_STRIKETHROUGH);
+				boolean underline = javaStore.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_UNDERLINE);
 				int style = SWT.NORMAL;
 				if (bold) {
 					style = style | SWT.BOLD;
@@ -155,6 +177,36 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 					style = style | TextAttribute.UNDERLINE;
 				}
 				ta = createTextAttribute(foreground, null, style);
+			} else if(colorKey == IStyleConstantsXML.COMMENT_BORDER ||
+					colorKey == IStyleConstantsJs.JSP_CONTENT) {
+				
+				/** @see AbstractLineStyleProvider#addTextAttribute */
+				ta = (TextAttribute)getTextAttributes().get(colorKey);
+				String prefString = getHTMLColorPreferences().getString(colorKey);
+				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+				if (stylePrefs != null) {
+					RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
+					RGB background = ColorHelper.toRGB(stylePrefs[1]);
+					boolean bold = Boolean.valueOf(stylePrefs[2]).booleanValue();
+					boolean italic = Boolean.valueOf(stylePrefs[3]).booleanValue();
+					boolean strikethrough = Boolean.valueOf(stylePrefs[4]).booleanValue();
+					boolean underline = Boolean.valueOf(stylePrefs[5]).booleanValue();
+					int style = SWT.NORMAL;
+					if (bold) {
+						style = style | SWT.BOLD;
+					}
+					if (italic) {
+						style = style | SWT.ITALIC;
+					}
+					if (strikethrough) {
+						style = style | TextAttribute.STRIKETHROUGH;
+					}
+					if (underline) {
+						style = style | TextAttribute.UNDERLINE;
+					}
+
+					ta = createTextAttribute(foreground, background, style);
+				}
 			}
 			if (ta != null) {
 				getTextAttributes().put(colorKey, ta);
@@ -200,6 +252,10 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 		return PreferenceConstants.getPreferenceStore();
 	}
 	
+	private IPreferenceStore getHTMLColorPreferences() {
+		return HTMLUIPlugin.getDefault().getPreferenceStore();
+	}
+	
 	/**
 	 * Returns a text attribute encoded in the given token. If the token's data
 	 * is not <code>null</code> and a text attribute it is assumed that it is
@@ -223,52 +279,42 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 	
 	protected void handlePropertyChange(PropertyChangeEvent event) {
 		String styleKey = null;
-		String javaStyleKey = null;
 		if (event != null) {
 			String prefKey = event.getProperty();
 			// check if preference changed is a style preference
-			if (IStyleConstantsHTML.SCRIPT_AREA_BORDER.equals(prefKey)) {
-				styleKey = IStyleConstantsHTML.SCRIPT_AREA_BORDER;
-			} else if (IStyleConstantsXML.TAG_ATTRIBUTE_NAME.equals(prefKey)) {
-				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_NAME;
-			} else if (IStyleConstantsXML.TAG_ATTRIBUTE_VALUE.equals(prefKey)) {
-				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_VALUE;
-			} else if (IStyleConstantsJs.JSP_CONTENT.equals(prefKey)) {
-				styleKey = IStyleConstantsJs.JSP_CONTENT;
+			if(IStyleConstantsXML.COMMENT_BORDER.equals(prefKey)) {
+				styleKey = IStyleConstantsXML.COMMENT_BORDER;
+			} else if(IStyleConstantsXML.COMMENT_TEXT.equals(prefKey)) {
+				styleKey = IStyleConstantsXML.COMMENT_TEXT;
 			} else if (PreferenceConstants.EDITOR_JAVA_KEYWORD_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_JAVA_KEYWORD_BOLD.equals(prefKey)) || (PreferenceConstants.EDITOR_JAVA_KEYWORD_ITALIC.equals(prefKey))) {
-				javaStyleKey = IStyleConstantsJSDT.JAVA_KEYWORD;
+				styleKey = IStyleConstantsJSDT.JAVA_KEYWORD;
 			} else if (PreferenceConstants.EDITOR_STRING_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_STRING_BOLD.equals(prefKey)) || (PreferenceConstants.EDITOR_STRING_ITALIC.equals(prefKey))) {
-				javaStyleKey = IStyleConstantsJSDT.JAVA_STRING;
+				styleKey = IStyleConstantsJSDT.JAVA_STRING;
 			} else if (PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_BOLD.equals(prefKey)) || (PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_ITALIC.equals(prefKey))) {
-				javaStyleKey = IStyleConstantsJSDT.JAVA_SINGLE_LINE_COMMENT;
+				styleKey = IStyleConstantsJSDT.JAVA_SINGLE_LINE_COMMENT;
+			} else if (PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_BOLD.equals(prefKey)) || (PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_ITALIC.equals(prefKey))) {
+				styleKey = IStyleConstantsJSDT.JAVA_MULTI_LINE_COMMENT;
 			} else if (PreferenceConstants.EDITOR_JAVA_DEFAULT_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_JAVA_DEFAULT_BOLD.equals(prefKey)) || (PreferenceConstants.EDITOR_JAVA_DEFAULT_ITALIC.equals(prefKey))) {
-				javaStyleKey = IStyleConstantsJSDT.JAVA_DEFAULT;
+				styleKey = IStyleConstantsJSDT.JAVA_DEFAULT;
 			}
 		}
 		if (styleKey != null) {
 			// overwrite style preference with new value
 			addTextAttribute(styleKey);
-		}
-		if (javaStyleKey != null) {
-			// overwrite style preference with new value
-			addJavaTextAttribute(javaStyleKey);
+			fRecHighlighter.refreshDisplay();
 			fScanner.initializeRules();
-		}
-		if (styleKey != null || javaStyleKey != null) {
-			// force a full update of the text viewer
-			super.getHighlighter().refreshDisplay();
 		}
 	}
 	
 	protected void loadColors() {
-		addTextAttribute(IStyleConstantsHTML.SCRIPT_AREA_BORDER);
-		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
-		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
+		addTextAttribute(IStyleConstantsXML.COMMENT_BORDER);
+		addTextAttribute(IStyleConstantsXML.COMMENT_TEXT);
 		addTextAttribute(IStyleConstantsJs.JSP_CONTENT);
-		addJavaTextAttribute(IStyleConstantsJSDT.JAVA_KEYWORD);
-		addJavaTextAttribute(IStyleConstantsJSDT.JAVA_STRING);
-		addJavaTextAttribute(IStyleConstantsJSDT.JAVA_SINGLE_LINE_COMMENT);
-		addJavaTextAttribute(IStyleConstantsJSDT.JAVA_DEFAULT);
+		addTextAttribute(IStyleConstantsJSDT.JAVA_KEYWORD);
+		addTextAttribute(IStyleConstantsJSDT.JAVA_STRING);
+		addTextAttribute(IStyleConstantsJSDT.JAVA_SINGLE_LINE_COMMENT);
+		addTextAttribute(IStyleConstantsJSDT.JAVA_MULTI_LINE_COMMENT);
+		addTextAttribute(IStyleConstantsJSDT.JAVA_DEFAULT);
 		fScanner.initializeRules();
 	}
 	
@@ -325,6 +371,7 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 	protected void registerPreferenceManager() {
 		getColorPreferences().addPropertyChangeListener(fPreferenceListener);
 		getJavaColorPreferences().addPropertyChangeListener(fPreferenceListener);
+		this.getHTMLColorPreferences().addPropertyChangeListener(fPreferenceListener);
 	}
 	
 	public void release() {
@@ -335,5 +382,6 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 	protected void unRegisterPreferenceManager() {
 		getColorPreferences().removePropertyChangeListener(fPreferenceListener);
 		getJavaColorPreferences().removePropertyChangeListener(fPreferenceListener);
+		this.getHTMLColorPreferences().removePropertyChangeListener(fPreferenceListener);
 	}
 }
