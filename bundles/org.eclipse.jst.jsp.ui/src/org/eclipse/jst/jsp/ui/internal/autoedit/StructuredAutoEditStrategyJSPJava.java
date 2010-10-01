@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
@@ -46,7 +47,7 @@ public class StructuredAutoEditStrategyJSPJava implements IAutoEditStrategy {
 						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
 						IDOMNode parent = (node != null) ? (IDOMNode) node.getParentNode() : null;
 						// Parent is the scriptlet tag
-						if (parent != null && !parent.getSource().endsWith("--%>")) { //$NON-NLS-1$
+						if (parent != null && JSP11Namespace.ElementName.SCRIPTLET.equals(parent.getNodeName()) && !parent.getSource().endsWith("--%>")) { //$NON-NLS-1$
 							IStructuredDocumentRegion end = parent.getEndStructuredDocumentRegion();
 							if (end != null) {
 								try {
