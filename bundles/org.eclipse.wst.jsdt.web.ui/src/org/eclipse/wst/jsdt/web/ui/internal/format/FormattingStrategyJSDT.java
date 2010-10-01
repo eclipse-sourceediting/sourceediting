@@ -56,14 +56,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 * (repeatedly) as the API evolves.
 */
 public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
-	private static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
-	private static final String XML_COMMENT_END = "//-->"; //$NON-NLS-1$
-	
-	/** matches on <!-- at beginning of script region */
-	private static final Pattern START_PATTERN = Pattern.compile("(\\A(\\s*<!--))");
-	
-	/** matches on //--> or --> at end of script region */
-	private static final Pattern END_PATTERN = Pattern.compile("(((//\\s*)?-->\\s*)\\z)");
+	/** matches on //--> at end of script region */
+	private static final Pattern END_PATTERN = Pattern.compile("((//.*-->\\s*)\\z)");
 	
 	private static final int regionStartIndentLevel = 1;
 	/** Documents to be formatted by this strategy */
@@ -114,17 +108,18 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 				String postText = lineDelim;
 
 				//find start comment tag
-				Matcher matcher = START_PATTERN.matcher(jsTextNotTranslated);
+				Pattern startPattern = Pattern.compile("(\\A(\\s*<!--.*(" + lineDelim + ")?))");
+				Matcher matcher = startPattern.matcher(jsTextNotTranslated);
 				if(matcher.find()) {
-					jsTextNotTranslated = matcher.replaceAll("");
-					preText = lineDelim + XML_COMMENT_START;
+					jsTextNotTranslated = matcher.replaceFirst("");
+					preText = lineDelim + matcher.group().trim();
 				}
 				
 				//find end tag
 				matcher = END_PATTERN.matcher(jsTextNotTranslated);
 				if(matcher.find()) {
-					jsTextNotTranslated = matcher.replaceAll("");
-					postText = lineDelim + XML_COMMENT_END + lineDelim;
+					jsTextNotTranslated = matcher.replaceFirst("");
+					postText = lineDelim + matcher.group().trim() + lineDelim;
 				}
 				
 				//replace the text in the document with the none-translated JS text but without HTML leading and trailing comments
