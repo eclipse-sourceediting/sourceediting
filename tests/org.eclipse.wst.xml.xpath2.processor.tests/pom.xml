@@ -14,6 +14,18 @@
 	<version>1.1.0</version>
 	<packaging>eclipse-test-plugin</packaging>
 	<name>PsychoPath XPath 2.0 Processor: Tests</name>
+   <reporting>
+      <plugins>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <version>0.0.0</version>
+            <configuration>
+               <skip>true</skip>
+            </configuration>
+         </plugin>
+      </plugins>
+   </reporting>   
 
 	<build>
         	<plugins>
