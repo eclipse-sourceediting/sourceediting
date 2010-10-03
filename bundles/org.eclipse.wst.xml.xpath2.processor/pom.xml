@@ -38,6 +38,23 @@
                </execution>
             </executions>
          </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <configuration>
+               <sourceEncoding>utf-8</sourceEncoding>
+               <minimumTokens>100</minimumTokens>
+               <targetJdk>1.5</targetJdk>
+               <format>xml</format>
+            </configuration>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>cpd</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
    </build>
 </project>
