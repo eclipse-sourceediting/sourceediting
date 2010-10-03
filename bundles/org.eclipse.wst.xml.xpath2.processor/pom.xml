@@ -60,7 +60,7 @@
             <executions>
                <execution>
                   <goals>
-                     <goal>cpd</goal>
+                     <goal>cpd-check</goal>
                   </goals>
                </execution>
             </executions>
