@@ -32,7 +32,7 @@
             <executions>
                <execution>
                   <goals>
-                     <goal>compile</goal>
+                     <goal>findbugs</goal>
                   </goals>
                </execution>
             </executions>
