@@ -11,11 +11,21 @@
       <groupId>org.eclipse.wst.xml.xpath2</groupId>
       <artifactId>org.eclipse.wst.xml.xpath2-parent</artifactId>
       <version>2.0.0-SNAPSHOT</version>
-      <relativePath>../../development/athena/org.eclipse.wst.xml.xpath2.releng</relativePath>
+      <relativePath>../../development/athena/org.eclipse.wst.xml.xpath2.releng
+      </relativePath>
    </parent>
 
    <build>
       <sourceDirectory>src</sourceDirectory>
+      <pluginManagement>
+         <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-pmd-plugin</artifactId>
+               <version>2.5</version>
+            </plugin>
+         </plugins>
+      </pluginManagement>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
