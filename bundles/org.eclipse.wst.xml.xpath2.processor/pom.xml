@@ -22,7 +22,21 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>2.7</version>
          </plugin>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <version>0.0.0</version>
+            <configuration>
+               <findbugsXmlOutput>true</findbugsXmlOutput>
+            </configuration>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>compile</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
-      
    </build>
 </project>
