@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,8 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -32,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
@@ -178,9 +181,18 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PREFERENCE_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
 		}
 		else {
-			Map data = new HashMap();
+			final Map data = new HashMap();
 			data.put(DATA_NO_LINK, Boolean.TRUE);
-			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PROPERTY_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), data).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
+			Link link= new Link(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT);
+			link.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
+			link.setText(JSPUIMessages.VALIDATION_JAVA_NOTICE);
+			link.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					IWorkbenchPreferenceContainer container= (IWorkbenchPreferenceContainer)getContainer();
+					container.openPage(JAVA_SEVERITY_PROPERTY_PAGE, data);
+				}
+			});
+			//new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PROPERTY_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), data).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
 			// open in same shell?
 			// PreferencesUtil.createPropertyDialogOn(getShell(), getProject(), JAVA_SEVERITY_PROPERTY_PAGE, new String[] { JAVA_SEVERITY_PROPERTY_PAGE }, data).open();
 		}
