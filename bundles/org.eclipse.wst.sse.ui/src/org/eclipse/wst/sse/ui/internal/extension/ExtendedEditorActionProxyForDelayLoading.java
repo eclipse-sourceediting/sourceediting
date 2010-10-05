@@ -238,7 +238,10 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
         if (proxy != null) {
             return proxy.getText();
         }
-        return p_text;
+        if (p_text != null) {
+            return p_text;
+        }
+        return "";
     }
 
     /*
