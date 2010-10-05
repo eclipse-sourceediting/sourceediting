@@ -40,15 +40,13 @@ public class HTMLDocumentTypeRegistry {
 	private HTMLDocumentTypeEntry defaultWMLEntry = null;
 	private HTMLDocumentTypeEntry defaultCHTMLEntry = null;
 	private HTMLDocumentTypeEntry defaultHTML5Entry = null;
-	private HTMLDocumentTypeEntry defaultXHTML5Entry = null;
-
+	
 	final static int DEFAULT_HTML = 0;
 	final static int DEFAULT_XHTML = 1;
 	final static int DEFAULT_WML = 2;
 	final static int DEFAULT_CHTML = 3;
 	final static int DEFAULT_HTML5 = 4;
-	final static int DEFAULT_XHTML5 = 5;
-
+	
 	public static final String CHTML_PUBLIC_ID = "-//W3C//DTD Compact HTML 1.0 Draft//EN";//$NON-NLS-1$
 
 	/**
@@ -86,9 +84,6 @@ public class HTMLDocumentTypeRegistry {
 		this.defaultHTML5Entry = new HTMLDocumentTypeEntry(name, publicId, null, null, false, false, displayName, false, false, false, true);
 		this.entries.put(publicId, this.defaultHTML5Entry);
 		
-		displayName = "XHTML5"; //$NON-NLS-1$
-		this.defaultXHTML5Entry = new HTMLDocumentTypeEntry(name, publicId, null, null, true, false, displayName, true, false, false, true);
-		this.entries.put("xmlns", this.defaultXHTML5Entry);
 		
 
 		HTMLDocumentTypeRegistryReader reader = new HTMLDocumentTypeRegistryReader();
@@ -120,9 +115,6 @@ public class HTMLDocumentTypeRegistry {
 		switch (type) {
 			case DEFAULT_HTML5 :
 				entry = this.defaultHTML5Entry;
-				break;
-			case DEFAULT_XHTML5 :
-				entry = this.defaultXHTML5Entry;
 				break;
 			case DEFAULT_XHTML :
 				entry = this.defaultXHTMLEntry;

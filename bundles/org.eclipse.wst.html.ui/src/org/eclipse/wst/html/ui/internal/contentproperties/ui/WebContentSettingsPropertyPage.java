@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -213,7 +213,7 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 	private void initializeDoctypeValues() {
 		int index = 0;
 		String doctype = HTMLContentProperties.getProperty(HTMLContentProperties.DOCUMENT_TYPE, getResource(), false);
-		if (doctype != null && doctype.length() > 0) {
+		if (doctype != null) {
 			/*
 			 * If item is already part of combo, select it. Otherwise, select
 			 * none.
@@ -359,7 +359,7 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 		int index = fDocumentTypeCombo.getSelectionIndex();
 		if (index > -1) {
 			String id = (String) fDocumentTypeIds.get(index);
-			if (id == null || id.length() == 0 || id.equalsIgnoreCase(SELECT_NONE)) {
+			if (id == null || id.equalsIgnoreCase(SELECT_NONE)) {
 				// if none, use null
 				id = null;
 			}
