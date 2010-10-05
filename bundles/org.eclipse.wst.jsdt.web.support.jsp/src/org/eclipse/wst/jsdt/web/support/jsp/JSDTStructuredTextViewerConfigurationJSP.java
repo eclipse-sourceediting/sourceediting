@@ -14,11 +14,14 @@
 package org.eclipse.wst.jsdt.web.support.jsp;
 
 import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.jsdt.web.core.text.IJsPartitions;
 import org.eclipse.wst.jsdt.web.ui.StructuredTextViewerConfigurationJSDT;
+import org.eclipse.wst.jsdt.web.ui.contentassist.JSDTStructuredContentAssistProcessor;
 import org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForJs;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -72,5 +75,33 @@ public class JSDTStructuredTextViewerConfigurationJSP extends StructuredTextView
 		} else {
 			return super.getAutoEditStrategies(sourceViewer, contentType);
 		}
+	}
+	
+	/**
+	 * @see org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP#getContentAssistProcessors(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	 */
+	protected IContentAssistProcessor[] getContentAssistProcessors(
+			ISourceViewer sourceViewer, String partitionType) {
+		
+		IContentAssistProcessor[] processors;
+		
+		if(isJavascriptPartitionType(partitionType)) {
+			IContentAssistProcessor processor = new JSDTStructuredContentAssistProcessor(
+					this.getContentAssistant(), partitionType, sourceViewer);
+			processors = new IContentAssistProcessor[]{processor};
+		} else {
+			processors = super.getContentAssistProcessors(sourceViewer, partitionType);
+		} 
+		
+		return processors;
+	}
+	
+	/**
+	 * @param partitionTypeID check to see if this partition type ID is for a Javascript partition type
+	 * @return <code>true</code> if the given partiton type is a Javascript partition type,
+	 * <code>false</code> otherwise
+	 */
+	private static boolean isJavascriptPartitionType(String partitionTypeID) {
+		return IJsPartitions.HtmlJsPartition.equals(partitionTypeID);
 	}
 }
