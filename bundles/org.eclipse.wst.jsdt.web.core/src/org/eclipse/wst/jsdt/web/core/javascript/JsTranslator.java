@@ -48,9 +48,11 @@ import org.eclipse.jface.text.DocumentRewriteSessionEvent;
 import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentRewriteSessionListener;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.jsdt.core.IBuffer;
+import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -513,7 +515,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				// skip over XML/HTML comment starts
 				if (regionText.indexOf(XML_COMMENT_START) >= 0) {
 					int index = regionText.indexOf(XML_COMMENT_START);
-					int leadingTrimPlusCommentStart = index + XML_COMMENT_START.length();
+					
 					boolean replaceCommentStart = true;
 					for (int i = 0; i < index; i++) {
 						/*
@@ -522,11 +524,29 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						 */
 						replaceCommentStart = replaceCommentStart && Character.isWhitespace(regionText.charAt(i));
 					}
+					
 					if (replaceCommentStart) {
+						IRegion line;
+						int end;
+						int length;
+						try {
+							line = container.getParentDocument().getLineInformationOfOffset(index + scriptStart);
+							end = line.getOffset() + line.getLength() - scriptStart;
+							if(end > regionText.length()) {
+								end = regionText.length()-1;
+							}
+							length = end - index;
+						} catch (BadLocationException e) {
+							Logger.logException("Could not get HTML style comment line information", e); //$NON-NLS-1$
+							
+							end = index + XML_COMMENT_START.length();
+							length = XML_COMMENT_START.length();
+						}
+						
 						StringBuffer newRegionText = new StringBuffer(regionText.substring(0, index));
-						spaces = Util.getPad(XML_COMMENT_START.length());
+						spaces = Util.getPad(length);
 						newRegionText.append(spaces);
-						newRegionText.append(regionText.substring(leadingTrimPlusCommentStart));
+						newRegionText.append(regionText.substring(end));
 						regionText = newRegionText.toString();
 					}
 				}
