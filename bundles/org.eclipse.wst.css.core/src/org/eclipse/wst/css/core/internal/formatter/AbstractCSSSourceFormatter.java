@@ -80,12 +80,17 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				RegionIterator it = new RegionIterator(toAppend.getDocumentRegion(), toAppend.getTextRegion());
 				it.prev();
 				ITextRegion prev = it.prev();
-				int offset = -1;
-				if (prev == null || (prev.getType() == CSSRegionContexts.CSS_S && (offset = TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0)[0]) >= 0)) {
-					// Collapse to one empty line if there's more than one.
-					if (offset < it.getStructuredDocumentRegion().getText(prev).length() - 1) {
-						if (TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), offset + 1)[0] >= 0) {
-							source.append(delim);
+				if (prev == null || prev.getType() == CSSRegionContexts.CSS_S) {
+					if (prev != null) {
+						int[] result = TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0);
+						if (result[0] >= 0) {
+							// Collapse to one empty line if there's more than one.
+							int offset = result[0] + DefaultLineTracker.DELIMITERS[result[1]].length();
+							if (offset < it.getStructuredDocumentRegion().getText(prev).length() ) {
+								if (TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), offset)[0] >= 0) {
+									source.append(delim);
+								}
+							}
 						}
 					}
 					source.append(delim);
