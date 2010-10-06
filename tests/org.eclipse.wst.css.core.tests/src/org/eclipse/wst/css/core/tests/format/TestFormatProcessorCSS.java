@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,5 +175,12 @@ public class TestFormatProcessorCSS extends TestCase {
 	 */
 	public void testBUG163315SlashBeforePrimative2() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/bug163315-slash_before_primative_2.css", "testfiles/bug163315-slash_before_primative_1.css");
+	}
+
+	/**
+	 * Test case with two comments separated by whitespace. Make sure that the comments do not run together onto one line.
+	 */
+	public void testCollapseWhitespaceBetweenComments() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/comments.css", "testfiles/comments-fmt.css");
 	}
 }
