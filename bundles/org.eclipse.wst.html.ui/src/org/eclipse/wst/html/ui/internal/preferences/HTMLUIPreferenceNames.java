@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,6 +62,12 @@ public class HTMLUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
+
+	/**
+	 * The initial template ID to be used in the new HTML file wizard. In the absence
+	 * of {@link NEW_FILE_TEMPLATE_NAME}, this ID is used to find a template name
+	 */
+	public static final String NEW_FILE_TEMPLATE_ID = "newFileTemplateId"; //$NON-NLS-1$
 	
 	/**
 	 * The key to store the option for auto-completing comments while

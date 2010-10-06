@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *     
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.preferences;
+
 
 /**
  * Preference keys for JSP UI
@@ -62,7 +63,13 @@ public class JSPUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
-	
+
+	/**
+	 * The initial template ID to be used in the new JSP file wizard. In the absence
+	 * of {@link NEW_FILE_TEMPLATE_NAME}, this ID is used to find a template name
+	 */
+	public static final String NEW_FILE_TEMPLATE_ID = "newFileTemplateId"; //$NON-NLS-1$
+
 	/**
 	 * The key to store the option for auto-completing EL braces after entering
 	 * <code>${</code>
