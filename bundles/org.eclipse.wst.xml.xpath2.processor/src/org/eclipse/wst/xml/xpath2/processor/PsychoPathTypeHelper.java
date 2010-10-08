@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 323900 - improving computing the typed value of element &
  *                                 attribute nodes, where the schema type of nodes
  *                                 are simple, with varieties 'list' and 'union'. 
+ *     David Carver (Intalio) - bug 327341 - Fix possible immutable issue on static data types.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -25,8 +26,8 @@ public class PsychoPathTypeHelper {
 	
 	// PsychoPath engine specific constants to support new built-in types, 
 	// introduced in XML Schema 1.1.
-	public static short DAYTIMEDURATION_DT = -100;
-	public static short YEARMONTHDURATION_DT = -101;
+	public static final short DAYTIMEDURATION_DT = -100;
+	public static final short YEARMONTHDURATION_DT = -101;
 	
 	
 	/* 
