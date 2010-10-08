@@ -32,13 +32,14 @@ DIV.sidenote H1 {
 /* Anchor pseudo-classes */
 A:link {
 	color: red
-}  /* unvisited link */
+} /* unvisited link */
 A:visited {
 	color: blue
-}  /* visited links */
+} /* visited links */
 A:active {
 	color: lime
-}  /* active links */
+} /* active links */
+
 /* Pseudo-class combined with normal class */
 A.external:visited {
 	color: blue

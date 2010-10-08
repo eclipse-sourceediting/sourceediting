@@ -180,7 +180,7 @@ public class TestFormatProcessorCSS extends TestCase {
 	/**
 	 * Test case with two comments separated by whitespace. Make sure that the comments do not run together onto one line.
 	 */
-	/* public void testCollapseWhitespaceBetweenComments() throws UnsupportedEncodingException, IOException, CoreException {
+	public void testCollapseWhitespaceBetweenComments() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/comments.css", "testfiles/comments-fmt.css");
-	} */
+	}
 }
