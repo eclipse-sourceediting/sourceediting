@@ -64,7 +64,11 @@ public class StyleSheetFormatter extends AbstractCSSSourceFormatter {
 			}
 			// generate source
 			if (prev != null) {
-				appendDelimBefore(node, (regions.length > 0) ? regions[0] : null, source);
+				if (regions.length > 0 && !regions[0].getType().equals(CSSRegionContexts.CSS_COMMENT))
+					appendDelimBefore(node, regions[0], source);
+				else if (regions.length == 0) {
+					appendDelimBefore(node, null, source);
+				}
 			}
 			for (int i = 0; i < regions.length; i++) {
 				appendDelimBefore(node, regions[i], source);
