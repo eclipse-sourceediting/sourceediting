@@ -1036,6 +1036,21 @@
 	       </command>
 	       <separator name="jspRefactorBegin" visible="false"></separator>
 		</menuContribution>
+		<menuContribution
+			locationURI="popup:refactorPopupMenuId">
+			<separator name="jspRefactorBegin" visible="false"></separator>
+			<command commandId="org.eclipse.jst.jsp.ui.refactor.rename" id="RenameElement" label="%command.jsp.refactor.rename.name" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition"></reference>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.jst.jsp.ui.refactor.move" id="MoveElement" label="%command.jsp.refactor.move.name" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition"></reference>
+				</visibleWhen>
+			</command>
+			<separator name="jspRefactorBegin" visible="false"></separator>
+		</menuContribution>
 	</extension>
 	
 	<!-- Enable the FormatHandler for JSP Content Type -->
