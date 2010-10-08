@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -211,6 +211,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 
 		radio1 = new Button(this, SWT.RADIO);
 		radio1.setText(XMLUIMessages._UI_SELECT_REGISTERED_NAMESPACES);
+		radio1.setSelection(true);
 		radio1.addSelectionListener(this);
 
 		radio2 = new Button(this, SWT.RADIO);
