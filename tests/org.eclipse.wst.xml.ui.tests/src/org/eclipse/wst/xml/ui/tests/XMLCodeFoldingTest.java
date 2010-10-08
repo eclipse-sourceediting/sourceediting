@@ -138,6 +138,7 @@ public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 		
 		StructuredTextEditor editor  = getEditor(file);
 		
+		// expected for single-character line delimiter
 		List expectedPositions = new ArrayList();
 		expectedPositions.add(new Position(142, 16));
 		expectedPositions.add(new Position(173, 36));
@@ -285,12 +286,12 @@ public class XMLCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 				if(editorPart instanceof XMLMultiPageEditorPart) {
 					XMLMultiPageEditorPart xmlEditorPart = (XMLMultiPageEditorPart)editorPart;
 					editor = (StructuredTextEditor)xmlEditorPart.getAdapter(StructuredTextEditor.class);
-					standardizeLineEndings(editor);
 				} else if(editorPart instanceof StructuredTextEditor) {
 					editor = ((StructuredTextEditor)editorPart);
 				} else {
 					fail("Unable to open structured text editor");
 				}
+				standardizeLineEndings(editor);
 				
 				if(editor != null) {
 					fFileToEditorMap.put(file, editor);
