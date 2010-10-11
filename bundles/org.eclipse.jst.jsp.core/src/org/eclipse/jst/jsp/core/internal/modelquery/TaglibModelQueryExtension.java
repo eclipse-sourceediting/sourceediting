@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,7 @@ public class TaglibModelQueryExtension extends ModelQueryExtension {
 			TLDCMDocumentManager manager = TaglibController.getTLDCMDocumentManager(structDoc);
 
 			if(manager != null) {
-				List trackers = manager.getCMDocumentTrackers(elem.getStartOffset());
+				List trackers = new ArrayList(manager.getTaglibTrackers());
 				
 				//for each tracker add each of its elements to the node list
 				for(int trackerIndex = 0; trackerIndex < trackers.size(); ++trackerIndex) {
