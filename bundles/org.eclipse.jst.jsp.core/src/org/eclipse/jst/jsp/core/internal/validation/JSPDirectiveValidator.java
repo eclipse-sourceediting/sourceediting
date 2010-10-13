@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -123,7 +123,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 	 * 
 	 * @param file
 	 */
-	private void addDependsOn(IResource file) {
+	void addDependsOn(IResource file) {
 		if (fMessageOriginator instanceof JSPBatchValidator) {
 			((JSPBatchValidator) fMessageOriginator).addDependsOn(file);
 		}
@@ -239,8 +239,12 @@ public class JSPDirectiveValidator extends JSPValidator {
 			// requires tag name, attribute, equals, and value
 			else if (comparer != null && region.getNumberOfRegions() > 4) {
 				ITextRegion nameRegion = region.getRegions().get(1);
-				if (comparer.regionMatches(region.getStartOffset(nameRegion), nameRegion.getTextLength(), "jsp:include")) {
-					processIncludeDirective(reporter, f, sDoc, region);
+				if (comparer.regionMatches(region.getStartOffset(nameRegion), nameRegion.getTextLength(), "jsp:include")) { //$NON-NLS-1$
+					processInclude(reporter, f, sDoc, region, JSP11Namespace.ATTR_NAME_PAGE);
+				}
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=295950
+				else if (comparer.regionMatches(region.getStartOffset(nameRegion), 14, "jsp:directive.")) { //$NON-NLS-1$
+					processDirective(reporter, f, sDoc, region);
 				}
 
 			}
@@ -259,22 +263,23 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
 		String directiveName = getDirectiveName(documentRegion);
-		// we only care about taglib directive
-		if (directiveName.equals("taglib")) { //$NON-NLS-1$
+
+		if (directiveName.endsWith("taglib")) { //$NON-NLS-1$
 			processTaglibDirective(reporter, file, sDoc, documentRegion);
 		}
-		else if (directiveName.equals("include")||directiveName.equals("jsp:include")) { //$NON-NLS-1$ //$NON-NLS-2$
-			processIncludeDirective(reporter, file, sDoc, documentRegion);
+		else if (directiveName.equals("jsp:include")) { //$NON-NLS-1$
+			processInclude(reporter, file, sDoc, documentRegion, JSP11Namespace.ATTR_NAME_PAGE);
 		}
-		else if (directiveName.equals("page")) { //$NON-NLS-1$
+		else if (directiveName.endsWith("include")) { //$NON-NLS-1$
+			processInclude(reporter, file, sDoc, documentRegion, JSP11Namespace.ATTR_NAME_FILE);
+		}
+		else if (directiveName.endsWith("page")) { //$NON-NLS-1$
 			processPageDirective(reporter, file, sDoc, documentRegion);
 		}
 	}
 
-	private void processIncludeDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
-		ITextRegion fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_FILE);
-		if (fileValueRegion == null)
-			fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_PAGE);
+	private void processInclude(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion, String attrName) {
+		ITextRegion fileValueRegion = getAttributeValueRegion(documentRegion, attrName);
 		// There is a file and it isn't a nested region which could contain a JSP expression
 		if (fileValueRegion != null && !hasNestedRegion(fileValueRegion)) {
 			// file specified
@@ -283,7 +288,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 			if (fileValue.length() == 0 && fSeverityIncludeFileNotSpecified != ValidationMessage.IGNORE) {
 				// file value is specified but empty
-				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_FILE);
+				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, attrName);
 				LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileNotSpecified, msgText, file);
 				int start = documentRegion.getStartOffset(fileValueRegion);
 				int length = fileValueRegion.getTextLength();
@@ -319,7 +324,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		}
 		else if (fileValueRegion == null && fSeverityIncludeFileNotSpecified != ValidationMessage.IGNORE) {
 			// file is not specified at all
-			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_FILE);
+			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, attrName);
 			LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileNotSpecified, msgText, file);
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
