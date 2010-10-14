@@ -1707,5 +1707,16 @@
           contentTypeID="org.eclipse.core.runtime.xml">
     </categoriesConfiguration>
  </extension>
+ 
+  <extension
+        point="org.eclipse.ui.views">
+     <view category="org.eclipse.wst.xml"
+           class="org.eclipse.wst.xml.ui.views.annotations.XMLAnnotationsView"
+           id="org.eclipse.wst.xml.ui.views.annotations.XMLAnnotationsView"
+           icon="icons/full/obj16/comment_obj.gif"
+           name="%xmlannotations"
+           restorable="true">
+     </view>
+  </extension>
 
 </plugin>

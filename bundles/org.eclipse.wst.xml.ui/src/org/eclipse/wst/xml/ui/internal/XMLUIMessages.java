@@ -251,6 +251,7 @@ public class XMLUIMessages extends NLS {
 	public static String Data_Type____4;
 	public static String Enumerated_Values____5;
 	public static String Default_Value____6;
+	public static String Documentation_view_default_msg;
 	public static String SourceMenu_label;
 	public static String Comment_label; // Resource bundle
 	public static String Comment_tooltip; // Resource bundle
