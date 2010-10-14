@@ -2,9 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xsl.exslt.core.tests
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.100.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.exslt.core.tests.EXSLTCoreTestsPlugin
 Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.junit;bundle-version="3.8.2",
  org.eclipse.wst.xsl.exslt.core;bundle-version="[1.0.0,2.0.0)",
