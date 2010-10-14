@@ -9,7 +9,7 @@
  *     David Carver (STAR) - initial API and implementation
  *     David Carver (Intalio) - generalize the implementation for contribution to eclipse
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.views.annotations;
+package org.eclipse.wst.xml.ui.internal.views.annotations;
 
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.text.TextPresentation;
