@@ -20,7 +20,6 @@ import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.jst.jsp.core.tests.validation.ReporterForTest;
 import org.eclipse.jst.jsp.core.tests.validation.ValidationContextForTest;
-import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
 public class JSPJavaTranslatorCustomTagTest extends TestCase {
@@ -72,7 +71,7 @@ public class JSPJavaTranslatorCustomTagTest extends TestCase {
 		helper.setURI(file.getFullPath().toString());
 		validator.validate(helper, reporter);
 		
-		assertTrue("Found JSP Java problem for custom tag "+reporter.getMessages().size()+":[" + ((IMessage)reporter.getMessages().get(0)).getText() + "]", reporter.getMessages().isEmpty());
+		assertTrue("Found JSP Java problem for custom tag "+reporter.getMessages().size(), reporter.getMessages().isEmpty());
 		
 	}
 
