@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -896,24 +896,6 @@ class CSSDeclarationItemParser {
 		value.setStringValue(valueType, text);
 	}
 
-	/**
-	 * @param item
-	 *            org.eclipse.wst.css.core.model.interfaces.ICSSStyleDeclItem
-	 * @param nodeRegions
-	 *            java.util.Vector
-	 */
-	private void setupImportantAttribute(ICSSStyleDeclItem item, ITextRegionList nodeRegions) {
-		if (item == null || nodeRegions == null || nodeRegions.isEmpty()) {
-			return;
-		}
-		ITextRegion region = nodeRegions.get(nodeRegions.size() - 1);
-		if (region != null && region.getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_IMPORTANT) {
-			item.setPriority(getText(region));
-			CSSAttrImpl attr = ((CSSStyleDeclItemImpl) item).getAttributeNode(ICSSStyleDeclItem.IMPORTANT);
-			attr.setRangeRegion(fParentRegion, region, region);
-			nodeRegions.remove(region);
-		}
-	}
 
 	/**
 	 * 
@@ -971,7 +953,6 @@ class CSSDeclarationItemParser {
 		}
 
 		CSSUtil.stripSurroundingSpace(nodeRegions);
-		setupImportantAttribute(newItem, nodeRegions);
 		// Now, nodeRegions just has regions for value.
 		setupValues(newItem, nodeRegions);
 		return newItem;

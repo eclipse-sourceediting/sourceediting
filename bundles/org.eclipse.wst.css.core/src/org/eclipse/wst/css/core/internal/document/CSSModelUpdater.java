@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,11 +19,9 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.w3c.dom.DOMException;
 
 
 /**
@@ -71,13 +69,9 @@ class CSSModelUpdater {
 		String text = new String(formatter.formatAttrChanged(parentNode, attr, true, region));
 
 		// set text
-		StructuredDocumentEvent result = insertText(region.start, region.end - region.start, text);
+		insertText(region.start, region.end - region.start, text);
 
-		int nRemains = fParser.cleanupUpdateContext();
-
-		if (0 < nRemains && !(result instanceof NoChangeEvent)) {
-			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$		
-		}
+		fParser.cleanupUpdateContext();
 	}
 
 	/**
@@ -102,13 +96,9 @@ class CSSModelUpdater {
 		String text = new String(formatter.formatAttrChanged(parentNode, attr, false, region));
 
 		// set text
-		StructuredDocumentEvent result = insertText(region.start, region.end - region.start, text);
+		insertText(region.start, region.end - region.start, text);
 
-		int nRemains = fParser.cleanupUpdateContext();
-
-		if (0 < nRemains && !(result instanceof NoChangeEvent)) {
-			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$		
-		}
+		fParser.cleanupUpdateContext();
 	}
 
 	/**
@@ -147,13 +137,9 @@ class CSSModelUpdater {
 
 		fParser.setupUpdateContext(updateMode, parentNode, node);
 
-		StructuredDocumentEvent result = defaultInserted(parentNode, node);
+		defaultInserted(parentNode, node);
 
-		int nRemains = fParser.cleanupUpdateContext();
-
-		if (0 < nRemains && !(result instanceof NoChangeEvent)) {
-			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$		
-		}
+		fParser.cleanupUpdateContext();
 	}
 
 	/**
@@ -194,39 +180,14 @@ class CSSModelUpdater {
 			endPos += nearestSpaceLengthAfter(parentNode, endPos);
 		}
 		source = getSpaceBefore(parentNode, next, node);
-		StructuredDocumentEvent result;
 		if (source.length() > 0) {
-			result = insertText(insertPos, endPos - insertPos, source);
+			insertText(insertPos, endPos - insertPos, source);
 		}
 		else {
-			result = removeText(insertPos, endPos - insertPos);
+			removeText(insertPos, endPos - insertPos);
 		}
 
-		int nRemains = fParser.cleanupUpdateContext();
-
-		if (0 < nRemains && !(result instanceof NoChangeEvent)) {
-			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$		
-		}
-
-		/*
-		 * int removeStart = -1; int removeEnd = -1; if (node instanceof
-		 * CSSStructuredDocumentRegionContainer) {
-		 * CSSStructuredDocumentRegionContainer container =
-		 * (CSSStructuredDocumentRegionContainer)node;
-		 * IStructuredDocumentRegion firstNode =
-		 * container.getFirstStructuredDocumentRegion();
-		 * IStructuredDocumentRegion lastNode =
-		 * container.getLastStructuredDocumentRegion(); if (firstNode != null &&
-		 * lastNode != null) { removeStart = firstNode.getStart(); removeEnd =
-		 * lastNode.getEnd(); } } else if (node instanceof CSSRegionContainer) {
-		 * CSSRegionContainer container = (CSSRegionContainer)node;
-		 * ITextRegion firstRegion = container.getFirstRegion(); ITextRegion
-		 * lastRegion = container.getLastRegion(); if (firstRegion != null &&
-		 * lastRegion != null) { removeStart = firstRegion.getStartOffset();
-		 * removeEnd = lastRegion.getEndOffset(); } } if (0 <= removeStart &&
-		 * 0 <= removeEnd) { removeText(removeStart, removeEnd - removeStart +
-		 * 1); }
-		 */
+		fParser.cleanupUpdateContext();
 	}
 
 	/**
@@ -550,12 +511,8 @@ class CSSModelUpdater {
 
 		fParser.setupUpdateContext(CSSModelUpdateContext.UPDATE_CHANGE_RCONTAINER, parent, node);
 
-		StructuredDocumentEvent result = insertText(start, oldLength, newValue);
+		insertText(start, oldLength, newValue);
 
-		int nRemains = fParser.cleanupUpdateContext();
-
-		if (0 < nRemains && !(result instanceof NoChangeEvent)) {
-			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$		
-		}
+		fParser.cleanupUpdateContext();
 	}
 }
