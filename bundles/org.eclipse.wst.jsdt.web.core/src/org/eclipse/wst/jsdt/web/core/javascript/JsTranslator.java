@@ -16,7 +16,6 @@
  *     
  *******************************************************************************/
 
-
 package org.eclipse.wst.jsdt.web.core.javascript;
 
 import java.io.File;
@@ -46,9 +45,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.jsdt.core.IBuffer;
+import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -76,6 +77,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 //	private static final String ENDL = "\n"; //$NON-NLS-1$
 	
 	private static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
+	private static final int XML_COMMENT_START_LENGTH = XML_COMMENT_START.length();
 //	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
 	private static final boolean REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE = false;
 	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<)>%]+/?>"); //$NON-NLS-1$
@@ -107,7 +109,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 * org.eclipse.jface.text.Regions that contain purely generated code, for
 	 * which no validation messages should be reported to the user
 	 */
-	private List fGeneratedRanges = new ArrayList();
+	protected List fGeneratedRanges = new ArrayList();
 	
 	protected boolean isGlobalJs() {
 		return fIsGlobalJs;
@@ -466,12 +468,12 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			boolean isContainerRegion = region instanceof ITextRegionContainer;
 			/* make sure its not a sub container region, probably JSP */
 			if (type == DOMRegionContext.BLOCK_TEXT ) {
-				int scriptStart = container.getStartOffset();
+				int scriptStartOffset = container.getStartOffset();
 				int scriptTextLength = container.getLength();
 				String regionText = container.getFullText(region);
 				int regionLength = region.getLength();
 				
-				spaces = Util.getPad(scriptStart - scriptOffset);
+				spaces = Util.getPad(scriptStartOffset - scriptOffset);
 				fScriptText.append(spaces); 	
 				// fJsToHTMLRanges.put(inScript, inHtml);
 				if(isContainerRegion && REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE) {
@@ -480,21 +482,42 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				}
 				// Bug 241794 - Validation shows errors when using JSP Expressions inside JavaScript code
 				else if (regionText.indexOf(XML_COMMENT_START) >= 0) {
-					int index = regionText.indexOf(XML_COMMENT_START);
-					int leadingTrim = index + XML_COMMENT_START.length();
-					for (int i = 0; i < index; i++) {
+					// http://www.w3.org/TR/REC-html40/interact/scripts.html#h-18.3
+					int commentStartIndex = regionText.indexOf(XML_COMMENT_START);
+					
+					boolean replaceCommentStart = true;
+					for (int i = 0; i < commentStartIndex; i++) {
 						/*
-						 * ignore the comment start when it's preceded only
-						 * by white space
+						 * replace the comment start in the translation when
+						 * it's preceded only by white space
 						 */
-						if (!Character.isWhitespace(regionText.charAt(i))) {
-							leadingTrim = 0;
-							break;
-						}
+						replaceCommentStart = replaceCommentStart && Character.isWhitespace(regionText.charAt(i));
 					}
-					spaces = Util.getPad(leadingTrim);
-					fScriptText.append(spaces);
-					fScriptText.append(regionText.substring(leadingTrim));
+					
+					if (replaceCommentStart) {
+						IRegion line;
+						int endOfLeadingCommentLine;
+						int length;
+						try {
+							line = container.getParentDocument().getLineInformationOfOffset(commentStartIndex + scriptStartOffset);
+							endOfLeadingCommentLine = line.getOffset() + line.getLength() - scriptStartOffset;
+							if (endOfLeadingCommentLine > regionLength) {
+								endOfLeadingCommentLine = regionLength - 1;
+							}
+							length = endOfLeadingCommentLine - commentStartIndex;
+						} catch (BadLocationException e) {
+							Logger.logException("Could not get HTML-style comment line information", e); //$NON-NLS-1$
+							
+							endOfLeadingCommentLine = commentStartIndex + XML_COMMENT_START_LENGTH;
+							length = XML_COMMENT_START_LENGTH;
+						}
+						
+						StringBuffer newRegionText = new StringBuffer(regionText.substring(0, commentStartIndex));
+						spaces = Util.getPad(length);
+						newRegionText.append(spaces);
+						newRegionText.append(regionText.substring(endOfLeadingCommentLine));
+						regionText = newRegionText.toString();
+					}
 				}
 //				// Bug 241794 - Validation shows errors when using JSP Expressions inside JavaScript code
 //				else if (regionText.indexOf(XML_COMMENT_END) >= 0) {
@@ -623,7 +646,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 					else {
 						fScriptText.append(regionText);
 					}
-					Position inHtml = new Position(scriptStart, scriptTextLength);
+					Position inHtml = new Position(scriptStartOffset, scriptTextLength);
 					scriptLocationInHtml.add(inHtml);
 				}
 								
@@ -703,7 +726,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	/**
 	 * @return the fGeneratedRanges
 	 */
-	Region[] getGeneratedRanges() {
+	public Region[] getGeneratedRanges() {
 		return (Region[]) fGeneratedRanges.toArray(new Region[fGeneratedRanges.size()]);
 	}
 }
