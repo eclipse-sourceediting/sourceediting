@@ -72,6 +72,10 @@ public class JSPSourceValidator implements MarkupValidatorDelegate {
 		catch (Exception e) {
 			Logger.logException(e);
 		}
+		finally {
+			if (model != null)
+				model.releaseFromRead();
+		}
 		
 	}
 }
