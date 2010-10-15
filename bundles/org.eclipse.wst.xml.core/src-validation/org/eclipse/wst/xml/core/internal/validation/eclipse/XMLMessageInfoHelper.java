@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,7 +49,7 @@ public class XMLMessageInfoHelper
     if(errorKey != null)
     {
       if (errorKey.equals("cvc-complex-type.2.4.a") || errorKey.equals("cvc-complex-type.2.4.d") || errorKey.equals("cvc-complex-type.2.4.b") || errorKey.equals("MSG_CONTENT_INVALID") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        | errorKey.equals("MSG_CONTENT_INCOMPLETE") || errorKey.equals("MSG_REQUIRED_ATTRIBUTE_NOT_SPECIFIED") || errorKey.equals("cvc-complex-type.4")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        | errorKey.equals("MSG_CONTENT_INCOMPLETE") || errorKey.equals("MSG_REQUIRED_ATTRIBUTE_NOT_SPECIFIED") || errorKey.equals("cvc-complex-type.4") || errorKey.equals("ElementPrefixUnbound")   ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       {
         selectionStrategy = "START_TAG"; //$NON-NLS-1$
       }
