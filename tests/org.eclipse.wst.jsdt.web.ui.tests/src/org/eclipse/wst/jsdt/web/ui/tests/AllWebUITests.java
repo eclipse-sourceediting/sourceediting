@@ -13,12 +13,13 @@ package org.eclipse.wst.jsdt.web.ui.tests;
 
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.jsdt.web.ui.tests.format.FormattingTests;
 import org.eclipse.wst.jsdt.web.ui.tests.style.StyleTests;
 
-public class AllWebUITests extends TestSuite {
+public class AllWebUITests extends TestCase {
 	public AllWebUITests() {
 		super("JSDT Web UI Tests");
 	}
