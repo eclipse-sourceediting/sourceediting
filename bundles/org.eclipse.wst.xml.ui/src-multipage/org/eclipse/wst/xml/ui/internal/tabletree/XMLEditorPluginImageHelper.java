@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,12 @@ import java.util.HashMap;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
@@ -30,9 +35,10 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 public class XMLEditorPluginImageHelper {
 	private final String PLUGINID = XMLUIPlugin.ID;
 	private static XMLEditorPluginImageHelper instance = null;
+	public static final String EDITOR_MENU = "editor.xml_tabletree.menu"; //$NON-NLS-1$
 
 	// save a descriptor for each image
-	private HashMap fImageDescRegistry = null;
+	private static HashMap fImageDescRegistry = null;
 
 	/**
 	 * Gets the instance.
@@ -42,9 +48,56 @@ public class XMLEditorPluginImageHelper {
 	public synchronized static XMLEditorPluginImageHelper getInstance() {
 		if (instance == null) {
 			instance = new XMLEditorPluginImageHelper();
+			initializeRegistry();
 		}
 		return instance;
 	}
+
+	private static void initializeRegistry() {
+		// Taken from org.eclipse.ui.internal.WorkbenchImages
+		Display d = Display.getCurrent();
+        
+        Image viewMenu = new Image(d, 11, 16);
+        Image viewMenuMask = new Image(d, 11, 16);
+        
+        GC gc = new GC(viewMenu);
+        GC maskgc = new GC(viewMenuMask);
+        drawViewMenu(gc, maskgc);
+        gc.dispose();
+        maskgc.dispose();
+        
+        ImageData data = viewMenu.getImageData();
+        data.transparentPixel = data.getPixel(0,0);
+        
+        Image vm2 = new Image(d, viewMenu.getImageData(), viewMenuMask.getImageData());
+        viewMenu.dispose();
+        viewMenuMask.dispose();
+                
+        getImageRegistry().put(EDITOR_MENU, vm2);
+        getImageDescriptorRegistry().put(EDITOR_MENU, ImageDescriptor.createFromImage(vm2));
+	}
+
+	private static void drawViewMenu(GC gc, GC maskgc) {
+    	Display display = Display.getCurrent();
+    	
+    	gc.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+    	gc.setBackground(display.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+    	
+	    int[] shapeArray = new int[] {1, 1, 10, 1, 6, 5, 5, 5};
+	    gc.fillPolygon(shapeArray);
+	    gc.drawPolygon(shapeArray);
+	    
+	    Color black = display.getSystemColor(SWT.COLOR_BLACK);
+	    Color white = display.getSystemColor(SWT.COLOR_WHITE);
+	    
+	    maskgc.setBackground(black);
+	    maskgc.fillRectangle(0,0,12,16);
+	    
+	    maskgc.setBackground(white);
+	    maskgc.setForeground(white);
+	    maskgc.fillPolygon(shapeArray);
+	    maskgc.drawPolygon(shapeArray);
+    }
 
 	/**
 	 * Retrieves the image associated with resource from the image registry.
@@ -95,7 +148,7 @@ public class XMLEditorPluginImageHelper {
 	 * 
 	 * @return HashMap - image descriptor registry for this plugin
 	 */
-	private HashMap getImageDescriptorRegistry() {
+	private static HashMap getImageDescriptorRegistry() {
 		if (fImageDescRegistry == null) {
 			fImageDescRegistry = new HashMap();
 		}
@@ -107,7 +160,7 @@ public class XMLEditorPluginImageHelper {
 	 * 
 	 * @return ImageRegistry - image registry for this plugin
 	 */
-	private ImageRegistry getImageRegistry() {
+	private static ImageRegistry getImageRegistry() {
 		return JFaceResources.getImageRegistry();
 	}
 

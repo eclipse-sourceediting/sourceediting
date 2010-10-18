@@ -38,8 +38,12 @@ public class XMLEditorMessages extends NLS {
 	public static String XMLTableTreeActionBarContributor_7;
 	public static String XMLTableTreeActionBarContributor_8;
 	public static String An_error_has_occurred_when1_ERROR_;
+
+	public static String ConfigureColumns_label;
 	public static String Resource__does_not_exist;
 	public static String Editor_could_not_be_open;
+
+	public static String EditorMenu_tooltip;
 	public static String TreeExtension_0;
 
 	static {

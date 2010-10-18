@@ -17,12 +17,17 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.util.ConfigureColumns;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
@@ -31,15 +36,19 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -48,6 +57,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -465,6 +475,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private PageInitializationData fPageInitializer;
 	
 	private ToolBarManager fToolbarManager;
+	private ToolBarManager fEditorManager;
+
+	/** Context menu manager */
+	private MenuManager fMenuManager;
 
 	private boolean fAllocateToolbar = true;
 	
@@ -637,8 +651,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		XMLUIPlugin.getInstance().getWorkbench().getHelpSystem().setHelp(tableTreeViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
 
 		// Toolbar wasn't allocated
-		if (fToolbarManager != null) {
+		if (fToolbarManager != null && fEditorManager != null) {
 			addToolBarActions(tableTreeViewer);
+			addEditorActions(tableTreeViewer);
 		}
 		return tableTreeViewer;
 	}
@@ -653,13 +668,50 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			layout.verticalSpacing = 0;
 			layout.marginWidth = 0;
 			container.setLayout(layout);
-	
-			ToolBar tb = new ToolBar(container, SWT.FLAT);
+
+			Composite toolbarContainer = new Composite(container, SWT.NONE);
+			layout = new GridLayout();
+			layout.marginHeight = 0;
+			layout.verticalSpacing = 0;
+			layout.marginWidth = 0;
+			layout.horizontalSpacing = 0;
+			layout.numColumns = 2;
+			toolbarContainer.setLayout(layout);
+			toolbarContainer.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
+
+			ToolBar tb = new ToolBar(toolbarContainer, SWT.FLAT | SWT.NO_BACKGROUND);
 			fToolbarManager = new ToolBarManager(tb);
+			tb.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
+			tb = new ToolBar(toolbarContainer, SWT.FLAT | SWT.NO_BACKGROUND);
+			fEditorManager = new ToolBarManager(tb);
 			tb.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
 			fDesignContainer = container;
 		}
 		return container;
+	}
+
+	private class EditorActions extends Action {
+		private ToolBar fToolbar;
+
+		public EditorActions(ToolBar toolbar) {
+			fToolbar = toolbar;
+		}
+
+		public ImageDescriptor getImageDescriptor() {
+			return XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImageHelper.EDITOR_MENU);
+		}
+
+		public String getToolTipText() {
+			return XMLEditorMessages.EditorMenu_tooltip;
+		}
+
+		public void run() {
+			Menu menu = fMenuManager.createContextMenu(fDesignContainer);
+			Point size = fToolbar.getSize();
+			Point location = fToolbar.toDisplay(0, size.y);
+			menu.setLocation(location.x, location.y);
+			menu.setVisible(true);
+		}
 	}
 
 	private void addToolBarActions(IDesignViewer viewer) {
@@ -673,6 +725,23 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	
 			expand.setViewer((AbstractTreeViewer) viewer);
 			collapse.setViewer((AbstractTreeViewer) viewer);
+		}
+	}
+
+	private void addEditorActions(IDesignViewer viewer) {
+		if (viewer instanceof AbstractTreeViewer) {
+			final Tree tree = (Tree) ((AbstractTreeViewer) viewer).getControl();
+			fMenuManager = new MenuManager();
+			fMenuManager.add(new Action(XMLEditorMessages.ConfigureColumns_label) {
+				public void run() {
+					ConfigureColumns.forTree(tree , new SameShellProvider(tree));
+				}
+			});
+			getSite().registerContextMenu("org.eclipse.wst.xml.ui.editor", fMenuManager, getSite().getSelectionProvider()); //$NON-NLS-1$
+			fMenuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+			fEditorManager.add(new EditorActions(fEditorManager.getControl()));
+			fEditorManager.update(true);
 		}
 	}
 
@@ -790,6 +859,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		if (fActivationListener != null) {
 			fActivationListener.dispose();
 			fActivationListener = null;
+		}
+
+		if (fMenuManager != null) {
+			fMenuManager.removeAll();
+			fMenuManager.dispose();
+			fMenuManager = null;
 		}
 
 		if ((fTextEditor != null) && (fPropertyListener != null)) {
