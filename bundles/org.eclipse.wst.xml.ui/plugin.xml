@@ -1586,6 +1586,7 @@
 		<view id="org.eclipse.ui.texteditor.TemplatesView" relative="org.eclipse.ui.views.ContentOutline" relationship="bottom" ratio="0.6" />
 		<!-- everything else on the bottom -->
 		<view id="org.eclipse.ui.views.ProblemView" relative="org.eclipse.ui.editorss" relationship="bottom" ratio="0.6" />
+		<view id="org.eclipse.wst.xml.ui.views.annotations.XMLAnnotationsView" relative="org.eclipse.ui.views.ProblemView" relationship="stack" />
 		<view id="org.eclipse.ui.views.PropertySheet" relative="org.eclipse.ui.views.ProblemView" relationship="stack"/>
 		<view id="org.eclipse.ui.console.ConsoleView" relative="org.eclipse.ui.views.ProblemView" relationship="stack" />
 		<view id="org.eclipse.wst.common.snippets.internal.ui.SnippetsView" relative="org.eclipse.ui.views.ProblemView" relationship="stack" />
