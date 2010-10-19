@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -252,10 +253,16 @@ public class HTMLDocumentAdapter implements IStyleSheetListAdapter, StyleSheetLi
 		Node node = null;
 		switch (eventType) {
 			case INodeNotifier.ADD :
-				node = (Node) newValue;
+				if (newValue instanceof Node)
+					node = (Node) newValue;
+				else if (changedFeature instanceof Attr)
+					node = ((Attr) changedFeature);
 				break;
 			case INodeNotifier.REMOVE :
-				node = (Node) oldValue;
+				if (oldValue instanceof Node)
+					node = (Node) oldValue;
+				else if (changedFeature instanceof Attr)
+					node = ((Attr) changedFeature);
 				break;
 			case INodeNotifier.CHANGE :
 				node = (Node) notifier;
@@ -263,33 +270,45 @@ public class HTMLDocumentAdapter implements IStyleSheetListAdapter, StyleSheetLi
 			default :
 				break;
 		}
-		if (node == null || node.getNodeType() != Node.ELEMENT_NODE)
+		
+		if (node == null)
 			return;
-		IDOMElement element = (IDOMElement) node;
-		String tagName = element.getTagName();
-		if (tagName == null)
-			return;
+		
+		switch(node.getNodeType()) {
+			case Node.ELEMENT_NODE: {
+				IDOMElement element = (IDOMElement) node;
+				String tagName = element.getTagName();
+				if (tagName == null)
+					return;
 
-		if (eventType == INodeNotifier.CHANGE) {
-			if (tagName.equalsIgnoreCase(HTML40Namespace.ElementName.BASE)) {
-				refreshAdapters();
+				if (eventType == INodeNotifier.CHANGE) {
+					if (tagName.equalsIgnoreCase(HTML40Namespace.ElementName.BASE)) {
+						refreshAdapters();
+					}
+				}
+				else {
+					if (tagName.equalsIgnoreCase(HTML40Namespace.ElementName.HTML) || tagName.equalsIgnoreCase(HTML40Namespace.ElementName.HEAD) || tagName.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE) || tagName.equalsIgnoreCase(HTML40Namespace.ElementName.LINK) || tagName.equalsIgnoreCase(HTML40Namespace.ElementName.NOSCRIPT) || tagName.equalsIgnoreCase(JSP11Namespace.ElementName.ROOT) || element.isCommentTag() || (!element.isGlobalTag() && element.isContainer())) {
+						childReplaced();
+					}
+					else if (tagName.equalsIgnoreCase(HTML40Namespace.ElementName.BASE)) {
+						refreshAdapters();
+					}
+					else {
+						String localName = element.getLocalName();
+						if (localName != null && localName.equalsIgnoreCase(HTML40Namespace.ElementName.HTML)) {
+							// taglib html tag
+							childReplaced();
+						}
+					}
+				}
 			}
-		}
-		else {
-			if (tagName.equalsIgnoreCase(HTML40Namespace.ElementName.HTML) || tagName.equalsIgnoreCase(HTML40Namespace.ElementName.HEAD) || tagName.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE) || tagName.equalsIgnoreCase(HTML40Namespace.ElementName.LINK) || tagName.equalsIgnoreCase(HTML40Namespace.ElementName.NOSCRIPT) || tagName.equalsIgnoreCase(JSP11Namespace.ElementName.ROOT) || element.isCommentTag() || (!element.isGlobalTag() && element.isContainer())) {
-				childReplaced();
-			}
-			else if (tagName.equalsIgnoreCase(HTML40Namespace.ElementName.BASE)) {
-				refreshAdapters();
-			}
-			else {
-				String localName = element.getLocalName();
-				if (localName != null && localName.equalsIgnoreCase(HTML40Namespace.ElementName.HTML)) {
-					// taglib html tag
-					childReplaced();
+			case Node.ATTRIBUTE_NODE : {
+				if (HTML40Namespace.ElementName.BASE.equals(((Attr) node).getOwnerElement().getLocalName())) {
+					refreshAdapters();
 				}
 			}
 		}
+		
 	}
 
 	/**
