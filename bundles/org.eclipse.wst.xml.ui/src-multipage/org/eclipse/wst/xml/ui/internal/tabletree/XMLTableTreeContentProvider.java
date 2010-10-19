@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -135,6 +136,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 				result = getElementValueHelper((Element) object);
 				
 		}
+		result = TextProcessor.process(result);
 		return result != null ? result : ""; //$NON-NLS-1$
 	}
 	
@@ -267,6 +269,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 				}
 			}
 		}
+		result = TextProcessor.process(result);
 		return result != null ? result : ""; //$NON-NLS-1$
 	}
 
