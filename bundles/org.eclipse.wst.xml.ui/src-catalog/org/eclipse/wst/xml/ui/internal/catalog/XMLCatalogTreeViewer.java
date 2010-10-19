@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -111,6 +112,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 					result += " (" + XMLCatalogMessages.UI_LABEL_PLATFORM_RESOURCE + ")";
 				}
 			}
+			result = TextProcessor.process(result);
 			return result != null ? result : object.toString();
 		}
 
