@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,11 @@ public class StyleSheetFormatter extends AbstractCSSSourceFormatter {
 			}
 			// generate source
 			if (prev != null) {
-				appendDelimBefore(node, (regions.length > 0) ? regions[0] : null, source);
+				if (regions.length > 0 && !regions[0].getType().equals(CSSRegionContexts.CSS_COMMENT))
+					appendDelimBefore(node, regions[0], source);
+				else if (regions.length == 0) {
+					appendDelimBefore(node, null, source);
+				}
 			}
 			for (int i = 0; i < regions.length; i++) {
 				appendDelimBefore(node, regions[i], source);
