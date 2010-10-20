@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
+import org.eclipse.osgi.util.TextProcessor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -329,6 +330,8 @@ public class DOMWriter
   /** a temporary hack to workaround our inability to create a DocumentType tag*/
   public void print(Document document, String encoding, String grammarFileName, String publicId, String systemId)
   {
+	publicId = TextProcessor.process(publicId);
+	systemId = TextProcessor.process(systemId);
     out.println("<?xml version=\"1.0\"" + " encoding=\"" + encoding + "\"?>");   //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     if (grammarFileName.endsWith(".dtd")) //$NON-NLS-1$
     {
