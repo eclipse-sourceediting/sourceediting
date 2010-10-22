@@ -237,6 +237,7 @@ class ProjectDescription {
 
 		boolean isExported = true;
 		boolean isMappedInWebXML;
+		boolean isConsistent = false;
 		IPath location;
 		List urlRecords;
 
@@ -588,7 +589,7 @@ class ProjectDescription {
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
-
+	private static final char[] TLD = { 't', 'T', 'l', 'L', 'd', 'D'} ;
 	/**
 	 * Notes that the build path information is stale. Some operations can now
 	 * be skipped until a resolve/getAvailable call is made.
@@ -652,6 +653,9 @@ class ProjectDescription {
 	
 	private TaglibSorter fTaglibSorter = new TaglibSorter();
 	private BuildPathJob fBuildPathJob = new BuildPathJob();
+
+	/** Shared JAR records between projects */
+	private static final Map fJarRecords = new Hashtable();
 
 	ProjectDescription(IProject project, String saveStateFile) {
 		super();
@@ -889,11 +893,17 @@ class ProjectDescription {
 	}
 
 	private JarRecord createJARRecord(String fileLocation) {
-		JarRecord record = new JarRecord();
-		record.info = new TaglibInfo();
-		record.location = new Path(fileLocation);
-		record.urlRecords = new ArrayList();
-		return record;
+		synchronized (fJarRecords) {
+			JarRecord record = (JarRecord) fJarRecords.get(fileLocation);
+			if (record == null) {
+				record = new JarRecord();
+				record.info = new TaglibInfo();
+				record.location = new Path(fileLocation);
+				record.urlRecords = new ArrayList();
+				fJarRecords.put(fileLocation, record);
+			}
+			return record;
+		}
 	}
 
 	/**
@@ -2169,6 +2179,9 @@ class ProjectDescription {
 		JarRecord libraryRecord = null;
 		if (deltaKind == ITaglibIndexDelta.REMOVED || deltaKind == ITaglibIndexDelta.CHANGED) {
 			libraryRecord = (JarRecord) fClasspathJars.remove(libraryLocation);
+			synchronized (fJarRecords) {
+				fJarRecords.remove(libraryLocation);
+			}
 			if (libraryRecord != null) {
 				IURLRecord[] urlRecords = (IURLRecord[]) libraryRecord.urlRecords.toArray(new IURLRecord[0]);
 				for (int i = 0; i < urlRecords.length; i++) {
@@ -2182,72 +2195,96 @@ class ProjectDescription {
 		if (deltaKind == ITaglibIndexDelta.ADDED || deltaKind == ITaglibIndexDelta.CHANGED) {
 			// XXX: runs on folders as well?!
 			libraryRecord = createJARRecord(libraryLocation);
-			libraryRecord.isExported = isExported;
-			fClasspathJars.put(libraryLocation, libraryRecord);
-
-			ZipFile jarfile = null;
-			try {
-				jarfile = new ZipFile(libraryLocation);
-				Enumeration entries = jarfile.entries();
-				while (entries.hasMoreElements()) {
-					ZipEntry z = (ZipEntry) entries.nextElement();
-					if (!z.isDirectory()) {
-						if (z.getName().toLowerCase(Locale.US).endsWith(".tld")) { //$NON-NLS-1$
-							if (z.getName().equals(JarUtilities.JSP11_TAGLIB)) {
-								libraryRecord.has11TLD = true;
-							}
-							InputStream contents = getCachedInputStream(jarfile, z);
-							if (contents != null) {
-								TaglibInfo info = extractInfo(libraryLocation, contents);
-
-								if (info != null && info.uri != null && info.uri.length() > 0) {
-									URLRecord urlRecord = new URLRecord();
-									urlRecord.info = info;
-									urlRecord.baseLocation = libraryLocation;
-									try {
-										urlRecord.isExported = isExported;
-										urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + z.getName()); //$NON-NLS-1$ //$NON-NLS-2$
-										libraryRecord.urlRecords.add(urlRecord);
-										int urlDeltaKind = ITaglibIndexDelta.ADDED;
-										if (fClasspathReferences.containsKey(urlRecord.getURI())) {
-											// TODO: not minimized enough
-											urlDeltaKind = ITaglibIndexDelta.CHANGED;
+			synchronized (libraryRecord) {
+				if (libraryRecord.isConsistent)
+					return;
+				libraryRecord.isExported = isExported;
+				fClasspathJars.put(libraryLocation, libraryRecord);
+	
+				ZipFile jarfile = null;
+				try {
+					jarfile = new ZipFile(libraryLocation);
+					Enumeration entries = jarfile.entries();
+					while (entries.hasMoreElements()) {
+						ZipEntry z = (ZipEntry) entries.nextElement();
+						if (!z.isDirectory()) {
+							if (isTLD(z.getName())) {
+								if (z.getName().equals(JarUtilities.JSP11_TAGLIB)) {
+									libraryRecord.has11TLD = true;
+								}
+								InputStream contents = getCachedInputStream(jarfile, z);
+								if (contents != null) {
+									TaglibInfo info = extractInfo(libraryLocation, contents);
+	
+									if (info != null && info.uri != null && info.uri.length() > 0) {
+										URLRecord urlRecord = new URLRecord();
+										urlRecord.info = info;
+										urlRecord.baseLocation = libraryLocation;
+										try {
+											urlRecord.isExported = isExported;
+											urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + z.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+											libraryRecord.urlRecords.add(urlRecord);
+											int urlDeltaKind = ITaglibIndexDelta.ADDED;
+											if (fClasspathReferences.containsKey(urlRecord.getURI())) {
+												// TODO: not minimized enough
+												urlDeltaKind = ITaglibIndexDelta.CHANGED;
+											}
+											fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+											TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, urlRecord, urlDeltaKind));
+											fClasspathReferences.put(info.uri, urlRecord);
+											if (_debugIndexCreation)
+												Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 										}
-										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
-										TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, urlRecord, urlDeltaKind));
-										fClasspathReferences.put(info.uri, urlRecord);
-										if (_debugIndexCreation)
-											Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
+										catch (MalformedURLException e) {
+											// don't record this URI
+											Logger.logException(e);
+										}
 									}
-									catch (MalformedURLException e) {
-										// don't record this URI
-										Logger.logException(e);
+									try {
+										contents.close();
 									}
-								}
-								try {
-									contents.close();
-								}
-								catch (IOException e) {
-									Logger.log(Logger.ERROR_DEBUG, null, e);
+									catch (IOException e) {
+										Logger.log(Logger.ERROR_DEBUG, null, e);
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-			catch (ZipException zExc) {
-				Logger.log(Logger.WARNING, "Taglib Index ZipException: " + libraryLocation + " " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			catch (IOException ioExc) {
-				Logger.log(Logger.WARNING, "Taglib Index IOException: " + libraryLocation + " " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			finally {
-				closeJarFile(jarfile);
+				catch (ZipException zExc) {
+					Logger.log(Logger.WARNING, "Taglib Index ZipException: " + libraryLocation + " " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				catch (IOException ioExc) {
+					Logger.log(Logger.WARNING, "Taglib Index IOException: " + libraryLocation + " " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				finally {
+					closeJarFile(jarfile);
+				}
+				libraryRecord.isConsistent = true;
 			}
 		}
 		if (libraryRecord != null) {
 			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, libraryRecord, deltaKind));
 		}
+	}
+
+	private boolean isTLD(String name) {
+		if (name == null)
+			return false;
+
+		final int length = name.length();
+
+		if (length < 4)
+			return false;
+		if (name.charAt(length - 4) != '.')
+			return false;
+
+		for (int i = length - 3, j = 0; i < length; i++, j++) {
+			final char c = name.charAt(i);
+			if (c != TLD[2*j] && c != TLD[2*j + 1])
+				return false;
+		}
+		return true;
 	}
 
 	void updateJAR(IResource jar, int deltaKind) {
@@ -2266,7 +2303,7 @@ class ProjectDescription {
 			try {
 				ZipEntry entry;
 				while ((entry = zip.getNextEntry()) != null) {
-					if (entry.getName().endsWith(".tld")) { //$NON-NLS-1$
+					if (isTLD(entry.getName())) { //$NON-NLS-1$
 						if (entry.getName().equals(JarUtilities.JSP11_TAGLIB)) {
 							jarRecord.has11TLD = true;
 						}
