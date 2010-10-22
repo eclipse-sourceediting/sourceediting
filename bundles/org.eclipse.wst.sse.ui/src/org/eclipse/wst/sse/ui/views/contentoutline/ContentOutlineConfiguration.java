@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -170,7 +170,7 @@ public abstract class ContentOutlineConfiguration {
 	 * @return IContributionItem[] for the local menu
 	 */
 	public final IContributionItem[] getMenuContributions(TreeViewer viewer) {
-		if (fMenuContributions == null) {
+		if (fMenuContributions == null && (viewer.getControl() != null && !viewer.getControl().isDisposed())) {
 			fMenuContributions = createMenuContributions(viewer);
 		}
 		return fMenuContributions;
@@ -232,7 +232,7 @@ public abstract class ContentOutlineConfiguration {
 	 * @return IContributionItem[] for the local toolbar
 	 */
 	public final IContributionItem[] getToolbarContributions(TreeViewer viewer) {
-		if (fToolbarContributions == null) {
+		if (fToolbarContributions == null && (viewer.getControl() != null && !viewer.getControl().isDisposed())) {
 			fToolbarContributions = createToolbarContributions(viewer);
 		}
 		return fToolbarContributions;
