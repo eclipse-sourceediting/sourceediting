@@ -96,9 +96,11 @@ public class CMImageUtil {
 				URL imageURL = new URL(imageURLString);
 				InputStream inputStream = JarUtilities.getInputStream(imageURL);
 				try {
-					ImageData data = new ImageData(inputStream);
-					descriptor = ImageDescriptor.createFromImageData(data);
-					getImageRegistry().put(imageURLString, descriptor);
+					if (inputStream != null) {
+						ImageData data = new ImageData(inputStream);
+						descriptor = ImageDescriptor.createFromImageData(data);
+						getImageRegistry().put(imageURLString, descriptor);
+					}
 				}
 				catch (SWTException e) {
 					/*
