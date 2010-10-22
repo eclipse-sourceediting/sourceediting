@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ package org.eclipse.wst.sse.core.internal.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
@@ -363,6 +364,9 @@ public class JarUtilities {
 			if (input != null) {
 				return copyAndCloseStream(input);
 			}
+		}
+		catch (FileNotFoundException e) {
+			// May be a file URL connection, do not log
 		}
 		catch (IOException e) {
 			Logger.logException(e);
