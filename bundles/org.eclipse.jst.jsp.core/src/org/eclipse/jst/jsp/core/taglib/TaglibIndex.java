@@ -669,7 +669,7 @@ public final class TaglibIndex {
 	 * 
 	 * @param delta
 	 */
-	void addDelta(ITaglibIndexDelta delta) {
+	synchronized void addDelta(ITaglibIndexDelta delta) {
 		ensureDelta(delta.getProject()).addChildDelta(delta);
 	}
 
