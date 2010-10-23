@@ -5,7 +5,7 @@
    <groupId>org.eclipse.wst.xsl</groupId>
    <artifactId>org.eclipse.wst.xsl.exslt.ui</artifactId>
    <packaging>eclipse-plugin</packaging>
-   <version>1.0.100-SNAPSHOT</version>
+   <version>1.0.0-SNAPSHOT</version>
    <name>XSLT EXSLT UI Plugin</name>
 
    <parent>
