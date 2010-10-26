@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.html.core.tests.cleanup.TestHTMLCleanupProcessor;
 import org.eclipse.wst.html.core.tests.format.TestFormatProcessorHTML;
+import org.eclipse.wst.html.core.tests.format.TestFormatUtility;
 import org.eclipse.wst.html.core.tests.html5.model.HTML5ContentModelTest;
 import org.eclipse.wst.html.core.tests.misc.HTMLCorePreferencesTest;
 import org.eclipse.wst.html.core.tests.misc.HTMLTagInfoTest;
@@ -50,6 +51,7 @@ public class HTMLCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(GetOverrideStyleTest.class));
 		addTest(new TestSuite(BUG124835SetStyleAttributeValueTest.class));
 		addTest(new TestSuite(TestFormatProcessorHTML.class));
+		addTest(new TestSuite(TestFormatUtility.class));
 		addTest(new TestSuite(TestCatalogContentModels.class));
 		addTest(TestHTMLCleanupProcessor.suite());
 		addTest(new TestSuite(HTML5ContentModelTest.class));

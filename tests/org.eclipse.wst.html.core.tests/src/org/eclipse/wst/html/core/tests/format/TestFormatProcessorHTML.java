@@ -181,6 +181,16 @@ public class TestFormatProcessorHTML extends TestCase {
 		formatAndAssertEquals("testfiles/html/tableformat.html", "testfiles/html/tableformat-fmt.html");
 	}
 
+	public void testBasicFormatting() throws UnsupportedEncodingException, IOException, CoreException {
+		// Test that the basic elements of HTML are properly aligned. Don't indent children of <html> or <head>
+		formatAndAssertEquals("testfiles/html/format-basic.html", "testfiles/html/format-basic-fmt.html");
+	}
+
+	public void testNestedDivs() throws UnsupportedEncodingException, IOException, CoreException {
+		// Test that the basic elements of HTML are properly aligned. Don't indent children of <html> or <head>
+		formatAndAssertEquals("testfiles/html/format-divs.html", "testfiles/html/format-divs-fmt.html");
+	}
+
 	public void testEmbeddedCSSFormat() throws UnsupportedEncodingException, IOException, CoreException {
 		// BUG92957
 		formatAndAssertEquals("testfiles/html/htmlwithcss.html", "testfiles/html/htmlwithcss-fmt.html");
