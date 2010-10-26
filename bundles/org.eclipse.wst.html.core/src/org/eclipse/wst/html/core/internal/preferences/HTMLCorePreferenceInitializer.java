@@ -61,6 +61,8 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 		// this could be made smarter by actually looking up the content
 		// type's valid extensions
 		node.put(HTMLCorePreferenceNames.DEFAULT_EXTENSION, "html"); //$NON-NLS-1$
+
+		node.put(HTMLCorePreferenceNames.INLINE_ELEMENTS, "a,abbr,acronym,b,basefont,big,br,cite,em,font,i,img,input,label,li,q,s,select,small,span,strike,strong,sub,sup,td,th,title,u");
 		
 		initializeValidationPreferences(node);
 	}
