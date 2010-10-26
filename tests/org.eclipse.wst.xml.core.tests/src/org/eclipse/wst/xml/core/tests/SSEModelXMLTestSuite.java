@@ -35,6 +35,7 @@ import org.eclipse.wst.xml.core.tests.model.TestModelManager;
 import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
 import org.eclipse.wst.xml.core.tests.model.TestStructuredModel;
 import org.eclipse.wst.xml.core.tests.model.TestXMLModelLoader;
+import org.eclipse.wst.xml.core.tests.range.TestRangeCompare;
 import org.eclipse.wst.xml.core.tests.text.TestStructuredPartitionerXML;
 
 
@@ -61,6 +62,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(NodeListImplTests.class));
 		addTest(new TestSuite(NodeContainerTests.class));
 		addTest(new TestSuite(TransitionTests.class));
+		addTest(new TestSuite(TestRangeCompare.class));
 		addTest(new TestSuite(XMLCorePreferencesTest.class));
 		addTest(new TestSuite(TestCatalogRetrivalAndModelCreation.class));
 		
