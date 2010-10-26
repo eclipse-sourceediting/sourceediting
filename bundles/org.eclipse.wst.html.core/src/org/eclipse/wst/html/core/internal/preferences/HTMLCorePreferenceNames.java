@@ -198,6 +198,14 @@ public class HTMLCorePreferenceNames {
 	public static final String ATTR_NAME_CASE = "attrNameCase";//$NON-NLS-1$
 
 	/**
+	 * Preferred elements to be considered as inline for the purposes of formatting
+	 * <p>
+	 * Value is a comma-separated list of element names
+	 * </p>
+	 */
+	public static final String INLINE_ELEMENTS = "inlineElements"; //$NON-NLS-1$
+
+	/**
 	 * Possible value for the preference #TAG_NAME_CASE or #ATTR_NAME_CASE.
 	 * Indicates to leave case as is.
 	 * 

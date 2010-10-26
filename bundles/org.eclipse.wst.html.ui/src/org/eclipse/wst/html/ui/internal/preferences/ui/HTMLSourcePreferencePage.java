@@ -10,10 +10,33 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.preferences.ui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -21,17 +44,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
+import org.eclipse.wst.html.core.internal.format.HTMLFormattingUtil;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
+
+import com.ibm.icu.text.Collator;
 
 public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 	private Button fTagNameUpper = null;
@@ -51,6 +83,13 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 	private Button fIndentUsingTabs;
 	private Button fIndentUsingSpaces;
 	private Spinner fIndentationSize;
+
+	private Button fAddButton;
+	private Button fRemoveButton;
+
+	private TableViewer fViewer;
+
+	private ContentProvider fContentProvider;
 
 	private Composite createContentsForPreferredCaseGroup(Composite parent, int columnSpan) {
 		Group caseGroup = createGroup(parent, columnSpan);
@@ -114,6 +153,92 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		fIndentationSize.setIncrement(1);
 		fIndentationSize.setPageIncrement(4);
 		fIndentationSize.addModifyListener(this);
+
+		GridData data;
+
+		
+		Composite inlineGroup = new Composite(formattingGroup, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		inlineGroup.setLayout(layout);
+
+		data = new GridData(GridData.FILL_BOTH);
+		data.horizontalSpan = 2;
+		inlineGroup.setLayoutData(data);
+
+		Label label = createLabel(inlineGroup, HTMLUIMessages.Inline_elements_table_label);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 2;
+		label.setLayoutData(data);
+
+		final TableViewer viewer = new TableViewer(inlineGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 1;
+		data.verticalAlignment = SWT.BEGINNING;
+		data.heightHint = convertHeightInCharsToPixels(10);
+		viewer.getTable().setLayoutData(data);
+
+		Composite buttonContainer = new Composite(inlineGroup, SWT.NONE);
+		data = new GridData(GridData.FILL_VERTICAL);
+		buttonContainer.setLayoutData(data);
+		layout = new GridLayout();
+		layout.numColumns = 1;
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		buttonContainer.setLayout(layout);
+
+		fAddButton = new Button(buttonContainer, SWT.PUSH);
+		fAddButton.setText(HTMLUIMessages.Add_inline);
+		fAddButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				HTMLElementDialog dialog = new HTMLElementDialog(getShell());
+				dialog.setMessage(HTMLUIMessages.Elements_Dialog_message);
+				dialog.setTitle(HTMLUIMessages.Elements_Dialog_title);
+				dialog.setMultipleSelection(true);
+				dialog.setAllowDuplicates(false);
+				dialog.open();
+				Object[] result = dialog.getResult();
+				if (result != null) {
+					for (int i = 0; i < result.length; i++) {
+						fContentProvider.addElement(result[i].toString());
+					}
+					fViewer.refresh();
+				}
+			}
+		});
+		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
+		int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+		data.widthHint = Math.max(widthHint, fAddButton.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
+		data.horizontalSpan = 1;
+		fAddButton.setLayoutData(data);
+
+		fRemoveButton = new Button(buttonContainer, SWT.PUSH);
+		fRemoveButton.setText(HTMLUIMessages.Remove_inline);
+		fRemoveButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ISelection selection = viewer.getSelection();
+				if (selection != null && !selection.isEmpty() && selection instanceof StructuredSelection) {
+					Object[] remove = ((StructuredSelection) selection).toArray();
+					for (int i = 0; i < remove.length; i++) {
+						fContentProvider.removeElement(remove[i].toString());
+					}
+					if (remove.length > 0) {
+						fViewer.refresh();
+					}
+				}
+			}
+		});
+		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
+		data.horizontalSpan = 1;
+		fRemoveButton.setLayoutData(data);
+
+		fViewer = viewer;
+		fContentProvider = new ContentProvider();
+		viewer.setContentProvider(fContentProvider);
+		viewer.setInput(this);
+		viewer.setComparator(new ViewerComparator(Collator.getInstance()));
 	}
 
 	protected void performDefaults() {
@@ -146,6 +271,10 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 			fIndentUsingTabs.setSelection(false);
 		}
 		fIndentationSize.setSelection(getModelPreferences().getDefaultInt(HTMLCorePreferenceNames.INDENTATION_SIZE));
+
+		// Inline elements
+		fContentProvider.restoreDefaults();
+		fViewer.refresh();
 	}
 
 	protected void initializeValues() {
@@ -209,6 +338,9 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		boolean result = super.performOk();
 
 		doSavePreferenceStore();
+
+		// Save values from inline elements
+		HTMLFormattingUtil.exportToPreferences(fContentProvider.fElements.toArray());
 
 		return result;
 	}
@@ -280,5 +412,111 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 			setErrorMessage(null);
 			setValid(true);
 		}
+	}
+
+	private static class HTMLElementDialog extends ElementListSelectionDialog {
+		public HTMLElementDialog(Shell parent) {
+			super(parent,  new ILabelProvider() {
+				
+				public void removeListener(ILabelProviderListener listener) {
+				}
+				
+				public boolean isLabelProperty(Object element, String property) {
+					return false;
+				}
+				
+				public void dispose() {
+				}
+				
+				public void addListener(ILabelProviderListener listener) {
+				}
+				
+				public String getText(Object element) {
+					return element.toString();
+				}
+				
+				public Image getImage(Object element) {
+					return null;
+				}
+			});
+		}
+
+		public int open() {
+			final List list = new ArrayList();
+			IRunnableContext context = PlatformUI.getWorkbench().getProgressService();
+			IRunnableWithProgress runnable= new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					if (monitor == null) {
+						monitor = new NullProgressMonitor();
+					}
+					monitor.beginTask("Searching for known elements", 1); //$NON-NLS-1$
+					try {
+						if (monitor.isCanceled()) {
+							throw new InterruptedException();
+						}
+						CMNamedNodeMap map = HTMLCMDocumentFactory.getCMDocument(CMDocType.HTML5_DOC_TYPE).getElements();
+						Iterator it = map.iterator();
+						while (it.hasNext()) {
+							CMNode node = (CMNode) it.next();
+							if (!node.getNodeName().startsWith("SSI:")) { //$NON-NLS-1$
+								list.add(node.getNodeName().toLowerCase(Locale.US));
+							}
+							monitor.worked(1);
+						}
+					}
+					finally {
+						monitor.done();
+					}
+				}
+			};
+			try {
+				context.run(true, true, runnable);
+			}
+			catch (InvocationTargetException e) {
+				return CANCEL;
+			}
+			catch (InterruptedException e) {
+				return CANCEL;
+			}
+			setElements(list.toArray());
+			return super.open();
+		}
+	}
+
+	private class ContentProvider implements IStructuredContentProvider {
+
+		private List fElements;
+
+		public ContentProvider() {
+			Object[] elements = HTMLFormattingUtil.getInlineElements();
+			fElements = new ArrayList(elements.length);
+			Collections.addAll(fElements, elements);
+		}
+
+		public void dispose() {
+		}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
+
+		public void addElement(String name) {
+			if (!fElements.contains(name))
+				fElements.add(name);
+		}
+
+		public void removeElement(String name) {
+			fElements.remove(name);
+		}
+
+		public Object[] getElements(Object inputElement) {
+			return fElements.toArray();
+		}
+
+		public void restoreDefaults() {
+			Object[] elements = HTMLFormattingUtil.getDefaultInlineElements();
+			fElements = new ArrayList(elements.length);
+			Collections.addAll(fElements, elements);
+		}
+		
 	}
 }

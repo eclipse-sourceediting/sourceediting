@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Genuitec - fix for bug #203252
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.format;
 
@@ -37,9 +38,16 @@ import org.w3c.dom.Text;
 public class HTMLFormatter implements IStructuredFormatter {
 
 	private static final String HTML_NAME = "html";//$NON-NLS-1$
+	private static final String HEAD_NAME = "head"; //$NON-NLS-1$
 	private static final String BODY_NAME = "BODY";//$NON-NLS-1$
 	// hidden jsp logic that should be removed when jsp formatter is created
 	private static final String JSP = "jsp";//$NON-NLS-1$
+
+	private HTMLFormattingUtil formattingUtil;
+
+	public HTMLFormatter() {
+		formattingUtil = new HTMLFormattingUtil();
+	}
 
 	/**
 	 */
@@ -164,6 +172,11 @@ public class HTMLFormatter implements IStructuredFormatter {
 			if (decl != null) {
 				if (decl.getContentType() == CMElementDeclaration.ELEMENT)
 					return true;
+                // causes all closing tags to wrap to a new line
+                boolean allowsText = decl.getContentType() == CMElementDeclaration.MIXED
+                        || decl.getContentType() == CMElementDeclaration.PCDATA;
+                if (allowsNewlineAfter(allowsText, node, element))
+                    return true;
 				String tagName = element.getTagName();
 				// special for direct children under BODY
 				if (tagName != null && tagName.equalsIgnoreCase(BODY_NAME))
@@ -271,19 +284,12 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 			CMElementDeclaration decl = getElementDeclaration(element);
 			if (decl != null) {
-				if (decl.getContentType() == CMElementDeclaration.ELEMENT)
-					return true;
-				String tagName = element.getTagName();
-				// special for direct children under BODY
-				if (tagName != null && tagName.equalsIgnoreCase(BODY_NAME))
-					return true;
+			    return allowNewlineBefore(node, element);
 			}
 		}
 
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
-			CMElementDeclaration decl = getElementDeclaration((Element) node);
-			if (canInsertBreakBefore(decl))
-				return true;
+			return true;
 		}
 		if (prev != null && prev.getNodeType() == Node.ELEMENT_NODE) {
 			CMElementDeclaration decl = getElementDeclaration((Element) prev);
@@ -429,10 +435,15 @@ public class HTMLFormatter implements IStructuredFormatter {
 					}
 					continue;
 				}
+				else {
+					String localName = element.getLocalName();
+					if (HTML_NAME.equalsIgnoreCase(localName) || HEAD_NAME.equalsIgnoreCase(localName))
+						break;
+				}
 
 				CMElementDeclaration decl = getElementDeclaration(element);
 				if (decl != null && decl.supports(HTMLCMProperties.SHOULD_INDENT_CHILD_SOURCE)) {
-					boolean shouldIndent = ((Boolean) decl.getProperty(HTMLCMProperties.SHOULD_INDENT_CHILD_SOURCE)).booleanValue();
+					boolean shouldIndent = isIdentable(node, parent); 
 					if (shouldIndent)
 						buffer.append(indent);
 				}
@@ -746,4 +757,68 @@ public class HTMLFormatter implements IStructuredFormatter {
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 		fProgressMonitor = progressMonitor;
 	}
+
+    /* Check to see if current text Node is a child of an inline element. */
+    public boolean isInlinableTextNode(Node theNode, Element theParentElement) {
+        return formattingUtil.isInline(theParentElement) && 
+               theNode.getNodeType() == Node.TEXT_NODE;
+    }
+    
+    public boolean allowsNewlineAfter(boolean theBool, Node theNode, Element theParentElement) {
+        boolean result = theBool;
+        if ((theNode.getNodeType() == Node.TEXT_NODE) && formattingUtil.isInline(theParentElement)) {
+            result = false;
+        } else if (theNode.getNodeType() == Node.ELEMENT_NODE
+                && formattingUtil.isInline(theNode.getNextSibling())) {
+            result = false;
+        }
+        else if (theNode.getNodeType() == Node.TEXT_NODE) {
+        	Node next = theNode.getNextSibling();
+        	if (next != null && formattingUtil.isInline(next)) {
+        		result = false;
+        	}
+        }
+        return result;
+    }
+
+    public boolean allowNewlineBefore(Node theNode) {
+        if (theNode.getNodeType() != Node.TEXT_NODE &&
+            theNode.getNodeType() != Node.ELEMENT_NODE) return false;
+        return (formattingUtil.isInline(theNode.getParentNode()) ||
+                        formattingUtil.isInline(theNode.getPreviousSibling()));        
+    }
+    
+    public boolean allowNewlineBefore(Node theNode, Element theParentElement) {
+        boolean result = true;
+        /* The calling method canInsertBreakBefore is checking if you can 
+         * insert a line break after the text node in the parentElement.  We 
+         * need to check for the case with inline element because we don't want to 
+         * break before the closing </tag> */
+        if (isInlinableTextNode(theNode, theParentElement)) {
+            result = false;
+        /* Check to see if we need to not break the line because we are
+         * a child of a inline element or a next sibling to an inline element*/
+        } else if (allowNewlineBefore(theNode)) {
+            result = false;
+        }
+        return result;
+    }
+
+    public boolean isIdentable(Node theNode, Node theParent) {
+        boolean result = true;
+        /* The first 2 cases where we don't want to break/indent or if the
+         * node is a inlineText ELement or if we should skip it before its parent
+         * is an inlineText element.  
+         * The last check is to make sure that the parent is actually the parent
+         * of the node.  This method is called when the formatter is formatting
+         * the startTag and the wrap margin causes attributes to be indents on
+         * mulitple lines.  In this case where the parentNode doesn't match
+         * theParent argument, we can allow the indent. */
+        if (formattingUtil.isInline(theNode) && 
+        		formattingUtil.shouldSkipIndentForNode(theNode) &&
+                theParent == theNode.getParentNode()) {
+            result = false;
+        }
+        return result;
+    }
 }

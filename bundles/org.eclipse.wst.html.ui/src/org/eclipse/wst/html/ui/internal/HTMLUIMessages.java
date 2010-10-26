@@ -66,14 +66,18 @@ public class HTMLUIMessages extends NLS {
 	public static String ToggleComment_label; // resource bundle
 	public static String ToggleComment_tooltip; // resource bundle
 	public static String ToggleComment_description; // resource bundle
+	public static String Add_inline;
 	public static String AddBlockComment_label; // resource bundle
 	public static String AddBlockComment_tooltip; // resource bundle
 	public static String AddBlockComment_description; // resource bundle
+	public static String Remove_inline;
 	public static String RemoveBlockComment_label; // resource bundle
 	public static String RemoveBlockComment_tooltip; // resource bundle
 	public static String RemoveBlockComment_description; // resource bundle
 	public static String FindOccurrences_label;	// resource bundle
 	public static String Creating_files;
+	public static String Elements_Dialog_message;
+	public static String Elements_Dialog_title;
 	public static String Encoding_desc;
 	public static String UI_Description_of_role_of_following_DOCTYPE;
 	public static String UI_Default_HTML_DOCTYPE_ID___1;
@@ -96,6 +100,7 @@ public class HTMLUIMessages extends NLS {
 	public static String Indent_using_spaces;
 	public static String Indentation_size;
 	public static String Indentation_size_tip;
+	public static String Inline_elements_table_label;
 	public static String Clear_all_blank_lines_UI_;
 	public static String Preferred_markup_case_UI_;
 	public static String Tag_names__UI_;
