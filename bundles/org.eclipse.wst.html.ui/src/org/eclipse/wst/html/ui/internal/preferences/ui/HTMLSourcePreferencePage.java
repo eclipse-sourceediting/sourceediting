@@ -12,7 +12,7 @@ package org.eclipse.wst.html.ui.internal.preferences.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -488,9 +488,7 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		private List fElements;
 
 		public ContentProvider() {
-			Object[] elements = HTMLFormattingUtil.getInlineElements();
-			fElements = new ArrayList(elements.length);
-			Collections.addAll(fElements, elements);
+			fElements = new ArrayList(Arrays.asList(HTMLFormattingUtil.getInlineElements()));
 		}
 
 		public void dispose() {
@@ -513,9 +511,7 @@ public class HTMLSourcePreferencePage extends AbstractPreferencePage {
 		}
 
 		public void restoreDefaults() {
-			Object[] elements = HTMLFormattingUtil.getDefaultInlineElements();
-			fElements = new ArrayList(elements.length);
-			Collections.addAll(fElements, elements);
+			fElements = new ArrayList(Arrays.asList(HTMLFormattingUtil.getDefaultInlineElements()));
 		}
 		
 	}
