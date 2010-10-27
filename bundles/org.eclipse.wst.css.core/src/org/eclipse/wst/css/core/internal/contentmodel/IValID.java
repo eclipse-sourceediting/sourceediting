@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -116,6 +116,7 @@ public interface IValID {
 	public final static String V_INFOBACKGROUND = "InfoBackground"; //$NON-NLS-1$
 	public final static String V_INFOTEXT = "InfoText"; //$NON-NLS-1$
 	public final static String V_INLINE = "inline"; //$NON-NLS-1$
+	public final static String V_INLINE_BLOCK = "inline-block"; //$NON-NLS-1$
 	public final static String V_INLINE_TABLE = "inline-table"; //$NON-NLS-1$
 	public final static String V_INSET = "inset"; //$NON-NLS-1$
 	public final static String V_INSIDE = "inside"; //$NON-NLS-1$
@@ -170,12 +171,16 @@ public interface IValID {
 	public final static String V_OLIVE = "olive"; //$NON-NLS-1$
 	public final static String V_ONCE = "once"; //$NON-NLS-1$
 	public final static String V_OPEN_QUOTE = "open-quote"; //$NON-NLS-1$
+	public final static String V_ORANGE = "orange"; //$NON-NLS-1$
 	public final static String V_OUTSET = "outset"; //$NON-NLS-1$
 	public final static String V_OUTSIDE = "outside"; //$NON-NLS-1$
 	public final static String V_OVERLINE = "overline"; //$NON-NLS-1$
 	public final static String V_POINTER = "pointer"; //$NON-NLS-1$
 	public final static String V_PORTRAIT = "portrait"; //$NON-NLS-1$
 	public final static String V_PRE = "pre"; //$NON-NLS-1$
+	public final static String V_PRE_LINE = "pre-line"; //$NON-NLS-1$
+	public final static String V_PRE_WRAP = "pre-wrap"; //$NON-NLS-1$
+	public final static String V_PROGRESS = "progress"; //$NON-NLS-1$
 	public final static String V_PURPLE = "purple"; //$NON-NLS-1$
 	public final static String V_RED = "red"; //$NON-NLS-1$
 	public final static String V_RELATIVE = "relative"; //$NON-NLS-1$

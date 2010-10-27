@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -389,6 +389,8 @@ public abstract class PropCMNode {
 		prop.appendChild(IValID.V_CLOSE_QUOTE);
 		prop.appendChild(IValID.V_NO_OPEN_QUOTE);
 		prop.appendChild(IValID.V_NO_CLOSE_QUOTE);
+		prop.appendChild(IValID.V_NONE);
+		prop.appendChild(IValID.V_NORMAL);
 		prop.setMaxValueCount(-1); // infinite
 		prop.appendMediaGroup(IMediaGroupID.M_ALL);
 
@@ -434,6 +436,7 @@ public abstract class PropCMNode {
 		prop.appendChild(IValID.V_CROSSHAIR);
 		prop.appendChild(IValID.V_DEFAULT);
 		prop.appendChild(IValID.V_POINTER);
+		prop.appendChild(IValID.V_PROGRESS);
 		prop.appendChild(IValID.V_MOVE);
 		prop.appendChild(IValID.V_E_RESIZE);
 		prop.appendChild(IValID.V_NE_RESIZE);
@@ -459,6 +462,7 @@ public abstract class PropCMNode {
 		// display
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_DISPLAY);
 		prop.appendChild(IValID.V_INLINE);
+		prop.appendChild(IValID.V_INLINE_BLOCK);
 		prop.appendChild(IValID.V_BLOCK);
 		prop.appendChild(IValID.V_LIST_ITEM);
 		prop.appendChild(IValID.V_RUN_IN);
@@ -1059,6 +1063,8 @@ public abstract class PropCMNode {
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_WHITE_SPACE);
 		prop.appendChild(IValID.V_NORMAL);
 		prop.appendChild(IValID.V_PRE);
+		prop.appendChild(IValID.V_PRE_LINE);
+		prop.appendChild(IValID.V_PRE_WRAP);
 		prop.appendChild(IValID.V_NOWRAP);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
@@ -1272,6 +1278,7 @@ public abstract class PropCMNode {
 		cont.appendChild(IValID.V_MAROON);
 		cont.appendChild(IValID.V_NAVY);
 		cont.appendChild(IValID.V_OLIVE);
+		cont.appendChild(IValID.V_ORANGE);
 		cont.appendChild(IValID.V_PURPLE);
 		cont.appendChild(IValID.V_RED);
 		cont.appendChild(IValID.V_SILVER);
