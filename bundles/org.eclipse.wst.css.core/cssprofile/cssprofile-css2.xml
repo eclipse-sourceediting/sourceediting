@@ -489,6 +489,8 @@
 		<function name="attr"/>
 		<keyword name="open-quote"/>
 		<keyword name="close-quote"/>
+		<keyword name="none"/>
+		<keyword name="normal"/>
 		<keyword name="no-open-quote"/>
 		<keyword name="no-close-quote"/>
 		<keyword name="inherit"/>
@@ -532,6 +534,7 @@
 		<keyword name="crosshair"/>
 		<keyword name="default"/>
 		<keyword name="pointer"/>
+		<keyword name="progress"/>
 		<keyword name="move"/>
 		<keyword name="e-resize"/>
 		<keyword name="ne-resize"/>
@@ -556,6 +559,7 @@
 	<property-def name="display"
 		inherited="no" mediagroup="all" category="visual">
 		<keyword name="inline"/>
+		<keyword name="inline-block"/>
 		<keyword name="block"/>
 		<keyword name="list-item"/>
 		<keyword name="run-in"/>
@@ -1129,6 +1133,8 @@
 		inherited="yes" mediagroup="visual" category="text">
 		<keyword name="normal"/>
 		<keyword name="pre"/>
+		<keyword name="pre-line"/>
+		<keyword name="pre-wrap"/>
 		<keyword name="nowrap"/>
 		<keyword name="inherit"/>
 	</property-def>
@@ -1308,6 +1314,7 @@
 		<keyword name="maroon"/>
 		<keyword name="navy"/>
 		<keyword name="olive"/>
+		<keyword name="orange"/>
 		<keyword name="purple"/>
 		<keyword name="red"/>
 		<keyword name="silver"/>
@@ -1826,6 +1833,9 @@
     <keyword-def name="inline">
         <keyword-value>inline</keyword-value>
     </keyword-def>
+    <keyword-def name="inline-block">
+        <keyword-value>inline-block</keyword-value>
+    </keyword-def>
     <keyword-def name="inline-table">
         <keyword-value>inline-table</keyword-value>
     </keyword-def>
@@ -1988,6 +1998,9 @@
     <keyword-def name="open-quote">
         <keyword-value>open-quote</keyword-value>
     </keyword-def>
+    <keyword-def name="orange">
+        <keyword-value>orange</keyword-value>
+    </keyword-def>
     <keyword-def name="outset">
         <keyword-value>outset</keyword-value>
     </keyword-def>
@@ -2005,6 +2018,15 @@
     </keyword-def>
     <keyword-def name="pre">
         <keyword-value>pre</keyword-value>
+    </keyword-def>
+    <keyword-def name="pre-line">
+        <keyword-value>pre-line</keyword-value>
+    </keyword-def>
+    <keyword-def name="pre-wrap">
+        <keyword-value>pre-wrap</keyword-value>
+    </keyword-def>
+    <keyword-def name="progress">
+        <keyword-value>progress</keyword-value>
     </keyword-def>
     <keyword-def name="purple">
         <keyword-value>purple</keyword-value>
