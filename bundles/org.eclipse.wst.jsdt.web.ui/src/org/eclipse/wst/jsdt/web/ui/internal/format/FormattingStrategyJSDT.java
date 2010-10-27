@@ -37,6 +37,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.formatter.DefaultCodeFormatter;
+import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
@@ -44,6 +45,7 @@ import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslator;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -57,7 +59,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 */
 public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 	/** matches on //--> at end of script region */
-	private static final Pattern END_PATTERN = Pattern.compile("((//.*-->\\s*)\\z)");
+	private static final Pattern END_PATTERN = Pattern.compile("((//.*-->\\s*)\\z)"); //$NON-NLS-1$
 	
 	private static final int regionStartIndentLevel = 1;
 	/** Documents to be formatted by this strategy */
@@ -97,7 +99,21 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		super.format();
 		final IStructuredDocument document = (IStructuredDocument) fDocuments.removeFirst();
 		final TypedPosition partition = (TypedPosition) fPartitions.removeFirst();
+		
 		if (document != null) {
+			//calculate the indent of the leading <script> tag because we need to add that indent level to the JS indent level
+			IStructuredDocumentRegion scriptTagStartRegion = document.getRegionAtCharacterOffset(partition.offset-1);
+			String scriptRegionIndent = ""; //$NON-NLS-1$
+			if(scriptTagStartRegion != null) {
+				try {
+					int scriptRegionIndentLevel = getIndentOfLine(document,document.getLineOfOffset(scriptTagStartRegion.getStartOffset())).length();
+					scriptRegionIndent = getIndentationString(getPreferences(), scriptRegionIndentLevel);
+					this.startIndentLevel += scriptRegionIndentLevel;
+				} catch (BadLocationException e) {
+					Logger.logException("Could not calculate starting indent of the script region, using 0", e);//$NON-NLS-1$
+				}
+			}
+		
 			String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 			try {
 				//get the JS text from the document (not translated)
@@ -105,21 +121,21 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 				
 				//deal with getting the JS text and unwrapping it from any <!-- //--> statements
 				String preText = "";
-				String postText = lineDelim;
+				String postText = lineDelim + scriptRegionIndent;
 
 				//find start comment tag
-				Pattern startPattern = Pattern.compile("(\\A(\\s*<!--.*(" + lineDelim + ")?))");
+				Pattern startPattern = Pattern.compile("(\\A(\\s*<!--.*(" + lineDelim + ")?))"); //$NON-NLS-1$
 				Matcher matcher = startPattern.matcher(jsTextNotTranslated);
 				if(matcher.find()) {
-					jsTextNotTranslated = matcher.replaceFirst("");
-					preText = lineDelim + matcher.group().trim();
+					jsTextNotTranslated = matcher.replaceFirst(""); //$NON-NLS-1$
+					preText = lineDelim + scriptRegionIndent + matcher.group().trim();
 				}
 				
 				//find end tag
 				matcher = END_PATTERN.matcher(jsTextNotTranslated);
 				if(matcher.find()) {
-					jsTextNotTranslated = matcher.replaceFirst("");
-					postText = lineDelim + matcher.group().trim() + lineDelim;
+					jsTextNotTranslated = matcher.replaceFirst(""); //$NON-NLS-1$
+					postText = lineDelim + scriptRegionIndent + matcher.group().trim() + postText;
 				}
 				
 				//replace the text in the document with the none-translated JS text but without HTML leading and trailing comments
@@ -239,4 +255,50 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		}
 		return tran;
 	}
+	
+	/**
+	 * 
+	 * @param d
+	 * @param line
+	 * @return
+	 * @throws BadLocationException
+	 * 
+	 * @see org.eclipse.wst.jsdt.internal.ui.text.java.JavaAutoIndentStrategy#getIndentOfLine
+	 */
+	private String getIndentOfLine(IDocument d, int line) throws BadLocationException {
+		if (line > -1) {
+			int start= d.getLineOffset(line);
+			int end= start + d.getLineLength(line) - 1;
+			int whiteEnd= findEndOfWhiteSpace(d, start, end);
+			return d.get(start, whiteEnd - start);
+		} else {
+			return ""; //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * Returns the first offset greater than <code>offset</code> and smaller than
+	 * <code>end</code> whose character is not a space or tab character. If no such
+	 * offset is found, <code>end</code> is returned.
+	 *
+	 * @param document the document to search in
+	 * @param offset the offset at which searching start
+	 * @param end the offset at which searching stops
+	 * @return the offset in the specified range whose character is not a space or tab
+	 * @exception BadLocationException if position is an invalid range in the given document
+	 * 
+	 * @see org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy#findEndOfWhiteSpace
+	 */
+	private int findEndOfWhiteSpace(IDocument document, int offset, int end) throws BadLocationException {
+		while (offset < end) {
+			char c= document.getChar(offset);
+			if (c != ' ' && c != '\t') {
+				return offset;
+			}
+			offset++;
+		}
+		return end;
+	}
+	
+
 }
