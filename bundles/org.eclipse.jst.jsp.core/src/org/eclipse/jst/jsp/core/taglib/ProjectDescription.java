@@ -104,6 +104,7 @@ import com.ibm.icu.util.StringTokenizer;
  *
  */
 class ProjectDescription {
+	static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	class BuildPathJob extends Job {
 		public BuildPathJob() {
 			super("Updating Tag Library Index");
@@ -231,11 +232,27 @@ class ProjectDescription {
 		}
 	}
 
-	static class JarRecord implements IJarRecord {
+	static class JarRecord implements IJarRecord {		
+		/**
+		 * Whether this jar includes an entry name "META-INF/taglib.tld"
+		 */
 		boolean has11TLD;
 		TaglibInfo info;
 
+		/**
+		 * Whether this record is in a library that was "exported" on the Java
+		 * Build Path. May no longer be accurate since the library may be used
+		 * in multiple projects.
+		 * 
+		 *  @deprecated - no current use, might not be worth preserving
+		 */
 		boolean isExported = true;
+		
+		/**
+		 * Whether this record was created based on a mapping within a
+		 * deployment descriptor. May also be innaccurate if the jar is used
+		 * in multiple projects.
+		 */
 		boolean isMappedInWebXML;
 		boolean isConsistent = false;
 		IPath location;
@@ -345,14 +362,14 @@ class ProjectDescription {
 	 */
 	static class TaglibInfo implements ITaglibDescriptor {
 		// extract only when asked?
-		String description = "";
-		String displayName = "";
-		String jspVersion = "";
-		String largeIcon = "";
-		String shortName = "";
-		String smallIcon = "";
-		String tlibVersion = "";
-		String uri = "";
+		String description = EMPTY_STRING;
+		String displayName = EMPTY_STRING;
+		String jspVersion = EMPTY_STRING;
+		String largeIcon = EMPTY_STRING;
+		String shortName = EMPTY_STRING;
+		String smallIcon = EMPTY_STRING;
+		String tlibVersion = EMPTY_STRING;
+		String uri = EMPTY_STRING;
 
 		public TaglibInfo() {
 			super();
@@ -446,6 +463,11 @@ class ProjectDescription {
 	static class URLRecord implements IURLRecord {
 		String baseLocation;
 		TaglibInfo info;
+		/**
+		 * XXX: Possibly a problem if the owning jar is shared across
+		 * projects--this value helps determine visibility during enumeration
+		 * and resolution and may not be correct.
+		 */
 		boolean isExported = true;
 		URL url;
 
@@ -485,7 +507,7 @@ class ProjectDescription {
 		 */
 		public String getURI() {
 			if (info == null)
-				return ""; //$NON-NLS-1$
+				return EMPTY_STRING; //$NON-NLS-1$
 			return info.uri;
 		}
 
@@ -550,6 +572,10 @@ class ProjectDescription {
 	}
 	
 	private class TaglibSorter extends Sorter {
+		TaglibSorter() {
+			super();
+		}
+		
 		Collator collator = Collator.getInstance();
 
 		public boolean compare(Object elementOne, Object elementTwo) {
@@ -574,7 +600,7 @@ class ProjectDescription {
 				case ITaglibRecord.URL:
 					return ((URLRecord) record).getBaseLocation();
 				default:
-					return ""; //$NON-NLS-1$
+					return EMPTY_STRING; //$NON-NLS-1$
 			}
 		}
 	}
@@ -590,6 +616,7 @@ class ProjectDescription {
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
 	private static final char[] TLD = { 't', 'T', 'l', 'L', 'd', 'D'} ;
+	
 	/**
 	 * Notes that the build path information is stale. Some operations can now
 	 * be skipped until a resolve/getAvailable call is made.
@@ -643,9 +670,9 @@ class ProjectDescription {
 	IResourceDeltaVisitor fVisitor;
 	Hashtable fWebXMLReferences;
 	
-	private Map fPackageFragmentRootsAdded = new HashMap();
-	private Map fPackageFragmentRootsChanged = new HashMap();
-	private Map fPackageFragmentRootsRemoved = new HashMap();
+	Map fPackageFragmentRootsAdded = new HashMap();
+	Map fPackageFragmentRootsChanged = new HashMap();
+	Map fPackageFragmentRootsRemoved = new HashMap();
 
 	ILock LOCK = Job.getJobManager().newLock();
 
@@ -655,7 +682,7 @@ class ProjectDescription {
 	private BuildPathJob fBuildPathJob = new BuildPathJob();
 
 	/** Shared JAR records between projects */
-	private static final Map fJarRecords = new Hashtable();
+	private static final Map fSharedJarRecords = new Hashtable();
 
 	ProjectDescription(IProject project, String saveStateFile) {
 		super();
@@ -893,14 +920,14 @@ class ProjectDescription {
 	}
 
 	private JarRecord createJARRecord(String fileLocation) {
-		synchronized (fJarRecords) {
-			JarRecord record = (JarRecord) fJarRecords.get(fileLocation);
+		synchronized (fSharedJarRecords) {
+			JarRecord record = (JarRecord) fSharedJarRecords.get(fileLocation);
 			if (record == null) {
 				record = new JarRecord();
 				record.info = new TaglibInfo();
 				record.location = new Path(fileLocation);
 				record.urlRecords = new ArrayList();
-				fJarRecords.put(fileLocation, record);
+				fSharedJarRecords.put(fileLocation, record);
 			}
 			return record;
 		}
@@ -934,10 +961,10 @@ class ProjectDescription {
 		}
 		// 8.4.3
 		record.info.tlibVersion = "1.0";
-		record.info.description = "";
-		record.info.displayName = "";
-		record.info.smallIcon = "";
-		record.info.largeIcon = "";
+		record.info.description = EMPTY_STRING;
+		record.info.displayName = EMPTY_STRING;
+		record.info.smallIcon = EMPTY_STRING;
+		record.info.largeIcon = EMPTY_STRING;
 
 		try {
 			IResource[] tagfiles = tagdir.members();
@@ -1671,7 +1698,7 @@ class ProjectDescription {
 				return getTextContents(child);
 			}
 		}
-		return ""; //$NON-NLS-1$
+		return EMPTY_STRING; //$NON-NLS-1$
 	}
 
 	void removeJAR(IResource jar) {
@@ -2175,12 +2202,18 @@ class ProjectDescription {
 			Logger.log(Logger.INFO, "marking build path information for " + fProject.getName() + " as dirty"); //$NON-NLS-1$
 	}
 
+	/**
+	 * Update records for a library on the project build path
+	 * @param libraryLocation
+	 * @param deltaKind
+	 * @param isExported
+	 */
 	void updateClasspathLibrary(String libraryLocation, int deltaKind, boolean isExported) {
 		JarRecord libraryRecord = null;
 		if (deltaKind == ITaglibIndexDelta.REMOVED || deltaKind == ITaglibIndexDelta.CHANGED) {
 			libraryRecord = (JarRecord) fClasspathJars.remove(libraryLocation);
-			synchronized (fJarRecords) {
-				fJarRecords.remove(libraryLocation);
+			synchronized (fSharedJarRecords) {
+				fSharedJarRecords.remove(libraryLocation);
 			}
 			if (libraryRecord != null) {
 				IURLRecord[] urlRecords = (IURLRecord[]) libraryRecord.urlRecords.toArray(new IURLRecord[0]);
@@ -2196,8 +2229,22 @@ class ProjectDescription {
 			// XXX: runs on folders as well?!
 			libraryRecord = createJARRecord(libraryLocation);
 			synchronized (libraryRecord) {
-				if (libraryRecord.isConsistent)
+				if (libraryRecord.isConsistent) {
+					// Library loaded by another Project Description, initialize our references from the existing
+					fClasspathJars.put(libraryLocation, libraryRecord);
+					Iterator records = libraryRecord.urlRecords.iterator();
+					while (records.hasNext()) {
+						URLRecord record = (URLRecord)records.next();
+						int urlDeltaKind = ITaglibIndexDelta.ADDED;
+						if (fClasspathReferences.containsKey(record.getURI())) {
+							urlDeltaKind = ITaglibIndexDelta.CHANGED;
+						}
+						fClasspathReferences.put(record.getURI(), record);
+						TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, urlDeltaKind));
+						fClasspathReferences.put(record.info.uri, record);
+					}
 					return;
+				}
 				libraryRecord.isExported = isExported;
 				fClasspathJars.put(libraryLocation, libraryRecord);
 	
@@ -2482,7 +2529,7 @@ class ProjectDescription {
 			document = provider.getDocument(false);
 		}
 		catch (CoreException e) {
-			Logger.log(Logger.ERROR_DEBUG, "", e); //$NON-NLS-1$
+			Logger.log(Logger.ERROR_DEBUG, EMPTY_STRING, e); //$NON-NLS-1$
 		}
 		finally {
 			if (webxmlContents != null)
