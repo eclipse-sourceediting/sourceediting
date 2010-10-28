@@ -2196,8 +2196,22 @@ class ProjectDescription {
 			// XXX: runs on folders as well?!
 			libraryRecord = createJARRecord(libraryLocation);
 			synchronized (libraryRecord) {
-				if (libraryRecord.isConsistent)
+				if (libraryRecord.isConsistent) {
+					// Library loaded by another Project Description, initialize our references from the existing
+					fClasspathJars.put(libraryLocation, libraryRecord);
+					Iterator records = libraryRecord.urlRecords.iterator();
+					while (records.hasNext()) {
+						URLRecord record = (URLRecord)records.next();
+						int urlDeltaKind = ITaglibIndexDelta.ADDED;
+						if (fClasspathReferences.containsKey(record.getURI())) {
+							urlDeltaKind = ITaglibIndexDelta.CHANGED;
+						}
+						fClasspathReferences.put(record.getURI(), record);
+						TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, urlDeltaKind));
+						fClasspathReferences.put(record.info.uri, record);
+					}
 					return;
+				}
 				libraryRecord.isExported = isExported;
 				fClasspathJars.put(libraryLocation, libraryRecord);
 	
