@@ -133,7 +133,7 @@ public class BugFixesTest extends BaseTestCase
           List<XSDTypeDefinition> list = XSDImpl.findTypesDerivedFrom(complexType);
           int size = list.size();
           // assertTrue(size == 1);  // if we got something back, then great, there was no out of stack error
-          assertTrue(size >= 0);
+          assertTrue("no types found in XSD", size >= 0);
           // Because of bug 203048, there is a change in behaviour to redefined types.  
           // The complex type named speaker is no longer circular.   In terms of this junit, the value returned is not relevant
           // since we just want some length back (i.e. there was no crash from a stack overflow).
@@ -141,7 +141,7 @@ public class BugFixesTest extends BaseTestCase
         }
       }
     }
-    assertTrue(foundDesiredType);  // if we didn't even find the complex type, then something terrible went wrong
+    assertTrue("type \"basic.event.handler\" not found in XSD", foundDesiredType);  // if we didn't even find the complex type, then something terrible went wrong
     
     // Second way to test via content model
     
@@ -170,7 +170,7 @@ public class BugFixesTest extends BaseTestCase
         break;
       }
     }
-    assertTrue(foundDesiredElement);  // if we didn't even find the noinput element, then something terrible went wrong
+    assertTrue("element \"noinput\"r not found in XSD", foundDesiredElement);  // if we didn't even find the noinput element, then something terrible went wrong
   }
   
   public void testXSDTypeWhitespaceFacets() {
