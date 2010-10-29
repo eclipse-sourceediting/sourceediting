@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,7 +77,7 @@ public class TestOfThreadLocalWithChanges extends TestCase {
 		long startTime = System.currentTimeMillis();
 		int start = 0;
 		int length = structuredDocument.getLength();
-		int nRegions = 0;
+//		int nRegions = 0;
 		// I made length "dynamic" after adding modification thread
 		for (int i = start; i < structuredDocument.getLength(); i++) {
 			int index = i;
@@ -87,7 +87,7 @@ public class TestOfThreadLocalWithChanges extends TestCase {
 			}
 			IStructuredDocumentRegion currentDocumentRegion = structuredDocument.getRegionAtCharacterOffset(index);
 			if (currentDocumentRegion != previousDocumentRegion) {
-				nRegions++;
+//				nRegions++;
 				previousDocumentRegion = currentDocumentRegion;
 			}
 			Thread.yield();
@@ -100,7 +100,7 @@ public class TestOfThreadLocalWithChanges extends TestCase {
 		}
 		long endTime = System.currentTimeMillis();
 		if (DEBUG_TEST_DETAIL) {
-			System.out.println("Thread: " + Thread.currentThread() + "   from " + length + " characters, found " + nRegions + " regions in " + (endTime - startTime) + " msecs.");
+			System.out.println("Thread: " + Thread.currentThread() + "   from " + length + " characters, found " + /*nRegions*/ "" + " regions in " + (endTime - startTime) + " msecs.");
 		}
 	}
 
