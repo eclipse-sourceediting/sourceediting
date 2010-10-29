@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class DTDParser extends DefaultHandler implements ContentHandler, DTDHandler, ErrorHandler, DeclHandler, LexicalHandler {
 	private String contentString = ""; //$NON-NLS-1$
-	private String declString = ""; //$NON-NLS-1$
+	//private String declString = ""; //$NON-NLS-1$
 
 	/* Canonical output. */
 	protected boolean canonical;
@@ -190,7 +190,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public void notationDecl(String name, String publicId, String systemId) throws SAXException {
 		startDeclaration(DeclNode.NOTATION);
-		declString = "<!NOTATION"; //$NON-NLS-1$
+		//declString = "<!NOTATION"; //$NON-NLS-1$
 		if (entityDepth == 1 || parsingExternalPEReference) {
 			String xs = " "; //$NON-NLS-1$
 			xs += name;
@@ -209,7 +209,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public void elementDecl(String name, String model) throws SAXException {
 		startDeclaration(DeclNode.ELEMENT);
-		declString = "<!ELEMENT"; //$NON-NLS-1$
+		//declString = "<!ELEMENT"; //$NON-NLS-1$
 
 		// KB: With early versions of Xerces 2.x, startEntity("[dtd]") used to
 		// be called before this method
@@ -225,7 +225,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws SAXException {
 		startDeclaration(DeclNode.ATTLIST);
-		declString = "<!ATTLIST"; //$NON-NLS-1$
+		//declString = "<!ATTLIST"; //$NON-NLS-1$
 
 		attributeString += " " + aName; //$NON-NLS-1$
 		if (type != null)
@@ -242,7 +242,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public void internalEntityDecl(String name, String value) throws SAXException {
 		startDeclaration(DeclNode.INTERNAL_ENTITY);
-		declString = "<!ENTITY"; //$NON-NLS-1$
+		//declString = "<!ENTITY"; //$NON-NLS-1$
 
 		if (entityDepth == 1 || parsingExternalPEReference) {
 			// build up a string: e.g. " % STRDOM "(#PCDATA)">"
@@ -266,7 +266,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public void externalEntityDecl(String name, String publicId, String systemId) throws SAXException {
 		startDeclaration(DeclNode.EXTERNAL_ENTITY);
-		declString = "<!ENTITY"; //$NON-NLS-1$
+		//declString = "<!ENTITY"; //$NON-NLS-1$
 
 		if (entityDepth == 1 || parsingExternalPEReference) {
 			// build up a string:
@@ -451,8 +451,8 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	/* Warning. */
 	public void warning(SAXParseException ex) {
-		String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
-		error += "[Warning    ] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$
+		/*String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
+		error += "[Warning    ] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$*/
 		setErrorInformation(ex, "warning"); //$NON-NLS-1$
 
 		parseCurrentDeclaration();
@@ -460,8 +460,8 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	/* Error. */
 	public void error(SAXParseException ex) {
-		String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
-		error += "[Error   ] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$
+		/*String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
+		error += "[Error   ] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$*/
 		setErrorInformation(ex, "error"); //$NON-NLS-1$
 
 		parseCurrentDeclaration();
@@ -469,15 +469,15 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	/* Fatal error. */
 	public void fatalError(SAXParseException ex) throws SAXException {
-		String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
-		error += "[Fatal Error] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$
+		/*String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
+		error += "[Fatal Error] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$*/
 		setErrorInformation(ex, "fatal"); //$NON-NLS-1$
 
 		parseCurrentDeclaration();
 	}
 
 	/* Returns a string of the location. */
-	private String getLocationString(SAXParseException ex) {
+	/*private String getLocationString(SAXParseException ex) {
 		StringBuffer str = new StringBuffer();
 
 		String systemId = ex.getSystemId();
@@ -494,7 +494,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 		return str.toString();
 
-	}
+	}*/
 
 	private void startDeclaration(int type) {
 		if (type == DeclNode.END_DTD || type == DeclNode.END_ENTITY_DTD || type == DeclNode.COMMENT || type == DeclNode.ERROR) {
@@ -504,7 +504,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		else {
 			currentDeclNode = new DeclNode(type);
 			contentString = ""; //$NON-NLS-1$
-			declString = ""; //$NON-NLS-1$
+			//declString = ""; //$NON-NLS-1$
 			expandedEntityValue = null;
 		}
 	}
@@ -638,13 +638,13 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	private boolean isDTDLoaded(String uri) {
 		boolean loaded = false;
-		String list = ""; //$NON-NLS-1$
+		//String list = ""; //$NON-NLS-1$
 		if (dtdList != null) {
 			Enumeration en = dtdList.elements();
 			while (en.hasMoreElements()) {
 				DTD dtd = (DTD) en.nextElement();
-				list += dtd.getName();
-				list += ","; //$NON-NLS-1$
+				//list += dtd.getName();
+				//list += ","; //$NON-NLS-1$
 				if (dtd.getName().equals(uri)) {
 					loaded = true;
 					break;

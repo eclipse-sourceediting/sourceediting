@@ -101,7 +101,7 @@ public class CSSHeadTokenizer {
   private int yy_markedPos;
 
   /** the textposition at the last state to be included in yytext */
-  private int yy_pushbackPos;
+  //private int yy_pushbackPos;
 
   /** the current text position in the buffer */
   private int yy_currentPos;
@@ -170,7 +170,7 @@ public class CSSHeadTokenizer {
   		yy_markedPos = 0;
 
   		/* the textposition at the last state to be included in yytext */
-  		yy_pushbackPos = 0;
+  		//yy_pushbackPos = 0;
 
   		/* the current text position in the buffer */
   		yy_currentPos = 0;
@@ -321,7 +321,7 @@ public class CSSHeadTokenizer {
       yy_endRead-= yy_startRead;
       yy_currentPos-= yy_startRead;
       yy_markedPos-= yy_startRead;
-      yy_pushbackPos-= yy_startRead;
+      //yy_pushbackPos-= yy_startRead;
       yy_startRead = 0;
     }
 

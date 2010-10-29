@@ -384,7 +384,7 @@ public class DTDTokenizer {
   private int yy_markedPos;
 
   /** the textposition at the last state to be included in yytext */
-  private int yy_pushbackPos;
+  //private int yy_pushbackPos;
 
   /** the current text position in the buffer */
   private int yy_currentPos;
@@ -518,7 +518,7 @@ public class DTDTokenizer {
       yy_endRead-= yy_startRead;
       yy_currentPos-= yy_startRead;
       yy_markedPos-= yy_startRead;
-      yy_pushbackPos-= yy_startRead;
+      //yy_pushbackPos-= yy_startRead;
       yy_startRead = 0;
     }
 
@@ -571,7 +571,7 @@ public class DTDTokenizer {
     yy_reader = reader;
     yy_atEOF  = false;
     yy_endRead = yy_startRead = 0;
-    yy_currentPos = yy_markedPos = yy_pushbackPos = 0;
+    yy_currentPos = yy_markedPos = 0;//yy_pushbackPos = 0;
     yyline = yychar = yycolumn = 0;
     yy_lexical_state = YYINITIAL;
   }

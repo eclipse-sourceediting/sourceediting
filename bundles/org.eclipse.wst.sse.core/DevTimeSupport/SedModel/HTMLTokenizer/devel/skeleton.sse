@@ -50,7 +50,7 @@
   private int yy_endRead;
 
   /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
+  // private int yyline;
 
   /** the number of characters up to the start of the matched text */
   private int yychar;

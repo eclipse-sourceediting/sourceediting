@@ -223,7 +223,7 @@ public final class XML10Names {
   private int zzMarkedPos;
 
   /** the textposition at the last state to be included in yytext */
-  private int zzPushbackPos;
+  //private int zzPushbackPos;
 
   /** the current text position in the buffer */
   private int zzCurrentPos;
@@ -338,7 +338,7 @@ public final class XML10Names {
       zzEndRead-= zzStartRead;
       zzCurrentPos-= zzStartRead;
       zzMarkedPos-= zzStartRead;
-      zzPushbackPos-= zzStartRead;
+      //zzPushbackPos-= zzStartRead;
       zzStartRead = 0;
     }
 
@@ -391,7 +391,7 @@ public final class XML10Names {
 //    zzAtBOL  = true;
     zzAtEOF  = false;
     zzEndRead = zzStartRead = 0;
-    zzCurrentPos = zzMarkedPos = zzPushbackPos = 0;
+    zzCurrentPos = zzMarkedPos = 0;//zzPushbackPos = 0;
 //    yyline = yychar = yycolumn = 0;
     zzLexicalState = YYINITIAL;
   }

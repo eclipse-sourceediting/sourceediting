@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 %function primGetNextToken
 %type String
 %char
-%line
 %unicode
 %caseless
 %pack
@@ -244,7 +243,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 		zzEndRead = 0;
 
 		/** number of newlines encountered up to the start of the matched text */
-		yyline = 0;
+		//yyline = 0;
 
 		/** the number of characters up to the start of the matched text */
 		yychar = 0;
@@ -253,12 +252,12 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 		 * the number of characters from the last newline up to the start of the 
 		 * matched text
 		 */
-		yycolumn = 0; 
+		//yycolumn = 0; 
 
 		/** 
 		 * yy_atBOL == true <=> the scanner is currently at the beginning of a line
 		 */
-		zzAtBOL = false;
+		//zzAtBOL = false;
 		
 		/** yy_atEOF == true <=> the scanner has returned a value for EOF */
 		zzAtEOF = false;

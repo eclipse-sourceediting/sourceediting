@@ -40,7 +40,7 @@
   private int yy_markedPos;
 
   /** the textposition at the last state to be included in yytext */
-  private int yy_pushbackPos;
+  //private int yy_pushbackPos;
 
   /** the current text position in the buffer */
   private int yy_currentPos;

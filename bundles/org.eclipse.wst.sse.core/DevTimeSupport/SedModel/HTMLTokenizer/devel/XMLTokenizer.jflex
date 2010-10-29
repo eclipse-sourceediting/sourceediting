@@ -412,7 +412,7 @@ public void reset(java.io.Reader in, int newOffset) {
 	yy_markedPos = 0;
 
 	/* the textposition at the last state to be included in yytext */
-	yy_pushbackPos = 0;
+	//yy_pushbackPos = 0;
 
 	/* the current text position in the buffer */
 	yy_currentPos = 0;
@@ -427,7 +427,7 @@ public void reset(java.io.Reader in, int newOffset) {
 	yy_endRead = 0;
 
 	/* number of newlines encountered up to the start of the matched text */
-	yyline = 0;
+	//yyline = 0;
 
 	/* the number of characters up to the start of the matched text */
 	yychar = 0;
@@ -489,7 +489,6 @@ private final String scanXMLCommentText() throws IOException {
 %function primGetNextToken
 %type String
 %char
-%line
 %unicode
 %pack
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -657,8 +657,8 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 				case AttNode.ID :
 					// check for duplicate ID attribute
 					if (hasIDAttribute(dtdattr)) {
-						String errMsg = DTDCoreMessages._ERROR_DUP_ID_ATTRIBUTE_1; //$NON-NLS-1$
-						errMsg += attdef.name + DTDCoreMessages._UI_ERRORPART_DUP_ID_ATTRIBUTE_2; //$NON-NLS-1$
+						/*String errMsg = DTDCoreMessages._ERROR_DUP_ID_ATTRIBUTE_1; //$NON-NLS-1$
+						errMsg += attdef.name + DTDCoreMessages._UI_ERRORPART_DUP_ID_ATTRIBUTE_2; //$NON-NLS-1$*/
 						// dtdattr.getDTDElement().getIElement().setDTDErrorMessage(errMsg);
 						// dtdattr.getDTDElement().getDTDFile().setParseError(true);
 						parseError = true;
@@ -731,10 +731,10 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 		if (defaultValue != null) {
 			if (attrType == AttNode.ENUMERATION || attrType == AttNode.NOTATION) {
 				if (!isDefaultEnumValueValid(attdef, defaultValue)) {
-					String typeString = (attrType == AttNode.ENUMERATION ? "enumeration" : "notation"); //$NON-NLS-1$ //$NON-NLS-2$
+					/*String typeString = (attrType == AttNode.ENUMERATION ? "enumeration" : "notation"); //$NON-NLS-1$ //$NON-NLS-2$
 					String errMsg = DTDCoreMessages._ERROR_INVALID_DEFAULT_ATTR_VALUE_1; //$NON-NLS-1$
 					errMsg += typeString + DTDCoreMessages._UI_ERRORPART_INVALID_DEFAULT_ATTR_VALUE_2; //$NON-NLS-1$
-					errMsg += attdef.name + "'"; //$NON-NLS-1$
+					errMsg += attdef.name + "'"; //$NON-NLS-1$*/
 
 					// dtdattr.getDTDElement().getIElement().setDTDErrorMessage(errMsg);
 					// dtdattr.getDTDElement().getDTDFile().setParseError(true);
