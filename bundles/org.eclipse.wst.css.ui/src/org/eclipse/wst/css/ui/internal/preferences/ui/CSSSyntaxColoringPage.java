@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -271,6 +271,11 @@ public final class CSSSyntaxColoringPage extends PreferencePage implements IWork
 		GridData gd = new GridData(SWT.BEGINNING, SWT.FILL, false, false);
 		fForegroundColor.setLayoutData(gd);
 		fForegroundColorEditor.setEnabled(false);
+		fForegroundColorEditor.getButton().getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			public void getName (final AccessibleEvent e) {
+				e.result = SSEUIMessages.Foreground_Color_Selector_Button;
+			}
+		});
 
 		fBackgroundLabel = createLabel(editControls, SSEUIMessages.Background_UI_);
 		((GridData) fBackgroundLabel.getLayoutData()).verticalAlignment = SWT.CENTER;
@@ -281,6 +286,11 @@ public final class CSSSyntaxColoringPage extends PreferencePage implements IWork
 		gd = new GridData(SWT.BEGINNING, SWT.FILL, false, false);
 		fBackgroundColor.setLayoutData(gd);
 		fBackgroundColorEditor.setEnabled(false);
+		fBackgroundColorEditor.getButton().getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			public void getName (final AccessibleEvent e) {
+				e.result = SSEUIMessages.Background_Color_Selector_Button;
+			}
+		});
 
 		fBold = createCheckbox(editControls, CSSUIMessages.SyntaxColoringPage_3);
 		fBold.setEnabled(false);

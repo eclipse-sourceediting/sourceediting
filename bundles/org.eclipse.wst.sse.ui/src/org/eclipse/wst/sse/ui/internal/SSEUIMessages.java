@@ -132,7 +132,9 @@ public class SSEUIMessages extends NLS {
 	public static String _4concat;
 	public static String Content_type__UI_;
 	public static String Foreground_UI_;
+	public static String Foreground_Color_Selector_Button;
 	public static String Background_UI_;
+	public static String Background_Color_Selector_Button;
 	public static String Bold_UI_;
 	public static String Italics_UI;
 	public static String Restore_Default_UI_;
