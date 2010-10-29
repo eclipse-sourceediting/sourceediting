@@ -108,15 +108,18 @@ public class BugFixesTest extends BaseTestCase
   @SuppressWarnings("unchecked")
   public void testStackOverflow()
   {
-    String vxmlSchemaURI = locateFileUsingCatalog("http://www.w3.org/TR/voicexml20/vxml.xsd");
+    String namespaceURI = "http://www.w3.org/TR/voicexml20/vxml.xsd";
+	String vxmlSchemaURI = locateFileUsingCatalog(namespaceURI);
     
     // See bug 206138
     
     // Two ways to test this.
     // First way. Call findTypesDerivedFrom from XSDImpl.
     
+    assertNotNull("unable to locate file for " + namespaceURI, vxmlSchemaURI);
+    assertTrue("unable to locate file for " + namespaceURI, vxmlSchemaURI.length() > 0);
     XSDSchema xsdSchema = XSDImpl.buildXSDModel(vxmlSchemaURI);
-    assertNotNull(xsdSchema);
+    assertNotNull("failed to build model for " + vxmlSchemaURI,xsdSchema);
     boolean foundDesiredType = false;
     for (Iterator<XSDTypeDefinition> types = xsdSchema.getTypeDefinitions().iterator(); types.hasNext(); )
     {
