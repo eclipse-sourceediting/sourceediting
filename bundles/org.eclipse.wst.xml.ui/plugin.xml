@@ -1127,8 +1127,8 @@
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.xml.ui.dependencies">
 			<or>
-				<with variable="activeEditorId">
-					<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"></equals>
+				<with variable="activeEditor">
+					<test property="org.eclipse.wst.xml.ui.editor" />
 				</with>
 				<with variable="activeContexts">
 					<iterate operator="or">
@@ -1138,12 +1138,12 @@
 			</or>
 		</definition>
 	</extension>
-	
+
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.xml.ui.grammar">
 			<or>
-				<with variable="activeEditorId">
-					<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"></equals>
+				<with variable="activeEditor">
+					<test property="org.eclipse.wst.xml.ui.editor" />
 				</with>
 				<with variable="activeContexts">
 					<iterate operator="or">
@@ -1154,6 +1154,16 @@
 		</definition>
 	</extension>
 	
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			class="org.eclipse.wst.xml.ui.internal.editor.XMLEditorTester"
+			id="org.eclipse.wst.xml.ui.internal.editor.XMLEditorTester"
+			namespace="org.eclipse.wst.xml.ui"
+			properties="editor"
+			type="org.eclipse.ui.IEditorPart">
+		</propertyTester>
+	</extension>
+
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.xml.ui.expand">
 			<or>
