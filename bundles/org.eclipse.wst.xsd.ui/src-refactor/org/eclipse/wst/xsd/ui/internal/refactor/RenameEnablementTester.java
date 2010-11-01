@@ -49,6 +49,10 @@ public class RenameEnablementTester extends RefactorEnablementTester
         {
           return false;
         }
+        if (!element.isGlobal())
+        {
+          return false;
+        }
       }
       if (selectedComponent instanceof XSDTypeDefinition)
       {
