@@ -31,6 +31,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 	private IntStack fStateStack = new IntStack();
 	private String valueText = null;
 	boolean foundContentTypeValue = false;
+	private boolean isXHTML;
 
 
 
@@ -99,7 +100,8 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
   		
   		hasMore = true;
   		hasCharsetAttr = false;
-  		
+  		isXHTML = false;
+
 		// its a little wasteful to "throw away" first char array generated
 		// by class init (via auto generated code), but we really do want
 		// a small buffer for our head parsers.
@@ -150,7 +152,9 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 		return new HeadParserToken(context, start, text);
 	}
 	
-
+    public boolean isXHTML() {
+       return isXHTML;
+    }
 %}
 
 %eof{
@@ -208,6 +212,9 @@ BeginAttributeValueUTF = {S_UTF}* \= {S_UTF}*
 	^ {S_UTF}* ({Z}<{Z}\?{Z}x{Z}m{Z}l{Z}){S_UTF}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
 	({Z}<{Z}M{Z}E{Z}T{Z}A{Z})       {yybegin(ST_META_TAG); return HTMLHeadTokenizerConstants.MetaTagStart;}
 	
+	// To determine if content is XHTML.Taken from JSPHeadTokenizer.
+    {Z}<{Z}\!{Z}D{Z}O{Z}C{Z}T{Z}Y{Z}P{Z}E{Z} {S_UTF}* {Z}h{Z}t{Z}m{Z}l{Z} {S_UTF}* {Z}P{Z}U{Z}B{Z}L{Z}I{Z}C{Z} .* {Z}\/{Z}\/{Z}D{Z}T{Z}D{Z}{S_UTF}{Z}X{Z}H{Z}T{Z}M{Z}L{Z}                {isXHTML = true;}
+	{Z}<{Z}h{Z}t{Z}m{Z}l{Z} {S_UTF}* {Z}x{Z}m{Z}l{Z}n{Z}s{Z} {S_UTF}* {Z}\={Z} {S_UTF}* (({Z}\"{Z}) | ({Z}\'{Z})) {Z}h{Z}t{Z}t{Z}p{Z}:{Z}\/{Z}\/{Z}w{Z}w{Z}w{Z}\.{Z}w{Z}3{Z}\.{Z}o{Z}r{Z}g{Z}\/{Z}1{Z}9{Z}9{Z}9{Z}\/{Z}x{Z}h{Z}t{Z}m{Z}l{Z}     {isXHTML = true;}
 
 }	
 	
