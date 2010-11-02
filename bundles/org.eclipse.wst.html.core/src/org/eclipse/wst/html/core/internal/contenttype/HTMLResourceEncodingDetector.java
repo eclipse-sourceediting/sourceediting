@@ -18,6 +18,7 @@ import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
+import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 
 public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetector implements IResourceCharsetDetector {
 
@@ -125,9 +126,20 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 		HeadParserToken token = null;
 		String tokenType = null;
 		String contentTypeValue = null;
+		String xhtmlEncoding = HTMLHeadTokenizerConstants.UNDEFINED;
+		boolean isXHTML = false;
 		do {
 			token = tokenizer.getNextToken();
 			tokenType = token.getType();
+			if (tokenizer.isXHTML()) {
+				isXHTML = true;
+				if (!xhtmlEncoding.equals(HTMLHeadTokenizerConstants.UNDEFINED)) {
+					if (xhtmlEncoding.length() > 0) {
+						createEncodingMemento(xhtmlEncoding, EncodingMemento.FOUND_ENCODING_IN_CONTENT);
+						return ;
+					}
+				}
+			}
 			if (canHandleAsUnicodeStream(tokenType)) {
 				// side effect of canHandle is to create appropriate
 				// memento
@@ -140,6 +152,14 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 						contentTypeValue = valueToken.getText();
 
 					}
+				}
+			}
+			else if (tokenType == XMLHeadTokenizerConstants.XMLDelEncoding ) {
+				if (tokenizer.hasMoreTokens()) {
+					token = tokenizer.getNextToken();
+					tokenType = token.getType();
+					if (isLegalString(tokenType)) 
+						xhtmlEncoding = token.getText();
 				}
 			}
 
@@ -155,6 +175,11 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 			else {
 				parseContentTypeValue(contentTypeValue);
 			}
+		}
+		//Content type is XHTML and no encoding found(since we did't hit return statement), use UTF-8
+		//https://bugs.eclipse.org/bugs/show_bug.cgi?id=318768
+		if (isXHTML) {
+			createEncodingMemento("UTF-8", EncodingMemento.DEFAULTS_ASSUMED_FOR_EMPTY_INPUT); //$NON-NLS-1$		
 		}
 	}
 
