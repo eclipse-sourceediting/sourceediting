@@ -479,11 +479,13 @@
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
 				<partitionType id="org.eclipse.wst.xml.XML_COMMENT"/>
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+                <partitionType id="org.eclipse.wst.xml.XML_PI"/> 
 			</contentTypeIdentifier>
 			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xmlsource">
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
 				<partitionType id="org.eclipse.wst.xml.XML_COMMENT"/>
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+                <partitionType id="org.eclipse.wst.xml.XML_PI"/>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
