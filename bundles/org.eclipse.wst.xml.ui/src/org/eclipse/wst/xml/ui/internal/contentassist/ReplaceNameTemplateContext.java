@@ -90,10 +90,11 @@ public class ReplaceNameTemplateContext extends DocumentTemplateContext {
 	 */
 	public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException {
 		TemplateBuffer buffer = super.evaluate(template);
+		String templateName = template.getName().toLowerCase();
 		if (buffer != null) {
 			if ((fInsertOffset > -1) && (fInsertOffset > getStart())) {
 				String prefix = getDocument().get(getStart(), fInsertOffset - getStart());
-				if (!template.getName().startsWith(prefix)) {
+				if (!templateName.startsWith(prefix.toLowerCase())) {
 					// generate a new buffer that actually contains the
 					// text that was going to be overwritten
 					int prefixSize = prefix.length();

@@ -33,6 +33,7 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xml.ui.internal.contentassist.ReplaceNameTemplateContext;
 
 /**
  * Completion processor for JSP Templates. Most of the work is already done by

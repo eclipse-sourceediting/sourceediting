@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
+import org.eclipse.wst.xml.ui.internal.contentassist.ReplaceNameTemplateContext;
 
 
 /**

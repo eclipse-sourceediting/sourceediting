@@ -26,6 +26,8 @@ import org.eclipse.jface.text.templates.TemplateVariable;
  * if it matches the template name. If so, overwrite the template name.
  * Otherwise, just insert the template at the insert offset location (by not
  * overwriting the prefix text)
+ * 
+ * @deprecated No longer used
  */
 public class ReplaceNameTemplateContext extends DocumentTemplateContext {
 	private int fInsertOffset = -1;
