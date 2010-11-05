@@ -53,7 +53,7 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_ROLE = "role"; // %coreattrs; //$NON_NLS-1$
 	String ATTR_NAME_SPELLCHECK = "spellcheck"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_ONABORT = "onabort"; // %event; //$NON-NLS-1$
-	String ATTR_NAME_ONCAN_PLAY = "oncanply"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONCAN_PLAY = "oncanplay"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONCAN_PLAY_THROUGH = "oncanplaythrough"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONCONTEXT_MENU = "oncontextmenu"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONDRAG = "ondrag"; // %event; //$NON-NLS-1$
@@ -68,7 +68,7 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_ONENDED = "onended"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONERROR = "onerror"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONFORM_CHANGE = "onformchange"; // %event; //$NON-NLS-1$
-	String ATTR_NAME_ONFORM_INPUT = "onform_input"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONFORM_INPUT = "onforminput"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONINPUT = "oninput"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONINVALID = "oninvalid"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONLOADED_DATA = "onloadeddata"; // %event; //$NON-NLS-1$
