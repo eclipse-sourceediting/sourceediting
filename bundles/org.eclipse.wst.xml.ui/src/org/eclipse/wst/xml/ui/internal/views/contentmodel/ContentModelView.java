@@ -32,10 +32,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.ViewPart;
 import org.w3c.dom.Element;
 
-/**
- * 
- *
- */
+
 public class ContentModelView extends ViewPart implements ISelectionListener {
 	private TreeViewer tv;
 
@@ -71,7 +68,7 @@ public class ContentModelView extends ViewPart implements ISelectionListener {
 				currentSelection = (IStructuredSelection) selection;
 				if (!selection.isEmpty()
 						&& (currentSelection.getFirstElement() instanceof Element)) {
-					if (isLinkedWithEditor()) {
+					if (isLinkedWithEditor() && !currentSelection.getFirstElement().equals(tv.getInput())) {
 						tv.setInput(currentSelection.getFirstElement());
 					} 
 				}
