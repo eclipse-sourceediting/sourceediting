@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -131,6 +131,27 @@ class JavaPairMatcher implements ICharacterPairMatcher {
 				//					pairIndex2= i;
 				//				}
 			}
+			
+			/*
+			 * If match for previous character fails , look for next character now.
+			 * This is required for cases like <abc|>, cursor placed at |.
+			 */
+			if (fEndPos == -1 && fStartPos == -1) {
+				char nextChar = fDocument.getChar(Math.max(fOffset, 0));
+				for (i = 0; i < fPairs.length; i = i + 2) {
+					if (nextChar == fPairs[i]) {
+						fStartPos = fOffset;
+						pairIndex1 = i;
+					}
+				}
+
+				for (i = 1; i < fPairs.length; i = i + 2) {
+					if (nextChar == fPairs[i]) {
+						fEndPos = fOffset;
+						pairIndex2 = i;
+					}
+				}
+			}
 
 			if (fEndPos > -1) {
 				fAnchor = RIGHT;
@@ -160,7 +181,7 @@ class JavaPairMatcher implements ICharacterPairMatcher {
 
 	protected int searchForClosingPeer(int offset, int openingPeer, int closingPeer, IDocument document) throws IOException {
 
-		fReader.configureForwardReader(document, offset + 1, document.getLength(), true, true);
+		fReader.configureForwardReader(document, offset + 1, document.getLength(), false, true);
 
 		int stack = 1;
 		int c = fReader.read();
@@ -181,7 +202,7 @@ class JavaPairMatcher implements ICharacterPairMatcher {
 
 	protected int searchForOpeningPeer(int offset, int openingPeer, int closingPeer, IDocument document) throws IOException {
 
-		fReader.configureBackwardReader(document, offset, true, true);
+		fReader.configureBackwardReader(document, offset, false, true);
 
 		int stack = 1;
 		int c = fReader.read();
