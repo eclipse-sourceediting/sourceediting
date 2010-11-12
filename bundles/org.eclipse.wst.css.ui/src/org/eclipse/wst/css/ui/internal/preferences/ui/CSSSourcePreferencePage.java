@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -292,5 +292,30 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 			getModelPreferences().setValue(CSSCorePreferenceNames.INDENTATION_CHAR, CSSCorePreferenceNames.SPACE);
 		}
 		getModelPreferences().setValue(CSSCorePreferenceNames.INDENTATION_SIZE, fIndentationSize.getSelection());
+	}
+	
+	protected void validateValues() {
+		boolean isError = false;
+		String widthText = null;
+
+		if (fLineWidthText != null) {
+			try {
+				widthText = fLineWidthText.getText();
+				int formattingLineWidth = Integer.parseInt(widthText);
+				if ((formattingLineWidth < WIDTH_VALIDATION_LOWER_LIMIT) || (formattingLineWidth > WIDTH_VALIDATION_UPPER_LIMIT)) {
+					throw new NumberFormatException();
+				}
+			}
+			catch (NumberFormatException nfexc) {
+				setInvalidInputMessage(widthText);
+				setValid(false);
+				isError = true;
+			}
+		}
+
+		if (!isError) {
+			setErrorMessage(null);
+			setValid(true);
+		}
 	}
 }
