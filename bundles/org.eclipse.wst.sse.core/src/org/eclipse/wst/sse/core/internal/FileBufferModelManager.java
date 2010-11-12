@@ -505,7 +505,7 @@ public class FileBufferModelManager {
 				InputStream input = null;
 				try {
 					input = new FileInputStream(file);
-					type = Platform.getContentTypeManager().findContentTypeFor(input, location.toOSString());
+					type = Platform.getContentTypeManager().findContentTypeFor(input, file.getName());
 				}
 				catch (FileNotFoundException e) {
 				}
