@@ -2558,7 +2558,7 @@ class ProjectDescription {
 			String taglibLocation = readTextofChild(taglibs.item(iTaglib), "taglib-location").trim(); //$NON-NLS-1$
 			IPath path = null;
 			if (taglibLocation.startsWith("/")) { //$NON-NLS-1$
-				path = new Path(getLocalRoot(webxml.getFullPath().toString()) + taglibLocation);
+				path = FacetModuleCoreSupport.resolve(new Path(webxml.getFullPath().toString()), taglibLocation);
 			}
 			else {
 				path = new Path(URIHelper.normalize(taglibLocation, webxml.getFullPath().toString(), getLocalRoot(webxml.getFullPath().toString())));
