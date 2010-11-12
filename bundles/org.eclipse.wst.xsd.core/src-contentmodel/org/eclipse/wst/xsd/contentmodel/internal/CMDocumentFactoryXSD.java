@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.contentmodel.internal;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.factory.CMDocumentFactory;
 import org.eclipse.xsd.XSDPackage;
-import org.eclipse.xsd.impl.XSDPackageImpl;
 
 /**
  *  This builder handles building .dtd / .xsd grammar files
@@ -26,7 +25,7 @@ public class CMDocumentFactoryXSD implements CMDocumentFactory
   {  
     // here we call init on the XSD and DTD packages to avoid strange initialization bugs
     //
-    XSDPackageImpl.init();
+    XSDPackage.eINSTANCE.eClass();
     XSDPackage.eINSTANCE.getXSDFactory();  
   }
 
