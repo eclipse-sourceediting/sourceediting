@@ -807,7 +807,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (!isXMLTag()) { // non-XML tag
 			CMElementDeclaration decl = getDeclaration();
 			if (decl == null)
-				return false; // undefined tag
+				return true; // undefined tag
 			return (decl.getContentType() != CMElementDeclaration.EMPTY);
 		}
 		return true;
