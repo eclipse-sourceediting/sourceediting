@@ -1307,7 +1307,9 @@ class ProjectDescription {
 	private String getTextContents(Node parent) {
 		NodeList children = parent.getChildNodes();
 		if (children.getLength() == 1) {
-			return children.item(0).getNodeValue().trim();
+			Node child = children.item(0);
+			if (child.getNodeValue() != null)
+				return child.getNodeValue().trim();
 		}
 		StringBuffer s = new StringBuffer();
 		Node child = parent.getFirstChild();
@@ -1321,7 +1323,7 @@ class ProjectDescription {
 					s.append(reference.trim());
 				}
 			}
-			else {
+			else if (child.getNodeValue() != null) {
 				s.append(child.getNodeValue().trim());
 			}
 			child = child.getNextSibling();
