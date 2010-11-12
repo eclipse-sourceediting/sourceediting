@@ -313,6 +313,29 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 					ed.setSmallIconURL(URIHelper.normalize(ed.getSmallIcon(), "file:" + tagFile.getLocation().toString(), tagFile.getLocation().removeLastSegments(1).toString()));
 				}
 			}
+			else if (isJarFile(document.getBaseLocation())) {
+				String jarLocation = document.getBaseLocation();
+				String[] entries = JarUtilities.getEntryNames(jarLocation);
+				boolean tag;
+				for (int jEntry = 0; jEntry < entries.length; jEntry++) {
+					tag = false;
+					if (((tag = entries[jEntry].endsWith(".tag")) || entries[jEntry].endsWith(".tagx")) && entries[jEntry].startsWith("META-INF/tags/")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							InputStream contents = JarUtilities.getInputStream(jarLocation, entries[jEntry]);
+							if (tag) {//$NON-NLS-1$ 
+								loadTagFile(ed, tagFile, true, contents);
+							}
+							else {
+								loadTagXFile(ed, tagFile, true, contents);
+							}
+							try {
+								contents.close();
+							}
+							catch (IOException e) {
+								Logger.log(Logger.ERROR_DEBUG, null, e);
+							}
+						}
+					}	
+			}
 		}
 
 		// load information declared within the .tld
@@ -346,6 +369,13 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		}
 		
 		return ed;
+	}
+
+	private boolean isJarFile(String path) {
+		if (path == null)
+			return false;
+		final int idx = path.lastIndexOf('.');
+		return idx >= 0 && idx < (path.length() - 1) && path.substring(idx + 1).equalsIgnoreCase("jar"); //$NON-NLS-1$
 	}
 
 	protected CMElementDeclaration createElementDeclaration(CMDocument document, Node tagNode) {
@@ -710,12 +740,16 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	}
 
 	void loadTagXFile(final CMElementDeclarationImpl ed, IFile tagxFile, boolean allowIncludes) {
+	  loadTagXFile(ed, tagxFile, allowIncludes, null);
+	}
+	
+	void loadTagXFile(final CMElementDeclarationImpl ed, IFile tagxFile, boolean allowIncludes, InputStream inputStream) {
 		ed.setPath(tagxFile.getFullPath().toString());
 		ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
 		try {
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 			InputSource inputSource = new InputSource(tagxFile.getFullPath().toString());
-			InputStream input = tagxFile.getContents(false);
+			InputStream input = inputStream != null ? inputStream : tagxFile.getContents(false);
 			inputSource.setByteStream(input);
 			parser.parse(inputSource, new DefaultHandler() {
 				public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
@@ -819,14 +853,23 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	}
 
 	private void loadTagFile(CMElementDeclarationImpl ed, IFile tagFile, boolean allowIncludes) {
+		loadTagFile(ed, tagFile, allowIncludes, null);
+	}
+	
+	private void loadTagFile(CMElementDeclarationImpl ed, IFile tagFile, boolean allowIncludes, InputStream inputStream) {
 		try {
 			ed.setPath(tagFile.getFullPath().toString());
 			ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
 			ed.setLocationString(tagFile.getFullPath().toString());
-			if (!tagFile.isAccessible())
+			IStructuredDocument document = null;
+			if(inputStream != null) {
+				document = (IStructuredDocument)new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile.getName(), inputStream);
+			}
+			else if(tagFile.isAccessible()) {
+				document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
+			}
+			if (document == null)
 				return;
-
-			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
 			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
 			while (documentRegion != null) {
 				if (documentRegion.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
