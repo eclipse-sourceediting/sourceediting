@@ -2682,8 +2682,7 @@ public class StructuredTextEditor extends TextEditor {
 		else {
 			implClass = "document was null"; //$NON-NLS-1$
 		}
-		Logger.log(Logger.WARNING, "        Unexpected IDocumentProvider implementation: " + getDocumentProvider().getClass().getName()); //$NON-NLS-1$
-		Logger.log(Logger.WARNING, "        Unexpected IDocument implementation: " + implClass); //$NON-NLS-1$
+		Logger.log(Logger.WARNING, "Unexpected IDocument implementation: " + implClass + "\n\tIDocumentProvider implementation: " + getDocumentProvider().getClass().getName()); //$NON-NLS-1$  //$NON-NLS-2$
 	}
 
 	/*
