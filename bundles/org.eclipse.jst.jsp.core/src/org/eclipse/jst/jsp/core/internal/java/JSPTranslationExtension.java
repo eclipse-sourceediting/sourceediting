@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,8 @@ import org.eclipse.text.edits.TextEdit;
 import org.eclipse.text.edits.UndoEdit;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 import com.ibm.icu.util.StringTokenizer;
@@ -192,9 +194,9 @@ public class JSPTranslationExtension extends JSPTranslation {
 					// get rid of pre and post white space or fine tuned
 					// adjustment later.
 					// fix text here...
-					replaceText = fixJspReplaceText(replaceText, jspPos.offset);
-
-					jspEdits.add(new ReplaceEdit(jspPos.offset, jspPos.length, replaceText));
+					replaceText = fixJspReplaceText(replaceText, jspPos);
+					if (!(replaceText.length() == 0 && jspPos.length == 0))//Unwanted TextEdit can lead to MalformedTreeException.See: Bug 321977 
+ 					   jspEdits.add(new ReplaceEdit(jspPos.offset, jspPos.length, replaceText));
 				}
 				if (DEBUG)
 					debugReplace(deltas, jspPos, replaceText, i);
@@ -232,7 +234,7 @@ public class JSPTranslationExtension extends JSPTranslation {
 		return allJspEdits;
 	}
 
-	private String fixJspReplaceText(String replaceText, int jspOffset) {
+	private String fixJspReplaceText(String replaceText, Position jspPos) {
 
 		// result is the text inbetween the delimiters
 		// eg.
@@ -245,7 +247,7 @@ public class JSPTranslationExtension extends JSPTranslation {
 		IDocument jspDoc = getJspDocument();
 		if (jspDoc instanceof IStructuredDocument) {
 			IStructuredDocument sDoc = (IStructuredDocument) jspDoc;
-			IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, jspOffset);
+			IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, jspPos.offset);
 			IStructuredDocumentRegion lastRegion = regions[regions.length - 1];
 
 			// only specifically modify scriptlets
@@ -275,10 +277,31 @@ public class JSPTranslationExtension extends JSPTranslation {
 					}
 				}
 			}
+			else if (lastRegion != null && checkForELRegion(lastRegion)) {//Check for EL region, we don't want to replace EL region with corresponding java text,leave it as it is.
+				result = getJspText().substring(jspPos.offset, jspPos.offset + jspPos.length);
+			}
 		}
 		return result;
 	}
 
+	private boolean checkForELRegion(IStructuredDocumentRegion container) {
+		Iterator regions = container.getRegions().iterator();
+		ITextRegion region = null;
+		while (regions.hasNext()) {
+			region = (ITextRegion) regions.next();
+			if (region instanceof ITextRegionCollection) {
+				ITextRegionCollection parentRegion = ((ITextRegionCollection) region);
+				Iterator childRegions = parentRegion.getRegions().iterator();
+				while (childRegions.hasNext()) {
+					ITextRegion childRegion = (ITextRegion) childRegions.next();
+					if (childRegion.getType() == DOMJSPRegionContexts.JSP_EL_OPEN)
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	private String adjustIndent(String textBefore, String indent, String delim) {
 
 		// first replace multiple indent with single indent
