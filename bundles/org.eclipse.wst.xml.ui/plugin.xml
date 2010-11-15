@@ -1130,7 +1130,7 @@
 		<definition id="org.eclipse.wst.xml.ui.dependencies">
 			<or>
 				<with variable="activeEditor">
-					<test property="org.eclipse.wst.xml.ui.editor" />
+					<test property="org.eclipse.wst.xml.ui.editor" forcePluginActivation="true" />
 				</with>
 				<with variable="activeContexts">
 					<iterate operator="or">
@@ -1145,7 +1145,7 @@
 		<definition id="org.eclipse.wst.xml.ui.grammar">
 			<or>
 				<with variable="activeEditor">
-					<test property="org.eclipse.wst.xml.ui.editor" />
+					<test property="org.eclipse.wst.xml.ui.editor" forcePluginActivation="true" />
 				</with>
 				<with variable="activeContexts">
 					<iterate operator="or">
@@ -1158,8 +1158,8 @@
 	
 	<extension point="org.eclipse.core.expressions.propertyTesters">
 		<propertyTester
-			class="org.eclipse.wst.xml.ui.internal.editor.XMLEditorTester"
-			id="org.eclipse.wst.xml.ui.internal.editor.XMLEditorTester"
+			class="org.eclipse.wst.xml.ui.internal.editor.propertytester.XMLEditorTester"
+			id="org.eclipse.wst.xml.ui.internal.editor.propertytester.XMLEditorTester"
 			namespace="org.eclipse.wst.xml.ui"
 			properties="editor"
 			type="org.eclipse.ui.IEditorPart">
