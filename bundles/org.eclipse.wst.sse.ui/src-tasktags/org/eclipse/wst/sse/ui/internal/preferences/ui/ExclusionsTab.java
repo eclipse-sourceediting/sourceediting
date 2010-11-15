@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -231,7 +232,8 @@ class ExclusionsTab implements IPreferenceTab {
 	}
 
 	public Control createContents(Composite tabFolder) {
-		Composite composite = new Composite(tabFolder, SWT.NONE);
+		SashForm sash = new SashForm(tabFolder, SWT.VERTICAL);
+		Composite composite = new Composite(sash, SWT.NONE);
 		composite.setLayout(new GridLayout(2, true));
 		Label description = new Label(composite, SWT.NONE);
 		description.setText(SSEUIMessages.TaskTagExclusionTab_02);
@@ -266,6 +268,8 @@ class ExclusionsTab implements IPreferenceTab {
 			}
 		});
 
+		composite = new Composite(sash, SWT.NONE);
+		composite.setLayout(new GridLayout(2, true));
 		new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
 		Label affectedTypesLabel = new Label(composite, SWT.NONE);
@@ -292,7 +296,7 @@ class ExclusionsTab implements IPreferenceTab {
 			}
 		});
 
-		return composite;
+		return sash;
 	}
 
 	public String getTitle() {
