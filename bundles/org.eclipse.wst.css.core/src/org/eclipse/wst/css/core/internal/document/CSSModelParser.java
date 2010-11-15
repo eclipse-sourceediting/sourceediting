@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1016,20 +1016,6 @@ public class CSSModelParser {
 		}
 	}
 
-	void replaceDocument(IStructuredDocumentRegionList newStructuredDocumentRegions) {
-		if (fDocument == null || fCreationContext == null)
-			return;
-		((CSSDocumentImpl) fDocument).removeChildNodes();
-
-		if (newStructuredDocumentRegions != null && 0 < newStructuredDocumentRegions.getLength()) {
-			setupCreationContext(newStructuredDocumentRegions.item(0));
-			insertStructuredDocumentRegions(newStructuredDocumentRegions);
-		}
-
-		IStructuredDocument structuredDocument = fStructuredDocumentWalker.getStructuredDocument();
-		((CSSStructuredDocumentRegionContainer)fDocument).setRangeStructuredDocumentRegion(structuredDocument.getFirstStructuredDocumentRegion(), structuredDocument.getLastStructuredDocumentRegion());
-	}
-
 	/**
 	 * 
 	 */
@@ -1052,14 +1038,7 @@ public class CSSModelParser {
 		}
 
 		if (newStructuredDocumentRegions != null && 0 < newStructuredDocumentRegions.getLength()) {
-			/* when removing old nodes the creation context should be set up based on them
-			 * else creation context is that of the new nodes
-			 */
-			if( oldStructuredDocumentRegions != null && oldStructuredDocumentRegions.getLength() < 0) {
-				setupCreationContext(oldStructuredDocumentRegions.item(0));
-			} else {
-				setupCreationContext(newStructuredDocumentRegions.item(0));
-			}
+			setupCreationContext(newStructuredDocumentRegions.item(0));
 			insertStructuredDocumentRegions(newStructuredDocumentRegions);
 		}
 

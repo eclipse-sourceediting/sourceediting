@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,27 +86,6 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 					if (needIndent)
 						source.append(getIndentString());
 				}
-				else if (prev.getType() == CSSRegionContexts.CSS_COMMENT) {
-					String fullText = toAppend.getDocumentRegion().getFullText(prev);
-					String trimmedText = toAppend.getDocumentRegion().getText(prev);
-					String whiteSpaces = "";//$NON-NLS-1$
-					if (fullText != null && trimmedText != null)
-					    whiteSpaces = fullText.substring(trimmedText.length());
-					int[] delimiterFound = TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, whiteSpaces, 0);
-					if (delimiterFound[0] != -1) {
-						source.append(delim);	
-					}
-					else {
-						appendSpaceBefore(node, toAppend.getText(), source);
-						
-						/*If two comments can't be adjusted in one line(combined length exceeds line width),
-						 * a tab is also appended along with next line delimiter , we need to remove that. 
-						 */
-						if (source.toString().endsWith(getIndentString())) {
-							source.delete((source.length() - getIndentString().length()), source.length());
-						}
-					}
-				}
 				else {
 					appendSpaceBefore(node, toAppend.getText(), source);
 				}
@@ -187,11 +166,22 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		}
 		else if (type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR && node instanceof ICSSStyleDeclItem) {
 			int n = preferences.getInt(CSSCorePreferenceNames.FORMAT_PROP_PRE_DELIM);
+			if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+				int length = getLastLineLength(node, source);
+				int append = 1;
+				if (length + n + append > preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH)) {
+					source.append(getLineDelimiter(node));
+					source.append(getIndent(node));
+					if (needIndent)
+						source.append(getIndentString());
+					n = 0; // no space is necessary
+				}
+			}
 			// no delimiter case
 			while (n-- > 0)
 				source.append(" ");//$NON-NLS-1$
 		}
-		else if (type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || type == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE) {
+		else if (type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || type == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE) {
 			if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 				int length = getLastLineLength(node, source);
 				int append = 1;
@@ -203,7 +193,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				}
 			}
 		}
-		else if (CSSRegionContexts.CSS_FOREIGN_ELEMENT == type || CSSRegionContexts.CSS_DECLARATION_DELIMITER == type) {
+		else if (CSSRegionContexts.CSS_FOREIGN_ELEMENT == type) {
 			return;
 		}
 		else

@@ -15,6 +15,7 @@ package org.eclipse.wst.css.core.internal.document;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelector;
@@ -25,8 +26,6 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.provisional.NameValidator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.ibm.icu.util.StringTokenizer;
 
 
 /**
@@ -303,7 +302,8 @@ class CSSSelector implements ICSSSelector {
 		if (i > 0) {
 			if (i > 1)
 				return false;
-			if (!element.hasAttribute("id") || (key = element.getAttribute("id")).length() == 0)//$NON-NLS-1$ //$NON-NLS-2$
+			key = element.getAttribute("id");//$NON-NLS-1$
+			if (key == null)
 				return false;
 			if (!selector.getID(0).equals(key))
 				return false;
@@ -312,7 +312,8 @@ class CSSSelector implements ICSSSelector {
 		// check class
 		i = selector.getNumOfClasses();
 		if (i > 0) {
-			if (!element.hasAttribute("class") || (key = element.getAttribute("class")).length() == 0) //$NON-NLS-1$  //$NON-NLS-2$
+			key = element.getAttribute("class");//$NON-NLS-1$
+			if (key == null)
 				return false;
 			StringTokenizer tokenizer = new StringTokenizer(key);
 			for (i = i - 1; i >= 0; i--) {
@@ -333,9 +334,8 @@ class CSSSelector implements ICSSSelector {
 			StringTokenizer tokenizer = new StringTokenizer(selector.getAttribute(i), "=~| \t\r\n\f");//$NON-NLS-1$
 			int countTokens = tokenizer.countTokens();
 			if (countTokens > 0) {
-				String attrName = tokenizer.nextToken();
-				String attrValue = null;
-				if (!element.hasAttribute(attrName) || (attrValue = element.getAttribute(attrName)).length() == 0)
+				String attrValue = element.getAttribute(tokenizer.nextToken());
+				if (attrValue == null)
 					return false;
 				if (countTokens > 1) {
 					String token = tokenizer.nextToken("= \t\r\n\f");//$NON-NLS-1$
