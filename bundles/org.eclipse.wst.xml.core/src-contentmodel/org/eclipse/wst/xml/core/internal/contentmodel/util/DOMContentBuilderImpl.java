@@ -428,19 +428,19 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
 				}
 
 				if (cmNode != null) {
-				  // Bug 330260
-		      // Problem - Add child element also adds optional grand-child elements
-		      // This assumes 'e' is a model group choice, case 1.  However 'e' could be a model group definition, case 2, where the first child is
-				  // a model group.
-		      // In the first case (choice), the first child is an element.  Upon visiting the element (visitCMElementDeclaration), the minOccurs of the 
-		      // choice is ALSO considered.  If its minOccurs is 0, then the first element is not added as a child.
-		      // However, in the second case (model group definition), the first child is a choice, but the multiplicity is [1,1], meaning, it is required. 
-		      // So the first element is then added as child, even though the model group definition reference is optional.  (minOccurs is not checked 
-				  // in this method, visitCMGroup)
-				  // Visit the node only if it is not a GROUP (model group).  If it is an element, then visit it.
- 			    if (!(cmNode.getNodeType() == CMNode.GROUP && min > 0)) {
+					// Bug 330260
+					// Problem - Add child element also adds optional grand-child elements
+					// This assumes 'e' is a model group choice, case 1. However 'e' could be a model group definition, case 2, where the
+					// first child is a model group. In the first case (choice), the first child is an
+					// element. Upon visiting the element (visitCMElementDeclaration), the minOccurs of the
+					// choice is ALSO considered. If its minOccurs is 0, then the first element is not added as a child.
+					// However, in the second case (model group definition), the first child is a choice, but the multiplicity is [1,1],
+					// meaning, it is required. So the first element is then added as child, even though
+					// the model group definition reference is optional. (minOccurs is not checked in this method, visitCMGroup)
+					// Visit the node only if it is not a GROUP (model group). If it is an element, then visit it.
+					if (!(cmNode.getNodeType() == CMNode.GROUP && min > 0)) {
 						visitCMNode(cmNode);
- 			    }
+					}
 				}
 			}
 			else if (e.getOperator() == CMGroup.ALL // ALL
