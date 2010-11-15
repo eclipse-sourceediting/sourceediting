@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -32,17 +34,25 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
+import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
+import org.eclipse.wst.validation.MutableProjectSettings;
+import org.eclipse.wst.validation.MutableWorkspaceSettings;
 import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.Validator;
+import org.eclipse.wst.validation.internal.IValChangedListener;
+import org.eclipse.wst.validation.internal.ValPrefManagerGlobal;
+import org.eclipse.wst.validation.internal.ValPrefManagerProject;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 
@@ -65,12 +75,20 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 * since beginProcessing() was called.
 	 */
 	private List fTotalScopeValidatorsAlreadyRun;
+	
+	/** Listens to validator preference changes in order to clear out annotations */
+	private IValChangedListener fValChangedListener;
 
 	public ValidatorStrategy(ISourceViewer sourceViewer, String contentType) {
 		super(sourceViewer);
 		fMetaData = new ArrayList();
 		fContentTypeIds = calculateParentContentTypeIds(contentType);
 		fVidToVStepMap = new HashMap();
+		fValChangedListener = new ValChangedListener();
+		
+		//add listeners
+		ValPrefManagerGlobal.getDefault().addListener(this.fValChangedListener);
+		ValPrefManagerProject.addListener(this.fValChangedListener);
 	}
 
 	public void addValidatorMetaData(ValidatorMetaData vmd) {
@@ -158,10 +176,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		 * or validation has been disabled
 		 */
 		IFile file = getFile();
-		if (isCanceled() || fMetaData.isEmpty() || (file != null && (
-				ValidationFramework.getDefault().isSuspended() ||
-				ValidationFramework.getDefault().isSuspended(file.getProject()) ||
-				ValidationFramework.getDefault().getProjectSettings(file.getProject()).getSuspend()))) {
+		if (isCanceled() || fMetaData.isEmpty() || areAllValidatorsSuspended(file)) {
 			return;
 		}
 
@@ -187,20 +202,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		 * validators.
 		 */
 		Set disabledValsByClass = new HashSet(20);
-		if (file != null) {
-			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(file).iterator(); it.hasNext();) {
-				Validator v = (Validator) it.next();
-				Validator.V1 v1 = v.asV1Validator();
-				if (v1 != null)
-					disabledValsByClass.add(v1.getId());
-				// not a V1 validator
-				else if (v.getSourceId() != null) {
-					//could be more then one sourceid per batch validator
-					String[] sourceIDs = StringUtils.unpack(v.getSourceId());
-					disabledValsBySourceId.addAll(Arrays.asList(sourceIDs));
-				}
-			}
-		}
+		getDisabledValidators(file, disabledValsBySourceId, disabledValsByClass);
 				
 		/*
 		 * Loop through all of the relevant validator meta data to find
@@ -254,6 +256,11 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 
 	public void release() {
 		super.release();
+		
+		//remove listeners
+		ValPrefManagerGlobal.getDefault().removeListener(this.fValChangedListener);
+		ValPrefManagerProject.removeListener(this.fValChangedListener);
+		
 		Iterator it = fVidToVStepMap.values().iterator();
 		IReconcileStep step = null;
 		while (it.hasNext()) {
@@ -313,5 +320,108 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 			}
 		}
 		return file;
+	}
+	
+	/**
+	 * <p>Determines the disabled validators by source id and class for v2 and v1 validators respectively</p>
+	 * 
+	 * @param file get the disabled validators for this {@link IFile}
+	 * @param disabledValsBySourceId return the disabled validators by source ID here
+	 * @param disabledValsByClass return the disabled validators by class here
+	 */
+	private static void getDisabledValidators(IFile file, Set disabledValsBySourceId, Set disabledValsByClass) {
+		if (file != null) {
+			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(file).iterator(); it.hasNext();) {
+				Validator v = (Validator) it.next();
+				Validator.V1 v1 = v.asV1Validator();
+				if (v1 != null)
+					disabledValsByClass.add(v1.getId());
+				// not a V1 validator
+				else if (v.getSourceId() != null) {
+					//could be more then one sourceid per batch validator
+					String[] sourceIDs = StringUtils.unpack(v.getSourceId());
+					disabledValsBySourceId.addAll(Arrays.asList(sourceIDs));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * <p>Determines if all validators are suspended for a given file.</p>
+	 * 
+	 * @param file Determine if all validators are suspended for this {@link IFile}
+	 * @return <code>true</code> if all validators are suspended for this file,
+	 * <code>false</code> otherwise
+	 */
+	private static boolean areAllValidatorsSuspended(IFile file) {
+		MutableWorkspaceSettings workspaceSettings = null;
+		try {
+			workspaceSettings = ValidationFramework.getDefault().getWorkspaceSettings();
+		} catch (InvocationTargetException e) {
+			Logger.logException("Could not get global validation settings", e); //$NON-NLS-1$
+		}
+		MutableProjectSettings projSettings = ValidationFramework.getDefault().getProjectSettings(file.getProject());
+		
+		return (workspaceSettings != null && workspaceSettings.getSuspend()) ||
+			ValidationFramework.getDefault().isSuspended() ||
+			ValidationFramework.getDefault().isSuspended(file.getProject()) ||
+			((workspaceSettings == null || workspaceSettings.getOverride()) && projSettings.getOverride() && projSettings.getSuspend());
+	}
+	
+	/**
+	 * <p>Used to listen to validator preference changes in order to
+	 * clear out annotations when needed</p>
+	 */
+	private class ValChangedListener implements IValChangedListener {
+
+		/**
+		 * @see org.eclipse.wst.validation.internal.IValChangedListener#validatorsForProjectChanged(org.eclipse.core.resources.IProject, boolean)
+		 */
+		public void validatorsForProjectChanged(IProject project,
+				boolean configSettingChanged) {
+			
+			//remove all the annotations if the val preferences changed
+			if(configSettingChanged) {
+				IFile file = ValidatorStrategy.this.getFile();
+				if(project == null || file.getProject() == project) {
+					
+					//determine the disabled steps
+					Set disabledValsBySourceId = new HashSet(20);
+					Set disabledValsByClass = new HashSet(20);
+					getDisabledValidators(file, disabledValsBySourceId, disabledValsByClass);
+					ValidatorMetaData vmd = null;
+					Set disabledSteps = new HashSet();
+					for (int i = 0; i < fMetaData.size() && !isCanceled(); i++) {
+						vmd = (ValidatorMetaData) fMetaData.get(i);
+						if (areAllValidatorsSuspended(file) ||
+								disabledValsBySourceId.contains(vmd.getValidatorId()) ||
+								disabledValsByClass.contains(vmd.getValidatorClass())) {
+							
+							Object step = fVidToVStepMap.get(vmd.getValidatorId());
+							if(step != null) {
+								disabledSteps.add(step);
+							}
+						}
+					}
+					
+					//clear annotations for the disabled steps
+					IAnnotationModel annoModel = ValidatorStrategy.this.getAnnotationModel();
+					Iterator iter = annoModel.getAnnotationIterator();
+					while(iter.hasNext()) {
+						Annotation anno = (Annotation)iter.next();
+						if(anno instanceof TemporaryAnnotation) {
+							TemporaryAnnotation tempAnno = (TemporaryAnnotation)anno;
+							if(tempAnno.getKey() instanceof ReconcileAnnotationKey) {
+								ReconcileAnnotationKey key = (ReconcileAnnotationKey)tempAnno.getKey();
+								IReconcileStep step = key.getStep();
+								if(disabledSteps.contains(step)) {
+									annoModel.removeAnnotation(anno);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
