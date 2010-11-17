@@ -24,7 +24,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
 public class JSPJavaTranslatorCustomTagTest extends TestCase {
 
-	static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";
+	static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";//$NON-NLS-1$
 //	private static byte[] creationLock = new byte[0];
 
 	public JSPJavaTranslatorCustomTagTest() {
@@ -41,7 +41,7 @@ public class JSPJavaTranslatorCustomTagTest extends TestCase {
 		String noninteractive = System.getProperty(WTP_AUTOTEST_NONINTERACTIVE);
 		if (noninteractive != null)
 			wtp_autotest_noninteractive = noninteractive;
-		System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, "true");
+		System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, "true");//$NON-NLS-1$
 	}
 
 	protected void tearDown() throws Exception {
@@ -57,12 +57,12 @@ public class JSPJavaTranslatorCustomTagTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void test_310085() throws Exception {
-		String projectName = "bug_310085";
+		String projectName = "bug_310085"; //$NON-NLS-1$
 		// Create new project
 		IProject project = BundleResourceUtil.createSimpleProject(projectName, null, null);
 		assertTrue(project.exists());
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName);
-		IFile file = project.getFile("WebContent/test310085.jsp");
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName);//$NON-NLS-1$ //$NON-NLS-2$
+		IFile file = project.getFile("WebContent/test310085.jsp");//$NON-NLS-1$
 		assertTrue(file.exists());
 				
 		JSPValidator validator = new JSPJavaValidator();
@@ -71,8 +71,32 @@ public class JSPJavaTranslatorCustomTagTest extends TestCase {
 		helper.setURI(file.getFullPath().toString());
 		validator.validate(helper, reporter);
 		
-		assertTrue("Found JSP Java problem for custom tag "+reporter.getMessages().size(), reporter.getMessages().isEmpty());
+		assertTrue("Found JSP Java problem for custom tag "+reporter.getMessages().size(), reporter.getMessages().isEmpty());//$NON-NLS-1$
 		
 	}
 
+	/**
+	 * Tests jsp translation when custom tag used
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=326193
+	 * 
+	 * @throws Exception
+	 */
+	public void test_326193() throws Exception {
+		String projectName = "bug_326193"; //$NON-NLS-1$
+		// Create new project
+		IProject project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		assertTrue(project.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName); //$NON-NLS-1$ //$NON-NLS-2$
+		IFile file = project.getFile("WebContent/test326193.jsp"); //$NON-NLS-1$
+		assertTrue(file.exists());
+		
+		JSPValidator validator = new JSPJavaValidator();
+		IReporter reporter = new ReporterForTest();
+		ValidationContextForTest helper = new ValidationContextForTest();
+		helper.setURI(file.getFullPath().toOSString());
+		validator.validate(helper, reporter);
+		
+		assertTrue("found jsp java error for empty end tag in xml comment in script", reporter.getMessages().isEmpty());//$NON-NLS-1$
+			 		
+	 	}
 	}
