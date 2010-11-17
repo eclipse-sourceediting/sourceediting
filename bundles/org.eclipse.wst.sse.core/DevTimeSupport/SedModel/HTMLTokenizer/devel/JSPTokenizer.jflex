@@ -405,6 +405,9 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 		fCurrentTagName = newTagName;
 	}
 
+	private final String doScan(String searchString, boolean requireTailSeparator, boolean allowJSP, boolean allowCDATA, String searchContext, int exitState, int immediateFallbackState) throws IOException {
+		return doScan(searchString, requireTailSeparator, allowJSP, allowCDATA, false, searchContext, exitState, immediateFallbackState);
+	}
 /**
  * Method doScan.
  * 
@@ -414,13 +417,14 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
  * @param searchString - target string to search for ex.: "-->", "</tagname"
  * @param requireTailSeparator - whether the target must be immediately followed by whitespace or '>'
  * @param allowJSP - check for and allow for JSP markup <%%>
+ * @param allowTag - check for and allow for xml tags <
  * @param context - the context of the scanned region if non-zero length
  * @param exitState - the state to go to if the region was of non-zero length
  * @param abortState - the state to go to if the searchString was found immediately
  * @return String - the context found: the desired context on a non-zero length match, the abortContext on immediate success
  * @throws IOException
  */
-private final String doScan(String searchString, boolean requireTailSeparator, boolean allowJSP, boolean allowCDATA, String searchContext, int exitState, int immediateFallbackState) throws IOException {
+private final String doScan(String searchString, boolean requireTailSeparator, boolean allowJSP, boolean allowCDATA, boolean allowTag, String searchContext, int exitState, int immediateFallbackState) throws IOException {
 	boolean stillSearching = true;
 	boolean wasBlockingEnabled = fIsBlockingEnabled;
 	try {
@@ -499,6 +503,20 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 					yy_currentPos = yy_markedPos + 1;
 					int resumeState = yystate();
 					yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
+					if(yy_markedPos == yy_startRead) {
+						String jspContext = primGetNextToken();
+						yybegin(resumeState);
+						return jspContext;
+					}
+					return searchContext;
+				}
+				// 4) XML tag 
+				else if(allowTag && checkJSPs && yy_currentPos > searchStringLength && yy_currentPos - searchStringLength != fLastInternalBlockStart && 
+						yy_buffer[yy_currentPos - searchStringLength] == '<') {
+					fLastInternalBlockStart = yy_markedPos = yy_currentPos - searchStringLength;
+					yy_currentPos = yy_markedPos + 1;
+					int resumeState = yystate();
+					yybegin(ST_XML_TAG_NAME);
 					if(yy_markedPos == yy_startRead) {
 						String jspContext = primGetNextToken();
 						yybegin(resumeState);
@@ -863,7 +881,7 @@ private final String doBlockTagScan() throws IOException {
 		//   XML_COMMENT_TEXT unless the string occurs IMMEDIATELY, in which
 		//  case change to the ST_XML_COMMENT_END state and return the next
 		//  context as usual.
-		return doScan("-->", false, true, true, XML_COMMENT_TEXT, ST_XML_COMMENT_END, ST_XML_COMMENT_END);
+		return doScan("-->", false, true, true, true, XML_COMMENT_TEXT, ST_XML_COMMENT_END, ST_XML_COMMENT_END);
 	}
 	/* user method */
 	private final String scanJSPCommentText() throws IOException {
