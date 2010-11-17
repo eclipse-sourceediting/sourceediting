@@ -15,11 +15,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -213,23 +214,17 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 	
 	private Map getProjectOptions(IDocument baseDocument) {
 		IJavaScriptProject javaProject = null;
-		IDOMModel xmlModel = null;
 		Map options = null;
-		try {
-			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(baseDocument);
-			String baseLocation = xmlModel.getBaseLocation();
+		ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(baseDocument);
+		if (buffer != null) {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			IPath filePath = new Path(baseLocation);
+			IPath filePath = buffer.getLocation();
 			IProject project = null;
 			if (filePath.segmentCount() > 0) {
 				project = root.getProject(filePath.segment(0));
 			}
 			if (project != null) {
 				javaProject = JavaScriptCore.create(project);
-			}
-		} finally {
-			if (xmlModel != null) {
-				xmlModel.releaseFromRead();
 			}
 		}
 		if (javaProject != null) {
