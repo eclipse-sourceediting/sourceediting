@@ -30,6 +30,7 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDAttributeDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
@@ -250,7 +251,7 @@ public class JSPActionValidator extends JSPValidator {
 			else {
 				if (fSeverityUnexpectedRuntimeExpression != ValidationMessage.IGNORE && adec instanceof TLDAttributeDeclaration) {
 					// The attribute cannot have a runtime evaluation of an expression
-					if (!Boolean.valueOf(((TLDAttributeDeclaration) adec).getRtexprvalue()).booleanValue()) {
+					if (!isTrue(((TLDAttributeDeclaration) adec).getRtexprvalue())) {
 						IDOMAttr attr = (IDOMAttr) a;
 						if(checkRuntimeValue(attr) && !fIsELIgnored) {
 							String msg = NLS.bind(JSPCoreMessages.JSPActionValidator_1, a.getName());
@@ -269,6 +270,10 @@ public class JSPActionValidator extends JSPValidator {
 			}
 		}
 		return foundjspattribute;
+	}
+
+	private boolean isTrue(String value) {
+		return JSP11TLDNames.TRUE.equalsIgnoreCase(value) || JSP11TLDNames.YES.equalsIgnoreCase(value);
 	}
 
 	public void cleanup(IReporter reporter) {
