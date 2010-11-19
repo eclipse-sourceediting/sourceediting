@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -782,7 +782,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (!isXMLTag()) { // non-XML tag
 			CMElementDeclaration decl = getDeclaration();
 			if (decl == null)
-				return false; // undefined tag
+				return true; // undefined tag
 			return (decl.getContentType() != CMElementDeclaration.EMPTY);
 		}
 		return true;
