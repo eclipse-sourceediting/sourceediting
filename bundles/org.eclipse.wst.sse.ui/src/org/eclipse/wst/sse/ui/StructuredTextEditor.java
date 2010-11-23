@@ -800,12 +800,16 @@ public class StructuredTextEditor extends TextEditor {
 
 	class TimeOutExpired extends TimerTask {
 		public void run() {
+			final byte[] result = new byte[1]; // Did the busy state end successfully?
 			getDisplay().syncExec(new Runnable() {
 				public void run() {
 					if (getDisplay() != null && !getDisplay().isDisposed())
-						endBusyStateInternal();
+						endBusyStateInternal(result);
 				}
 			});
+			if (result[0] == 1) {
+				fBusyTimer.cancel();
+			}
 		}
 
 	}
@@ -1960,10 +1964,12 @@ public class StructuredTextEditor extends TextEditor {
 	 * ... but expected to be gaurded there with ILock, plus, can be called
 	 * directly from timer thread, so the timer's run method guards with ILock
 	 * too.
+	 * 
+	 * Set result[0] to 1 if the busy state was ended successfully
 	 */
-	private void endBusyStateInternal() {
+	private void endBusyStateInternal(byte[] result) {
 		if (fBackgroundJobEnded) {
-			fBusyTimer.cancel();
+			result[0] = 1;
 			showBusy(false);
 
 			ISourceViewer viewer = getSourceViewer();
