@@ -1,7 +1,5 @@
-package org.eclipse.wst.xsd.ui.internal.adt.design;
-
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +8,8 @@ package org.eclipse.wst.xsd.ui.internal.adt.design;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+package org.eclipse.wst.xsd.ui.internal.adt.design;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -101,8 +101,6 @@ public FlatCCombo (Composite parent, int style) {
   if ((style & SWT.READ_ONLY) != 0) textStyle |= SWT.READ_ONLY;
   if ((style & SWT.FLAT) != 0) textStyle |= SWT.FLAT;
   text = new Text (this, textStyle);
-  int arrowStyle = SWT.ARROW | SWT.DOWN;
-  if ((style & SWT.FLAT) != 0) arrowStyle |= SWT.FLAT;
   arrow = new Label(this, SWT.FLAT);
   arrow.setImage(XSDEditorPlugin.getXSDImage("icons/TriangleToolBar.gif")); //$NON-NLS-1$
 
