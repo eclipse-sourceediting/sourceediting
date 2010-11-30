@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -185,7 +185,6 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 		IBreakpoint[] breakpoints = getBreakpoints(getMarkers());
 		for (int i = 0; i < breakpoints.length; i++) {
 			try {
-				breakpoints[i].getMarker().delete();
 				breakpointManager.removeBreakpoint(breakpoints[i], true);
 			}
 			catch (CoreException e) {
