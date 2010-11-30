@@ -74,6 +74,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
+import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
@@ -200,6 +201,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSou
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.quickoutline.QuickOutlineHandler;
 import org.eclipse.wst.sse.ui.internal.quickoutline.QuickOutlinePopupDialog;
+import org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager;
@@ -2369,6 +2371,26 @@ public class StructuredTextEditor extends TextEditor {
 	protected void handleCursorPositionChanged() {
 		super.handleCursorPositionChanged();
 		updateStatusField(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET);
+	}
+	
+	protected void handleElementContentReplaced() {
+		super.handleElementContentReplaced();
+
+		// queue a full revalidation of content
+		IDocument document = getDocumentProvider().getDocument(getEditorInput());
+		SourceViewerConfiguration sourceViewerConfiguration = getSourceViewerConfiguration();
+		if (document != null && sourceViewerConfiguration != null && sourceViewerConfiguration.getReconciler(getSourceViewer()) instanceof DirtyRegionProcessor) {
+			((DirtyRegionProcessor) sourceViewerConfiguration.getReconciler(getSourceViewer())).processDirtyRegion(new DirtyRegion(0, document.getLength(), DirtyRegion.INSERT, document.get()));
+		}
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=129906 - update selection to listeners
+		ISelectionProvider selectionProvider = getSelectionProvider();
+		ISelection originalSelection = selectionProvider.getSelection();
+		if (selectionProvider instanceof StructuredSelectionProvider && originalSelection instanceof ITextSelection) {
+			SelectionChangedEvent syntheticEvent = new SelectionChangedEvent(selectionProvider, new TextSelection(((ITextSelection) originalSelection).getOffset(), ((ITextSelection) originalSelection).getLength()));
+			((StructuredSelectionProvider) selectionProvider).handleSelectionChanged(syntheticEvent);
+			((StructuredSelectionProvider) selectionProvider).handlePostSelectionChanged(syntheticEvent);
+		}
 	}
 	
 	/*
