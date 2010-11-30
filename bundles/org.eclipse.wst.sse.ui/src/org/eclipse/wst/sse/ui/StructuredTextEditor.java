@@ -1030,7 +1030,6 @@ public class StructuredTextEditor extends TextEditor {
 	private ISourceReconcilingListener[] fReconcilingListeners = new ISourceReconcilingListener[0]; 
 	private IPartListener fPartListener;
 
-	private String fRememberTitle;
 	/** The ruler context menu to be disposed. */
 	private Menu fRulerContextMenu;
 	/** The ruler context menu manager to be disposed. */
@@ -2956,17 +2955,8 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.part.WorkbenchPart#showBusy(boolean)
 	 */
 	public void showBusy(boolean busy) {
-		if (busy) {
-			fRememberTitle = getPartName();
-			// update title and/or fonts and/or background
-			//
-			// temp solution, for testing, uses "busy"
-			setPartName(SSEUIMessages.busy); //$NON-NLS-1$
-		}
-		else {
-			// reset to what it was
-			setPartName(fRememberTitle);
-		}
+		// no-op
+		super.showBusy(busy);
 	}
 
 	private void startBusyTimer() {

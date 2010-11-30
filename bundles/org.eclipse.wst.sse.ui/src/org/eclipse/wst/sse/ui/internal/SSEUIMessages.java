@@ -291,7 +291,6 @@ public class SSEUIMessages extends NLS {
 	public static String EncodingPreferencePage_0;
 	public static String EncodingPreferencePage_1;
 
-	public static String busy;
 	public static String caret_update;
 	public static String EmptyFilePreferencePage_0;
 
