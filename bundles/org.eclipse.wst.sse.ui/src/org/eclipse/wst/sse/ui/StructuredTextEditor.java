@@ -2381,14 +2381,26 @@ public class StructuredTextEditor extends TextEditor {
 		if (document != null && sourceViewerConfiguration != null && sourceViewerConfiguration.getReconciler(getSourceViewer()) instanceof DirtyRegionProcessor) {
 			((DirtyRegionProcessor) sourceViewerConfiguration.getReconciler(getSourceViewer())).processDirtyRegion(new DirtyRegion(0, document.getLength(), DirtyRegion.INSERT, document.get()));
 		}
-		
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=129906 - update selection to listeners
+
+		/*
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=129906 - update
+		 * selection to listeners
+		 */
 		ISelectionProvider selectionProvider = getSelectionProvider();
 		ISelection originalSelection = selectionProvider.getSelection();
 		if (selectionProvider instanceof StructuredSelectionProvider && originalSelection instanceof ITextSelection) {
-			SelectionChangedEvent syntheticEvent = new SelectionChangedEvent(selectionProvider, new TextSelection(((ITextSelection) originalSelection).getOffset(), ((ITextSelection) originalSelection).getLength()));
-			((StructuredSelectionProvider) selectionProvider).handleSelectionChanged(syntheticEvent);
-			((StructuredSelectionProvider) selectionProvider).handlePostSelectionChanged(syntheticEvent);
+			ITextSelection textSelection = (ITextSelection) originalSelection;
+			// make sure the old selection is actually still valid
+			if (!textSelection.isEmpty() && (document == null || textSelection.getOffset() + textSelection.getLength() <= document.getLength())) {
+				SelectionChangedEvent syntheticEvent = new SelectionChangedEvent(selectionProvider, new TextSelection(textSelection.getOffset(), textSelection.getLength()));
+				((StructuredSelectionProvider) selectionProvider).handleSelectionChanged(syntheticEvent);
+				((StructuredSelectionProvider) selectionProvider).handlePostSelectionChanged(syntheticEvent);
+			}
+			else {
+				SelectionChangedEvent syntheticEvent = new SelectionChangedEvent(selectionProvider, new TextSelection(0, 0));
+				((StructuredSelectionProvider) selectionProvider).handleSelectionChanged(syntheticEvent);
+				((StructuredSelectionProvider) selectionProvider).handlePostSelectionChanged(syntheticEvent);
+			}
 		}
 	}
 	
