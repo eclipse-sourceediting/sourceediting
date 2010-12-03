@@ -51,7 +51,7 @@ public class SimpleWebFacetInstallDataModelProvider extends FacetInstallDataMode
 		if (propertyName.equals(CONTENT_DIR)) {
 			return "WebContent"; //$NON-NLS-1$
 		} else if (propertyName.equals(CONTEXT_ROOT)) {
-			return getProperty(FACET_PROJECT_NAME);
+			return getStringProperty(FACET_PROJECT_NAME).replace(' ', '_');
 		} else if (propertyName.equals(FACET_ID)) {
 			return IModuleConstants.WST_WEB_MODULE;
 		}
