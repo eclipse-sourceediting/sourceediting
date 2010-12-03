@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,8 +42,6 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 
 	private Image fImage;
 
-	private int fOriginalReplacementLength;
-
 	private int fRelevance = IRelevanceConstants.R_NONE;
 
 	private int fReplacementLength = 0;
@@ -83,7 +81,6 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 		fAdditionalProposalInfo = additionalProposalInfo;
 		fRelevance = relevance;
 		fUpdateLengthOnValidate = updateReplacementLengthOnValidate;
-		fOriginalReplacementLength = fReplacementLength;
 	}
 
 	public CustomCompletionProposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image, String displayString, IContextInformation contextInformation, String additionalProposalInfo, int relevance) {
@@ -309,11 +306,7 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 		boolean validated = startsWith(document, offset, fDisplayString);
 
 		if (fUpdateLengthOnValidate) {
-			// it would be better to use "originalCursorPosition" instead of
-			// getReplacementOffset(), but we don't have that info.
-			int newLength = offset - getReplacementOffset();
-			int delta = newLength - fOriginalReplacementLength;
-			fReplacementLength = delta + fOriginalReplacementLength;
+			fReplacementLength += event.fText.length() - event.fLength; //adjust the replacement length by the event's text replacement
 		}
 		return validated;
 	}
