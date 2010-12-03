@@ -247,10 +247,7 @@ public class JSPJavaValidator extends JSPValidator {
 
 		m.setLineNo(lineNo);
 		m.setOffset(sourceStart);
-		if (sourceEnd - sourceStart + 1 >= 0)
-			m.setLength(sourceEnd - sourceStart + 1);
-		else
-			m.setLength(0);
+		m.setLength((sourceEnd >= sourceStart) ? (sourceEnd - sourceStart + 1) : 0);
 
 		// need additional adjustment for problems from
 		// indirect (included) files
