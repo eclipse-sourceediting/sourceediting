@@ -301,6 +301,7 @@ public class HTMLDocumentAdapter implements IStyleSheetListAdapter, StyleSheetLi
 						}
 					}
 				}
+				break;
 			}
 			case Node.ATTRIBUTE_NODE : {
 				if (HTML40Namespace.ElementName.BASE.equals(((Attr) node).getOwnerElement().getLocalName())) {
