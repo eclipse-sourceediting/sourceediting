@@ -1518,12 +1518,12 @@ public class ModelManagerImpl implements IModelManager {
 		if (sharedObject != null) {
 			SYNC.release();
 			sharedObject.waitForLoadAttempt();
-			SYNC.acquire();
 			synchronized (sharedObject) {
 				count = sharedObject.referenceCountForRead + sharedObject.referenceCountForEdit;
 			}
+		} else {
+			SYNC.release();
 		}
-		SYNC.release();
 		return count;
 	}
 
@@ -1566,12 +1566,12 @@ public class ModelManagerImpl implements IModelManager {
 		if (sharedObject != null) {
 			SYNC.release();
 			sharedObject.waitForLoadAttempt();
-			SYNC.acquire();
 			synchronized(sharedObject) {
 				count = sharedObject.referenceCountForRead;
 			}
+		} else {
+			SYNC.release();
 		}
-		SYNC.release();
 		return count;
 	}
 
@@ -1599,12 +1599,12 @@ public class ModelManagerImpl implements IModelManager {
 		if (sharedObject != null) {
 			SYNC.release();
 			sharedObject.waitForLoadAttempt();
-			SYNC.acquire();
 			synchronized(sharedObject) {
 				count = sharedObject.referenceCountForRead + sharedObject.referenceCountForEdit;
 			}
+		} else {
+			SYNC.release();
 		}
-		SYNC.release();
 		result = count > 1;
 		return result;
 	}
@@ -1651,12 +1651,12 @@ public class ModelManagerImpl implements IModelManager {
 		if (sharedObject != null) {
 			SYNC.release();
 			sharedObject.waitForLoadAttempt();
-			SYNC.acquire();
 			synchronized(sharedObject) {
 				count = sharedObject.referenceCountForRead;
 			}
+		} else {
+			SYNC.release();
 		}
-		SYNC.release();
 		result = count > 1;
 		return result;
 	}
