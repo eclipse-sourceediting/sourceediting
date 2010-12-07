@@ -722,71 +722,7 @@ public class TaglibHelper {
 	 */
 	private TagInfo getTagInfo(final TLDElementDeclaration decl, TagExtraInfo tei, String prefix, String uri) {
 
-		TagLibraryInfo libInfo = new TagLibraryInfo(prefix, uri) {
-
-			public String getURI() {
-				if (Platform.inDebugMode())
-					new NotImplementedException().printStackTrace();
-				return super.getURI();
-			}
-
-			public String getPrefixString() {
-				if (Platform.inDebugMode())
-					new NotImplementedException().printStackTrace();
-				return super.getPrefixString();
-			}
-
-			public String getShortName() {
-				return ((TLDDocument)decl.getOwnerDocument()).getShortname();
-			}
-
-			public String getReliableURN() {
-				return ((TLDDocument)decl.getOwnerDocument()).getUri();
-			}
-
-			public String getInfoString() {
-				return ((TLDDocument)decl.getOwnerDocument()).getInfo();
-			}
-
-			public String getRequiredVersion() {
-				return ((TLDDocument)decl.getOwnerDocument()).getJspversion();
-			}
-
-			public TagInfo[] getTags() {
-				if (Platform.inDebugMode())
-					new NotImplementedException().printStackTrace();
-				return super.getTags();
-			}
-
-			public TagFileInfo[] getTagFiles() {
-				if (Platform.inDebugMode())
-					new NotImplementedException().printStackTrace();
-				return super.getTagFiles();
-			}
-
-			public TagInfo getTag(String shortname) {
-				if (Platform.inDebugMode())
-					new NotImplementedException().printStackTrace();
-				return super.getTag(shortname);
-			}
-
-			public TagFileInfo getTagFile(String shortname) {
-				if (Platform.inDebugMode())
-					new NotImplementedException().printStackTrace();
-				return super.getTagFile(shortname);
-			}
-
-			public FunctionInfo[] getFunctions() {
-				if (Platform.inDebugMode())
-					new NotImplementedException().printStackTrace();
-				return super.getFunctions();
-			}
-
-			public FunctionInfo getFunction(String name) {
-				new NotImplementedException(name).printStackTrace();
-				return super.getFunction(name);
-			}
-		};
+		TagLibraryInfo libInfo = new TagLibraryInfoImpl(prefix, uri, decl);
 
 		CMNamedNodeMap attrs = decl.getAttributes();
 		TagAttributeInfo[] attrInfos = new TagAttributeInfo[attrs.getLength()];
@@ -989,5 +925,83 @@ public class TaglibHelper {
 			fClassMap.clear();
 		}
 
+	}
+
+	class TagLibraryInfoImpl extends TagLibraryInfo {
+		TLDElementDeclaration decl;
+
+		TagLibraryInfoImpl(String prefix, String uri, TLDElementDeclaration decl){
+			super(prefix, uri);
+			this.decl = decl;
+		}
+
+		public String getURI() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getURI();
+		}
+
+		public String getPrefixString() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getPrefixString();
+		}
+
+		public String getShortName() {
+			return ((TLDDocument)decl.getOwnerDocument()).getShortname();
+		}
+
+		public String getReliableURN() {
+			return ((TLDDocument)decl.getOwnerDocument()).getUri();
+		}
+
+		public String getInfoString() {
+			return ((TLDDocument)decl.getOwnerDocument()).getInfo();
+		}
+
+		public String getRequiredVersion() {
+			return ((TLDDocument)decl.getOwnerDocument()).getJspversion();
+		}
+
+		public TagInfo[] getTags() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getTags();
+		}
+
+		public TagFileInfo[] getTagFiles() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getTagFiles();
+		}
+
+		public TagInfo getTag(String shortname) {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getTag(shortname);
+		}
+
+		public TagFileInfo getTagFile(String shortname) {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getTagFile(shortname);
+		}
+
+		public FunctionInfo[] getFunctions() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getFunctions();
+		}
+
+		public FunctionInfo getFunction(String name) {
+			new NotImplementedException(name).printStackTrace();
+			return super.getFunction(name);
+		}
+
+		public TagLibraryInfo[] getTagLibraryInfos()  {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return new TagLibraryInfo[] { this };
+		}
 	}
 }
