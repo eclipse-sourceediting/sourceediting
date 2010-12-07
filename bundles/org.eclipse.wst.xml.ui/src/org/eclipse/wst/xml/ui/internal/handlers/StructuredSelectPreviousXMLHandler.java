@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,29 +45,48 @@ public class StructuredSelectPreviousXMLHandler extends AbstractStructuredSelect
 			Region cursorNodeRegion = new Region(indexedRegion.getStartOffset(), indexedRegion.getEndOffset() - indexedRegion.getStartOffset());
 
 			if ((cursorNodeRegion.getOffset() >= textSelection.getOffset()) && (cursorNodeRegion.getOffset() <= textSelection.getOffset() + textSelection.getLength()) && (cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() >= textSelection.getOffset()) && (cursorNodeRegion.getOffset() + cursorNodeRegion.getLength() <= textSelection.getOffset() + textSelection.getLength())) {
-				Node newNode = cursorNode.getPreviousSibling();
-				if (newNode == null) {
-					newNode = cursorNode.getParentNode();
-
-					if (newNode instanceof IndexedRegion) {
-						IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
-						newRegion = new Region(newIndexedRegion.getStartOffset(), newIndexedRegion.getEndOffset() - newIndexedRegion.getStartOffset());
-					}
-				}
-				else {
-					if (newNode instanceof IndexedRegion) {
-						IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
-						newRegion = new Region(newIndexedRegion.getStartOffset(), textSelection.getOffset() + textSelection.getLength() - newIndexedRegion.getStartOffset());
-
-						if (newNode.getNodeType() == Node.TEXT_NODE) {
-							newRegion = getNewSelectionRegion(newIndexedRegion, new TextSelection(newRegion.getOffset(), newRegion.getLength()));
-						}
-					}
-				}
-
+				
+				newRegion = getNewSelectionRegion2(indexedRegion, textSelection);
+			
 			}
 			else {
 				newRegion = cursorNodeRegion;
+			}
+		}
+		return newRegion;
+	}
+	
+	/**
+	 * This method was separated out from getNewSelectionRegion2 because the
+	 * code in here is allowed to be called recursively.
+	 * 
+	 * @param indexedRegion
+	 * @param textSelection
+	 * @return new region to select or null if none
+	 */
+	protected Region getNewSelectionRegion2(IndexedRegion indexedRegion, ITextSelection textSelection) {
+		Region newRegion = null;
+		if (indexedRegion instanceof Node) {
+			Node node = (Node) indexedRegion;
+		
+			Node newNode = node.getPreviousSibling();
+			if (newNode == null) {
+				newNode = node.getParentNode();
+	
+				if (newNode instanceof IndexedRegion) {
+					IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
+					newRegion = new Region(newIndexedRegion.getStartOffset(), newIndexedRegion.getEndOffset() - newIndexedRegion.getStartOffset());
+				}
+			}
+			else {
+				if (newNode instanceof IndexedRegion) {
+					IndexedRegion newIndexedRegion = (IndexedRegion) newNode;
+					newRegion = new Region(newIndexedRegion.getStartOffset(), textSelection.getOffset() + textSelection.getLength() - newIndexedRegion.getStartOffset());
+	
+					if (newNode.getNodeType() == Node.TEXT_NODE) {
+						newRegion = getNewSelectionRegion2(newIndexedRegion, new TextSelection(newRegion.getOffset(), newRegion.getLength()));
+					}
+				}
 			}
 		}
 		return newRegion;
