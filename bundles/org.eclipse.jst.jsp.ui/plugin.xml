@@ -71,7 +71,7 @@
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<provisionalDefinition
 			type="spellingregions"
-			value="XML_COMMENT_TEXT, JSP_COMMENT_TEXT, XML_CONTENT, HTML_CONTENT, JSP_CONTENT"
+			value="XML_COMMENT_TEXT, JSP_COMMENT_TEXT, XML_CONTENT, HTML_CONTENT"
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<provisionalDefinition
 			type="activecontexts"
