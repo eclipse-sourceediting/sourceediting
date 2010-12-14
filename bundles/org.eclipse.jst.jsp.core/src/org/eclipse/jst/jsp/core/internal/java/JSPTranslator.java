@@ -587,7 +587,7 @@ public class JSPTranslator implements Externalizable {
 	/**
 	 * Reinitialize some fields
 	 */
-	private void reset() {
+	void reset() {
 
 		// reset progress monitor
 		if (fProgressMonitor != null)

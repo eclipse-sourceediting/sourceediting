@@ -162,8 +162,8 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 			// it's going to be rebuilt, so we release it here
 			if (fJSPTranslation != null) {
 				if (DEBUG)
-					System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
-				fJSPTranslation.release();
+					System.out.println("JSPTranslationAdapter retranslating:" + fJSPTranslation); //$NON-NLS-1$
+				fJSPTranslation.retranslate();
 			}
 			fJSPTranslation = new JSPTranslationExtension(getXMLModel().getStructuredDocument(), fJavaDocument, getJavaProject(), translator);
 			fDocumentIsDirty = false;
