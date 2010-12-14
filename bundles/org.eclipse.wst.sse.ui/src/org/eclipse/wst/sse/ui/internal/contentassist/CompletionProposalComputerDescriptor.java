@@ -470,6 +470,7 @@ final class CompletionProposalComputerDescriptor {
 						ContentAssistUtils.checkExtensionAttributeNotNull(partitionTypeID, ATTR_ID, partitionTypes[partitionTypeIndex]);
 						
 						CompletionProposalComputerRegistry.getDefault().putDescription(contentTypeID, partitionTypeID, desc);
+						CompletionProposalComputerRegistry.getDefault().putAutoActivator(contentTypeID, partitionTypeID, partitionTypes[partitionTypeIndex]);
 					}
 				} else {
 					CompletionProposalComputerRegistry.getDefault().putDescription(contentTypeID, null, desc);

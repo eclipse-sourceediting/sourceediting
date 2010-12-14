@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.wst.sse.ui.contentassist.AutoActivationDelegate;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
@@ -55,6 +56,9 @@ public final class CompletionProposalComputerRegistry {
 	
 	/** The extension schema name for element ID attributes */
 	private static final String ATTR_ID= "id"; //$NON-NLS-1$
+
+	/** The extension schema name for the partition's auto-activation class */
+	private static final String ATTR_AUTO_ACTIVATION_CLASS = "autoActivationDelegate"; //$NON-NLS-1$
 	
 	/** preference key to keep track of the last known number of content assist computers */
 	private static final String NUM_COMPUTERS_PREF_KEY = "content_assist_number_of_computers"; //$NON-NLS-1$
@@ -108,6 +112,9 @@ public final class CompletionProposalComputerRegistry {
 	 * <ul>
 	 */
 	private final Map fDescriptors = new HashMap();
+
+	/** A map maintaining the relationship between content types, partition types and their associated {@link AutoActivationDelegate}s*/
+	private Map fAutoActivators = new HashMap();
 
 	/** The {@link CompletionProposalCategory}s tracked by this registry */
 	private final List fCategories = new ArrayList();
@@ -233,6 +240,30 @@ public final class CompletionProposalComputerRegistry {
 		
 		CompletionProposalContentTypeContext context = getContext(contentTypeID);
 		context.putDescriptor(partitionTypeID, descriptor);
+	}
+
+	void putAutoActivator(String contentTypeID, String partitionTypeID, IConfigurationElement element) {
+		String autoActivationClass = element.getAttribute(ATTR_AUTO_ACTIVATION_CLASS);
+		if (autoActivationClass == null)
+			return;
+
+		Map partitionMap = (Map) fAutoActivators.get(contentTypeID);
+		if (partitionMap == null) {
+			partitionMap = new HashMap();
+			fAutoActivators.put(contentTypeID, partitionMap);
+		}
+		partitionMap.put(partitionTypeID, new Activator(element));
+	}
+
+	public AutoActivationDelegate getActivator(String contentTypeID, String partitionTypeID) {
+		Map partitionMap = (Map) fAutoActivators.get(contentTypeID);
+		if (partitionMap != null) {
+			Activator activator = (Activator) partitionMap.get(partitionTypeID);
+			if (activator != null) {
+				return activator.createAutoActivation();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -504,5 +535,25 @@ public final class CompletionProposalComputerRegistry {
 		}
 		
 		return contexts;
+	}
+
+	private static class Activator {
+		IConfigurationElement fElement;
+
+		public Activator(IConfigurationElement element) {
+			fElement = element;
+		}
+
+		AutoActivationDelegate createAutoActivation() {
+			AutoActivationDelegate activation = null;
+			if (fElement != null) {
+				try {
+					activation = (AutoActivationDelegate) fElement.createExecutableExtension(ATTR_AUTO_ACTIVATION_CLASS);
+				} catch (CoreException e) {
+				}
+			}
+			return activation;
+		}
+
 	}
 }

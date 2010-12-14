@@ -195,6 +195,16 @@ and must have a public 0-argument constructor.
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="autoActivationDelegate" type="string">
+            <annotation>
+               <documentation>
+                  Identifies a class that is responsible for identifying auto-activation characters for the associated content and partition type.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.contentassist.AutoActivationDelegate:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
