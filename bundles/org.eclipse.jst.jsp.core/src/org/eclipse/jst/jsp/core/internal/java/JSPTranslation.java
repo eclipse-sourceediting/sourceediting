@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,7 +28,8 @@ import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jface.text.Position;
@@ -436,9 +436,22 @@ public class JSPTranslation implements IJSPTranslation {
 			return null;
 		
 		final String name = getClassname() + ".java";
-		IFile fakeFile = je.getProject().getFile(name);
-		ICompilationUnit fakeUnit = JavaCore.createCompilationUnitFrom(fakeFile);
-		ICompilationUnit cu = fakeUnit.getWorkingCopy(getWorkingCopyOwner(), getProgressMonitor());
+		IPackageFragmentRoot packageFragmentRoot = null;
+		IPackageFragmentRoot[] packageFragmentRoots = je.getPackageFragmentRoots();
+		for (int i = 0; i < packageFragmentRoots.length; i++) {
+			if (!packageFragmentRoots[i].isArchive() && !packageFragmentRoots[i].isExternal()) {
+				packageFragmentRoot = packageFragmentRoots[i];
+				break;
+			}
+		}
+		if (packageFragmentRoot == null) {
+			if(DEBUG) {
+				System.out.println("** Abort create working copy: cannot create working copy: JSP is not in a Java project with source package fragment root"); //$NON-NLS-1$
+			}
+			return null;
+		}
+		final IPackageFragment fragment = packageFragmentRoot.getPackageFragment(IPackageFragmentRoot.DEFAULT_PACKAGEROOT_PATH);
+		ICompilationUnit cu = fragment.getCompilationUnit(name).getWorkingCopy(getWorkingCopyOwner(), getProgressMonitor());
 		setContents(cu);
 
 		if(DEBUG) {
