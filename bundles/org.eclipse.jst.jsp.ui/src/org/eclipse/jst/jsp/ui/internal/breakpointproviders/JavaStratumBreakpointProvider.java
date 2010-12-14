@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -126,10 +126,18 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				}
 				StringBuffer patternBuffer = new StringBuffer("_" + shortName);
 				for (int i = 0; i < types.length; i++) {
-					Object pattern = ((Map) fData).get(types[i].getId());
+					final String id = types[i].getId();
+					Object pattern = ((Map) fData).get(id);
 					if (pattern != null) {
 						patternBuffer.append(","); //$NON-NLS-1$
 						patternBuffer.append(pattern);
+					}
+					 // Append contributions
+					final String contributions = ClassPatternRegistry.getInstance().getClassPattern(id);
+					if (contributions != null && contributions.length() > 0) {
+						if (contributions.charAt(0) != ',')
+							patternBuffer.append(',');
+						patternBuffer.append(contributions);
 					}
 				}
 				return patternBuffer.toString();
