@@ -99,25 +99,27 @@ public class JSPTranslation implements IJSPTranslation {
 
 		fLock = new byte[0];
 		fJavaProject = javaProj;
-		//fTranslator = translator;
+		fTranslator = translator;
 		
 		// can be null if it's an empty document (w/ NullJSPTranslation)
-		if(translator != null) {
-		    fJavaText = translator.getTranslation().toString();
-		    fJspText = translator.getJspText();
-			fClassname = translator.getClassname();
-			fJava2JspMap = translator.getJava2JspRanges();
-			fJsp2JavaMap = translator.getJsp2JavaRanges();
-			fJava2JspImportsMap = translator.getJava2JspImportRanges();
-			fJava2JspUseBeanMap = translator.getJava2JspUseBeanRanges();
-			fJava2JspIndirectMap = translator.getJava2JspIndirectRanges();
-			fTranslationProblems = translator.getTranslationProblems();
-			fIncludedPaths = translator.getIncludedPaths();
-		}
-		
-		this.fTranslator = translator;
+		initialize();
 	}
-	
+
+	private void initialize() {
+		if(fTranslator != null) {
+			fJavaText = fTranslator.getTranslation().toString();
+			fJspText = fTranslator.getJspText();
+			fClassname = fTranslator.getClassname();
+			fJava2JspMap = fTranslator.getJava2JspRanges();
+			fJsp2JavaMap = fTranslator.getJsp2JavaRanges();
+			fJava2JspImportsMap = fTranslator.getJava2JspImportRanges();
+			fJava2JspUseBeanMap = fTranslator.getJava2JspUseBeanRanges();
+			fJava2JspIndirectMap = fTranslator.getJava2JspIndirectRanges();
+			fTranslationProblems = fTranslator.getTranslationProblems();
+			fIncludedPaths = fTranslator.getIncludedPaths();
+		}
+	}
+
 	/**
 	 * @return {@link JSPTranslator} used by this {@link JSPTranslation}
 	 */
@@ -515,6 +517,20 @@ public class JSPTranslation implements IJSPTranslation {
 		ICompilationUnit cu = getCompilationUnit();
 		if(cu != null) {	
 			getProblemRequestor().setIsActive(collect);
+		}
+	}
+
+	public void retranslate() {
+		if (fTranslator != null) {
+			// retranslate and initialize this translation
+			fTranslator.reset();
+			fTranslator.translate();
+			initialize();
+
+			// Also, if we have a compilation unit, reset the contents
+			synchronized (fLock) {
+				setContents(fCompilationUnit);
+			}
 		}
 	}
 
