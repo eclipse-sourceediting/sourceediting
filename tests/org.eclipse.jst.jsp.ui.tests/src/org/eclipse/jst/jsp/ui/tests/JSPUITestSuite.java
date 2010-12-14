@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.jface.text.tests.JFaceTextTestSuite;
+import org.eclipse.jst.jsp.ui.tests.breakpointproviders.BreakpointProvidersTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.BeanInfoProviderTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPELContentAssistTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPJavaTranslatorTest;
@@ -68,6 +69,10 @@ public class JSPUITestSuite extends TestSuite {
 
 		addTest(new TestSuite(TestContentDescription.class, "Content Description Tests"));
 		addTest(new TestSuite(JSPHTMLValidatorTest.class, "JSP HTML Validator Test"));
+
+		// Breakpoint Providers
+		addTest(new TestSuite(BreakpointProvidersTest.class, "Additional JSP Breakpoint classes"));
+
 		// pa_TODO fix this test
 		//addTest(new TestSuite(JSPSearchTests.class));
 

@@ -51,4 +51,19 @@
              commandId="org.eclipse.jst.jsp.ui.showTranslation">
        </handler>
 	</extension>
+    <extension
+          point="org.eclipse.jst.jsp.ui.classPatternProvider">
+       <classPatternProvider
+             contentType="org.eclipse.jst.jsp.ui.tests.type"
+             pattern="*foo,*bar">
+       </classPatternProvider>
+       <classPatternProvider
+             contentType="org.eclipse.jst.jsp.ui.tests.multitype"
+             pattern="*foo,*bar">
+       </classPatternProvider>
+       <classPatternProvider
+             contentType="org.eclipse.jst.jsp.ui.tests.multitype"
+             pattern="*baz">
+       </classPatternProvider>
+    </extension>
 </plugin>
