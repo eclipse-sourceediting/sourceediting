@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -176,8 +176,8 @@ public class CSSStructuredDocumentReParser extends StructuredDocumentReParser {
 	private ReparseRange getUpdateRangeForQuotes(int start, int end) {
 		ReparseRange range = new ReparseRange();
 
-		range.expand(getUpdateRangeForPair(start, end, "\"", "\"")); //$NON-NLS-2$//$NON-NLS-1$
-		range.expand(getUpdateRangeForPair(start, end, "\'", "\'")); //$NON-NLS-2$//$NON-NLS-1$
+		range.expand(getUpdateRangeForPair(start, end, '\"', '\"'));
+		range.expand(getUpdateRangeForPair(start, end, '\'', '\''));
 
 		return (range.isValid()) ? range : null;
 	}
@@ -194,9 +194,9 @@ public class CSSStructuredDocumentReParser extends StructuredDocumentReParser {
 	private ReparseRange getUpdateRangeForBraces(int start, int end) {
 		ReparseRange range = new ReparseRange();
 
-		range.expand(getUpdateRangeForPair(start, end, "[", "]")); //$NON-NLS-2$//$NON-NLS-1$
-		range.expand(getUpdateRangeForPair(start, end, "(", ")")); //$NON-NLS-2$//$NON-NLS-1$
-		range.expand(getUpdateRangeForPair(start, end, "{", "}")); //$NON-NLS-2$//$NON-NLS-1$
+		range.expand(getUpdateRangeForPair(start, end, '[', ']'));
+		range.expand(getUpdateRangeForPair(start, end, '(', ')'));
+		range.expand(getUpdateRangeForPair(start, end, '{', '}'));
 
 		return (range.isValid()) ? range : null;
 	}
@@ -332,6 +332,64 @@ public class CSSStructuredDocumentReParser extends StructuredDocumentReParser {
 				}
 				else {
 					e = -1;
+				}
+			}
+			catch (BadLocationException ex) {
+				Logger.logException(ex);
+				return null;
+			}
+			if (0 <= s) {
+				rangeStart = Math.min(rangeStart, s);
+			}
+			if (0 <= e) {
+				rangeEnd = Math.max(rangeEnd, e);
+			}
+		}
+
+		if (rangeStart < start || end < rangeEnd) {
+			return new ReparseRange(rangeStart, rangeEnd);
+		}
+		else {
+			return null;
+		}
+	}
+
+	private int findChar(char c, int start, boolean forward) throws BadLocationException {
+		int stop = forward ? fStructuredDocument.getLength() : 0;
+		if (forward) {
+			for (; start < stop; start++) {
+				if (fStructuredDocument.getChar(start) == c)
+					return start;
+			}
+		}
+		else {
+			for (; start >= stop; start--) {
+				if (fStructuredDocument.getChar(start) == c)
+					return start;
+			}
+		}
+		return -1;
+	}
+
+	ReparseRange getUpdateRangeForPair(int start, int end, char opener, char closer) {
+		StringBuffer deletionBuf = new StringBuffer();
+		StringBuffer insertionBuf = new StringBuffer();
+		deletionBuf.append(fDeletedText);
+		insertionBuf.append(fChanges);
+		String deletion = deletionBuf.toString();
+		String insertion = insertionBuf.toString();
+
+		int rangeStart = start;
+		int rangeEnd = end;
+
+		if (0 <= deletion.indexOf(opener) || 0 <= deletion.indexOf(closer) || 0 <= insertion.indexOf(opener) || 0 <= insertion.indexOf(closer)) {
+			int s = -1, e = -1;
+			try {
+				if (start <= fStructuredDocument.getLength()) {
+					s = findChar(opener, start - 1, false);
+				}
+				if (end < fStructuredDocument.getLength() - 1) {
+					e = findChar(closer, end + 1, true);
 				}
 			}
 			catch (BadLocationException ex) {
