@@ -158,6 +158,26 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 					IStructuredDocumentRegion region = node.getEndStructuredDocumentRegion();
 					if (region != null && region.getRegions().size() > 0 && region.getRegions().get(0).getType() == DOMRegionContext.XML_END_TAG_OPEN && !isClosedByParent)
 						return;
+					region = node.getStartStructuredDocumentRegion();
+					if (region != null) {
+						ITextRegion textRegion = region.getRegionAtCharacterOffset(command.offset - 1);
+						if (textRegion != null && DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE.equals(textRegion.getType())) {
+							// Check that the command is not within a quoted attribute value
+							final String text = region.getText(textRegion);
+							final char first = text.charAt(0);
+							if (first == '\'' || first == '"') {
+								if (text.length() < 2) // Just an opening quote
+									return;
+								final char last = text.charAt(text.length() - 1);
+								if (last == first) { // Quote is paired
+									 if (command.offset < region.getTextEndOffset(textRegion)) // Command is within the value
+									 	return;
+								}
+								else // Unpaired quote
+									return;
+							}
+						}
+					}
 					command.text += "</" + getElementName(node, command.offset) + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 					command.shiftsCaret = false;
 					command.caretOffset = command.offset + 1;
