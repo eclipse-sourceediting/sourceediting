@@ -329,6 +329,22 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		return this.fContextInformationValidator;
 	}
 	
+	public void install(ITextViewer viewer) {
+		if (fPreferenceStore != null) {
+			fPreferenceStore.addPropertyChangeListener(this);
+		}
+		if (fViewer != null) {
+			fViewer.removeTextInputListener(fTextInputListener);
+		}
+		fViewer = viewer;
+		if (fViewer != null) {
+			fViewer.addTextInputListener(fTextInputListener);
+		}
+		if (fAssistant != null) {
+			fAssistant.addCompletionListener(fCompletionListener);
+		}
+	}
+
 	/**
 	 * <p>Extenders may override, but should always be sure to call the super implementation</p>
 	 * 
@@ -341,7 +357,6 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		}
 		if(this.fPreferenceStore != null) {
 			this.fPreferenceStore.removePropertyChangeListener(this);
-			this.fPreferenceStore = null;
 		}
 		
 		if(this.fViewer != null) {
@@ -350,7 +365,6 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		}
 		if (this.fAssistant != null) {
 			this.fAssistant.removeCompletionListener(fCompletionListener);
-			this.fAssistant = null;
 		}
 	}
 	
