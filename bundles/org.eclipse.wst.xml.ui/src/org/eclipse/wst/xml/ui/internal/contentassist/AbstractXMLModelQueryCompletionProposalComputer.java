@@ -331,6 +331,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 				proposedInfo = getAdditionalInfo(elementDecl, attrDecl);
 				List possibleValues = getPossibleDataTypeValues(node, attrDecl);
 				String defaultValue = attrDecl.getAttrType().getImpliedValue();
+				String qualifiedDelimiter = (String) attrDecl.getProperty("qualified-delimiter"); //$NON-NLS-1$
 				if (possibleValues.size() > 0 || defaultValue != null) {
 					// ENUMERATED VALUES
 					String matchString = contentAssistRequest.getMatchString();
@@ -347,14 +348,22 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 					int rLength = contentAssistRequest.getReplacementLength();
 					for (Iterator j = possibleValues.iterator(); j.hasNext();) {
 						String possibleValue = (String) j.next();
+						String alternateMatch = null;
+						if (qualifiedDelimiter != null) {
+							int delimiter = possibleValue.lastIndexOf(qualifiedDelimiter);
+							if (delimiter >= 0 && delimiter < possibleValue.length() - 1) {
+								alternateMatch = possibleValue.substring(delimiter + 1);
+							}
+						}
 						if(!possibleValue.equals(defaultValue)) {
 							currentValid = currentValid || possibleValue.equals(currentValue);
 							if ((matchString.length() == 0) || possibleValue.startsWith(matchString)) {
 								String rString = "\"" + possibleValue + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+								alternateMatch = "\"" + alternateMatch; //$NON-NLS-1$
 								CustomCompletionProposal proposal = new CustomCompletionProposal(
 										rString, rOffset, rLength, possibleValue.length() + 1,
 										XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ENUM),
-										rString, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+										rString, alternateMatch, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE, true);
 								contentAssistRequest.addProposal(proposal);
 							}
 						}
