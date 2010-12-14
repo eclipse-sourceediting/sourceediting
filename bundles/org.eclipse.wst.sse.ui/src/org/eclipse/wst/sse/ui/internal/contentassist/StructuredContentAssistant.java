@@ -15,6 +15,7 @@ package org.eclipse.wst.sse.ui.internal.contentassist;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
@@ -33,6 +34,8 @@ public class StructuredContentAssistant extends ContentAssistant {
 	 */
 	private boolean fIsInitalized;
 	
+	private boolean fProcessorsReleased = false;
+
 	/**
 	 * <p>Construct the assistant</p>
 	 */
@@ -92,7 +95,19 @@ public class StructuredContentAssistant extends ContentAssistant {
 		}
 		return compoundContentAssistProcessor;
 	}
-	
+
+	public void install(ITextViewer textViewer) {
+		if (fProcessorsReleased) {
+			if (this.fReleasableProcessors != null && !this.fReleasableProcessors.isEmpty()) {
+				for(int i = 0; i < this.fReleasableProcessors.size(); ++i) {
+					((CompoundContentAssistProcessor)this.fReleasableProcessors.get(i)).install(textViewer);
+				}
+			}
+			fProcessorsReleased = false;
+		}
+		super.install(textViewer);
+	}
+
 	/**
 	 * @see org.eclipse.jface.text.contentassist.ContentAssistant#uninstall()
 	 */
@@ -102,11 +117,8 @@ public class StructuredContentAssistant extends ContentAssistant {
 			for(int i = 0; i < this.fReleasableProcessors.size(); ++i) {
 				((IReleasable)this.fReleasableProcessors.get(i)).release();
 			}
-			
-			this.fReleasableProcessors.clear();
 		}
-		this.fReleasableProcessors = null;
-		
+		fProcessorsReleased = true;
 		super.uninstall();
 	}
 }

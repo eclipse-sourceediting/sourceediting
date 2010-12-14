@@ -35,6 +35,7 @@ import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
@@ -354,6 +355,15 @@ public class CompoundContentAssistProcessor implements IContentAssistProcessor, 
 		this.release();
 	}
 	
+	public void install(ITextViewer viewer) {
+		for (Iterator it = fProcessors.iterator(); it.hasNext();) {
+			IContentAssistProcessor p = (IContentAssistProcessor) it.next();
+			if (p instanceof StructuredContentAssistProcessor) {
+				((StructuredContentAssistProcessor) p).install(viewer);
+			}
+		}
+	}
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.IReleasable#release()
 	 */
@@ -365,7 +375,6 @@ public class CompoundContentAssistProcessor implements IContentAssistProcessor, 
 				((IReleasable) p).release();
 			}
 		}
-		fProcessors.clear();
 	}
 	
 	private static class WrappedContextInformation implements IContextInformation, IContextInformationExtension {
