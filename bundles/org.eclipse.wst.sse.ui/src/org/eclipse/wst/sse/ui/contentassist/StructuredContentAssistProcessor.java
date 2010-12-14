@@ -176,6 +176,8 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	/** the context information validator for this processor */
 	private IContextInformationValidator fContextInformationValidator;
 	
+	private AutoActivationDelegate fAutoActivation;
+
 	/**
 	 * <p>Create a new content assist processor for a specific partition type. 
 	 * The content type will be determined when a document is set on the viewer</p>
@@ -291,7 +293,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		return null;
+		return (fAutoActivation != null) ? fAutoActivation.getCompletionProposalAutoActivationCharacters() : null;
 	}
 
 	/**
@@ -301,7 +303,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationAutoActivationCharacters()
 	 */
 	public char[] getContextInformationAutoActivationCharacters() {
-		return null;
+		return (fAutoActivation != null) ? fAutoActivation.getContextInformationAutoActivationCharacters() : null;
 	}
 
 	/**
@@ -333,6 +335,10 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * @see org.eclipse.wst.sse.ui.internal.IReleasable#release()
 	 */
 	public void release() {
+		if (fAutoActivation != null) {
+			fAutoActivation.dispose();
+			fAutoActivation = null;
+		}
 		if(this.fPreferenceStore != null) {
 			this.fPreferenceStore.removePropertyChangeListener(this);
 			this.fPreferenceStore = null;
@@ -891,6 +897,10 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 						model = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument)newInput);
 						if(model != null) {
 							fContentTypeID = model.getContentTypeIdentifier();
+							if (fAutoActivation != null) {
+								fAutoActivation.dispose();
+							}
+							fAutoActivation = CompletionProposalComputerRegistry.getDefault().getActivator(fContentTypeID, fPartitionTypeID);
 						}
 					} finally {
 						if(model != null) {
