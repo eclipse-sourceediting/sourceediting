@@ -40,6 +40,8 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 
 	private String fDisplayString;
 
+	private String fAlternateMatch;
+
 	private Image fImage;
 
 	private int fRelevance = IRelevanceConstants.R_NONE;
@@ -71,20 +73,25 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 	 * 
 	 */
 	public CustomCompletionProposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image, String displayString, IContextInformation contextInformation, String additionalProposalInfo, int relevance, boolean updateReplacementLengthOnValidate) {
+		this(replacementString, replacementOffset, replacementLength, cursorPosition, image, displayString, null, contextInformation, additionalProposalInfo, relevance, updateReplacementLengthOnValidate);
+	}
+
+	public CustomCompletionProposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image, String displayString, IContextInformation contextInformation, String additionalProposalInfo, int relevance) {
+		this(replacementString, replacementOffset, replacementLength, cursorPosition, image, displayString, contextInformation, additionalProposalInfo, relevance, true);
+	}
+
+	public CustomCompletionProposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image, String displayString, String alternateMatch, IContextInformation contextInformation, String additionalProposalInfo, int relevance, boolean updateReplacementLengthOnValidate) {
 		fReplacementString = replacementString;
 		fReplacementOffset = replacementOffset;
 		fReplacementLength = replacementLength;
 		fCursorPosition = cursorPosition;
 		fImage = image;
 		fDisplayString = displayString;
+		fAlternateMatch = alternateMatch;
 		fContextInformation = contextInformation;
 		fAdditionalProposalInfo = additionalProposalInfo;
 		fRelevance = relevance;
 		fUpdateLengthOnValidate = updateReplacementLengthOnValidate;
-	}
-
-	public CustomCompletionProposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image, String displayString, IContextInformation contextInformation, String additionalProposalInfo, int relevance) {
-		this(replacementString, replacementOffset, replacementLength, cursorPosition, image, displayString, contextInformation, additionalProposalInfo, relevance, true);
 	}
 
 	public void apply(IDocument document) {
@@ -278,9 +285,7 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 			int length = offset - fReplacementOffset;
 			String start = document.get(fReplacementOffset, length);
 
-			if(word != null) {
-				return word.substring(0, length).equalsIgnoreCase(start);
-			}
+			return (word != null && word.substring(0, length).equalsIgnoreCase(start)) || (fAlternateMatch != null && length <= fAlternateMatch.length() && fAlternateMatch.substring(0, length).equalsIgnoreCase(start));
 		}
 		catch (BadLocationException x) {
 		}
