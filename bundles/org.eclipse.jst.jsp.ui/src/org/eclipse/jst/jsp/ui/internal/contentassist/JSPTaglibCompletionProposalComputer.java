@@ -151,16 +151,18 @@ public class JSPTaglibCompletionProposalComputer extends
 									break;
 								}
 								case ITaglibRecord.TLD : {
-									IPath path = ((ITLDRecord) taglibRecord).getPath();
-									IPath localContextRoot = FacetModuleCoreSupport.computeWebContentRootPath(basePath);
-									if (localContextRoot.isPrefixOf(path)) {
-										uri = IPath.SEPARATOR + path.removeFirstSegments(localContextRoot.segmentCount()).toString();
-										uriToRecords.put(uri, taglibRecord);
+									uri = descriptor.getURI();
+									if (uri == null || uri.trim().length() == 0) {
+										IPath path = ((ITLDRecord) taglibRecord).getPath();
+										IPath localContextRoot = FacetModuleCoreSupport.computeWebContentRootPath(basePath);
+										if (localContextRoot.isPrefixOf(path)) {
+											uri = IPath.SEPARATOR + path.removeFirstSegments(localContextRoot.segmentCount()).toString();
+										}
+										else {
+											uri = FacetModuleCoreSupport.getRuntimePath(path).toString();
+										}
 									}
-									else {
-										uri = FacetModuleCoreSupport.getRuntimePath(path).toString();
-										uriToRecords.put(uri, taglibRecord);
-									}
+									uriToRecords.put(uri, taglibRecord);
 									break;
 								}
 							}
