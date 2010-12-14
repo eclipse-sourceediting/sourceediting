@@ -28,6 +28,8 @@ import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistantExtension2;
+import org.eclipse.jface.text.contentassist.IContentAssistantExtension4;
 import org.eclipse.jface.text.formatter.FormattingContext;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
@@ -37,6 +39,7 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionDocument;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.source.ContentAssistantFacade;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -100,6 +103,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	 * True if formatter has been set
 	 */
 	private boolean fFormatterSet = false;
+
+	private ContentAssistantFacade fContentAssistantFacade;
 
 	/**
 	 * @see org.eclipse.jface.text.source.SourceViewer#SourceViewer(Composite,
@@ -216,6 +221,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 			if (fContentAssistant != null) {
 				fContentAssistant.install(this);
+				if (fContentAssistant instanceof IContentAssistantExtension2 && fContentAssistant instanceof IContentAssistantExtension4)
+					fContentAssistantFacade= new ContentAssistantFacade(fContentAssistant);
 				fContentAssistantInstalled = true;
 			}
 			else {
@@ -819,6 +826,10 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			// notifyViewerSelectionManager(getSelectedRange().x,
 			// getSelectedRange().y);
 		}
+	}
+
+	public ContentAssistantFacade getContentAssistFacade() {
+		return fContentAssistantFacade;
 	}
 
 	/**

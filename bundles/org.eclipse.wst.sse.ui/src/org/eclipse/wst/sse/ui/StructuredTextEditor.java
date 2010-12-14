@@ -69,7 +69,10 @@ import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.ICompletionListener;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
@@ -836,6 +839,29 @@ public class StructuredTextEditor extends TextEditor {
 
 	private class CharacterPairListener implements VerifyKeyListener {
 		private CharacterPairing[] fInserters = new CharacterPairing[0];
+		private ICompletionListener fCompletionListener;
+		private boolean fIsCompleting = false;
+
+		public void installCompletionListener() {
+			ISourceViewer viewer = getSourceViewer();
+			if (viewer instanceof StructuredTextViewer) {
+				fCompletionListener = new ICompletionListener() {
+
+					public void assistSessionStarted(ContentAssistEvent event) {
+						fIsCompleting = true;
+					}
+
+					public void assistSessionEnded(ContentAssistEvent event) {
+						fIsCompleting = false;
+					}
+
+					public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
+					}
+					
+				};
+				((StructuredTextViewer) viewer).getContentAssistFacade().addCompletionListener(fCompletionListener);
+			}
+		}
 
 		/**
 		 * Add the pairing to the list of inserters
@@ -855,6 +881,11 @@ public class StructuredTextEditor extends TextEditor {
 		 * Perform cleanup on the character pair inserters
 		 */
 		void dispose() {
+			ISourceViewer viewer = getSourceViewer();
+			if (viewer instanceof StructuredTextViewer) {
+				((StructuredTextViewer) viewer).getContentAssistFacade().removeCompletionListener(fCompletionListener);
+			}
+
 			for (int i = 0; i < fInserters.length; i++) {
 				final AbstractCharacterPairInserter inserter = fInserters[i].inserter;
 				SafeRunner.run(new ISafeRunnable() {
@@ -870,7 +901,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		public void verifyKey(final VerifyEvent event) {
-			if (!event.doit || getInsertMode() != SMART_INSERT || isBlockSelectionModeEnabled() && isMultilineSelection())
+			if (!event.doit || getInsertMode() != SMART_INSERT || fIsCompleting || isBlockSelectionModeEnabled() && isMultilineSelection())
 				return;
 			final boolean[] paired = { false };
 			for (int i = 0; i < fInserters.length; i++) {
@@ -1494,8 +1525,10 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		installCharacterPairing();
 		ISourceViewer viewer = getSourceViewer();
-		if (viewer instanceof ITextViewerExtension)
+		if (viewer instanceof ITextViewerExtension) {
 			((ITextViewerExtension) viewer).appendVerifyKeyListener(fPairInserter);
+			fPairInserter.installCompletionListener();
+		}
 		
 	}
 
