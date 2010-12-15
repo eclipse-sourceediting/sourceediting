@@ -2330,6 +2330,10 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @see set(String)
 	 */
 	public void reparse(Object requester) {
+		// check if we're already making document-wide changes on this thread
+		if (fStoppedCount > 0)
+			return;
+		
 		stopPostNotificationProcessing();
 		clearReadOnly();
 

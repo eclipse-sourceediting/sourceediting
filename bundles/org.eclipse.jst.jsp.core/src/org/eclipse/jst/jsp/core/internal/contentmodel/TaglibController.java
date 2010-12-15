@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -139,10 +139,10 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 					synchronized (_instance.fDocumentMap) {
 						_instance.fDocumentMap.put(document, info);
 					}
-					TaglibIndex.addTaglibIndexListener(info);
 					if (document instanceof BasicStructuredDocument && document.getLength() > 0) {
 						((BasicStructuredDocument) document).reparse(this);
 					}
+					TaglibIndex.addTaglibIndexListener(info);
 				}
 			}
 		}
