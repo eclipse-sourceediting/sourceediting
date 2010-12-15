@@ -210,7 +210,7 @@ class ProjectDescription {
 	class Indexer implements IResourceProxyVisitor {
 		public boolean visit(IResourceProxy proxy) throws CoreException {
 			boolean visitMembers = true;
-			if (proxy.getType() == IResource.FILE) {
+			if (proxy.getType() == IResource.FILE && !proxy.isDerived()) {
 				if (proxy.getName().endsWith(".tld")) { //$NON-NLS-1$
 					updateTLD(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}
@@ -228,7 +228,7 @@ class ProjectDescription {
 				}
 			}
 			String name = proxy.getName();
-			return name.length() != 0 && name.charAt(0) != '.' && visitMembers;
+			return name.length() != 0 && name.charAt(0) != '.' && visitMembers && !proxy.isDerived();
 		}
 	}
 
@@ -1453,7 +1453,7 @@ class ProjectDescription {
 		fWebXMLReferences.clear();
 
 		try {
-			fProject.accept(new Indexer(), 0);
+			fProject.accept(new Indexer(), IResource.NONE);
 		}
 		catch (CoreException e) {
 			Logger.logException(e);
