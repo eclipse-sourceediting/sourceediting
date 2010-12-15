@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,10 @@ public interface IHTMLPartitions {
 
 	String SCRIPT = "org.eclipse.wst.html.SCRIPT"; //$NON-NLS-1$
 	String SCRIPT_EVENTHANDLER = SCRIPT + ".EVENTHANDLER"; //$NON-NLS-1$
+	
+	/**
+	 * @deprecated this partition type is not used locally any longer
+	 */
 	String STYLE = "org.eclipse.wst.html.STYLE"; //$NON-NLS-1$
 
 	// ISSUE: I think meta tag areas are here too?
