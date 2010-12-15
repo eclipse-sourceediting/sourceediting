@@ -210,6 +210,12 @@
 			description="%scope.structuredTextEditor.description"
 			id="org.eclipse.wst.sse.ui.structuredTextEditorScope">
 		</context>
+		<context
+			name="%scope.structuredTextEditor.comments.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structuredTextEditor.comments.description"
+			id="org.eclipse.wst.sse.comments">
+		</context>
 	</extension>
 	<!-- Keybindings for source editor -->
 	<extension point="org.eclipse.ui.bindings">
@@ -519,6 +525,7 @@
 		id="quickFixProcessor" 
 		name="%quickFixProcessor" 
 		schema="schema/quickFixProcessor.exsd"/>
+ <extension-point id="commentingStrategy" name="%Commenting_Strategy_Extension.name" schema="schema/commentingStrategy.exsd"/>
  <extension-point id="completionProposal" name="%Completion_Proposal.name" schema="schema/completionProposal.exsd"/>
  <extension-point id="completionProposalCategoriesConfiguration" name="%Completion_Proposal_Categories_Configuration.name" schema="schema/completionProposalCategoriesConfiguration.exsd"/>
  
@@ -649,8 +656,33 @@
 			</command>
 		</menuContribution>
 
-	     <menuContribution
+		<menuContribution
 	           locationURI="popup:sourcePopupMenuId?after=sourceBegin">
+			<command
+					commandId="org.eclipse.wst.sse.ui.toggle.comment"
+					id="ToggleComment"
+					style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.commentingActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+			<command
+					commandId="org.eclipse.wst.sse.ui.add.block.comment"
+					id="AddBlockComment"
+					style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.commentingActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+			<command
+					commandId="org.eclipse.wst.sse.ui.remove.block.comment"
+					id="RemoveBlockComment"
+					style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.commentingActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+			<separator name="format" visible="true"></separator>
 				<command
 			           commandId="org.eclipse.wst.sse.ui.cleanup.document"
 			           id="CleanupDocument"
@@ -679,6 +711,32 @@
 				</command>
 				
 	     </menuContribution>
+			<menuContribution locationURI="menu:sourceMenuId?after=sourceBegin">
+				<command commandId="org.eclipse.wst.sse.ui.toggle.comment"
+						id="ToggleComment"
+				    mnemonic="%command.toggle.comment.mnemonic"
+				    style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.eclipse.wst.sse.ui.commentingActiveContext.definition"/>
+					</visibleWhen>
+				</command>
+				<command commandId="org.eclipse.wst.sse.ui.add.block.comment"
+						id="AddBlockComment"
+				    mnemonic="%command.add.block.comment.mnemonic"
+				    style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.eclipse.wst.sse.ui.commentingActiveContext.definition"/>
+					</visibleWhen>
+				</command>
+				<command commandId="org.eclipse.wst.sse.ui.remove.block.comment"
+						id="RemoveBlockComment"
+						mnemonic="%command.remove.block.comment.mnemonic"
+						style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.eclipse.wst.sse.ui.commentingActiveContext.definition"/>
+					</visibleWhen>
+				</command>
+			</menuContribution>
 	</extension>
 	<extension
        point="org.eclipse.ui.commands">
@@ -718,6 +776,14 @@
 	           </iterate>
             </with>
 		</definition>
+	  <definition 
+	  		id="org.eclipse.wst.sse.ui.commentingActiveContext.definition">
+	  	<with variable="activeContexts">
+				<iterate operator="or">
+					<equals value="org.eclipse.wst.sse.comments"/>
+				</iterate>
+			</with>
+	  </definition>
 	</extension>
 	
 	<!-- Define theme -->

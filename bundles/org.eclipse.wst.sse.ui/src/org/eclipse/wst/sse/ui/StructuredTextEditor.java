@@ -193,6 +193,9 @@ import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor;
 import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
+import org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler;
+import org.eclipse.wst.sse.ui.internal.handlers.RemoveBlockCommentHandler;
+import org.eclipse.wst.sse.ui.internal.handlers.ToggleLineCommentHandler;
 import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
@@ -1403,14 +1406,25 @@ public class StructuredTextEditor extends TextEditor {
 
 		computeAndSetDoubleClickAction();
 		
-		IHandler handler = new GotoMatchingBracketHandler();
-	    IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-	    if (handlerService != null)
-	      handlerService.activateHandler(ActionDefinitionIds.GOTO_MATCHING_BRACKET, handler);
-	    if (handlerService != null) {
-	    	fOutlineHandler = new QuickOutlineHandler();
+		//add handlers to handler service
+		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		if (handlerService != null) {
+			
+			IHandler gotoHandler = new GotoMatchingBracketHandler();
+			handlerService.activateHandler(ActionDefinitionIds.GOTO_MATCHING_BRACKET, gotoHandler);
+			
+			fOutlineHandler = new QuickOutlineHandler();
 	    	handlerService.activateHandler(ActionDefinitionIds.SHOW_OUTLINE, fOutlineHandler);
-	    }
+			
+			IHandler toggleCommentHandler = new ToggleLineCommentHandler();
+			handlerService.activateHandler(ActionDefinitionIds.TOGGLE_COMMENT, toggleCommentHandler);
+			
+			IHandler addCommentBlockHandler = new AddBlockCommentHandler();
+			handlerService.activateHandler(ActionDefinitionIds.ADD_BLOCK_COMMENT, addCommentBlockHandler);
+			
+			IHandler removeCommentBlockHandler = new RemoveBlockCommentHandler();
+			handlerService.activateHandler(ActionDefinitionIds.REMOVE_BLOCK_COMMENT, removeCommentBlockHandler);
+		}
 
 		fShowPropertiesAction = new ShowPropertiesAction(getEditorPart(), getSelectionProvider());
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());

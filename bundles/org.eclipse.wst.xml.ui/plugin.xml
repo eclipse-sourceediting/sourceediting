@@ -83,7 +83,7 @@
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalDefinition
 			type="activecontexts"
-			value="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.cleanup, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection, org.eclipse.wst.xml.dependencies, org.eclipse.wst.xml.grammar, org.eclipse.wst.xml.expand, org.eclipse.wst.xml.occurrences"
+			value="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.cleanup, org.eclipse.wst.xml.selection, org.eclipse.wst.xml.dependencies, org.eclipse.wst.xml.grammar, org.eclipse.wst.xml.expand, org.eclipse.wst.xml.occurrences, org.eclipse.wst.sse.comments"
         	target="org.eclipse.core.runtime.xml" />
 	</extension>
 	
@@ -1007,53 +1007,6 @@
            </command>
         </toolbar>
      </menuContribution>
-     
-     <menuContribution locationURI="menu:sourceMenuId?after=sourceBegin">
-			<command commandId="org.eclipse.wst.sse.ui.toggle.comment"
-			         id="ToggleComment"
-			         mnemonic="%command.toggle.comment.mnemonic"
-			         style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.comments"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.wst.sse.ui.add.block.comment"
-			         id="AddBlockComment"
-			         mnemonic="%command.add.block.comment.mnemonic"
-			         style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.comments"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.wst.sse.ui.remove.block.comment"
-			         id="RemoveBlockComment"
-			         mnemonic="%command.remove.block.comment.mnemonic"
-			         style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.comments"/>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-		
-		<menuContribution
-	           locationURI="popup:sourcePopupMenuId?after=sourceBegin">
-				<command commandId="org.eclipse.wst.sse.ui.toggle.comment" id="ToggleComment" style="push">
-					<visibleWhen checkEnabled="false">
-						<reference definitionId="org.eclipse.wst.xml.ui.comments"></reference>
-					</visibleWhen>
-				</command>
-				<command commandId="org.eclipse.wst.sse.ui.add.block.comment" id="AddBlockComment" style="push">
-					<visibleWhen checkEnabled="false">
-						<reference definitionId="org.eclipse.wst.xml.ui.comments"></reference>
-					</visibleWhen>
-				</command>
-				<command commandId="org.eclipse.wst.sse.ui.remove.block.comment" id="RemoveBlockComment" style="push">
-					<visibleWhen checkEnabled="false">
-						<reference definitionId="org.eclipse.wst.xml.ui.comments"></reference>
-					</visibleWhen>
-				</command>
-				<separator name="format" visible="true"></separator>
-		</menuContribution>
 	</extension>
 	
 	<extension point="org.eclipse.core.expressions.definitions">
@@ -1085,7 +1038,7 @@
             </with>
 		</definition>
 	</extension>
-	
+
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.xml.ui.comments">
 			<with variable="activeContexts">
@@ -1095,7 +1048,7 @@
 			</with>
 		</definition>
 	</extension>
-	
+
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.xml.ui.cleanup">
 			<with variable="activeContexts">
@@ -1191,36 +1144,6 @@
           </activeWhen>
           <enabledWhen>
              <reference definitionId="org.eclipse.wst.xml.ui.cleanup"/>
-          </enabledWhen>
-       </handler>
-       <handler
-             class="org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler"
-             commandId="org.eclipse.wst.sse.ui.toggle.comment">
-          <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
-          </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
-          </enabledWhen>
-       </handler>
-       <handler
-             class="org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler"
-             commandId="org.eclipse.wst.sse.ui.add.block.comment">
-          <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
-          </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
-          </enabledWhen>
-       </handler>
-       <handler
-             class="org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler"
-             commandId="org.eclipse.wst.sse.ui.remove.block.comment">
-          <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
-          </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
           </enabledWhen>
        </handler>
        <handler
@@ -1681,6 +1604,20 @@
              id="org.eclipse.wst.xml.core.xmlsource" partitions="org.eclipse.wst.xml.XML_DEFAULT,org.eclipse.wst.xml.XML_DECL">
        </contentTypeIdentifier>
     </inserter>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.commentingStrategy">
+    <blockCommentingStrategy
+          prefix="&lt;!--"
+          suffix="--&gt;">
+       <contentType
+             id="org.eclipse.core.runtime.xml"
+             associatedCommentPartitionTypeID="org.eclipse.wst.xml.XML_COMMENT">
+          <allowablePartitionTypes
+                anyPartitionType="true">
+          </allowablePartitionTypes>
+       </contentType>
+    </blockCommentingStrategy>
  </extension>
  <extension
        point="org.eclipse.wst.sse.ui.completionProposal">

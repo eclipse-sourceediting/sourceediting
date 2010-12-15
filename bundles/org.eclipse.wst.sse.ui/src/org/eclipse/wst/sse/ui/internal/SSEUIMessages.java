@@ -90,6 +90,7 @@ public class SSEUIMessages extends NLS {
 	public static String ToggleComment_tooltip;
 	public static String ToggleComment_image;
 	public static String ToggleComment_description;
+	public static String ToggleComment_progress;
 	public static String AddBlockComment_label;
 	public static String AddBlockComment_tooltip;
 	public static String AddBlockComment_image;

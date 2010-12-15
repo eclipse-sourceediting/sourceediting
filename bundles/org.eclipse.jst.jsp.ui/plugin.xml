@@ -76,7 +76,7 @@
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<provisionalDefinition
 			type="activecontexts"
-			value="org.eclipse.jst.jsp.core.jspsource, org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope, org.eclipse.wst.html.core.htmlsource, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection"
+			value="org.eclipse.jst.jsp.core.jspsource, org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope, org.eclipse.wst.html.core.htmlsource, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.selection, org.eclipse.wst.sse.comments"
         	target="org.eclipse.jst.jsp.core.jspsource" />
 
 		<contentOutlineConfiguration
@@ -1104,6 +1104,97 @@
 			</contentTypeIdentifier>
 		</inserter>
 	</extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.commentingStrategy">
+    <blockCommentingStrategy
+          prefix="&lt;!--"
+          suffix="--&gt;">
+       <contentType
+             associatedCommentPartitionTypeID="org.eclipse.wst.html.HTML_COMMENT"
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <requiredPartitionTypes>
+             <partitionType
+                   id="org.eclipse.wst.html.HTML_DEFAULT">
+             </partitionType>
+             <partitionType
+                   id="org.eclipse.wst.html.HTML_DECLARATION">
+             </partitionType>
+             <partitionType
+                   id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
+             </partitionType>
+             <partitionType
+                   id="org.eclipse.wst.xml.XML_PI">
+             </partitionType>
+          </requiredPartitionTypes>
+          <allowablePartitionTypes
+                anyPartitionType="false">
+             <partitionType
+                   id="org.eclipse.wst.css.STYLE">
+             </partitionType>
+             <partitionType
+                   id="org.eclipse.wst.html.SCRIPT">
+             </partitionType>
+          </allowablePartitionTypes>
+       </contentType>
+    </blockCommentingStrategy>
+    <blockCommentingStrategy
+          prefix="&lt;%--"
+          suffix="--%&gt;">
+       <contentType
+             associatedCommentPartitionTypeID="org.eclipse.jst.jsp.JSP_COMMENT"
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <requiredPartitionTypes>
+             <partitionType
+                   id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+             </partitionType>
+             <partitionType
+                   id="org.eclipse.jst.jsp.DEFAULT_JSP">
+             </partitionType>
+             <partitionType
+                   id="org.eclipse.jst.jsp.SCRIPT.DELIMITER">
+             </partitionType>
+             <partitionType
+                   id="org.eclipse.jst.jsp.SCRIPT.JSP_EL">
+             </partitionType>
+             <partitionType
+                   id="org.eclipse.jst.jsp.SCRIPT.JSP_EL2">
+             </partitionType>
+          </requiredPartitionTypes>
+          <allowablePartitionTypes
+                anyPartitionType="true">
+          </allowablePartitionTypes>
+       </contentType>
+    </blockCommentingStrategy>
+    <blockCommentingStrategy
+          prefix="/*"
+          suffix="*/">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <requiredPartitionTypes>
+             <partitionType
+                   id="org.eclipse.jst.jsp.SCRIPT.JAVA">
+             </partitionType>
+          </requiredPartitionTypes>
+          <allowablePartitionTypes
+                anyPartitionType="false">
+          </allowablePartitionTypes>
+       </contentType>
+    </blockCommentingStrategy>
+    <lineCommentingStrategy
+          prefix="//">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <requiredPartitionTypes>
+             <partitionType
+                   id="org.eclipse.jst.jsp.SCRIPT.JAVA">
+             </partitionType>
+          </requiredPartitionTypes>
+          <allowablePartitionTypes
+                anyPartitionType="false">
+          </allowablePartitionTypes>
+       </contentType>
+    </lineCommentingStrategy>
+ </extension>
  <extension
        point="org.eclipse.wst.sse.ui.completionProposal">
     <proposalCategory
