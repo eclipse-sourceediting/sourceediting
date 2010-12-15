@@ -1142,6 +1142,7 @@ public class JSPTokenizer implements BlockTokenizer, DOMJSPRegionContexts {
 			// TODO: parent region needs to be set .... but not sure where to get it from 
 			//		fEmbeddedContainer.setParent(parentRegion);
 		}
+		int initialLength = fEmbeddedContainer.getRegions().size();
 		containerStart = fEmbeddedContainer.getStart();
 		while (notFinished) {
 			// add the region to the container
@@ -1223,7 +1224,7 @@ public class JSPTokenizer implements BlockTokenizer, DOMJSPRegionContexts {
 				// check for ending context
 				if (endTagName == null) {
 					for (int i = 0; i < endTypes.length; i++) {
-						isEndingType = isEndingType || (internalContext == endTypes[i]) || (embeddedList.size() >=2 && (embeddedList.get(embeddedList.size()-1)).getType() == endTypes[i]);
+						isEndingType = isEndingType || (internalContext == endTypes[i]) || (embeddedList.size() - initialLength) >= 2 && (embeddedList.get(embeddedList.size()-1)).getType() == endTypes[i];
 					}
 				}
 				else {
