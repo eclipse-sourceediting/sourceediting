@@ -31,7 +31,7 @@ import org.eclipse.wst.xml.ui.internal.contentassist.AttributeContextInformation
 public class JSPStructuredContentAssistProcessor extends StructuredContentAssistProcessor {
 
 	/** auto activation characters */
-	private char[] fCompletionPropoaslAutoActivationCharacters;
+	private char[] fCompletionProposalAutoActivationCharacters;
 	
 	/** property key for determining if auto activation is enabled */
 	private String fAutoActivationEnabledPropertyKey;
@@ -82,7 +82,7 @@ public class JSPStructuredContentAssistProcessor extends StructuredContentAssist
 	 * @see org.eclipse.wst.html.ui.internal.contentassist.HTMLStructuredContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		return fCompletionPropoaslAutoActivationCharacters;
+		return super.getCompletionProposalAutoActivationCharacters() != null ? super.getCompletionProposalAutoActivationCharacters() : this.fCompletionProposalAutoActivationCharacters;
 	}
 	
 	/**
@@ -106,10 +106,10 @@ public class JSPStructuredContentAssistProcessor extends StructuredContentAssist
 		
 		boolean doAuto = store.getBoolean(fAutoActivationEnabledPropertyKey);
 		if (doAuto) {
-			fCompletionPropoaslAutoActivationCharacters =
+			fCompletionProposalAutoActivationCharacters =
 				store.getString(fAutoActivationCharactersPropertyKey).toCharArray();
 		} else {
-			fCompletionPropoaslAutoActivationCharacters = null;
+			fCompletionProposalAutoActivationCharacters = null;
 		}
 	}
 	

@@ -35,7 +35,8 @@ public class JSDTStructuredContentAssistProcessor extends StructuredContentAssis
 	 * @see org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		return new char[0];
+		return super.getCompletionProposalAutoActivationCharacters() != null ? super.getCompletionProposalAutoActivationCharacters() : new char[0];
+
 	}
 	
 	/**
