@@ -701,21 +701,14 @@
       class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
       id="org.eclipse.wst.jsdt.web.ui.ContentAssistProposals">
      <contentType
-        id="org.eclipse.jst.jsp.core.jspsource">
-      <partitionType
-          id="org.eclipse.wst.html.SCRIPT">
-      </partitionType>
-            <partitionType
-          id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
-      </partitionType>
-    </contentType>
-     <contentType
         id="org.eclipse.wst.html.core.htmlsource">
       <partitionType
-          id="org.eclipse.wst.html.SCRIPT">
+            autoActivationDelegate="org.eclipse.wst.jsdt.web.ui.contentassist.JSDTAutoActivationDelegate"
+            id="org.eclipse.wst.html.SCRIPT">
       </partitionType>
             <partitionType
-          id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
+                  autoActivationDelegate="org.eclipse.wst.jsdt.web.ui.contentassist.JSDTAutoActivationDelegate"
+                  id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
       </partitionType>
     </contentType>
   </proposalComputer>

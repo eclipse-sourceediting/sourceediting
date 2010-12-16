@@ -230,6 +230,9 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		if (javaProject != null) {
 			options = javaProject.getOptions(true);
 		}
+		if (options == null) {
+			options = JavaScriptCore.getOptions();
+		}
 		return options;
 	}
 	
