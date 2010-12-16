@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.wst.html.ui.internal.contentoutline.HTMLNodeActionManager;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor;
 import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
@@ -36,7 +37,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
 * (repeatedly) as the API evolves.
 */
-public class JsMenuListener extends XMLNodeActionManager implements IMenuListener, IReleasable {
+public class JsMenuListener extends HTMLNodeActionManager implements IMenuListener, IReleasable {
 	public static final String EDIT_GROUP_ID = "group.edit"; //$NON-NLS-1$
 	CompilationUnitEditorActionContributor contrib;
 	private XMLNodeActionManager fActionManager;
