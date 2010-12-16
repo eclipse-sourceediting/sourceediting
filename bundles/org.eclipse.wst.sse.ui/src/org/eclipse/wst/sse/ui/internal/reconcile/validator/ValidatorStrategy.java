@@ -21,10 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
@@ -34,8 +35,6 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -59,6 +58,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 
 	private static final boolean DEBUG_VALIDATION_CAPABLE_BUT_DISABLED = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidatorEnablement")).booleanValue();
 	private static final boolean DEBUG_VALIDATION_UNSUPPORTED = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidatorSupported")).booleanValue();
+	private static final Object NO_FILE = new Object();
 
 	private String[] fContentTypeIds = null;
 	private List fMetaData = null;
@@ -76,6 +76,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 * suspended for the current resource
 	 */
 	private boolean fValidatorsSuspended = false;
+	private Object fFile;
 
 	public ValidatorStrategy(ISourceViewer sourceViewer, String contentType) {
 		super(sourceViewer);
@@ -297,14 +298,16 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 			if (step instanceof IReleasable)
 				((IReleasable) step).release();
 		}
+		fFile = null;
 	}
 
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy#setDocument(org.eclipse.jface.text.IDocument)
 	 */
 	public void setDocument(IDocument document) {
-
 		super.setDocument(document);
+
+		fFile = null;
 
 		try {
 			fValidatorsSuspended = false;
@@ -337,32 +340,22 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 * @return IFile the IFile, null if no such file exists
 	 */
 	private IFile getFile() {
-		IStructuredModel model = null;
-		IFile file = null;
-		try {
-			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-			if (model != null) {
-				String baseLocation = model.getBaseLocation();
-				// The baseLocation may be a path on disk or relative to the
-				// workspace root. Don't translate on-disk paths to
-				// in-workspace resources.
-				IPath basePath = new Path(baseLocation);
-				if (basePath.segmentCount() > 1) {
-					file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
-					/*
-					 * If the IFile doesn't  exist, make sure it's not
-					 * returned
-					 */
-					if (!file.exists())
-						file = null;
+		if (fFile == null) {
+			fFile = NO_FILE;
+			ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(getDocument());
+			if (buffer != null && buffer.getLocation() != null) {
+				IPath path = buffer.getLocation();
+				if (path.segmentCount() > 1) {
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+					if (file.isAccessible()) {
+						fFile = file;
+					}
 				}
 			}
 		}
-		finally {
-			if (model != null) {
-				model.releaseFromRead();
-			}
-		}
-		return file;
+
+		if (fFile != NO_FILE)
+			return (IFile) fFile;
+		return null;
 	}
 }
