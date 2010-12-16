@@ -15,8 +15,6 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.jsdt.web.core.text.IJsPartitions;
-import org.eclipse.wst.jsdt.web.ui.contentassist.JSDTStructuredContentAssistProcessor;
 import org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForJs;
 
 /**
@@ -57,32 +55,8 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 			return super.getAutoEditStrategies(sourceViewer, contentType);
 		}
 	}
-	
-	/**
-	 * @see org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML#getContentAssistProcessors(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
-	 */
-	protected IContentAssistProcessor[] getContentAssistProcessors(
-			ISourceViewer sourceViewer, String partitionType) {
-		
-		IContentAssistProcessor[] processors;
-		
-		if(isJavascriptPartitionType(partitionType)) {
-			IContentAssistProcessor processor = new JSDTStructuredContentAssistProcessor(
-					this.getContentAssistant(), partitionType, sourceViewer);
-			processors = new IContentAssistProcessor[]{processor};
-		} else {
-			processors = super.getContentAssistProcessors(sourceViewer, partitionType);
-		} 
-		
-		return processors;
-	}
-	
-	/**
-	 * @param partitionTypeID check to see if this partition type ID is for a Javascript partition type
-	 * @return <code>true</code> if the given partiton type is a Javascript partition type,
-	 * <code>false</code> otherwise
-	 */
-	private static boolean isJavascriptPartitionType(String partitionTypeID) {
-		return IJsPartitions.HtmlJsPartition.equals(partitionTypeID);
+
+	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
+		return super.getContentAssistProcessors(sourceViewer, partitionType);
 	}
 }
