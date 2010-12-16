@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,7 @@ public class JSPQueryParticipant implements IQueryParticipant {
 				SearchRequestor jspRequestor = new JSPSearchRequestor(requestor);
 				
 				// pa_TODO need to adapt JavaSearchScope to a JSPSearchScope
-				JSPSearchSupport.getInstance().search(element, new JSPSearchScope(), jspRequestor);
+				JSPSearchSupport.getInstance().search(element, new JSPSearchScope(), jspRequestor, monitor);
 				
 			}
 			else if(querySpecification instanceof PatternQuerySpecification) {
@@ -79,7 +79,8 @@ public class JSPQueryParticipant implements IQueryParticipant {
 														patternQuery.getLimitTo(), 
 														SearchPattern.R_PATTERN_MATCH, 
 														false, 
-														jspRequestor);
+														jspRequestor,
+														monitor);
 			}
 		}
 	}

@@ -3181,9 +3181,12 @@ public class JSPTranslator implements Externalizable {
 
 	private IPath getModelPath() {
 		IPath path = null;
-		ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(getStructuredDocument());
-		if (buffer != null) {
-			path = buffer.getLocation();
+		IStructuredDocument structuredDocument = getStructuredDocument();
+		if (structuredDocument != null) {
+			ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(structuredDocument);
+			if (buffer != null) {
+				path = buffer.getLocation();
+			}
 		}
 		return path;
 	}
