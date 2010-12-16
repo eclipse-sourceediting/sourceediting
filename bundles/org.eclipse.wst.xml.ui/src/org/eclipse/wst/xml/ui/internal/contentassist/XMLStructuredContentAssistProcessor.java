@@ -30,7 +30,7 @@ import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
  */
 public class XMLStructuredContentAssistProcessor extends StructuredContentAssistProcessor {
 	/** the auto activation characters for this processor, set by user preference */
-	private char[] fCompletionPropoaslAutoActivationCharacters;
+	private char[] fCompletionProposalAutoActivationCharacters;
 	
 	/** the context information validator for this processor */
 	private IContextInformationValidator fContextInformationValidator;
@@ -63,7 +63,7 @@ public class XMLStructuredContentAssistProcessor extends StructuredContentAssist
 	 * @see org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		return this.fCompletionPropoaslAutoActivationCharacters;
+		return super.getCompletionProposalAutoActivationCharacters() != null ? super.getCompletionProposalAutoActivationCharacters() : this.fCompletionProposalAutoActivationCharacters;
 	}
 	
 	/**
@@ -83,10 +83,10 @@ public class XMLStructuredContentAssistProcessor extends StructuredContentAssist
 		boolean doAuto = getPreferenceStore().getBoolean(key);
 		if (doAuto) {
 			key = XMLUIPreferenceNames.AUTO_PROPOSE_CODE;
-			fCompletionPropoaslAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
+			fCompletionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
 		}
 		else {
-			fCompletionPropoaslAutoActivationCharacters = null;
+			fCompletionProposalAutoActivationCharacters = null;
 		}
 	}
 }
