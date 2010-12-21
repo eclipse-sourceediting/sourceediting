@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,10 +33,13 @@ public class PropCMProperty extends PropCMContainer {
 	public final static String P_AZIMUTH = "azimuth";//$NON-NLS-1$
 	public final static String P_BG = "background";//$NON-NLS-1$
 	public final static String P_BG_ATTACHMENT = "background-attachment";//$NON-NLS-1$
+	public final static String P_BG_CLIP = "background-clip"; //$NON-NLS-1$
 	public final static String P_BG_COLOR = "background-color";//$NON-NLS-1$
 	public final static String P_BG_IMAGE = "background-image";//$NON-NLS-1$
+	public final static String P_BG_ORIGIN = "background-origin"; //$NON-NLS-1$
 	public final static String P_BG_POSITION = "background-position";//$NON-NLS-1$
 	public final static String P_BG_REPEAT = "background-repeat";//$NON-NLS-1$
+	public final static String P_BG_SIZE = "background-size"; //$NON-NLS-1$
 	public final static String P_BORDER = "border";//$NON-NLS-1$
 	public final static String P_BORDER_COLLAPSE = "border-collapse";//$NON-NLS-1$
 	public final static String P_BORDER_COLOR = "border-color";//$NON-NLS-1$
@@ -59,11 +62,28 @@ public class PropCMProperty extends PropCMContainer {
 	public final static String P_BORDER_BOTTOM_WIDTH = "border-bottom-width";//$NON-NLS-1$
 	public final static String P_BORDER_LEFT_WIDTH = "border-left-width";//$NON-NLS-1$
 	public final static String P_BORDER_WIDTH = "border-width";//$NON-NLS-1$
+	public final static String P_BORDER_RADIUS = "border-radius"; //$NON-NLS-1$
+	public final static String P_BORDER_TOP_LEFT_RADIUS = "border-top-left-radius"; //$NON-NLS-1$
+	public final static String P_BORDER_TOP_RIGHT_RADIUS = "border-top-right-radius"; //$NON-NLS-1$
+	public final static String P_BORDER_BOTTOM_LEFT_RADIUS = "border-bottom-left-radius"; //$NON-NLS-1$
+	public final static String P_BORDER_BOTTOM_RIGHT_RADIUS = "border-bottom-right-radius"; //$NON-NLS-1$
 	public final static String P_BOTTOM = "bottom";//$NON-NLS-1$
+	public final static String P_BOX_SHADOW = "box-shadow"; //$NON-NLS-1$
+	public final static String P_BOX_SIZING = "box-sizing"; //$NON-NLS-1$
 	public final static String P_CAPTION_SIDE = "caption-side";//$NON-NLS-1$
 	public final static String P_CLEAR = "clear";//$NON-NLS-1$
 	public final static String P_CLIP = "clip";//$NON-NLS-1$
 	public final static String P_COLOR = "color";//$NON-NLS-1$
+	public final static String P_COLUMNS = "columns";//$NON-NLS-1$
+	public final static String P_COLUMN_COUNT = "column-count";//$NON-NLS-1$
+	public final static String P_COLUMN_FILL = "column-fill";//$NON-NLS-1$
+	public final static String P_COLUMN_GAP = "column-gap";//$NON-NLS-1$
+	public final static String P_COLUMN_RULE = "column-rule";//$NON-NLS-1$
+	public final static String P_COLUMN_RULE_COLOR = "column-rule-color";//$NON-NLS-1$
+	public final static String P_COLUMN_RULE_STYLE = "column-rule-styler";//$NON-NLS-1$
+	public final static String P_COLUMN_RULE_WIDTH = "column-rule-width";//$NON-NLS-1$
+	public final static String P_COLUMN_SPAN = "column-span";//$NON-NLS-1$
+	public final static String P_COLUMN_WIDTH = "column-width";//$NON-NLS-1$
 	public final static String P_CONTENT = "content";//$NON-NLS-1$
 	public final static String P_COUNTER_INCREMENT = "counter-increment";//$NON-NLS-1$
 	public final static String P_COUNTER_RESET = "counter-reset";//$NON-NLS-1$
@@ -103,6 +123,7 @@ public class PropCMProperty extends PropCMContainer {
 	public final static String P_MAX_WIDTH = "max-width";//$NON-NLS-1$
 	public final static String P_MIN_HEIGHT = "min-height";//$NON-NLS-1$
 	public final static String P_MIN_WIDTH = "min-width";//$NON-NLS-1$
+	public final static String P_OPACITY = "opacity"; //$NON-NLS-1$
 	public final static String P_ORPHANS = "orphans";//$NON-NLS-1$
 	public final static String P_OUTLINE = "outline";//$NON-NLS-1$
 	public final static String P_OUTLINE_COLOR = "outline-color";//$NON-NLS-1$
@@ -126,6 +147,7 @@ public class PropCMProperty extends PropCMContainer {
 	public final static String P_PLAY_DURING = "play-during";//$NON-NLS-1$
 	public final static String P_POSITION = "position";//$NON-NLS-1$
 	public final static String P_QUOTES = "quotes";//$NON-NLS-1$
+	public final static String P_RESIZE = "resize"; //$NON-NLS-1$
 	public final static String P_RICHNESS = "richness";//$NON-NLS-1$
 	public final static String P_RIGHT = "right";//$NON-NLS-1$
 	public final static String P_SIZE = "size";//$NON-NLS-1$
@@ -139,6 +161,7 @@ public class PropCMProperty extends PropCMContainer {
 	public final static String P_TEXT_ALIGN = "text-align";//$NON-NLS-1$
 	public final static String P_TEXT_DECORATION = "text-decoration";//$NON-NLS-1$
 	public final static String P_TEXT_INDENT = "text-indent";//$NON-NLS-1$
+	public final static String P_TEXT_OVERFLOW = "text-overflow"; //$NON-NLS-1$
 	public final static String P_TEXT_SHADOW = "text-shadow";//$NON-NLS-1$
 	public final static String P_TEXT_TRANSFORM = "text-transform";//$NON-NLS-1$
 	public final static String P_TOP = "top";//$NON-NLS-1$

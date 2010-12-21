@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
@@ -193,7 +192,7 @@ class CSSProposalArranger {
 	 */
 	ICompletionProposal[] getProposals() {
 		buildProposals();
-		ICompletionProposal[] proposalArray = new CompletionProposal[fProposals.size()];
+		ICompletionProposal[] proposalArray = new ICompletionProposal[fProposals.size()];
 		Iterator iItem = fProposals.iterator();
 		for (int i = 0; iItem.hasNext(); i++) {
 			proposalArray[i] = (ICompletionProposal) iItem.next();

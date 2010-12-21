@@ -4,6 +4,11 @@
 
 	<extension point="org.eclipse.wst.sse.core.cssprofile">
 		<profile
+			name="%cssprofile_css3.name"
+			uri="cssprofile/cssprofile-css3.xml"
+			id="org.eclipse.wst.css.core.cssprofile.css3">
+		</profile>
+		<profile
 			name="%cssprofile_css2.name"
 			default="true"
 			uri="cssprofile/cssprofile-css2.xml"

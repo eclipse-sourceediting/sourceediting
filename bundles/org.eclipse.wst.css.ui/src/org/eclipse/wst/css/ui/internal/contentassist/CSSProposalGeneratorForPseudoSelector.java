@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.wst.css.ui.internal.contentassist;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,10 +67,29 @@ class CSSProposalGeneratorForPseudoSelector extends CSSProposalGenerator {
 		boolean useUpperCase = CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER;
 
 		List tags = getSelectorTags();
-		Collections.sort(tags);
+		Collections.sort(tags, new Comparator() {
+			/* (non-Javadoc)
+			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+			 */
+			public int compare(Object o1, Object o2) {
+				return clean(((CSSMMSelector) o1).getName()).compareTo(clean(((CSSMMSelector) o2).getName()));
+			}
+
+			private String clean(String str) {
+				int length = str.length();
+				for (int i = 0; i < length; i++) {
+					if (str.charAt(i) != ':') {
+						return str.substring(i);
+					}
+				}
+				return str;
+			}
+		});
+
 		Iterator i = tags.iterator();
 		while (i.hasNext()) {
-			String text = (String) i.next();
+			CSSMMSelector selector = (CSSMMSelector) i.next();
+			String text = selector.getSelectorString();
 			if (hasLeadingColon && !isMatch(text)) {
 				continue;
 			}
@@ -83,8 +103,12 @@ class CSSProposalGeneratorForPseudoSelector extends CSSProposalGenerator {
 			
 			buf.append(text);
 			cursorPos += buf.length();
-
+			
 			if (0 < buf.length()) {
+				// Pseudoclass/element takes arguments
+				if (buf.charAt(buf.length() - 1) == ')') {
+					--cursorPos;
+				}
 				boolean inRule = (fContext.getTargetNode() instanceof ICSSStyleRule || fContext.getTargetNode() instanceof ICSSPageRule);
 				if (!inRule || (textToReplace.length() == 0 && !hasLeadingColon)) {
 					buf.append(" ");//$NON-NLS-1$
@@ -100,6 +124,7 @@ class CSSProposalGeneratorForPseudoSelector extends CSSProposalGenerator {
 				item.setCursorPosition(cursorPos);
 				item.setDisplayString(text);
 				item.setImageType(CSSImageType.SELECTOR_PSEUDO);
+				item.setMMNode(selector);
 				candidates.add(item);
 			}
 		}
@@ -130,7 +155,7 @@ class CSSProposalGeneratorForPseudoSelector extends CSSProposalGenerator {
 			if (child.getType() == CSSMMNode.TYPE_SELECTOR) {
 				String selType = ((CSSMMSelector) child).getSelectorType();
 				if (selType == CSSMMSelector.TYPE_PSEUDO_CLASS || selType == CSSMMSelector.TYPE_PSEUDO_ELEMENT) {
-					tagList.add(((CSSMMSelector) child).getSelectorString());
+					tagList.add(child);
 				}
 			}
 		}

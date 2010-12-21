@@ -2,6 +2,8 @@
 <?eclipse version="3.0"?>
 <plugin>
 
+	<extension-point id="proposalInfo" name="%proposalInfo.name" schema="schema/proposalInfo.exsd"/>
+
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%CSS_Source_Page_Editor.name"
