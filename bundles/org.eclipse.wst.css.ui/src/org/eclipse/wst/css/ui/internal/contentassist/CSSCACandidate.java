@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.css.ui.internal.contentassist;
 
 
 
+import org.eclipse.wst.css.core.internal.metamodel.CSSMMNode;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
 
 class CSSCACandidate {
@@ -20,7 +21,7 @@ class CSSCACandidate {
 	private int fCursorPosition = 0;
 	private String fDisplayString = null;
 	private CSSImageType fImageType = null;
-
+	private CSSMMNode fNode = null;
 	/**
 	 * CSSCACandidate constructor comment.
 	 */
@@ -56,6 +57,10 @@ class CSSCACandidate {
 		return fReplacementString;
 	}
 
+	CSSMMNode getMMNode() {
+		return fNode;
+	}
+
 	/**
 	 *  
 	 */
@@ -82,6 +87,10 @@ class CSSCACandidate {
 	 */
 	void setReplacementString(String replacementString) {
 		fReplacementString = replacementString;
+	}
+
+	void setMMNode(CSSMMNode node) {
+		fNode = node;
 	}
 
 	/**

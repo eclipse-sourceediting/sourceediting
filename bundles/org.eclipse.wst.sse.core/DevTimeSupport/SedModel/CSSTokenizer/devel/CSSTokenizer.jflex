@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -418,7 +418,7 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 	"*" { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_UNIVERSAL; }
 	{hash} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_ID; }
 //	":"{ident}("("{s}*{ident}{s}*")")? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
-	":"({ident}("("{s}*{ident}{s}*")")?)? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
+	":"({ident}("("{s}*([a-zA-Z0-9]|[-+]|{s})*{s}*")")?)? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
 	"."{name} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_CLASS; }
 	"[" { yybegin(ST_SELECTOR_ATTRIBUTE_NAME); return CSS_SELECTOR_ATTRIBUTE_START; }
 }

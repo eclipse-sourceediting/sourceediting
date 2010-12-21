@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
@@ -168,7 +167,7 @@ abstract class CSSProposalGenerator {
 		while (i.hasNext()) {
 			CSSCACandidate candidate = (CSSCACandidate) i.next();
 			Image image = imageHelper.getImage(candidate.getImageType());
-			ICompletionProposal item = new CompletionProposal(candidate.getReplacementString(), fContext.getReplaceBegin() + fContext.getDocumentOffset(), fContext.getTextToReplace().length(), candidate.getCursorPosition(), image, candidate.getDisplayString(), null, null);
+			ICompletionProposal item = new CompletionProposal(candidate.getReplacementString(), fContext.getReplaceBegin() + fContext.getDocumentOffset(), fContext.getTextToReplace().length(), candidate.getCursorPosition(), image, candidate.getDisplayString(), null, candidate.getDisplayString(), candidate.getMMNode());
 			proposals.add(item);
 		}
 

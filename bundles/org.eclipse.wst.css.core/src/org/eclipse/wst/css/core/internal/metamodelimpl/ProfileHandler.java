@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 
 class ProfileHandler extends DefaultHandler {
+
+	private StringBuffer fCharacters = null;
 
 	public ProfileHandler(CSSMetaModelImpl metamodel, ResourceBundle resourceBundle, boolean logging) {
 		super();
@@ -150,19 +152,12 @@ class ProfileHandler extends DefaultHandler {
 	}
 
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		fNodeStack.pop();
-	}
-
-	public void characters(char[] ch, int start, int length) throws SAXException {
+		
 		TagNode tagNode = (TagNode) fNodeStack.peek();
+		CSSMMNodeImpl node = tagNode.node;
 		String tagName = tagNode.tag;
-		if (tagName.equals(ProfileKeywords.KEYWORD_VALUE) || tagName.equals(ProfileKeywords.UNIT_VALUE) || tagName.equals(ProfileKeywords.FUNCTION_VALUE) || tagName.equals(ProfileKeywords.SELECTOR_VALUE) || tagName.equals(ProfileKeywords.DESCRIPTION) || tagName.equals(ProfileKeywords.CAPTION)) {
-			StringBuffer buf = new StringBuffer(length);
-			for (int i = 0; i < length; i++) {
-				buf.append(ch[start + i]);
-			}
-			String value = getResourceString(buf.toString().trim());
-			CSSMMNodeImpl node = tagNode.node;
+		if (fCharacters != null && (tagName.equals(ProfileKeywords.KEYWORD_VALUE) || tagName.equals(ProfileKeywords.UNIT_VALUE) || tagName.equals(ProfileKeywords.FUNCTION_VALUE) || tagName.equals(ProfileKeywords.SELECTOR_VALUE) || tagName.equals(ProfileKeywords.DESCRIPTION) || tagName.equals(ProfileKeywords.CAPTION))) {
+			String value = getResourceString(fCharacters.toString().trim());
 			if (node != null) {
 				if (node.getType() == CSSMMNode.TYPE_KEYWORD && tagName.equals(ProfileKeywords.KEYWORD_VALUE)) {
 					((CSSMMKeywordImpl) node).setKeywordString(value);
@@ -186,6 +181,20 @@ class ProfileHandler extends DefaultHandler {
 					node.setDescription(value);
 				}
 			}
+		}
+		fNodeStack.pop();
+		fCharacters = null;
+	}
+
+	public void characters(char[] ch, int start, int length) throws SAXException {
+		
+		TagNode tagNode = (TagNode) fNodeStack.peek();
+		String tagName = tagNode.tag;
+		if (tagName.equals(ProfileKeywords.KEYWORD_VALUE) || tagName.equals(ProfileKeywords.UNIT_VALUE) || tagName.equals(ProfileKeywords.FUNCTION_VALUE) || tagName.equals(ProfileKeywords.SELECTOR_VALUE) || tagName.equals(ProfileKeywords.DESCRIPTION) || tagName.equals(ProfileKeywords.CAPTION)) {
+			if (fCharacters == null) {
+				fCharacters = new StringBuffer(length);
+			}
+			fCharacters.append(ch, start, length);
 		}
 	}
 

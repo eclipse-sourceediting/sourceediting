@@ -126,6 +126,14 @@ public abstract class PropCMNode {
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BG_ATTACHMENT);
 		prop.appendChild(IValID.V_SCROLL);
 		prop.appendChild(IValID.V_FIXED);
+		prop.appendChild(IValID.V_LOCAL);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// background-clip
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BG_CLIP);
+		prop.appendChild(IValID.V_BORDER_BOX);
+		prop.appendChild(IValID.V_CONTENT_BOX);
+		prop.appendChild(IValID.V_PADDING_BOX);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
 		// background-color
@@ -138,6 +146,13 @@ public abstract class PropCMNode {
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BG_IMAGE);
 		prop.appendChild(PropCMFunction.getInstanceOf(PropCMFunction.VAL_URI));
 		prop.appendChild(IValID.V_NONE);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// background-origin
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BG_ORIGIN);
+		prop.appendChild(IValID.V_PADDING_BOX);
+		prop.appendChild(IValID.V_BORDER_BOX);
+		prop.appendChild(IValID.V_CONTENT_BOX);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
 		// background-position ---- sub-properties horizontal
@@ -170,7 +185,17 @@ public abstract class PropCMNode {
 		prop.appendChild(IValID.V_REPEAT);
 		prop.appendChild(IValID.V_REPEAT_X);
 		prop.appendChild(IValID.V_REPEAT_Y);
+		prop.appendChild(IValID.V_SPACE);
+		prop.appendChild(IValID.V_ROUND);
 		prop.appendChild(IValID.V_NO_REPEAT);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// background-size
+		prop = PropCMSubProperty.getInstanceOf(PropCMProperty.P_BG_SIZE);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_PERCENTAGE));
+		prop.appendChild(IValID.V_CONTAIN);
+		prop.appendChild(IValID.V_COVER);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
 		// border
@@ -317,11 +342,53 @@ public abstract class PropCMNode {
 		prop.setMaxValueCount(4);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
+		// border-top-left-radius
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_TOP_LEFT_RADIUS);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// border-top-right-radius
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_TOP_RIGHT_RADIUS);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// border-bottom-left-radius
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_BOTTOM_LEFT_RADIUS);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// border-bottom-right-radius
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_BOTTOM_RIGHT_RADIUS);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_RADIUS);
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_TOP_LEFT_RADIUS));
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_TOP_RIGHT_RADIUS));
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_BOTTOM_LEFT_RADIUS));
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_BORDER_BOTTOM_RIGHT_RADIUS));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+		prop.setMaxValueCount(4);
+
 		// bottom
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BOTTOM);
 		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
 		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_PERCENTAGE));
 		prop.appendChild(IValID.V_AUTO);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// box-shadow
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BOX_SHADOW);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
+		// prop.appendChild(PropCMContainer.getContInstanceOf(PropCMContainer.VAL_COLOR));
+		prop.appendChild(PropCMContainer.getContInstanceOf(PropCMContainer.VAL_COLOR));
+		prop.setMaxValueCount(4);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// box-shadow
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_BOX_SIZING);
+		prop.appendChild(IValID.V_BORDER_BOX);
+		prop.appendChild(IValID.V_CONTENT_BOX);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
 		// caption-side
@@ -377,6 +444,65 @@ public abstract class PropCMNode {
 		// color
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLOR);
 		prop.appendChild(PropCMContainer.getContInstanceOf(PropCMContainer.VAL_COLOR));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// columns
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMNS);
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_WIDTH));
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_COUNT));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-width
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_WIDTH);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
+		prop.appendChild(IValID.V_AUTO);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-count
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_COUNT);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_INTEGER));
+		prop.appendChild(IValID.V_AUTO);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-fill
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_FILL);
+		prop.appendChild(IValID.V_AUTO);
+		prop.appendChild(IValID.V_BALANCE);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-gap
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_GAP);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
+		prop.appendChild(IValID.V_NORMAL);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-rule
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_RULE);
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_RULE_WIDTH));
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_RULE_STYLE));
+		prop.appendChild(PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_RULE_COLOR));
+		prop.setMaxValueCount(3);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-rule-color
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_RULE_COLOR);
+		prop.appendChild(PropCMContainer.getContInstanceOf(PropCMContainer.VAL_COLOR));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-rule-style
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_RULE_STYLE);
+		prop.appendChild(PropCMContainer.getContInstanceOf(PropCMContainer.VAL_BORDER_STYLE));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-rule-width
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_RULE_WIDTH);
+		prop.appendChild(PropCMContainer.getContInstanceOf(PropCMContainer.VAL_BORDER_WIDTH));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// column-span
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_COLUMN_SPAN);
+		prop.appendChild(IValID.V_1);
+		prop.appendChild(IValID.V_ALL);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
 		// content
@@ -731,6 +857,11 @@ public abstract class PropCMNode {
 		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_PERCENTAGE));
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
+		// opacity
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_OPACITY);
+		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_NUM));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
 		// orphans
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_ORPHANS);
 		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_INTEGER));
@@ -896,6 +1027,14 @@ public abstract class PropCMNode {
 		prop.setMaxValueCount(-1);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
+		// resize
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_RESIZE);
+		prop.appendChild(IValID.V_BOTH);
+		prop.appendChild(IValID.V_HORIZONTAL);
+		prop.appendChild(IValID.V_NONE);
+		prop.appendChild(IValID.V_VERTICAL);
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
 		// richness
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_RICHNESS);
 		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_NUM));
@@ -987,6 +1126,12 @@ public abstract class PropCMNode {
 		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_TEXT_INDENT);
 		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_LENGTH));
 		prop.appendChild(PropCMNumber.getInstanceOf(PropCMNumber.VAL_PERCENTAGE));
+		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
+
+		// text-overflow
+		prop = PropCMProperty.getInstanceOf(PropCMProperty.P_TEXT_OVERFLOW);
+		prop.appendChild(IValID.V_CLIP);
+		prop.appendChild(IValID.V_ELLIPSIS);
 		prop.appendMediaGroup(IMediaGroupID.M_VISUAL);
 
 		// text-shadow

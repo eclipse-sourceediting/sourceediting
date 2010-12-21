@@ -17,6 +17,7 @@ package org.eclipse.wst.css.core.internal.contentmodel;
  */
 public interface IValID {
 
+	public final static String V_1 = "1";//$NON-NLS-1$
 	public final static String V_100 = "100"; //$NON-NLS-1$
 	public final static String V_200 = "200"; //$NON-NLS-1$
 	public final static String V_300 = "300"; //$NON-NLS-1$
@@ -38,6 +39,7 @@ public interface IValID {
 	public final static String V_AUTO = "auto"; //$NON-NLS-1$
 	public final static String V_AVOID = "avoid"; //$NON-NLS-1$
 	public final static String V_BACKGROUND = "Background"; //$NON-NLS-1$
+	public final static String V_BALANCE = "balance";//$NON-NLS-1$
 	public final static String V_BASELINE = "baseline"; //$NON-NLS-1$
 	public final static String V_BEHIND = "behind"; //$NON-NLS-1$
 	public final static String V_BELOW = "below"; //$NON-NLS-1$
@@ -48,6 +50,7 @@ public interface IValID {
 	public final static String V_BLUE = "blue"; //$NON-NLS-1$
 	public final static String V_BOLD = "bold"; //$NON-NLS-1$
 	public final static String V_BOLDER = "bolder"; //$NON-NLS-1$
+	public final static String V_BORDER_BOX = "border-box"; //$NON-NLS-1$
 	public final static String V_BOTH = "both"; //$NON-NLS-1$
 	public final static String V_BOTTOM = "bottom"; //$NON-NLS-1$
 	public final static String V_BUTTONFACE = "ButtonFace"; //$NON-NLS-1$
@@ -63,12 +66,16 @@ public interface IValID {
 	public final static String V_CHILD = "child"; //$NON-NLS-1$
 	public final static String V_CIRCLE = "circle"; //$NON-NLS-1$
 	public final static String V_CJK_IDEOGRAPHIC = "cjk-ideographic"; //$NON-NLS-1$
+	public final static String V_CLIP = "clip"; //$NON-NLS-1$
 	public final static String V_CLOSE_QUOTE = "close-quote"; //$NON-NLS-1$
 	public final static String V_CODE = "code"; //$NON-NLS-1$
 	public final static String V_CONDENSED = "condensed"; //$NON-NLS-1$
 	public final static String V_COLLAPSE = "collapse"; //$NON-NLS-1$
 	public final static String V_COMPACT = "compact"; //$NON-NLS-1$
+	public final static String V_CONTAIN = "contain"; //$NON-NLS-1$
+	public final static String V_CONTENT_BOX = "content-box"; //$NON-NLS-1$
 	public final static String V_CONTINUOUS = "continuous"; //$NON-NLS-1$
+	public final static String V_COVER = "cover"; //$NON-NLS-1$
 	public final static String V_CROP = "crop"; //$NON-NLS-1$
 	public final static String V_CROSS = "cross"; //$NON-NLS-1$
 	public final static String V_CROSSHAIR = "crosshair"; //$NON-NLS-1$
@@ -82,6 +89,7 @@ public interface IValID {
 	public final static String V_DOTTED = "dotted"; //$NON-NLS-1$
 	public final static String V_DOUBLE = "double"; //$NON-NLS-1$
 	public final static String V_E_RESIZE = "e-resize"; //$NON-NLS-1$
+	public final static String V_ELLIPSIS = "ellipsis"; //$NON-NLS-1$
 	public final static String V_EMBED = "embed"; //$NON-NLS-1$
 	public final static String V_EXPANDED = "expanded"; //$NON-NLS-1$
 	public final static String V_EXTRA_CONDENSED = "extra-condensed"; //$NON-NLS-1$
@@ -109,6 +117,7 @@ public interface IValID {
 	public final static String V_HIGHER = "higher"; //$NON-NLS-1$
 	public final static String V_HIRAGANA = "hiragana"; //$NON-NLS-1$
 	public final static String V_HIRAGANA_IROHA = "hiragana-iroha"; //$NON-NLS-1$
+	public final static String V_HORIZONTAL = "horizontal"; //$NON-NLS-1$
 	public final static String V_ICON = "icon"; //$NON-NLS-1$
 	public final static String V_INACTIVEBORDER = "InactiveBorder"; //$NON-NLS-1$
 	public final static String V_INACTIVECAPTION = "InactiveCaption"; //$NON-NLS-1$
@@ -136,6 +145,7 @@ public interface IValID {
 	public final static String V_LIME = "lime"; //$NON-NLS-1$
 	public final static String V_LINE_THROUGH = "line-through"; //$NON-NLS-1$
 	public final static String V_LIST_ITEM = "list-item"; //$NON-NLS-1$
+	public final static String V_LOCAL = "local"; //$NON-NLS-1$
 	public final static String V_LOUD = "loud"; //$NON-NLS-1$
 	public final static String V_LOW = "low"; //$NON-NLS-1$
 	public final static String V_LOWER = "lower"; //$NON-NLS-1$
@@ -175,6 +185,7 @@ public interface IValID {
 	public final static String V_OUTSET = "outset"; //$NON-NLS-1$
 	public final static String V_OUTSIDE = "outside"; //$NON-NLS-1$
 	public final static String V_OVERLINE = "overline"; //$NON-NLS-1$
+	public final static String V_PADDING_BOX = "padding-box"; //$NON-NLS-1$
 	public final static String V_POINTER = "pointer"; //$NON-NLS-1$
 	public final static String V_PORTRAIT = "portrait"; //$NON-NLS-1$
 	public final static String V_PRE = "pre"; //$NON-NLS-1$
@@ -191,6 +202,7 @@ public interface IValID {
 	public final static String V_RIGHT = "right"; //$NON-NLS-1$
 	public final static String V_RIGHT_SIDE = "right-side"; //$NON-NLS-1$
 	public final static String V_RIGHTWARDS = "rightwards"; //$NON-NLS-1$
+	public final static String V_ROUND = "round"; //$NON-NLS-1$
 	public final static String V_RTL = "rtl"; //$NON-NLS-1$
 	public final static String V_RUN_IN = "run-in"; //$NON-NLS-1$
 	public final static String V_S_RESIZE = "s-resize"; //$NON-NLS-1$
@@ -213,6 +225,7 @@ public interface IValID {
 	public final static String V_SMALLER = "smaller"; //$NON-NLS-1$
 	public final static String V_SOFT = "soft"; //$NON-NLS-1$
 	public final static String V_SOLID = "solid"; //$NON-NLS-1$
+	public final static String V_SPACE = "space"; //$NON-NLS-1$
 	public final static String V_SPELL_OUT = "spell-out"; //$NON-NLS-1$
 	public final static String V_SQUARE = "square"; //$NON-NLS-1$
 	public final static String V_STATIC = "static"; //$NON-NLS-1$
@@ -249,6 +262,7 @@ public interface IValID {
 	public final static String V_UPPER_LATIN = "upper-latin"; //$NON-NLS-1$
 	public final static String V_UPPER_ROMAN = "upper-roman"; //$NON-NLS-1$
 	public final static String V_UPPERCASE = "uppercase"; //$NON-NLS-1$
+	public final static String V_VERTICAL = "vertical";//$NON-NLS-1$
 	public final static String V_VISIBLE = "visible"; //$NON-NLS-1$
 	public final static String V_W_RESIZE = "w-resize"; //$NON-NLS-1$
 	public final static String V_WAIT = "wait"; //$NON-NLS-1$
