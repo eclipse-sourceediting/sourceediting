@@ -5,4 +5,10 @@
 		<provisionalConfiguration
 			type="sourceReconcilingListener" target="org.eclipse.wst.css.core.csssource" class="org.eclipse.wst.css.ui.tests.viewer.CSSCodeFoldingTest"/>
 	</extension>
+	<extension
+	      point="org.eclipse.wst.css.ui.proposalInfo">
+    <proposalInfo
+          class="org.eclipse.wst.css.ui.tests.contentassist.ProposalInfo">
+    </proposalInfo>
+	</extension>
 </plugin>

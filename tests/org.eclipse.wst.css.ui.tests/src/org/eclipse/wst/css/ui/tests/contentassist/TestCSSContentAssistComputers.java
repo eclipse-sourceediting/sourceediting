@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension5;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -134,7 +135,25 @@ public class TestCSSContentAssistComputers extends TestCase {
 		int[] expectedProposalCounts = new int[] {4, 0, 4, 4};
 		runProposalTest("test4.css", 7, 23, expectedProposalCounts);
 	}
-	
+
+	public void testAdditionalProposalInfo() throws Exception {
+		IFile file = getFile("test4.css");
+		StructuredTextEditor editor = getEditor(file);
+		StructuredTextViewer viewer = editor.getTextViewer();
+		int offset = viewer.getDocument().getLineLength(7) + 23;
+		ICompletionProposal[][] pages = getProposals(viewer, offset, 4);
+		
+		assertTrue("Not enough pages", pages.length > 0);
+		ICompletionProposal[] proposals = pages[0];
+		for (int i = 0; i < proposals.length; i++) {
+			if (proposals[i] instanceof ICompletionProposalExtension5) {
+				Object obj = ((ICompletionProposalExtension5) proposals[i]).getAdditionalProposalInfo(null);
+				assertTrue("Additional info must be of type ProposalInfo", obj instanceof ProposalInfo);
+				ProposalInfo info = (ProposalInfo) obj;
+				assertNotNull("CSSMMNode for Proposal Info should not be null", info);
+			}
+		}
+	}
 	/**
 	 * <p>Run a proposal test by opening the given file and invoking content assist for
 	 * each expected proposal count at the given line number and line character
@@ -213,7 +232,7 @@ public class TestCSSContentAssistComputers extends TestCase {
 	private static void verifyProposalCounts(ICompletionProposal[][] pages, int[] expectedProposalCounts) {
 		StringBuffer error = new StringBuffer();
 		for(int page = 0; page < expectedProposalCounts.length; ++page) {
-			if(expectedProposalCounts[page] != pages[page].length) {
+			if(expectedProposalCounts[page] > pages[page].length) {
 				error.append("\nProposal page " + page + " did not have the expected number of proposals: was " +
 						pages[page].length + " expected " + expectedProposalCounts[page]);
 			}

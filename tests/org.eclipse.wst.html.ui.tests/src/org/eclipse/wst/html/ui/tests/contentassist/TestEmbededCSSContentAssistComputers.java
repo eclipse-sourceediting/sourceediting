@@ -255,7 +255,7 @@ public class TestEmbededCSSContentAssistComputers extends TestCase {
 	private static void verifyProposalCounts(ICompletionProposal[][] pages, int[] expectedProposalCounts) {
 		StringBuffer error = new StringBuffer();
 		for(int page = 0; page < expectedProposalCounts.length; ++page) {
-			if(expectedProposalCounts[page] != pages[page].length) {
+			if(expectedProposalCounts[page] > pages[page].length) {
 				error.append("\nProposal page " + page + " did not have the expected number of proposals: was " +
 						pages[page].length + " expected " + expectedProposalCounts[page]);
 			}
