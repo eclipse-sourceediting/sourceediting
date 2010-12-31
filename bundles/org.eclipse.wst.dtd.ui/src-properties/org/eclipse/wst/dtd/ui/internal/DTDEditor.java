@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.wst.dtd.ui.internal.preferences.DTDUIPreferenceNames;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
@@ -88,15 +89,17 @@ public class DTDEditor extends StructuredTextEditor {
 	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
 		super.init(site, editorInput);
 
-		IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IWorkbenchPage page = dw.getActivePage();
-		try {
-			if (page != null) {
-				page.showView(IPageLayout.ID_PROP_SHEET);
+		if (DTDUIPlugin.getDefault().getPreferenceStore().getBoolean(DTDUIPreferenceNames.ACTIVATE_PROPERTIES)) {
+			IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			IWorkbenchPage page = dw.getActivePage();
+			try {
+				if (page != null) {
+					page.showView(IPageLayout.ID_PROP_SHEET);
+				}
 			}
-		}
-		catch (PartInitException e) {
-			Logger.logException(e);
+			catch (PartInitException e) {
+				Logger.logException(e);
+			}
 		}
 	}
 }

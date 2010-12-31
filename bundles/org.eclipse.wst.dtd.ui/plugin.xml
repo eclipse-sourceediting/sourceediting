@@ -151,6 +151,12 @@
 			id="org.eclipse.wst.sse.ui.preferences.dtd.styles">
          	<keywordReference id="org.eclipse.wst.dtd.ui.styles"/>
 		</page>
+		<page
+			name="%Editor.name"
+			category="org.eclipse.wst.dtd.ui.preferences.dtd"
+			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDEditorPreferencePage"
+			id="org.eclipse.wst.dtd.ui.preferences.editor">
+		</page>
 	</extension>
 	
 	<!-- Keywords for preference and properties pages -->

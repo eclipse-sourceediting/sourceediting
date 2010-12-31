@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,6 +73,7 @@ public class DTDUIMessages extends NLS {
 	public static String SyntaxColoringPage_5;
 	public static String SyntaxColoringPage_6;
 	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
+	public static String ShowProperties;
 
 	static {
 		// load message values from bundle file

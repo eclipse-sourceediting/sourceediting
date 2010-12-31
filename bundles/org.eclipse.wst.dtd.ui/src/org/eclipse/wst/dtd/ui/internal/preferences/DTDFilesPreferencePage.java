@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,18 +20,13 @@ import java.util.List;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PreferenceLinkArea;
-import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.preferences.DTDCorePreferenceNames;
 import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
@@ -48,11 +43,6 @@ public class DTDFilesPreferencePage extends AbstractPreferencePage {
 	protected Control createContents(final Composite parent) {
 		Composite composite = super.createComposite(parent, 1);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.DTD_PREFWEBX_FILES_HELPID);
-
-		new PreferenceLinkArea(composite, SWT.WRAP | SWT.MULTI, "org.eclipse.wst.sse.ui.preferences.editor", DTDUIMessages._UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK,//$NON-NLS-1$
-					(IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).create());
-		new Label(composite, SWT.NONE).setLayoutData(GridDataFactory.swtDefaults().create());
-
 
 		Group creatingGroup = createGroup(composite, 2);
 		creatingGroup.setText(DTDUIMessages.Creating_files);
