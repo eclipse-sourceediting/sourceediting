@@ -32,14 +32,14 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 //	private static final String TEXTEDITOR_TEMPLATES_VIEW_ID = "org.eclipse.ui.texteditor.TemplatesView"; //$NON-NLS-1$
 //	private static final String ID_CONSOLE_VIEW = "org.eclipse.ui.console.ConsoleView"; //$NON-NLS-1$
 
-	private static String HIERARCHY_VIEW_ID = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
+	private static String EXPLORER_VIEW_ID = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
 
 	public XMLPerspectiveFactory() {
 		String viewerID = ProductProperties.getProperty(IProductConstants.PERSPECTIVE_EXPLORER_VIEW);
 		if (viewerID != null) {
 			// verify that the view actually exists
 			if (PlatformUI.getWorkbench().getViewRegistry().find(viewerID) != null){
-				HIERARCHY_VIEW_ID = viewerID;
+				EXPLORER_VIEW_ID = viewerID;
 			}
 		}
 	}
@@ -58,10 +58,10 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
 
-		layout.addShowViewShortcut(HIERARCHY_VIEW_ID);
+		layout.addShowViewShortcut(EXPLORER_VIEW_ID);
 
 		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, 0.23f, layout.getEditorArea());//$NON-NLS-1$
-		topLeft.addView(HIERARCHY_VIEW_ID);
+		topLeft.addView(EXPLORER_VIEW_ID);
 
 		// Create the areas of the layout with their initial views
 //		IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, (float) 0.23, editorArea); //$NON-NLS-1$
