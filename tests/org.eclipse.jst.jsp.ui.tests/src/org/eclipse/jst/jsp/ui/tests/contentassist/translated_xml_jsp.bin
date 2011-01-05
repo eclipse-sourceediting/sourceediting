@@ -33,6 +33,7 @@ String includedString = "incd";
    jb. 
 {out.print("");} //markup
 { // <logic:iterate>
+{out.print("");} //markup
 } // </logic:iterate>
 {out.print("");} //markup
  } catch (java.lang.Exception e) {} 
