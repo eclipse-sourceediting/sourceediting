@@ -124,7 +124,7 @@ public class JSPTranslator implements Externalizable {
 	 * @see #writeRanges(ObjectOutput, HashMap)
 	 * @see #readRanges(ObjectInput)
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	/** for debugging */
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")).booleanValue(); //$NON-NLS-1$
@@ -3375,7 +3375,7 @@ public class JSPTranslator implements Externalizable {
 	private static void writeString(ObjectOutput out, String s) throws IOException {
 		if(s != null) {
 			out.writeInt(s.length());
-			out.writeBytes(s);
+			out.writeChars(s);
 		} else {
 			out.writeInt(0);
 		}
@@ -3397,9 +3397,11 @@ public class JSPTranslator implements Externalizable {
 	 */
 	private static String readString(ObjectInput in) throws IOException {
 		int length = in.readInt();
-		byte[] bytes = new byte[length];
-		in.readFully(bytes);
-		return new String(bytes);
+		char charArray[] = new char[length];
+		for(int i=0; i < length;i++){
+			charArray[i] = in.readChar();
+		}
+		return new String(charArray);
 	}
 	
 	/**
