@@ -224,9 +224,6 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 				// determine if a block tag scan is necessary
 				if (internalContext == XML_TAG_NAME) {
 					internalTagName = yytext();
-					if (endTagName != null && endTagName.length() == 0){
-						endTagName = internalTagName;
-					}
 					if(!isNestable(internalTagName)) {
 						internalTagName = null;
 						// snagged a tag name we shouldn't have
@@ -515,27 +512,16 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 					return searchContext;
 				}
 				// 4) XML tag 
-				else if(allowTag && checkJSPs && yy_currentPos > searchStringLength && yy_buffer[yy_currentPos - searchStringLength] == '<') {
-					String buffer = String.copyValueOf(yy_buffer);
-					int jspSepIndex = buffer.indexOf(':',yy_currentPos );
-					if (jspSepIndex >= 0 ){
-						int endTagIndex = buffer.indexOf('>', jspSepIndex +1);
-						if (endTagIndex != -1 && (buffer.indexOf(searchString, jspSepIndex) != (endTagIndex -searchStringLength+1) )){
-							fLastInternalBlockStart = yy_markedPos = yy_currentPos - searchStringLength;
-							yy_currentPos = yy_markedPos + 1;
-							if(yy_markedPos == yy_startRead) {
-								int resumeState = yystate();
-								yybegin(ST_XML_TAG_NAME);
-								fStateStack.push(resumeState);
-								String jspContext = primGetNextToken();
-								yybegin(resumeState);
-								return jspContext;
-							}
-							
-							return searchContext;
-						}
-							
-						
+				else if(allowTag && checkJSPs && yy_currentPos > searchStringLength && yy_currentPos - searchStringLength != fLastInternalBlockStart && 
+						yy_buffer[yy_currentPos - searchStringLength] == '<') {
+					fLastInternalBlockStart = yy_markedPos = yy_currentPos - searchStringLength;
+					yy_currentPos = yy_markedPos + 1;
+					int resumeState = yystate();
+					yybegin(ST_XML_TAG_NAME);
+					if(yy_markedPos == yy_startRead) {
+						String jspContext = primGetNextToken();
+						yybegin(resumeState);
+						return jspContext;
 					}
 					return searchContext;
 				}
@@ -1413,14 +1399,6 @@ jspDirectiveStart        = {jspScriptletStart}@
 <YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_DECLARATION, ST_JSP_DIRECTIVE_NAME, ST_JSP_DIRECTIVE_NAME_WHITESPACE, ST_JSP_DIRECTIVE_ATTRIBUTE_NAME, ST_JSP_DIRECTIVE_EQUALS, ST_JSP_DIRECTIVE_ATTRIBUTE_VALUE> {genericTagOpen} {
 	if(Debug.debugTokenizer)
 		dump("\nstart tag open");//$NON-NLS-1$
-	if (!fStateStack.empty() && fStateStack.peek()== ST_XML_COMMENT){
-		fStateStack.pop();
-		fEmbeddedHint = XML_COMMENT_TEXT;
-		yybegin(ST_XML_TAG_NAME);
-		String tagName = "";
-		assembleEmbeddedTagSequence(XML_TAG_OPEN, tagName); // ?
-		return PROXY_CONTEXT;
-	}
 	fEmbeddedHint = XML_TAG_NAME;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
         yybegin(ST_XML_TAG_NAME);
