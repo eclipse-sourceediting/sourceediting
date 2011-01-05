@@ -1577,7 +1577,7 @@ public class JSPTranslator implements Externalizable {
 					}
 				}
 				else {
-					checkAllAttributeValueContainers(container,regions);
+					checkAllAttributeValueContainers(regions);
 				}
 			}
 		}
@@ -1588,23 +1588,15 @@ public class JSPTranslator implements Externalizable {
 	 * 
 	 * @param regions
 	 */
-	private void checkAllAttributeValueContainers(ITextRegionCollection container, Iterator regions) {
+	private void checkAllAttributeValueContainers(Iterator regions) {
 		// tag name is not jsp
 		// handle embedded jsp attributes...
 		ITextRegion embedded = null;
 		// Iterator attrRegions = null;
 		// ITextRegion attrChunk = null;
-		ITextRegion prevRegion = null;
 		while (regions.hasNext()) {
 			embedded = (ITextRegion) regions.next();
-			if (embedded.getType() == DOMRegionContext.XML_TAG_NAME || embedded.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-				String fullTagName = container.getText(embedded);
-				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith(JSP_PREFIX)) {
-					if (prevRegion != null)
-					addCustomTaglibVariables(fullTagName, container,prevRegion,-1); // it may be a custom tag
-				}
-			}
-			else if (embedded instanceof ITextRegionContainer) {
+			if (embedded instanceof ITextRegionContainer) {
 				// parse out container
 
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=130606
@@ -1632,7 +1624,6 @@ public class JSPTranslator implements Externalizable {
 				// }
 				// }
 			}
-			prevRegion = embedded;
 		}
 	}
 
