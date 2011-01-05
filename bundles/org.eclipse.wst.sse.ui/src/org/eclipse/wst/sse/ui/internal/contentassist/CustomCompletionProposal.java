@@ -310,7 +310,7 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 			return false;
 		boolean validated = startsWith(document, offset, fDisplayString);
 
-		if (fUpdateLengthOnValidate) {
+		if (fUpdateLengthOnValidate && event != null) {
 			fReplacementLength += event.fText.length() - event.fLength; //adjust the replacement length by the event's text replacement
 		}
 		return validated;
