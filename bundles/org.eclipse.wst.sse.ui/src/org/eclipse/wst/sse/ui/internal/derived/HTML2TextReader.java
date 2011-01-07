@@ -45,7 +45,13 @@ public class HTML2TextReader extends SubstitutionTextReader {
 		fgTags.add("b"); //$NON-NLS-1$
 		fgTags.add("br"); //$NON-NLS-1$
 		fgTags.add("br/");//$NON-NLS-1$
+		fgTags.add("h1"); //$NON-NLS-1$
+		fgTags.add("h2"); //$NON-NLS-1$
+		fgTags.add("h3"); //$NON-NLS-1$
+		fgTags.add("h4"); //$NON-NLS-1$
 		fgTags.add("h5"); //$NON-NLS-1$
+		fgTags.add("h6"); //$NON-NLS-1$
+		fgTags.add("hr"); //$NON-NLS-1$
 		fgTags.add("p"); //$NON-NLS-1$
 		fgTags.add("dl"); //$NON-NLS-1$
 		fgTags.add("dt"); //$NON-NLS-1$
@@ -53,6 +59,15 @@ public class HTML2TextReader extends SubstitutionTextReader {
 		fgTags.add("li"); //$NON-NLS-1$
 		fgTags.add("ul"); //$NON-NLS-1$
 		fgTags.add("pre"); //$NON-NLS-1$
+		fgTags.add("html"); //$NON-NLS-1$
+		fgTags.add("body"); //$NON-NLS-1$
+		fgTags.add("code"); //$NON-NLS-1$
+		fgTags.add("blockquote"); //$NON-NLS-1$
+		fgTags.add("a"); //$NON-NLS-1$
+		fgTags.add("tt"); //$NON-NLS-1$
+		fgTags.add("tl"); //$NON-NLS-1$
+		fgTags.add("em"); //$NON-NLS-1$
+		fgTags.add("i"); //$NON-NLS-1$
 
 		fgEntityLookup= new HashMap(7);
 		fgEntityLookup.put("lt", "<"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -137,6 +152,11 @@ public class HTML2TextReader extends SubstitutionTextReader {
 		String tag= html;
 		if ('/' == tag.charAt(0))
 			tag= tag.substring(1);
+
+		final int ws = tag.indexOf(' ');
+		if (ws > 0) {
+			tag = tag.substring(0, ws);
+		}
 
 		if (!fgTags.contains(tag))
 			return '<' + html + '>';
