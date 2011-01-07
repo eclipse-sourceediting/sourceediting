@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1577,7 +1577,7 @@ public class JSPTranslator implements Externalizable {
 					}
 				}
 				else {
-					checkAllAttributeValueContainers(regions);
+					checkAllAttributeValueContainers(container,regions);
 				}
 			}
 		}
@@ -1588,15 +1588,25 @@ public class JSPTranslator implements Externalizable {
 	 * 
 	 * @param regions
 	 */
-	private void checkAllAttributeValueContainers(Iterator regions) {
+	private void checkAllAttributeValueContainers(ITextRegionCollection container, Iterator regions) {
 		// tag name is not jsp
 		// handle embedded jsp attributes...
 		ITextRegion embedded = null;
 		// Iterator attrRegions = null;
 		// ITextRegion attrChunk = null;
+		ITextRegion prevRegion = null;
 		while (regions.hasNext()) {
 			embedded = (ITextRegion) regions.next();
-			if (embedded instanceof ITextRegionContainer) {
+			if (embedded.getType() == DOMRegionContext.XML_TAG_NAME || embedded.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
+
+			{
+				String fullTagName = container.getText(embedded);
+				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith(JSP_PREFIX)) {
+					if (prevRegion != null)
+					addCustomTaglibVariables(fullTagName, container,prevRegion,-1); // it may be a custom tag
+				}
+			}
+				else if (embedded instanceof ITextRegionContainer) {
 				// parse out container
 
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=130606
@@ -1624,6 +1634,7 @@ public class JSPTranslator implements Externalizable {
 				// }
 				// }
 			}
+			prevRegion = embedded;
 		}
 	}
 
