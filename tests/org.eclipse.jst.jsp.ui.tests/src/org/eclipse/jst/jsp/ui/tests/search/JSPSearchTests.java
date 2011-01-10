@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaElement;
@@ -163,7 +164,7 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 
 		TestJspSearchRequestor requestor = new TestJspSearchRequestor();
 		requestor.addCheckMatch("searchTestJSP.jsp", 93, 106);
-		JSPSearchSupport.getInstance().search("searchForThis", new JSPSearchScope(), FIELD, ALL_OCCURRENCES, SearchPattern.R_EXACT_MATCH, true, requestor);
+		JSPSearchSupport.getInstance().search("searchForThis", new JSPSearchScope(), FIELD, ALL_OCCURRENCES, SearchPattern.R_EXACT_MATCH, true, requestor, new NullProgressMonitor());
 		assertTrue("did not find all expected matches: searchForThis", requestor.checkValid());
 	}
 
@@ -172,7 +173,7 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 		TestJspSearchRequestor requestor = new TestJspSearchRequestor();
 		requestor.addCheckMatch("searchTestJSP.jsp", 143, 158);
 		requestor.addCheckMatch("searchTestJSP.jsp", 298, 315);
-		JSPSearchSupport.getInstance().search("searchForMethod", new JSPSearchScope(), METHOD, ALL_OCCURRENCES, SearchPattern.R_EXACT_MATCH, true, requestor);
+		JSPSearchSupport.getInstance().search("searchForMethod", new JSPSearchScope(), METHOD, ALL_OCCURRENCES, SearchPattern.R_EXACT_MATCH, true, requestor, new NullProgressMonitor());
 		assertTrue("did not find all expected matches: searchForMethod", requestor.checkValid());
 	}
 
@@ -182,7 +183,7 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 		requestor.addCheckMatch("searchTestJSP.jsp", 93, 106);
 		requestor.addCheckMatch("searchTestJSP2.jsp", 116, 129);
 		requestor.addCheckMatch("searchTestJSP2.jsp", 152, 165);
-		JSPSearchSupport.getInstance().search("search*", new JSPSearchScope(), FIELD, ALL_OCCURRENCES, SearchPattern.R_PATTERN_MATCH, true, requestor);
+		JSPSearchSupport.getInstance().search("search*", new JSPSearchScope(), FIELD, ALL_OCCURRENCES, SearchPattern.R_PATTERN_MATCH, true, requestor, new NullProgressMonitor());
 		assertTrue("did not find all expected matches: search*", requestor.checkValid());
 	}
 
@@ -195,7 +196,7 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 		requestor.addCheckMatch("searchTestJSP3.jsp", 299, 309);
 		requestor.addCheckMatch("searchTestJSP3.jsp", 408, 417);
 		requestor.addCheckMatch("searchTestJSP3.jsp", 430, 439);
-		JSPSearchSupport.getInstance().search("Jellybean*", new JSPSearchScope(), TYPE, ALL_OCCURRENCES, SearchPattern.R_PATTERN_MATCH, true, requestor);
+		JSPSearchSupport.getInstance().search("Jellybean*", new JSPSearchScope(), TYPE, ALL_OCCURRENCES, SearchPattern.R_PATTERN_MATCH, true, requestor, new NullProgressMonitor());
 		assertTrue("did not find all expected matches: search*", requestor.checkValid());
 	}
 
@@ -215,7 +216,7 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 
 			TestJspSearchRequestor requestor = new TestJspSearchRequestor();
 			requestor.addCheckMatch("searchTestJSP3.jsp", 377, 384);
-			JSPSearchSupport.getInstance().search(element, new JSPSearchScope(), requestor);
+			JSPSearchSupport.getInstance().search(element, new JSPSearchScope(), requestor, new NullProgressMonitor());
 			assertTrue("did not find all expected matches: search*", requestor.checkValid());
 		}
 		finally {
