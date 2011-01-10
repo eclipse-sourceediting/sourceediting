@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,6 @@ import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
-import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
@@ -315,10 +314,67 @@ public class JSPSearchSupport {
      * @param requestor
      *            passed in to accept search matches (and do "something" with
      *            them)
+     * 
+     * @deprecated use {@link #search(String, IJavaSearchScope, int, int, int, boolean, SearchRequestor, IProgressMonitor)}
      */
     public void search(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
+    	this.search(searchText, scope, searchFor, limitTo, matchMode, isCaseSensitive,
+    			requestor, new NullProgressMonitor());
+    }
 
-        JSPIndexManager.getInstance().rebuildIndexIfNeeded();
+    /**
+     * Search for an IJavaElement, constrained by the given parameters. Runs in
+     * a background Job (results may still come in after this method call)
+     * 
+     * @param element
+     * @param scope
+     * @param requestor
+     * 
+     * @deprecated use {@link #search(IJavaElement, IJavaSearchScope, SearchRequestor, IProgressMonitor)}
+     */
+    public void search(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
+    	this.search(element, scope, requestor, new NullProgressMonitor());
+    }
+
+    /**
+     * Search for an IJavaElement, constrained by the given parameters. Runs in
+     * an IWorkspace runnable (results will be reported by the end of this
+     * method)
+     * 
+     * @param element
+     * @param scope
+     * @param requestor
+     */
+    public void searchRunnable(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
+    	this.searchRunnable(element, scope, requestor, new NullProgressMonitor());
+    }
+    
+    /**
+     * Perform a java search w/ the given parameters. Runs in a background Job
+     * (results may still come in after this method call)
+     * 
+     * @param searchText
+     *            the string of text to search on
+     * @param searchFor
+     *            IJavaSearchConstants.TYPE, METHOD, FIELD, PACKAGE, etc...
+     * @param limitTo
+     *            IJavaSearchConstants.DECLARATIONS,
+     *            IJavaSearchConstants.REFERENCES,
+     *            IJavaSearchConstants.IMPLEMENTORS, or
+     *            IJavaSearchConstants.ALL_OCCURRENCES
+     * @param matchMode
+     *            allow * wildcards or not
+     * @param isCaseSensitive
+     * @param requestor
+     *            passed in to accept search matches (and do "something" with
+     *            them)
+     */
+    public void search(String searchText, IJavaSearchScope scope, int searchFor, int
+    		limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor,
+    		IProgressMonitor monitor) {
+
+    	//wait for the index
+		JSPIndexManager.getDefault().waitForConsistent(monitor);
 
         SearchJob job = new SearchJob(searchText, scope, searchFor, limitTo, matchMode, isCaseSensitive, requestor);
         setCanceled(false);
@@ -338,10 +394,12 @@ public class JSPSearchSupport {
      * @param scope
      * @param requestor
      */
-    public void search(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
+    public void search(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor,
+    		IProgressMonitor monitor) {
 
-        JSPIndexManager.getInstance().rebuildIndexIfNeeded();
-
+    	//wait for the index
+		JSPIndexManager.getDefault().waitForConsistent(monitor);
+    	
         SearchJob job = new SearchJob(element, scope, requestor);
         setCanceled(false);
         job.setUser(true);
@@ -359,9 +417,11 @@ public class JSPSearchSupport {
      * @param scope
      * @param requestor
      */
-    public void searchRunnable(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
-
-        JSPIndexManager.getInstance().rebuildIndexIfNeeded();
+    public void searchRunnable(IJavaElement element, IJavaSearchScope scope,
+    		SearchRequestor requestor, IProgressMonitor monitor) {
+    	
+    	//wait for the index
+		JSPIndexManager.getDefault().waitForConsistent(monitor);
 
         SearchRunnable searchRunnable = new SearchRunnable(element, scope, requestor);
         try {
@@ -467,11 +527,6 @@ public class JSPSearchSupport {
             // this is the only difference from
             // IndexManager#computeIndexLocation(...)
             indexLocation = getModelJspPluginWorkingLocation().append(fileName);
-
-            // pa_TODO need to add to java path too, so JDT search support knows
-            // there should be a non internal way to do this.
-            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=77564
-            JavaModelManager.getIndexManager().indexLocations.put(containerPath, indexLocation);
         //}
         return indexLocation;
     }
@@ -483,7 +538,7 @@ public class JSPSearchSupport {
             return this.fJspPluginLocation;
 
         // Append the folder name "jspsearch" to keep the state location area cleaner
-        IPath stateLocation = JSPCorePlugin.getDefault().getStateLocation().append("jspsearch");
+        IPath stateLocation = JSPCorePlugin.getDefault().getStateLocation().append("jspsearch"); //$NON-NLS-1$
 
         // pa_TODO workaround for
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=62267

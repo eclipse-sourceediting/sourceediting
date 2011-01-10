@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2010 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -36,4 +36,15 @@ public class SSECoreMessages extends NLS {
 	public static String TaskScanningJob_0;
 	public static String TaskScanningJob_1;
 	public static String Migrate_Charset;
+	
+	public static String IndexManager_0_starting;
+	public static String IndexManager_0_starting_1;
+	public static String IndexManager_0_Indexing_1_Files;	
+	public static String IndexManager_processing_deferred_resource_changes;
+	public static String IndexManager_Processing_entire_workspace_for_the_first_time;
+	public static String IndexManager_0_Processing_entire_workspace_for_the_first_time;
+	public static String IndexManager_processing_recent_resource_changes;
+	public static String IndexManager_0_resources_to_go_1;
+	public static String IndexManager_Waiting_for_0;
+	public static String IndexManager_0_Processing_resource_events;
 }

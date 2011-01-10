@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal;
 
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ISavedState;
@@ -26,7 +28,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentPropertiesManager;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslatorPersister;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
@@ -36,19 +37,22 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class JSPCorePlugin extends Plugin {
-	// The shared instance.
+	/** singleton instance of the plugin */
 	private static JSPCorePlugin plugin;
-	
-	/** Save participant for this plugin */
-	private ISaveParticipant fSaveParticipant;
 
+	/**
+	 * <p>Job used to finish tasks needed to start up the plugin but that did not have
+	 * to block the plugin start up process.</p>
+	 */
+	private Job fPluginInitializerJob;
+	
 	/**
 	 * The constructor.
 	 */
 	public JSPCorePlugin() {
 		super();
 		plugin = this;
-		fSaveParticipant = new SaveParticipant();
+		this.fPluginInitializerJob = new PluginInitializerJob();
 	}
 
 	/**
@@ -75,58 +79,9 @@ public class JSPCorePlugin extends Plugin {
 
 		// listen for classpath changes
 		JavaCore.addElementChangedListener(TaglibHelperManager.getInstance());
-
-		/*
-		 * Restore save state and process any events that happened before
-		 * plug-in loaded. Don't do it immediately since adding the save
-		 * participant requires a lock on the workspace to compute the
-		 * accumulated deltas, and if the tree is not already locked it
-		 * becomes a blocking call.
-		 */
-		if (JSPTranslatorPersister.ACTIVATED) {
-			Job persister = new Job(JSPCoreMessages.Initializing) {
-				protected IStatus run(IProgressMonitor monitor) {
-					final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-					try {
-						workspace.run(new IWorkspaceRunnable() {
-							public void run(IProgressMonitor monitor) throws CoreException {
-								ISavedState savedState = null;
-								try {
-									savedState = workspace.addSaveParticipant(getBundle().getSymbolicName(), fSaveParticipant);
-								}
-								catch (CoreException e) {
-									Logger.logException("Could not load previous save state", e);
-								}
-								if (savedState != null) {
-									try {
-										Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-									}
-									finally {
-										savedState.processResourceChangeEvents(JSPTranslatorPersister.getDefault());
-									}
-								}
-							}
-						}, monitor);
-					}
-					catch (CoreException e) {
-						return e.getStatus();
-					}
-					finally {
-						/*
-						 * set up persister to listen to resource change
-						 * events
-						 */
-						workspace.addResourceChangeListener(JSPTranslatorPersister.getDefault());
-					}
-					return Status.OK_STATUS;
-				}
-			};
-			persister.setUser(false);
-			persister.schedule(2000);
-		}
 		
-		//init the JSP index
-		JSPIndexManager.getInstance().initialize();
+		//schedule delayed initialization
+		this.fPluginInitializerJob.schedule(2000);
 
 		// listen for resource changes to update content properties keys
 		JSPFContentPropertiesManager.startup();
@@ -142,22 +97,14 @@ public class JSPCorePlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		DeploymentDescriptorPropertyCache.stop();
 
-		/*
-		 * stop listening for resource changes to update content properties
-		 * keys
-		 */
+		// stop listening for resource changes to update content properties keys
 		JSPFContentPropertiesManager.shutdown();
 
 		//remove the plugin save participant
 		ResourcesPlugin.getWorkspace().removeSaveParticipant(plugin.getBundle().getSymbolicName());
 		
-		//remove the translator persister
-		if(JSPTranslatorPersister.ACTIVATED) {
-			ResourcesPlugin.getWorkspace().removeResourceChangeListener(JSPTranslatorPersister.getDefault());
-		}
-		
 		// stop any indexing
-		JSPIndexManager.getInstance().shutdown();
+		JSPIndexManager.getDefault().stop();
 
 		// stop listening for classpath changes
 		JavaCore.removeElementChangedListener(TaglibHelperManager.getInstance());
@@ -167,6 +114,79 @@ public class JSPCorePlugin extends Plugin {
 		TaglibIndex.shutdown();
 
 		super.stop(context);
+	}
+	
+	/**
+	 * <p>A {@link Job} used to perform delayed initialization for the plugin</p>
+	 */
+	private static class PluginInitializerJob extends Job {
+		/**
+		 * <p>Default constructor to set up this {@link Job} as a
+		 * long running system {@link Job}</p>
+		 */
+		protected PluginInitializerJob() {
+			super(JSPCoreMessages.JSPCorePlugin_Initializing_JSP_Tools);
+			
+			this.setUser(false);
+			this.setSystem(true);
+			this.setPriority(Job.LONG);
+		}
+		
+		/**
+		 * <p>Perform delayed initialization for the plugin</p>
+		 * 
+		 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		protected IStatus run(IProgressMonitor monitor) {
+			IStatus status = Status.OK_STATUS;
+			final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			try {
+				/*
+				 * Restore save state and process any events that happened before
+				 * plug-in loaded. Don't do it immediately since adding the save
+				 * participant requires a lock on the workspace to compute the
+				 * accumulated deltas, and if the tree is not already locked it
+				 * becomes a blocking call.
+				 */
+				workspace.run(new IWorkspaceRunnable() {
+					public void run(final IProgressMonitor worspaceMonitor) throws CoreException {
+						ISavedState savedState = null;
+						
+						try {
+							//add the save participant for this bundle
+							savedState = ResourcesPlugin.getWorkspace().addSaveParticipant(
+									JSPCorePlugin.plugin.getBundle().getSymbolicName(), new SaveParticipant());
+						} catch (CoreException e) {
+							Logger.logException("JSP Core Plugin failed at loading previously saved state." + //$NON-NLS-1$
+									" All componenets dependent on this state will start as if first workspace load.", e); //$NON-NLS-1$
+						}
+						
+						//if there is a saved state start up using that, else start up cold
+						if(savedState != null) {
+							try {
+								Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+							} finally {
+								savedState.processResourceChangeEvents(new IResourceChangeListener() {
+									/**
+									 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+									 */
+									public void resourceChanged(IResourceChangeEvent event) {
+										JSPIndexManager.getDefault().start(event.getDelta(), worspaceMonitor);
+									}
+								});
+							}
+						} else {
+							JSPIndexManager.getDefault().start(null, worspaceMonitor);
+						}
+					}
+				}, monitor);
+			} catch(CoreException e) {
+				status = e.getStatus();
+			}
+			
+			return status;
+		}
+		
 	}
 	
 	/**
