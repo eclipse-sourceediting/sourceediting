@@ -174,7 +174,8 @@ public abstract class AbstractIndexManager {
 	 * @param messageRunning Message to use when manager is running. Should be user readable.
 	 * @param messagegInitializing Message to use when manager is initializing. Should be user readable.
 	 * @param messageProcessingFiles Message to use when manager is processing files.
-	 * Should contain one parameter to be filled in with the number of files to process.
+	 * Should contain two parameters to be filled in with the number of files to process, and
+	 * the file currently being processed.
 	 * Should be user readable.
 	 */
 	
