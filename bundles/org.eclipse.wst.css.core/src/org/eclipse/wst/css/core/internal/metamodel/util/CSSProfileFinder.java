@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,9 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.w3c.dom.Node;
 
 
 public class CSSProfileFinder {
@@ -62,6 +65,17 @@ public class CSSProfileFinder {
 		}
 		else if (model != null) {
 			baseLocation = model.getBaseLocation();
+		}
+		return findProfileFor(baseLocation);
+	}
+
+	public CSSProfile findProfileFor(Node node) {
+		String baseLocation = null;
+		if (node instanceof IDOMNode) {
+			IDOMModel model = ((IDOMNode) node).getModel();
+			if (model != null) {
+				baseLocation = model.getBaseLocation();
+			}
 		}
 		return findProfileFor(baseLocation);
 	}
