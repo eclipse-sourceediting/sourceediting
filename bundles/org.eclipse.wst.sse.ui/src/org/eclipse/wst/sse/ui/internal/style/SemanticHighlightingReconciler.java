@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,7 +104,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 		fJobHighlightings = fHighlightings;
 		IStructuredModel model = null;
 		try {
-			if (fJobPresenter == null || fJobSemanticHighlightings == null || fJobHighlightings == null)
+			if (fJobPresenter == null || fJobSemanticHighlightings == null || fJobHighlightings == null || fDocument == null)
 				return;
 
 			fJobPresenter.setCanceled(false);
