@@ -106,7 +106,7 @@ public class StructuredMarkerAnnotation extends MarkerAnnotation implements IAnn
 		IMarker marker = getMarker();
 		fAnnotationType = TemporaryAnnotation.ANNOT_UNKNOWN;
 		try {
-			if (marker.isSubtypeOf(IMarker.PROBLEM)) {
+			if (marker.exists() && marker.isSubtypeOf(IMarker.PROBLEM)) {
 				int severity = marker.getAttribute(IMarker.SEVERITY, -1);
 				switch (severity) {
 					case IMarker.SEVERITY_ERROR :
