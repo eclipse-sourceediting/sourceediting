@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -774,7 +774,7 @@ public class HTMLFormatter implements IStructuredFormatter {
         }
         else if (theNode.getNodeType() == Node.TEXT_NODE) {
         	Node next = theNode.getNextSibling();
-        	if (next != null && formattingUtil.isInline(next)) {
+        	if (next != null && formattingUtil.isInline(next) || theParentElement.getChildNodes().getLength() <= 1) {
         		result = false;
         	}
         }
@@ -800,6 +800,8 @@ public class HTMLFormatter implements IStructuredFormatter {
          * a child of a inline element or a next sibling to an inline element*/
         } else if (allowNewlineBefore(theNode)) {
             result = false;
+        } else if (theNode.getNodeType() == Node.TEXT_NODE && theParentElement.getChildNodes().getLength() <= 1) {
+        	result = false;
         }
         return result;
     }
