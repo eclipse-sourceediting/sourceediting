@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,18 +89,16 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 			byte[] bytes = new byte[CodedIO.MAX_MARK_SIZE];
 			int nRead = 0;
 			for (int i = 0; i < bytes.length; i++) {
-				if (fReader.ready()) {
-					int oneByte = fReader.read();
-					nRead++;
-					if (oneByte <= 0xFF) {
-						bytes[i] = (byte) oneByte;
-					}
-					else {
-						noHeuristic = true;
-						break;
-					}
+				int oneByte = fReader.read();
+				nRead++;
+				if (oneByte == -1) {
+					break;
+				}
+				if (oneByte <= 0xFF) {
+					bytes[i] = (byte) oneByte;
 				}
 				else {
+					noHeuristic = true;
 					break;
 				}
 			}
