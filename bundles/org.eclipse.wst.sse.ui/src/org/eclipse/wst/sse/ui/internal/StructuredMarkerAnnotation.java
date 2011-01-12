@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,7 +106,7 @@ public class StructuredMarkerAnnotation extends MarkerAnnotation implements IAnn
 		IMarker marker = getMarker();
 		fAnnotationType = TemporaryAnnotation.ANNOT_UNKNOWN;
 		try {
-			if (marker.isSubtypeOf(IMarker.PROBLEM)) {
+			if (marker.exists() && marker.isSubtypeOf(IMarker.PROBLEM)) {
 				int severity = marker.getAttribute(IMarker.SEVERITY, -1);
 				switch (severity) {
 					case IMarker.SEVERITY_ERROR :
