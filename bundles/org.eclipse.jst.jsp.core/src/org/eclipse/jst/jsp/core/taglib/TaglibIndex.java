@@ -475,7 +475,7 @@ public final class TaglibIndex {
 	 * All resolution from the given path beginning with '/' will be relative
 	 * to the computed web-app root.
 	 * 
-	 * @deprecated - is not correct in flexible projects
+	 * @deprecated - is not correct in flexible projects, use the {@link org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport} class instead
 	 * @param path -
 	 *            a path under the web-app root
 	 * @return the IPath considered to be the web-app's root for the given
