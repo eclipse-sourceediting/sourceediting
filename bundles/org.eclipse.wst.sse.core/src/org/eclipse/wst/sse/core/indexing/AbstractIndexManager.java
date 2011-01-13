@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -224,11 +224,12 @@ public abstract class AbstractIndexManager {
 				progress.setWorkRemaining(1);
 				
 				//don't bother processing saved delta if forced full re-index is needed
-				boolean stillNeedFullReIndex = forcedFullReIndexNeeded;
 				if(!forcedFullReIndexNeeded) {
-					//if there is a delta attempt to process it
+					/* if there is a delta attempt to process it
+					 * else need to do a full workspace index
+					 */
 					if(savedStateDelta != null) {
-						stillNeedFullReIndex = false;
+						forcedFullReIndexNeeded = false;
 						try {
 							//deal with reporting progress
 							SubMonitor savedStateProgress = progress.newChild(1, SubMonitor.SUPPRESS_NONE);
@@ -244,16 +245,18 @@ public abstract class AbstractIndexManager {
 							//process any remaining batched up resources to index
 							visitor.processBatchedResourceEvents();
 						} catch (CoreException e) {
-							stillNeedFullReIndex = true;
+							forcedFullReIndexNeeded = true;
 							Logger.logException(this.fName + ": Could not process saved state. " + //$NON-NLS-1$
 									"Forced to do a full workspace re-index.", e); //$NON-NLS-1$
 						}
+					} else {
+						forcedFullReIndexNeeded = true;
 					}
 				}
 				progress.worked(1);
 				
 				//if need to process the entire workspace do so in another job
-				if(stillNeedFullReIndex){
+				if(forcedFullReIndexNeeded){
 					this.fWorkspaceVisitorJob = new WorkspaceVisitorJob();
 					this.fWorkspaceVisitorJob.schedule();
 				}
@@ -645,9 +648,6 @@ public abstract class AbstractIndexManager {
 						}
 						visitChildren = true;
 					}
-					visitChildren = false;
-				} else {
-					visitChildren = false;
 				}
 				
 				//batch up resource changes before sending them out
