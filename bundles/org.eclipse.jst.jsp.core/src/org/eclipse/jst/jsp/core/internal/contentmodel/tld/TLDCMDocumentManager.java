@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -762,7 +762,12 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	private long getModificationStamp(String reference) {
-		ITaglibRecord record = TaglibIndex.resolve(getCurrentParserPath().toString(), reference, false);
+		IPath currentParserPath = getCurrentParserPath();
+		if (currentParserPath == null) {
+			return IResource.NULL_STAMP;
+		}
+		
+		ITaglibRecord record = TaglibIndex.resolve(currentParserPath.toString(), reference, false);
 		long modificationStamp = IResource.NULL_STAMP;
 		if (record != null) {
 			switch (record.getRecordType()) {
