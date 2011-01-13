@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1265,7 +1265,7 @@ class ProjectDescription {
 	/**
 	 * @param basePath
 	 * @return the applicable Web context root path, if one exists
-	 * @deprecated
+	 * @deprecated - does not support flexible project layouts
 	 */
 	IPath getLocalRoot(IPath basePath) {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -1463,34 +1463,6 @@ class ProjectDescription {
 			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " contents in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	/**
-	 * @deprecated
-	 */
-	void indexClasspath() {
-		if (_debugIndexTime)
-			time0 = System.currentTimeMillis();
-		fClasspathProjects.clear();
-		fClasspathReferences.clear();
-		fClasspathJars.clear();
-		fBuildPathEntryCount = 0;
-
-		IJavaProject javaProject = JavaCore.create(fProject);
-		/*
-		 * If the Java nature isn't present (or something else is wrong),
-		 * don't check the build path.
-		 */
-		if (javaProject != null && javaProject.exists()) {
-			indexClasspath(javaProject);
-		}
-		// else {
-		// Logger.log(Logger.WARNING, "TaglibIndex was asked to index non-Java
-		// Project " + fProject.getName()); //$NON-NLS-1$
-		// }
-
-		if (_debugIndexTime)
-			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	}
-
 	void indexClasspath(IClasspathEntry[] entries) {
 		if (_debugIndexTime)
 			time0 = System.currentTimeMillis();
@@ -1614,28 +1586,6 @@ class ProjectDescription {
 	 * TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record,
 	 * ITaglibIndexDelta.REMOVED)); } }
 	 */
-
-	/**
-	 * @deprecated
-	 */
-	private void indexClasspath(IJavaProject javaProject) {
-		if (javaProject == null)
-			return;
-
-		IProject project = javaProject.getProject();
-		if (project.equals(fProject)) {
-			try {
-				IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
-				fBuildPathEntryCount = entries.length;
-				for (int i = 0; i < entries.length; i++) {
-					indexClasspath(entries[i]);
-				}
-			}
-			catch (JavaModelException e) {
-				Logger.logException("Error searching Java Build Path + (" + fProject.getName() + ") for tag libraries", e); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
-	}
 	
 	void queueElementChanged(IJavaElementDelta delta) {
 		try {
