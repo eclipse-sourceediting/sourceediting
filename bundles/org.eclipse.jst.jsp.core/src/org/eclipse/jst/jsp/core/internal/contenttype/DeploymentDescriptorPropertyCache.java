@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -565,6 +565,7 @@ public final class DeploymentDescriptorPropertyCache {
 
 	static final String SCRIPTING_INVALID = "scripting-invalid"; //$NON-NLS-1$
 	static final String URL_PATTERN = "url-pattern"; //$NON-NLS-1$
+	private static final String SERVLET_MAPPING = "servlet-mapping"; //$NON-NLS-1$
 	private static final String WEB_APP_ELEMENT_LOCAL_NAME = ":web-app"; //$NON-NLS-1$
 	private static final String WEB_APP_ELEMENT_NAME = "web-app"; //$NON-NLS-1$
 
@@ -682,11 +683,16 @@ public final class DeploymentDescriptorPropertyCache {
 			}
 		}
 		
+		// 325554 : only apply to URL patterns for Servlet mappings
 		NodeList urlPatternElements = document.getElementsByTagName(URL_PATTERN);
-		for (int i = 0; i < urlPatternElements.getLength(); i++) {
-			String urlPattern = getContainedText(urlPatternElements.item(i));
-			if(urlPattern != null && urlPattern.length() > 0) {
-				urlPatterns.add(new StringMatcher(urlPattern));
+		int urlPatternElementCount = urlPatternElements.getLength();
+		for (int i = 0; i < urlPatternElementCount; i++) {
+			Node urlPatternElement = urlPatternElements.item(i);
+			if (SERVLET_MAPPING.equals(urlPatternElement.getParentNode().getNodeName())) {
+				String urlPattern = getContainedText(urlPatternElement);
+				if (urlPattern != null && urlPattern.length() > 0) {
+					urlPatterns.add(new StringMatcher(urlPattern));
+				}
 			}
 		}
 	}
