@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -190,7 +190,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   {
     schemaNsPrefixField.setText(getPreferenceStore().getDefaultString(XSDEditorPlugin.CONST_XSD_DEFAULT_PREFIX_TEXT));
     qualifyXSDLanguage.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY));
-    defaultTargetNamespaceText.setText(getPreferenceStore().getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
+    defaultTargetNamespaceText.setText(getPreferenceStore().getDefaultString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
   }
 
   /**
