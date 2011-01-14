@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -895,8 +895,10 @@ public class DefaultXMLPartitionFormatter {
 					int attributesCount = 0;
 					int i = 2;
 					while (i < textRegions.size() && attributesCount < 2) {
-						if (DOMRegionContext.XML_TAG_ATTRIBUTE_NAME.equals(textRegions.get(i).getType()))
+						if (DOMRegionContext.XML_TAG_ATTRIBUTE_NAME.equals(textRegions.get(i).getType())) {
 							++attributesCount;
+						}
+						i++;
 					}
 					indentAllAttributes = (attributesCount > 1);
 				}
