@@ -230,6 +230,10 @@
             <uri
                 name="http://java.sun.com/xml/ns/javaee/web-partialresponse_2_0.xsd"
                 uri="dtdsAndSchemas/web-partialresponse_2_0.xsd"/>
+            <uri
+                  name="http://java.sun.com/xml/ns/javaee/beans_1_0.xsd"
+                  uri="dtdsAndSchemas/beans_1_0.xsd">
+            </uri>
 
 
                           
