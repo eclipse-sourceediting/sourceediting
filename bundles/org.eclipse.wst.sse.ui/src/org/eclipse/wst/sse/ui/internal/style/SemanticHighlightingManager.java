@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
+import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension2;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
@@ -446,10 +447,17 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 
 				String rgbString = getString(store, highlighting.getColorPreferenceKey());
 				Color color = null;
+				Color bgColor = null;
 				
 				if (rgbString != null)
 					color = EditorUtility.getColor(ColorHelper.toRGB(rgbString));
-				attribute = new TextAttribute(color, null, style);
+				if (highlighting instanceof ISemanticHighlightingExtension2) {
+					rgbString = getString(store, ((ISemanticHighlightingExtension2) highlighting).getBackgroundColorPreferenceKey());
+					if (rgbString != null) {
+						bgColor = EditorUtility.getColor(ColorHelper.toRGB(rgbString));
+					}
+				}
+				attribute = new TextAttribute(color, bgColor, style);
 			}
 
 			store.addPropertyChangeListener(fHighlightingChangeListener);
@@ -631,6 +639,13 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 				refreshRequired = true;
 				continue;
 			}
+
+			if (highlighting instanceof ISemanticHighlightingExtension2 && property.equals(((ISemanticHighlightingExtension2) highlighting).getBackgroundColorPreferenceKey())) {
+				adaptToTextBackgroundChange(fHighlightingStyles[i], event);
+				fPresenter.highlightingStyleChanged(fHighlightingStyles[i]);
+				refreshRequired = true;
+				continue;
+			}
 		}
 		
 		if (refreshRequired && fReconciler != null)
@@ -684,6 +699,22 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 			Color color= EditorUtility.getColor(rgb);
 			TextAttribute oldAttr= highlighting.getTextAttribute();
 			highlighting.setTextAttribute(new TextAttribute(color, oldAttr.getBackground(), oldAttr.getStyle()));
+		}
+	}
+
+	private void adaptToTextBackgroundChange(HighlightingStyle highlighting, PropertyChangeEvent event) {
+		RGB rgb = null;
+
+		Object value = event.getNewValue();
+		if (value instanceof RGB)
+			rgb = (RGB) value;
+		else if (value instanceof String)
+			rgb = ColorHelper.toRGB( (String) value);
+
+		if (rgb != null) {
+			Color color= EditorUtility.getColor(rgb);
+			TextAttribute oldAttr= highlighting.getTextAttribute();
+			highlighting.setTextAttribute(new TextAttribute(oldAttr.getForeground(), color, oldAttr.getStyle()));
 		}
 	}
 	
