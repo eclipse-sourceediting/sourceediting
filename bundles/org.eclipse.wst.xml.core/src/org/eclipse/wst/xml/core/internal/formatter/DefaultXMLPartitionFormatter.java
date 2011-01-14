@@ -894,7 +894,8 @@ public class DefaultXMLPartitionFormatter {
 				if (indentMultipleAttribute) {
 					int attributesCount = 0;
 					int i = 2;
-					while (i < textRegions.size() && attributesCount < 2) {
+					final int size = textRegions.size();
+					while (i < size && attributesCount < 2) {
 						if (DOMRegionContext.XML_TAG_ATTRIBUTE_NAME.equals(textRegions.get(i).getType())) {
 							++attributesCount;
 						}
