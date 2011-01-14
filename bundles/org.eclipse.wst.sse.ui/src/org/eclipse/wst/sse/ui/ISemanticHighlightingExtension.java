@@ -19,7 +19,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
  * define consumability with respect to indexed regions containing the structured
  * document region.
  * 
- * @since 3.2
  */
 public interface ISemanticHighlightingExtension {
 
