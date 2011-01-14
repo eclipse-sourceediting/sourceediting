@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -57,6 +58,7 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 	private WizardNewFileCreationPage fNewFilePage;
 	private NewDTDTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
+	private static final String defaultName = "NewFile"; //$NON-NLS-1$
 	private IContentType fContentType;
 	private List fValidExtensions = null;
 
@@ -138,6 +140,30 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 	
 	public void addPages() {
 		fNewFilePage = new WizardNewFileCreationPage("DTDWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))) { //$NON-NLS-1$
+			public void createControl(Composite parent) {
+				// inherit default container and name specification widgets
+				super.createControl(parent);
+				setFileName(computeDefaultFileName());
+				setPageComplete(validatePage());
+			}
+			protected String computeDefaultFileName() {
+				int count = 0;
+				String fileName = addDefaultExtension(defaultName);
+				IPath containerFullPath = getContainerFullPath();
+				if (containerFullPath != null) {
+					while (true) {
+						IPath path = containerFullPath.append(fileName);
+						if (ResourcesPlugin.getWorkspace().getRoot().exists(path)) {
+							count++;
+							fileName = addDefaultExtension(defaultName + count);
+						}
+						else {
+							break;
+						}
+					}
+				}
+				return fileName;
+			}
 			protected boolean validatePage() {
 				String fileName = getFileName();
 				IPath fullPath = getContainerFullPath();
@@ -274,4 +300,5 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 		return charset;
 	}
 
+	
 }

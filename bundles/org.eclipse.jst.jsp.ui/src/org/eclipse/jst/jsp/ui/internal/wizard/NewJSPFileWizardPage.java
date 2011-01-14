@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 ,2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,10 +33,12 @@ import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 
 class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 
+	private static final String defaultName = "NewFile"; //$NON-NLS-1$
 	private IContentType fContentType;
 	private List fValidExtensions = null;
 
@@ -44,6 +46,31 @@ class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 		super(pageName, selection);
 	}
 
+	public void createControl(Composite parent) {
+		// inherit default container and name specification widgets
+		super.createControl(parent);
+		setFileName(computeDefaultFileName());
+		setPageComplete(validatePage());
+	}
+	
+	protected String computeDefaultFileName() {
+		int count = 0;
+		String fileName = addDefaultExtension(defaultName);
+		IPath containerFullPath = getContainerFullPath();
+		if (containerFullPath != null) {
+			while (true) {
+				IPath path = containerFullPath.append(fileName);
+				if (ResourcesPlugin.getWorkspace().getRoot().exists(path)) {
+					count++;
+					fileName = addDefaultExtension(defaultName + count);
+				}
+				else {
+					break;
+				}
+			}
+		}
+		return fileName;
+	}
 	/**
 	 * This method is overriden to set the selected folder to web contents
 	 * folder if the current selection is outside the web contents folder.

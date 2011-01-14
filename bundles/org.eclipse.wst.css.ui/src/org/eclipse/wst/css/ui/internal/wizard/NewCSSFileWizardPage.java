@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
@@ -34,6 +35,7 @@ import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 
 class NewCSSFileWizardPage extends WizardNewFileCreationPage {
 
+	private static final String defaultName = "NewFile"; //$NON-NLS-1$
 	private IContentType fContentType;
 	private List fValidExtensions = null;
 	
@@ -41,6 +43,31 @@ class NewCSSFileWizardPage extends WizardNewFileCreationPage {
         super(pageName, selection);
     }
 	
+	public void createControl(Composite parent) {
+		// inherit default container and name specification widgets
+		super.createControl(parent);
+		setFileName(computeDefaultFileName());
+		setPageComplete(validatePage());
+	}
+	
+	protected String computeDefaultFileName() {
+		int count = 0;
+		String fileName = addDefaultExtension(defaultName);
+		IPath containerFullPath = getContainerFullPath();
+		if (containerFullPath != null) {
+			while (true) {
+				IPath path = containerFullPath.append(fileName);
+				if (ResourcesPlugin.getWorkspace().getRoot().exists(path)) {
+					count++;
+					fileName = addDefaultExtension(defaultName + count);
+				}
+				else {
+					break;
+				}
+			}
+		}
+		return fileName;
+	}
 	/**
 	 * This method is overriden to set the selected folder to web contents 
 	 * folder if the current selection is outside the web contents folder. 
