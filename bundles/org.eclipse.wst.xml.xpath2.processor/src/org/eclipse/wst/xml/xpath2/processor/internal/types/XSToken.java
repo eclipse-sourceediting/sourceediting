@@ -1,13 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2010 Mukul Gandhi, and others
+ * Copyright (c) 2011 Mukul Gandhi, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Mukul Gandhi - bug 309585 - implementation of xs:normalizedString data type
- *     Mukul Gandhi - bug 334478 - refactoring code to cater to xs:token data type
+ *     Mukul Gandhi - bug 334478 - implementation of xs:token data type
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -17,11 +16,11 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 /**
- * A representation of the xs:normalizedString datatype
+ * A representation of the xs:token datatype
  */
-public class XSNormalizedString extends XSString {
+public class XSToken extends XSNormalizedString {
 
-	private static final String XS_NORMALIZEDSTRING = "xs:normalizedString";
+	private static final String XS_TOKEN = "xs:token";
 
 	/**
 	 * Initialises using the supplied String
@@ -29,35 +28,35 @@ public class XSNormalizedString extends XSString {
 	 * @param x
 	 *            The String to initialise to
 	 */
-	public XSNormalizedString(String x) {
+	public XSToken(String x) {
 		super(x);
 	}
 
 	/**
 	 * Initialises to null
 	 */
-	public XSNormalizedString() {
+	public XSToken() {
 		this(null);
 	}
 
 	/**
 	 * Retrieves the datatype's full pathname
 	 * 
-	 * @return "xs:normalizedString" which is the datatype's full pathname
+	 * @return "xs:token" which is the datatype's full pathname
 	 */
 	@Override
 	public String string_type() {
-		return XS_NORMALIZEDSTRING;
+		return XS_TOKEN;
 	}
 
 	/**
 	 * Retrieves the datatype's name
 	 * 
-	 * @return "normalizedString" which is the datatype's name
+	 * @return "token" which is the datatype's name
 	 */
 	@Override
 	public String type_name() {
-		return "normalizedString";
+		return "token";
 	}
 
 	/**
@@ -84,25 +83,26 @@ public class XSNormalizedString extends XSString {
 			DynamicError.throw_type_error();
 		}
 		
-		rs.add(new XSNormalizedString(srcString));
+		rs.add(new XSToken(srcString));
 
 		return rs;
 	}
 	
 	/*
-	 * Does the string in context satisfies constraints of the datatype, xs:normalizedString. 
+	 * Does the string in context satisfies constraints of the datatype, xs:token. 
 	 */
 	protected boolean isSatisfiesConstraints(String srcString) {
 	   
-		boolean isNormalizedStr = true;
+		boolean isToken = true;
 		
-		// the xs:normalizedString value cannot contain, 'carriage return', 'line feed' and 'tab' characters.
-		if ((srcString.indexOf("\r") != -1) || (srcString.indexOf("\n") != -1) || (srcString.indexOf("\t") != -1)) {
-			// invalid input
-			isNormalizedStr = false;
+		// satisfies constraints of xs:normalizedString and additionally must satisfy the condition,
+		// the string must not have leading or trailing spaces and that have no internal sequences of two or more spaces.
+		if (!super.isSatisfiesConstraints(srcString) || srcString.startsWith(" ") || 
+			 srcString.endsWith(" ") || srcString.indexOf("  ") != -1) {
+			isToken = false;
 		}
 		
-		return isNormalizedStr;
+		return isToken;
 		  
 	} // isSatisfiesConstraints
 

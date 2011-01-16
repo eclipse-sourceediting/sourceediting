@@ -25,6 +25,7 @@
  *     David Carver - bug 262765 - implementation of xs:untypedAtomic data type.
  *     Jesper Moller - bug 297707 - Missing the empty-sequence() type
  *     Mukul Gandhi - bug 309585 - implementation of xs:normalizedString data type
+ *     Mukul Gandhi - bug 334478 - implementation of xs:token data type
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -50,6 +51,7 @@ public class XSCtrLibrary extends ConstructorFL {
 		// add types here
 		add_type(new XSString());
 		add_type(new XSNormalizedString());
+		add_type(new XSToken());
 		add_type(new XSBoolean());
 		add_type(new XSUntypedAtomic());
 		add_type(new XSNotation());
