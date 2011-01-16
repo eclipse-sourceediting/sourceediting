@@ -46,7 +46,8 @@
  *                                 attribute nodes, where the schema type of nodes
  *                                 are simple, with varieties 'list' and 'union'.
  *  Mukul Gandhi    - bug 325262 - providing ability to store an XPath2 sequence into
- *                                 an user-defined variable.                               
+ *                                 an user-defined variable.
+ *  Mukul Gandhi    - bug 334478   implementation of xs:token data type                                
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -1946,6 +1947,35 @@ public class TestBugs extends AbstractPsychoPathTest {
 		ResultSequence rsRes = eval.evaluate(path);        
 		XSBoolean result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
+	}
+	
+	public void testXSToken() throws Exception {
+		// Bug 334478
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// the strings in below are not valid tokens (they contain 2 consecutive spaces)
+		String xpath = "xs:token('abcs  abcde') eq xs:token('abcs  abcde')";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		
+		boolean testSuccess = false;
+		try {
+		   ResultSequence rs = eval.evaluate(path);
+		}
+		catch(DynamicError ex) {
+		   // a 'DynamicError' exception indicates, that this test is a success 
+		   testSuccess = true;
+		}
+		
+		assertTrue(testSuccess);
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {
