@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,19 +73,17 @@ class HedMediaElement extends HTMLElemDeclImpl {
 		attr = new HTMLAttrDeclImpl(HTML50Namespace.ATTR_NAME_AUTOPLAY, atype, CMAttributeDeclaration.OPTIONAL);
 		attributes.putNamedItem(HTML50Namespace.ATTR_NAME_AUTOPLAY, attr);
 
-		// (loop (true|false) #IMPLIED)
+		// (loop (boolean) #IMPLIED)
 		atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
-		String[] loopValues = {HTML40Namespace.ATTR_VALUE_TRUE, HTML40Namespace.ATTR_VALUE_FALSE};
+		String[] loopValues = {HTML50Namespace.ATTR_NAME_LOOP};
 		atype.setEnumValues(loopValues);
-		atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, HTML40Namespace.ATTR_VALUE_FALSE);
 		attr = new HTMLAttrDeclImpl(HTML50Namespace.ATTR_NAME_LOOP, atype, CMAttributeDeclaration.OPTIONAL);
 		attributes.putNamedItem(HTML50Namespace.ATTR_NAME_LOOP, attr);
 
-		// (controls (true|false) #IMPLIED)
+		// (controls (boolean) #IMPLIED)
 		atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
-		String[] controlValues = {HTML40Namespace.ATTR_VALUE_TRUE, HTML40Namespace.ATTR_VALUE_FALSE};
+		String[] controlValues = {HTML50Namespace.ATTR_NAME_CONTROLS};
 		atype.setEnumValues(controlValues);
-		atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, HTML40Namespace.ATTR_VALUE_FALSE);
 		attr = new HTMLAttrDeclImpl(HTML50Namespace.ATTR_NAME_CONTROLS, atype, CMAttributeDeclaration.OPTIONAL);
 		attributes.putNamedItem(HTML50Namespace.ATTR_NAME_CONTROLS, attr);
 
