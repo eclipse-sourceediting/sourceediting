@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,6 +80,7 @@ import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.ContentAssistantFacade;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -862,7 +863,9 @@ public class StructuredTextEditor extends TextEditor {
 					}
 					
 				};
-				((StructuredTextViewer) viewer).getContentAssistFacade().addCompletionListener(fCompletionListener);
+				ContentAssistantFacade facade = ((StructuredTextViewer) viewer).getContentAssistFacade();
+				if (facade != null)
+					facade.addCompletionListener(fCompletionListener);
 			}
 		}
 
@@ -886,7 +889,9 @@ public class StructuredTextEditor extends TextEditor {
 		void dispose() {
 			ISourceViewer viewer = getSourceViewer();
 			if (viewer instanceof StructuredTextViewer) {
-				((StructuredTextViewer) viewer).getContentAssistFacade().removeCompletionListener(fCompletionListener);
+				ContentAssistantFacade facade = ((StructuredTextViewer) viewer).getContentAssistFacade();
+				if (facade != null)
+					facade.removeCompletionListener(fCompletionListener);
 			}
 
 			for (int i = 0; i < fInserters.length; i++) {
