@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -158,7 +158,8 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_VALUE_DATETIME_LOCAL = "datetime-local"; //input type //$NON-NLS-1$
 	String ATTR_VALUE_RANGE = "range"; //input type //$NON-NLS-1$
 	String ATTR_VALUE_COLOR = "color"; //input type //$NON-NLS-1$
-	
+	String ATTR_VALUE_NUMBER_STRING = "number"; //input type //$NON-NLS-1$
+
 	String ATTR_VALUE_ON = "on"; //input autocomplete //$NON-NLS-1$
 	String ATTR_VALUE_OFF = "off"; //input autocomplete //$NON-NLS-1$
 	

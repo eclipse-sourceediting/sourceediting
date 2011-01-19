@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -437,7 +437,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			//  number | range | search | tel)
 			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
 			String[] values = {ATTR_VALUE_TEXT, ATTR_VALUE_PASSWORD, ATTR_VALUE_CHECKBOX, ATTR_VALUE_RADIO, ATTR_VALUE_SUBMIT, ATTR_VALUE_RESET, ATTR_VALUE_FILE, ATTR_VALUE_HIDDEN, ATTR_VALUE_IMAGE, ATTR_VALUE_BUTTON,
-					 ATTR_VALUE_COLOR, ATTR_VALUE_DATE, ATTR_VALUE_DATETIME, ATTR_VALUE_DATETIME_LOCAL, ATTR_VALUE_EMAIL, ATTR_VALUE_MONTH, ATTR_VALUE_NUMBER, ATTR_VALUE_RANGE, ATTR_VALUE_SEARCH, ATTR_VALUE_TEL, ATTR_VALUE_TIME};
+					 ATTR_VALUE_COLOR, ATTR_VALUE_DATE, ATTR_VALUE_DATETIME, ATTR_VALUE_DATETIME_LOCAL, ATTR_VALUE_EMAIL, ATTR_VALUE_MONTH, ATTR_VALUE_NUMBER_STRING, ATTR_VALUE_RANGE, ATTR_VALUE_SEARCH, ATTR_VALUE_TEL, ATTR_VALUE_TIME};
 			atype.setEnumValues(values);
 			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_TEXT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.OPTIONAL);
