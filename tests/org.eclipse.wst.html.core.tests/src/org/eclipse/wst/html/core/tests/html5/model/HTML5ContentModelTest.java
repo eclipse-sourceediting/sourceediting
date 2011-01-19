@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.html5.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.eclipse.wst.html.core.internal.contentmodel.HTML5AttributeCollection;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLAttributeDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
@@ -46,6 +50,30 @@ public class HTML5ContentModelTest extends TestCase {
 			assertNotNull("missing attribute declaration:" + attrNames[i] + " for element: " + elementName, attributes.getNamedItem(attrNames[i]));
 		}
 		assertEquals("Attributes defined in content model that are not expected by the test for element: " + elementName, attributes.getLength(), attrNames.length);
+	}
+
+	private void checkAttrValues(String documentKey, String elementName, String attrName, String[] attrValues) {
+		CMDocument document = HTMLCMDocumentFactory.getCMDocument(documentKey);
+		CMNode elementDeclaration = document.getElements().getNamedItem(elementName);
+		assertEquals("not an element declaration:" + elementDeclaration, CMNode.ELEMENT_DECLARATION, elementDeclaration.getNodeType());
+		assertNotNull("missing element declaration:" + elementName, elementDeclaration);
+		
+		CMNamedNodeMap attributes = ((CMElementDeclaration) elementDeclaration).getAttributes();
+		final CMNode node = attributes.getNamedItem(attrName);
+		assertNotNull("No attribute [" + attrName + "]", node);
+		final String[] actualValues = ((HTMLAttributeDeclaration) node).getAttrType().getEnumeratedValues();
+		
+		assertEquals(attrValues.length, actualValues.length);
+		Set valueSet = new HashSet(actualValues.length);
+		for (int i = 0; i < actualValues.length; i++) {
+			valueSet.add(actualValues[i]);
+		}
+
+		for (int i = 0; i < attrValues.length; i++) {
+			if (!valueSet.remove(attrValues[i]))
+				fail("Type did not contain attribute value [" + attrValues[i] +"]");
+		}
+		assertTrue("Type had unexpected attribute values", valueSet.isEmpty());
 	}
 
 	private void checkDocument(Object documentKey) {
@@ -199,6 +227,13 @@ public class HTML5ContentModelTest extends TestCase {
 				new String[]{HTML40Namespace.ATTR_NAME_SRC, HTML50Namespace.ATTR_NAME_PRELOAD, HTML50Namespace.ATTR_NAME_AUTOPLAY,
 				HTML50Namespace.ATTR_NAME_LOOP, HTML50Namespace.ATTR_NAME_CONTROLS, HTML50Namespace.ATTR_NAME_POSTER, HTML40Namespace.ATTR_NAME_HEIGHT, HTML40Namespace.ATTR_NAME_WIDTH}));
 	}
+
+	public void testAttributesOnHTML5InputTypes() {
+		checkAttrValues(CMDocType.HTML5_DOC_TYPE, HTML40Namespace.ElementName.INPUT, HTML40Namespace.ATTR_NAME_TYPE, 
+				new String[]{HTML40Namespace.ATTR_VALUE_TEXT, HTML40Namespace.ATTR_VALUE_PASSWORD, HTML40Namespace.ATTR_VALUE_CHECKBOX, HTML40Namespace.ATTR_VALUE_RADIO, HTML40Namespace.ATTR_VALUE_SUBMIT, HTML40Namespace.ATTR_VALUE_RESET, HTML40Namespace.ATTR_VALUE_FILE, HTML40Namespace.ATTR_VALUE_HIDDEN, HTML40Namespace.ATTR_VALUE_IMAGE, HTML40Namespace.ATTR_VALUE_BUTTON,
+				HTML50Namespace.ATTR_VALUE_COLOR, HTML50Namespace.ATTR_VALUE_DATE, HTML50Namespace.ATTR_VALUE_DATETIME, HTML50Namespace.ATTR_VALUE_DATETIME_LOCAL, HTML50Namespace.ATTR_VALUE_EMAIL, HTML50Namespace.ATTR_VALUE_MONTH, HTML50Namespace.ATTR_VALUE_NUMBER_STRING, HTML50Namespace.ATTR_VALUE_RANGE, HTML50Namespace.ATTR_VALUE_SEARCH, HTML50Namespace.ATTR_VALUE_TEL, HTML50Namespace.ATTR_VALUE_TIME});
+	}
+
 	public void testHTML5document() {
 		checkDocument(CMDocType.HTML5_DOC_TYPE);
 	}
