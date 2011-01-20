@@ -47,7 +47,9 @@
  *                                 are simple, with varieties 'list' and 'union'.
  *  Mukul Gandhi    - bug 325262 - providing ability to store an XPath2 sequence into
  *                                 an user-defined variable.
- *  Mukul Gandhi    - bug 334478   implementation of xs:token data type                                
+ *  Mukul Gandhi    - bug 334478   implementation of xs:token data type
+ *  Mukul Gandhi    - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
+ *                                 ID, IDREF and NMTOKEN.                                
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -1976,6 +1978,64 @@ public class TestBugs extends AbstractPsychoPathTest {
 		}
 		
 		assertTrue(testSuccess);
+	}
+	
+	public void testBug334842() throws Exception {
+		// Bug 334842
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// test a)
+		String xpath = "xs:Name('x:abc') eq xs:Name('x:abc')"; 
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rsRes = eval.evaluate(path);
+		XSBoolean result = (XSBoolean) rsRes.get(0);
+		assertEquals("true", result.string_value());
+		
+		// test b)
+		xpath = "xs:NCName('x:abc') eq xs:NCName('x:abc')"; 
+		path = compileXPath(dc, xpath);
+		try {
+		   rsRes = eval.evaluate(path);
+		   assertTrue(false);
+		}
+		catch(DynamicError ex) {
+		   // a 'DynamicError' exception indicates, that this test is a success 
+		   assertTrue(true);
+		}
+		
+		// test c)
+		xpath = "xs:NCName('abc') eq xs:NCName('abc')"; 
+		path = compileXPath(dc, xpath);
+		rsRes = eval.evaluate(path);
+		result = (XSBoolean) rsRes.get(0);
+		assertEquals("true", result.string_value());
+		
+		// test d)
+		xpath = "xs:ID('x:abc') eq xs:ID('x:abc')"; 
+		path = compileXPath(dc, xpath);
+		try {
+		   rsRes = eval.evaluate(path);
+		   assertTrue(false);
+		}
+		catch(DynamicError ex) {
+		   // a 'DynamicError' exception indicates, that this test is a success 
+		   assertTrue(true);
+		}
+		
+		// test e)
+		xpath = "xs:ID('abc') eq xs:ID('abc')"; 
+		path = compileXPath(dc, xpath);
+		rsRes = eval.evaluate(path);
+		result = (XSBoolean) rsRes.get(0);
+		assertEquals("true", result.string_value());
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {
