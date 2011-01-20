@@ -7,6 +7,8 @@
  *
  * Contributors:
  *     David Carver (STAR) bug 228223 - initial API and implementation
+ *     Mukul Gandhi - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
+ *                                 ID, IDREF and NMTOKEN.
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
@@ -49,8 +51,14 @@ public class XSID extends XSNCName {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		String strValue = aat.string_value();
+		
+		if (!isConstraintSatisfied(strValue)) {
+			// invalid input
+			DynamicError.throw_type_error();
+		}
 
-		rs.add(new XSID(aat.string_value()));
+		rs.add(new XSID(strValue));
 
 		return rs;
 	}

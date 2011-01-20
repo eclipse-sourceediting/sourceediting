@@ -26,6 +26,8 @@
  *     Jesper Moller - bug 297707 - Missing the empty-sequence() type
  *     Mukul Gandhi - bug 309585 - implementation of xs:normalizedString data type
  *     Mukul Gandhi - bug 334478 - implementation of xs:token data type
+ *     Mukul Gandhi - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
+ *                                 ID, IDREF and NMTOKEN. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -52,6 +54,9 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSString());
 		add_type(new XSNormalizedString());
 		add_type(new XSToken());
+		add_type(new XSName());
+		add_type(new XSNCName());
+		add_type(new XSNMTOKEN());
 		add_type(new XSBoolean());
 		add_type(new XSUntypedAtomic());
 		add_type(new XSNotation());
@@ -96,7 +101,6 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSGDay());
 
 		add_type(new QName());
-		add_type(new XSNCName());
 		add_type(new XSAnyURI());
 		add_type(new XSYearMonthDuration());
 		add_type(new XSDayTimeDuration());

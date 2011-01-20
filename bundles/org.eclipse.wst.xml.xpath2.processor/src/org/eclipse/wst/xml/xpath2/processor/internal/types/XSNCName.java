@@ -6,11 +6,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
+ *                                 ID, IDREF and NMTOKEN. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.apache.xerces.util.XMLChar;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -18,7 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 /**
  * A representation of the NCName datatype
  */
-public class XSNCName extends XSString {
+public class XSNCName extends XSName {
 	private static final String XS_NC_NAME = "xs:NCName";
 
 	/**
@@ -70,14 +73,35 @@ public class XSNCName extends XSString {
 	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
-
+		
 		if (arg.empty())
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		String strValue = aat.string_value();
+		
+		if (!isConstraintSatisfied(strValue)) {
+			// invalid input
+			DynamicError.throw_type_error();
+		}
 
-		rs.add(new XSNCName(aat.string_value()));
+		rs.add(new XSNCName(strValue));
 
 		return rs;
 	}
+	
+	/*
+	 * Check if a string satisfies the constraints of NCName data type.
+	 */
+	protected boolean isConstraintSatisfied(String strValue) {
+		
+		boolean isValidNCName = true;
+		
+		if (!XMLChar.isValidNCName(strValue)) {
+			isValidNCName = false;
+		}
+		
+		return isValidNCName;
+		
+	} // isConstraintSatisfied
 }
