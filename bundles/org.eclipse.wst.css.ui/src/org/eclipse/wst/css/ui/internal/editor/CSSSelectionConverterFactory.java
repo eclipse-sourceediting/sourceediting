@@ -106,11 +106,9 @@ public class CSSSelectionConverterFactory implements IAdapterFactory {
 					else {
 						int maxLength = model.getStructuredDocument().getLength();
 						Set structures = new HashSet();
-						while (region != null && region.getEndOffset() <= end && region.getEndOffset() <= maxLength) {
-							if (structures.contains(region))
-								break;
-							else
-								structures.add(region);
+						while (region != null && region.getEndOffset() <= end && region.getEndOffset() <= maxLength && !structures.contains(region)) {
+							structures.add(region);
+
 							//use the CSS model to find the next sibling
 							boolean foundNextSibling = false;
 							if(region instanceof CSSNodeImpl ) {
