@@ -7,13 +7,10 @@
  *
  * Contributors:
  *     Mukul Gandhi - initial API and implementation
- *     Mukul Gandhi - bug 318313 - improvements to computation of typed values 
- *                                 of nodes, when validated by XML Schema 
+ *     Mukul Gandhi - bug 318313 - improvements to computation of typed values of nodes, when validated by XML Schema 
  *                                 primitive types.
- *     Mukul Gandhi - bug 323900 - improving computing the typed value of
- *                                 element & attribute nodes, where the schema
- *                                 type of nodes are simple, with varieties 
- *                                 'list' and 'union'.                                 
+ *     Mukul Gandhi - bug 323900 - improving computing the typed value of element and attribute nodes, where the schema
+ *                                 type of nodes are simple, with varieties 'list' and 'union'.                                 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -25,8 +22,8 @@ import org.apache.xerces.xs.XSConstants;
 import org.eclipse.wst.xml.xpath2.processor.PsychoPathTypeHelper;
 
 /**
- * A factory class implementation, to construct PsychoPath schema type
- * representation corresponding to XML Schema types.
+ * A factory class implementation, to construct PsychoPath schema type representation corresponding 
+ * to XML Schema types.
  */
 public class SchemaTypeValueFactory {
 
@@ -37,8 +34,7 @@ public class SchemaTypeValueFactory {
 		}
 		
 		if (typeDef == XSConstants.BOOLEAN_DT) {
-			return new XSBoolean(Boolean.valueOf(strValue).
-					                 booleanValue());
+			return new XSBoolean(Boolean.valueOf(strValue).booleanValue());
 		}
 		
 		if (typeDef == XSConstants.DATE_DT) {       
@@ -157,9 +153,43 @@ public class SchemaTypeValueFactory {
 			return QName.parse_QName(strValue);
 		}
 		
+		// string and it's subtypes
 		if (typeDef == XSConstants.STRING_DT) {
 			return new XSString(strValue);   
-		}                        
+		}
+		
+		if (typeDef == XSConstants.NORMALIZEDSTRING_DT) {
+			return new XSNormalizedString(strValue);   
+		}
+		
+		if (typeDef == XSConstants.TOKEN_DT) {
+			return new XSToken(strValue);   
+		}
+		
+		if (typeDef == XSConstants.NAME_DT) {
+			return new XSName(strValue);   
+		}
+		
+		if (typeDef == XSConstants.NCNAME_DT) {
+			return new XSNCName(strValue);   
+		}
+		
+		if (typeDef == XSConstants.ENTITY_DT) {
+			return new XSEntity(strValue);   
+		}
+		
+		if (typeDef == XSConstants.ID_DT) {
+			return new XSID(strValue);   
+		}
+		
+		if (typeDef == XSConstants.IDREF_DT) {
+			return new XSIDREF(strValue);   
+		}
+		
+		if (typeDef == XSConstants.NMTOKEN_DT) {
+			return new XSNMTOKEN(strValue);   
+		}		
+		// end of, string types
 		
 		if (typeDef == XSConstants.TIME_DT) {
 			return XSTime.parse_time(strValue);

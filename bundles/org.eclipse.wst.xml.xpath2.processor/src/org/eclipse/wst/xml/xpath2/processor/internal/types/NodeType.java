@@ -238,19 +238,15 @@ public abstract class NodeType extends AnyType {
 		   return new XSUntypedAtomic(strValue);
 		}
 		
-		return SchemaTypeValueFactory.newSchemaTypeValue(PsychoPathTypeHelper.
-				                                       getXSDTypeShortCode
-				                                           (typeDef), strValue);
+		return SchemaTypeValueFactory.newSchemaTypeValue(PsychoPathTypeHelper.getXSDTypeShortCode(typeDef), strValue);
 		
 	} // getTypedValueForPrimitiveType 
 
 	
 	/*
-	 * Construct the "typed value" from a "string value", given the simpleType
-     * of the node.
+	 * Construct the "typed value" from a "string value", given the simpleType of the node.
      */
-	protected ResultSequence getXDMTypedValue(XSTypeDefinition typeDef, 
-			                                  ShortList itemValTypes) {
+	protected ResultSequence getXDMTypedValue(XSTypeDefinition typeDef, ShortList itemValTypes) {
 		
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
@@ -263,23 +259,20 @@ public abstract class NodeType extends AnyType {
 			ResultSequence rsSimpleContent = null;
 
 			if (typeDef instanceof XSComplexTypeDefinition) {
-				XSComplexTypeDefinition complexTypeDefinition = 
-					                      (XSComplexTypeDefinition) typeDef;
+				XSComplexTypeDefinition complexTypeDefinition = (XSComplexTypeDefinition) typeDef;
 				simpType = complexTypeDefinition.getSimpleType();
 				if (simpType != null) {
-					// element has a complexType with a "simple content model"
-					rsSimpleContent = getTypedValueForSimpleContent(simpType, 
-							                                   itemValTypes);
+					// element has a complexType with a simple content
+					rsSimpleContent = getTypedValueForSimpleContent(simpType, itemValTypes);
 				}
 				else {
-					// element has a complexType with "complex content"
+					// element has a complexType with complex content
 					rs.add(new XSUntypedAtomic(string_value()));
 				}
 			} else {
 				// element has a simpleType
 				simpType = (XSSimpleTypeDefinition) typeDef;
-				rsSimpleContent = getTypedValueForSimpleContent(simpType, 
-						                                      itemValTypes);
+				rsSimpleContent = getTypedValueForSimpleContent(simpType, itemValTypes);
 			}
 
 			if (rsSimpleContent != null) {
@@ -295,29 +288,23 @@ public abstract class NodeType extends AnyType {
     /*
      * Helper method to construct typed value of an XDM node.
      */
-	private ResultSequence getTypedValueForSimpleContent(
-			                                       XSSimpleTypeDefinition 
-			                                       simpType,
-			                                       ShortList itemValueTypes) {
+	private ResultSequence getTypedValueForSimpleContent(XSSimpleTypeDefinition simpType, ShortList itemValueTypes) {
 		
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
 		if (simpType.getVariety() == XSSimpleTypeDefinition.VARIETY_ATOMIC) {
-		   AnyType schemaTypeValue = SchemaTypeValueFactory.newSchemaTypeValue
-		                                     (PsychoPathTypeHelper.getXSDTypeShortCode
-		                                    		 (simpType), string_value());
+		   AnyType schemaTypeValue = SchemaTypeValueFactory.newSchemaTypeValue(PsychoPathTypeHelper.getXSDTypeShortCode(simpType), 
+				                                                               string_value());
 		   if (schemaTypeValue != null) {
 				rs.add(schemaTypeValue);
 		   } else {
 				rs.add(new XSUntypedAtomic(string_value()));
 		   }
 		}
-		else if (simpType.getVariety() == XSSimpleTypeDefinition.
-				                                          VARIETY_LIST) {
+		else if (simpType.getVariety() == XSSimpleTypeDefinition.VARIETY_LIST) {
 			addAtomicListItemsToResultSet(simpType, itemValueTypes, rs);
 		}
-		else if (simpType.getVariety() == XSSimpleTypeDefinition.
-				                                          VARIETY_UNION) {
+		else if (simpType.getVariety() == XSSimpleTypeDefinition.VARIETY_UNION) {
 			getTypedValueForVarietyUnion(simpType, rs);
 		}
 		
@@ -327,40 +314,27 @@ public abstract class NodeType extends AnyType {
 	
 	
 	/*
-	 * If the variety of simpleType was 'list', add the typed "list item" 
-	 * values to the parent result set. 
+	 * If the variety of simpleType was 'list', add the typed "list item" values to the parent result set. 
 	 */
-	private void addAtomicListItemsToResultSet(XSSimpleTypeDefinition simpType,
-			                                   ShortList itemValueTypes, 
-			                                   ResultSequence rs) {
+	private void addAtomicListItemsToResultSet(XSSimpleTypeDefinition simpType, ShortList itemValueTypes, ResultSequence rs) {
 		
-		// tokenize the string value by a 'longest sequence' of
-		// white-spaces. this gives us the list items as string values.
+		// tokenize the string value by a 'longest sequence' of white-spaces. this gives us the list items as string values.
 		String[] listItemsStrValues = string_value().split("\\s+");
 		
 		XSSimpleTypeDefinition itemType = simpType.getItemType();		
-		if (itemType.getVariety() == XSSimpleTypeDefinition.
-				                                  VARIETY_ATOMIC) {
-			for (int listItemIdx = 0; listItemIdx < listItemsStrValues.
-			                                  length; listItemIdx++) {
-			   // add an atomic typed value (whose type is the "item 
-			   // type" of the list, and "string value" is the "string 
+		if (itemType.getVariety() == XSSimpleTypeDefinition.VARIETY_ATOMIC) {
+			for (int listItemIdx = 0; listItemIdx < listItemsStrValues.length; listItemIdx++) {
+			   // add an atomic typed value (whose type is the "item  type" of the list, and "string value" is the "string 
 			   // value of the list item") to the "result sequence".
-		       rs.add(SchemaTypeValueFactory.newSchemaTypeValue
-		                                  (PsychoPathTypeHelper.getXSDTypeShortCode
-		                                		                  (itemType), 
-		                                   listItemsStrValues[listItemIdx]));
+		       rs.add(SchemaTypeValueFactory.newSchemaTypeValue(PsychoPathTypeHelper.getXSDTypeShortCode(itemType), 
+		                                                        listItemsStrValues[listItemIdx]));
 			}
 		}
-		else if (itemType.getVariety() == XSSimpleTypeDefinition.
-		                                           VARIETY_UNION) {
+		else if (itemType.getVariety() == XSSimpleTypeDefinition.VARIETY_UNION) {
 		    // here the list items may have different atomic types
-			for (int listItemIdx = 0; listItemIdx < listItemsStrValues.
-		                                     length; listItemIdx++) {
+			for (int listItemIdx = 0; listItemIdx < listItemsStrValues.length; listItemIdx++) {
 				String listItem = listItemsStrValues[listItemIdx];
-				rs.add(SchemaTypeValueFactory.newSchemaTypeValue
-                                         (itemValueTypes.item(listItemIdx), 
-                        		          listItem));
+				rs.add(SchemaTypeValueFactory.newSchemaTypeValue(itemValueTypes.item(listItemIdx), listItem));
 			}
 		}
 		
@@ -368,28 +342,19 @@ public abstract class NodeType extends AnyType {
 	
 	
 	/*
-	 * If the variety of simpleType was 'union', find the typed value (and
-	 * added to the parent 'result set') to be returned as the typed value
-	 * of the parent node, by considering the member types of the union (i.e
-	 * whichever member type first in order, can successfully validate the
-	 * string value of the parent node).
+	 * If the variety of simpleType was 'union', find the typed value (and added to the parent 'result set') 
+	 * to be returned as the typed value of the parent node, by considering the member types of the union (i.e
+	 * whichever member type first in order, can successfully validate the string value of the parent node).
 	 */
-	private void getTypedValueForVarietyUnion(XSSimpleTypeDefinition simpType,
-			                                  ResultSequence rs) {
+	private void getTypedValueForVarietyUnion(XSSimpleTypeDefinition simpType, ResultSequence rs) {
 		
 		XSObjectList memberTypes = simpType.getMemberTypes();
-		// check member types in order, to find that which one can
-		// successfully validate the string value.
-		for (int memTypeIdx = 0; memTypeIdx < memberTypes.getLength(); 
-		                                                memTypeIdx++) {
-		   XSSimpleType memSimpleType = (XSSimpleType) memberTypes.item
-		                                                    (memTypeIdx);
+		// check member types in order, to find that which one can successfully validate the string value.
+		for (int memTypeIdx = 0; memTypeIdx < memberTypes.getLength(); memTypeIdx++) {
+		   XSSimpleType memSimpleType = (XSSimpleType) memberTypes.item(memTypeIdx);
 		   if (isValueValidForSimpleType(string_value(), memSimpleType)) {
 			  
-			   rs.add(SchemaTypeValueFactory.newSchemaTypeValue
-		                                  (PsychoPathTypeHelper.getXSDTypeShortCode
-		                                		            (memSimpleType), 
-		                                                   string_value()));
+			   rs.add(SchemaTypeValueFactory.newSchemaTypeValue(PsychoPathTypeHelper.getXSDTypeShortCode(memSimpleType), string_value()));
 			   // no more memberTypes need to be checked
 			   break; 
 		   }
@@ -399,11 +364,9 @@ public abstract class NodeType extends AnyType {
 	
 	
 	/*
-	 * Determine if a "string value" is valid for a given simpleType definition.
-	 * This is a helped method for other methods.
+	 * Determine if a "string value" is valid for a given simpleType definition. This is a helped method for other methods.
 	 */
-	private boolean isValueValidForSimpleType (String value, XSSimpleType 
-			                                                  simplType) {
+	private boolean isValueValidForSimpleType (String value, XSSimpleType simplType) {
 		
 		boolean isValueValid = true;
 		
