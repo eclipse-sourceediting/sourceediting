@@ -62,6 +62,7 @@ public class HTML2TextReader extends SubstitutionTextReader {
 		fgTags.add("html"); //$NON-NLS-1$
 		fgTags.add("body"); //$NON-NLS-1$
 		fgTags.add("code"); //$NON-NLS-1$
+		fgTags.add("font"); //$NON-NLS-1$
 		fgTags.add("blockquote"); //$NON-NLS-1$
 		fgTags.add("a"); //$NON-NLS-1$
 		fgTags.add("tt"); //$NON-NLS-1$
