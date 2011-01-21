@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -43,9 +44,11 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
+import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -112,7 +115,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 				String uriString = null;
 				if (currentNode.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
 					// doctype nodes
-					uriString = getURIString(currentNode, document);
+					uriString = getURIString(currentNode, document, region);
 				}
 				else if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
 					// element nodes
@@ -120,7 +123,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 					if (currentAttr != null) {
 						// try to find link for current attribute
 						// resolve attribute value
-						uriString = getURIString(currentAttr, document);
+						uriString = getURIString(currentAttr, document, region);
 						// verify validity of uri string
 						if ((uriString == null) || !isValidURI(uriString)) {
 							// reset current attribute
@@ -131,7 +134,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 						// try to find a linkable attribute within element
 						currentAttr = getLinkableAttr((Element) currentNode);
 						if (currentAttr != null) {
-							uriString = getURIString(currentAttr, document);
+							uriString = getURIString(currentAttr, document, region);
 						}
 					}
 					currentNode = currentAttr;
@@ -400,7 +403,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 	 * @param node -
 	 *            assumes not null
 	 */
-	private String getURIString(Node node, IDocument document) {
+	private String getURIString(Node node, IDocument document, IRegion region) {
 		String resolvedURI = null;
 		// need the base location, publicId, and systemId for URIResolver
 		String baseLoc = null;
@@ -436,10 +439,37 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 				else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attrNode))) && (SCHEMA_LOCATION.equals(unprefixedName))) {
 					// for now just use the first pair
 					// need to look into being more precise
+                    
+					//Being precise now
+					String attrText = ""; //$NON-NLS-1$
+					int relativeOffset = -1;
+					if (node instanceof AttrImpl) {
+						relativeOffset = region.getOffset() - ((AttrImpl)node).getStartOffset();
+						try {
+							attrText = document.get(((AttrImpl)node).getStartOffset(), ((AttrImpl)node).getLength());
+						} catch (BadLocationException e) {
+							Logger.logException(e);
+						}
+					}					
 					StringTokenizer st = new StringTokenizer(attrValue);
-					publicId = st.hasMoreTokens() ? st.nextToken() : null;
-					systemId = st.hasMoreTokens() ? st.nextToken() : null;
+					while (st.hasMoreTokens()) {
+						publicId = st.nextToken();
+						systemId = st.hasMoreTokens() ? st.nextToken() : null;
+						int startOffset = -1;
+						int endOffset = -1;
+						if (publicId != null) {
+							startOffset = attrText.indexOf(publicId);
+							if (systemId != null) {
+								endOffset = attrText.indexOf(systemId) + systemId.length();
+							}
+							else {
+								endOffset = attrText.indexOf(publicId) + publicId.length();
+							}
+						}
+						if (startOffset <= relativeOffset && relativeOffset <= endOffset)
+							break;
 					// else check if xmlns publicId = value
+					}
 				}
 				else {
 					systemId = attrValue;
