@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal.editor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.text.BadLocationException;
@@ -105,10 +105,12 @@ public class CSSSelectionConverterFactory implements IAdapterFactory {
 					}
 					else {
 						int maxLength = model.getStructuredDocument().getLength();
-						List structures = new ArrayList(2);
+						Set structures = new HashSet();
 						while (region != null && region.getEndOffset() <= end && region.getEndOffset() <= maxLength) {
-							structures.add(region);
-							
+							if (structures.contains(region))
+								break;
+							else
+								structures.add(region);
 							//use the CSS model to find the next sibling
 							boolean foundNextSibling = false;
 							if(region instanceof CSSNodeImpl ) {
