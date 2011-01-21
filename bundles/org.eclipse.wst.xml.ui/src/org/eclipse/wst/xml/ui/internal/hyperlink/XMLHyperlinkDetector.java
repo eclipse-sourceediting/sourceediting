@@ -44,7 +44,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
-import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -443,10 +442,10 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 					//Being precise now
 					String attrText = ""; //$NON-NLS-1$
 					int relativeOffset = -1;
-					if (node instanceof AttrImpl) {
-						relativeOffset = region.getOffset() - ((AttrImpl)node).getStartOffset();
+					if (node instanceof IDOMNode) {
+						relativeOffset = region.getOffset() - ((IDOMNode)node).getStartOffset();
 						try {
-							attrText = document.get(((AttrImpl)node).getStartOffset(), ((AttrImpl)node).getLength());
+							attrText = document.get(((IDOMNode)node).getStartOffset(), ((IDOMNode)node).getLength());
 						} catch (BadLocationException e) {
 							Logger.logException(e);
 						}
