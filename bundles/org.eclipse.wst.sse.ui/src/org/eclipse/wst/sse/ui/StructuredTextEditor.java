@@ -224,8 +224,8 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 
 /**
  * A Text Editor for editing structured models and structured documents.
+ * <p>This class is not meant to be subclassed.</p>
  * <p>
- * This class is not meant to be subclassed.<br />
  * New content types may associate source viewer, content outline, and
  * property sheet configurations to extend the existing functionality.
  * </p>
@@ -1548,7 +1548,14 @@ public class StructuredTextEditor extends TextEditor {
 			((ITextViewerExtension) viewer).appendVerifyKeyListener(fPairInserter);
 			fPairInserter.installCompletionListener();
 		}
-		
+
+		if (Platform.getProduct() != null) {
+			String viewID = Platform.getProduct().getProperty("idPerspectiveHierarchyView"); //$NON-NLS-1$);
+			// make sure the specified view ID is known
+			if (PlatformUI.getWorkbench().getViewRegistry().find(viewID) != null) {
+				fShowInTargetIds = new String[]{viewID, IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.ID_RES_NAV, IPageLayout.ID_OUTLINE};
+			}
+		}
 	}
 
 	protected PropertySheetConfiguration createPropertySheetConfiguration() {
