@@ -272,19 +272,21 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 * Reinitialize some fields
 	 */
 	protected void reset() {
-		synchronized(fLock) {
-			scriptOffset = 0;
-			// reset progress monitor
-			fScriptText = new StringBuffer();
-			fCurrentNode = fStructuredDocument.getFirstStructuredDocumentRegion();
-			rawImports.clear();
-			importLocationsInHtml.clear();
-			scriptLocationInHtml.clear();
-			missingEndTagRegionStart = -1;
-			cancelParse = false;
-			fGeneratedRanges.clear();
+		synchronized (finished) {
+			synchronized (fLock) {
+				scriptOffset = 0;
+				// reset progress monitor
+				fScriptText = new StringBuffer();
+				fCurrentNode = fStructuredDocument.getFirstStructuredDocumentRegion();
+				rawImports.clear();
+				importLocationsInHtml.clear();
+				scriptLocationInHtml.clear();
+				missingEndTagRegionStart = -1;
+				cancelParse = false;
+				fGeneratedRanges.clear();
+			}
+			translate();
 		}
-		translate();
 	}
 
 
@@ -757,7 +759,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			return;
 		}
 
-		reset();
+		cancel();
+		schedule();
 	}
 
 	/* (non-Javadoc)
