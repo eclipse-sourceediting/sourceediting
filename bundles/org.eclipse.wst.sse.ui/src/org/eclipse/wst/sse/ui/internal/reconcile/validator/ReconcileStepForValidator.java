@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilableModel;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
@@ -195,24 +196,27 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 
 	private IFile getFile() {
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 		IFile file = null;
-		try {
-			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-			if (model != null) {
-				String baseLocation = model.getBaseLocation();
-				// The baseLocation may be a path on disk or relative to the
-				// workspace root. Don't translate on-disk paths to
-				// in-workspace resources.
-				IPath basePath = new Path(baseLocation);
-				if (basePath.segmentCount() > 1 && !basePath.toFile().exists()) {
-					file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+		if(modelManager != null) {
+			try {
+				model = modelManager.getExistingModelForRead(getDocument());
+				if (model != null) {
+					String baseLocation = model.getBaseLocation();
+					// The baseLocation may be a path on disk or relative to the
+					// workspace root. Don't translate on-disk paths to
+					// in-workspace resources.
+					IPath basePath = new Path(baseLocation);
+					if (basePath.segmentCount() > 1 && !basePath.toFile().exists()) {
+						file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+					}
 				}
 			}
-		}
-		finally {
-			if (model != null) {
-				model.releaseFromRead();
+			finally {
+				if (model != null) {
+					model.releaseFromRead();
+				}
 			}
 		}
 		return file;
