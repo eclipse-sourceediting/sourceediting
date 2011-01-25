@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -267,7 +267,8 @@ public class HTMLCorePreferenceNames {
 	public static final String ELEM_UNCLOSED_END_TAG = "elemUnclosedEndTag";//$NON-NLS-1$
 	public static final String ELEM_INVALID_EMPTY_TAG = "elemInvalidEmptyTag";//$NON-NLS-1$
 	public static final String ELEM_OBSOLETE_NAME = "elemObsoleteName";//$NON-NLS-1$
-	
+	public static final String ELEM_INVALID_TEXT = "elemInvalidText";//$NON-NLS-1$
+
 	public static final String DOC_DUPLICATE = "docDuplicateTag";//$NON-NLS-1$
 	public static final String DOC_INVALID_CONTENT = "docInvalidContent";//$NON-NLS-1$
 	public static final String DOC_DOCTYPE_UNCLOSED = "docDoctypeUnclosed";//$NON-NLS-1$

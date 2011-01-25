@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,6 +115,7 @@ public class MessageFactory implements ErrorState {
 		mapToKey(HTMLCorePreferenceNames.ELEM_INVALID_EMPTY_TAG, elemTable, INVALID_EMPTY_ELEMENT_TAG, MSG_INVALID_EMPTY_ELEMENT_TAG);
 		mapToKey(HTMLCorePreferenceNames.ELEM_OBSOLETE_NAME, elemTable, OBSOLETE_TAG_NAME_ERROR, MSG_OBSOLETE_TAG_ERROR);
 
+		mapToKey(HTMLCorePreferenceNames.ELEM_INVALID_TEXT, elemTable, INVALID_TEXT_IN_ELEM_ERROR, MSG_INVALID_TEXT_IN_ELEM_ERROR);
 
 		// document type error map
 		ErrorTable docTable = errTables[NodeType.DOCUMENT_TYPE];// short hand
@@ -242,7 +243,8 @@ public class MessageFactory implements ErrorState {
 	private static final String MSG_RESOURCE_NOT_FOUND = HTMLCoreMessages._ERROR_Resource_not_found_0;
 	private static final String MSG_OBSOLETE_ATTR_ERROR = HTMLCoreMessages.Obsolete_attribute_name___ERROR_;
 	private static final String MSG_OBSOLETE_TAG_ERROR = HTMLCoreMessages.Obsolete_tag___ERROR_;
-	
+	private static final String MSG_INVALID_TEXT_IN_ELEM_ERROR = HTMLCoreMessages.Invalid_text_in_tag__ERROR_;
+
 	private ErrorTable[] errTables = new ErrorTable[NodeType.MAX_TYPE];
 
 //	static {
@@ -335,7 +337,7 @@ public class MessageFactory implements ErrorState {
 			return MSG_UNKNOWN_ERROR;
 
 		String template = tab.getMessage(info.getState());
-		Object[] arguments = {info.getHint()};
+		Object[] arguments = (info instanceof AbstractErrorInfo) ? ((AbstractErrorInfo) info).getMessageArguments() : new Object[] {info.getHint()};
 		String s = null;
 		try {
 			s = NLS.bind(template, arguments);

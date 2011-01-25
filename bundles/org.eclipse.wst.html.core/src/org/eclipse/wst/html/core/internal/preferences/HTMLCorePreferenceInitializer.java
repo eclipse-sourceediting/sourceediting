@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,6 +101,7 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 		node.putInt(HTMLCorePreferenceNames.ELEM_UNCLOSED_END_TAG, ValidationMessage.ERROR);
 		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_EMPTY_TAG, ValidationMessage.WARNING);
 		node.putInt(HTMLCorePreferenceNames.ELEM_OBSOLETE_NAME, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_TEXT, ValidationMessage.WARNING);
 		
 		
 		// DOCTYPE

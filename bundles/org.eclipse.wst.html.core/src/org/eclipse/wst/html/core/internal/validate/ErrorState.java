@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,8 @@ interface ErrorState {
 	static final int INVALID_EMPTY_ELEMENT_TAG = 112;
 	static final int UNCLOSED_ATTR_VALUE = 113; //D210422
 	static final int RESOURCE_NOT_FOUND = 114; //D210422
+	static final int INVALID_TEXT_IN_ELEM_ERROR = 115;
+
 	// layout error
 	static final int LAYOUT_ERROR_LEVEL = 1000;
 	static final int INVALID_CONTENT_ERROR = 1001;

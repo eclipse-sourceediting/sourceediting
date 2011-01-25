@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,6 +108,9 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 				validateTagCase(info);
 			}
 		}
+
+		//validate the syntax of the attributes
+		validateAttributes(info);
 	}
 
 	private void getInfo(ElementInfo info) {
@@ -406,8 +409,37 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		return -1;
 	}
 
+	/**
+	 * <p>Used to validate the syntax of the arguments in a tag.</p>
+	 * 
+	 * @param info the <code>ElementInfo</code> about the tag to validate 
+	 */
+	private void validateAttributes(ElementInfo info) {
+		if(info != null && info.hasStartTag()) {
+			ITextRegionList list = info.startTag.getRegions();
+
+			//for each region in the tag, these make up the arguments
+			for(int i = 0; i < list.size(); ++i) {
+				ITextRegion region = list.get(i);
+				String type = region.getType();
+	
+				//if the type is undefined then there is a syntax error
+				if(type == DOMRegionContext.UNDEFINED) {
+					String invalidText = info.startTag.getFullText(region).trim();
+					Segment errorSeg = new Segment(info.startTag.getStartOffset() + region.getStart(), invalidText.length());
+					report(INVALID_TEXT_IN_ELEM_ERROR, errorSeg, info.target, new String[]{invalidText}, new String[0]);
+				}
+			}
+		}
+	}
+
 	private void report(int state, Segment errorSeg, Node node) {
 		ErrorInfo info = new ErrorInfoImpl(state, errorSeg, node);
+		reporter.report(info);
+	}
+
+	private void report(int state, Segment errorSeg, Node node, String[] preTargetMsgInjections, String[] postTargetMsgInjections) {
+		ErrorInfo info = new ErrorInfoImpl(state, errorSeg, node, preTargetMsgInjections, postTargetMsgInjections);
 		reporter.report(info);
 	}
 }

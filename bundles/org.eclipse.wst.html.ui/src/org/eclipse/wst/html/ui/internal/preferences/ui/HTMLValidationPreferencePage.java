@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -131,6 +131,10 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		
 		label = HTMLUIMessages.HTMLValidationPreferencePage_21;
 		addComboBox(inner, label, HTMLCorePreferenceNames.ELEM_INVALID_EMPTY_TAG, SEVERITIES, errorWarningIgnoreLabel, 0);
+		
+		label = HTMLUIMessages.HTMLValidationPreferencePage_36;
+		addComboBox(inner, label, HTMLCorePreferenceNames.ELEM_INVALID_TEXT, SEVERITIES, errorWarningIgnoreLabel, 0);
+		
 		// End Element Section
 		
 		// The Attribute validation section

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,8 +24,6 @@ abstract class AbstractErrorInfo implements ErrorInfo, ErrorState {
 		this.seg = seg;
 	}
 
-	abstract public String getHint();
-
 	abstract public short getTargetType();
 
 	public int getLength() {
@@ -39,4 +37,13 @@ abstract class AbstractErrorInfo implements ErrorInfo, ErrorState {
 	public int getState() {
 		return this.state;
 	}
+
+	/**
+	 * @return the arguments to be injected into a message for the user about this error
+	 */
+	public String[] getMessageArguments() {
+		String hint = getHint();
+		return hint != null ? new String[] { hint } : null;
+	}
+
 }
