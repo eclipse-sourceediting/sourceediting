@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,10 @@
 package org.eclipse.jst.jsp.ui.internal.breakpointproviders;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -125,6 +128,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 					types = Platform.getContentTypeManager().findContentTypesFor(resource.getName());
 				}
 				StringBuffer patternBuffer = new StringBuffer("_" + shortName);
+				final Set contributions = new HashSet(0);
 				for (int i = 0; i < types.length; i++) {
 					final String id = types[i].getId();
 					Object pattern = ((Map) fData).get(id);
@@ -133,11 +137,17 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 						patternBuffer.append(pattern);
 					}
 					 // Append contributions
-					final String contributions = ClassPatternRegistry.getInstance().getClassPattern(id);
-					if (contributions != null && contributions.length() > 0) {
-						if (contributions.charAt(0) != ',')
-							patternBuffer.append(',');
-						patternBuffer.append(contributions);
+					
+					final Iterator it = ClassPatternRegistry.getInstance().getClassPatternSegments(id);
+					while (it.hasNext()) {
+						contributions.add(it.next());
+					}
+				}
+				if (contributions.size() > 0) {
+					final Iterator it = contributions.iterator();
+					while (it.hasNext()) {
+						patternBuffer.append(',');
+						patternBuffer.append(it.next());
 					}
 				}
 				return patternBuffer.toString();
