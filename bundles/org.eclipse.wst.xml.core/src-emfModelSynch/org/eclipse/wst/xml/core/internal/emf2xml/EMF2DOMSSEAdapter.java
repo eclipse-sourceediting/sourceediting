@@ -425,25 +425,27 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 		int startOff = Math.max(0, nodeStartOff - 100);
 		int endOff = nodeStartOff;
 
-		try {
-			String text = flatModel.get(startOff, endOff - startOff);
-
-			int inx = text.length() - 1;
-			if (inx >= 0) {
-				for (; inx >= 0; inx--) {
-					char ch = text.charAt(inx);
-					if (Character.isWhitespace(ch) && ch != '\n' && ch != '\r') {
-						continue;
+		if(flatModel != null) {
+			try {
+				String text = flatModel.get(startOff, endOff - startOff);
+	
+				int inx = text.length() - 1;
+				if (inx >= 0) {
+					for (; inx >= 0; inx--) {
+						char ch = text.charAt(inx);
+						if (Character.isWhitespace(ch) && ch != '\n' && ch != '\r') {
+							continue;
+						}
+						inx++;
+						break;
 					}
-					inx++;
-					break;
+	
+					return text.substring(inx);
 				}
-
-				return text.substring(inx);
 			}
-		}
-		catch (BadLocationException ex) {
-			Logger.logException(ex);
+			catch (BadLocationException ex) {
+				Logger.logException(ex);
+			}
 		}
 		return ""; //$NON-NLS-1$
 	}
