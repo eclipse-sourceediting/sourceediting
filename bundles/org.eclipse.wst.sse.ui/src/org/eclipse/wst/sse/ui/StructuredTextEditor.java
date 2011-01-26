@@ -1551,9 +1551,11 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (Platform.getProduct() != null) {
 			String viewID = Platform.getProduct().getProperty("idPerspectiveHierarchyView"); //$NON-NLS-1$);
-			// make sure the specified view ID is known
-			if (PlatformUI.getWorkbench().getViewRegistry().find(viewID) != null) {
-				fShowInTargetIds = new String[]{viewID, IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.ID_RES_NAV, IPageLayout.ID_OUTLINE};
+			if (viewID != null) {
+				// make sure the specified view ID is known
+				if (PlatformUI.getWorkbench().getViewRegistry().find(viewID) != null) {
+					fShowInTargetIds = new String[]{viewID, IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.ID_RES_NAV, IPageLayout.ID_OUTLINE};
+				}
 			}
 		}
 	}
