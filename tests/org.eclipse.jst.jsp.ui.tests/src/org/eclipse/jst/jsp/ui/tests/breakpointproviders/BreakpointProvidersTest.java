@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,14 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.tests.breakpointproviders;
 
-import org.eclipse.jst.jsp.ui.internal.breakpointproviders.ClassPatternRegistry;
+import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.TestCase;
+
+import org.eclipse.jst.jsp.ui.internal.breakpointproviders.ClassPatternRegistry;
+
+import com.ibm.icu.util.StringTokenizer;
 
 public class BreakpointProvidersTest extends TestCase {
 
@@ -23,7 +28,16 @@ public class BreakpointProvidersTest extends TestCase {
 		// Test
 		final String pattern = ClassPatternRegistry.getInstance().getClassPattern("org.eclipse.jst.jsp.ui.tests.type");
 		assertNotNull("Class pattern for 'type' shouldn't be null", pattern);
-		assertEquals("Class patterns are not equal", "*foo,*bar", pattern);
+		final String[] expected = new String[] { "*foo", "*bar" };
+		final StringTokenizer tokenizer = new StringTokenizer(pattern, ",");
+		final Set tokens = new HashSet(expected.length);
+		while (tokenizer.hasMoreTokens()) {
+			tokens.add(tokenizer.nextElement());
+		}
+		for (int i = 0; i < expected.length; i++) {
+			tokens.remove(expected[i]);
+		}
+		assertTrue("Class patterns are not equal", tokens.isEmpty());
 	}
 
 	/**
@@ -40,6 +54,15 @@ public class BreakpointProvidersTest extends TestCase {
 	public void testMultipleProviders() {
 		final String pattern = ClassPatternRegistry.getInstance().getClassPattern("org.eclipse.jst.jsp.ui.tests.multitype");
 		assertNotNull("Class pattern for 'type' shouldn't be null", pattern);
-		assertEquals("Class patterns are not equal", "*foo,*bar,*baz", pattern);
+		final String[] expected = new String[] { "*foo", "*bar", "*baz" };
+		final StringTokenizer tokenizer = new StringTokenizer(pattern, ",");
+		final Set tokens = new HashSet(expected.length);
+		while (tokenizer.hasMoreTokens()) {
+			tokens.add(tokenizer.nextElement());
+		}
+		for (int i = 0; i < expected.length; i++) {
+			tokens.remove(expected[i]);
+		}
+		assertTrue("Class patterns are not equal", tokens.isEmpty());
 	}
 }
