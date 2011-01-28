@@ -91,7 +91,12 @@ public class XSLModelObjectFactory {
 	}
 
 	private boolean notParentStylesheet() {
-		return stylesheetParserData.getParentEl().getModelType() != XSLModelObject.Type.STYLESHEET;
+		XSLElement parentElement = stylesheetParserData.getParentEl();
+		if (parentElement == null) {
+			return true;
+		}
+		
+		return parentElement.getModelType() != XSLModelObject.Type.STYLESHEET;
 	}
 
 	private void configure(IDOMNode node, XSLElement element) {
