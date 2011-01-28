@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -471,23 +471,32 @@ public class ModelManagerImpl implements IModelManager {
 
 	private void _doCommonGetModel(IFile file, String id, SharedObject sharedObject,ReadEditType rwType) {
 		boolean doRemove = false;
-		synchronized(sharedObject) {
-			sharedObject.doWait=false;
-			IStructuredModel model = FileBufferModelManager.getInstance().getModel(file);
-			sharedObject.doWait=true;
-			if (model != null) {
-				sharedObject.theSharedModel=model;
-				_initCount(sharedObject, rwType);
-			} else {
-				doRemove = true;
+		try {
+			synchronized(sharedObject) {
+				sharedObject.doWait=false;
+				IStructuredModel model = null;
+				try {
+					model = FileBufferModelManager.getInstance().getModel(file);
+				}
+				finally {
+					sharedObject.doWait=true;
+				}
+				if (model != null) {
+					sharedObject.theSharedModel=model;
+					_initCount(sharedObject, rwType);
+				} else {
+					doRemove = true;
+				}
 			}
 		}
-		if (doRemove) {
-			SYNC.acquire();
-			fManagedObjects.remove(id);
-			SYNC.release();
+		finally {
+			if (doRemove) {
+				SYNC.acquire();
+				fManagedObjects.remove(id);
+				SYNC.release();
+			}
+			sharedObject.setLoaded();
 		}
-		sharedObject.setLoaded();
 	}
 
 	private SharedObject _commonNewModel(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
