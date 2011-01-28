@@ -73,5 +73,9 @@ public class TestStylesheetModel extends AbstractModelTest {
 		model = XSLCore.getInstance().getStylesheet(getFile("modeTest.xsl"));
 		assertFalse("Undettected circular reference", model.hasCircularReference());
 	}	
+	
+	public void testLoadStylesheetWithEXSLTFuncs() throws Exception {
+		model = XSLCore.getInstance().getStylesheet(getFile("exsltfunctionparm.xsl"));
+	}
 
 }
