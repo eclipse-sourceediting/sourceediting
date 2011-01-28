@@ -78,5 +78,10 @@ public class TestStylesheetModel extends AbstractModelTest {
 	public void testLoadStylesheetWithEXSLTFuncs() throws Exception {
 		model = XSLCore.getInstance().getStylesheet(getFile("exsltfunctionparm.xsl"));
 	}
+	
+	@Test
+	public void testNPEOnParmParsing() throws Exception {
+		model = XSLCore.getInstance().getStylesheet(getFile("exsltfunctionparm.xsl"));
+	}
 
 }
