@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -493,7 +493,7 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 						int lineNumber = getLineNumber(start);
 
 						// SEVERITY_STRUCTURE == IMessage.HIGH_SEVERITY
-						IMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
+						IMessage message = new LocalizedMessage(getMissingEndTagSeverity(), messageText);
 						message.setOffset(start);
 						message.setLength(length);
 						message.setLineNo(lineNumber);
@@ -554,6 +554,10 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 				}
 			}
 		}
+	}
+
+	protected int getMissingEndTagSeverity() {
+		return IMessage.HIGH_SEVERITY;
 	}
 
 	private Object[] getStartEndFixInfo(IDOMNode xmlNode, String tagName, ITextRegion r) {

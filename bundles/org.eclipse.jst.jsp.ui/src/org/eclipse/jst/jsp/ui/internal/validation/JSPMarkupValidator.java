@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,14 @@ package org.eclipse.jst.jsp.ui.internal.validation;
 
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
@@ -159,5 +162,10 @@ public class JSPMarkupValidator extends MarkupValidator {
 
 	private boolean isTagCloseTextRegion(ITextRegion textRegion) {
 		return (textRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) || (textRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE);
+	}
+
+	protected int getMissingEndTagSeverity() {
+		final int severity = HTMLCorePlugin.getDefault().getPluginPreferences().getInt(HTMLCorePreferenceNames.ELEM_MISSING_END);
+		return severity < 0 ? IMessage.LOW_SEVERITY : severity;
 	}
 }
