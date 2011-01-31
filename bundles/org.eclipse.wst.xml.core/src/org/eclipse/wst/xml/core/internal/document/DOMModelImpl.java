@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
@@ -26,6 +27,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.wst.xml.core.internal.provisional.IXMLNamespace;
+import org.eclipse.wst.xml.core.internal.provisional.NameValidator;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -65,7 +69,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 * "large" change to the model. This change might be in terms of content
 	 * or it might be in terms of the model id or base location.
 	 * 
-	 * Note that in the case of embedded calls, notification to listners is
+	 * Note that in the case of embedded calls, notification to listeners is
 	 * sent only once.
 	 * 
 	 * Note that the client who is making these changes has the responsibility
@@ -222,7 +226,69 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 * @see DOM Level 2
 	 */
 	public Document createDocument(String namespaceURI, String qualifiedName, DocumentType doctype) throws DOMException {
-		return null;
+		final DocumentImpl document = new DocumentImpl();
+		if (namespaceURI == null && qualifiedName == null && doctype == null)
+			return document;
+
+		if (qualifiedName != null) {
+
+			final int idx = qualifiedName.indexOf(':');
+			if (idx > 0) {
+				if (namespaceURI == null)
+					throw new DOMException(DOMException.NAMESPACE_ERR, null);
+				final String prefix = qualifiedName.substring(0, idx);
+				if (prefix.equals(IXMLNamespace.XML) && !namespaceURI.equals(IXMLNamespace.XML_URI))
+					throw new DOMException(DOMException.NAMESPACE_ERR, null);
+
+				// Check if the qualifiedName is malformed
+				if (idx == qualifiedName.length() - 1) // No local name
+					throw new DOMException(DOMException.NAMESPACE_ERR, null);
+
+				String localName = qualifiedName.substring(idx + 1);
+				final int length = localName.length();
+				if (length == 0)
+					throw new DOMException(DOMException.NAMESPACE_ERR, null);
+
+				switch (localName.charAt(0)) {
+					case '-':
+					case '.':
+						throw new DOMException(DOMException.NAMESPACE_ERR, null);
+				}
+
+				final int qualifiedLength = qualifiedName.length();
+				for (int i = 0; i < qualifiedLength; i++) {
+					final char c = qualifiedName.charAt(i);
+					if (Character.isWhitespace(c))
+						throw new DOMException(DOMException.INVALID_CHARACTER_ERR, null);
+					else if (c == ':' && i != idx)
+						throw new DOMException(DOMException.NAMESPACE_ERR, null);
+				}
+			}
+			if (!NameValidator.isValid(qualifiedName))
+				throw new DOMException(DOMException.INVALID_CHARACTER_ERR, null);
+		}
+		else if (namespaceURI != null){
+				throw new DOMException(DOMException.NAMESPACE_ERR, null);
+		}
+
+		final DOMModelImpl model = (DOMModelImpl) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		if (model != null) {
+			document.setModel(model);
+			model.document = document;
+		}
+
+		if (doctype != null) {
+			if (doctype.getOwnerDocument() != null)
+				throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, null);
+			document.appendChild(doctype);
+		}
+
+		final ElementImpl root = new ElementImpl();
+		document.appendChild(root);
+		root.setNamespaceURI(namespaceURI);
+		root.setTagName(qualifiedName);
+
+		return document;
 	}
 
 	/**
