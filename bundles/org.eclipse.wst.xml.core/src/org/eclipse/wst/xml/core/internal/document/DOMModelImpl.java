@@ -520,6 +520,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 		setActive(parser);
 		this.document.removeChildNodes();
 		try {
+			this.refresh = false;
 			parser.replaceStructuredDocumentRegions(getStructuredDocument().getRegionList(), null);
 		}
 		catch (Exception ex) {
@@ -529,7 +530,6 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 			setActive(null);
 			if (!isChanging)
 				notifier.endChanging();
-			this.refresh = false;
 		}
 	}
 
