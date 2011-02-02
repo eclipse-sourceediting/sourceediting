@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,12 +17,17 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
+import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.internal.core.ClasspathEntry;
 import org.eclipse.wst.jsdt.internal.core.util.DefaultSourcePathProvider;
 
 public class ModuleSourcePathProvider extends DefaultSourcePathProvider {
 
+	public static final String PROVIDER_ATTRIBUTE_KEY_NAME = "provider"; //$NON-NLS-1$
+	public static final String PROVIDER_ATTRIBUTE_KEY_VALUE = ModuleSourcePathProvider.class.getName(); //$NON-NLS-1$
+	
 	public ModuleSourcePathProvider() {
 	}
 
@@ -47,6 +52,9 @@ public class ModuleSourcePathProvider extends DefaultSourcePathProvider {
 				}
 			}
 		}
-		return super.getDefaultSourcePaths(p);
+		
+		return new IIncludePathEntry[]{JavaScriptCore.newSourceEntry(p.getFullPath(),
+				ClasspathEntry.INCLUDE_ALL,ClasspathEntry.EXCLUDE_NONE,null,
+				new IIncludePathAttribute[]{JavaScriptCore.newIncludepathAttribute(PROVIDER_ATTRIBUTE_KEY_NAME, PROVIDER_ATTRIBUTE_KEY_VALUE)})};
 	}
 }
