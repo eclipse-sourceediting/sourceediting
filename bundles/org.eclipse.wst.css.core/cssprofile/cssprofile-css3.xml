@@ -14,7 +14,7 @@
 <!--<!DOCTYPE css-profile SYSTEM "css-profile.dtd" >-->
 <css-profile>
 	<stylesheet-def>
-		<description>%css3.stylesheet-def.description</description>
+		<description>Cascading Style Sheets, level 3</description>
 		<charset-rule/>
 		<import-rule/>
 		<page-rule/>
