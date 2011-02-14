@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,9 +55,11 @@ public class ConfigurationPointCalculator {
 		IWorkbenchPartSite site = null;
 		if (fPart != null) {
 			site = fPart.getSite();
-			String id = site.getId();
-			if (id != null && id.length() > 0 && !id.equals(fRootClass.getName()))
-				points.add(id);
+			if (site != null) {
+				String id = site.getId();
+				if (id != null && id.length() > 0 && !id.equals(fRootClass.getName()))
+					points.add(id);
+			}
 			if (site instanceof MultiPageEditorSite) {
 				String multipageID = ((MultiPageEditorSite) site).getMultiPageEditor().getSite().getId();
 				if (!points.contains(multipageID))
