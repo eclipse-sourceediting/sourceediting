@@ -73,11 +73,10 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 	 * @see org.eclipse.wst.sse.core.indexing.AbstractIndexManager#isResourceToIndex(int, org.eclipse.core.runtime.IPath)
 	 */
 	protected boolean isResourceToIndex(int type, IPath path) {
-		String name = path.lastSegment();
 		return 
 			type == IResource.ROOT ||
 			type == IResource.PROJECT || 
-			(type == IResource.FILE && name.equals(DOT_PROJECT_FILE_NAME));
+			(type == IResource.FILE && DOT_PROJECT_FILE_NAME.equals(path.lastSegment()));
 	}
 
 	/**
@@ -89,7 +88,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 		switch(action) {
 			case(AbstractIndexManager.ACTION_ADD): {
 				if(resource.getName().equals(DOT_PROJECT_FILE_NAME)) {
-					updateClassPathEntires(resource.getProject());
+					updateClassPathEntries(resource.getProject());
 				}
 				break;
 			}
@@ -130,106 +129,101 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 	 * <p>Updates the JavaScript class path entries for the given project if
 	 * both the Module core and JavaScript natures are installed on that project.</p>
 	 *
-	 * @param project {@link IProject} to update the JavaScript class path entires for
+	 * @param project {@link IProject} to update the JavaScript class path entries for
 	 */
-	private static void updateClassPathEntires(IProject project) {
+	private static void updateClassPathEntries(IProject project) {
 		try {
-			//if a JS project with Module core check if class path needs to be updated
-			if (project.hasNature(JavaScriptCore.NATURE_ID) &&
-					ModuleCoreNature.isFlexibleProject(project)) {
-				
+			/*
+			 * if a JS project with Module Core nature, check if include path
+			 * needs to be updated
+			 */
+			if (project.hasNature(JavaScriptCore.NATURE_ID) && ModuleCoreNature.isFlexibleProject(project)) {
 				JavaProject jsProject = (JavaProject) JavaScriptCore.create(project);
-				
+
 				IIncludePathEntry[] oldEntries = jsProject.getRawIncludepath();
 				List updatedEntries = new ArrayList();
-				boolean foundDefault = false;
-				
-				List preExistingExclusionPatterns = new ArrayList();
-				List preExistingInclusionPatterns = new ArrayList();
-				for(int oldEntry = 0; oldEntry < oldEntries.length; ++oldEntry) {
-					IIncludePathAttribute[] attrs = oldEntries[oldEntry].getExtraAttributes();
-					
-					for(int atter = 0; atter < attrs.length; ++atter) {
-						if(attrs[atter].getName().equals(ModuleSourcePathProvider.PROVIDER_ATTRIBUTE_KEY_NAME) && 
-								attrs[atter].getValue().equals(ModuleSourcePathProvider.PROVIDER_ATTRIBUTE_KEY_VALUE)) {
-							foundDefault = true;
-							
-							//create exclusion paths that are not relative to the parent entry
-							IPath[] exclusionPaths = oldEntries[oldEntry].getExclusionPatterns();
-							for(int i = 0; i < exclusionPaths.length; ++i) {
-								preExistingExclusionPatterns.add(
-										oldEntries[oldEntry].getPath().append(exclusionPaths[i]));
-							}
-							
-							//create inclusion paths that are not relative to the parent entry
-							IPath[]inclusionPaths = oldEntries[oldEntry].getInclusionPatterns();
-							for(int i = 0; i < inclusionPaths.length; ++i) {
-								preExistingInclusionPatterns.add(
-										oldEntries[oldEntry].getPath().append(inclusionPaths[i]));
-							}
-						} else {
-							updatedEntries.add(oldEntries[oldEntry]);
-						}
-					}
-					
-				}
-				
-				//if found that a default path was added, replace with module core determined path
-				if(foundDefault) {
-					IResource[] roots = getRoots(project);
-					for(int root = 0; root < roots.length; ++root) {
-						IPath rootPath = roots[root].getFullPath();
+				boolean updateIncludePath = false;
 
-						//find matching pre-existing exclusion patterns
-						List exclusionPatterns = new ArrayList();
-						for(int i = 0; i < preExistingExclusionPatterns.size(); ++i) {
-							IPath parentRelativeExclusionPattern = PathUtils.makePatternRelativeToParent(
-									(IPath)preExistingExclusionPatterns.get(i), rootPath);
-							
-							if(parentRelativeExclusionPattern != null) {
-								exclusionPatterns.add(parentRelativeExclusionPattern);
+				for (int oldEntry = 0; oldEntry < oldEntries.length; ++oldEntry) {
+					IIncludePathAttribute[] entryAttributes = oldEntries[oldEntry].getExtraAttributes();
+
+					boolean isProvidedEntry = false;
+					for (int attribute = 0; attribute < entryAttributes.length; ++attribute) {
+						isProvidedEntry = entryAttributes[attribute].getName().equals(ModuleSourcePathProvider.PROVIDER_ATTRIBUTE_KEY_NAME) && entryAttributes[attribute].getValue().equals(ModuleSourcePathProvider.PROVIDER_ATTRIBUTE_KEY_VALUE);
+						updateIncludePath |= isProvidedEntry;
+						if (isProvidedEntry) {
+							/*
+							 * create updated exclusion paths that are not
+							 * relative to the parent entry
+							 */
+							IPath[] nonRelativeExclusionPaths = oldEntries[oldEntry].getExclusionPatterns();
+							for (int i = 0; i < nonRelativeExclusionPaths.length; ++i) {
+								nonRelativeExclusionPaths[i] = oldEntries[oldEntry].getPath().append(nonRelativeExclusionPaths[i]);
+							}
+
+							/*
+							 * create updated inclusion paths that are not
+							 * relative to the parent entry
+							 */
+							IPath[] nonRelativeInclusionPaths = oldEntries[oldEntry].getInclusionPatterns();
+							for (int i = 0; i < nonRelativeInclusionPaths.length; ++i) {
+								nonRelativeInclusionPaths[i] = oldEntries[oldEntry].getPath().append(nonRelativeInclusionPaths[i]);
+							}
+
+							IResource[] roots = getRoots(project);
+							for (int root = 0; root < roots.length; ++root) {
+								IPath rootPath = roots[root].getFullPath();
+
+								/*
+								 * find matching pre-existing exclusion
+								 * patterns
+								 */
+								List exclusionPatterns = new ArrayList();
+								for (int i = 0; i < nonRelativeExclusionPaths.length; ++i) {
+									IPath parentRelativeExclusionPattern = PathUtils.makePatternRelativeToParent(nonRelativeExclusionPaths[i], rootPath);
+									if (parentRelativeExclusionPattern != null) {
+										exclusionPatterns.add(parentRelativeExclusionPattern);
+									}
+								}
+
+								/*
+								 * find matching pre-existing inclusion
+								 * patterns
+								 */
+								List inclusionPatterns = new ArrayList();
+								for (int i = 0; i < nonRelativeInclusionPaths.length; ++i) {
+									IPath parentRelativeInclusionPattern = PathUtils.makePatternRelativeToParent(nonRelativeInclusionPaths[i], rootPath);
+									if (parentRelativeInclusionPattern != null) {
+										inclusionPatterns.add(parentRelativeInclusionPattern);
+									}
+								}
+
+								// create new inclusion/exclusion rules
+								IPath[] exclusionPaths = exclusionPatterns.isEmpty() ? ClasspathEntry.EXCLUDE_NONE : (IPath[]) exclusionPatterns.toArray(new IPath[exclusionPatterns.size()]);
+								IPath[] inclusionPaths = inclusionPatterns.isEmpty() ? ClasspathEntry.INCLUDE_ALL : (IPath[]) inclusionPatterns.toArray(new IPath[inclusionPatterns.size()]);
+
+								IIncludePathEntry newEntry = JavaScriptCore.newSourceEntry(rootPath, inclusionPaths, exclusionPaths, null);
+								updatedEntries.add(newEntry);
 							}
 						}
-						
-						//find matching pre-existing inclusion patterns
-						List inclusionPatterns = new ArrayList();
-						for(int i = 0; i < preExistingInclusionPatterns.size(); ++i) {
-							IPath parentRelativeInclusionPattern = PathUtils.makePatternRelativeToParent(
-									(IPath)preExistingInclusionPatterns.get(i), rootPath);
-							
-							if(parentRelativeInclusionPattern != null) {
-								inclusionPatterns.add(parentRelativeInclusionPattern);
-							}
-						}
-						
-						//create new entry entry
-						IPath[] exclusionPaths = ClasspathEntry.EXCLUDE_NONE;
-						if(exclusionPatterns.size() > 0) {
-							exclusionPaths = (IPath[])exclusionPatterns.toArray(
-									new IPath[exclusionPatterns.size()]);
-						}
-						IPath[] inclusionPaths = ClasspathEntry.INCLUDE_ALL;
-						if(inclusionPatterns.size() > 0) {
-							inclusionPaths = (IPath[])inclusionPatterns.toArray(
-									new IPath[inclusionPatterns.size()]);
-						}
-						IIncludePathEntry newEntry = JavaScriptCore.newSourceEntry(
-								rootPath,
-								inclusionPaths,
-								exclusionPaths,
-								null);
-						updatedEntries.add(newEntry);
 					}
-					
-					//set include path
-					jsProject.setRawIncludepath(
-							(IIncludePathEntry[])updatedEntries.toArray(
-									new IIncludePathEntry[updatedEntries.size()]),
-							project.getLocation(), null);
+					if (!isProvidedEntry) {
+						updatedEntries.add(oldEntries[oldEntry]);
+					}
+				}
+
+				/*
+				 * if found that a default source path was added, replace with
+				 * module core determined path
+				 */
+				if (updateIncludePath) {
+					// commit the updated include path
+					jsProject.setRawIncludepath((IIncludePathEntry[]) updatedEntries.toArray(new IIncludePathEntry[updatedEntries.size()]), jsProject.getOutputLocation(), null);
 				}
 			}
-		} catch(CoreException e) {
-			Logger.logException("Error while updating JavaScript classpath.", e); //$NON-NLS-1$
+		}
+		catch (CoreException e) {
+			Logger.logException("Error while updating JavaScript includepath", e); //$NON-NLS-1$
 		}
 	}
 	
