@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -244,12 +244,12 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				 * the custom tags in the comment will not be found. Run those
 				 * comment text pieces through the translator on their own.
 				 */
-				Iterator regions = sdRegion.getRegions().iterator();
-				while (regions.hasNext()) {
-					ITextRegion region = (ITextRegion) regions.next();
-					if (DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType()) && region.getStart() != 0) {
-						fTranslator.decodeScriptBlock(sdRegion.getFullText(region), sdRegion.getStartOffset(region));
-					}
+				ITextRegion first = sdRegion.getFirstRegion();
+				ITextRegion last = sdRegion.getLastRegion();
+
+				/* Decode everything between the comment delimiters at once */
+				if (DOMRegionContext.XML_COMMENT_OPEN.equals(first.getType()) && DOMRegionContext.XML_COMMENT_CLOSE.equals(last.getType())) {
+					fTranslator.decodeScriptBlock(sdRegion.getFullText().substring(first.getEnd(), last.getStart()), 0);
 				}
 			}
 			// this updates cursor position
