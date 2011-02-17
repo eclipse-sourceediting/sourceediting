@@ -1118,7 +1118,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 			ref = source.indexOf('&', ref + 1);
 		}
 
-		if (offset > length || end > length) {
+		if (offset > length) {
 			throw new DOMException(DOMException.INDEX_SIZE_ERR, DOMMessages.INDEX_SIZE_ERR);
 		}
 
