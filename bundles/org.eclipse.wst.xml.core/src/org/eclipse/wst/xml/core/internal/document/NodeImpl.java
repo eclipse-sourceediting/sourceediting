@@ -953,8 +953,8 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 					child = child.getNextSibling();
 					continue;
 				}
-				
-				String text = child.getTextContent();
+
+				String text = ((IDOMNode) child).getTextContent();
 				if (text != null) {
 					builder.append(text);
 				}
