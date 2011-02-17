@@ -260,8 +260,10 @@ public class BugFixesTest extends BaseTestCase
 
     // Obtain the Web Application schema
     String vxmlSchemaURI = locateFileUsingCatalog("http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd");
+    assertNotNull("unable to locate file for " + vxmlSchemaURI, vxmlSchemaURI);
+    assertTrue("unable to locate file for " + vxmlSchemaURI, vxmlSchemaURI.length() > 0);
     XSDSchema xsdSchema = XSDImpl.buildXSDModel(vxmlSchemaURI);
-    assertNotNull(xsdSchema);
+    assertNotNull("failed to build model for " + vxmlSchemaURI,xsdSchema);
 
     // The type transport-guaranteeType is defined as a complex type with simple type content
     // It has 3 enumerated values
