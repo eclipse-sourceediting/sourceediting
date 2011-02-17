@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -381,10 +381,8 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		return parent;
 	}
 
-	/**
-	 * getNodeValue method
-	 * 
-	 * @return java.lang.String
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Node#getNodeValue()
 	 */
 	public String getNodeValue() throws DOMException {
 		return null;
@@ -490,16 +488,15 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		return getNodeValue();
 	}
 
-	/**
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Node#hasAttributes()
 	 */
 	public boolean hasAttributes() {
 		return false;
 	}
 
-	/**
-	 * hasChildNodes method
-	 * 
-	 * @return boolean
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Node#hasChildNodes()
 	 */
 	public boolean hasChildNodes() {
 		return false;
@@ -928,11 +925,46 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
 	}
 
-	/**
-	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.w3c.dom.Node#getTextContent()
 	 */
 	public String getTextContent() throws DOMException {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version."); //$NON-NLS-1$
+		switch (getNodeType()) {
+			case Node.DOCUMENT_NODE :
+			case Node.DOCUMENT_TYPE_NODE :
+			case Node.NOTATION_NODE :
+				return null;
+			case Node.TEXT_NODE :
+			case Node.CDATA_SECTION_NODE :
+			case Node.COMMENT_NODE :
+			case Node.PROCESSING_INSTRUCTION_NODE :
+				return getNodeValue();
+		}
+
+		if (hasChildNodes()) {
+			final StringBuffer builder = new StringBuffer();
+
+			Node child = getFirstChild();
+			while (child != null) {
+				short nodeType = child.getNodeType();
+				if (nodeType == Node.COMMENT_NODE || nodeType == Node.PROCESSING_INSTRUCTION_NODE) {
+					child = child.getNextSibling();
+					continue;
+				}
+				
+				String text = child.getTextContent();
+				if (text != null) {
+					builder.append(text);
+				}
+				child = child.getNextSibling();
+			}
+
+			return builder.toString();
+		}
+
+		return EMPTY_STRING;
 	}
 
 	/**
