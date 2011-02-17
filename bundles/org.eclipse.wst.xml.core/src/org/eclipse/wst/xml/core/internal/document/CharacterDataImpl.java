@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -329,7 +329,8 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 		}
 		int end = offset + count;
 		if (end > length) {
-			throw new DOMException(DOMException.INDEX_SIZE_ERR, DOMMessages.INDEX_SIZE_ERR);
+			// no DOMException specified to be thrown
+			end = length;
 		}
 		return data.substring(offset, end);
 	}
