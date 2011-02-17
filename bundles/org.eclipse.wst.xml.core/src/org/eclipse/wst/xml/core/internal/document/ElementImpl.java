@@ -21,6 +21,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import java.util.Iterator;
+import java.util.Stack;
 
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -79,6 +80,8 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		public Node item(int index) {
 			if (attrNodes == null)
 				return null;
+			if (index >= attrNodes.getLength())
+				return null;
 			return attrNodes.item(index);
 		}
 
@@ -112,6 +115,8 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	private char[] fTagName = null;
 
 	private char[] fNamespaceURI = null;
+	
+	private Stack fDefaultValueLookups = null;
 
 	/**
 	 * ElementImpl constructor
@@ -240,33 +245,13 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		Attr attr = getAttributeNode(name);
 		// In the absence of the attribute, get the default value
 		if (attr == null) {
-			String defaultValue = getDefaultValue(name);
-			return (defaultValue != null) ? defaultValue : NodeImpl.EMPTY_STRING;
+			return getDefaultValue(name, NodeImpl.EMPTY_STRING);
 		}
 		return attr.getValue();
 	}
 
-	/**
-	 * get the default value for attribute <code>name</code>. Returns an empty string
-	 * @param name
-	 * @return
-	 */
-	private String getDefaultValue(String name) {
-		CMNamedNodeMap map = ((DocumentImpl) getOwnerDocument()).getCMAttributes(this);
-		if (map != null) {
-			CMNode attribute = map.getNamedItem(name);
-			if (attribute instanceof CMAttributeDeclaration)
-				return ((CMAttributeDeclaration) attribute).getAttrType().getImpliedValue();
-		}
-		return NodeImpl.EMPTY_STRING;
-	}
-
-	/**
-	 * getAttributeNode method
-	 * 
-	 * @return org.w3c.dom.Attr
-	 * @param name
-	 *            java.lang.String
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Element#getAttributeNode(java.lang.String)
 	 */
 	public Attr getAttributeNode(String name) {
 		if (name == null)
@@ -284,10 +269,18 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 				return attr; // found
 		}
 
+		String implied = getDefaultValue(name, null);
+		if (implied != null) {
+			Attr createdAttribute = getOwnerDocument().createAttribute(name);
+			createdAttribute.setNodeValue(implied);
+			return createdAttribute;
+		}
+		
 		return null; // not found
 	}
 
-	/**
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Element#getAttributeNodeNS(java.lang.String, java.lang.String)
 	 */
 	public Attr getAttributeNodeNS(String uri, String name) {
 		if (name == null)
@@ -320,14 +313,14 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		return null; // not found
 	}
 
-	/**
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Element#getAttributeNS(java.lang.String, java.lang.String)
 	 */
 	public String getAttributeNS(String uri, String name) {
 		Attr attr = getAttributeNodeNS(uri, name);
 		// In the absence of the attribute, get the default value
 		if (attr == null) {
-			String defaultValue = getDefaultValue(name);
-			return (defaultValue != null) ? defaultValue : NodeImpl.EMPTY_STRING;
+			return getDefaultValue(name, NodeImpl.EMPTY_STRING);
 		}
 		return attr.getValue();
 	}
@@ -351,6 +344,33 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (modelQuery == null)
 			return null;
 		return modelQuery.getCMElementDeclaration(this);
+	}
+
+	/**
+	 * Get the implied default value for attribute <code>name</code>
+	 * 
+	 * @param name
+	 * @return returns the default value for attribute <code>name</code> if it
+	 *         is found in the content model, <code>unknownDefault</code> otherwise
+	 */
+	private String getDefaultValue(String name, String unknownDefault) {
+		if (fDefaultValueLookups != null && fDefaultValueLookups.contains(name))
+			return null;
+		try {
+			if (fDefaultValueLookups == null)
+				fDefaultValueLookups = new Stack();
+			fDefaultValueLookups.push(name);
+			CMNamedNodeMap map = ((DocumentImpl) getOwnerDocument()).getCMAttributes(this);
+			if (map != null) {
+				CMNode attribute = map.getNamedItem(name);
+				if (attribute instanceof CMAttributeDeclaration)
+					return ((CMAttributeDeclaration) attribute).getAttrType().getImpliedValue();
+			}
+			return unknownDefault;
+		}
+		finally {
+			fDefaultValueLookups.pop();
+		}
 	}
 
 	/**
@@ -995,11 +1015,8 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		return (decl.getContentType() == CMElementDeclaration.EMPTY);
 	}
 
-	/**
-	 * removeAttribute method
-	 * 
-	 * @param name
-	 *            java.lang.String
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Element#removeAttribute(java.lang.String)
 	 */
 	public void removeAttribute(String name) throws DOMException {
 		removeAttributeNode(name);
@@ -1043,13 +1060,14 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	}
 
 	/**
-	 * removeAttributeNode method
-	 * 
-	 * @return org.w3c.dom.Attr
 	 * @param name
-	 *            java.lang.String
+	 * @return
 	 */
 	public Attr removeAttributeNode(String name) {
+		return removeAttributeNode(name, true);
+	}
+	
+	private  Attr removeAttributeNode(String name, boolean exceptionOnNotFound) {
 		if (name == null)
 			return null; // invalid parameter
 		if (this.attrNodes == null)
@@ -1075,6 +1093,8 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return attr;
 		}
 
+		if (exceptionOnNotFound)
+			throw new DOMException(DOMException.NOT_FOUND_ERR, DOMMessages.NOT_FOUND_ERR);
 		return null; // not found
 	}
 
@@ -1230,12 +1250,8 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		appendAttributeNode(attr);
 	}
 
-	/**
-	 * setAttributeNode method
-	 * 
-	 * @return org.w3c.dom.Attr
-	 * @param newAttr
-	 *            org.w3c.dom.Attr
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Element#setAttributeNode(org.w3c.dom.Attr)
 	 */
 	public Attr setAttributeNode(Attr newAttr) throws DOMException {
 		if (newAttr == null)
@@ -1253,7 +1269,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, DOMMessages.INUSE_ATTRIBUTE_ERR);
 		}
 
-		Attr oldAttr = removeAttributeNode(newAttr.getName());
+		Attr oldAttr = removeAttributeNode(newAttr.getName(), false);
 		appendAttributeNode(attr);
 		return oldAttr;
 	}
