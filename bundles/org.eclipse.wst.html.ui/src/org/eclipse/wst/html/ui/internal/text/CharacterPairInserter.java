@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,7 +34,7 @@ public class CharacterPairInserter extends AbstractCharacterPairInserter impleme
 		switch (c) {
 			case '\'':
 			case '"':
-				return fCloseStrings ? checkRegion(viewer) : false;
+				return fCloseStrings ? checkRegion(viewer, c) : false;
 			default:
 				return fCloseBrackets;
 		}
@@ -45,7 +45,7 @@ public class CharacterPairInserter extends AbstractCharacterPairInserter impleme
 	 * @param viewer the viewer
 	 * @return true if the region is not in an XML attribute value
 	 */
-	private boolean checkRegion(ISourceViewer viewer) {
+	private boolean checkRegion(ISourceViewer viewer, char c) {
 		final IDocument doc = viewer.getDocument();
 		final Point selection = viewer.getSelectedRange();
 		final int offset = selection.x;
@@ -54,7 +54,11 @@ public class CharacterPairInserter extends AbstractCharacterPairInserter impleme
 			IStructuredDocumentRegion[] regions = ((IStructuredDocument) doc).getStructuredDocumentRegions(offset, 0);
 			if (regions != null && regions.length > 0) {
 				ITextRegion region = regions[0].getRegionAtCharacterOffset(offset);
-				return region != null && region.getType() != DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE;
+				if (region != null) {
+					if (DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(region.getType()))
+						return true;
+					return c != '\'' && DOMRegionContext.XML_CONTENT.equals(region.getType()); 
+				}
 			}
 		}
 		return true;
