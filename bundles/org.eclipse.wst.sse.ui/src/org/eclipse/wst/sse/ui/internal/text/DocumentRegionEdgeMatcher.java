@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,7 +125,7 @@ public class DocumentRegionEdgeMatcher implements ICharacterPairMatcher {
 						if (offsetAtNearEdge == docRegion.getStartOffset(currentTextRegion)) {
 							int end = docRegion.getTextEndOffset(currentTextRegion);
 							try {
-								if (document.getChar(offsetAtNearEdge) == document.getChar(end - 1)) {
+								if (!Character.isWhitespace(document.getChar(offsetAtNearEdge)) && document.getChar(offsetAtNearEdge) == document.getChar(end - 1)) {
 									fAnchor = ICharacterPairMatcher.LEFT;
 									match = new Region(end - 1, 1);
 								}
@@ -137,7 +137,7 @@ public class DocumentRegionEdgeMatcher implements ICharacterPairMatcher {
 						else if (offsetAtNearEdge == docRegion.getTextEndOffset(currentTextRegion)-1) {
 							int start = docRegion.getStartOffset(currentTextRegion);
 							try {
-								if (document.getChar(offsetAtNearEdge) == document.getChar(start)) {
+								if (!Character.isWhitespace(document.getChar(offsetAtNearEdge)) && (document.getChar(offsetAtNearEdge) == document.getChar(start))) {
 									fAnchor = ICharacterPairMatcher.RIGHT;
 									match = new Region(start, 1);
 								}
