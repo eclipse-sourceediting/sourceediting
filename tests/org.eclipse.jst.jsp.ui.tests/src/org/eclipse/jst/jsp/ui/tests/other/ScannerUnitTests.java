@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -293,6 +293,33 @@ public class ScannerUnitTests extends TestCase {
 		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{1, 6, 1, 3, 1});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{DOMRegionContext.XML_CONTENT}) && checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{DOMRegionContext.XML_TAG_OPEN, DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS, DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMRegionContext.XML_TAG_CLOSE}) && checkSimpleRegionTypes(nodes.item(2).getRegions(), new String[]{DOMRegionContext.BLOCK_TEXT}) && checkSimpleRegionTypes(nodes.item(3).getRegions(), new String[]{DOMRegionContext.XML_END_TAG_OPEN, DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_CLOSE}) && checkSimpleRegionTypes(nodes.item(4).getRegions(), new String[]{DOMRegionContext.XML_CONTENT});
+		assertTrue("region context type check", typeCheck);
+		verifyModelLength();
+	}
+
+	public void testCommentMarkupLike() {
+		IStructuredDocumentRegionList nodes = setUpJSP("<!-- if (a<b) -->");
+		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[] {3});
+		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
+		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[] { DOMRegionContext.XML_COMMENT_OPEN, DOMRegionContext.XML_COMMENT_TEXT, DOMRegionContext.XML_COMMENT_CLOSE});
+		assertTrue("region context type check", typeCheck);
+		verifyModelLength();
+	}
+
+	public void testCommentMarkup() {
+		IStructuredDocumentRegionList nodes = setUpJSP("<!-- <div>Commented Out</div>-->");
+		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[] {3});
+		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
+		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[] { DOMRegionContext.XML_COMMENT_OPEN, DOMRegionContext.XML_COMMENT_TEXT, DOMRegionContext.XML_COMMENT_CLOSE});
+		assertTrue("region context type check", typeCheck);
+		verifyModelLength();
+	}
+
+	public void testCommentEmbeddedCustomTag() {
+		IStructuredDocumentRegionList nodes = setUpJSP("<!--<link HREF='<c:out value='localhost/file.css'/>'>--> Some text");
+		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[] {3, 1});
+		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
+		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[] { DOMRegionContext.XML_COMMENT_OPEN, DOMRegionContext.XML_COMMENT_TEXT, DOMRegionContext.XML_COMMENT_CLOSE}) && checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[] { DOMRegionContext.XML_CONTENT});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
