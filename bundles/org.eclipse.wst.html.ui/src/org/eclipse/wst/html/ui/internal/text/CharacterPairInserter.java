@@ -46,18 +46,26 @@ public class CharacterPairInserter extends AbstractCharacterPairInserter impleme
 	 * @return true if the region is not in an XML attribute value
 	 */
 	private boolean checkRegion(ISourceViewer viewer, char c) {
-		final IDocument doc = viewer.getDocument();
-		final Point selection = viewer.getSelectedRange();
-		final int offset = selection.x;
+		IDocument doc = viewer.getDocument();
+		final Point selection= viewer.getSelectedRange();
+		final int offset= selection.x;
 
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocumentRegion[] regions = ((IStructuredDocument) doc).getStructuredDocumentRegions(offset, 0);
 			if (regions != null && regions.length > 0) {
 				ITextRegion region = regions[0].getRegionAtCharacterOffset(offset);
 				if (region != null) {
-					if (DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(region.getType()))
+					final String type = region.getType();
+					if (DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(type))
 						return true;
-					return c != '\'' && DOMRegionContext.XML_CONTENT.equals(region.getType()); 
+					else if (DOMRegionContext.XML_TAG_CLOSE.equals(type) || DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(type)) {
+						if (regions[0].containsOffset(offset - 1)) {
+							region = regions[0].getRegionAtCharacterOffset(offset - 1);
+							if (region != null && DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(region.getType()))
+								return true;
+						}
+					}
+					return c != '\'' && DOMRegionContext.XML_CONTENT.equals(type); 
 				}
 			}
 		}

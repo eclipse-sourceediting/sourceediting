@@ -55,9 +55,17 @@ public class CharacterPairInserter extends AbstractCharacterPairInserter impleme
 			if (regions != null && regions.length > 0) {
 				ITextRegion region = regions[0].getRegionAtCharacterOffset(offset);
 				if (region != null) {
-					if (DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(region.getType()))
+					final String type = region.getType();
+					if (DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(type))
 						return true;
-					return c != '\'' && DOMRegionContext.XML_CONTENT.equals(region.getType()); 
+					else if (DOMRegionContext.XML_TAG_CLOSE.equals(type) || DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(type)) {
+						if (regions[0].containsOffset(offset - 1)) {
+							region = regions[0].getRegionAtCharacterOffset(offset - 1);
+							if (region != null && DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(region.getType()))
+								return true;
+						}
+					}
+					return c != '\'' && DOMRegionContext.XML_CONTENT.equals(type); 
 				}
 			}
 		}
