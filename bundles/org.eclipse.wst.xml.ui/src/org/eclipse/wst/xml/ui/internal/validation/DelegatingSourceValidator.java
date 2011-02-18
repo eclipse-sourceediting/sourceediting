@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,6 +63,7 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	// the selection strategies:
 	protected static final String ALL_ATTRIBUTES = "ALL_ATTRIBUTES"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME"; //$NON-NLS-1$
+	protected static final String ATTRIBUTE_NAME_LAST = "ATTRIBUTE_NAME_LAST"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE"; //$NON-NLS-1$
 	protected static final String START_TAG = "START_TAG"; //$NON-NLS-1$
 	protected static final String TEXT = "TEXT"; //$NON-NLS-1$
@@ -620,6 +621,26 @@ public abstract class DelegatingSourceValidator implements IValidator {
 								startEndPositions[1] = startEndPositions[0] + nodeValue.length();
 								break;
 							}
+						}
+					}
+				}
+				else if (ATTRIBUTE_NAME_LAST.equals(selectionStrategy)) {
+					// underline the last attribute's name
+					if (node.getNodeType() == Node.ELEMENT_NODE) {
+						NamedNodeMap attributeMap = node.getAttributes();
+						final int length = attributeMap.getLength();
+						Node tempNode = null;
+						Node attrNode  = null;
+						for (int i = 0; i < length; i++) {
+							tempNode = attributeMap.item(i);
+							if (tempNode != null && tempNode.getNodeName().equals(nameOrValue)) {
+								attrNode = tempNode;
+							}
+						}
+						IDOMNode attributeNode = (IDOMNode) (attrNode);
+						if (attributeNode != null) {
+							startEndPositions[0] = attributeNode.getStartOffset();
+							startEndPositions[1] = attributeNode.getStartOffset() + nameOrValue.length();
 						}
 					}
 				}

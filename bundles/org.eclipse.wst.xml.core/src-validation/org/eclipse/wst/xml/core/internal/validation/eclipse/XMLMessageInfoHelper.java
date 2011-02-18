@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -102,6 +102,13 @@ public class XMLMessageInfoHelper
       else if (errorKey.equals("ETagUnterminated") || errorKey.equals("ETagRequired"))  //$NON-NLS-1$  //$NON-NLS-2$
       {
         selectionStrategy = "END_TAG";   //$NON-NLS-1$
+      }
+      else if (errorKey.equals("AttributeNotUnique")) //$NON-NLS-N$
+      {
+    	selectionStrategy = "ATTRIBUTE_NAME_LAST"; //$NON-NLS-1$
+  	    //in this case we need nameOrValue to be the name of the last attribute(like in case of duplicate attributes)
+    	//to underline
+  	    nameOrValue = (String)messageArguments[1];
       }
     }
     String messageInfo[] = new String[2];
