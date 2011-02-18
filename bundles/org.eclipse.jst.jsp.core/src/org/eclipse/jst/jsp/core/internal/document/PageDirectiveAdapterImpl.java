@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -560,7 +560,8 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 				modelReinitNeeded(cachedLanguage, newLanguage);
 			}
 		}
-		setLanguage(newLanguage);
+		if (languageKnown(newLanguage))
+			setLanguage(newLanguage);
 	}
 
 	/**
@@ -586,9 +587,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		boolean result = false; // languages are equal, then no change in
 		// state
 		if (!cachedLanguage.equalsIgnoreCase(newLanguage)) {
-			boolean oldLanguageKnown = languageKnown(cachedLanguage);
-			boolean newLanguageKnown = languageKnown(newLanguage);
-			result = newLanguageKnown || (!newLanguageKnown && oldLanguageKnown);
+			result = languageKnown(newLanguage);
 		}
 		return result;
 	}
