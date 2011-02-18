@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.ui.internal.viewers.SelectSingleFilePage;
-import org.eclipse.wst.dtd.core.internal.emf.DTDResource;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
+import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
 
 /**
  * Extend the base wizard to select a file from the project or outside the
@@ -35,7 +35,7 @@ class DTDSelectIncludeFileWizard extends Wizard implements INewWizard {
 	public DTDSelectIncludeFileWizard(String title, String desc, ViewerFilter filter, IStructuredSelection selection) {
 		super();
 		setWindowTitle(title);
-		setDefaultPageImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(DTDUIPlugin.getDefault().getBundle().getSymbolicName(), DTDResource.NEWDTD));
+		setDefaultPageImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(DTDUIPlugin.getDefault().getBundle().getSymbolicName(), DTDEditorPluginImages.IMG_WIZBAN_NEWDTDFILE));
 
 		// Select File Page
 		filePage = new DTDSelectSingleFilePage(PlatformUI.getWorkbench(), selection, true);
