@@ -72,13 +72,15 @@ public class XSLElementFactory {
 				break;
 			}
 		}
-		if (stylesheetParserData.getParentEl().getModelType() == XSLModelObject.Type.FUNCTION) {
-			Function function = (Function) stylesheetParserData.getParentEl();
-			function.addParameter(param);
-		} else if (stylesheetParserData.getParentEl().getModelType() == XSLModelObject.Type.TEMPLATE
-				&& stylesheetParserData.getElementStack().size() == 2 && stylesheetParserData.getCurrentTemplate() != null) {
-			Template template = (Template) stylesheetParserData.getParentEl();
-			template.addParameter(param);
+		if (stylesheetParserData.getParentEl() != null) {
+			if (stylesheetParserData.getParentEl().getModelType() == XSLModelObject.Type.FUNCTION) {
+				Function function = (Function) stylesheetParserData.getParentEl();
+				function.addParameter(param);
+			} else if (stylesheetParserData.getParentEl().getModelType() == XSLModelObject.Type.TEMPLATE
+					&& stylesheetParserData.getElementStack().size() == 2 && stylesheetParserData.getCurrentTemplate() != null) {
+				Template template = (Template) stylesheetParserData.getParentEl();
+				template.addParameter(param);
+			}
 		}
 		return param;
 	}
