@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,9 @@ import java.util.Map;
 
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -81,6 +81,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractSyntaxColoringPage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -94,7 +95,7 @@ import com.ibm.icu.text.Collator;
  * and CDT pages far more than our original color page while retaining the
  * extra "click-to-find" functionality.
  */
-public final class JSPSyntaxColoringPage extends PreferencePage implements IWorkbenchPreferencePage {
+public final class JSPSyntaxColoringPage extends AbstractSyntaxColoringPage implements IWorkbenchPreferencePage {
 
 	private Button fBold;
 	private Label fForegroundLabel;
@@ -114,6 +115,7 @@ public final class JSPSyntaxColoringPage extends PreferencePage implements IWork
 	private Map fStyleToDescriptionMap;
 	private StyledText fText;
 	private Button fUnderline;
+	private ISourceViewer fPreviewViewer;
 
 
 	// activate controls based on the given local color type
@@ -321,8 +323,8 @@ public final class JSPSyntaxColoringPage extends PreferencePage implements IWork
 		((GridLayout) sampleArea.getLayout()).marginLeft = 5;
 		((GridLayout) sampleArea.getLayout()).marginTop = 5;
 		createLabel(sampleArea, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
-		SourceViewer viewer = new SourceViewer(sampleArea, null, SWT.BORDER | SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY);
-		fText = viewer.getTextWidget();
+		fPreviewViewer = new SourceViewer(sampleArea, null, SWT.BORDER | SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY);
+		fText = fPreviewViewer.getTextWidget();
 		GridData gridData3 = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData3.widthHint = convertWidthInCharsToPixels(20);
 		gridData3.heightHint = convertHeightInCharsToPixels(5);
@@ -337,7 +339,8 @@ public final class JSPSyntaxColoringPage extends PreferencePage implements IWork
 		setAccessible(fText, SSEUIMessages.Sample_text__UI_);
 		fDocument = StructuredModelManager.getModelManager().createStructuredDocumentFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		fDocument.set(getExampleText());
-		viewer.setDocument(fDocument);
+		initializeSourcePreviewColors(fPreviewViewer);
+		fPreviewViewer.setDocument(fDocument);
 
 		top.setWeights(new int[]{1, 1});
 		editor.setWeights(new int[]{1, 1});
@@ -509,6 +512,13 @@ public final class JSPSyntaxColoringPage extends PreferencePage implements IWork
 		});
 
 		return pageComponent;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractSyntaxColoringPage#getSourcePreviewViewer()
+	 */
+	protected ISourceViewer getSourcePreviewViewer() {
+		return fPreviewViewer;
 	}
 
 	private Label createLabel(Composite parent, String text) {
