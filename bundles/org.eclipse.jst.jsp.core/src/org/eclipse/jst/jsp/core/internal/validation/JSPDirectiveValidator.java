@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -459,9 +459,10 @@ public class JSPDirectiveValidator extends JSPValidator {
 						// URI specified but does not resolve
 						String msgText = null;
 						// provide better messages for typical "http:*" URIs
-						if (uri.startsWith("http:") && DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(file.getFullPath()) < 1.2) { //$NON-NLS-1$
+						final float version = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(file.getFullPath());
+						if (uri.startsWith("http:") && version < 1.2) { //$NON-NLS-1$
 							if (FacetModuleCoreSupport.isDynamicWebProject(file.getProject())) {
-								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_9, uri);
+								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_9, new Object[] { uri, new Float(version)} );
 							}
 							else {
 								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_10, uri);
