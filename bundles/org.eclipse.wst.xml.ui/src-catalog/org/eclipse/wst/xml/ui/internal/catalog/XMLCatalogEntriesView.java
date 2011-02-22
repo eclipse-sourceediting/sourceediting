@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.Catalog;
 import org.eclipse.wst.xml.core.internal.catalog.CatalogElement;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
@@ -43,6 +44,7 @@ public class XMLCatalogEntriesView extends Composite {
 	protected Button newButton;
 	protected Button editButton;
 	protected Button deleteButton;
+	protected Button clearCacheButton;
 	protected XMLCatalogTreeViewer tableViewer;
 	protected ICatalog workingUserCatalog;
 	protected ICatalog systemCatalog;
@@ -126,6 +128,9 @@ public class XMLCatalogEntriesView extends Composite {
 				else if (e.widget == deleteButton) {
 					performDelete();
 				}
+				else if (e.widget == clearCacheButton) {
+					performRefresh();
+				}
 			}
 		};
 
@@ -165,6 +170,15 @@ public class XMLCatalogEntriesView extends Composite {
 		// XMLBuilderContextIds.XMLP_MAPPING_DELETE);
 		deleteButton.setLayoutData(gd);
 		deleteButton.addSelectionListener(selectionListener);
+		
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		gd.verticalIndent = 9;
+		clearCacheButton = new Button(composite, SWT.NONE);
+		clearCacheButton.setText(XMLCatalogMessages.UI_BUTTON_RELOAD_CATALOG);
+		clearCacheButton.setLayoutData(gd);
+		clearCacheButton.addSelectionListener(selectionListener);
 		
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
@@ -235,6 +249,10 @@ public class XMLCatalogEntriesView extends Composite {
 				tableViewer.setSelection(new StructuredSelection(newEntry));
 			}
 		}
+	}
+
+	protected void performRefresh() {
+		XMLCorePlugin.getDefault().clearCatalogCache();
 	}
 
 	protected void performDelete() {

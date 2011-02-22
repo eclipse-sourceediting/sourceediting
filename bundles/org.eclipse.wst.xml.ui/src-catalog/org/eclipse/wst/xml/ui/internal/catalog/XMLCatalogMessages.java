@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,6 +81,7 @@ public class XMLCatalogMessages extends NLS {
 	public static String UI_BUTTON_EDIT;
 	public static String UI_BUTTON_DELETE;
 	public static String UI_BUTTON_REMOVE;
+	public static String UI_BUTTON_RELOAD_CATALOG;
 	public static String UI_LABEL_NEW_DIALOG_TITLE;
 	public static String UI_LABEL_EDIT_DIALOG_TITLE;
 
