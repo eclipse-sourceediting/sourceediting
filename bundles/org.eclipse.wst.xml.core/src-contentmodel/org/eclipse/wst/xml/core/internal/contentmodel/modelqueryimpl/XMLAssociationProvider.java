@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,10 +34,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
-/**
- *
- */
 public abstract class XMLAssociationProvider extends BaseAssociationProvider implements CMDocumentReferenceProvider
 {              
   protected CMDocumentCache cmDocumentCache; 
@@ -61,7 +57,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     DocumentType doctype = document.getDoctype();
 
     // defect 206833 ... here we test for DTDs that are declared inline
-    // since we currently have no way of making use of inline DTDs we ingore them
+    // since we currently have no way of making use of inline DTDs we ignore them
     // so that the implict DTD (if any) can be used
     if (doctype != null && (doctype.getPublicId() != null || doctype.getSystemId() != null))
     {
@@ -296,7 +292,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     String xsiPrefix = namespaceTable.getPrefixForURI("http://www.w3.org/2001/XMLSchema-instance"); //$NON-NLS-1$
     if (xsiPrefix != null)
     {
-      String xsiTypeValue = element.hasAttribute(xsiPrefix + ":type") ? element.getAttribute(xsiPrefix + ":type") : null; //$NON-NLS-1$ //$NON-NLS-2$
+      String xsiTypeValue = element.getAttribute(xsiPrefix + ":type"); //$NON-NLS-1$
       if (xsiTypeValue != null && xsiTypeValue.length() > 0)
       {  
         String typePrefix = DOMNamespaceHelper.getPrefix(xsiTypeValue);
