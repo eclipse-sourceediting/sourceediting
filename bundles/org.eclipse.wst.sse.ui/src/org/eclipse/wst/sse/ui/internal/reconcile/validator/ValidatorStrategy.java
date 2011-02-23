@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,6 +77,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 */
 	private boolean fValidatorsSuspended = false;
 	private Object fFile;
+	private boolean fIsCancelled = false;
 
 	public ValidatorStrategy(ISourceViewer sourceViewer, String contentType) {
 		super(sourceViewer);
@@ -264,7 +265,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 						fVidToVStepMap.put(vmd.getValidatorId(), validatorStep);
 					}
 
-					if (!fTotalScopeValidatorsAlreadyRun.contains(vmd)) {
+					if (!fTotalScopeValidatorsAlreadyRun.contains(vmd) && !fIsCancelled) {
 						annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
 						stepsRanOnThisDirtyRegion.add(validatorStep);
 
@@ -285,12 +286,13 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		}
 
 		TemporaryAnnotation[] annotationsToRemove = getAnnotationsToRemove(dr, stepsRanOnThisDirtyRegion);
-		if (annotationsToRemove.length + annotationsToAdd.size() > 0)
+		if (annotationsToRemove.length + annotationsToAdd.size() > 0 && !fIsCancelled)
 			smartProcess(annotationsToRemove, (IReconcileResult[]) annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
 	}
 
 	public void release() {
 		super.release();
+		fIsCancelled = true;
 		Iterator it = fVidToVStepMap.values().iterator();
 		IReconcileStep step = null;
 		while (it.hasNext()) {

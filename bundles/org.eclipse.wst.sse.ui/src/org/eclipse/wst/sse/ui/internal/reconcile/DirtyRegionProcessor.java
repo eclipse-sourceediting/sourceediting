@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+  * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -595,7 +595,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * @param dirtyRegion
 	 */
 	protected void process(DirtyRegion dirtyRegion) {
-		if (!isInstalled() || isInRewriteSession() || dirtyRegion == null || getDocument() == null) {
+		if (!isInstalled() || isInRewriteSession() || dirtyRegion == null || getDocument() == null || fIsCanceled) {
 			return;
 		}
 		/*
@@ -605,7 +605,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		 * regardless of the number and types of partitions.
 		 */
 		ITypedRegion[] partitions = computePartitioning(dirtyRegion);
-		for (int i = 0; i < partitions.length; i++) {
+		for (int i = 0; i < partitions.length && !fIsCanceled; i++) {
 			IReconcilingStrategy strategy = getReconcilingStrategy(partitions[i].getType());
 			if (strategy != null) {
 				strategy.reconcile(partitions[i]);
