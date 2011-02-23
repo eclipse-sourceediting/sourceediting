@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -160,5 +161,26 @@ public class ElementImplTests extends TestCase {
 
 		NodeList children = root.getElementsByTagNameNS("*", "*");
 		assertEquals(3, children.getLength());
+	}
+
+	public void testRemoveNonexistantAttrByName() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(decl);
+
+		Document document = model.getDocument();
+		Element root = document.createElement("test:root");
+		root.setAttribute("xmlns:test", "http://test");
+		root.setAttribute("xmlns:test2", "http://test2");
+		document.appendChild(root);
+
+		boolean success = false;
+		try {
+			root.removeAttribute(getName());
+			success = true;
+		}
+		catch (DOMException ex) {
+			assertTrue("threw_NOT_FOUND_ERR", ex.code != DOMException.NOT_FOUND_ERR);
+		}
+		assertTrue("threw exception", success);
 	}
 }
