@@ -284,27 +284,55 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 
 		IFile file = getFile();
-
+		IncrementalReporter reporter = null;
+		
 		try {
 			IncrementalHelper helper = getHelper(file != null ? file.getProject() : null);
-			IncrementalReporter reporter = getReporter();
 
-			if (file != null && file.exists()) {
+			if (file != null && file.isAccessible()) {
 				helper.setURI(file.getFullPath().toString());
 			}
+			else {
+				String uri = getURI();
+				if (uri != null) {
+					helper.setURI(uri);
+				}
+			}
 
+			reporter = getReporter();
 			fValidator.validate(helper, reporter);
 
 			// results = createAnnotations(reporter.getMessages());
 			results = createAnnotations(reporter.getAnnotationInfo());
 			reporter.removeAllMessages(fValidator);
 
-			fValidator.cleanup(reporter);
 		}
 		catch (Exception e) {
 			Logger.logException(e);
 		}
+		finally {
+			fValidator.cleanup(reporter);
+		}
 		return results;
+	}
+
+	/**
+	 * @return
+	 */
+	private String getURI() {
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+			if (model != null && !(IModelManager.UNMANAGED_MODEL.equals(model.getBaseLocation()))) {
+				return model.getBaseLocation();
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+		return null;
 	}
 
 	public void setInputModel(IReconcilableModel inputModel) {
@@ -353,7 +381,10 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 					((ISourceValidator) fValidator).validate(dirtyRegion, helper, reporter);
 				else
 					((ISourceValidator) fValidator).validate(new Region(0, getDocument().getLength()), helper, reporter);
-				// call IValidator.cleanup() during release()
+				/*
+				 * call IValidator.cleanup() during release() because this
+				 * validator might be called again on a different region
+				 */
 				// results = createAnnotations(reporter.getMessages());
 				results = createAnnotations(reporter.getAnnotationInfo());
 				reporter.removeAllMessages(fValidator);
