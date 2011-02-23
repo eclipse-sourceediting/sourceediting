@@ -1019,7 +1019,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 * @see org.w3c.dom.Element#removeAttribute(java.lang.String)
 	 */
 	public void removeAttribute(String name) throws DOMException {
-		removeAttributeNode(name);
+		removeAttributeNode(name, false);
 	}
 
 	/**
