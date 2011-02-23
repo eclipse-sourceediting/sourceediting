@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
 /**
@@ -29,10 +30,19 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  * TagInfoProcessor, AnnotationHoverProcessor
  */
 public class BestMatchHover implements ITextHover, ITextHoverExtension {
-	private ITextHover fBestMatchHover; // current best match text hover
-	private ITextHover[] fTagInfoHovers; // documentation/information hover
-	private List fTextHovers; // list of text hovers to consider in best
-	// match
+	/** Current best match text hover */
+	private ITextHover fBestMatchHover;
+	/**
+	 * Documentation / Information hovers
+	 */
+	private ITextHover[] fTagInfoHovers;
+	/** List of text hovers to consider in best match */
+	private List fTextHovers;
+	/**
+	 * Partition type for which to create text hovers (when deferred for
+	 * performance)
+	 */
+	private String fPartitionType;
 
 	public BestMatchHover(ITextHover infoTagHover) {
 		this(new ITextHover[]{infoTagHover});
@@ -40,6 +50,10 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension {
 
 	public BestMatchHover(ITextHover[] infoTagHovers) {
 		fTagInfoHovers = infoTagHovers;
+	}
+
+	public BestMatchHover(String partitionType) {
+		fPartitionType = partitionType;
 	}
 
 	/**
@@ -58,6 +72,10 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension {
 
 		hoverList.add(new ProblemAnnotationHoverProcessor());
 		
+		if (fPartitionType != null && fTagInfoHovers == null) {
+			List extendedTextHover = ExtendedConfigurationBuilder.getInstance().getConfigurations(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, fPartitionType);
+			fTagInfoHovers = (ITextHover[]) extendedTextHover.toArray(new ITextHover[extendedTextHover.size()]);
+		}
 		if (fTagInfoHovers != null) {
 			for (int i = 0; i < fTagInfoHovers.length; i++) {
 				hoverList.add(fTagInfoHovers[i]);

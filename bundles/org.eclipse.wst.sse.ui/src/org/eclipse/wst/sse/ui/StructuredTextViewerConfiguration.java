@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -479,7 +479,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 *             extension point
 	 */
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		ITextHover bestMatchHover = new BestMatchHover(createDocumentationHovers(partitionType));
+		ITextHover bestMatchHover = new BestMatchHover(partitionType);
 		return new TextHoverInformationProvider(bestMatchHover);
 	}
 
@@ -676,7 +676,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 				else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
 					textHover = new AnnotationHoverProcessor();
 				else if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
-					textHover = new BestMatchHover(createDocumentationHovers(contentType));
+					textHover = new BestMatchHover(contentType);
 				else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
 					ITextHover[] hovers = createDocumentationHovers(contentType);
 					if (hovers.length > 0) {
