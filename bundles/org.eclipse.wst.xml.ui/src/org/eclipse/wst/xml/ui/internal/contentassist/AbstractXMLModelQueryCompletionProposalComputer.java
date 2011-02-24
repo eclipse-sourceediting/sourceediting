@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryActio
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -57,7 +58,6 @@ import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.taginfo.MarkupTagInfoProvider;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -143,7 +143,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 				AttrImpl existingAttr = (AttrImpl) attrs.item(i);
 				ITextRegion name = existingAttr.getNameRegion();
 				
-				if ((sdRegion.getStartOffset(name) <= contentAssistRequest.getReplacementBeginPosition()) &&
+				if (name != null && (sdRegion.getStartOffset(name) <= contentAssistRequest.getReplacementBeginPosition()) &&
 						(sdRegion.getStartOffset(name) + name.getLength() >= contentAssistRequest.getReplacementBeginPosition() + contentAssistRequest.getReplacementLength()) &&
 						(existingAttr.getValueRegion() != null)) {
 					// selected region is attribute name
@@ -173,7 +173,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						ITextRegion nameRegion = attr != null ? attr.getNameRegion() : null;
 						// nameRegion.getEndOffset() + 1 is required to allow for
 						// matches against the full name of an existing Attr
-						showAttribute = showAttribute && ((attr == null) ||
+						showAttribute = showAttribute && ((attr == null) || nameRegion == null ||
 								((nameRegion != null) &&
 										(sdRegion.getStartOffset(nameRegion) <
 											contentAssistRequest.getReplacementBeginPosition()) &&
@@ -207,23 +207,30 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 							// no attribute exists or is elsewhere, generate
 							// minimally
 							else {
-								Attr existingAttrNode = (Attr) node.getAttributes().getNamedItem(getRequiredName(node, attrDecl));
+								IDOMAttr existingAttrNode = (IDOMAttr) node.getAttributes().getNamedItem(getRequiredName(node, attrDecl));
 								String value = null;
-								if (existingAttrNode != null) {
+								if (existingAttrNode != null && existingAttrNode.getNameRegion() != null) {
 									value = existingAttrNode.getNodeValue();
 								}
+								int cursorPosition = 0;
 								if ((value != null) && (value.length() > 0)) {
 									proposedText = getRequiredName(node, attrDecl);
+									cursorPosition = proposedText.length() + 2;
 								}
 								else {
 									proposedText = getRequiredText(node, attrDecl);
+									// skip the cursor past a fixed value
+									if (attrDecl.getAttrType() != null && attrDecl.getAttrType().getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED)
+										cursorPosition = proposedText.length();
+									else
+										cursorPosition = getRequiredName(node, attrDecl).length() + 2;
 								}
 								if (proposalNeedsSpace)
 									proposedText += " "; //$NON-NLS-1$
 								proposal = new CustomCompletionProposal(proposedText,
 										contentAssistRequest.getReplacementBeginPosition(),
 										contentAssistRequest.getReplacementLength(),
-										attrDecl.getNodeName().length() + 2, attrImage,
+										cursorPosition, attrImage,
 								// if the value isn't empty (no empty set of quotes), show it
 								// BUG 203494, content strings may have "", but not be empty
 								// An empty string is when there's no content between double quotes

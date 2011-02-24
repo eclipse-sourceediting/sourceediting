@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,6 +61,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -74,7 +75,6 @@ import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.taginfo.MarkupTagInfoProvider;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -185,7 +185,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					ITextRegion nameRegion = attr != null ? attr.getNameRegion() : null;
 					// nameRegion.getEndOffset() + 1 is required to allow for
 					// matches against the full name of an existing Attr
-					showAttribute = showAttribute && ((attr == null) || ((nameRegion != null) && (sdRegion.getStartOffset(nameRegion) <= contentAssistRequest.getReplacementBeginPosition()) && (sdRegion.getStartOffset(nameRegion) + nameRegion.getLength() >= contentAssistRequest.getReplacementBeginPosition() + contentAssistRequest.getReplacementLength())));
+					showAttribute = showAttribute && (attr == null || nameRegion == null || (nameRegion != null && (sdRegion.getStartOffset(nameRegion) <= contentAssistRequest.getReplacementBeginPosition()) && (sdRegion.getStartOffset(nameRegion) + nameRegion.getLength() >= contentAssistRequest.getReplacementBeginPosition() + contentAssistRequest.getReplacementLength())));
 					if (showAttribute) {
 						Image attrImage = CMImageUtil.getImage(attrDecl);
 						if (attrImage == null) {
@@ -209,9 +209,9 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						// no attribute exists or is elsewhere, generate
 						// minimally
 						else {
-							Attr existingAttrNode = (Attr) node.getAttributes().getNamedItem(getRequiredName(node, attrDecl));
+							IDOMAttr existingAttrNode = (IDOMAttr) node.getAttributes().getNamedItem(getRequiredName(node, attrDecl));
 							String value = null;
-							if (existingAttrNode != null) {
+							if (existingAttrNode != null && existingAttrNode.getNameRegion() != null) {
 								value = existingAttrNode.getNodeValue();
 							}
 							if ((value != null) && (value.length() > 0)) {
