@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.wst.xsd.ui.internal.editor;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
@@ -46,7 +47,7 @@ public class XSDTabbedPropertySheetPage extends TabbedPropertySheetPage implemen
    */
   public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
-      Object selected = ((StructuredSelection)selection).getFirstElement();
+      Object selected = ((IStructuredSelection)selection).getFirstElement();
       if (selected instanceof XSDBaseAdapter)
       {
         XSDBaseAdapter adapter = (XSDBaseAdapter)selected;
