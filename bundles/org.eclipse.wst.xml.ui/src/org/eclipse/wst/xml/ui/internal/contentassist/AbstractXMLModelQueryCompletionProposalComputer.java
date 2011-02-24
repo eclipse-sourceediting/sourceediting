@@ -46,7 +46,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryActio
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -58,6 +57,7 @@ import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.taginfo.MarkupTagInfoProvider;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -207,9 +207,9 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 							// no attribute exists or is elsewhere, generate
 							// minimally
 							else {
-								IDOMAttr existingAttrNode = (IDOMAttr) node.getAttributes().getNamedItem(getRequiredName(node, attrDecl));
+								Attr existingAttrNode = (Attr) node.getAttributes().getNamedItem(getRequiredName(node, attrDecl));
 								String value = null;
-								if (existingAttrNode != null && existingAttrNode.getNameRegion() != null) {
+								if (existingAttrNode != null && existingAttrNode.getSpecified()) {
 									value = existingAttrNode.getNodeValue();
 								}
 								int cursorPosition = 0;

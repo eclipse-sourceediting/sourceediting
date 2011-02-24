@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2011 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -768,7 +768,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 				((MultiPageEditorActionBarContributor) contributor).setActiveEditor(this);
 			}
 
-			int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
+			int activePageIndex = getPreferenceStore().getInt(getEditorSite().getId() + "." + IXMLPreferenceNames.LAST_ACTIVE_PAGE); //$NON-NLS-1$;
 			if ((activePageIndex >= 0) && (activePageIndex < getPageCount())) {
 				setActivePage(activePageIndex);
 			}
@@ -1063,7 +1063,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
 	private void saveLastActivePageIndex(int newPageIndex) {
 		// save the last active page index to preference manager
-		getPreferenceStore().setValue(IXMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex);
+		getPreferenceStore().setValue(getEditorSite().getId() + "." + IXMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex); //$NON-NLS-1$
 	}
 
 	public void setFocus() {

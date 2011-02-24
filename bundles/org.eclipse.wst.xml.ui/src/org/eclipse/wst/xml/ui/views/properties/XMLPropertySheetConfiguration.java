@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,12 +144,16 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 					fPropertySource = new XMLPropertySource((INodeNotifier) object) {
 						public void setPropertyValue(Object nameObject, Object value) {
 							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=218979
-							for (int i = 0; i < fSelectedNotifiers.length; i++) {
-								fSelectedNotifiers[i].removeAdapter(fRefreshAdapter);
+							if (fSelectedNotifiers != null) {
+								for (int i = 0; i < fSelectedNotifiers.length; i++) {
+									fSelectedNotifiers[i].removeAdapter(fRefreshAdapter);
+								}
 							}
 							super.setPropertyValue(nameObject, value);
-							for (int i = 0; i < fSelectedNotifiers.length; i++) {
-								fSelectedNotifiers[i].addAdapter(fRefreshAdapter);
+							if (fSelectedNotifiers != null) {
+								for (int i = 0; i < fSelectedNotifiers.length; i++) {
+									fSelectedNotifiers[i].addAdapter(fRefreshAdapter);
+								}
 							}
 						}
 					};

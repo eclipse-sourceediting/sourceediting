@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -151,10 +151,10 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 						// display the attribute and value (without quotes)
 						String attributeName = shownAttribute.getNodeName();
 						if ((attributeName != null) && (attributeName.length() > 0)) {
-							text.append(" "); //$NON-NLS-1$
-							text.append(attributeName);
 							String attributeValue = shownAttribute.getNodeValue();
 							if ((attributeValue != null) && (attributeValue.length() > 0)) {
+								text.append(" "); //$NON-NLS-1$
+								text.append(attributeName);
 								text.append("="); //$NON-NLS-1$
 								text.append(StringUtils.strip(attributeValue));
 							}

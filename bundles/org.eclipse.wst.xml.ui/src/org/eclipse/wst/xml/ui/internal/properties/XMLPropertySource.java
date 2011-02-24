@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -542,7 +542,8 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 
 		NamedNodeMap attrMap = fNode.getAttributes();
 		if (attrMap != null) {
-			return attrMap.getNamedItem(property) != null;
+			Node attr = attrMap.getNamedItem(property);
+			return attr != null && (attr instanceof Attr ? ((Attr) attr).getSpecified() : true);
 		}
 		return false;
 	}
@@ -603,10 +604,10 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				}
 			}
 			if ((defValue != null) && (defValue.length() > 0)) {
-				((Attr) attrMap.getNamedItem(property)).setValue(defValue);
+				// implied values will be in the DOM, but not the source
+				attrMap.removeNamedItem(property);
 			}
 			else {
-				// remember, this method is for reset, not remove
 				((Attr) attrMap.getNamedItem(property)).setValue(""); //$NON-NLS-1$
 			}
 		}
@@ -638,7 +639,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		try {
 			if (attrMap != null) {
 				Attr attr = (Attr) attrMap.getNamedItem(name);
-				if (attr != null) {
+				if (attr != null && attr.getSpecified()) {
 					// EXISTING VALUE
 					// potential out of control loop if updating the value
 					// triggers a viewer update, forcing the
