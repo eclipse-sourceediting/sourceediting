@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.preferences.ui;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -32,6 +30,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CompletionProposoalCatigori
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.sse.ui.preferences.CodeAssistCyclingConfigurationBlock;
 import org.eclipse.wst.sse.ui.preferences.ICompletionProposalCategoriesConfigurationWriter;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * <p>Defines the preference page for allowing the user to change the content
@@ -48,7 +47,6 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 	private Text fAutoProposeDelay;
 	private Label fAutoProposeLabel;
 	private Text fAutoProposeText;
-	private final Pattern delayPattern = Pattern.compile("\\d{0,4}"); //$NON-NLS-1$
 	
 	/** configuration block for changing preference having to do with the content assist categories */
 	private CodeAssistCyclingConfigurationBlock fConfigurationBlock;
@@ -138,42 +136,43 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 
 		fAutoProposeDelayLabel = createLabel(contentAssistGroup, HTMLUIMessages.Auto_Activation_Delay);
 		fAutoProposeDelay = createTextField(contentAssistGroup);
-		fAutoProposeDelay.addVerifyListener(new VerifyListener() {
+		fAutoProposeDelay.setTextLimit(4);
+		fAutoProposeDelay.addModifyListener(new ModifyListener() {
 			
-			public void verifyText(VerifyEvent e) {
-					verifyDelay(e);
-				}
+			public void modifyText(ModifyEvent e) {
+				verifyDelay();
+			}
 		});
 		
 		fAutoProposeLabel = createLabel(contentAssistGroup, HTMLUIMessages.Prompt_when_these_characte_UI_);
 		fAutoProposeText = createTextField(contentAssistGroup);
 	}
 	
-	private void verifyDelay(VerifyEvent e) {
-		StringBuffer textToVerify = new StringBuffer();
-		textToVerify.append(fAutoProposeDelay.getText());
-		if (e.start == e.end) {
-		  textToVerify.insert(e.start, e.text);
-		} else {
-		  textToVerify.replace(e.start, e.end, e.text);	
+	private void verifyDelay() {
+		final String text = fAutoProposeDelay.getText();
+		boolean valid = true;
+		try {
+			final int delay = Integer.parseInt(text);
+			if (delay < 0) {
+				valid = false;
+			}
 		}
-		
-		Matcher m = delayPattern.matcher(textToVerify.toString());
-		if (m.matches()) {
-			e.doit = true;
-			if (textToVerify.toString().trim().length() == 0) {
-				setValid(false);
-			}
-			else {
-				setValid(true);
-			}
+		catch (NumberFormatException e) {
+			valid = false;
+		}
+		if (!valid) {
+			if (text.trim().length() > 0)
+				setErrorMessage(NLS.bind(XMLUIMessages.Not_an_integer, text));
+			else
+				setErrorMessage(XMLUIMessages.Missing_integer);
+			setValid(false);
 		}
 		else {
-			e.doit = false;
+			setErrorMessage(null);
+			setValid(true);
 		}
-		
 	}
-	
+
 	/**
 	 * <p>Create the contents for the content assist cycling preference group</p>
 	 * @param parent {@link Composite} parent of the group

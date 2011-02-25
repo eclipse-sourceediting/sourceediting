@@ -11,13 +11,12 @@
 package org.eclipse.wst.xml.ui.internal.preferences;
 
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -52,7 +51,6 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 	private Text fAutoProposeText;
 	private Combo fSuggestionStrategyCombo;
 	private Vector fSuggestionStrategies = null;
-	private final Pattern delayPattern = Pattern.compile("\\d{0,4}"); //$NON-NLS-1$
 	
 	/** configuration block for changing preference having to do with the content assist categories */
 	private CodeAssistCyclingConfigurationBlock fConfigurationBlock;
@@ -142,11 +140,12 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 
 		fAutoProposeDelayLabel = createLabel(contentAssistGroup, XMLUIMessages.Auto_Activation_Delay);
 		fAutoProposeDelay = createTextField(contentAssistGroup);
-		fAutoProposeDelay.addVerifyListener(new VerifyListener() {
+		fAutoProposeDelay.setTextLimit(4);
+		fAutoProposeDelay.addModifyListener(new ModifyListener() {
 			
-			public void verifyText(VerifyEvent e) {
-				verifyDelay(e);
-				}
+			public void modifyText(ModifyEvent e) {
+				verifyDelay();
+			}
 		});
 		
 
@@ -163,28 +162,29 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 		fSuggestionStrategies.add(XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_STRICT);
 	}
 	
-	private void verifyDelay(VerifyEvent e) {
-		StringBuffer textToVerify = new StringBuffer();
-		textToVerify.append(fAutoProposeDelay.getText());
-		if (e.start == e.end) {
-		  textToVerify.insert(e.start, e.text);
-		} else {
-		  textToVerify.replace(e.start, e.end, e.text);	
+	private void verifyDelay() {
+		final String text = fAutoProposeDelay.getText();
+		boolean valid = true;
+		try {
+			final int delay = Integer.parseInt(text);
+			if (delay < 0) {
+				valid = false;
+			}
 		}
-		Matcher m = delayPattern.matcher(textToVerify.toString());
-		if (m.matches()) {
-			e.doit = true;
-			if (textToVerify.toString().trim().length() == 0) {
-				setValid(false);
-			}
-			else {
-				setValid(true);
-			}
+		catch (NumberFormatException e) {
+			valid = false;
+		}
+		if (!valid) {
+			if (text.trim().length() > 0)
+				setErrorMessage(NLS.bind(XMLUIMessages.Not_an_integer, text));
+			else
+				setErrorMessage(XMLUIMessages.Missing_integer);
+			setValid(false);
 		}
 		else {
-			e.doit = false;
+			setErrorMessage(null);
+			setValid(true);
 		}
-		
 	}
 	
 	/**
