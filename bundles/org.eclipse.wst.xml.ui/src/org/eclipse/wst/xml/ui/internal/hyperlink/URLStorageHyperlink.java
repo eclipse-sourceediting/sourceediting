@@ -1,5 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.hyperlink;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -8,7 +19,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -152,7 +165,46 @@ class URLStorageHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		return NLS.bind(XMLUIMessages.Open, fURL.toString());
+		String path = fURL.toString();
+		if (path.length() > 60) {
+			path = path.substring(0, 25) + "..." + path.substring(path.length() - 25, path.length());
+		}
+		final String editorLabel = getEditorLabel();
+		if (editorLabel != null)
+			return NLS.bind(XMLUIMessages.Open_With, path, editorLabel);
+		return NLS.bind(XMLUIMessages.Open, path);
+	}
+
+	protected String getEditorLabel() {
+		IEditorDescriptor descriptor = getEditorDescriptor();
+		return descriptor != null ? descriptor.getLabel() : null;
+	}
+
+	private IEditorDescriptor getEditorDescriptor() {
+		final URLStorage storage = new URLStorage(fURL);
+		final String path = fURL.getPath();
+		String name = null;
+		if (path != null)
+			name = new Path(fURL.getPath()).lastSegment();
+
+		IContentType contentType= null;
+		try {
+			InputStream is = null;
+			try {
+				is = storage.getContents();
+				contentType= Platform.getContentTypeManager().findContentTypeFor(is, name);
+			} finally {
+				if (is != null) {
+					is.close();
+				}
+			}
+		} catch (CoreException ex) {
+			// continue without content type
+		} catch (IOException ex) {
+			// continue without content type
+		}
+
+		return PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(name, contentType);
 	}
 
 	/*
@@ -163,9 +215,8 @@ class URLStorageHyperlink implements IHyperlink {
 	public void open() {
 		if (fURL != null) {
 			IEditorInput input = new StorageEditorInput(new URLStorage(fURL));
-			IEditorDescriptor descriptor;
 			try {
-				descriptor = IDE.getEditorDescriptor(input.getName());
+				final IEditorDescriptor descriptor = getEditorDescriptor();
 				if (descriptor != null) {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					IDE.openEditor(page, input, descriptor.getId(), true);

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2011 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -320,6 +320,7 @@ public class XMLUIMessages extends NLS {
 	public static String Use_XInclude;
     public static String Honour_all_schema_locations;   
 	public static String Open;
+	public static String Open_With;
 	public static String _UI_BUTTON_SORT;
 	public static String MarkupValidation_files_label;
 	public static String MarkupValidation_files;

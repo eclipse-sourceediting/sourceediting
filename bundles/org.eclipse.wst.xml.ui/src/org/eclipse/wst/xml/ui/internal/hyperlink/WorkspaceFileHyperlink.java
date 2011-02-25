@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,11 @@
 package org.eclipse.wst.xml.ui.internal.hyperlink;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -71,7 +73,22 @@ class WorkspaceFileHyperlink implements IHyperlink {
 		if (path.length() > 60) {
 			path = path.substring(0, 25) + "..." + path.substring(path.length() - 25, path.length());
 		}
+		String editorLabel = null;
+		try {
+			editorLabel = getEditorLabel();
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		if (editorLabel != null) {
+			return NLS.bind(XMLUIMessages.Open_With, path, editorLabel);
+		}
 		return NLS.bind(XMLUIMessages.Open, path);
+	}
+
+	private String getEditorLabel() throws CoreException {
+		final IEditorDescriptor defaultEditor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(fFile.getName(), fFile.getContentDescription().getContentType());
+		return defaultEditor != null ? defaultEditor.getLabel() : null;
 	}
 
 	public void open() {

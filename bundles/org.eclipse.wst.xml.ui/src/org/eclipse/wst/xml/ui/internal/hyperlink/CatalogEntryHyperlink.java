@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,6 +59,9 @@ class CatalogEntryHyperlink implements IHyperlink {
 				if (fEntry.getURI().startsWith("jar:file:"))
 					return new URLStorageHyperlink(fHyperlinkRegion, new URL(fEntry.getURI())) {
 						public String getHyperlinkText() {
+							final String editorLabel = getEditorLabel();
+							if (editorLabel != null)
+								return NLS.bind(XMLUIMessages.Open_With, fEntry.getKey(), editorLabel);
 							return NLS.bind(XMLUIMessages.Open, fEntry.getKey());
 						}
 					};
