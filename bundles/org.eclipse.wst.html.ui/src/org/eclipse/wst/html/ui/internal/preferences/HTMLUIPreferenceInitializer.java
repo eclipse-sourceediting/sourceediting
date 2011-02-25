@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,7 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		store.setDefault(HTMLUIPreferenceNames.AUTO_PROPOSE, true);
 		store.setDefault(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<=");//$NON-NLS-1$
-
+		store.setDefault(HTMLUIPreferenceNames.AUTO_PROPOSE_DELAY, 500);
 		// HTML Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
 		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,9 @@ public class JSPStructuredContentAssistProcessor extends StructuredContentAssist
 	/** property key for determining what the auto activation characters are */
 	private String fAutoActivationCharactersPropertyKey;
 	
+	/** property key for determining what the auto activation delay is*/
+	private String fAutoActivationDelayKey;
+	
 	/** the context information validator for this processor */
 	private IContextInformationValidator fContextInformationValidator;
 	
@@ -63,9 +66,11 @@ public class JSPStructuredContentAssistProcessor extends StructuredContentAssist
 			fAutoActivationEnabledPropertyKey = HTMLUIPreferenceNames.AUTO_PROPOSE;
 			fAutoActivationCharactersPropertyKey = HTMLUIPreferenceNames.AUTO_PROPOSE_CODE;
 		}
+		fAutoActivationDelayKey = HTMLUIPreferenceNames.AUTO_PROPOSE_DELAY;
 		
 		//get the current user preference
 		getAutoActivationCharacterPreferences();
+		updateAutoActivationDelay();
 	}
 	
 	/**
@@ -92,12 +97,25 @@ public class JSPStructuredContentAssistProcessor extends StructuredContentAssist
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 		if(property.equals(fAutoActivationEnabledPropertyKey) ||
-				property.equals(fAutoActivationCharactersPropertyKey)) {
-			
+				property.equals(fAutoActivationCharactersPropertyKey)) {			
 			getAutoActivationCharacterPreferences();
+		}else if (property.equals(fAutoActivationDelayKey)) {
+			updateAutoActivationDelay();
 		}
 	}
 	
+	/**
+	 * <p>Sets the auto activation delay in Content Assist</p>
+	 */
+	private void updateAutoActivationDelay() {
+		IPreferenceStore store = getPreferenceStore();
+		boolean doAuto = store.getBoolean(fAutoActivationEnabledPropertyKey);
+		if (doAuto) {
+			setAutoActivationDelay(store.getInt(fAutoActivationDelayKey));
+		} 
+		
+	}
+
 	/**
 	 * <p>Gets the auto activation character user preferences for Java and stores them for later use</p>
 	 */

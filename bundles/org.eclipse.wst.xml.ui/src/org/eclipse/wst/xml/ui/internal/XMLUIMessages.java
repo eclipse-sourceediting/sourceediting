@@ -226,6 +226,7 @@ public class XMLUIMessages extends NLS {
 	public static String XMLContentAssistPreferencePage_Auto_Activation_UI_;
 	public static String XMLContentAssistPreferencePage_Cycling_UI_;
 	public static String Automatically_make_suggest_UI_;
+	public static String Auto_Activation_Delay;
 	public static String Prompt_when_these_characte_UI_;
 	public static String Formatting_UI_;
 	public static String Line_width__UI_;

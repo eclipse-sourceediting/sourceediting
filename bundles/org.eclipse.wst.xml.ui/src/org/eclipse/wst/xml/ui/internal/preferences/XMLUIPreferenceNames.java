@@ -18,6 +18,15 @@ public class XMLUIPreferenceNames {
 
 	public final static String SUGGESTION_STRATEGY_VALUE_LAX = "Lax"; //$NON-NLS-1$
 	public final static String SUGGESTION_STRATEGY_VALUE_STRICT = "Strict"; //$NON-NLS-1$
+	
+	/**
+	 * A named preference that controls time before code assist gets auto activated.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String AUTO_PROPOSE_DELAY = "autoProposeDelay";//$NON-NLS-1$
+
 	/**
 	 * A named preference that controls if code assist gets auto activated.
 	 * <p>

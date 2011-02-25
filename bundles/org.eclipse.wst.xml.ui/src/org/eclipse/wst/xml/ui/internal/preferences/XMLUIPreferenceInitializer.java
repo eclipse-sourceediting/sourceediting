@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE, true);
 		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<=:"); //$NON-NLS-1$
+		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE_DELAY, 500);
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=140946
 		store.setDefault(XMLUIPreferenceNames.SUGGESTION_STRATEGY, XMLUIPreferenceNames.SUGGESTION_STRATEGY_VALUE_STRICT);
 		store.setDefault(XMLUIPreferenceNames.USE_INFERRED_GRAMMAR, true);

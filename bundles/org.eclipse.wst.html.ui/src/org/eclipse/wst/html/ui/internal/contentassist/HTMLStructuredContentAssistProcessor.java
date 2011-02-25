@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentassist;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
@@ -44,6 +45,7 @@ public class HTMLStructuredContentAssistProcessor extends StructuredContentAssis
 		
 		super(assistant, partitionTypeID, viewer, HTMLUIPlugin.getDefault().getPreferenceStore());
 		getAutoActivationCharacterPreferences();
+		updateAutoActivationDelay();
 	}
 	
 	/**
@@ -72,6 +74,20 @@ public class HTMLStructuredContentAssistProcessor extends StructuredContentAssis
 				event.getProperty().equals(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE)) {
 			getAutoActivationCharacterPreferences();
 		}
+		else if (event.getProperty().equals(HTMLUIPreferenceNames.AUTO_PROPOSE_DELAY)) {
+			updateAutoActivationDelay();
+		}
+	}
+	
+	/**
+	 * <p>Sets the auto activation delay in Content Assist</p>
+	 */
+	private void updateAutoActivationDelay() {
+		IPreferenceStore store = getPreferenceStore();
+		boolean doAuto = store.getBoolean(HTMLUIPreferenceNames.AUTO_PROPOSE);
+		if (doAuto) {
+			setAutoActivationDelay(store.getInt(HTMLUIPreferenceNames.AUTO_PROPOSE_DELAY));
+		} 
 	}
 	
 	/**
