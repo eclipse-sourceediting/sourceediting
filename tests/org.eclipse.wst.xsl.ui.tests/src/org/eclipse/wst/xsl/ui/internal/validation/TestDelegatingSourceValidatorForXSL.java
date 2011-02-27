@@ -100,6 +100,16 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 		sourceValidator.validate(context, reporter);
 		assertFalse("Errors reported with XSLT 2.0 with Functions: " + fileName + ".", reporter.isMessageReported());
 	}
+	
+	@Test
+	public void testXSL20Transform() throws Exception {
+		String fileName = "XSLT20Transform.xsl";
+		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName);
+		TestReporter reporter = new TestReporter();
+		sourceValidator.validate(context, reporter);
+		assertFalse("Errors reported with XSLT 2.0 with Transform statement: " + fileName + ".", reporter.isMessageReported());
+	}
+	
 
 	private class TestReporter implements IReporter {
 		protected boolean messageReported = false;
