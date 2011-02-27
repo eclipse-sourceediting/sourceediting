@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 <template id="org.eclipse.wst.xslt.templates.xsl_basic"
-       name="Basic stylesheet"
+       name="Basic stylesheet - XSLT 1.0"
        context="xsl_new"
        autoinsert="true"
        deleted="false"
@@ -26,7 +26,7 @@
 </xsl:stylesheet>]]></template>
 
 <template id="org.eclipse.wst.xslt.templates.xsl_copy"
-     name="Copy stylesheet"
+     name="Copy stylesheet - XSLT 1.0"
      context="xsl_new"
      autoinsert="true"
      deleted="false"
@@ -45,7 +45,7 @@
 	</xsl:template>	
 </xsl:stylesheet>]]></template>
 <template id="org.eclipse.wst.xslt.templates.xsl_copy.xslt2"
-     name="XSLT 2.0 Copy stylesheet"
+     name="Copy stylesheet - XSLT 2.0"
      context="xsl_new"
      autoinsert="true"
      deleted="false"
