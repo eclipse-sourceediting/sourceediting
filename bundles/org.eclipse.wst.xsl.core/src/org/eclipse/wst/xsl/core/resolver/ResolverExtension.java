@@ -47,7 +47,7 @@ public class ResolverExtension implements URIResolverExtension
 {
 	private static final Double DEFAULT_XSLT_VERSION = 1.0;
 	private static final String XSLT_STYLESHEET = "stylesheet"; //$NON-NLS-1$
-	private static final String XSLT_TEMPLATE = "template"; //$NON-NLS-1$
+	private static final String XSLT_TRANSFORM = "transform"; //$NON-NLS-1$
 	private static final String XSLT_VERSION = "version"; //$NON-NLS-1$
 
 	private boolean initialised;
@@ -174,7 +174,7 @@ public class ResolverExtension implements URIResolverExtension
 					if (doc != null && doc.getDocumentElement() != null)
 					{
 						Element documentElement = doc.getDocumentElement();
-						if (XSLT_STYLESHEET.equals(documentElement.getLocalName()) || XSLT_TEMPLATE.equals(documentElement.getLocalName()))
+						if (XSLT_STYLESHEET.equals(documentElement.getLocalName()) || XSLT_TRANSFORM.equals(documentElement.getLocalName()))
 						{
 							return documentElement.getAttribute(XSLT_VERSION);
 						}

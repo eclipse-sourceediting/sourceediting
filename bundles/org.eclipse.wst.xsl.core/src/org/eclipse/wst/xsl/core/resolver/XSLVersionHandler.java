@@ -30,7 +30,7 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 
 	private static final String XSLT_STYLESHEET = "stylesheet"; //$NON-NLS-1$
 
-	private static final String XSLT_TEMPLATE = "template"; //$NON-NLS-1$
+	private static final String XSLT_TRANSFORM = "transform"; //$NON-NLS-1$
 
 	private static final String XSLT_VERSION = "version"; //$NON-NLS-1$
 
@@ -192,7 +192,7 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 	 */
 	@Override
 	public final void startElement(final String uri, final String elementName, final String qualifiedName, final Attributes attributes) throws SAXException {
-		if (uri.equals(XSLCore.XSL_NAMESPACE_URI) && (XSLT_TEMPLATE.equals(elementName) || XSLT_STYLESHEET.equals(elementName))) {
+		if (uri.equals(XSLCore.XSL_NAMESPACE_URI) && (XSLT_TRANSFORM.equals(elementName) || XSLT_STYLESHEET.equals(elementName))) {
 			versionAttribute = attributes.getValue(XSLT_VERSION);
 		} else {
 			versionAttribute = ""; //$NON-NLS-1$
