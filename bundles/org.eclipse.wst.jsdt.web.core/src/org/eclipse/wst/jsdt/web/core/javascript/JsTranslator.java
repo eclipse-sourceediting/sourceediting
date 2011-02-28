@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -272,19 +272,21 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 * Reinitialize some fields
 	 */
 	protected void reset() {
-		synchronized(fLock) {
-			scriptOffset = 0;
-			// reset progress monitor
-			fScriptText = new StringBuffer();
-			fCurrentNode = fStructuredDocument.getFirstStructuredDocumentRegion();
-			rawImports.clear();
-			importLocationsInHtml.clear();
-			scriptLocationInHtml.clear();
-			missingEndTagRegionStart = -1;
-			cancelParse = false;
-			fGeneratedRanges.clear();
+		synchronized (finished) {
+			synchronized (fLock) {
+				scriptOffset = 0;
+				// reset progress monitor
+				fScriptText = new StringBuffer();
+				fCurrentNode = fStructuredDocument.getFirstStructuredDocumentRegion();
+				rawImports.clear();
+				importLocationsInHtml.clear();
+				scriptLocationInHtml.clear();
+				missingEndTagRegionStart = -1;
+				cancelParse = false;
+				fGeneratedRanges.clear();
+			}
+			translate();
 		}
-		translate();
 	}
 
 
@@ -757,7 +759,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			return;
 		}
 
-		reset();
+		cancel();
+		schedule();
 	}
 
 	/* (non-Javadoc)
