@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Bug 338494    - prohibiting xpath expressions starting with / or // to be parsed.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -28,4 +29,17 @@ public interface XPathParser {
 	 * @return The parsed XPath.
 	 */
 	public XPath parse(String xpath) throws XPathParserException;
+	
+	/**
+	 * Constructor for the XPath parser interface.
+	 * 
+	 * @param xpath
+	 *            is the input XPath to be parsed.
+	 * @param isRootlessAccess
+	 *            if 'true' then PsychoPath engine can't parse xpath expressions starting with / or //.
+	 * @throws XPathParserException
+	 *             XPath parser exception.
+	 * @return The parsed XPath.
+	 */
+	public XPath parse(String xpath, boolean isRootlessAccess) throws XPathParserException;
 }
