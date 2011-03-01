@@ -49,7 +49,8 @@
  *                                 an user-defined variable.
  *  Mukul Gandhi    - bug 334478   implementation of xs:token data type
  *  Mukul Gandhi    - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
- *                                 ID, IDREF and NMTOKEN.                                
+ *                                 ID, IDREF and NMTOKEN.
+ *  Mukul Gandhi    - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.                                
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -70,6 +71,7 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
@@ -96,6 +98,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 				.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
 
 	}
+
 
 	public void testNamesWhichAreKeywords() throws Exception {
 		// Bug 273719
@@ -2036,6 +2039,113 @@ public class TestBugs extends AbstractPsychoPathTest {
 		rsRes = eval.evaluate(path);
 		result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
+	}
+	
+	public void testBugXX() throws Exception {
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		// set up XPath default namespace in Dynamic Context
+		DynamicContext dc = setupDynamicContext(schema);
+        dc.set_variable(new QName("value"), new XSString("2.5"));
+		addXPathDefaultNamespace("http://www.w3.org/2001/XMLSchema");
+
+		String xpath = "$value castable as double";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, null);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testExprParsingBeginnigWithRootNode_bugXX() throws Exception {
+		// Bug ??
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// test a)
+		String xpath = "/x";
+		XPath path = null;
+		try {
+		    path = compileXPath(dc, xpath, true);
+		    // test fails
+		    assertTrue(false);
+		}
+		catch(XPathParserException ex) {
+			if ("Expression starts with / or //".equals(ex.getMessage())) {
+				// test passes
+				assertTrue(true);
+			}
+		}
+		
+		// test b)
+		xpath = "//x";
+		try {
+		    path = compileXPath(dc, xpath, true);
+		    // test fails
+		    assertTrue(false);
+		}
+		catch(XPathParserException ex) {
+			if ("Expression starts with / or //".equals(ex.getMessage())) {
+				// test passes
+				assertTrue(true);
+			}
+		}
+		
+		// test c)
+		xpath = "/";
+		try {
+		    path = compileXPath(dc, xpath, true);
+		    // test fails
+		    assertTrue(false);
+		}
+		catch(XPathParserException ex) {
+			if ("Expression starts with / or //".equals(ex.getMessage())) {
+				// test passes
+				assertTrue(true);
+			}
+		}
+		
+		// test d)
+		xpath = "x/y[/a]";
+		try {
+		    path = compileXPath(dc, xpath, true);
+		    // test fails
+		    assertTrue(false);
+		}
+		catch(XPathParserException ex) {
+			if ("Expression starts with / or //".equals(ex.getMessage())) {
+				// test passes
+				assertTrue(true);
+			}
+		}
+		
+		// test e)
+		xpath = ".//x";
+		try {
+		    path = compileXPath(dc, xpath, true);
+		    // test passes
+		    assertTrue(true);
+		}
+		catch(XPathParserException ex) {
+		   // test fails
+		   assertTrue(false);
+		}
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {

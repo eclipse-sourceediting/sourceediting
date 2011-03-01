@@ -15,6 +15,7 @@
  *     Jesper S Moller - bug 275610 - Avoid big time and memory overhead for externals
  *     Jesper Steen Moeller - bug 282096 - make test harness handle all string encoding
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
+ *     Mukul Gandhi         - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -277,8 +278,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	   dynamicContext.add_namespace(null, uri);	
 	}
 
-	protected XPath compileXPath(DynamicContext dc, String xpath)
-			throws XPathParserException, StaticError {
+	protected XPath compileXPath(DynamicContext dc, String xpath) throws XPathParserException, StaticError {
 		XPathParser xpp = new JFlexCupParser();
 		XPath path = xpp.parse(xpath);
 
@@ -286,6 +286,21 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		name_check.check(path);
 		return path;
 	}
+	
+	protected XPath compileXPath(DynamicContext dc, String xpath, boolean isRootlessAccess) throws XPathParserException, StaticError {
+       XPathParser xpp = new JFlexCupParser();
+       XPath path = null; 
+       if (isRootlessAccess) {
+          path = xpp.parse(xpath, isRootlessAccess);
+       }
+       else {
+    	   path = xpp.parse(xpath); 
+       }
+       
+       StaticChecker name_check = new StaticNameResolver(dc);
+       name_check.check(path);
+       return path;
+    }
 
 	protected String getExpectedResult(String xqFile) {
 		return getExpectedResult(xqFile, true);
