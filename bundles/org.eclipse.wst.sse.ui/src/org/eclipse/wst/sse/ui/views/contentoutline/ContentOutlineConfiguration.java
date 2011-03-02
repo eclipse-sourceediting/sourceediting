@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,7 @@ import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
  * @since 1.0
  */
 public abstract class ContentOutlineConfiguration {
+	
 	/**
 	 * Add a collapse action to help with navigation.
 	 */
@@ -86,6 +87,7 @@ public abstract class ContentOutlineConfiguration {
 	private IContributionItem[] fMenuContributions = null;
 	private IContributionItem[] fToolbarContributions = null;
 	private final String OUTLINE_LINK_PREF = "outline-link-editor"; //$NON-NLS-1$
+    private static final String OUTLINE_FILTER_PREF = "org.eclipse.wst.sse.ui.OutlinePage"; //$NON-NLS-1$
 	ImageDescriptor SYNCED_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_SYNCED);
 	ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
 
@@ -312,5 +314,25 @@ public abstract class ContentOutlineConfiguration {
 			}
 			fMenuContributions = null;
 		}
+	}
+
+	/**
+	 * Provides the target used when associating filters to the outline
+	 * 
+	 * @return The target id used when associating filters to the outline
+	 */
+	protected String getOutlineFilterTarget() {
+		return OUTLINE_FILTER_PREF ;
+	}
+
+	/**
+	 * Returns the content outline filter processor for this configuration
+	 * 
+	 * @param viewer the {@link TreeViewer} that is associated with the filter
+	 * 
+	 * @return A {@link ContentOutlineFilterProcessor} to filter nodes in the outline
+	 */
+	public ContentOutlineFilterProcessor getOutlineFilterProcessor(TreeViewer viewer){
+		return new ContentOutlineFilterProcessor(getPreferenceStore(), getOutlineFilterTarget(), viewer);
 	}
 }

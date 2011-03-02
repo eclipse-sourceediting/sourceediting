@@ -266,7 +266,8 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 	 * Preference key for Show Attributes
 	 */
 	private final String OUTLINE_SHOW_ATTRIBUTE_PREF = "outline-show-attribute"; //$NON-NLS-1$
-
+	private static final String OUTLINE_FILTER_PREF = "org.eclipse.wst.xml.ui.OutlinePage"; //$NON-NLS-1$
+	 
 	/**
 	 * Create new instance of XMLContentOutlineConfiguration
 	 */
@@ -407,5 +408,9 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 			filteredSelection = new StructuredSelection(filteredNodes);
 		}
 		return filteredSelection;
+	}
+	
+	protected String getOutlineFilterTarget(){
+		return OUTLINE_FILTER_PREF ;
 	}
 }

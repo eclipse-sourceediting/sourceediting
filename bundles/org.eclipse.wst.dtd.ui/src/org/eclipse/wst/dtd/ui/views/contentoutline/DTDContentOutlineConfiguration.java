@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,8 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 	private Map fViewerContributions;
 	private final String OUTLINE_ORDER_PREF = "outline-order"; //$NON-NLS-1$
 	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
-
+	private static final String OUTLINE_FILTER_PREF = "org.eclipse.wst.dtd.ui.OutlinePage"; //$NON-NLS-1$
+	
 	/**
 	 * Default constructor for DTDContentOutlineConfiguration.
 	 */
@@ -278,5 +279,9 @@ public class DTDContentOutlineConfiguration extends ContentOutlineConfiguration 
 			fMenuHelper.removeMenuListenersFor(viewer);
 			fMenuHelper = null;
 		}
+	}
+	
+	protected String getOutlineFilterTarget(){
+		return OUTLINE_FILTER_PREF ;
 	}
 }

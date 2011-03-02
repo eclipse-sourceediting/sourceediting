@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,6 +67,7 @@ import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
+import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineFilterProcessor;
 
 
 public class ConfigurableContentOutlinePage extends ContentOutlinePage implements IAdaptable {
@@ -753,5 +754,9 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		else {
 			mgr.setMessage(image, text);
 		}
+	}
+
+	public ContentOutlineFilterProcessor getOutlineFilterProcessor() {
+		return getConfiguration().getOutlineFilterProcessor(getTreeViewer());
 	}
 }

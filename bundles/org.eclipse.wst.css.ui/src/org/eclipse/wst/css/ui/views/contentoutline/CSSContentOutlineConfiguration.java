@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2011 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -33,6 +33,8 @@ public class CSSContentOutlineConfiguration extends ContentOutlineConfiguration 
 	private IContentProvider fContentProvider = null;
 	private ILabelProvider fLabelProvider = null;
 	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
+	private static final String OUTLINE_FILTER_PREF = "org.eclipse.wst.css.ui.OutlinePage"; //$NON-NLS-1$
+	
 
 	/**
 	 * Create new instance of CSSContentOutlineConfiguration
@@ -117,5 +119,9 @@ public class CSSContentOutlineConfiguration extends ContentOutlineConfiguration 
 			filteredSelection = new StructuredSelection(filteredNodes);
 		}
 		return filteredSelection;
+	}
+	
+	protected String getOutlineFilterTarget(){
+		return OUTLINE_FILTER_PREF ;
 	}
 }

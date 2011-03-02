@@ -23,8 +23,12 @@
 		id="characterPairing"
 		name="%Character_Pairing.name"
 		schema="schema/characterPairing.exsd" ></extension-point>
-
-
+	<extension-point
+	   id="outlineFilters" 
+	   name="%outlineFiltersName" 
+	   schema="schema/outlineFilters.exsd">
+	</extension-point>
+  
 	<!-- Make sure default preference values are set at runtime -->
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
@@ -737,9 +741,28 @@
 					</visibleWhen>
 				</command>
 			</menuContribution>
+	     <!-- content outline  -->
+	     <menuContribution locationURI="menu:org.eclipse.ui.views.ContentOutline?after=additions">
+			<command 
+				commandId="org.eclipse.wst.sse.ui.outline.customFilter" 
+				id="org.eclipse.wst.sse.ui.outline.customFilter"
+				label="%command.outline.customFilter" 
+				icon ="icons/full/elcl16/filter_ps.gif"
+				style="push">
+		        <visibleWhen checkEnabled="false">
+				   <with variable="activeEditor">
+				   		<test property="org.eclipse.wst.sse.ui.outline.isConfigurableOutlinePage" />
+    				</with>
+				</visibleWhen>
+			</command>
+		</menuContribution>
 	</extension>
 	<extension
        point="org.eclipse.ui.commands">
+	    <command
+	          id="org.eclipse.wst.sse.ui.outline.customFilter"
+	          name="%command.outline.customFilter">
+	    </command>
 	    <command
 	          id="org.eclipse.wst.sse.ui.format"
 	          name="%command.format.document.name">
@@ -766,6 +789,12 @@
 				</iterate>
 			</enabledWhen>
 		</handler>
+		
+		<handler
+			class="org.eclipse.wst.sse.ui.internal.handlers.CustomFilterHandler"
+			commandId="org.eclipse.wst.sse.ui.outline.customFilter">
+		</handler>
+		
 	</extension>
 	
 	<extension point="org.eclipse.core.expressions.definitions">
@@ -834,5 +863,15 @@
 		</colorDefinition>
 	</extension>
 	
+	<extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.wst.sse.ui.internal.CustomFilterPropertyTester"
+            id="org.eclipse.wst.sse.ui.internal.handlers.CustomFilterPropertyTester"
+            namespace="org.eclipse.wst.sse.ui.outline"
+            properties="isConfigurableOutlinePage"
+            type="org.eclipse.ui.IEditorPart">
+      </propertyTester>
+   </extension>
 </plugin>
 

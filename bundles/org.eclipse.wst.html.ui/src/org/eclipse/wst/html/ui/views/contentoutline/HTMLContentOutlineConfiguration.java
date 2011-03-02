@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguratio
  * @since 1.0
  */
 public class HTMLContentOutlineConfiguration extends XMLContentOutlineConfiguration {
-
+	private static final String OUTLINE_FILTER_PREF = "org.eclipse.wst.html.ui.OutlinePage"; //$NON-NLS-1$
 	/**
 	 * Create new instance of HTMLContentOutlineConfiguration
 	 */
@@ -40,5 +40,9 @@ public class HTMLContentOutlineConfiguration extends XMLContentOutlineConfigurat
 
 	protected IPreferenceStore getPreferenceStore() {
 		return HTMLUIPlugin.getDefault().getPreferenceStore();
+	}
+	
+	protected String getOutlineFilterTarget(){
+		return OUTLINE_FILTER_PREF ;
 	}
 }
