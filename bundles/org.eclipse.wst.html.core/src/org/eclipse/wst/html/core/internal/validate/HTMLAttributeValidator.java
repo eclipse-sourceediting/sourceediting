@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	private static final char SINGLE_QUOTE = '\'';
 	private static final char DOUBLE_QUOTE = '\"';
 
-	private static final String ATTR_NAME_DATA = "data-";
+	private static final String ATTR_NAME_DATA = "data-"; //$NON-NLS-1$
 
 	// D210422
 	/**
@@ -124,12 +124,8 @@ public class HTMLAttributeValidator extends PrimeValidator {
 					continue; // skip futher validation and begin next loop.
 			}
 
-			String attrName = a.getName().toLowerCase(Locale.US);
-			if (attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length())
-				continue;
-
 			CMAttributeDeclaration adec = (CMAttributeDeclaration) declarations.getNamedItem(a.getName());
-			
+			final String attrName = a.getName().toLowerCase(Locale.US);
 			/* Check the modelquery if nothing is declared by the element declaration */
 			if (adec == null) {
 				if (modelQueryNodes == null)
@@ -146,6 +142,8 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			}
 			
 			if (adec == null) {
+				if (attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length())
+					continue;
 				// No attr declaration was found. That is, the attr name is
 				// undefined.
 				// but not regard it as undefined name if it includes nested
