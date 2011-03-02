@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,9 +19,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.css.core.internal.IProductConstants;
 import org.eclipse.wst.css.core.internal.metamodelimpl.RegistryReader;
 
 public class CSSProfileRegistry {
+
+	CSSProfile fDefault = null;
+
 	public synchronized static CSSProfileRegistry getInstance() {
 		if (fInstance == null) {
 			fInstance = new CSSProfileRegistry();
@@ -53,14 +58,31 @@ public class CSSProfileRegistry {
 	}
 
 	public CSSProfile getDefaultProfile() {
+		if (fDefault != null) {
+			return fDefault;
+		}
+
+		String id = Platform.getProduct().getProperty(IProductConstants.DEFAULT_PROFILE);
+
 		Iterator i = getProfiles();
+		CSSProfile firstDefault = null;
 		while (i.hasNext()) {
 			CSSProfile profile = (CSSProfile) i.next();
 			if (profile.isDefault()) {
+				if (id == null) { // Original scenario
+					fDefault = profile;
+					return profile;
+				}
+				else if (firstDefault == null) { // extension point used, flag the first default in case the id doesn't end up matching
+					firstDefault = profile;
+				}
+			}
+			if (id != null && id.equals(profile.getProfileID())) { // Found the profile for the extension
+				fDefault = profile;
 				return profile;
 			}
 		}
-		return null;
+		return firstDefault;
 	}
 
 	/**
