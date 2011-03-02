@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,6 +97,13 @@ public class EncodingGuesser {
 		return encoding;
 	}
 
+	public static boolean canGuess() {
+		// Currently, only Japanese is supported.
+		String system_ctype = java.util.Locale.getDefault().getLanguage();
+		String jp_ctype = java.util.Locale.JAPANESE.getLanguage();
+		return system_ctype.compareTo(jp_ctype) == 0;
+	}
+
 	/**
 	 * Return guessed Java Encoding name target: bytes to be inspected length:
 	 * length of target
@@ -104,10 +111,8 @@ public class EncodingGuesser {
 	public static String guessEncoding(byte[] target, int length) {
 		int code = UNKNOWN;
 
-		// Currently, only Japanese is supported.
-		String system_ctype = java.util.Locale.getDefault().getLanguage();
-		String jp_ctype = java.util.Locale.JAPANESE.getLanguage();
-		if (system_ctype.compareTo(jp_ctype) == 0) {
+		
+		if (canGuess()) {
 			// Ok, I'm under ja_JP.
 			code = ASCII;
 			int pos = 0;

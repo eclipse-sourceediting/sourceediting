@@ -84,26 +84,28 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 		boolean noHeuristic = false;
 		String heuristicEncoding = null;
 		try {
-			fReader.reset();
-			fReader.mark(CodedIO.MAX_MARK_SIZE);
-			byte[] bytes = new byte[CodedIO.MAX_MARK_SIZE];
-			int nRead = 0;
-			for (int i = 0; i < bytes.length; i++) {
-				int oneByte = fReader.read();
-				nRead++;
-				if (oneByte == -1) {
-					break;
+			if (EncodingGuesser.canGuess()) {
+				fReader.reset();
+				fReader.mark(CodedIO.MAX_MARK_SIZE);
+				byte[] bytes = new byte[CodedIO.MAX_MARK_SIZE];
+				int nRead = 0;
+				for (int i = 0; i < bytes.length; i++) {
+					int oneByte = fReader.read();
+					nRead++;
+					if (oneByte == -1) {
+						break;
+					}
+					if (oneByte <= 0xFF) {
+						bytes[i] = (byte) oneByte;
+					}
+					else {
+						noHeuristic = true;
+						break;
+					}
 				}
-				if (oneByte <= 0xFF) {
-					bytes[i] = (byte) oneByte;
+				if (!noHeuristic) {
+					heuristicEncoding = EncodingGuesser.guessEncoding(bytes, nRead);
 				}
-				else {
-					noHeuristic = true;
-					break;
-				}
-			}
-			if (!noHeuristic) {
-				heuristicEncoding = EncodingGuesser.guessEncoding(bytes, nRead);
 			}
 		}
 		catch (IOException e) {
