@@ -66,6 +66,7 @@ public interface IProductConstants {
 	public static final String DEFAULT_RUNTIME_1 = "defaultRuntime1"; //$NON-NLS-1$
 	public static final String DEFAULT_RUNTIME_2 = "defaultRuntime2"; //$NON-NLS-1$
 	public static final String DEFAULT_RUNTIME_3 = "defaultRuntime3"; //$NON-NLS-1$
+	public static final String DEFAULT_RUNTIME_4 = "defaultRuntime4"; //$NON-NLS-1$
 	public static final String VIEWER_SYNC_FOR_WEBSERVICES = "viewerSyncForWebservices"; //$NON-NLS-1$
 	
 }

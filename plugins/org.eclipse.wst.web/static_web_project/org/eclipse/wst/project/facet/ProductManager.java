@@ -46,7 +46,8 @@ public class ProductManager {
 	private static final String[] DEFAULT_RUNTIME_KEYS = 
 							new String[]{IProductConstants.DEFAULT_RUNTIME_1,
 										IProductConstants.DEFAULT_RUNTIME_2,
-										IProductConstants.DEFAULT_RUNTIME_3};
+										IProductConstants.DEFAULT_RUNTIME_3,
+										IProductConstants.DEFAULT_RUNTIME_4};
 	
 	/**
 	 * Return the value for the associated key from the Platform Product registry or return the
