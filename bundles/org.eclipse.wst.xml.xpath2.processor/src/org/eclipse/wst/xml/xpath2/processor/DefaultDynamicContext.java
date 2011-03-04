@@ -20,19 +20,32 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import org.apache.xerces.xs.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.DefaultStaticContext;
-import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
-
-import org.w3c.dom.*;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
+
+import org.apache.xerces.xs.XSModel;
+import org.eclipse.wst.xml.xpath2.processor.internal.DefaultStaticContext;
+import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.Function;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeModel;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 /**
  * The default implementation of a Dynamic Context.
@@ -59,13 +72,25 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 *            Document [root] node of XML source.
 	 */
 	public DefaultDynamicContext(XSModel schema, Document doc) {
+		this(new XercesTypeModel(schema));
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param schema
+	 *            Schema information of document. May be null
+	 * @param doc
+	 *            Document [root] node of XML source.
+	 * @since 2.0
+	 */
+	public DefaultDynamicContext(TypeModel schema) {
 		super(schema);
 
 		_focus = null;
 		_tz = new XSDayTimeDuration(0, 5, 0, 0, true);
 		_loaded_documents = new HashMap();
 	}
-
 	/**
 	 * Reads the day from a TimeDuration type
 	 * 
@@ -138,6 +163,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * Retrieve the variable name
 	 * 
 	 * @return an AnyType result from get_var(name) or return NULL
+	 * @since 2.0
 	 */
 	public Object get_variable(QName name) {
 		// XXX: built-in variables
@@ -195,7 +221,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		if (doc == null)
 			return null;
 
-		return ResultSequenceFactory.create_new(new DocType(doc));
+		return ResultSequenceFactory.create_new(new DocType(doc, getTypeModel(doc)));
 	}
 	/**
 	 * @since 1.1
@@ -250,6 +276,9 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	
 	/*
 	 * Set a XPath2 sequence into a variable.
+	 */
+	/**
+	 * @since 2.0
 	 */
 	public void set_variable(QName var, ResultSequence val) {
 		super.set_variable(var, val);
@@ -307,4 +336,11 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	  return _focus.position();	
 	}
 	
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	public TypeModel getTypeModel(Node node) {
+		return super.getTypeModel(node);
+	}
 }

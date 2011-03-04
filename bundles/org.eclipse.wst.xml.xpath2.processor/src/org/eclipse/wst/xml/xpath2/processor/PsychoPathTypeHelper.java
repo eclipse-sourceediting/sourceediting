@@ -13,12 +13,15 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import org.apache.xerces.xs.XSSimpleTypeDefinition;
-import org.apache.xerces.xs.XSTypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 
-/*
+
+/**
  * An PsychoPath Engine helper class providing useful module implementations for commonly 
  * performed "XML schema" evaluation tasks.  
+ *
+ * @since 2.0
  */
 public class PsychoPathTypeHelper {
 	
@@ -31,7 +34,7 @@ public class PsychoPathTypeHelper {
 	 * Get Xerces "schema type" short code, given a type definition instance object. PsychoPath engine uses few custom 
 	 * type 'short codes', to support XML Schema 1.1.
 	 */
-	public static short getXSDTypeShortCode(XSTypeDefinition typeDef) {
+	public static short getXSDTypeShortCode(TypeDefinition typeDef) {
 		
 		// dummy type "short code" initializer
 		short typeCode = -100;
@@ -43,7 +46,7 @@ public class PsychoPathTypeHelper {
 			typeCode = YEARMONTHDURATION_DT; 
 		}
 		
-		return (typeCode != -100) ? typeCode : ((XSSimpleTypeDefinition) typeDef).getBuiltInKind();
+		return (typeCode != -100) ? typeCode : ((SimpleTypeDefinition) typeDef).getBuiltInKind();
 		
 	} // getXSDTypeShortCode
 

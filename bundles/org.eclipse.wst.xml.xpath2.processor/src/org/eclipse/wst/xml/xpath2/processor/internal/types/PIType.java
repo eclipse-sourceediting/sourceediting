@@ -14,6 +14,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.w3c.dom.*;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
@@ -32,8 +33,8 @@ public class PIType extends NodeType {
 	 * @param doc_order
 	 *            The document order
 	 */
-	public PIType(ProcessingInstruction v) {
-		super(v);
+	public PIType(ProcessingInstruction v, TypeModel tm) {
+		super(v, tm);
 		_value = v;
 	}
 

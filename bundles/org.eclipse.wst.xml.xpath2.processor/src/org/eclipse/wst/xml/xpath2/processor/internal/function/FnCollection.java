@@ -155,7 +155,7 @@ public class FnCollection extends Function {
 		List<Document> docList = collectionMap.get(uri);
 		for (int i = 0; i < docList.size(); i++) {
 			Document doc = docList.get(i);
-			rs.add(new DocType(doc));
+			rs.add(new DocType(doc, dc.getTypeModel(doc)));
 		}
 		return rs;
 		

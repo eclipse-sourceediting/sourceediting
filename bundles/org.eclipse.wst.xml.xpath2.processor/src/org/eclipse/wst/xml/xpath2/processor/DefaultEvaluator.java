@@ -133,6 +133,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 
 /**
  * Default evaluator interface
@@ -199,7 +200,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// initialize context item with root of document
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		if (doc != null) rs.add(new DocType(doc));
+		if (doc != null) rs.add(new DocType(doc, dc.getTypeModel(doc)));
 
 		_dc.set_focus(new Focus(rs));
 
@@ -1584,9 +1585,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			
 			if (item instanceof NodeType) {
 				NodeType node = ((NodeType)item);
-				if (node.node_value() instanceof ItemPSVI) {
-					if (_dc.derives_from(node , qname)) continue;
-				}
+				if (_dc.derives_from(node , qname)) continue;
 				// fall through => non-match
 			} else {
 				// atomic of some sort
@@ -1602,8 +1601,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		return rs;
 	}
 
-	
-	private ResultSequence kind_test(ResultSequence rs, Class kind) {
+    private ResultSequence kind_test(ResultSequence rs, Class kind) {
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			if (!kind.isInstance(i.next()))
 				i.remove();
@@ -1660,7 +1658,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 					if (elem_count > 1)
 						break;
 
-					elem = new ElementType((Element) child);
+					elem = new ElementType((Element) child, this._dc.getTypeModel(child));
 				}
 			}
 
@@ -1811,7 +1809,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		}
 
 		// check the type
-		XSTypeDefinition et = _dc.attribute_type_definition(name);
+		TypeDefinition et = _dc.attribute_type_definition(name);
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			NodeType node = (NodeType) i.next();
 
@@ -1894,7 +1892,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		}
 
 		// check the type
-		XSTypeDefinition et = _dc.element_type_definition(name);
+		TypeDefinition et = _dc.element_type_definition(name);
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			NodeType node = (NodeType) i.next();
 

@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
@@ -50,7 +51,7 @@ public class SchemaElemTest extends KindTest {
 	}
 
 	@Override
-	public AnyType createTestType(ResultSequence rs) {
+	public AnyType createTestType(ResultSequence rs, StaticContext sc) {
 		// TODO Auto-generated method stub
 		return null;
 	}

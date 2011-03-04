@@ -12,11 +12,14 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
-import org.apache.xerces.xs.ElementPSVI;
-import org.apache.xerces.xs.ItemPSVI;
-import org.apache.xerces.xs.XSTypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.StaticContext;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -103,7 +106,7 @@ public class ElementTest extends AttrElemTest {
 	}
 
 	@Override
-	public AnyType createTestType(ResultSequence rs) {
+	public AnyType createTestType(ResultSequence rs, StaticContext sc) {
 
 		if (name() == null && !wild()) {
 			return new ElementType();
@@ -115,10 +118,10 @@ public class ElementTest extends AttrElemTest {
 			return new ElementType();
 		}
 
-		return createElementType(at);
+		return createElementType(at, sc);
 	}
 
-	private AnyType createElementType(AnyType at) {
+	private AnyType createElementType(AnyType at, StaticContext sc) {
 		anyType = new ElementType();
 		NodeType nodeType = (NodeType) at;
 		Node node = nodeType.node_value();
@@ -138,23 +141,24 @@ public class ElementTest extends AttrElemTest {
 		}
 
 		if (nodeList.getLength() > 0) {
-			anyType = createElementForXSDType(nodeList);
+			anyType = createElementForXSDType(nodeList, sc);
 		}
 		return anyType;
 	}
 
-	private AnyType createElementForXSDType(NodeList nodeList) {
+	private AnyType createElementForXSDType(NodeList nodeList, StaticContext sc) {
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Element element = (Element) nodeList.item(i);
-			if (type() == null || !(element instanceof ItemPSVI)) {
-				anyType = new ElementType(element);
+			
+			TypeModel typeModel = sc.getTypeModel(element);
+			TypeDefinition typedef = typeModel.getType(element);
+			if (type() == null || typedef == null) {
+				anyType = new ElementType(element, typeModel);
 				break;
 			} else {
-				ElementPSVI elempsvi = (ElementPSVI) element;
-				XSTypeDefinition typedef = elempsvi.getTypeDefinition();
 				if (typedef.derivedFrom(type().namespace(), type().local(),
 						getDerviationTypes())) {
-					anyType = new ElementType(element);
+					anyType = new ElementType(element, typeModel);
 					break;
 				}
 			}

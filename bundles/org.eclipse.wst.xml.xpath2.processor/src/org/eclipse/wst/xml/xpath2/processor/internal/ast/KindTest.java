@@ -13,6 +13,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
@@ -21,7 +22,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
  */
 public abstract class KindTest extends NodeTest {
 	
-	abstract public AnyType createTestType(ResultSequence rs);
+	abstract public AnyType createTestType(ResultSequence rs, StaticContext sc);
 	
 	abstract public QName name();
 	

@@ -13,6 +13,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.PIType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -60,7 +61,7 @@ public class PITest extends KindTest {
 	}
 
 	@Override
-	public AnyType createTestType(ResultSequence rs) {
+	public AnyType createTestType(ResultSequence rs, StaticContext sc) {
 		// TODO Auto-generated method stub
 		return null;
 	}

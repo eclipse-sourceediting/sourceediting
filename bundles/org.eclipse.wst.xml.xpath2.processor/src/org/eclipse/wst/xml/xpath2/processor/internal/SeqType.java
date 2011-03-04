@@ -97,32 +97,7 @@ public class SeqType {
 	 */
 	public SeqType(SequenceType st, StaticContext sc, ResultSequence rs) {
 
-		// convert occurrence
-		switch (st.occurrence()) {
-		case SequenceType.EMPTY:
-			occ = OCC_EMPTY;
-			return;
-
-		case SequenceType.NONE:
-			occ = OCC_NONE;
-			break;
-
-		case SequenceType.QUESTION:
-			occ = OCC_QMARK;
-			break;
-
-		case SequenceType.STAR:
-			occ = OCC_STAR;
-			break;
-
-		case SequenceType.PLUS:
-			occ = OCC_PLUS;
-			break;
-
-		default:
-			assert false;
-		}
-
+		occ = mapSequenceTypeOccurrence(st.occurrence());
 		// figure out the item is
 		final ItemType item = st.item_type();
 		KindTest ktest = null;
@@ -155,9 +130,33 @@ public class SeqType {
 		}
 
 		typeClass = ktest.getXDMClassType();
-		anytype = ktest.createTestType(rs);
+		anytype = ktest.createTestType(rs, sc);
 		nodeName = ktest.name();
 		wild = ktest.isWild();
+	}
+
+	public static int mapSequenceTypeOccurrence(int occurrence) {
+		// convert occurrence
+		switch (occurrence) {
+		case SequenceType.EMPTY:
+			return OCC_EMPTY;
+
+		case SequenceType.NONE:
+			return OCC_NONE;
+
+		case SequenceType.QUESTION:
+			return OCC_QMARK;
+
+		case SequenceType.STAR:
+			return OCC_STAR;
+
+		case SequenceType.PLUS:
+			return OCC_PLUS;
+
+		default:
+			assert false;
+			return 0;
+		}
 	}
 
 	/**

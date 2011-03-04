@@ -12,6 +12,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -50,7 +51,7 @@ public class FnIDREF extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return idref(args, dynamic_context());
+		return idref(args, dynamic_context(), dynamic_context());
 	}
 
 	/**
@@ -58,11 +59,12 @@ public class FnIDREF extends Function {
 	 * 
 	 * @param args
 	 *            Result from the expressions evaluation.
+	 * @param dc 
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of fn:insert-before operation.
 	 */
-	public static ResultSequence idref(Collection args, DynamicContext context) throws DynamicError {
+	public static ResultSequence idref(Collection args, DynamicContext context, DynamicContext dc) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
@@ -98,12 +100,12 @@ public class FnIDREF extends Function {
 		}
 		
 		if (hasID(ids, node)) {
-			ElementType element = new ElementType((Element) node);
+			ElementType element = new ElementType((Element) node, dc.getTypeModel(node));
 			rs.add(element);
 		}
 		
-		rs = processAttributes(node, ids, rs);
-		rs = processChildNodes(node, ids, rs);
+		rs = processAttributes(node, ids, rs, dc);
+		rs = processChildNodes(node, ids, rs, dc);
 
 		return rs;
 	}
@@ -117,7 +119,7 @@ public class FnIDREF extends Function {
 		return xsid;
 	}
 	
-	private static ResultSequence processChildNodes(Node node, List ids, ResultSequence rs) {
+	private static ResultSequence processChildNodes(Node node, List ids, ResultSequence rs, DynamicContext dc) {
 		if (!node.hasChildNodes()) {
 			return rs;
 		}
@@ -126,14 +128,14 @@ public class FnIDREF extends Function {
 		for (int nodecnt = 0; nodecnt < nodeList.getLength(); nodecnt++) {
 			Node childNode = nodeList.item(nodecnt);
 			if (childNode.getNodeType() == Node.ELEMENT_NODE && !isDuplicate(childNode, rs)) {
-				ElementType element = new ElementType((Element)childNode);
+				ElementType element = new ElementType((Element)childNode, dc.getTypeModel(node));
 				if (element.isIDREF()) {
 					if (hasID(ids, childNode)) {
 						rs.add(element);
 					}
 				} 
-				rs = processAttributes(childNode, ids, rs);
-				rs = processChildNodes(childNode, ids, rs);
+				rs = processAttributes(childNode, ids, rs, dc);
+				rs = processChildNodes(childNode, ids, rs, dc);
 			}
 		}
 		
@@ -141,7 +143,7 @@ public class FnIDREF extends Function {
 
 	}
 	
-	private static ResultSequence processAttributes(Node node, List idrefs, ResultSequence rs) {
+	private static ResultSequence processAttributes(Node node, List idrefs, ResultSequence rs, DynamicContext dc) {
 		if (!node.hasAttributes()) {
 			return rs;
 		}
@@ -149,11 +151,11 @@ public class FnIDREF extends Function {
 		NamedNodeMap attributeList = node.getAttributes();
 		for (int atsub = 0; atsub < attributeList.getLength(); atsub++) {
 			Attr atNode = (Attr) attributeList.item(atsub);
-			NodeType atType = new AttrType(atNode);
+			NodeType atType = new AttrType(atNode, dc.getTypeModel(atNode));
 			if (atType.isID()) {
 				if (hasID(idrefs, atNode)) {
 					if (!isDuplicate(node, rs)) {
-						ElementType element = new ElementType((Element)node);
+						ElementType element = new ElementType((Element)node, dc.getTypeModel(node));
 						rs.add(element);
 					}
 				}

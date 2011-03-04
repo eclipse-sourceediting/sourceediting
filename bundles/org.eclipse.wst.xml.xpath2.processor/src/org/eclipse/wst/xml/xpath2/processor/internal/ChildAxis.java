@@ -49,13 +49,7 @@ public class ChildAxis extends ForwardAxis {
 		if (nl != null) {
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node dnode = nl.item(i);
-				NodeType n = null;
-				try {
-					n = NodeType.dom_to_xpath(dnode);
-				} catch (NullPointerException ex) {
-					n = NodeType.dom_to_xpath(dnode);
-				}
-
+				NodeType n = NodeType.dom_to_xpath(dnode, dc.getTypeModel(dnode));
 				rs.add(n);
 			}
 		}

@@ -50,7 +50,7 @@ public class ParentAxis extends ReverseAxis {
 
 		// if a parent exists... add it
 		if (parent != null)
-			rs.add(NodeType.dom_to_xpath(parent));
+			rs.add(NodeType.dom_to_xpath(parent, dc.getTypeModel(n)));
 
 		return rs;
 	}

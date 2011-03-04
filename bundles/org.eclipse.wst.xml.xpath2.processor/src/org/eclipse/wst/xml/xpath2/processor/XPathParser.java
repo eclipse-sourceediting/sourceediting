@@ -40,6 +40,7 @@ public interface XPathParser {
 	 * @throws XPathParserException
 	 *             XPath parser exception.
 	 * @return The parsed XPath.
+	 * @since 2.0
 	 */
 	public XPath parse(String xpath, boolean isRootlessAccess) throws XPathParserException;
 }

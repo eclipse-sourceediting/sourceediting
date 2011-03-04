@@ -12,11 +12,14 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
-import org.apache.xerces.xs.AttributePSVI;
-import org.apache.xerces.xs.ItemPSVI;
-import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.StaticContext;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AttrType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
@@ -73,7 +76,7 @@ public class AttributeTest extends AttrElemTest {
 	}
 
 	@Override
-	public AnyType createTestType(ResultSequence rs) {
+	public AnyType createTestType(ResultSequence rs, StaticContext sc) {
 		if (name() == null && !wild()) {
 			return new AttrType();
 		}
@@ -84,10 +87,10 @@ public class AttributeTest extends AttrElemTest {
 			return new AttrType();
 		}
 
-		return createAttrType(at);
+		return createAttrType(at, sc);
 	}
 
-	private AnyType createAttrType(AnyType at) {
+	private AnyType createAttrType(AnyType at, StaticContext sc) {
 		anyType = new AttrType();
 		NodeType nodeType = (NodeType) at;
 		Node node = nodeType.node_value();
@@ -99,31 +102,31 @@ public class AttributeTest extends AttrElemTest {
 
 		if (wild()) {
 			if (type() != null) {
-				anyType = createAttrForXSDType(node);
+				anyType = createAttrForXSDType(node, sc);
 			}
 		} else if (nodeName.equals(name().local())) {
 			if (type() != null) {
-				anyType = createAttrForXSDType(node);
+				anyType = createAttrForXSDType(node, sc);
 			} else {
-				anyType = new AttrType((Attr) node);
+				anyType = new AttrType((Attr) node, sc.getTypeModel(node));
 			}
 		}
 		return anyType;
 	}
 
-	private AnyType createAttrForXSDType(Node node) {
+	private AnyType createAttrForXSDType(Node node, StaticContext sc) {
 		Attr attr = (Attr) node;
-		if (!(attr instanceof ItemPSVI)) {
-			anyType = new AttrType(attr);
-		} else {
-			AttributePSVI elempsvi = (AttributePSVI) attr;
-			XSTypeDefinition typedef = elempsvi.getTypeDefinition();
-			if (typedef != null) {
-				if (typedef.derivedFrom(type().namespace(), type().local(),
-						getDerviationTypes())) {
-					anyType = new AttrType(attr);
-				}
+		
+		TypeModel typeModel = sc.getTypeModel(attr);
+		TypeDefinition typedef = typeModel.getType(attr);
+
+		if (typedef != null) {
+			if (typedef.derivedFrom(type().namespace(), type().local(),
+					getDerviationTypes())) {
+				anyType = new AttrType(attr, sc.getTypeModel(node));
 			}
+		} else {
+			anyType = new AttrType(attr, sc.getTypeModel(node));
 		}
 		return anyType;
 	}

@@ -16,6 +16,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -54,6 +55,7 @@ public class FsPlus extends Function {
 	 * 
 	 * @param args
 	 *            input arguments.
+	 * @param sc 
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of conversion.
@@ -123,6 +125,7 @@ public class FsPlus extends Function {
 	 * 
 	 * @param args
 	 *            input arguments.
+	 * @param sc 
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of the operation.
@@ -169,6 +172,7 @@ public class FsPlus extends Function {
 	 *            type of arguments.
 	 * @param mname
 	 *            Method name for template simulation.
+	 * @param sc 
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of operation.

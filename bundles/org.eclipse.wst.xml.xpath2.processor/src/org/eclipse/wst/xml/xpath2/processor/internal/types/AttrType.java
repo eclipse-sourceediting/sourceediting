@@ -21,8 +21,10 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
-import org.apache.xerces.dom.PSVIAttrNSImpl;
-import org.apache.xerces.xs.XSTypeDefinition;
+import java.util.List;
+
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.w3c.dom.Attr;
@@ -33,7 +35,7 @@ import org.w3c.dom.TypeInfo;
  */
 public class AttrType extends NodeType {
 	private static final String ATTRIBUTE = "attribute";
-	private Attr _value;
+	Attr _value;
 
 	// constructor only usefull for string_type()
 	// XXX needs to be fixed in future
@@ -41,7 +43,7 @@ public class AttrType extends NodeType {
 	 * Initialises to null
 	 */
 	public AttrType() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
@@ -50,8 +52,8 @@ public class AttrType extends NodeType {
 	 * @param v
 	 *            The attribute being represented
 	 */
-	public AttrType(Attr v) {
-		super(v);
+	public AttrType(Attr v, TypeModel tm) {
+		super(v, tm);
 		_value = v;
 	}
 
@@ -60,6 +62,7 @@ public class AttrType extends NodeType {
 	 * 
 	 * @return "attribute" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return ATTRIBUTE;
 	}
@@ -69,34 +72,29 @@ public class AttrType extends NodeType {
 	 * 
 	 * @return String representation of the attribute being stored
 	 */
+	@Override
 	public String string_value() {
 		return _value.getValue();
 	}
 
 	/**
-	 * Creates a new ResultSequence consisting of the typed value of an
-	 * attribute node.
+	 * Creates a new ResultSequence consisting of the attribute being stored
 	 * 
-	 * @return New ResultSequence consisting of the typed-value sequence.
+	 * @return New ResultSequence consisting of the attribute being stored
 	 */
+	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if (!(_value instanceof PSVIAttrNSImpl)) {
-			rs.add(new XSUntypedAtomic(string_value()));
+		TypeDefinition typeDef = getType();
+
+		if (typeDef != null) {
+			List<Short> types = typeDef.getSimpleTypes(_value);
+ 		    rs = getXDMTypedValue(typeDef, types);
 		}
 		else {
-			PSVIAttrNSImpl typeInfo = (PSVIAttrNSImpl) _value;
-			
-			XSTypeDefinition typeDef = typeInfo.getTypeDefinition();		   
-			if (typeDef != null) {
-			   rs = getXDMTypedValue(typeDef, typeInfo.getItemValueTypes());
-			}
-			else {
-			   rs.add(new XSUntypedAtomic(string_value()));  
-			}
+		   rs.add(new XSUntypedAtomic(string_value()));  
 		}
-
 		return rs;
 	}
 
@@ -105,6 +103,7 @@ public class AttrType extends NodeType {
 	 * 
 	 * @return Name of the node
 	 */
+	@Override
 	public QName node_name() {
 		QName name = new QName(_value.getPrefix(), _value.getLocalName(),
 				_value.getNamespaceURI());
@@ -112,6 +111,7 @@ public class AttrType extends NodeType {
 		return name;
 	}
 
+	@Override
 	/**
 	 * Checks if the current node is of type ID
 	 * @since 1.1;
@@ -124,6 +124,7 @@ public class AttrType extends NodeType {
 	 * 
 	 * @since 1.1
 	 */
+	@Override
 	public boolean isIDREF() {
 		return isAttrType(SCHEMA_TYPE_IDREF);
 	}

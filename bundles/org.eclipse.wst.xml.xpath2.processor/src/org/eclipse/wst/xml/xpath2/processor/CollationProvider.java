@@ -16,6 +16,8 @@ import java.util.Comparator;
 /**
  * Service provider interface for looking up collations from within the dynamic context.
  * @since 1.1
+ * 
+ * @deprecated Use org.eclipse.wst.xml.xpath2.api.CollationProvider instead
  */
 public interface CollationProvider {
 	/**

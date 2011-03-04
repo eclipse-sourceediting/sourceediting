@@ -15,13 +15,20 @@ package org.eclipse.wst.xml.xpath2.processor;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.xerces.xs.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 /**
  * interface to static context
+ * 
+ * @deprecated See <tt>org.eclipse.wst.xml.xpath2.api.StaticContext</tt> instead
  */
 public interface StaticContext {
 
@@ -67,15 +74,16 @@ public interface StaticContext {
 	 * @param attr
 	 *            is the qname variable
 	 * @return attributes's type definition
+	 * @since 2.0
 	 */
-	public XSTypeDefinition attribute_type_definition(QName attr);
+	public TypeDefinition attribute_type_definition(QName attr);
 
 	/**
 	 * @param elem
 	 *            is the elem of the qname
 	 * @return element's type definition
 	 */
-	public XSTypeDefinition element_type_definition(QName elem);
+	public TypeDefinition element_type_definition(QName elem);
 
 	/**
 	 * is the attribute declared?
@@ -188,8 +196,9 @@ public interface StaticContext {
 	 * @param et
 	 *            is the XSTypeDefinition of the node
 	 * @return boolean
+	 * @since 2.0
 	 */
-	public boolean derives_from(NodeType at, XSTypeDefinition et);
+	public boolean derives_from(NodeType at, TypeDefinition et);
 
 	/**
 	 * add namespace
@@ -259,5 +268,12 @@ public interface StaticContext {
 	 * @since 1.1
 	 */
 	public void set_collections(Map<String, List<Document>> collections);
+
+	/**
+	 * Gets the type provider in use for the specified DOM node.
+	 * 
+	 * @since 2.0
+	 */
+	public TypeModel getTypeModel(Node element);
 	
 }

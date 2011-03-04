@@ -22,7 +22,8 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.dom.PSVIElementNSImpl;
-import org.apache.xerces.xs.XSTypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.w3c.dom.Element;
@@ -37,6 +38,10 @@ import org.w3c.dom.TypeInfo;
 public class ElementType extends NodeType {
 	private static final String ELEMENT = "element";
 
+	private static final String SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
+	private static final String NIL_ATTRIBUTE = "nil";
+	private static final String TRUE_VALUE = "true";
+
 	private Element _value;
 
 	private String _string_value;
@@ -45,7 +50,7 @@ public class ElementType extends NodeType {
 	 * Initialises to a null element
 	 */
 	public ElementType() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
@@ -54,25 +59,10 @@ public class ElementType extends NodeType {
 	 * @param v
 	 *            The element being represented
 	 */
-	public ElementType(Element v) {
-		super(v);
+	public ElementType(Element v, TypeModel tm) {
+		super(v, tm);
 		_value = v;
 
-		_string_value = null;
-	}
-
-	/**
-	 * This deprecated and will be removed. Adopters need to use
-	 * ElementType(Element)
-	 * 
-	 * @param v
-	 * @param nodePosition
-	 * @deprecated Use ElementType(Element v) instead.
-	 */
-	public ElementType(Element v, int nodePosition) {
-		// unused parameter, nodePosition!
-		super(v);
-		_value = v;
 		_string_value = null;
 	}
 
@@ -90,6 +80,7 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return "element" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return ELEMENT;
 	}
@@ -99,6 +90,7 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return String representation of the element being stored
 	 */
+	@Override
 	public String string_value() {
 		// XXX can we cache ?
 		if (_string_value != null)
@@ -110,37 +102,35 @@ public class ElementType extends NodeType {
 	}
 
 	/**
-	 * Creates a new ResultSequence consisting of the typed value of an
-	 * element node.
+	 * Creates a new ResultSequence consisting of the element stored
 	 * 
-	 * @return New ResultSequence consisting of the typed-value sequence.
+	 * @return New ResultSequence consisting of the element stored
 	 */
+	@Override
 	public ResultSequence typed_value() {
-		
 		ResultSequence rs = ResultSequenceFactory.create_new();
+
 		
-		if (!(_value instanceof PSVIElementNSImpl)) {
-			rs.add(new XSUntypedAtomic(string_value()));
+		TypeDefinition typeDef = getType();
+
+		if (typeDef != null) {
+			if (!isNilled(_value)) {
+				if (typeDef != null) {
+					rs = getXDMTypedValue(typeDef, typeDef.getSimpleTypes(_value));
+				}
+				else {
+					rs.add(new XSUntypedAtomic(string_value()));
+				}
+			}
 		}
 		else {
-		   PSVIElementNSImpl typeInfo = (PSVIElementNSImpl) _value;
-
-		   // if the 'nilled' property of the node is 'false', attempt to
-		   // construct the typed-value as per the algorithm described in
-		   // XDM spec. if the 'nilled' property is 'true', the typed-value
-		   // is an empty sequence.
-		   if (!typeInfo.getNil()) {
-		      XSTypeDefinition typeDef = typeInfo.getTypeDefinition();		   
-		      if (typeDef != null) {
-		         rs = getXDMTypedValue(typeDef, typeInfo.getItemValueTypes());
-		      }
-		      else {
-			     rs.add(new XSUntypedAtomic(string_value()));  
-		      }
-		   }
+			rs.add(new XSUntypedAtomic(string_value()));
 		}
-
 		return rs;
+	}
+
+	private boolean isNilled(Element _value2) {
+		return TRUE_VALUE.equals(_value2.getAttributeNS(SCHEMA_INSTANCE, NIL_ATTRIBUTE));
 	}
 
 	// recursively concatenate TextNode strings
@@ -178,20 +168,22 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return QName representation of the name of the node
 	 */
+	@Override
 	public QName node_name() {
-		QName name = new QName(_value.getPrefix(), _value.getLocalName(),
-				_value.getNamespaceURI());
+		QName name = new QName(_value.getPrefix(), _value.getLocalName(), _value.getNamespaceURI());
 
 		return name;
 	}
 
+	@Override
 	public ResultSequence nilled() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		if (_value instanceof PSVIElementNSImpl) {
 			PSVIElementNSImpl psviElement = (PSVIElementNSImpl) _value;
 			rs.add(new XSBoolean(psviElement.getNil()));
-		} else {
+		}
+		else {
 			rs.add(new XSBoolean(false));
 		}
 
@@ -201,6 +193,7 @@ public class ElementType extends NodeType {
 	/**
 	 * @since 1.1
 	 */
+	@Override
 	public boolean isID() {
 		return isElementType(SCHEMA_TYPE_ID);
 	}
@@ -208,6 +201,7 @@ public class ElementType extends NodeType {
 	/**
 	 * @since 1.1
 	 */
+	@Override
 	public boolean isIDREF() {
 		return isElementType(SCHEMA_TYPE_IDREF);
 	}

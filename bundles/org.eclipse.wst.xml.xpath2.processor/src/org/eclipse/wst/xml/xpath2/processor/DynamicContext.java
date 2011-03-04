@@ -32,6 +32,8 @@ import org.w3c.dom.Node;
 
 /**
  * Interface for dynamic context.
+ * 
+ * @deprecated Use 
  */
 public interface DynamicContext extends StaticContext {
 
@@ -68,6 +70,7 @@ public interface DynamicContext extends StaticContext {
 	 * @param name
 	 *            is the name of the variable.
 	 * @return variable.
+	 * @since 2.0
 	 */
 	public Object get_variable(QName name);
 	
@@ -82,8 +85,10 @@ public interface DynamicContext extends StaticContext {
 	public void set_variable(QName var, AnyType val);
 	
 	
-	/*
+	/**
 	 * Sets a XPath2 sequence into a variable.
+	 *
+	 * @since 2.0
 	 */
 	public void set_variable(QName var, ResultSequence val);
 

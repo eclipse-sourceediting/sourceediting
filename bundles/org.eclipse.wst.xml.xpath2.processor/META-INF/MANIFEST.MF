@@ -2,21 +2,21 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.processor
-Bundle-Version: 1.1.100.qualifier
-Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
- org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
+Bundle-Version: 2.0.0.qualifier
+Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
  java_cup.runtime;bundle-version="0.10.0",
  com.ibm.icu;bundle-version="[3.8.0,5.0.0)";resolution:=optional
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.eclipse.wst.xml.xpath2.processor.internal.XPath2Plugin
-Export-Package: org.eclipse.wst.xml.xpath2.processor,
+Bundle-RequiredExecutionEnvironment: J2SE-1.4,J2SE-1.5
+Export-Package: org.eclipse.wst.xml.xpath2.api,
+ org.eclipse.wst.xml.xpath2.api.typesystem,
+ org.eclipse.wst.xml.xpath2.processor,
  org.eclipse.wst.xml.xpath2.processor.ast,
  org.eclipse.wst.xml.xpath2.processor.function,
  org.eclipse.wst.xml.xpath2.processor.internal;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.ast;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.function;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.types;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.internal.types.xerces;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.utils;x-internal:=true
 Bundle-Vendor: %provider

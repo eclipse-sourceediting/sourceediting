@@ -15,16 +15,28 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.apache.xerces.xs.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.ConstructorFL;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.Function;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
 import org.w3c.dom.Document;
-
-import java.util.*;
+import org.w3c.dom.Node;
 
 /**
  * Default implementation of a static context as described by the XPath 2.0
@@ -35,7 +47,7 @@ public class DefaultStaticContext implements StaticContext {
 	private boolean _xpath1_compatible;
 	private String _default_namespace;
 	private String _default_function_namespace;
-	private XSModel _schema;
+	private TypeModel _model;
 	private XSCtrLibrary builtinTypes;
 
 	// key: String prefix, contents: String namespace
@@ -89,12 +101,12 @@ public class DefaultStaticContext implements StaticContext {
 	 * @param schema
 	 *            Schema information from document. May be null.
 	 */
-	public DefaultStaticContext(XSModel schema) {
+	public DefaultStaticContext(TypeModel model) {
 		_xpath1_compatible = false;
 
 		_default_namespace = null;
 		_default_function_namespace = FnFunctionLibrary.XPATH_FUNCTIONS_NS;
-		_schema = schema;
+		_model = model;
 		builtinTypes = new XSCtrLibrary();
 
 		_functions = new HashMap(20); // allow null keys: null namespace
@@ -105,8 +117,8 @@ public class DefaultStaticContext implements StaticContext {
 		_scopes = new Stack();
 		new_scope();
 
-		if (_schema != null)
-			init_schema(schema);
+		if (_model != null)
+			init_schema(model);
 
 		_base_uri = new XSAnyURI();
 
@@ -123,7 +135,8 @@ public class DefaultStaticContext implements StaticContext {
 		this(null);
 	}
 
-	private void init_schema(XSModel schema) {
+	private void init_schema(TypeModel schema) {
+		_model = schema;
 	}
 
 	/**
@@ -309,12 +322,11 @@ public class DefaultStaticContext implements StaticContext {
 	 */
 	public boolean type_defined(QName qname) {
 		
-		if (_schema == null) {
+		if (_model == null) {
 			return builtinTypes.atomic_type(qname) != null;
 		}
 
-		XSTypeDefinition td = _schema.getTypeDefinition(qname.local(), qname
-				.namespace());
+		TypeDefinition td = _model.lookupType(qname.namespace(), qname.local());
 		if (td == null)
 			return false;
 
@@ -343,13 +355,13 @@ public class DefaultStaticContext implements StaticContext {
 	 * @return true if element declared.
 	 */
 	public boolean element_declared(QName elem) {
-		if (_schema == null)
+		if (_model == null)
 			return false;
 
-		XSElementDeclaration ed = _schema.getElementDeclaration(elem.local(),
+		TypeDefinition td = _model.lookupElementDeclaration(elem.local(),
 				elem.namespace());
 
-		if (ed == null)
+		if (td == null)
 			return false;
 
 		return true;
@@ -362,11 +374,9 @@ public class DefaultStaticContext implements StaticContext {
 	 *            name of element who's type is desired.
 	 * @return schema definition of type
 	 */
-	public XSTypeDefinition element_type_definition(QName elem) {
-		XSElementDeclaration ed = _schema.getElementDeclaration(elem.local(),
+	public TypeDefinition element_type_definition(QName elem) {
+		return _model.lookupElementDeclaration(elem.local(),
 				elem.namespace());
-
-		return ed.getTypeDefinition();
 	}
 
 	/**
@@ -377,13 +387,13 @@ public class DefaultStaticContext implements StaticContext {
 	 * @return true if attribute is declared.
 	 */
 	public boolean attribute_declared(QName attr) {
-		if (_schema == null)
+		if (_model == null)
 			return false;
 
-		XSAttributeDeclaration ad = _schema.getAttributeDeclaration(attr
+		TypeDefinition td = _model.lookupAttributeDeclaration(attr
 				.local(), attr.namespace());
 
-		if (ad == null)
+		if (td == null)
 			return false;
 
 		return true;
@@ -396,11 +406,9 @@ public class DefaultStaticContext implements StaticContext {
 	 *            element name
 	 * @return schema definition of the type of the attribute
 	 */
-	public XSTypeDefinition attribute_type_definition(QName elem) {
-		XSAttributeDeclaration ad = _schema.getAttributeDeclaration(elem
+	public TypeDefinition attribute_type_definition(QName elem) {
+		return _model.lookupAttributeDeclaration(elem
 				.local(), elem.namespace());
-
-		return ad.getTypeDefinition();
 	}
 
 	/**
@@ -436,10 +444,10 @@ public class DefaultStaticContext implements StaticContext {
 	 */
 	// XXX fix this
 	public boolean derives_from(NodeType at, QName et) {
-		ItemPSVI psvi = (ItemPSVI) at.node_value();
-		XSTypeDefinition td = psvi.getTypeDefinition();
+		
+		TypeDefinition td = _model.getType(at.node_value());
 
-		short method = 0;
+		short method = TypeDefinition.DERIVATION_EXTENSION | TypeDefinition.DERIVATION_RESTRICTION;
 
 		// XXX
 		if (!et.expanded()) {
@@ -454,7 +462,7 @@ public class DefaultStaticContext implements StaticContext {
 				et.set_namespace(default_namespace());
 		}
 
-		return td.derivedFrom(et.namespace(), et.local(), method);
+		return td != null && td.derivedFrom(et.namespace(), et.local(), method);
 	}
 
 	/**
@@ -466,12 +474,9 @@ public class DefaultStaticContext implements StaticContext {
 	 *            type definition of expected type.
 	 * @return true if a derivation exists.
 	 */
-	public boolean derives_from(NodeType at, XSTypeDefinition et) {
-		ItemPSVI psvi = (ItemPSVI) at.node_value();
-		XSTypeDefinition td = psvi.getTypeDefinition();
-
+	public boolean derives_from(NodeType at, TypeDefinition et) {
+		TypeDefinition td = _model.getType(at.node_value());
 		short method = 0;
-
 		return td.derivedFromType(et, method);
 	}
 
@@ -637,5 +642,9 @@ public class DefaultStaticContext implements StaticContext {
 
 	public Map get_documents() {
 		return _documents;
+	}
+
+	public TypeModel getTypeModel(Node node) {
+		return _model;
 	}
 }

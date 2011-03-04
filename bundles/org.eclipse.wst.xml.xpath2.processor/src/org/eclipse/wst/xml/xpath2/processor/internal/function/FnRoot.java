@@ -123,7 +123,7 @@ public class FnRoot extends Function {
 			root = newroot;
 		}
 
-		rs.add(NodeType.dom_to_xpath(root));
+		rs.add(NodeType.dom_to_xpath(root, dc.getTypeModel(root)));
 
 		return rs;
 	}

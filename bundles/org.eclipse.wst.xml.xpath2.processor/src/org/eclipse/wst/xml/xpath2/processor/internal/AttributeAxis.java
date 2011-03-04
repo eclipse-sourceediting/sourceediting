@@ -48,7 +48,7 @@ public class AttributeAxis extends ForwardAxis {
 		for (int i = 0; i < attrs.getLength(); i++) {
 			Attr attr = (Attr) attrs.item(i);
 
-			rs.add(NodeType.dom_to_xpath(attr));
+			rs.add(NodeType.dom_to_xpath(attr, dc.getTypeModel(attr)));
 		}
 
 		return rs;

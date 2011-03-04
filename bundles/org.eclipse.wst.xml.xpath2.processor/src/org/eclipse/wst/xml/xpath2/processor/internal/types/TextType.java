@@ -14,6 +14,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.w3c.dom.*;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
@@ -30,8 +31,8 @@ public class TextType extends NodeType {
 	 * @param v
 	 *            The value of the TextType node
 	 */
-	public TextType(Text v) {
-		super(v);
+	public TextType(Text v, TypeModel tm) {
+		super(v, tm);
 		_value = v;
 	}
 

@@ -11,8 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
-import org.apache.xerces.xs.XSConstants;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 
 /**
  * Common base class for Attribute and Element tests.
@@ -88,8 +88,8 @@ public abstract class AttrElemTest extends KindTest {
 	}
 
 	protected short getDerviationTypes() {
-		return XSConstants.DERIVATION_LIST | XSConstants.DERIVATION_EXTENSION
-				| XSConstants.DERIVATION_RESTRICTION
-				| XSConstants.DERIVATION_SUBSTITUTION;
+		return TypeDefinition.DERIVATION_LIST | TypeDefinition.DERIVATION_EXTENSION
+				| TypeDefinition.DERIVATION_RESTRICTION
+				| TypeDefinition.DERIVATION_SUBSTITUTION;
 	}
 }
