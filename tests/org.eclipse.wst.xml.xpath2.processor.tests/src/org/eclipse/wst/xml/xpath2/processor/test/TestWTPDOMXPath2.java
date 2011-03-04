@@ -9,7 +9,7 @@ import org.apache.xerces.xs.XSModel;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -23,9 +23,8 @@ import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
-import org.osgi.framework.Bundle;
+import org.eclipse.wst.xml.xpath2.wtptypes.XsdDOMTypeProvider;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 public class TestWTPDOMXPath2 extends AbstractPsychoPathTest {
 	IDOMModel model = null;
@@ -65,6 +64,33 @@ public class TestWTPDOMXPath2 extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
+	}
+
+	{
+//		DefaultTypeProviderRegistry.getInstance().register(DOMModelImpl.class, new XsdDOMTypeProvider());
+	}
+
+	public void testWTPDOMWithTypes() throws Exception {
+		// Test for the fix, for xpathDefaultNamespace
+		bundle = Platform
+				.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
+
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		super.domDoc = load(fileURL);
+
+		// set up XPath default namespace in Dynamic Context
+		DynamicContext dc = setupDynamicContext2(new XsdDOMTypeProvider.XsdTypeModel((IDOMDocument)domDoc));
+		
+		assertXPathTrue("/Example/x[1] instance of element(*, x_Type)", dc, domDoc);
+		assertXPathTrue("not (/Example/x[1] instance of element(*, y_Type))", dc, domDoc);
+		assertXPathTrue("/Example/x instance of x_Type+", dc, domDoc);
+		assertXPathTrue("/Example/x instance of element(x, x_Type)+", dc, domDoc);
+		assertXPathTrue("not (/Example/x instance of element(z, x_Type)+)", dc, domDoc);
+		assertXPathTrue("/Example/x[2]/@mesg instance of mesg_Type", dc, domDoc);
+		assertXPathTrue("/Example/x[2]/@mesg instance of attribute(mesg, mesg_Type)", dc, domDoc);
+		assertXPathTrue("not (/Example/x[2]/@mesg instance of attribute(mesg, xs:integer))", dc, domDoc);
+		assertXPathTrue("not (/Example/x[2]/@mesg instance of attribute(cesc, mesg_Type))", dc, domDoc);
+		assertXPathTrue("/Example/y/@intAttr instance of attribute(intAttr, xs:integer)", dc, domDoc);
 	}
 
 	public void test_ForExpr005() throws Exception {
@@ -1786,7 +1812,7 @@ public class TestWTPDOMXPath2 extends AbstractPsychoPathTest {
 		if (inStream == null)
 			throw new FileNotFoundException("Can't file resource stream "
 					+ url.getFile());
-		model = (IDOMModel) modelManager.getModelForRead(url.getFile(),
+		model = (IDOMModel) modelManager.getModelForRead(url.toString(),
 				inStream, null);
 
 		return model.getDocument();

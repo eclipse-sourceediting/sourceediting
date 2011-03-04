@@ -41,7 +41,7 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 	}
 
 	public void testSetupNullContenxt() throws Exception {
-		DynamicContext dc = new DefaultDynamicContext(null, domDoc);
+		DynamicContext dc = new DefaultDynamicContext(null, null);
 		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
 	}
 

@@ -52,10 +52,14 @@ import org.apache.xerces.xs.XSObject;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoaderException;
 import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.JFlexCupParser;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.StaticChecker;
@@ -71,7 +75,9 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeModel;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesFloatUserDefined;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesIntegerUserDefined;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesQNameUserDefined;
@@ -260,7 +266,9 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	}
 
 	protected DefaultDynamicContext setupDynamicContext(XSModel schema) {
-		DefaultDynamicContext dc = new DefaultDynamicContext(schema, domDoc);
+		XercesTypeModel typeModel = schema != null ? new XercesTypeModel(schema) : null;
+		DefaultDynamicContext dc = new DefaultDynamicContext(typeModel);
+//		DefaultDynamicContext dc = new DefaultDynamicContext(schema, domDoc);
 		dynamicContext = dc;
 		
 		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
@@ -273,7 +281,22 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		setupVariables(dc);
 		return dc;
 	}
-	
+
+	protected DefaultDynamicContext setupDynamicContext2(TypeModel model) {
+		DefaultDynamicContext dc = new DefaultDynamicContext(model);
+		dynamicContext = dc;
+		
+		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
+		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
+		dc.add_namespace("fn", "http://www.w3.org/2005/xpath-functions");
+		dc.add_namespace("xml", "http://www.w3.org/XML/1998/namespace");
+
+		dc.add_function_library(new FnFunctionLibrary());
+		dc.add_function_library(new XSCtrLibrary());
+		setupVariables(dc);
+		return dc;
+	}
+
 	protected void addXPathDefaultNamespace(String uri) {
 	   dynamicContext.add_namespace(null, uri);	
 	}
@@ -458,13 +481,13 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		dc.add_variable(new QName("var"));
 		
 		if (domDoc != null) {
-			AnyType docType = new DocType(domDoc);
+			AnyType docType = new DocType(domDoc, dc.getTypeModel(domDoc));
 			dc.set_variable(new QName("input-context1"), docType);
 			dc.set_variable(new QName("input-context"), docType);
 			if (domDoc2 == null) {
 				dc.set_variable(new QName("input-context2"), docType);
 			} else {
-				dc.set_variable(new QName("input-context2"), (AnyType) new DocType(domDoc2));
+				dc.set_variable(new QName("input-context2"), (AnyType) new DocType(domDoc2, dc.getTypeModel(domDoc2)));
 			}
 		}
 		return dc;
@@ -591,6 +614,40 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	      dc.add_function_library(udl);
 	 
 	   }
+
+	protected void assertXPathTrue(String xpath, DynamicContext dc, Document domDoc) {
+		XSBoolean result = evaluateSimpleXPath(xpath, dc, domDoc, XSBoolean.class);
+		assertEquals(true, result.value());
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T extends AnyType> T evaluateSimpleXPath(String xpath, DynamicContext dc, Document doc, Class<T> resultClass) {
+		XPath path;
+		try {
+			path = compileXPath(dc, xpath);
+		}
+		catch (XPathParserException e) {
+			throw new RuntimeException("XPath parse: " + e.getMessage(), e);
+		}
+		catch (StaticError e) {
+			throw new RuntimeException("Static error: " + e.getMessage(), e);
+		}
+	
+		Evaluator eval = new DefaultEvaluator(dc, doc);
+		ResultSequence rs;
+		try {
+			rs = eval.evaluate(path);
+		}
+		catch (DynamicError e) {
+			throw new RuntimeException("Evaluation error: " + e.getMessage(), e);
+		}
+		assertEquals("Expected single result from \'" + xpath + "\'", 1, rs.size());
+		
+		AnyType result = rs.first();
+		assertTrue("Exected XPath result instanceof class " + resultClass.getSimpleName() + " from \'" + xpath + "\', got " + result.getClass(), resultClass.isInstance(result));
+		
+		return (T)result;
+	}
 
 
 }

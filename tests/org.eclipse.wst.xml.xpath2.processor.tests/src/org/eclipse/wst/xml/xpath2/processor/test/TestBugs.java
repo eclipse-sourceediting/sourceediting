@@ -1372,15 +1372,12 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 
-		String xpath = "(/Example/x instance of x_Type+) and (/Example/x[2]/@mesg instance of mesg_Type)";
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
-
-		XSBoolean result = (XSBoolean) rs.first();
-
-		assertEquals(true, result.value());
+		assertXPathTrue("/Example/x instance of x_Type+", dc, domDoc);
+		assertXPathTrue("/Example/x instance of element(x, x_Type)+", dc, domDoc);
+		assertXPathTrue("not (/Example/x instance of element(z, x_Type)+)", dc, domDoc);
+		assertXPathTrue("/Example/x[2]/@mesg instance of mesg_Type", dc, domDoc);
+		assertXPathTrue("/Example/x[2]/@mesg instance of attribute(mesg, mesg_Type)", dc, domDoc);
+		assertXPathTrue("not (/Example/x[2]/@mesg instance of attribute(cesc, mesg_Type))", dc, domDoc);
 	}
 
 	public void testXPathInstanceOf6() throws Exception {
@@ -1433,6 +1430,31 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
+	public void testXPathNotInstanceOf() throws Exception {
+		// Bug 298267
+		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
+	
+		loadDOMDocument(fileURL, schemaURL);
+	
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+	
+		DynamicContext dc = setupDynamicContext(schema);
+	
+		String xpath = "/Example/x[1] instance of element(*, x_Type) and not (/Example/x[1] instance of element(*, y_Type))";
+		XPath path = compileXPath(dc, xpath);
+	
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+	
+		XSBoolean result = (XSBoolean) rs.first();
+	
+		String actual = result.string_value();
+	
+		assertEquals("true", actual);
+	}
+
 	public void testXPathInstanceNonExistantElement() throws Exception {
 		// Bug 298267
 		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
