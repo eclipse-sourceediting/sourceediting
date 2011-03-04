@@ -1,0 +1,229 @@
+### Eclipse Workspace Patch 1.0
+#P org.eclipse.wst.xml.xpath2.processor.tests
+Index: META-INF/MANIFEST.MF
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/tests/org.eclipse.wst.xml.xpath2.processor.tests/META-INF/MANIFEST.MF,v
+retrieving revision 1.15
+diff -u -r1.15 MANIFEST.MF
+--- META-INF/MANIFEST.MF	24 May 2010 04:21:26 -0000	1.15
++++ META-INF/MANIFEST.MF	28 May 2010 14:35:03 -0000
+@@ -11,6 +11,9 @@
+  org.junit;bundle-version="3.8.2",
+  org.w3c.xqts.testsuite;bundle-version="1.0.2",
+  org.eclipse.wst.xml.core;bundle-version="[1.1.0,2.0.0)",
++ org.eclipse.xsd;bundle-version="[2.3.0,3.0.0)",
++ org.eclipse.wst.xsd.core;bundle-version="[1.1.501,2.0.0)",
++ org.eclipse.wst.xml.xpath2.cmsupport;bundle-version="[1.1.0,2.0.0)",
+  org.eclipse.wst.sse.core;bundle-version="[1.1.0,2.0.0)",
+  org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)"
+ Export-Package: org.custommonkey.xmlunit,
+Index: bugTestFiles/attrNodeTest.xml
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/tests/org.eclipse.wst.xml.xpath2.processor.tests/bugTestFiles/attrNodeTest.xml,v
+retrieving revision 1.1
+diff -u -r1.1 attrNodeTest.xml
+--- bugTestFiles/attrNodeTest.xml	26 Dec 2009 13:17:14 -0000	1.1
++++ bugTestFiles/attrNodeTest.xml	28 May 2010 14:35:03 -0000
+@@ -1,4 +1,4 @@
+-<Example>
++<Example xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="attrNodeTest.xsd">
+   <x mesg="hello" />
+   <x mesg="world" />
+   <x mesg="test" />
+Index: src/org/eclipse/wst/xml/xpath2/processor/test/AbstractPsychoPathTest.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/tests/org.eclipse.wst.xml.xpath2.processor.tests/src/org/eclipse/wst/xml/xpath2/processor/test/AbstractPsychoPathTest.java,v
+retrieving revision 1.38
+diff -u -r1.38 AbstractPsychoPathTest.java
+--- src/org/eclipse/wst/xml/xpath2/processor/test/AbstractPsychoPathTest.java	8 Nov 2009 14:04:46 -0000	1.38
++++ src/org/eclipse/wst/xml/xpath2/processor/test/AbstractPsychoPathTest.java	28 May 2010 14:35:04 -0000
+@@ -69,11 +69,13 @@
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
++import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeModel;
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary;
+ import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesFloatUserDefined;
+ import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesIntegerUserDefined;
+ import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesQNameUserDefined;
+ import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesUserDefined;
++import org.eclipse.wst.xml.xpath2.processor.types.TypeModel;
+ import org.osgi.framework.Bundle;
+ import org.w3c.dom.Document;
+ import org.w3c.dom.Node;
+@@ -198,7 +200,22 @@
+ 	}
+ 
+ 	protected DefaultDynamicContext setupDynamicContext(XSModel schema) {
+-		DefaultDynamicContext dc = new DefaultDynamicContext(schema, domDoc);
++		DefaultDynamicContext dc = new DefaultDynamicContext(schema != null ? new XercesTypeModel(schema) : null, domDoc);
++		dynamicContext = dc;
++		
++		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
++		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
++		dc.add_namespace("fn", "http://www.w3.org/2005/xpath-functions");
++		dc.add_namespace("xml", "http://www.w3.org/XML/1998/namespace");
++
++		dc.add_function_library(new FnFunctionLibrary());
++		dc.add_function_library(new XSCtrLibrary());
++		setupVariables(dc);
++		return dc;
++	}
++
++	protected DefaultDynamicContext setupDynamicContext2(TypeModel model) {
++		DefaultDynamicContext dc = new DefaultDynamicContext(model, domDoc);
+ 		dynamicContext = dc;
+ 		
+ 		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
+Index: src/org/eclipse/wst/xml/xpath2/processor/test/TestBugs.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/tests/org.eclipse.wst.xml.xpath2.processor.tests/src/org/eclipse/wst/xml/xpath2/processor/test/TestBugs.java,v
+retrieving revision 1.52
+diff -u -r1.52 TestBugs.java
+--- src/org/eclipse/wst/xml/xpath2/processor/test/TestBugs.java	18 Apr 2010 09:46:00 -0000	1.52
++++ src/org/eclipse/wst/xml/xpath2/processor/test/TestBugs.java	28 May 2010 14:35:05 -0000
+@@ -62,6 +62,7 @@
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
++import org.eclipse.wst.xml.xpath2.processor.types.TypeModel;
+ import org.osgi.framework.Bundle;
+ 
+ public class TestBugs extends AbstractPsychoPathTest {
+@@ -1295,6 +1296,31 @@
+ 		assertEquals("true", actual);
+ 	}
+ 	
++	public void testXPathNotInstanceOf() throws Exception {
++		// Bug 298267
++		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
++		URL schemaURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xsd");
++	
++		loadDOMDocument(fileURL, schemaURL);
++	
++		// Get XSModel object for the Schema
++		XSModel schema = getGrammar(schemaURL);
++	
++		DynamicContext dc = setupDynamicContext(schema);
++	
++		String xpath = "/Example/x[1] instance of element(*, x_Type) and not (/Example/x[1] instance of element(*, y_Type))";
++		XPath path = compileXPath(dc, xpath);
++	
++		Evaluator eval = new DefaultEvaluator(dc, domDoc);
++		ResultSequence rs = eval.evaluate(path);
++	
++		XSBoolean result = (XSBoolean) rs.first();
++	
++		String actual = result.string_value();
++	
++		assertEquals("true", actual);
++	}
++
+ 	public void testXPathInstanceNonExistantElement() throws Exception {
+ 		// Bug 298267
+ 		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
+Index: src/org/eclipse/wst/xml/xpath2/processor/test/TestMinMax.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/tests/org.eclipse.wst.xml.xpath2.processor.tests/src/org/eclipse/wst/xml/xpath2/processor/test/TestMinMax.java,v
+retrieving revision 1.1
+diff -u -r1.1 TestMinMax.java
+--- src/org/eclipse/wst/xml/xpath2/processor/test/TestMinMax.java	1 Dec 2009 23:12:37 -0000	1.1
++++ src/org/eclipse/wst/xml/xpath2/processor/test/TestMinMax.java	28 May 2010 14:35:05 -0000
+@@ -22,6 +22,7 @@
+ import org.eclipse.wst.xml.xpath2.processor.StaticError;
+ import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
+ import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
++import org.eclipse.wst.xml.xpath2.processor.types.TypeModel;
+ 
+ public class TestMinMax extends AbstractPsychoPathTest {
+ 
+Index: src/org/eclipse/wst/xml/xpath2/processor/test/TestSumAvg.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/tests/org.eclipse.wst.xml.xpath2.processor.tests/src/org/eclipse/wst/xml/xpath2/processor/test/TestSumAvg.java,v
+retrieving revision 1.1
+diff -u -r1.1 TestSumAvg.java
+--- src/org/eclipse/wst/xml/xpath2/processor/test/TestSumAvg.java	1 Dec 2009 23:12:37 -0000	1.1
++++ src/org/eclipse/wst/xml/xpath2/processor/test/TestSumAvg.java	28 May 2010 14:35:05 -0000
+@@ -18,6 +18,7 @@
+ import org.eclipse.wst.xml.xpath2.processor.StaticError;
+ import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
+ import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
++import org.eclipse.wst.xml.xpath2.processor.types.TypeModel;
+ 
+ public class TestSumAvg extends AbstractPsychoPathTest {
+ 
+Index: src/org/eclipse/wst/xml/xpath2/processor/test/TestWTPDOMXPath2.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/tests/org.eclipse.wst.xml.xpath2.processor.tests/src/org/eclipse/wst/xml/xpath2/processor/test/TestWTPDOMXPath2.java,v
+retrieving revision 1.3
+diff -u -r1.3 TestWTPDOMXPath2.java
+--- src/org/eclipse/wst/xml/xpath2/processor/test/TestWTPDOMXPath2.java	15 Dec 2009 23:52:55 -0000	1.3
++++ src/org/eclipse/wst/xml/xpath2/processor/test/TestWTPDOMXPath2.java	28 May 2010 14:35:06 -0000
+@@ -9,10 +9,11 @@
+ import org.eclipse.core.runtime.Platform;
+ import org.eclipse.wst.sse.core.StructuredModelManager;
+ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
++import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
+ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
++import org.eclipse.wst.xml.xpath2.cmsupport.XsdDOMTypeProvider;
+ import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
+ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+ import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+@@ -23,9 +24,8 @@
+ import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+ import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+-import org.osgi.framework.Bundle;
++import org.eclipse.wst.xml.xpath2.processor.types.DefaultTypeProviderRegistry;
+ import org.w3c.dom.Document;
+-import org.w3c.dom.Node;
+ 
+ public class TestWTPDOMXPath2 extends AbstractPsychoPathTest {
+ 	IDOMModel model = null;
+@@ -67,6 +67,34 @@
+ 		assertEquals("true", actual);
+ 	}
+ 
++	{
++		DefaultTypeProviderRegistry.getInstance().register(DOMModelImpl.class, new XsdDOMTypeProvider());
++	}
++
++	public void testWTPDOMWithTypes() throws Exception {
++		// Test for the fix, for xpathDefaultNamespace
++		bundle = Platform
++				.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
++
++		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
++		super.domDoc = load(fileURL);
++
++		// set up XPath default namespace in Dynamic Context
++		DynamicContext dc = setupDynamicContext2(new XsdDOMTypeProvider.XsdTypeModel((IDOMDocument)domDoc));
++
++		String xpath = "/Example/x[1] instance of element(*, x_Type) and not (/Example/x[1] instance of element(*, y_Type))";
++		XPath path = compileXPath(dc, xpath);
++
++		Evaluator eval = new DefaultEvaluator(dc, domDoc);
++		ResultSequence rs = eval.evaluate(path);
++
++		AnyType result = rs.first();
++
++		String actual = result.string_value();
++
++		assertEquals("true", actual);
++	}
++
+ 	public void test_ForExpr005() throws Exception {
+ 		String inputFile = "/TestSources/fsx.xml";
+ 		String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr005.xq";
+@@ -1786,7 +1814,7 @@
+ 		if (inStream == null)
+ 			throw new FileNotFoundException("Can't file resource stream "
+ 					+ url.getFile());
+-		model = (IDOMModel) modelManager.getModelForRead(url.getFile(),
++		model = (IDOMModel) modelManager.getModelForRead(url.toString(),
+ 				inStream, null);
+ 
+ 		return model.getDocument();
