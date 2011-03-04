@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.processor.tests;singleton:=true
-Bundle-Version: 1.1.100.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
