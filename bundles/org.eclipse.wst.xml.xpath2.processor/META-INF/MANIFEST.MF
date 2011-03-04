@@ -6,7 +6,7 @@ Bundle-Version: 2.0.0.qualifier
 Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
  java_cup.runtime;bundle-version="0.10.0",
  com.ibm.icu;bundle-version="[3.8.0,5.0.0)";resolution:=optional
-Bundle-RequiredExecutionEnvironment: J2SE-1.4,J2SE-1.5
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xml.xpath2.api,
  org.eclipse.wst.xml.xpath2.api.typesystem,
  org.eclipse.wst.xml.xpath2.processor,
