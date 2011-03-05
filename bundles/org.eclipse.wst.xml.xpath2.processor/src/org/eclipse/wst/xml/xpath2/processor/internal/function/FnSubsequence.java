@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,16 +9,22 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - bug 262765 - eased restriction on data type...convert numerics to XSDouble.
  *     Jesper S Moller - bug 285806 - fixed fn:subsequence for indexes starting before 1
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *     Mukul Gandhi - bug 338999 - improving compliance of function 'fn:subsequence'. implementing full arity support.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 
 /**
  * Returns the contiguous sequence of items in the value of $sourceSeq beginning
@@ -28,11 +34,12 @@ import java.util.*;
  * <= $p < fn:round($startingLoc) + fn:round($length)
  */
 public class FnSubsequence extends Function {
+	
 	/**
 	 * Constructor for FnSubsequence.
 	 */
 	public FnSubsequence() {
-		super(new QName("subsequence"), 3);
+		super(new QName("subsequence"), 2, 3);
 	}
 
 	/**
@@ -44,7 +51,6 @@ public class FnSubsequence extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return subsequence(args);
 	}
@@ -58,22 +64,21 @@ public class FnSubsequence extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:subsequence operation.
 	 */
-	public static ResultSequence subsequence(Collection args)
-			throws DynamicError {
-
-		assert args.size() == 3;
-
+	public static ResultSequence subsequence(Collection args) throws DynamicError {		
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
 		Iterator citer = args.iterator();
-		ResultSequence seq = (ResultSequence) citer.next();
+		
+		ResultSequence seq = (ResultSequence) citer.next();		
+		if (seq.empty())
+			return rs;
+		
 		ResultSequence startLoc = (ResultSequence) citer.next();
-		ResultSequence length = (ResultSequence) citer.next();
-
-		// sanity chex
-		if (startLoc.size() != 1)
-			DynamicError.throw_type_error();
+		ResultSequence length = null; 		
+		if (citer.hasNext()) {
+			length = (ResultSequence) citer.next(); 
+		}
 
 		AnyType at = startLoc.first();
 		if (!(at instanceof NumericType)) {
@@ -83,37 +88,56 @@ public class FnSubsequence extends Function {
 		at = new XSDouble(at.string_value());
 
 		int start = (int) ((XSDouble) at).double_value();
+        int effectiveNoItems = 0; // no of items beyond index >= 1 that are added to the result
+        
+	    if (length != null) {
+	    	// the 3rd argument is present
+			if (length.size() != 1)
+				DynamicError.throw_type_error();
+			at = length.first();
+			if (!(at instanceof NumericType)) {
+				DynamicError.throw_type_error();
+			}
+			at = new XSDouble(at.string_value());
+			int len = (int) ((XSDouble) at).double_value();
+			if (len < 0) {
+				DynamicError.throw_type_error();	
+			}
 
-		if (length.size() != 1)
-			DynamicError.throw_type_error();
+			if (start <= 0) {				
+				effectiveNoItems = start + len - 1;	
+				start = 1;
+			}
+			else {
+				effectiveNoItems = len;
+			}
+		}
+	    else {
+	    	// 3rd argument is absent
+	    	if (start <= 0) {
+	    		start = 1;
+	    		effectiveNoItems = seq.size(); 
+	    	}
+	    	else {
+	    		effectiveNoItems = seq.size() - start + 1; 
+	    	}
+	    }
 		
-		at = length.first();
-		
-		if (!(at instanceof NumericType)) {
-			DynamicError.throw_type_error();
+		int pos = 1; // index running parallel to the iterator
+		int addedItems = 0;
+		if (effectiveNoItems > 0) {
+			for (Iterator seqIter = seq.iterator(); seqIter.hasNext();) {
+				at = (AnyType) seqIter.next();
+				if (start <= pos && addedItems < effectiveNoItems) {				
+					rs.add(at);
+					addedItems++;
+				}
+				pos++;
+			}
 		}
 		
-		at = new XSDouble(at.string_value());
-			
-
-		int len = (int) ((XSDouble) at).double_value();
-
-		if (seq.empty())
-			return rs;
-
-		int pos = 1;
-
-		int end = start + len;
-
-		// XXX: Huge optimization possible here!
-		for (Iterator i = seq.iterator(); i.hasNext();) {
-			at = (AnyType) i.next();
-
-			if (start <= pos && pos < end)
-				rs.add(at);
-
-			pos++;
-		}
 		return rs;
+		
 	}
+	
 }
