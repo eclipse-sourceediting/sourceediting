@@ -50,7 +50,8 @@
  *  Mukul Gandhi    - bug 334478   implementation of xs:token data type
  *  Mukul Gandhi    - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
  *                                 ID, IDREF and NMTOKEN.
- *  Mukul Gandhi    - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.                                
+ *  Mukul Gandhi    - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.
+ *  Mukul Gandhi    - bug 338999 - improving compliance of function 'fn:subsequence'. implementing full arity support.                                
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -2063,7 +2064,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", result.string_value());
 	}
 	
-	public void testBugXX() throws Exception {
+	public void testDefNamespaceOnbuiltInTypes() throws Exception {
 		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -2089,8 +2090,8 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
-	public void testExprParsingBeginnigWithRootNode_bugXX() throws Exception {
-		// Bug ??
+	public void testExprParsingBeginnigWithRootNode_bug338494() throws Exception {
+		// Bug 338494
 		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -2168,6 +2169,58 @@ public class TestBugs extends AbstractPsychoPathTest {
 		   // test fails
 		   assertTrue(false);
 		}
+	}
+	
+	public void testBug338999_Fnsubsequence() throws Exception {
+		// bug 338999
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug338999.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug338999.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+		
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		
+		// test a)
+		String xpath = "count(subsequence(X/*, 2)) eq 2";
+		XPath path = compileXPath(dc, xpath);		
+		ResultSequence rs = eval.evaluate(path);
+		String actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test b)
+		xpath = "subsequence(X/*, 2) instance of element(*, xs:integer)+";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test c)
+		xpath = "deep-equal(subsequence((1,2,3,4), 2), (2,3,4))";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test d)
+		// hetrogeneous sequence as input. arity 3 mode.
+		xpath = "deep-equal(subsequence(('a', 1, 1.5), 2, 2), (1, 1.5))";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test e)
+		// hetrogeneous sequence as input. arity 3 mode (startingLoc is < 0).
+		xpath = "deep-equal(subsequence(('a', 1, 1.5, 'b'), -2, 3), ())";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {
