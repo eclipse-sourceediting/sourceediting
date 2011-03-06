@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *     Jesper Moller - bug 280555 - Add pluggable collation support
  *     David Carver (STAR) - bug 262765 - fixed distinct-values comparison logic.
  *                           There is probably an easier way to do the comparison.
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *     Mukul Gandhi - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -51,7 +53,6 @@ public class FnDistinctValues extends AbstractCollationEqualFunction {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return distinct_values(args, dynamic_context());
 	}
@@ -65,9 +66,7 @@ public class FnDistinctValues extends AbstractCollationEqualFunction {
 	 *             Dynamic error.
 	 * @return Result of fn:distinct-values operation.
 	 */
-	public static ResultSequence distinct_values(Collection args, DynamicContext context)
-			throws DynamicError {
-
+	public static ResultSequence distinct_values(Collection args, DynamicContext context) throws DynamicError {
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -85,14 +84,10 @@ public class FnDistinctValues extends AbstractCollationEqualFunction {
 			collationURI = collation.string_value();
 		}
 
-		for (Iterator i = arg1.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			if (!(at instanceof AnyAtomicType))
-				DynamicError.throw_type_error();
-
-			if (!contains(rs, (AnyAtomicType) at, context, collationURI))
-				rs.add(at);
+		for (Iterator iter = arg1.iterator(); iter.hasNext();) {
+			AnyAtomicType atomizedItem = (AnyAtomicType) FnData.atomize((AnyType) iter.next());
+			if (!contains(rs, atomizedItem, context, collationURI))
+				rs.add(atomizedItem);
 		}
 
 		return rs;
