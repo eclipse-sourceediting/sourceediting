@@ -51,7 +51,8 @@
  *  Mukul Gandhi    - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
  *                                 ID, IDREF and NMTOKEN.
  *  Mukul Gandhi    - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.
- *  Mukul Gandhi    - bug 338999 - improving compliance of function 'fn:subsequence'. implementing full arity support.                                
+ *  Mukul Gandhi    - bug 338999 - improving compliance of function 'fn:subsequence'. implementing full arity support.
+ *  Mukul Gandhi    - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.                                
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -2221,6 +2222,41 @@ public class TestBugs extends AbstractPsychoPathTest {
 		rs = eval.evaluate(path);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
+	}
+	
+	public void testBug339025_distinctValuesOnNodeSequence() throws Exception {
+		// bug 339025
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug339025.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug339025.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+		
+		DynamicContext dc = setupDynamicContext(schema);;		
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		
+		// test a)
+		String xpath = "count(//a) = count(distinct-values(//a))";
+		XPath path = compileXPath(dc, xpath);		
+		ResultSequence rs = eval.evaluate(path);
+		String actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test b)
+		xpath = "count(X/a) = count(distinct-values(X/a))";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test c)
+		xpath = "count(//b) = count(distinct-values(//b))";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("false", actual);
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {
