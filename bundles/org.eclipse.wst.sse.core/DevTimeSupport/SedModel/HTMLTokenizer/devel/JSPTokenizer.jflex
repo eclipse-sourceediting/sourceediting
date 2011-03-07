@@ -2793,6 +2793,11 @@ jspDirectiveStart        = {jspScriptletStart}@
 	return XML_CONTENT;
 }
 
+<YYINITIAL> (%)+ {
+	if(Debug.debugTokenizer)
+		dump("non-reference %");//$NON-NLS-1$
+	return XML_CONTENT;
+}
 
 <ST_BLOCK_TAG_SCAN> .|\r|\n {
 		return doBlockTagScan();
