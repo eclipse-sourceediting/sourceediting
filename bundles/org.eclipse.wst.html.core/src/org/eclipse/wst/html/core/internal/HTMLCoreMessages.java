@@ -54,6 +54,7 @@ public class HTMLCoreMessages extends NLS {
 	public static String Obsolete_attribute_name___ERROR_;
 	public static String Obsolete_tag___ERROR_;
 	public static String Invalid_text_in_tag__ERROR_;
+	public static String Missing_attribute_value_equals_ERROR_;
 
 	static {
 		// load message values from bundle file

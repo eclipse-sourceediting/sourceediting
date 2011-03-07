@@ -181,6 +181,13 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				if (state == ErrorState.NONE_ERROR) { // Need more check.
 					// Now, the value should be checked, if the type is ENUM.
 					CMDataType attrType = adec.getAttrType();
+					if (a instanceof IDOMAttr) {
+						final ITextRegion region = ((IDOMAttr) a).getEqualRegion();
+						if (region == null) {
+							rgnType = REGION_NAME;
+							state = ErrorState.MISSING_ATTR_VALUE_EQUALS_ERROR;
+						}
+					}
 					String actualValue = a.getValue();
 					if (attrType.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED) {
 						// Check FIXED value.

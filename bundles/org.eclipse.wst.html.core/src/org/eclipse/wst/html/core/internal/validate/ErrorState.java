@@ -20,6 +20,7 @@ interface ErrorState {
 	static final int MISMATCHED_VALUE_ERROR = 13;
 	static final int OBSOLETE_ATTR_NAME_ERROR = 14;
 	static final int OBSOLETE_TAG_NAME_ERROR = 15;
+	static final int MISSING_ATTR_VALUE_EQUALS_ERROR = 16;
 	
 	// format error
 	static final int FORMAT_ERROR_LEVEL = 100;

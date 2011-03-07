@@ -95,6 +95,7 @@ public class MessageFactory implements ErrorState {
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_UNCLOSED, attrTable, UNCLOSED_ATTR_VALUE, MSG_UNCLOSED_ATTR_VALUE_ERROR);
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND, attrTable, RESOURCE_NOT_FOUND, MSG_RESOURCE_NOT_FOUND);
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_OBSOLETE_NAME, attrTable, OBSOLETE_ATTR_NAME_ERROR, MSG_OBSOLETE_ATTR_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_EQUALS_MISSING, attrTable, MISSING_ATTR_VALUE_EQUALS_ERROR, MSG_MISSING_ATTR_VALUE_EQUALS_ERROR);
 
 		// element error map
 		ErrorTable elemTable = errTables[NodeType.ELEMENT];// short hand
@@ -244,6 +245,7 @@ public class MessageFactory implements ErrorState {
 	private static final String MSG_OBSOLETE_ATTR_ERROR = HTMLCoreMessages.Obsolete_attribute_name___ERROR_;
 	private static final String MSG_OBSOLETE_TAG_ERROR = HTMLCoreMessages.Obsolete_tag___ERROR_;
 	private static final String MSG_INVALID_TEXT_IN_ELEM_ERROR = HTMLCoreMessages.Invalid_text_in_tag__ERROR_;
+	private static final String MSG_MISSING_ATTR_VALUE_EQUALS_ERROR = HTMLCoreMessages.Missing_attribute_value_equals_ERROR_;
 
 	private ErrorTable[] errTables = new ErrorTable[NodeType.MAX_TYPE];
 

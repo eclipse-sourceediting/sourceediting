@@ -169,6 +169,9 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		label = HTMLUIMessages.HTMLValidationPreferencePage_7;
 		addComboBox(inner, label, HTMLCorePreferenceNames.ATTRIBUTE_VALUE_UNCLOSED, SEVERITIES, errorWarningIgnoreLabel, 0);
 		
+		label = HTMLUIMessages.HTMLValidationPreferencePage_37;
+		addComboBox(inner, label, HTMLCorePreferenceNames.ATTRIBUTE_VALUE_EQUALS_MISSING, SEVERITIES, errorWarningIgnoreLabel, 0);
+		
 		label = HTMLUIMessages.HTMLValidationPreferencePage_35;
 		// TODO: validate resources?
 		// addComboBox(inner, label, HTMLCorePreferenceNames.ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabel, 0);

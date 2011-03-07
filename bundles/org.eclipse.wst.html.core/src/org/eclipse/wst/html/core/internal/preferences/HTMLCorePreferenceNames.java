@@ -250,6 +250,7 @@ public class HTMLCorePreferenceNames {
 	public static final String ATTRIBUTE_VALUE_UNCLOSED = "attrValueUnclosed";//$NON-NLS-1$
 	public static final String ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND = "resourceNotFound";//$NON-NLS-1$
 	public static final String ATTRIBUTE_OBSOLETE_NAME = "attrObsoleteName";//$NON-NLS-1$
+	public static final String ATTRIBUTE_VALUE_EQUALS_MISSING = "attrValueEqualsMissing";//$NON-NLS-1$
 	
 	
 	public static final String ELEM_UNKNOWN_NAME = "elemUnknownName";//$NON-NLS-1$
