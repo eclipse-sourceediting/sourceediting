@@ -663,6 +663,9 @@ class ProjectDescription {
 
 	private String fSaveStateFilename;
 
+	/**
+	 * String->ITaglibRecord
+	 */
 	Hashtable fTagDirReferences;
 
 	Hashtable fTLDReferences;
@@ -1737,20 +1740,27 @@ class ProjectDescription {
 			float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(new Path(basePath));
 
 			/**
-			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=196177 Support
-			 * resolution in flexible projects
+			 * http://bugs.eclipse.org/196177 - Support resolution in flexible
+			 * projects
 			 */
 			IPath resourcePath = FacetModuleCoreSupport.resolve(new Path(basePath), reference);
 			if (resourcePath.segmentCount() > 1) {
-				if (resourcePath.toString().toLowerCase(Locale.US).endsWith(".tld")) { //$NON-NLS-1$ 
+				String fileExtension = resourcePath.getFileExtension();
+				if (fileExtension != null && fileExtension.toLowerCase(Locale.US).equals("tld")) { //$NON-NLS-1$ 
 					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
 					if (file.isAccessible()) {
 						path = resourcePath.toString();
 					}
 				}
-				else if (resourcePath.toString().toLowerCase(Locale.US).endsWith(".jar")) { //$NON-NLS-1$ 
+				else if (fileExtension != null && fileExtension.toLowerCase(Locale.US).equals("jar")) { //$NON-NLS-1$ 
 					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
 					if (file.isAccessible()) {
+						path = resourcePath.toString();
+					}
+				}
+				else {
+					IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(resourcePath);
+					if (folder.isAccessible()) {
 						path = resourcePath.toString();
 					}
 				}
