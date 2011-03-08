@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xsl.jaxp.debug
-Bundle-Version: 1.0.100.qualifier
+Bundle-Version: 1.0.200.qualifier
 Bundle-Vendor: %vendorName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.apache.commons.logging;bundle-version="1.0.4";visibility:=reexport,
