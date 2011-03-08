@@ -74,6 +74,16 @@
 		   </builder>    
 	   </extension>
 
+    <extension id="problem" point="org.eclipse.core.resources.markers" name="%problemMarker.name">
+        <super type="org.eclipse.wst.jsdt.core.problem"/>
+        <super type="org.eclipse.core.resources.problemmarker"/>
+        <super type="org.eclipse.core.resources.textmarker"/>
+        <persistent value="true"/>
+        <attribute name="id"/>
+        <attribute name="flags"/>
+        <attribute name="arguments"/>
+        <attribute name="categoryId"/>
+    </extension>   
 	
 	<!--======================================================================================-->
 	<!-- JS batch validation in Web files                                                     -->
@@ -87,8 +97,8 @@
 			class="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator"
             manual="false"
             sourceid="org.eclipse.wst.jsdt.web.jssourcevalidator"
-            version="1"
-            markerId="org.eclipse.wst.jsdt.core.problem">
+            version="2"
+            markerId="org.eclipse.wst.jsdt.web.core.problem">
          <include>
             <rules>
 				<projectNature id="org.eclipse.wst.jsdt.core.jsNature" />

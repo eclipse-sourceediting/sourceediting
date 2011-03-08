@@ -781,4 +781,11 @@
 	  </contentTypeIdentifier>
 	</inserter>
 </extension>
+
+   <extension point="org.eclipse.ui.ide.markerSupport">
+      <markerTypeCategory name="%markerCategory.problem">
+         <markerTypeReference id="org.eclipse.wst.jsdt.web.core.problem"/>
+      </markerTypeCategory>
+   </extension>
+
 </plugin>
