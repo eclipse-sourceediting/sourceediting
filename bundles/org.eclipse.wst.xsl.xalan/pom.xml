@@ -5,7 +5,7 @@
 	<groupId>org.eclipse.wst.xsl</groupId>
 	<artifactId>org.eclipse.wst.xsl.xalan</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.100-SNAPSHOT</version>
 	<name>XSLT Xalan Plugin</name>
 
 	<parent>
