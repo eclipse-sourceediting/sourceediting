@@ -1,5 +1,5 @@
 /*******************************************************************************
- *Copyright (c) 2008, 2009 Standards for Technology in Automotive Retail and others.
+ *Copyright (c) 2008, 2011 Standards for Technology in Automotive Retail and others.
  *All rights reserved. This program and the accompanying materials
  *are made available under the terms of the Eclipse Public License v1.0
  *which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractValidationSettingsPage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
 import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.wst.xsl.core.ValidationPreferences;
@@ -224,7 +225,6 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage
 		return text;
 	}
 
-	@Override
 	protected ExpandableComposite createTwistie(Composite parent, String label,
 			int nColumns) {
 		ExpandableComposite excomposite = new ExpandableComposite(parent,
@@ -247,12 +247,6 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage
 		return excomposite;
 	}
 
-	private void makeScrollableCompositeAware(Control control) {
-		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(control);
-		if (parentScrolledComposite != null) {
-			parentScrolledComposite.adaptChild(control);
-		}
-	}
 
 	@Override
 	public void dispose() {
@@ -381,7 +375,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage
 	/**
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.xsl.ui.internal.preferences.AbstractValidationSettingsPage#performOk()
+	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractValidationSettingsPage#performOk()()
 	 */
 	@Override
 	public boolean performOk() {
