@@ -215,7 +215,7 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 		// Content Assist
 		fAutoPropose.setSelection(getPreferenceStore().getBoolean(HTMLUIPreferenceNames.AUTO_PROPOSE));
 		fAutoProposeText.setText(getPreferenceStore().getString(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE));
-		fAutoProposeDelay.setText((new Integer(getPreferenceStore().getInt(HTMLUIPreferenceNames.AUTO_PROPOSE_DELAY))).toString());
+		fAutoProposeDelay.setText(Integer.toString(getPreferenceStore().getInt(HTMLUIPreferenceNames.AUTO_PROPOSE_DELAY)));
 	}
 	
 	/**
@@ -234,7 +234,7 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 		// Content Assist
 		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(HTMLUIPreferenceNames.AUTO_PROPOSE));
 		fAutoProposeText.setText(getPreferenceStore().getDefaultString(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE));
-		fAutoProposeDelay.setText(new Integer(getPreferenceStore().getDefaultInt(HTMLUIPreferenceNames.AUTO_PROPOSE_DELAY)).toString());
+		fAutoProposeDelay.setText(Integer.toString(getPreferenceStore().getDefaultInt(HTMLUIPreferenceNames.AUTO_PROPOSE_DELAY)));
 	}
 	
 	/**

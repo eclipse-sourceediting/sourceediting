@@ -229,7 +229,7 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 	private void initializeValuesForAutoActivationGroup() {
 		fAutoPropose.setSelection(getPreferenceStore().getBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
 		fAutoProposeText.setText(getPreferenceStore().getString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
-		fAutoProposeDelay.setText((new Integer(getPreferenceStore().getInt(XMLUIPreferenceNames.AUTO_PROPOSE_DELAY))).toString());
+		fAutoProposeDelay.setText(Integer.toString(getPreferenceStore().getInt(XMLUIPreferenceNames.AUTO_PROPOSE_DELAY)));
 		String suggestionStrategy = getPreferenceStore().getString(XMLUIPreferenceNames.SUGGESTION_STRATEGY);
 		if (suggestionStrategy.length() > 0) {
 			setCurrentAutoActivationSuggestionStrategy(suggestionStrategy);
@@ -254,7 +254,7 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 	private void performDefaultsForAutoActivationGroup() {
 		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
 		fAutoProposeText.setText(getPreferenceStore().getDefaultString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
-		fAutoProposeDelay.setText(new Integer(getPreferenceStore().getDefaultInt(XMLUIPreferenceNames.AUTO_PROPOSE_DELAY)).toString());
+		fAutoProposeDelay.setText(Integer.toString(getPreferenceStore().getDefaultInt(XMLUIPreferenceNames.AUTO_PROPOSE_DELAY)));
 		String suggestionStrategy = getPreferenceStore().getDefaultString(XMLUIPreferenceNames.SUGGESTION_STRATEGY);
 		if (suggestionStrategy.length() > 0) {
 			setCurrentAutoActivationSuggestionStrategy(suggestionStrategy);
