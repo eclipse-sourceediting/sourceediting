@@ -33,6 +33,7 @@ public class JsCoreMessages extends NLS {
 	public static String JSPFContentPropertiesManager_Updating;
 	public static String JSPIndexManager_0;
 	public static String JSPIndexManager_2;
+	public static String model_initialization;
 	/**
 	 * @deprecated
 	 */

@@ -59,7 +59,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 	 */
 	private JSWebResourceEventManager() {
 		super(Messages.build_analyzingDeltas, Messages.build_analyzingDeltas,
-				Messages.javamodel_initialization, Messages.manager_filesToIndex);
+				JsCoreMessages.model_initialization, Messages.manager_filesToIndex);
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 		if(this.fWorkingLocation == null) {
 			//create path to working area
     		IPath workingLocation =
-    			JsCorePlugin.getDefault().getStateLocation().append("JSWebResourceEventManager"); //$NON-NLS-1$
+    			JsCorePlugin.getDefault().getStateLocation().append("resourceEventManager"); //$NON-NLS-1$
 
             // ensure that it exists on disk
             File folder = new File(workingLocation.toOSString());
