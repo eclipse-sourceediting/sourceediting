@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -149,53 +149,10 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 	}
 
 	public Object getParent(Object element) {
+		List parents = getParents(element);
 		Object parent = null;
-		if (element instanceof DTDNode) {
-			DTDNode node = (DTDNode) element;
-			if (element instanceof Attribute) {
-				// then we must say that the element with the same name
-				// as our attribute's parent attributelist is our parent
-				parent = node.getParentNode();
-				if (parent != null && parent instanceof AttributeList) {
-					return getParent(parent);
-				}
-			}
-			if (element instanceof AttributeList) {
-				// then we must say that the element with the same name
-				// as our attributelist is our parent
-				String attListName = ((AttributeList) element).getName();
-				Iterator iter = node.getDTDFile().getElementsAndParameterEntityReferences().getNodes().iterator();
-				while (iter.hasNext() && parent == null) {
-					DTDNode currentNode = (DTDNode) iter.next();
-					if (currentNode instanceof Element && currentNode.getName().equals(attListName)) {
-						parent = currentNode;
-					}
-				}
-			}
-
-			if (parent == null) {
-				parent = ((DTDNode) element).getParentNode();
-			}
-
-			// if showing in the logical order, return the IndexedNodeList
-			// acting as the parent in the tree
-			if (parent == null) {
-				if (isShowLogicalOrder()) {
-					Object[] indexedNodeLists = getChildren(((DTDModelImpl) fInputObject).getDTDFile());
-					for (int i = 0; i < indexedNodeLists.length && parent == null; i++) {
-						if (indexedNodeLists[i] instanceof NodeList) {
-							if (((NodeList) indexedNodeLists[i]).getNodes().contains(element))
-								parent = indexedNodeLists[i];
-						}
-					}
-				}
-				else {
-					parent = ((DTDModelImpl) fInputObject).getDTDFile();
-				}
-			}
-		}
-		else if (element instanceof NodeList && fInputObject instanceof DTDModelImpl) {
-			parent = ((DTDModelImpl) fInputObject).getDTDFile();
+		if(parents.size() > 0) {
+			parent = parents.get(0);
 		}
 		return parent;
 	}
@@ -242,66 +199,13 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 		return true;// !nodeList.getListType().equals(DTDRegionTypes.ATTLIST_TAG);
 	}
 
+	/**
+	 * <p>If a node changed then refresh the tree for that node</p>
+	 * 
+	 * @see org.eclipse.wst.dtd.core.internal.event.IDTDFileListener#nodeChanged(org.eclipse.wst.dtd.core.internal.DTDNode)
+	 */
 	public void nodeChanged(final DTDNode node) {
-		if (fViewer instanceof StructuredViewer) {
-			// System.out.println("node changed notified");
-			// System.out.println("selection before = " +
-			// ((StructuredViewer)view).getSelection());
-			if (node instanceof AttributeList && isShowLogicalOrder()) {
-				// in this case, we are showing attributes under the element.
-				// refresh the element object instead
-				Iterator iter = node.getDTDFile().getNodes().iterator();
-				while (iter.hasNext()) {
-					DTDNode currentNode = (DTDNode) iter.next();
-					if (currentNode.getName().equals(node.getName()) && currentNode instanceof Element) {
-						((StructuredViewer) fViewer).refresh(currentNode, true);
-					}
-				} // end of while ()
-			}
-			else {
-				// do standard stuff
-				fViewer.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (fViewer.getControl().isDisposed())
-							return;
-						if (node.getParentNode() != null) {
-							((StructuredViewer) fViewer).refresh(node.getParentNode(), true);
-						}
-						((StructuredViewer) fViewer).refresh(node, true);
-					}
-				});
-			}
-			
-			if (node instanceof Attribute) {
-				fViewer.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (fViewer.getControl().isDisposed())
-							return;
-						/*
-						 * go from the attribute to its list and then owning element
-						 * so we refresh the tree item there as well
-						 */
-						Object attrList = node.getParentNode();
-						if (attrList != null && attrList instanceof AttributeList) {
-							String attListName = ((AttributeList) attrList).getName();
-							Iterator iter = node.getDTDFile().getElementsAndParameterEntityReferences().getNodes().iterator();
-							Object parent = null;
-							while (iter.hasNext() && parent == null) {
-								DTDNode currentNode = (DTDNode) iter.next();
-								if (currentNode instanceof Element && currentNode.getName().equals(attListName)) {
-									parent = currentNode;
-								}
-							}
-							if (parent != null) {
-								((StructuredViewer) fViewer).refresh(parent, true);
-							}
-						}
-					}
-				});
-			}
-			// System.out.println("selection after = " +
-			// ((StructuredViewer)view).getSelection());
-		}
+		refreshTree(node);
 	}
 
 	public void nodesAdded(NodesEvent event) {
@@ -315,45 +219,8 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 				oldSelectedNode = (DTDNode) firstObj;
 			}
 
-			final AbstractTreeViewer abstractTreeViewer = (AbstractTreeViewer) fViewer;
-			for (Iterator it = event.getNodes().iterator(); it.hasNext();) {
-				Object node = it.next();
-				final Object parent = getParent(node);
-				// Bug 111100 - If it is a top level node (ie. parent is a
-				// DTDFile),
-				// insert the node directly to improve performance
-				if (parent instanceof DTDFile) {
-					Object[] objs = getChildren(parent);
-					for (int i = 0; i < objs.length; i++) {
-						if (objs[i] == node) {
-							abstractTreeViewer.insert(parent, node, i);
-							break;
-						}
-					}
-				}
-				// If the parent node is not a DTDFile, just refresh the
-				// parent for now
-				else if (parent != null) {
-					fViewer.getControl().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (fViewer.getControl().isDisposed())
-								return;
-							abstractTreeViewer.refresh(parent, true);
-						}
-					});
-				}
-				// You should never reach this block, if you do, just refresh
-				// the whole tree
-				else {
-					fViewer.getControl().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (fViewer.getControl().isDisposed())
-								return;
-							abstractTreeViewer.refresh(true);
-						}
-					});
-				}
-			}
+			//update the tree
+			refreshTree(event);
 
 			Iterator iter = event.getNodes().iterator();
 			List newSelection = new ArrayList();
@@ -380,6 +247,8 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 			}
 		}
 
+		//update the tree
+		refreshTree(event);
 	}
 
 	/**
@@ -394,5 +263,140 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 			// if not using logical order, lose the cached lists
 			logicalNodeLists = null;
 		}
+	}
+	
+	/**
+	 * <p>Used to update the tree after a node event such as a node added or removed.</p>
+	 * @param event the {@link NodesEvent} that caused the tree to need updating
+	 */
+	private void refreshTree(NodesEvent event) {
+		for (Iterator it = event.getNodes().iterator(); it.hasNext();) {
+			Object node = it.next();
+			this.refreshTree(node);
+			
+		}
+	}
+	
+	/**
+	 * <p>Refreshes the tree from the parents of the given node.</p>
+	 * @param node refresh the tree from the parents of this node
+	 */
+	private void refreshTree(Object node) {
+		List parents = getParents(node);
+		if(parents.size() > 0) {
+			for(int p = 0; p < parents.size(); ++p) {
+				final Object parent = parents.get(p);
+			
+				// Bug 111100 - If it is a top level node (ie. parent is a
+				// DTDFile),
+				// insert the node directly to improve performance
+				if (parent instanceof DTDFile) {
+					Object[] objs = getChildren(parent);
+					for (int i = 0; i < objs.length; i++) {
+						if (objs[i] == node) {
+							((AbstractTreeViewer) fViewer).insert(parent, node, i);
+							break;
+						}
+					}
+				}
+				
+				this.refreshTreeNode(parent, true);
+			}
+		}
+	}
+	
+	/**
+	 * @param element get the tree parents of this element
+	 * @return {@link List} of parents of the given element
+	 */
+	private List getParents(Object element) {
+		List parents = new ArrayList();
+		
+		Object parent = null;
+		if (element instanceof DTDNode) {
+			DTDNode node = (DTDNode) element;
+			if (element instanceof Attribute) {
+				parent = node.getParentNode();
+				if (parent != null && parent instanceof AttributeList) {
+					parents.addAll(getElementParentsOfAttributeList((AttributeList)parent));
+				}
+			} else if(element instanceof AttributeList) {
+				parents.addAll(getElementParentsOfAttributeList((AttributeList)element));
+			}
+
+			// if showing in the logical order, return the IndexedNodeList
+			// acting as a parent in the tree
+			if (isShowLogicalOrder()) {
+				Object[] indexedNodeLists = getChildren(((DTDModelImpl) fInputObject).getDTDFile());
+				for (int i = 0; i < indexedNodeLists.length && parent == null; i++) {
+					if (indexedNodeLists[i] instanceof NodeList) {
+						if (((NodeList) indexedNodeLists[i]).getNodes().contains(element)) {
+							parents.add(indexedNodeLists[i]);
+						}
+					}
+				}
+			}
+			
+			//try and get the simple parent
+			parent = ((DTDNode) element).getParentNode();
+			if(parent != null) {
+				parents.add(parent);
+			}
+			
+			//if no parents found must be new nodes so refresh from root
+			if(parents.size() == 0) {
+				parents.add(((DTDModelImpl) fInputObject).getDTDFile());
+			}
+		}else if (element instanceof NodeList && fInputObject instanceof DTDModelImpl) {
+			parents.add(((DTDModelImpl) fInputObject).getDTDFile());
+		}
+		
+		return parents;
+	}
+	
+	/**
+	 * @param attList get the element parents of the given {@link AttributeList}
+	 * @return the element parents of the given {@link AttributeList}, if no parents
+	 * can be found the list contains the DTD file element
+	 */
+	private List getElementParentsOfAttributeList(AttributeList attList) {
+		List parents = new ArrayList();
+		Iterator iterAttList = attList.getDTDFile().getNodes().iterator();
+		while (iterAttList.hasNext()) {
+			DTDNode currentNode = (DTDNode) iterAttList.next();
+			if (currentNode instanceof Element &&
+					currentNode.getName().equals(attList.getName())) {
+
+				parents.add(currentNode);
+			}
+		}
+		
+		if(parents.size() == 0) {
+			parents.add(((DTDModelImpl) fInputObject).getDTDFile());
+		}
+		
+		return parents;
+	}
+	
+	/**
+	 * <p>Executes a refresh on the {@link AbstractTreeViewer} for the given
+	 * node</p>
+	 * 
+	 * @param node refresh the tree for this node
+	 * @param updateLabels <code>true</code> to update the labels on the tree,
+	 * <code>false</code> otherwise.
+	 */
+	private void refreshTreeNode(final Object node, final boolean updateLabels) {
+		fViewer.getControl().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if (!fViewer.getControl().isDisposed()) {
+					if(node != null) {
+						((AbstractTreeViewer) fViewer).refresh(node, updateLabels);
+					} else {
+						((AbstractTreeViewer) fViewer).refresh(updateLabels);
+					}
+				}
+			}
+		});
 	}
 }
