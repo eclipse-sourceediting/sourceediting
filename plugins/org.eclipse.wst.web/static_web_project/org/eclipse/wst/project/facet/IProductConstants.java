@@ -16,6 +16,9 @@ package org.eclipse.wst.project.facet;
  * this interface and the facilities offered is highly provisional. 
  * Productization support will be reviewed and possibly modified in future 
  * releases.
+ * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @noimplement
  * 
  * @see org.eclipse.core.runtime.IProduct#getProperty(String)
  */

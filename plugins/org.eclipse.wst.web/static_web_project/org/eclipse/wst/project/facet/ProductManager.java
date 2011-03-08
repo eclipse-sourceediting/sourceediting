@@ -136,7 +136,7 @@ public class ProductManager {
 				defaultRuntime = getMatchingRuntime(DEFAULT_RUNTIME_KEYS[i], runtimes);
 				if (defaultRuntime != null) {
 					if (theRuntimes == null) {
-						theRuntimes = new ArrayList(3);
+						theRuntimes = new ArrayList(DEFAULT_RUNTIME_KEYS.length);
 					}
 					theRuntimes.add(defaultRuntime);
 				}
