@@ -222,20 +222,14 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 			//update the tree
 			refreshTree(event);
 
-			Iterator iter = event.getNodes().iterator();
-			List newSelection = new ArrayList();
-			while (iter.hasNext()) {
-				DTDNode node = (DTDNode) iter.next();
+			final List nodes = event.getNodes();
+			if (!nodes.isEmpty()) {
+				final DTDNode node = (DTDNode) nodes.get(0);
 				if (oldSelectedNode == null || node.getStructuredDTDDocumentRegion() != oldSelectedNode.getStructuredDTDDocumentRegion() || node.getStartOffset() != oldSelectedNode.getStartOffset() || node.getEndOffset() != oldSelectedNode.getEndOffset()) {
-					// add to selection
-					newSelection.add(node);
 					expandToNode(node);
+					viewer.setSelection(new StructuredSelection(node));
 				}
 			}
-			if (newSelection.size() > 0) {
-				viewer.setSelection(new StructuredSelection(newSelection));
-			}
-
 		}
 	}
 
