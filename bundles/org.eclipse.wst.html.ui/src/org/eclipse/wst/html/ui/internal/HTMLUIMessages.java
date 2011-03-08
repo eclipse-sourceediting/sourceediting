@@ -204,11 +204,7 @@ public class HTMLUIMessages extends NLS {
 	public static String HTMLValidationPreferencePage_8;
 	public static String HTMLValidationPreferencePage_9;
 	
-	// Validation
-	public static String Validation_Title;
-	public static String Validation_Workspace;
-	public static String Validation_Project;
-	public static String Validation_jobName;
+
 	
 	// Hyperlinks
 	public static String Hyperlink_line;

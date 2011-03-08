@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractValidationSettingsPage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
 
 public class JSPValidationPreferencePage extends AbstractValidationSettingsPage {

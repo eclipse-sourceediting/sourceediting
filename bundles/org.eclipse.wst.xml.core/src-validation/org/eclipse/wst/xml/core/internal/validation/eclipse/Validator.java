@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,13 @@ package org.eclipse.wst.xml.core.internal.validation.eclipse;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -33,7 +38,6 @@ public class Validator extends AbstractNestedValidator
 {
   private static final String XML_VALIDATOR_CONTEXT = "org.eclipse.wst.xml.core.validatorContext"; //$NON-NLS-1$
   protected int indicateNoGrammar = 0;
-  
   /**
    * Set any preferences for XML validation.
    * 
@@ -42,9 +46,19 @@ public class Validator extends AbstractNestedValidator
   protected void setupValidation(NestedValidatorContext context) 
   {
 	super.setupValidation(context);
-	indicateNoGrammar = XMLCorePlugin.getDefault().getPluginPreferences().getInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR);
+	//indicateNoGrammar = XMLCorePlugin.getDefault().getPluginPreferences().getInt();
   }
 
+  protected IScopeContext[] createPreferenceScopes(NestedValidatorContext context) {
+	  final IProject project = context.getProject();
+	  if (project != null && project.isAccessible()) {
+		  final ProjectScope projectScope = new ProjectScope(project);
+		  if (projectScope.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(XMLCorePreferenceNames.USE_PROJECT_SETTINGS, false))
+			return new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+	  }
+	  return new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+  }
+ 
   /* (non-Javadoc)
    * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#validate(java.lang.String, java.io.InputStream, org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext)
    */
@@ -58,12 +72,16 @@ public class Validator extends AbstractNestedValidator
     XMLValidator validator = XMLValidator.getInstance();
 
     XMLValidationConfiguration configuration = new XMLValidationConfiguration();
+    final IScopeContext[] preferenceScopes = createPreferenceScopes(context);
+	final IPreferencesService preferencesService = Platform.getPreferencesService();
+	indicateNoGrammar = preferencesService.getInt(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 0, preferenceScopes);
+
     try
     {
-      Preferences pluginPreferences = XMLCorePlugin.getDefault().getPluginPreferences();
+      //Preferences pluginPreferences = XMLCorePlugin.getDefault().getPluginPreferences();
       configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, indicateNoGrammar);
-      configuration.setFeature(XMLValidationConfiguration.USE_XINCLUDE, pluginPreferences.getBoolean(XMLCorePreferenceNames.USE_XINCLUDE));
-      configuration.setFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, pluginPreferences.getBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
+      configuration.setFeature(XMLValidationConfiguration.USE_XINCLUDE, preferencesService.getBoolean(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.USE_XINCLUDE, false, preferenceScopes));
+      configuration.setFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, preferencesService.getBoolean(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true, preferenceScopes));
     }
     catch(Exception e)
     {

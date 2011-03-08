@@ -25,6 +25,7 @@ import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractValidationSettingsPage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
 
 public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage {

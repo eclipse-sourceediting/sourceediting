@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -284,4 +284,5 @@ public class XMLCorePreferenceNames {
     public static final String NAMESPACE_IN_PI_TARGET = "namespaceInPITarget"; //$NON-NLS-1$
     public static final String MISSING_TAG_NAME = "missingTagName"; //$NON-NLS-1$
     public static final String WHITESPACE_AT_START = "whitespaceAtStart"; //$NON-NLS-1$
+    public static final String USE_PROJECT_SETTINGS = "use-project-settings";//$NON-NLS-1$
 }

@@ -227,6 +227,20 @@
     	</page>
 	</extension>
 	
+	<!-- Web content settings -->
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			name="%XML_Property_validation"
+			class="org.eclipse.wst.xml.ui.internal.preferences.XMLValidatorPreferencePage"
+			id="org.eclipse.wst.xml.ui.propertyPage.project.validation"
+			category="ValidationPropertiesPage">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+					
+				</adapt>
+			</enabledWhen>
+		</page>
+	</extension>
 	<!-- Keywords for preference and properties pages -->
 	<extension point="org.eclipse.ui.keywords">
 		<keyword

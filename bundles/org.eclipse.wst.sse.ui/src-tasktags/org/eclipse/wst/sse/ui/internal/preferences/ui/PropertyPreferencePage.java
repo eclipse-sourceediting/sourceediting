@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,6 +66,10 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 	private Button fEnableProjectSettings;
 
 	private Link fProjectSettingsLink;
+
+	private Control fCommon;
+
+	private ControlEnableState fEnablements;
 
 	public PropertyPreferencePage() {
 		super();
@@ -142,24 +146,14 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 			line.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		}
 
-		final Control common = createCommonContents(composite);
-		common.setLayoutData(new GridData(GridData.FILL_BOTH));
+		fCommon = createCommonContents(composite);
+		fCommon.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		if (fEnableProjectSettings != null) {
 			SelectionAdapter selectionAdapter = new SelectionAdapter() {
-				ControlEnableState enablements = null;
-
 				public void widgetSelected(SelectionEvent e) {
 					super.widgetSelected(e);
-					if (fEnableProjectSettings.getSelection()) {
-						if (enablements != null) {
-							enablements.restore();
-							enablements = null;
-						}
-					}
-					else {
-						enablements = ControlEnableState.disable(common);
-					}
+					enablePreferenceContent(fEnableProjectSettings.getSelection());
 				}
 			};
 			selectionAdapter.widgetSelected(null);
@@ -273,6 +267,34 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 			}
 		}
 		return ok;
+	}
+
+	protected void performDefaults() {
+		if(getProject() != null && fEnableProjectSettings != null) {
+			fEnableProjectSettings.setSelection(false);
+			enablePreferenceContent(false);
+		}
+		super.performDefaults();
+	}
+	
+	/**
+	 * Controls the enablement of the common content region
+	 * of a property or preference page
+	 * 
+	 * @param enable the enabled state of the common content
+	 * area
+	 */
+	protected void enablePreferenceContent(boolean enable) {
+		if(enable) {
+			if(fEnablements != null) {
+				fEnablements.restore();
+				fEnablements = null;
+			}
+		}
+		else {
+			if(fEnablements == null)
+				fEnablements = ControlEnableState.disable(fCommon);
+		}
 	}
 
 	private void updateLinkEnablement() {

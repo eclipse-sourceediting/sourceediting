@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,7 +78,7 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 	        setupValidation(nestedcontext);
 	        teardownRequired = true;
 	      }
-
+	      nestedcontext.setProject(file.getProject());
 		  validate(file, null, result, reporter, nestedcontext);
 
 	      if (teardownRequired)
@@ -109,6 +109,7 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 	      IFile file = (IFile) context.loadModel(GET_FILE, parms);
 	      if (file != null && shouldValidate(file)) 
 	      { 
+	    	  nestedcontext.setProject(file.getProject());
 	    	// The helper may not have a file stored in it but may have an InputStream if being
 	    	// called from a source other than the validation framework such as an editor.
 	        if (context.loadModel(GET_INPUTSTREAM) instanceof InputStream)

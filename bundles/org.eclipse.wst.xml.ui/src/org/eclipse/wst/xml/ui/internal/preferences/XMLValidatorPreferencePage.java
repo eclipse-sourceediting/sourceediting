@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,14 +13,15 @@
 
 package org.eclipse.wst.xml.ui.internal.preferences;
 
-
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.dialogs.ControlEnableState;
-import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -28,491 +29,295 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractValidationSettingsPage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
+public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
+	private static final String SETTINGS_SECTION_NAME = "XMLValidationSeverities";//$NON-NLS-1$
 
-public class XMLValidatorPreferencePage extends AbstractPreferencePage {
-  private Combo fIndicateNoGrammar;
-  
-  private Button fHonourAllSchemaLocations;
+	boolean fOriginalUseXIncludeButtonSelected;
 
-  private Button fUseXinclude;
-  
-  private Button fExtendedMarkupValidation;
-  
-  private Combo fEmptyElementTag;
-  
-  private Combo fEndTagWithAttributes;
-  
-  private Combo fInvalidWhitespaceBeforeTagname;
-  
-  private Combo fMissingClosingBracket;
-  
-  private Combo fMissingClosingQuote;
-  
-  private Combo fMissingEndTag;
-  
-  private Combo fMissingStartTag;
-  
-  private Combo fMissingQuotes;
-  
-  private Combo fInvalidNamespaceInPI;
-  
-  private Combo fMissingTagName;
-  
-  private Combo fInvalidWhitespaceAtStart;
+	boolean fOriginalUseHonourAllButtonSelected;
 
-  private Group fMarkupValidationGroup;
-  private ControlEnableState fMarkupState;
- 
-  private static final String[] SEVERITIES = {XMLUIMessages.Indicate_no_grammar_specified_severities_error, XMLUIMessages.Indicate_no_grammar_specified_severities_warning, XMLUIMessages.Indicate_no_grammar_specified_severities_ignore};
-  private static final String[] MARKUP_SEVERITIES = {XMLUIMessages.Severity_error, XMLUIMessages.Severity_warning, XMLUIMessages.Severity_ignore};
+	boolean fOriginalUseExtendedMarkupValidation;
 
-  protected Control createContents(Composite parent) {
-    Composite composite = (Composite)super.createContents(parent);
-    PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.XML_PREFWEBX_VALIDATOR_HELPID);
-    createContentsForValidatingGroup(composite);
-    createContentsForMarkupValidationGroup(composite);
-    setSize(composite);
-    loadPreferences();
+	private Combo fIndicateNoGrammar = null;
 
-    return composite;
-  }
+	private Button fHonourAllSchemaLocations = null;
 
-  protected void createContentsForValidatingGroup(Composite parent) {
-    Group validatingGroup = createGroup(parent, 2);
-    ((GridLayout)validatingGroup.getLayout()).makeColumnsEqualWidth = false;
-    validatingGroup.setText(XMLUIMessages.Validating_files);
+	private Button fUseXinclude = null;
 
-    if (fIndicateNoGrammar == null) {
-      createLabel(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified);
-      fIndicateNoGrammar = createCombo(validatingGroup, SEVERITIES);
-    }
-    if (fUseXinclude == null) {
-      fUseXinclude = createCheckBox(validatingGroup, XMLUIMessages.Use_XInclude);
-      ((GridData)fUseXinclude.getLayoutData()).horizontalSpan = 2;
-    }
-    if (fHonourAllSchemaLocations == null) {
-      fHonourAllSchemaLocations = createCheckBox(validatingGroup, XMLUIMessages.Honour_all_schema_locations);
-      ((GridData)fHonourAllSchemaLocations.getLayoutData()).horizontalSpan = 2;
-    }
-  }
-  private void handleMarkupSeveritySelection(boolean selection){
-	  if (selection) {
-		  fMarkupState.restore();
-	  }
-	  else {
-		  fMarkupState = ControlEnableState.disable(fMarkupValidationGroup);
-	  }
-  }
+	private Button fExtendedMarkupValidation;
 
-  protected void createContentsForMarkupValidationGroup(Composite parent) {
-	   
-	    if (fExtendedMarkupValidation == null) {
-		    fExtendedMarkupValidation = createCheckBox(parent, XMLUIMessages.MarkupValidation_files);
-		    ((GridData)fExtendedMarkupValidation.getLayoutData()).horizontalSpan = 2;
-		    fExtendedMarkupValidation.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					handleMarkupSeveritySelection(fExtendedMarkupValidation.getSelection());
-				}
-			});
-		}
-	    fMarkupValidationGroup = createGroup(parent, 3);
-	    ((GridLayout)fMarkupValidationGroup.getLayout()).makeColumnsEqualWidth = false;
-	    fMarkupValidationGroup.setText(XMLUIMessages.MarkupValidation_files_label);
+	private Combo fMissingStartTag;
 
-	    if (fMissingStartTag == null) {
-	        fMissingStartTag = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Missing_start_tag, MARKUP_SEVERITIES);
-	    }
-	    if (fMissingEndTag == null) {
-	        fMissingEndTag = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Missing_end_tag, MARKUP_SEVERITIES);
-	    }
-	    if (fMissingTagName == null) {
-	        fMissingTagName = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Tag_name_missing, MARKUP_SEVERITIES);
-	    }
-	    if (fMissingQuotes == null) {
-	        fMissingQuotes = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Missing_quotes, MARKUP_SEVERITIES);
-	    }
-	    if (fMissingClosingBracket == null) {
-	        fMissingClosingBracket = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Missing_closing_bracket, MARKUP_SEVERITIES);
-	    }
-	    if (fMissingClosingQuote == null) {
-	        fMissingClosingQuote = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Missing_closing_quote, MARKUP_SEVERITIES);
-	    }
-	    if (fEmptyElementTag == null) {
-	        fEmptyElementTag = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Empty_element_tag, MARKUP_SEVERITIES);
-	    }
-	    if (fEndTagWithAttributes == null) {
-	        fEndTagWithAttributes = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.End_tag_with_attributes, MARKUP_SEVERITIES);
-	    }
-	    if (fInvalidWhitespaceBeforeTagname == null) {
-	        fInvalidWhitespaceBeforeTagname = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Invalid_whitespace_before_tagname, MARKUP_SEVERITIES);
-	    }
-	    if (fInvalidNamespaceInPI == null) {
-	        fInvalidNamespaceInPI = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Namespace_in_pi_target, MARKUP_SEVERITIES);
-	    }
-	    if (fInvalidWhitespaceAtStart == null) {
-	        fInvalidWhitespaceAtStart = createMarkupCombo(fMarkupValidationGroup, XMLUIMessages.Whitespace_at_start, MARKUP_SEVERITIES);
-	    }
+	private Combo fMissingEndTag;
 
-  }
+	private Combo fMissingTagName;
 
-  /**
-   * @param parent 
-   * @return
-   */
-  private Combo createCombo(Composite parent, String[] items) {
-    Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
-    combo.setItems(items);
+	private Combo fEmptyElementTag;
 
-    //GridData
-    GridData data = new GridData(SWT.FILL, SWT.CENTER, true, true);
-    combo.setLayoutData(data);
+	private Combo fEndTagWithAttributes;
 
-    return combo;
-  }
+	private Combo fInvalidWhitespaceBeforeTagname;
 
-  private Combo createMarkupCombo(Composite parent, String text, String[] items) {
-	  Label label = new Label(parent, SWT.LEFT);
-	  GridData gd = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
-		label.setFont(JFaceResources.getDialogFont());
-		label.setText(text);
-		label.setLayoutData(gd);
+	private Combo fMissingClosingBracket;
 
-	  Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
-	    combo.setItems(items);
+	private Combo fMissingClosingQuote;
 
-	    //GridData
-	   // GridData data = new GridData(SWT.FILL, SWT.CENTER, false, true);
-	    combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+	private Combo fMissingQuotes;
 
-	    return combo;
-  }
- 
-  protected void initializeValues() {
-    initializeValuesForValidatingGroup();
-    initializeValuesForMarkupValidationGroup();
-  }
+	private Combo fInvalidNamespaceInPI;
 
-  protected void initializeValuesForValidatingGroup() {
-    Preferences modelPreferences = getModelPreferences();
-    int indicateNoGrammarButtonSelected = modelPreferences.getInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR);
-    boolean useXIncludeButtonSelected = modelPreferences.getBoolean(XMLCorePreferenceNames.USE_XINCLUDE);
+	private Combo fInvalidWhitespaceAtStart;
 
-    if (fIndicateNoGrammar != null) {
-      fIndicateNoGrammar.select(2 - indicateNoGrammarButtonSelected);
-      fIndicateNoGrammar.setText(SEVERITIES[2 - indicateNoGrammarButtonSelected]);
-    }
-    if (fUseXinclude != null) {
-      fUseXinclude.setSelection(useXIncludeButtonSelected);
-    }
+	private Group fMarkupValidationGroup;
+	private ControlEnableState fMarkupState;
 
-    boolean honourAllSelected = modelPreferences.getBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS);
-    if (fHonourAllSchemaLocations != null) {
-      fHonourAllSchemaLocations.setSelection(honourAllSelected);
-    }
-  }
-  
-  protected void initializeValuesForMarkupValidationGroup() {
-	    Preferences modelPreferences = getModelPreferences();
-	    boolean useExtendedMarkupValidation = modelPreferences.getBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION);
+	private static final int[] XML_SEVERITIES = { ValidationMessage.WARNING, ValidationMessage.ERROR, ValidationMessage.IGNORE };
 
-	    
-	    if (fExtendedMarkupValidation != null) {
-	    	fExtendedMarkupValidation.setSelection(useExtendedMarkupValidation);
-	    }
-	    int emptyElementTag = modelPreferences.getInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE);
-	    
-	    if (fEmptyElementTag != null) {
-	    	fEmptyElementTag.select(2 - emptyElementTag);
-	    	fEmptyElementTag.setText(MARKUP_SEVERITIES[2 - emptyElementTag]);
-		}
-	    
-	    int endTagWithAttributes  = modelPreferences.getInt(XMLCorePreferenceNames.END_TAG_WITH_ATTRIBUTES);
-	    
-	    if (fEndTagWithAttributes != null) {
-	    	fEndTagWithAttributes.select(2 - endTagWithAttributes);
-	    	fEndTagWithAttributes.setText(MARKUP_SEVERITIES[2 - endTagWithAttributes]);
-		}
-	    
-	    int invalidWhitespaceBeforeTagname  = modelPreferences.getInt(XMLCorePreferenceNames.WHITESPACE_BEFORE_TAGNAME);
-	    
-	    if (fInvalidWhitespaceBeforeTagname != null) {
-	    	fInvalidWhitespaceBeforeTagname.select(2 - invalidWhitespaceBeforeTagname);
-	    	fInvalidWhitespaceBeforeTagname.setText(MARKUP_SEVERITIES[2 - invalidWhitespaceBeforeTagname]);
-		}
-	    
-	    int missingClosingBracket  = modelPreferences.getInt(XMLCorePreferenceNames.MISSING_CLOSING_BRACKET);
-	    
-	    if (fMissingClosingBracket != null) {
-	    	fMissingClosingBracket.select(2 - missingClosingBracket);
-	    	fMissingClosingBracket.setText(MARKUP_SEVERITIES[2 - missingClosingBracket]);
-		}
-	    
-	    int missingClosingQuote  = modelPreferences.getInt(XMLCorePreferenceNames.MISSING_CLOSING_QUOTE);
-	    
-	    if (fMissingClosingQuote != null) {
-	    	fMissingClosingQuote.select(2 - missingClosingQuote);
-	    	fMissingClosingQuote.setText(MARKUP_SEVERITIES[2 - missingClosingQuote]);
-		}
-	    
-	    int missingEndTag  = modelPreferences.getInt(XMLCorePreferenceNames.MISSING_END_TAG);
-	    
-	    if (fMissingEndTag != null) {
-	    	fMissingEndTag.select(2 - missingEndTag);
-	    	fMissingEndTag.setText(MARKUP_SEVERITIES[2 - missingEndTag]);
-		}
-	    
-	    int missingStartTag  = modelPreferences.getInt(XMLCorePreferenceNames.MISSING_START_TAG);
-	    
-	    if (fMissingStartTag != null) {
-	    	fMissingStartTag.select(2 - missingStartTag);
-	    	fMissingStartTag.setText(MARKUP_SEVERITIES[2 - missingStartTag]);
-		}
-	    
-	    int missingQuotes  = modelPreferences.getInt(XMLCorePreferenceNames.MISSING_QUOTES);
-	    
-	    if (fMissingQuotes != null) {
-	    	fMissingQuotes.select(2 - missingQuotes);
-	    	fMissingQuotes.setText(MARKUP_SEVERITIES[2 - missingQuotes]);
-		}
-	    
-	    int invalidNamespaceInPI  = modelPreferences.getInt(XMLCorePreferenceNames.NAMESPACE_IN_PI_TARGET);
-	    
-	    if (fInvalidNamespaceInPI != null) {
-	    	fInvalidNamespaceInPI.select(2 - invalidNamespaceInPI);
-	    	fInvalidNamespaceInPI.setText(MARKUP_SEVERITIES[2 - invalidNamespaceInPI]);
-		}
-	    
-	    int tagNameMissing  = modelPreferences.getInt(XMLCorePreferenceNames.MISSING_TAG_NAME);
-	    
-	    if (fMissingTagName != null) {
-	    	fMissingTagName.select(2 - tagNameMissing);
-	    	fMissingTagName.setText(MARKUP_SEVERITIES[2 - tagNameMissing]);
-		}
-	    
-	    int invalidWhitespaceAtStart  = modelPreferences.getInt(XMLCorePreferenceNames.WHITESPACE_AT_START);
-	    
-	    if (fInvalidWhitespaceAtStart != null) {
-	    	fInvalidWhitespaceAtStart.select(2 - invalidWhitespaceAtStart);
-	    	fInvalidWhitespaceAtStart.setText(MARKUP_SEVERITIES[2 - invalidWhitespaceAtStart]);
+	private static final String[] MARKUP_SEVERITIES = { XMLUIMessages.Severity_error, XMLUIMessages.Severity_warning, XMLUIMessages.Severity_ignore };
+
+	protected void createContentsForValidatingGroup(Composite validatingGroup) {
+
+		if (fIndicateNoGrammar == null)
+			fIndicateNoGrammar = addComboBox(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified, XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+
+		if (fUseXinclude == null) {
+			fUseXinclude = createCheckBox(validatingGroup, XMLUIMessages.Use_XInclude);
+			((GridData) fUseXinclude.getLayoutData()).horizontalSpan = 2;
 		}
 
-	    if (!useExtendedMarkupValidation)
-	    	fMarkupState = ControlEnableState.disable(fMarkupValidationGroup);
-  }
+		if (fHonourAllSchemaLocations == null) {
+			fHonourAllSchemaLocations = createCheckBox(validatingGroup, XMLUIMessages.Honour_all_schema_locations);
+			((GridData) fHonourAllSchemaLocations.getLayoutData()).horizontalSpan = 2;
+		}
 
-  protected void performDefaultsForValidatingGroup() {
-    Preferences modelPreferences = getModelPreferences();
-    int indicateNoGrammarButtonSelected = modelPreferences.getDefaultInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR);
-    boolean useXIncludeButtonSelected = modelPreferences.getDefaultBoolean(XMLCorePreferenceNames.USE_XINCLUDE);
+		IScopeContext[] contexts = createPreferenceScopes();
+		fOriginalUseXIncludeButtonSelected = contexts[0].getNode(getPreferenceNodeQualifier()).getBoolean(XMLCorePreferenceNames.USE_XINCLUDE, true);
 
-    if (fIndicateNoGrammar != null) {
-      fIndicateNoGrammar.setSelection(new Point(indicateNoGrammarButtonSelected, 2 - indicateNoGrammarButtonSelected));
-      fIndicateNoGrammar.setText(SEVERITIES[indicateNoGrammarButtonSelected]);
-    }
-    if (fUseXinclude != null) {
-      fUseXinclude.setSelection(useXIncludeButtonSelected);
-    }
+		if (fUseXinclude != null) {
+			fUseXinclude.setSelection(fOriginalUseXIncludeButtonSelected);
+		}
+		fOriginalUseHonourAllButtonSelected = contexts[0].getNode(getPreferenceNodeQualifier()).getBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
+		if (fHonourAllSchemaLocations != null) {
+			fHonourAllSchemaLocations.setSelection(fOriginalUseHonourAllButtonSelected);
+		}
 
-    boolean honourAllButtonSelected = modelPreferences.getDefaultBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS);
-    if (fHonourAllSchemaLocations != null) {
-      fHonourAllSchemaLocations.setSelection(honourAllButtonSelected);
-    }
-  }
-  
-  protected void performDefaultsForMarkupValidationGroup() {
-	  Preferences modelPreferences = getModelPreferences();
-	    boolean useExtendedMarkupValidation = modelPreferences.getDefaultBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION);
-
-	    
-	    if (fExtendedMarkupValidation != null) {
-	    	if (fExtendedMarkupValidation.getSelection() != useExtendedMarkupValidation) {
-	    		handleMarkupSeveritySelection(useExtendedMarkupValidation);
-	    	}
-	    	fExtendedMarkupValidation.setSelection(useExtendedMarkupValidation);
-	    	
-	    }
-	    int emptyElementTag = modelPreferences.getDefaultInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE);
-	    
-	    if (fEmptyElementTag != null) {
-	    	fEmptyElementTag.setSelection(new Point(emptyElementTag,2 - emptyElementTag));
-	    	fEmptyElementTag.setText(MARKUP_SEVERITIES[2 - emptyElementTag]);
-		}
-	    
-	    int endTagWithAttributes  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.END_TAG_WITH_ATTRIBUTES);
-	    
-	    if (fEndTagWithAttributes != null) {
-	    	fEndTagWithAttributes.setSelection(new Point(endTagWithAttributes,2 - endTagWithAttributes));
-	    	fEndTagWithAttributes.setText(MARKUP_SEVERITIES[2 - endTagWithAttributes]);
-		}
-	    
-	    int invalidWhitespaceBeforeTagname  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.WHITESPACE_BEFORE_TAGNAME);
-	    
-	    if (fInvalidWhitespaceBeforeTagname != null) {
-	    	fInvalidWhitespaceBeforeTagname.setSelection(new Point(invalidWhitespaceBeforeTagname,2 - invalidWhitespaceBeforeTagname));
-	    	fInvalidWhitespaceBeforeTagname.setText(MARKUP_SEVERITIES[2 - invalidWhitespaceBeforeTagname]);
-		}
-	    
-	    int missingClosingBracket  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.MISSING_CLOSING_BRACKET);
-	    
-	    if (fMissingClosingBracket != null) {
-	    	fMissingClosingBracket.setSelection(new Point(missingClosingBracket,2 - missingClosingBracket));
-	    	fMissingClosingBracket.setText(MARKUP_SEVERITIES[2 - missingClosingBracket]);
-		}
-	    
-	    int missingClosingQuote  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.MISSING_CLOSING_QUOTE);
-	    
-	    if (fMissingClosingQuote != null) {
-	    	fMissingClosingQuote.setSelection(new Point(missingClosingQuote,2 - missingClosingQuote));
-	    	fMissingClosingQuote.setText(MARKUP_SEVERITIES[2 - missingClosingQuote]);
-		}
-	    
-	    int missingEndTag  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.MISSING_END_TAG);
-	    
-	    if (fMissingEndTag != null) {
-	    	fMissingEndTag.setSelection(new Point(missingEndTag,2 - missingEndTag));
-	    	fMissingEndTag.setText(MARKUP_SEVERITIES[2 - missingEndTag]);
-		}
-	    
-	    int missingStartTag  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.MISSING_START_TAG);
-	    
-	    if (fMissingStartTag != null) {
-	    	fMissingStartTag.setSelection(new Point(missingStartTag,2 - missingStartTag));
-	    	fMissingStartTag.setText(MARKUP_SEVERITIES[2 - missingStartTag]);
-		}
-	    
-	    int missingQuotes  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.MISSING_QUOTES);
-	    
-	    if (fMissingQuotes != null) {
-	    	fMissingQuotes.setSelection(new Point(missingQuotes,2 - missingQuotes));
-	    	fMissingQuotes.setText(MARKUP_SEVERITIES[2 - missingQuotes]);
-		}
-	    
-	    int invalidNamespaceInPI  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.NAMESPACE_IN_PI_TARGET);
-	    
-	    if (fInvalidNamespaceInPI != null) {
-	    	fInvalidNamespaceInPI.setSelection(new Point(invalidNamespaceInPI,2 - invalidNamespaceInPI));
-	    	fInvalidNamespaceInPI.setText(MARKUP_SEVERITIES[2 - invalidNamespaceInPI]);
-		}
-	    
-	    int tagNameMissing  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.MISSING_TAG_NAME);
-	    
-	    if (fMissingTagName != null) {
-	    	fMissingTagName.setSelection(new Point(tagNameMissing,2 - tagNameMissing));
-	    	fMissingTagName.setText(MARKUP_SEVERITIES[2 - tagNameMissing]);
-		}
-	    
-	    int invalidWhitespaceAtStart  = modelPreferences.getDefaultInt(XMLCorePreferenceNames.WHITESPACE_AT_START);
-	    
-	    if (fInvalidWhitespaceAtStart != null) {
-	    	fInvalidWhitespaceAtStart.setSelection(new Point(invalidWhitespaceAtStart,2 - invalidWhitespaceAtStart));
-	    	fInvalidWhitespaceAtStart.setText(MARKUP_SEVERITIES[2 - invalidWhitespaceAtStart]);
-		}
-	  }
-
-  protected void storeValuesForValidatingGroup()
-  {
-    Preferences modelPreferences = getModelPreferences();
-    if (fIndicateNoGrammar != null) {
-      int warnNoGrammarButtonSelected = 2 - fIndicateNoGrammar.getSelectionIndex();
-      modelPreferences.setValue(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, warnNoGrammarButtonSelected);
-    }
-    if (fUseXinclude != null) {
-      boolean useXIncludeButtonSelected = fUseXinclude.getSelection();
-      modelPreferences.setValue(XMLCorePreferenceNames.USE_XINCLUDE, useXIncludeButtonSelected);
-    }
-    if (fHonourAllSchemaLocations != null) {
-      boolean honourAllButtonSelected = fHonourAllSchemaLocations.getSelection();
-      modelPreferences.setValue(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, honourAllButtonSelected);
-    }
-  }
-  protected void storeValuesForMarkupValidationGroup()
-  {
-    Preferences modelPreferences = getModelPreferences();
-    if (fExtendedMarkupValidation != null) {
-        boolean extendedMarkupValidation = fExtendedMarkupValidation.getSelection();
-        modelPreferences.setValue(XMLCorePreferenceNames.MARKUP_VALIDATION, extendedMarkupValidation);
-    }
-    if (fEmptyElementTag != null) {
-      int emptyElementTag = 2 - fEmptyElementTag.getSelectionIndex();
-      modelPreferences.setValue(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE, emptyElementTag);
-    }
-    if (fEndTagWithAttributes != null) {
-        int endTagWithAttributes = 2 - fEndTagWithAttributes.getSelectionIndex();
-        modelPreferences.setValue(XMLCorePreferenceNames.END_TAG_WITH_ATTRIBUTES, endTagWithAttributes);
-    }
-    if (fInvalidWhitespaceBeforeTagname != null) {
-        int invalidWhitespaceBeforeTagname = 2 - fInvalidWhitespaceBeforeTagname.getSelectionIndex();
-        modelPreferences.setValue(XMLCorePreferenceNames.WHITESPACE_BEFORE_TAGNAME, invalidWhitespaceBeforeTagname);
-    }
-    if (fMissingClosingBracket != null) {
-          int missingClosingBracket = 2 - fMissingClosingBracket.getSelectionIndex();
-          modelPreferences.setValue(XMLCorePreferenceNames.MISSING_CLOSING_BRACKET, missingClosingBracket);
-    }
-    if (fMissingClosingQuote != null) {
-        int missingClosingQuote = 2 - fMissingClosingQuote.getSelectionIndex();
-        modelPreferences.setValue(XMLCorePreferenceNames.MISSING_CLOSING_BRACKET, missingClosingQuote);
-    }
-    if (fMissingEndTag != null) {
-        int missingEndTag = 2 - fMissingEndTag.getSelectionIndex();
-        modelPreferences.setValue(XMLCorePreferenceNames.MISSING_END_TAG, missingEndTag);
-        modelPreferences.getInt(XMLCorePreferenceNames.MISSING_END_TAG);
-    }
-	if (fMissingStartTag != null) {
-        int missingStartTag = 2 - fMissingStartTag.getSelectionIndex();
-	    modelPreferences.setValue(XMLCorePreferenceNames.MISSING_START_TAG, missingStartTag);
 	}
-	if (fMissingQuotes != null) {
-        int missingQuotes = 2 - fMissingQuotes.getSelectionIndex();
-	    modelPreferences.setValue(XMLCorePreferenceNames.MISSING_QUOTES, missingQuotes);
-	}
-	if (fInvalidNamespaceInPI != null) {
-        int invalidNamespaceInPI = 2 - fInvalidNamespaceInPI.getSelectionIndex();
-	    modelPreferences.setValue(XMLCorePreferenceNames.NAMESPACE_IN_PI_TARGET, invalidNamespaceInPI);
-	}
-	if (fMissingTagName != null) {
-        int missingTagName = 2 - fMissingTagName.getSelectionIndex();
-	    modelPreferences.setValue(XMLCorePreferenceNames.MISSING_TAG_NAME, missingTagName);
-	}
-	if (fInvalidWhitespaceAtStart != null) {
-        int invalidWhitespaceAtStart = 2 - fInvalidWhitespaceAtStart.getSelectionIndex();
-	    modelPreferences.setValue(XMLCorePreferenceNames.WHITESPACE_AT_START, invalidWhitespaceAtStart);
-	}
-    
-    
-  }
-  
-  protected void storeValues() {
-    storeValuesForValidatingGroup();
-    storeValuesForMarkupValidationGroup();
-  }
 
-  protected void performDefaults() {
-    performDefaultsForValidatingGroup();
-    performDefaultsForMarkupValidationGroup();
-    super.performDefaults();
-  }
-  
-  protected Preferences getModelPreferences() {
-    return XMLCorePlugin.getDefault().getPluginPreferences();
-  }  
-  
-  protected void doSavePreferenceStore() {
-      XMLCorePlugin.getDefault().savePluginPreferences(); // model
-  }
+	private void handleMarkupSeveritySelection(boolean selection) {
+		if (selection) {
+			if (fMarkupState != null) {
+				fMarkupState.restore();
+				fMarkupState = null;
+			}
+		} else {
+			if (fMarkupState == null)
+				fMarkupState = ControlEnableState.disable(fMarkupValidationGroup);
+		}
+	}
 
-  public boolean performOk() {
-    boolean result = super.performOk();
+	protected void createContentsForMarkupValidationGroup(Composite parent) {
 
-    doSavePreferenceStore();
+		IScopeContext[] contexts = createPreferenceScopes();
 
-    return result;
-  }
+		fOriginalUseExtendedMarkupValidation = contexts[0].getNode(getPreferenceNodeQualifier()).getBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION, false);
+		fExtendedMarkupValidation = createCheckBox(parent, XMLUIMessages.MarkupValidation_files);
+
+		((GridData) fExtendedMarkupValidation.getLayoutData()).horizontalSpan = 2;
+		fExtendedMarkupValidation.setSelection(fOriginalUseExtendedMarkupValidation);
+
+		fExtendedMarkupValidation.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				handleMarkupSeveritySelection(fExtendedMarkupValidation.getSelection());
+			}
+		});
+
+		fMarkupValidationGroup = createGroup(parent, 3);
+		((GridLayout) fMarkupValidationGroup.getLayout()).makeColumnsEqualWidth = false;
+		fMarkupValidationGroup.setText(XMLUIMessages.MarkupValidation_files_label);
+		GridLayout layout = new GridLayout(3, false);
+		fMarkupValidationGroup.setLayout(layout);
+
+		if (fMissingStartTag == null)
+			fMissingStartTag = addComboBox(fMarkupValidationGroup, XMLUIMessages.Missing_start_tag, XMLCorePreferenceNames.MISSING_START_TAG, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fMissingEndTag == null)
+			fMissingEndTag = addComboBox(fMarkupValidationGroup, XMLUIMessages.Missing_end_tag, XMLCorePreferenceNames.MISSING_END_TAG, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fMissingTagName == null)
+			fMissingTagName = addComboBox(fMarkupValidationGroup, XMLUIMessages.Tag_name_missing, XMLCorePreferenceNames.MISSING_TAG_NAME, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fMissingQuotes == null)
+			fMissingQuotes = addComboBox(fMarkupValidationGroup, XMLUIMessages.Missing_quotes, XMLCorePreferenceNames.MISSING_QUOTES, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fMissingClosingBracket == null)
+			fMissingClosingBracket = addComboBox(fMarkupValidationGroup, XMLUIMessages.Missing_closing_bracket, XMLCorePreferenceNames.MISSING_CLOSING_BRACKET, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fMissingClosingQuote == null)
+			fMissingClosingQuote = addComboBox(fMarkupValidationGroup, XMLUIMessages.Missing_closing_quote, XMLCorePreferenceNames.MISSING_CLOSING_QUOTE, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fEmptyElementTag == null)
+			fEmptyElementTag = addComboBox(fMarkupValidationGroup, XMLUIMessages.Empty_element_tag, XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fEndTagWithAttributes == null)
+			fEndTagWithAttributes = addComboBox(fMarkupValidationGroup, XMLUIMessages.End_tag_with_attributes, XMLCorePreferenceNames.END_TAG_WITH_ATTRIBUTES, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fInvalidWhitespaceBeforeTagname == null)
+			fInvalidWhitespaceBeforeTagname = addComboBox(fMarkupValidationGroup, XMLUIMessages.Invalid_whitespace_before_tagname, XMLCorePreferenceNames.WHITESPACE_BEFORE_TAGNAME, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fInvalidNamespaceInPI == null)
+			fInvalidNamespaceInPI = addComboBox(fMarkupValidationGroup, XMLUIMessages.Namespace_in_pi_target, XMLCorePreferenceNames.NAMESPACE_IN_PI_TARGET, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		if (fInvalidWhitespaceAtStart == null)
+			fInvalidWhitespaceAtStart = addComboBox(fMarkupValidationGroup, XMLUIMessages.Whitespace_at_start, XMLCorePreferenceNames.WHITESPACE_AT_START, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+
+		handleMarkupSeveritySelection(fOriginalUseExtendedMarkupValidation);
+
+	}
+
+	protected void performDefaultsForValidatingGroup() {
+		IEclipsePreferences modelPreferences = new DefaultScope().getNode(getPreferenceNodeQualifier());
+		boolean useXIncludeButtonSelected = modelPreferences.getBoolean(XMLCorePreferenceNames.USE_XINCLUDE, true);
+
+		if (fUseXinclude != null) {
+			fUseXinclude.setSelection(useXIncludeButtonSelected);
+		}
+		boolean useHonourAllButtonSelected = modelPreferences.getBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
+		if (fHonourAllSchemaLocations != null) {
+			fHonourAllSchemaLocations.setSelection(useHonourAllButtonSelected);
+		}
+	}
+
+	protected void performDefaultsForMarkupValidationGroup() {
+		IEclipsePreferences modelPreferences = new DefaultScope().getNode(getPreferenceNodeQualifier());
+		boolean useExtendedMarkupValidation = modelPreferences.getBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION, false);
+
+		if (fExtendedMarkupValidation != null) {
+			if (fExtendedMarkupValidation.getSelection() != useExtendedMarkupValidation) {
+				handleMarkupSeveritySelection(useExtendedMarkupValidation);
+			}
+			fExtendedMarkupValidation.setSelection(useExtendedMarkupValidation);
+		}
+	}
+
+	protected void storeValuesForValidatingGroup(IScopeContext[] contexts) {
+		if (fUseXinclude != null) {
+			boolean useXIncludeButtonSelected = fUseXinclude.getSelection();
+			contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(XMLCorePreferenceNames.USE_XINCLUDE, useXIncludeButtonSelected);
+		}
+		if (fHonourAllSchemaLocations != null) {
+			boolean honourAllButtonSelected = fHonourAllSchemaLocations.getSelection();
+			contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, honourAllButtonSelected);
+		}
+	}
+
+	protected void storeValuesForMarkupValidationGroup(IScopeContext[] contexts) {
+		if (fExtendedMarkupValidation != null) {
+			boolean extendedMarkupValidation = fExtendedMarkupValidation.getSelection();
+			contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION, extendedMarkupValidation);
+		}
+	}
+
+	protected void performDefaults() {
+		resetSeverities();
+		performDefaultsForValidatingGroup();
+		performDefaultsForMarkupValidationGroup();
+		super.performDefaults();
+	}
+
+	protected Preferences getModelPreferences() {
+		return XMLCorePlugin.getDefault().getPluginPreferences();
+	}
+
+	protected void doSavePreferenceStore() {
+		XMLCorePlugin.getDefault().savePluginPreferences(); // model
+	}
+
+	protected void storeValues() {
+		super.storeValues();
+		IScopeContext[] contexts = createPreferenceScopes();
+
+		storeValuesForValidatingGroup(contexts);
+		storeValuesForMarkupValidationGroup(contexts);
+	}
+
+	protected Control createCommonContents(Composite parent) {
+		final Composite page = new Composite(parent, SWT.NULL);
+
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		page.setLayout(layout);
+
+		Group validatingGroup = createGroup(page, 3);
+		validatingGroup.setText(XMLUIMessages.Validating_files);
+		createContentsForValidatingGroup(validatingGroup);
+
+		createContentsForMarkupValidationGroup(page);
+
+		return page;
+	}
+
+	protected String getPreferenceNodeQualifier() {
+		return XMLCorePlugin.getDefault().getBundle().getSymbolicName();
+	}
+
+	protected String getPreferencePageID() {
+		return "org.eclipse.wst.sse.ui.preferences.xml.validation";//$NON-NLS-1$
+	}
+
+	protected String getProjectSettingsKey() {
+		return XMLCorePreferenceNames.USE_PROJECT_SETTINGS;
+	}
+
+	protected String getPropertyPageID() {
+		return "org.eclipse.wst.xml.ui.propertyPage.project.validation";//$NON-NLS-1$
+	}
+
+	public void init(IWorkbench workbench) {
+	}
+
+	private Group createGroup(Composite parent, int numColumns) {
+
+		Group group = new Group(parent, SWT.NULL);
+
+		// GridLayout
+		GridLayout layout = new GridLayout();
+		layout.numColumns = numColumns;
+		group.setLayout(layout);
+
+		// GridData
+		GridData data = new GridData(GridData.FILL);
+		data.horizontalIndent = 0;
+		data.verticalAlignment = GridData.FILL;
+		data.horizontalAlignment = GridData.FILL;
+		data.grabExcessHorizontalSpace = true;
+		group.setLayoutData(data);
+
+		return group;
+	}
+
+	private Button createCheckBox(Composite group, String label) {
+		Button button = new Button(group, SWT.CHECK | SWT.LEFT);
+		button.setText(label);
+
+		// button.setLayoutData(GridDataFactory.fillDefaults().create());
+
+		// GridData
+		GridData data = new GridData(GridData.FILL);
+		data.verticalAlignment = GridData.CENTER;
+		data.horizontalAlignment = GridData.FILL;
+		button.setLayoutData(data);
+
+		return button;
+	}
+
+	public void dispose() {
+		storeSectionExpansionStates(getDialogSettings().addNewSection(SETTINGS_SECTION_NAME));
+		super.dispose();
+	}
+
+	protected IDialogSettings getDialogSettings() {
+		return XMLUIPlugin.getDefault().getDialogSettings();
+	}
+
+	protected boolean shouldRevalidateOnSettingsChange() {
+		return fOriginalUseExtendedMarkupValidation != fExtendedMarkupValidation.getSelection() || fOriginalUseXIncludeButtonSelected != fUseXinclude.getSelection() || fOriginalUseHonourAllButtonSelected != fHonourAllSchemaLocations.getSelection() || super.shouldRevalidateOnSettingsChange();
+	}
 }
