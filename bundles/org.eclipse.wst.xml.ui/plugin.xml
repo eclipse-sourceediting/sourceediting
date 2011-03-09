@@ -697,7 +697,8 @@
 				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
 				actionID="StructureSelectHistory">
 			</action>
-		</editorContribution>
+		</editorContribution>-->
+	<extension point="org.eclipse.ui.editorActions">
         <editorContribution
             targetID="org.eclipse.core.runtime.xml.source"
             id="org.eclipse.core.runtime.xml.source.ruler.actions">
@@ -714,7 +715,6 @@
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
 	</extension>
--->
 
 	<extension
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
