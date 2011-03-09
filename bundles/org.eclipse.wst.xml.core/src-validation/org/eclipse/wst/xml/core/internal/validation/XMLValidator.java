@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,6 +86,7 @@ public class XMLValidator
   
   // WTP XML validator specific key.
   protected static final String NO_GRAMMAR_FOUND = "NO_GRAMMAR_FOUND"; //$NON-NLS-1$
+  protected static final String NO_DOCUMENT_ELEMENT_FOUND = "NO_DOCUMENT_ELEMENT_FOUND"; //$NON-NLS-1$
   
   private static final String FILE_NOT_FOUND_KEY = "FILE_NOT_FOUND"; //$NON-NLS-1$
    
@@ -327,7 +328,6 @@ public class XMLValidator
         valinfo.setElementDeclarationCount(helper.numDTDElements);
         valinfo.setNamespaceEncountered(helper.isNamespaceEncountered);
         valinfo.setGrammarEncountered(helper.isGrammarEncountered);
-        
         XMLReader reader = createXMLReader(valinfo, entityResolver);
         // Set the configuration option
         if (configuration.getFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS))
@@ -352,7 +352,12 @@ public class XMLValidator
           else // 2
               valinfo.addError(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
         }
-
+        if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_DOCUMENT_ELEMENT) > 0 && valinfo.isValid() && !helper.isDocumentElementEncountered) {
+        	if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_DOCUMENT_ELEMENT) == 1)
+                valinfo.addWarning(XMLValidationMessages._NO_DOCUMENT_ELEMENT, 1, 0, uri, NO_DOCUMENT_ELEMENT_FOUND, null);
+              else // 2
+                  valinfo.addError(XMLValidationMessages._NO_DOCUMENT_ELEMENT, 1, 0, uri, NO_DOCUMENT_ELEMENT_FOUND, null);
+        }
         if (helper.isDTDEncountered)
           grammarFile = entityResolver.getLocation();
         else

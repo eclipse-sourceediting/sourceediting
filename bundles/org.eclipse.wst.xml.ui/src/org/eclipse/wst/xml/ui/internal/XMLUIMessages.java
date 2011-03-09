@@ -300,6 +300,7 @@ public class XMLUIMessages extends NLS {
 	public static String StructureSelectPrevious_description;
 	public static String MESSAGE_XML_VALIDATION_MESSAGE_UI_;
 	public static String Indicate_no_grammar_specified;
+	public static String Indicate_no_document_element;
 	public static String Indicate_no_grammar_specified_severities_error;
 	public static String Indicate_no_grammar_specified_severities_warning;
 	public static String Indicate_no_grammar_specified_severities_ignore;

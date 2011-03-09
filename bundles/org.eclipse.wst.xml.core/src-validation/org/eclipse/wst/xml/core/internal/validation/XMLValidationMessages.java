@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ public class XMLValidationMessages extends NLS {
 	public static String _UI_PROBLEMS_CONNECTION_REFUSED;
 	public static String _UI_REF_FILE_ERROR_MESSAGE;
 	public static String _WARN_NO_GRAMMAR;
+	public static String _NO_DOCUMENT_ELEMENT;
 
 	static {
 		// load message values from bundle file

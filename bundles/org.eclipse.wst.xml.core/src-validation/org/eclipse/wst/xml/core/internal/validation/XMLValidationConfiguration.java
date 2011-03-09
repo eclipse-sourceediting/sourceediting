@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ public class XMLValidationConfiguration
    */
   public static final String WARN_NO_GRAMMAR = "WARN_NO_GRAMMAR"; //$NON-NLS-1$
   public static final String INDICATE_NO_GRAMMAR = "INDICATE_NO_GRAMMAR"; //$NON-NLS-1$
+  public static final String INDICATE_NO_DOCUMENT_ELEMENT = "INDICATE_NO_DOCUMENT_ELEMENT"; //$NON-NLS-1$
   public static final String USE_XINCLUDE = "USE_XINCLUDE"; //$NON-NLS-1$
   public static final String HONOUR_ALL_SCHEMA_LOCATIONS = "HONOUR_ALL_SCHEMA_LOCATIONS"; //$NON-NLS-1$
 
@@ -32,6 +33,7 @@ public class XMLValidationConfiguration
   private int indicate_no_grammar_value = 1;
   private boolean use_xinclude = false;
   private boolean honour_all_schema_locations_value = false;
+  private int indicate_no_document_value = 0;
   
   /**
    * Set a feature of this configuration.
@@ -70,6 +72,8 @@ public class XMLValidationConfiguration
   {
 	if(INDICATE_NO_GRAMMAR.equals(feature))
 	  indicate_no_grammar_value = value;
+	else if (INDICATE_NO_DOCUMENT_ELEMENT.equals(feature))
+	  indicate_no_document_value = value;
 	else
 	  throw new IllegalArgumentException("Feature not recognized."); //$NON-NLS-1$
 	
@@ -114,7 +118,9 @@ public class XMLValidationConfiguration
   {
 	if(INDICATE_NO_GRAMMAR.equals(feature))
 	  return indicate_no_grammar_value;
-	
+	else if (INDICATE_NO_DOCUMENT_ELEMENT.equals(feature))
+      return indicate_no_document_value;
+
 	throw new IllegalArgumentException("Feature not recognized."); //$NON-NLS-1$
   }
 

@@ -81,6 +81,7 @@ public class Validator extends AbstractNestedValidator
       //Preferences pluginPreferences = XMLCorePlugin.getDefault().getPluginPreferences();
       configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, indicateNoGrammar);
       final IPreferencesService preferencesService = Platform.getPreferencesService();
+      configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_DOCUMENT_ELEMENT, preferencesService.getInt(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.INDICATE_NO_DOCUMENT_ELEMENT, -1, fPreferenceScopes));
       configuration.setFeature(XMLValidationConfiguration.USE_XINCLUDE, preferencesService.getBoolean(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.USE_XINCLUDE, false, fPreferenceScopes));
       configuration.setFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, preferencesService.getBoolean(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true, fPreferenceScopes));
     }
@@ -147,6 +148,8 @@ public class Validator extends AbstractNestedValidator
       if (context == null)
       {
         context = getNestedContext(state, true);
+        if (context != null)
+        	context.setProject(project);
         setupValidation(context);
         state.put(XML_VALIDATOR_CONTEXT, context);
       }

@@ -184,6 +184,16 @@ public class XMLCorePreferenceNames {
 	 */
 	public static final String INDICATE_NO_GRAMMAR = "indicateNoGrammar";//$NON-NLS-1$
 
+	/**
+	 * Indicates whether or not a message should be produced when validating a file that does not contain
+	 * a document element
+	 * <p>
+	 * Value is of type <code>integer</code>.<br/>
+	 * Possible values: {-1, 1, 2} (none, warning, error)
+	 * </p>
+	 */
+	public static final String INDICATE_NO_DOCUMENT_ELEMENT = "indiciateNoDocumentElement"; //$NON-NLS-1$
+
  	/**
 	 * Indicates whether or not xincludes should be processed before
 	 * validation.

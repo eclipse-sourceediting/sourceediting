@@ -48,6 +48,8 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 
 	private Combo fIndicateNoGrammar = null;
 
+	private Combo fIndicateNoDocumentElement = null;
+
 	private Button fHonourAllSchemaLocations = null;
 
 	private Button fUseXinclude = null;
@@ -87,6 +89,10 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 
 		if (fIndicateNoGrammar == null)
 			fIndicateNoGrammar = addComboBox(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified, XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+
+		if (fIndicateNoDocumentElement == null) {
+			fIndicateNoDocumentElement = addComboBox(validatingGroup, XMLUIMessages.Indicate_no_document_element, XMLCorePreferenceNames.INDICATE_NO_DOCUMENT_ELEMENT, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+		}
 
 		if (fUseXinclude == null) {
 			fUseXinclude = createCheckBox(validatingGroup, XMLUIMessages.Use_XInclude);
