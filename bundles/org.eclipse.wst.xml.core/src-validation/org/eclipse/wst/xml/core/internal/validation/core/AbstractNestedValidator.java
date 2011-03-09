@@ -75,10 +75,13 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 	      {
 	        // validationstart was not called, so manually setup and tear down
 	        nestedcontext = getNestedContext(state, true);
+	        nestedcontext.setProject(file.getProject());
 	        setupValidation(nestedcontext);
 	        teardownRequired = true;
 	      }
-	      nestedcontext.setProject(file.getProject());
+	      else {
+	    	  nestedcontext.setProject(file.getProject());
+	      }
 		  validate(file, null, result, reporter, nestedcontext);
 
 	      if (teardownRequired)

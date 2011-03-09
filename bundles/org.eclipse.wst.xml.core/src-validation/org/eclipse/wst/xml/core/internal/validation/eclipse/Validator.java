@@ -38,6 +38,7 @@ public class Validator extends AbstractNestedValidator
 {
   private static final String XML_VALIDATOR_CONTEXT = "org.eclipse.wst.xml.core.validatorContext"; //$NON-NLS-1$
   protected int indicateNoGrammar = 0;
+  private IScopeContext[] fPreferenceScopes = null;
   /**
    * Set any preferences for XML validation.
    * 
@@ -46,15 +47,18 @@ public class Validator extends AbstractNestedValidator
   protected void setupValidation(NestedValidatorContext context) 
   {
 	super.setupValidation(context);
-	//indicateNoGrammar = XMLCorePlugin.getDefault().getPluginPreferences().getInt();
+    fPreferenceScopes = createPreferenceScopes(context);
+    indicateNoGrammar = Platform.getPreferencesService().getInt(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 0, fPreferenceScopes);
   }
 
   protected IScopeContext[] createPreferenceScopes(NestedValidatorContext context) {
-	  final IProject project = context.getProject();
-	  if (project != null && project.isAccessible()) {
-		  final ProjectScope projectScope = new ProjectScope(project);
-		  if (projectScope.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(XMLCorePreferenceNames.USE_PROJECT_SETTINGS, false))
-			return new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+	  if (context != null) {
+		  final IProject project = context.getProject();
+		  if (project != null && project.isAccessible()) {
+			  final ProjectScope projectScope = new ProjectScope(project);
+			  if (projectScope.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(XMLCorePreferenceNames.USE_PROJECT_SETTINGS, false))
+				return new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+		  }
 	  }
 	  return new IScopeContext[]{new InstanceScope(), new DefaultScope()};
   }
@@ -72,16 +76,13 @@ public class Validator extends AbstractNestedValidator
     XMLValidator validator = XMLValidator.getInstance();
 
     XMLValidationConfiguration configuration = new XMLValidationConfiguration();
-    final IScopeContext[] preferenceScopes = createPreferenceScopes(context);
-	final IPreferencesService preferencesService = Platform.getPreferencesService();
-	indicateNoGrammar = preferencesService.getInt(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 0, preferenceScopes);
-
     try
     {
       //Preferences pluginPreferences = XMLCorePlugin.getDefault().getPluginPreferences();
       configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, indicateNoGrammar);
-      configuration.setFeature(XMLValidationConfiguration.USE_XINCLUDE, preferencesService.getBoolean(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.USE_XINCLUDE, false, preferenceScopes));
-      configuration.setFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, preferencesService.getBoolean(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true, preferenceScopes));
+      final IPreferencesService preferencesService = Platform.getPreferencesService();
+      configuration.setFeature(XMLValidationConfiguration.USE_XINCLUDE, preferencesService.getBoolean(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.USE_XINCLUDE, false, fPreferenceScopes));
+      configuration.setFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, preferencesService.getBoolean(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true, fPreferenceScopes));
     }
     catch(Exception e)
     {
