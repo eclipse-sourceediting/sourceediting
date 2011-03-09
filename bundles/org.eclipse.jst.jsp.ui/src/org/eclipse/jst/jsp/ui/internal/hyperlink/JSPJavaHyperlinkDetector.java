@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,6 +49,7 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 		IHyperlink link = null;
 		if (region != null) {
 			// open local variable in the JSP file...
+			boolean isInTranslationCU = false;
 			if (element instanceof ISourceReference) {
 				IFile file = null;
 				int jspOffset = 0;
@@ -79,18 +80,25 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 						// link to local variable definitions
 						if (element instanceof ILocalVariable) {
 							range = ((ILocalVariable) element).getNameRange();
+							Object cu = ((ILocalVariable) element).getDeclaringMember().getCompilationUnit();
+							if (cu != null && cu.equals(jspTranslation.getCompilationUnit()))
+								isInTranslationCU = true;
 						}
 						// linking to fields of the same compilation unit
 						else if (element.getElementType() == IJavaElement.FIELD) {
 							Object cu = ((IField) element).getCompilationUnit();
-							if (cu != null && cu.equals(jspTranslation.getCompilationUnit()))
+							if (cu != null && cu.equals(jspTranslation.getCompilationUnit())) {
 								range = ((ISourceReference) element).getSourceRange();
+								isInTranslationCU = true;
+							}
 						}
 						// linking to methods of the same compilation unit
 						else if (element.getElementType() == IJavaElement.METHOD) {
 							Object cu = ((IMethod) element).getCompilationUnit();
-							if (cu != null && cu.equals(jspTranslation.getCompilationUnit()))
+							if (cu != null && cu.equals(jspTranslation.getCompilationUnit())) {
 								range = ((ISourceReference) element).getSourceRange();
+								isInTranslationCU = true;
+							}
 						}
 					}
 
@@ -105,7 +113,7 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 					Logger.log(Logger.WARNING_DEBUG, jme.getMessage(), jme);
 				}
 			}
-			if (link == null) {
+			if (link == null && !isInTranslationCU) { // Don't try to open the translation CU
 				link = new JSPJavaHyperlink(region, element);
 			}
 		}
