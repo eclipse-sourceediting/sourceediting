@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -327,9 +327,18 @@ public class LibraryTagsCompletionProposalComputer extends
 						image = this.getGenericTagImage();
 					}
 					String proposedText = getRequiredText(document, ed);
+					final IStructuredDocumentRegion region = contentAssistRequest.getDocumentRegion();
+					if (region != null && region.getFirstRegion() != null && region.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN) && proposedText.length() > 0) {
+							//in order to differentiate between content assist on 
+							//completely empty document and the one with xml open tag
+							proposedText = proposedText.substring(1);
+					}
+					if (!beginsWith(proposedText, contentAssistRequest.getMatchString())) {
+						return;
+					}
 					String tagname = getRequiredName(document, ed);
 					// account for the &lt; and &gt;
-					int markupAdjustment = getContentGenerator().getMinimalStartTagLength(document, ed);
+					int markupAdjustment = getCursorPositionForProposedText(proposedText);
 					String proposedInfo = getAdditionalInfo(null, ed);
 					CustomCompletionProposal proposal = new CustomCompletionProposal(
 							proposedText, contentAssistRequest.getReplacementBeginPosition(),
