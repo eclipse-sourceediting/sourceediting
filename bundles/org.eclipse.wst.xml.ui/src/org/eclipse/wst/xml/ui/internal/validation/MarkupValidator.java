@@ -493,26 +493,29 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 						int lineNumber = getLineNumber(start);
 
 						// SEVERITY_STRUCTURE == IMessage.HIGH_SEVERITY
-						IMessage message = new LocalizedMessage(getMissingEndTagSeverity(), messageText);
-						message.setOffset(start);
-						message.setLength(length);
-						message.setLineNo(lineNumber);
-
-						if (reporter instanceof IncrementalReporter) {
-
-							Object[] additionalFixInfo = getStartEndFixInfo(xmlNode, tagName, r);
-
-							MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-							processor.setProblemId(ProblemIDsXML.MissingEndTag);
-							processor.setAdditionalFixInfo(additionalFixInfo);
-							message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-							AnnotationInfo info = new AnnotationInfo(message);
-
-							((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-						}
-						else {
-							reporter.addMessage(this, message);
+						int severity = getMissingEndTagSeverity();
+						if (severity != IMessage.LOW_SEVERITY) {
+							IMessage message = new LocalizedMessage(severity, messageText);
+							message.setOffset(start);
+							message.setLength(length);
+							message.setLineNo(lineNumber);
+	
+							if (reporter instanceof IncrementalReporter) {
+	
+								Object[] additionalFixInfo = getStartEndFixInfo(xmlNode, tagName, r);
+	
+								MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+								processor.setProblemId(ProblemIDsXML.MissingEndTag);
+								processor.setAdditionalFixInfo(additionalFixInfo);
+								message.setAttribute(QUICKASSISTPROCESSOR, processor);
+	
+								AnnotationInfo info = new AnnotationInfo(message);
+	
+								((IncrementalReporter) reporter).addAnnotationInfo(this, info);
+							}
+							else {
+								reporter.addMessage(this, message);
+							}
 						}
 					}
 				}
