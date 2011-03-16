@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -121,8 +120,8 @@ public class Element extends NamedTopLevelNode {
 		return attributes;
 	}
 
-	public Image getImage() {
-		return DTDCorePlugin.getInstance().getImage(DTDResource.ELEMENTICON);
+	public String getImagePath() {
+		return DTDResource.ELEMENTICON;
 	}
 
 	public short getNodeType() {

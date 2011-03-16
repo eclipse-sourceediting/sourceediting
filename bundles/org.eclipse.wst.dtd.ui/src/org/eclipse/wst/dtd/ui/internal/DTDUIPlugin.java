@@ -16,8 +16,11 @@ import java.io.IOException;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -95,5 +98,27 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 		}
 
 		return fContextTypeRegistry;
+	}
+
+	public Image getImage(String iconName) {
+		ImageRegistry imageRegistry = getImageRegistry();
+		Image image = imageRegistry.get(iconName);
+
+		if (image == null) {
+			String thisID = getDefault().getBundle().getSymbolicName();
+			imageRegistry.put(iconName, imageDescriptorFromPlugin(thisID, iconName));
+			image = imageRegistry.get(iconName);
+		}
+
+		return image;
+	}
+
+	public static Image getDTDImage(String iconName) {
+		return getDefault().getImage(iconName);
+	}
+
+	public static ImageDescriptor getDTDImageDescriptor(String iconName) {
+		String thisID = getDefault().getBundle().getSymbolicName();
+		return AbstractUIPlugin.imageDescriptorFromPlugin(thisID, iconName);
 	}
 }

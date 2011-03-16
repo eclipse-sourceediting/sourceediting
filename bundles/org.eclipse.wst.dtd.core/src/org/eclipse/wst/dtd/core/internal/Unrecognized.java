@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal;
 
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 
@@ -22,8 +21,8 @@ public class Unrecognized extends TopLevelNode {
 		super(file, flatNode);
 	}
 
-	public Image getImage() {
-		return DTDCorePlugin.getInstance().getImage(DTDResource.UNRECOGNIZEDICON);
+	public String getImagePath() {
+		return DTDResource.UNRECOGNIZEDICON;
 	}
 
 	public String getName() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ package org.eclipse.wst.dtd.core.internal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 
 
@@ -31,24 +30,24 @@ public class NodeList {
 		this.dtdFile = dtdFile;
 	}
 
-	public Image getImage() {
+	public String getImagePath() {
 		if (listType == DTDRegionTypes.ELEMENT_TAG) {
-			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_EL);
+			return DTDResource.FLDR_EL;
 		}
 		else if (listType == DTDRegionTypes.ENTITY_TAG) {
-			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_ENT);
+			return DTDResource.FLDR_ENT;
 		}
 		else if (listType == DTDRegionTypes.NOTATION_TAG) {
-			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_NOT);
+			return DTDResource.FLDR_NOT;
 		}
 		else if (listType == DTDRegionTypes.COMMENT_START) {
-			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_COMM);
+			return DTDResource.FLDR_COMM;
 		}
 		else if (listType == DTDRegionTypes.ATTLIST_TAG) {
-			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_ATTLIST);
+			return DTDResource.FLDR_ATTLIST;
 		}
 		else if (listType == DTDRegionTypes.UNKNOWN_CONTENT) {
-			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_UNREC);
+			return DTDResource.FLDR_UNREC;
 		}
 		else
 			return null;

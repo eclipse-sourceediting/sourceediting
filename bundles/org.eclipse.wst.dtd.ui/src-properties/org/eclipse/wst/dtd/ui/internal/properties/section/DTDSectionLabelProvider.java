@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.wst.dtd.core.internal.Entity;
 import org.eclipse.wst.dtd.core.internal.Notation;
 import org.eclipse.wst.dtd.core.internal.ParameterEntityReference;
 import org.eclipse.wst.dtd.ui.internal.DTDPropertiesMessages;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 
 public class DTDSectionLabelProvider extends LabelProvider {
 
@@ -52,7 +53,8 @@ public class DTDSectionLabelProvider extends LabelProvider {
 		else if (selected instanceof DTDNode) {
 			if (selected instanceof ParameterEntityReference)
 				return null;
-			return ((DTDNode) selected).getImage();
+			final String imgPath = ((DTDNode) selected).getImagePath();
+			return imgPath != null ? DTDUIPlugin.getDefault().getImage(imgPath) : null;
 		}
 		else if (selected instanceof org.w3c.dom.Element) {
 			return null;

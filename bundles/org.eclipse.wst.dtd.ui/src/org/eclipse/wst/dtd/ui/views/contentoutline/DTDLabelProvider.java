@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,9 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.internal.DTDFile;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
+import org.eclipse.wst.dtd.core.internal.DTDResource;
 import org.eclipse.wst.dtd.core.internal.NodeList;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 
 class DTDLabelProvider extends LabelProvider {
 
@@ -35,13 +37,15 @@ class DTDLabelProvider extends LabelProvider {
 	public Image getImage(Object element) {
 		Image image = null;
 		if (element instanceof DTDNode) {
-			image = ((DTDNode) element).getImage();
+			final String imgPath = ((DTDNode) element).getImagePath();
+			image = imgPath != null ? DTDUIPlugin.getDefault().getImage(imgPath) : null;
 		}
 		else if (element instanceof NodeList) {
-			image = ((NodeList) element).getImage();
+			final String imgPath = ((NodeList) element).getImagePath();
+			image = imgPath != null ? DTDUIPlugin.getDefault().getImage(imgPath) : null;
 		}
 		else if (element instanceof DTDFile) {
-			image = ((DTDFile) element).getImage();
+			image = DTDUIPlugin.getDefault().getImage(DTDResource.DTDFILEICON);
 		}
 		else {
 			image = super.getImage(element);

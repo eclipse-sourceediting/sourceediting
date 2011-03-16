@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ package org.eclipse.wst.dtd.core.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -30,7 +29,7 @@ public class AttributeEnumList extends DTDNode {
 		super(file, flatNode);
 	}
 
-	public Image getImage() {
+	public String getImagePath() {
 		// never exposed in tree
 		return null;
 	}

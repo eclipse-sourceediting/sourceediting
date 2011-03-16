@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal;
 
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -34,25 +33,25 @@ public class CMBasicNode extends CMRepeatableNode {
 		super(file, flatNode);
 	}
 
-	public Image getImage() {
+	public String getImagePath() {
 		final String name = getName();
 		ITextRegion pcdata = getNextRegion(iterator(), DTDRegionTypes.CONTENT_PCDATA);
 		if (pcdata != null) {
-			return DTDCorePlugin.getInstance().getImage(DTDResource.PCDATAICON);
+			return DTDResource.PCDATAICON;
 		}
 
 		if (isRootElementContent()) {
 			if (name.equals(EMPTY)) {
-				return DTDCorePlugin.getInstance().getImage(DTDResource.EMPTYICON);
+				return DTDResource.EMPTYICON;
 			}
 			else if (name.equals(ANY)) {
-				return DTDCorePlugin.getInstance().getImage(DTDResource.ANYICON);
+				return DTDResource.ANYICON;
 			}
 		}
 
 		// Otherwise this is just an element reference node. Just return
 		// what CMRepeatableNode would give us
-		return super.getImage();
+		return super.getImagePath();
 	}
 
 	public ITextRegion getNameRegion() {

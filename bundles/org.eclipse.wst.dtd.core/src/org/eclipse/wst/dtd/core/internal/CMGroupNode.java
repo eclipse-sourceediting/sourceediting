@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ package org.eclipse.wst.dtd.core.internal;
 
 import java.util.List;
 
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.internal.util.DTDUniqueNameHelper;
@@ -121,11 +120,10 @@ public class CMGroupNode extends CMRepeatableNode {
 		return connector;
 	}
 
-	public Image getImage() {
-		DTDCorePlugin resourcePlugin = DTDCorePlugin.getInstance();
+	public String getImagePath() {
 		switch (getConnector()) {
 			case SEQUENCE :
-				return resourcePlugin.getImage(DTDResource.ONESEQUENCEICON);
+				return DTDResource.ONESEQUENCEICON;
 			/*
 			 * switch (getOccurrence()) { case ONCE : return
 			 * resourcePlugin.getImage(DTDResource.ONESEQUENCEICON); case
@@ -137,7 +135,7 @@ public class CMGroupNode extends CMRepeatableNode {
 			 * resourcePlugin.getImage(DTDResource.ZEROORMORESEQUENCEICON); }
 			 */
 			case CHOICE :
-				return resourcePlugin.getImage(DTDResource.ONECHOICEICON);
+				return DTDResource.ONECHOICEICON;
 		/*
 		 * switch (getOccurrence()) { case ONCE : return
 		 * resourcePlugin.getImage(DTDResource.ONECHOICEICON); case OPTIONAL :
