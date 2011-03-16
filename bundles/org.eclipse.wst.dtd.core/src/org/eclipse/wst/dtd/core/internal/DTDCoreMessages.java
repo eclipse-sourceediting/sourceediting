@@ -82,10 +82,6 @@ public class DTDCoreMessages extends NLS {
 	public static String _ERROR_INCL_FILE_LOAD_FAILURE;
 	public static String _ERROR_UNDECLARED_ELEMENT_1;
 	public static String _UI_ERRORPART_UNDECLARED_ELEMENT_2;
-	public static String _ERROR_DUP_ID_ATTRIBUTE_1;
-	public static String _UI_ERRORPART_DUP_ID_ATTRIBUTE_2;
-	public static String _ERROR_INVALID_DEFAULT_ATTR_VALUE_1;
-	public static String _UI_ERRORPART_INVALID_DEFAULT_ATTR_VALUE_2;
 	public static String _EXC_OPERATION_NOT_SUPPORTED;
 
 	static {

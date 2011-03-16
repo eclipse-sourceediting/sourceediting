@@ -60,29 +60,13 @@ public class DTDPropertiesMessages extends NLS {
 	public static String _UI_LABEL_SYSTEM_ID;
 
 	// org.eclipse.wst.dtd.ui.internal.properties.section.DTDSectionLabelProvider
-	public static String _UI_PROPERTIES_VIEW_TITLE_ELEMENT;
 	public static String _UI_PROPERTIES_VIEW_TITLE_ELEMENT_REF;
-	public static String _UI_PROPERTIES_VIEW_TITLE_CHOICE;
-	public static String _UI_PROPERTIES_VIEW_TITLE_SEQUENCE;
-	public static String _UI_PROPERTIES_VIEW_TITLE_ATTRIBUTE;
-	public static String _UI_PROPERTIES_VIEW_TITLE_ATTLIST;
-	public static String _UI_PROPERTIES_VIEW_TITLE_COMMENT;
-	public static String _UI_PROPERTIES_VIEW_TITLE_ENTITY;
-	public static String _UI_PROPERTIES_VIEW_TITLE_NOTATION;
 
 	// org.eclipse.wst.dtd.ui.internal.properties.section.NewEntitySection
 	public static String _UI_FILEDIALOG_SELECT_DTD;
 	public static String _UI_FILEDIALOG_SELECT_DTD_DESC;
 
 	// New property tabs
-	public static String _UI_LABEL_GENERAL;
-	public static String _UI_LABEL_OTHER;
-	public static String _UI_LABEL_ATTRIBUTES;
-	public static String _UI_LABEL_DOCUMENTATION;
-	public static String DTDEditor_0;
-	public static String DTDEditor_1;
-	public static String DTDEditor_2;
-	public static String DTDEditor_3;
 	public static String DTDSectionLabelProvider_0;
 	public static String DTDSectionLabelProvider_1;
 	public static String DTDSectionLabelProvider_10;

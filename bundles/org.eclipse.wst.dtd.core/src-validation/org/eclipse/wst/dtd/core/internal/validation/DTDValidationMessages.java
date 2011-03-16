@@ -20,15 +20,7 @@ import org.eclipse.osgi.util.NLS;
 public class DTDValidationMessages extends NLS {
 	public static String _ERROR_REF_ELEMENT_UNDEFINED;
 
-	public static String _UI_DIALOG_DTD_INVALID_TEXT;
-	public static String _UI_DIALOG_DTD_INVALID_TITLE;
-	public static String _UI_DIALOG_DTD_VALID_TEXT;
-	public static String _UI_DIALOG_DTD_VALID_TITLE;
 	private static final String BUNDLE_NAME = "org.eclipse.wst.dtd.core.internal.validation.DTDValidationResources";//$NON-NLS-1$
-	public static String Missing_required_files_1;
-	public static String Missing_required_files_2;
-	public static String Missing_required_files_3;
-	public static String Missing_required_files_4;
 
 	static {
 		// load message values from bundle file
