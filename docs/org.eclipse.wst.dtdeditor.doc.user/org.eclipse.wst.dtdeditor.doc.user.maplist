@@ -1,9 +1,0 @@
-<maplist version="3.6.2">
-  <nav>
-    <map file="DTDEditormap_toc.ditamap"/>
-  </nav>
-  <link>
-    <map file="DTDEditormap_toc.ditamap"/>
-    <map file="DTDreftable.ditamap"/>
-  </link>
-</maplist>
