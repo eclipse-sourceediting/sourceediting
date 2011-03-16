@@ -69,6 +69,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -947,7 +948,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private IDocument getDocument() {
 		IDocument document = null;
 		if (fTextEditor != null) {
-			document = fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
+			final IDocumentProvider provider = fTextEditor.getDocumentProvider();
+			if (provider != null) {
+				document = provider.getDocument(fTextEditor.getEditorInput());
+			}
 		}
 		return document;
 	}
