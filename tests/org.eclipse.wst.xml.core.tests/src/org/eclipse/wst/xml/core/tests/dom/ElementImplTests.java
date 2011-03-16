@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,20 @@
 
 package org.eclipse.wst.xml.core.tests.dom;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -182,5 +192,86 @@ public class ElementImplTests extends TestCase {
 			assertTrue("threw_NOT_FOUND_ERR", ex.code != DOMException.NOT_FOUND_ERR);
 		}
 		assertTrue("threw exception", success);
+	}
+
+	public void testSetAttrWithImpliedDefault() {
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) getModelForRead("testfiles/time.xml");
+			if (model != null) {
+				IDOMDocument document = model.getDocument();
+				Element element = document.getDocumentElement();
+				assertNotNull(element);
+				assertEquals("0", element.getAttribute("hour")); // Default value should be 0
+				element.setAttribute("hour", "12");
+				assertEquals("12", element.getAttribute("hour"));
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+	}
+
+	public IStructuredModel getModelForRead(String path) {
+		IStructuredModel model = null;
+		try {
+			IModelManager modelManager = StructuredModelManager.getModelManager();
+			InputStream inStream = getClass().getResourceAsStream(path);
+			if (inStream == null)
+				throw new FileNotFoundException("Can't file resource stream " + path);
+			final String baseFile = getClass().getResource(path).toString();
+			model = modelManager.getModelForRead(baseFile, inStream, new URIResolver() {
+
+				String fBase = baseFile;
+
+				public String getFileBaseLocation() {
+					return fBase;
+				}
+
+				public String getLocationByURI(String uri) {
+					return getLocationByURI(uri, fBase);
+				}
+
+				public String getLocationByURI(String uri, boolean resolveCrossProjectLinks) {
+					return getLocationByURI(uri);
+				}
+
+				public String getLocationByURI(String uri, String baseReference) {
+					int lastSlash = baseReference.lastIndexOf("/");
+					if (lastSlash > 0)
+						return baseReference.substring(0, lastSlash + 1) + uri;
+					return baseReference;
+				}
+
+				public String getLocationByURI(String uri, String baseReference, boolean resolveCrossProjectLinks) {
+					return getLocationByURI(uri, baseReference);
+				}
+
+				public IProject getProject() {
+					return null;
+				}
+
+				public IContainer getRootLocation() {
+					return null;
+				}
+
+				public InputStream getURIStream(String uri) {
+					return getClass().getResourceAsStream(getLocationByURI(uri));
+				}
+
+				public void setFileBaseLocation(String newLocation) {
+					this.fBase = newLocation;
+				}
+
+				public void setProject(IProject newProject) {
+				}
+			});
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return model;
 	}
 }

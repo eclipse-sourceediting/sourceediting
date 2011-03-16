@@ -1,0 +1,3 @@
+<!ELEMENT time EMPTY>
+<!ATTLIST time hour CDATA "0">
+<!ATTLIST time minute CDATA "0">
