@@ -259,15 +259,9 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (this.attrNodes == null)
 			return null; // no attribute
 
-		int length = this.attrNodes.getLength();
-		char[] nameChars = name.toCharArray();
-		for (int i = 0; i < length; i++) {
-			AttrImpl attr = (AttrImpl) this.attrNodes.item(i);
-			if (attr == null)
-				continue;
-			if (attr.matchName(nameChars))
-				return attr; // found
-		}
+		final Attr attr = findAttributeNode(name);
+		if (attr != null)
+			return attr;
 
 		String implied = getDefaultValue(name, null);
 		if (implied != null) {
@@ -277,6 +271,28 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		}
 		
 		return null; // not found
+	}
+
+	/**
+	 * Finds an attribute node in this element's attribute nodelist
+	 * @param name the name of the attribute to find
+	 * @return The {@link Attr} whose name matches <code>name</code>. Returns null if an attribute by <code>name</code>
+	 * could not be found.
+	 */
+	private Attr findAttributeNode(String name) {
+		if (attrNodes == null)
+			return null; // no attribute
+
+		int length = attrNodes.getLength();
+		char[] nameChars = name.toCharArray();
+		for (int i = 0; i < length; i++) {
+			AttrImpl attr = (AttrImpl) attrNodes.item(i);
+			if (attr == null)
+				continue;
+			if (attr.matchName(nameChars))
+				return attr; // found
+		}
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -1233,7 +1249,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 
-		Attr attr = getAttributeNode(name);
+		Attr attr = findAttributeNode(name);
 		if (attr != null) {
 			attr.setValue(value); // change value
 			return;
