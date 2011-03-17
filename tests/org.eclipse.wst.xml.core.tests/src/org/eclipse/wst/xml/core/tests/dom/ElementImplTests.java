@@ -214,6 +214,28 @@ public class ElementImplTests extends TestCase {
 		}
 	}
 
+	public void testRemoveAttrWithImpliedDefault() {
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) getModelForRead("testfiles/time.xml");
+			if (model != null) {
+				IDOMDocument document = model.getDocument();
+				Element element = document.getDocumentElement();
+				assertNotNull(element);
+				assertEquals("0", element.getAttribute("hour")); // Default value should be 0
+				element.setAttribute("hour", "12");
+				assertEquals("12", element.getAttribute("hour"));
+				element.removeAttribute("hour"); // value should be reset to default/0
+				assertEquals("0", element.getAttribute("hour")); 
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+	}
+
 	public IStructuredModel getModelForRead(String path) {
 		IStructuredModel model = null;
 		try {
