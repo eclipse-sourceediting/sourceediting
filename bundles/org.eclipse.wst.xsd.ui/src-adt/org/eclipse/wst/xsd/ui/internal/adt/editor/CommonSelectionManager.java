@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 
@@ -96,6 +97,18 @@ public class CommonSelectionManager extends MultiPageSelectionProvider implement
         {
           ISelectionChangedListener listener = (ISelectionChangedListener)i.next();
           listener.selectionChanged(event);
+        }
+        // Bug 338126 Properties view not synced with XSD and WSDL design views
+        // PropertySheet was changed to be a post selection listener
+        // We need to fire off a post selection change event in order for the properties view to update.
+        IEditorSite site = getMultiPageEditor().getEditorSite();
+        if (site != null)
+        {
+          ISelectionProvider selectionProvider = site.getSelectionProvider();
+          if (selectionProvider instanceof MultiPageSelectionProvider)
+          {
+            ((MultiPageSelectionProvider)selectionProvider).firePostSelectionChanged(event);
+          }
         }
       }
       catch (Exception e)
