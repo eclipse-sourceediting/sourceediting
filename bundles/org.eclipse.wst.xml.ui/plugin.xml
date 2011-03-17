@@ -886,7 +886,7 @@
                  </visibleWhen>
            </command>
            <command
-                 commandId="org.eclipse.wst.xml.ui.reload.dependecies"
+                 commandId="org.eclipse.wst.xml.ui.reload.dependencies"
                  icon="icons/full/etool16/rldgrmr.gif"
                  id="ReloadDependencies"
                  mnemonic="%ReloadDependencies_mnemonic"
@@ -989,7 +989,8 @@
      <menuContribution
            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
         <toolbar
-              id="org.eclipse.wst.xml.ui.design.DesignToolBar">
+              id="org.eclipse.wst.xml.ui.design.DesignToolBar"
+              label="%editor_grammar_toolbar">
            <separator
                  name="sed.tabletree.separator.1"
                  visible="true">
@@ -1008,7 +1009,7 @@
 	           </visibleWhen>
            </command>
            <command
-                 commandId="org.eclipse.wst.xml.ui.reload.dependecies"
+                 commandId="org.eclipse.wst.xml.ui.reload.dependencies"
                  icon="icons/full/etool16/rldgrmr.gif"
                  id="ReloadDependencies"
                  style="push">
@@ -1244,7 +1245,7 @@
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.ReloadDependenciesHandler"
-             commandId="org.eclipse.wst.xml.ui.reload.dependecies">
+             commandId="org.eclipse.wst.xml.ui.reload.dependencies">
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.dependencies"/>
           </activeWhen>
@@ -1302,7 +1303,7 @@
 	    </command>
 	    <command
 	          description="%ReloadDependencies_description"
-	          id="org.eclipse.wst.xml.ui.reload.dependecies"
+	          id="org.eclipse.wst.xml.ui.reload.dependencies"
 	          name="%ReloadDependencies_name">
 	    </command>
 	    <command
