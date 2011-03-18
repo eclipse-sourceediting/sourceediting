@@ -205,66 +205,70 @@ public abstract class AbstractIndexManager {
 		SubMonitor progress = SubMonitor.convert(monitor);
 		synchronized (this.fStartStopLock) {
 			this.fStarting = true;
-			
-			if(this.fState == STATE_DISABLED) {
-				//report status
-				progress.beginTask(NLS.bind(SSECoreMessages.IndexManager_0_starting, this.fName), 2);
-				
-				//start listening for resource change events
-				this.fResourceChangeListener.start();
-				
-				//check to see if a full re-index is required
-				boolean forcedFullReIndexNeeded = this.isForcedFullReIndexNeeded();
-				
-				/* start the indexing job only loading preserved state if not doing full index
-				 * if failed loading preserved state then force full re-index
-				 */
-				forcedFullReIndexNeeded = !this.fResourceEventProcessingJob.start(!forcedFullReIndexNeeded,
-						progress.newChild(1));
-				progress.setWorkRemaining(1);
-				
-				//don't bother processing saved delta if forced full re-index is needed
-				if(!forcedFullReIndexNeeded) {
-					/* if there is a delta attempt to process it
-					 * else need to do a full workspace index
+
+			try {
+				if(this.fState == STATE_DISABLED) {
+					//report status
+					progress.beginTask(NLS.bind(SSECoreMessages.IndexManager_0_starting, this.fName), 2);
+					
+					//start listening for resource change events
+					this.fResourceChangeListener.start();
+					
+					//check to see if a full re-index is required
+					boolean forcedFullReIndexNeeded = this.isForcedFullReIndexNeeded();
+					
+					/* start the indexing job only loading preserved state if not doing full index
+					 * if failed loading preserved state then force full re-index
 					 */
-					if(savedStateDelta != null) {
-						forcedFullReIndexNeeded = false;
-						try {
-							//deal with reporting progress
-							SubMonitor savedStateProgress = progress.newChild(1, SubMonitor.SUPPRESS_NONE);
-							
-							savedStateProgress.setTaskName(NLS.bind(SSECoreMessages.IndexManager_0_starting_1,
-									new String[] {this.fName, SSECoreMessages.IndexManager_processing_deferred_resource_changes}));
-							
-							//process delta
-							ResourceDeltaVisitor visitor = new ResourceDeltaVisitor(savedStateProgress,
-									AbstractIndexManager.SOURCE_SAVED_STATE);
-							savedStateDelta.accept(visitor);
-							
-							//process any remaining batched up resources to index
-							visitor.processBatchedResourceEvents();
-						} catch (CoreException e) {
+					forcedFullReIndexNeeded = !this.fResourceEventProcessingJob.start(!forcedFullReIndexNeeded,
+							progress.newChild(1));
+					progress.setWorkRemaining(1);
+					
+					//don't bother processing saved delta if forced full re-index is needed
+					if(!forcedFullReIndexNeeded) {
+						/* if there is a delta attempt to process it
+						 * else need to do a full workspace index
+						 */
+						if(savedStateDelta != null) {
+							forcedFullReIndexNeeded = false;
+							try {
+								//deal with reporting progress
+								SubMonitor savedStateProgress = progress.newChild(1, SubMonitor.SUPPRESS_NONE);
+								
+								savedStateProgress.setTaskName(NLS.bind(SSECoreMessages.IndexManager_0_starting_1,
+										new String[] {this.fName, SSECoreMessages.IndexManager_processing_deferred_resource_changes}));
+								
+								//process delta
+								ResourceDeltaVisitor visitor = new ResourceDeltaVisitor(savedStateProgress,
+										AbstractIndexManager.SOURCE_SAVED_STATE);
+								savedStateDelta.accept(visitor);
+								
+								//process any remaining batched up resources to index
+								visitor.processBatchedResourceEvents();
+							} catch (CoreException e) {
+								forcedFullReIndexNeeded = true;
+								Logger.logException(this.fName + ": Could not process saved state. " + //$NON-NLS-1$
+										"Forced to do a full workspace re-index.", e); //$NON-NLS-1$
+							}
+						} else {
 							forcedFullReIndexNeeded = true;
-							Logger.logException(this.fName + ": Could not process saved state. " + //$NON-NLS-1$
-									"Forced to do a full workspace re-index.", e); //$NON-NLS-1$
 						}
-					} else {
-						forcedFullReIndexNeeded = true;
 					}
+					progress.worked(1);
+					
+					//if need to process the entire workspace do so in another job
+					if(forcedFullReIndexNeeded){
+						this.fWorkspaceVisitorJob = new WorkspaceVisitorJob();
+						this.fWorkspaceVisitorJob.schedule();
+					}
+					
+					//update state
+					this.fState = STATE_ENABLED;
 				}
-				progress.worked(1);
-				
-				//if need to process the entire workspace do so in another job
-				if(forcedFullReIndexNeeded){
-					this.fWorkspaceVisitorJob = new WorkspaceVisitorJob();
-					this.fWorkspaceVisitorJob.schedule();
-				}
-				
-				//update state
-				this.fState = STATE_ENABLED;
+			} finally {
+				this.fStarting = false;
+				progress.done();
 			}
-			this.fStarting = false;
 		}
 	}
 	
@@ -437,6 +441,7 @@ public abstract class AbstractIndexManager {
 			Thread.currentThread().interrupt();
 		}
 		
+		progress.done();
 		return success;
 	}
 	
@@ -578,6 +583,7 @@ public abstract class AbstractIndexManager {
 				status = Status.OK_STATUS;
 			}
 			
+			monitor.done();
 			return status;
 		}
 		
@@ -1538,12 +1544,19 @@ public abstract class AbstractIndexManager {
 							//get the resource
 							IResource resource = null;
 							IPath resourcePath = new Path(new String(resourceLocoationBOS.toByteArray(), ENCODING_UTF16));
-							if(fileType == IResource.FILE) {
-								resource =
-									ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
+							if(!resourcePath.isRoot() && !resourcePath.toString().equals("")) { //$NON-NLS-1$
+								if(fileType == IResource.FILE) {
+									resource =
+										ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
+								} else {
+									resource =
+										ResourcesPlugin.getWorkspace().getRoot().getFolder(resourcePath);
+								}	
 							} else {
-								resource =
-									ResourcesPlugin.getWorkspace().getRoot().getFolder(resourcePath);
+								Logger.log(Logger.WARNING, "The AbstractIndexManager " +
+										AbstractIndexManager.this.fName +
+										" attempted to load an invlaid preserved resource event:\n" +
+										"(" + resourcePath + ")");
 							}
 							
 							//get the move path
@@ -1564,12 +1577,18 @@ public abstract class AbstractIndexManager {
 					}
 				} catch (FileNotFoundException e) {
 					Logger.logException(AbstractIndexManager.this.fName +
-							": Exception while opening file to read preserved resources to index.", //$NON-NLS-1$
+							": Exception while opening file to read preserved resources to index. Index manager will recover by re-indexing workspace.", //$NON-NLS-1$
 							e);
 					success = false;
 				} catch (IOException e) {
 					Logger.logException(AbstractIndexManager.this.fName +
-							": Exception while reading from file of preserved resources to index.", //$NON-NLS-1$
+							": Exception while reading from file of preserved resources to index. Index manager will recover by re-indexing workspace.", //$NON-NLS-1$
+							e);
+					success = false;
+				} catch(Exception e) {
+					//Purposely catching all exceptions here so that index manager can recover gracefully
+					Logger.logException(AbstractIndexManager.this.fName +
+							": Unexpected exception while reading from file of preserved resources to index. Index manager will recover by re-indexing workspace.", //$NON-NLS-1$
 							e);
 					success = false;
 				} finally {
@@ -1602,6 +1621,7 @@ public abstract class AbstractIndexManager {
 				}
 			}
 			
+			progress.done();
 			return success;
 		}
 		

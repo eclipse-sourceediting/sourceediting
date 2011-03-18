@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.ui.internal.java.search;
 import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
@@ -47,7 +48,7 @@ public class JSPSearchQuery extends BasicSearchQuery {
 		return this;
 	}
 	
-	protected IStatus doQuery() {
+	protected IStatus doQuery(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		try {
 			JSPSearchSupport support = JSPSearchSupport.getInstance();
@@ -59,7 +60,7 @@ public class JSPSearchQuery extends BasicSearchQuery {
 			
 			// perform a searchs
 			// by passing in this jsp search query, requstor can add matches
-			support.searchRunnable(getJavaElement(), singleFileScope, new JSPSingleFileSearchRequestor(getInstance()));
+			support.searchRunnable(getJavaElement(), singleFileScope, new JSPSingleFileSearchRequestor(getInstance()), monitor);
 		}
 		catch (Exception e){
 			status = new Status(IStatus.ERROR, "org.eclipse.wst.sse.ui", IStatus.OK, "", null); //$NON-NLS-1$	//$NON-NLS-2$

@@ -344,6 +344,9 @@ public class JSPSearchSupport {
      * @param element
      * @param scope
      * @param requestor
+     * 
+     * @deprecated should use {@link #search(IJavaElement, IJavaSearchScope, SearchRequestor, IProgressMonitor)}
+     * so that operation can be canceled
      */
     public void searchRunnable(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
     	this.searchRunnable(element, scope, requestor, new NullProgressMonitor());

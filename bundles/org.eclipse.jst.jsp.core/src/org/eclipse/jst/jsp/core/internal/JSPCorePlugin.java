@@ -183,7 +183,6 @@ public class JSPCorePlugin extends Plugin {
 			} catch(CoreException e) {
 				status = e.getStatus();
 			}
-			
 			return status;
 		}
 		
