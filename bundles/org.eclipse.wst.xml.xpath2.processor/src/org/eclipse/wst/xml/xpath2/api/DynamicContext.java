@@ -19,8 +19,6 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Node;
 
-import com.sun.xml.internal.txw2.Document;
-
 /**
  * Interface for dynamic context. This covers the Dynamic Context as defined by the XPath2 specification, EXCEPT for 
  * context item and size (handled in EvaluationContext) 
