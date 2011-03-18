@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.wtptypes.tests;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
  org.eclipse.wst.xml.xpath2.processor;bundle-version="[2.0,3.0.0)",
  org.eclipse.wst.xml.xpath2.wtptypes;bundle-version="[2.0,3.0.0)",
