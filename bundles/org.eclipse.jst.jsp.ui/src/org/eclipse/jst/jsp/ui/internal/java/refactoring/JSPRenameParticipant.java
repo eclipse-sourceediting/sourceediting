@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -150,7 +150,7 @@ public abstract class JSPRenameParticipant extends RenameParticipant implements 
 		Iterator iter = fElementAndArgumentPairs.values().iterator();
 		while(iter.hasNext()) {
 			ElementAndArgumentsPair elemArgsPair = (ElementAndArgumentsPair)iter.next();
-			Change[] changes = createChangesFor(elemArgsPair.fElement, elemArgsPair.fArgs.getNewName());
+			Change[] changes = createChangesFor(elemArgsPair.fElement, elemArgsPair.fArgs.getNewName(), pm);
 			
 			/* add all new text changes to the local list of text changes so that
 			 * future iterations through the while loop will be aware of already
@@ -207,12 +207,12 @@ public abstract class JSPRenameParticipant extends RenameParticipant implements 
 	 * that while no NEW {@link Change}s maybe returned it is possible that
 	 * new {@link TextEdit}s will still added to existing {@link Change}s.
 	 */
-	protected Change[] createChangesFor(IJavaElement element, String newName) {
+	protected Change[] createChangesFor(IJavaElement element, String newName, IProgressMonitor monitor) {
 		Change[] changes;
 		BasicRefactorSearchRequestor requestor = getSearchRequestor(element, newName);
 		if(requestor != null) {
 			JSPSearchSupport support = JSPSearchSupport.getInstance();
-			support.searchRunnable(element, new JSPSearchScope(), requestor);
+			support.searchRunnable(element, new JSPSearchScope(), requestor, monitor);
 			changes = requestor.getChanges(this);
 		} else {
 			changes = new Change[0];

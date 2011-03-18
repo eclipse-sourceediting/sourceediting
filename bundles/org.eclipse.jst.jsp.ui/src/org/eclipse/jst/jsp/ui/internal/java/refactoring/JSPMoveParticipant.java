@@ -156,7 +156,7 @@ public abstract class JSPMoveParticipant extends MoveParticipant implements ISha
 			Object dest = elemArgsPair.fArgs.getDestination();
 			
 			if(dest instanceof IPackageFragment) {	
-				Change[] changes = createChangesFor(elemArgsPair.fElement, ((IPackageFragment)dest).getElementName());
+				Change[] changes = createChangesFor(elemArgsPair.fElement, ((IPackageFragment)dest).getElementName(), pm);
 				
 				/* add all new text changes to the local list of text changes so that
 				 * future iterations through the while loop will be aware of already
@@ -215,12 +215,12 @@ public abstract class JSPMoveParticipant extends MoveParticipant implements ISha
 	 * that while no NEW {@link Change}s maybe returned it is possible that
 	 * new {@link TextEdit}s will still added to existing {@link Change}s.
 	 */
-	protected Change[] createChangesFor(IJavaElement element, String newName) {
+	protected Change[] createChangesFor(IJavaElement element, String newName, IProgressMonitor monitor) {
 		Change[] changes;
 		BasicRefactorSearchRequestor requestor = getSearchRequestor(element, newName);
 		if(requestor != null) {
 			JSPSearchSupport support = JSPSearchSupport.getInstance();
-			support.searchRunnable(element, new JSPSearchScope(), requestor);
+			support.searchRunnable(element, new JSPSearchScope(), requestor, monitor);
 			changes = requestor.getChanges(this);
 		} else {
 			changes = new Change[0];

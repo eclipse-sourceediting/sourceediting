@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -145,14 +145,14 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery#doQuery()
 	 */
-	protected IStatus doQuery() {
+	protected IStatus doQuery(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		FindRegions findRegions = new FindRegions(this.fDocument, this.fRegionText, this.fRegionType);
 		try {
 			// BUG158846 - deadlock if lock up entire workspace, so only lock
 			// up the file we are searching on
 			ISchedulingRule markerRule = ResourcesPlugin.getWorkspace().getRuleFactory().markerRule(getFile());
-			ResourcesPlugin.getWorkspace().run(findRegions, markerRule, IWorkspace.AVOID_UPDATE, null);
+			ResourcesPlugin.getWorkspace().run(findRegions, markerRule, IWorkspace.AVOID_UPDATE, monitor);
 		} catch (CoreException e) {
 			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.OK, "", null); //$NON-NLS-1$
 		}

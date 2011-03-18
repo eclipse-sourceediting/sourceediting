@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,11 @@ public class BasicSearchQuery implements ISearchQuery {
 	private AbstractTextSearchResult fResult = null;
 
 	/**
+	 * The progress monitor for the query
+	 */
+	private IProgressMonitor fProgressMonitor = null;
+
+	/**
 	 * <p>Construct a new basic query.</p>
 	 * 
 	 * <p><b>IMPORTANT: </b>It is very important that after
@@ -64,6 +69,7 @@ public class BasicSearchQuery implements ISearchQuery {
 	 * @see org.eclipse.search.ui.ISearchQuery#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IStatus run(IProgressMonitor monitor) {
+		fProgressMonitor = monitor;
 		return doQuery();
 	}
 	
@@ -153,8 +159,23 @@ public class BasicSearchQuery implements ISearchQuery {
 	 * will actually do something</p>
 	 * 
 	 * @return the status of the query when it has finished
+	 * 
+	 * @deprecated use {@link #doQuery(IProgressMonitor)} so that the operation is cancelable
 	 */
 	protected IStatus doQuery() {
+		return doQuery(fProgressMonitor);
+	}
+	
+	/**
+	 * <p>The actual work of the query, called by {@link #run(IProgressMonitor)}</p>
+	 * <p><i>Note: </i>This method should be overridden by implementers so that their query
+	 * will actually do something</p>
+	 * 
+	 * @param monitor {@link IProgressMonitor} used to track progress and cancel the operation
+	 * 
+	 * @return the status of the query when it has finished
+	 */
+	protected IStatus doQuery(IProgressMonitor monitor) {
 		return Status.OK_STATUS;
 	}
 	
