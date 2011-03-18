@@ -36,7 +36,7 @@ public class TestWTPDOMXPath2 extends AbstractPsychoPathWTPTest {
 	public void testSimpleWTPDOM() throws Exception {
 		// Test for the fix, for xpathDefaultNamespace
 		bundle = Platform
-				.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
+				.getBundle("org.eclipse.wst.xml.xpath2.wtptypes.tests");
 
 		URL fileURL = bundle.getEntry("/bugTestFiles/bug273719.xml");
 		super.domDoc = load(fileURL);
@@ -64,7 +64,7 @@ public class TestWTPDOMXPath2 extends AbstractPsychoPathWTPTest {
 	public void testWTPDOMWithTypes() throws Exception {
 		// Test for the fix, for xpathDefaultNamespace
 		bundle = Platform
-				.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
+				.getBundle("org.eclipse.wst.xml.xpath2.wtptypes.tests");
 
 		URL fileURL = bundle.getEntry("/bugTestFiles/attrNodeTest.xml");
 		super.domDoc = load(fileURL);
