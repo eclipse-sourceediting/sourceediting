@@ -1,9 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.wtptypes;singleton:=true
+Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.wtptypes
 Bundle-Version: 2.0.0.qualifier
-Bundle-Activator: org.eclipse.wst.xml.xpath2.wtptypes.Activator
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
