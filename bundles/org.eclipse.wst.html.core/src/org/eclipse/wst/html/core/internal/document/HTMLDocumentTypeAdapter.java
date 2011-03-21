@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,6 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	private final static String XML = "xml"; //$NON-NLS-1$
 	private final static String XHTML = "xhtml"; //$NON-NLS-1$
 	private final static String WML = "wml"; //$NON-NLS-1$
-
 
 	/**
 	 */
@@ -228,6 +227,11 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 			if (this.entry == null)
 				return false;
 			return this.entry.hasFrameset();
+		}
+		if (feature.equals(HTML5)) {
+			if (this.entry == null)
+				return false;
+			return this.entry == HTMLDocumentTypeRegistry.getInstance().getDefaultEntry(HTMLDocumentTypeRegistry.DEFAULT_HTML5);
 		}
 		return false;
 	}
