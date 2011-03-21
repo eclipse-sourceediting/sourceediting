@@ -1,10 +1,9 @@
-package org.eclipse.wst.xml.xpath2.processor.internal.types;
+package org.eclipse.wst.xml.xpath2.processor.internal.types.xerces;
 
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.ComplexTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeDefinition;
 import org.w3c.dom.NodeList;
 
 public class ComplexXercesTypeDefinition extends XercesTypeDefinition implements ComplexTypeDefinition {

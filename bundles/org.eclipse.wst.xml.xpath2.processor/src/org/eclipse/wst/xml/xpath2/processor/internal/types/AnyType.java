@@ -11,6 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+
 /**
  * Common base for every type
  */
@@ -28,4 +30,11 @@ public abstract class AnyType {
 	 * @return Datatype's name
 	 */
 	public abstract String string_value();
+	
+	/**
+	 * Returns the "new style" of TypeDefinition for this item.
+	 * 
+	 * @return Type definition (possibly backed by a schema type)
+	 */
+	public abstract TypeDefinition getTypeDefinition();
 }

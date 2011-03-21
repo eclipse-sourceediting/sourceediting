@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Jesper Steen Moller, and others
+ * Copyright (c) 2009, 2010 Jesper Steen Moller, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -67,7 +68,6 @@ public class FnCodepointEqual extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the comparison of the arguments.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return codepoint_equals(args, dynamic_context());
 	}

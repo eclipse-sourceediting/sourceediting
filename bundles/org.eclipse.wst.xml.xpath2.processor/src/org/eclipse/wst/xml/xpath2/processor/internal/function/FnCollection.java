@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,22 +8,28 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moller - bug 281159 - fix document loading and resolving URIs 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.StaticContext;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.w3c.dom.Document;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
 
 /**
  * Summary: This function takes an xs:string as argument and returns a sequence
@@ -75,7 +81,6 @@ public class FnCollection extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return collection(args, dynamic_context());
 	}
@@ -151,10 +156,10 @@ public class FnCollection extends Function {
 	
 	private static ResultSequence getCollection(String uri, DynamicContext dc) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		Map<String, List<Document>> collectionMap = dc.get_collections();
-		List<Document> docList = collectionMap.get(uri);
+		Map/*<String, List<Document>>*/ collectionMap = dc.get_collections();
+		List/*<Document>*/ docList = (List) collectionMap.get(uri);
 		for (int i = 0; i < docList.size(); i++) {
-			Document doc = docList.get(i);
+			Document doc = (Document) docList.get(i);
 			rs.add(new DocType(doc, dc.getTypeModel(doc)));
 		}
 		return rs;

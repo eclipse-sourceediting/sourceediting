@@ -17,6 +17,7 @@ import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 
 /**
  * Support for functions.
+ * @since 2.0
  */
 public interface Function {
 

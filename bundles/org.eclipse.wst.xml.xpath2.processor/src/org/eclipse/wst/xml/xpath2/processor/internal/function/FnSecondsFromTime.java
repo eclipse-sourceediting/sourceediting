@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - bug 277774 - XSDecimal returing wrong values. 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -48,7 +49,6 @@ public class FnSecondsFromTime extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return seconds_from_time(args);
 	}
@@ -78,7 +78,7 @@ public class FnSecondsFromTime extends Function {
 
 		double res = dt.second();
 
-		rs.add(new XSDecimal(BigDecimal.valueOf(res)));
+		rs.add(new XSDecimal(new BigDecimal(res)));
 
 		return rs;
 	}

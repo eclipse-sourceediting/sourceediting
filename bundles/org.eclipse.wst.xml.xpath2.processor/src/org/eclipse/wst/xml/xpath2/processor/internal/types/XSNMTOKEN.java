@@ -14,9 +14,11 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.util.XMLChar;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the NMTOKEN datatype
@@ -46,7 +48,6 @@ public class XSNMTOKEN extends XSToken {
 	 * 
 	 * @return "xs:NMTOKEN" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_NMTOKEN;
 	}
@@ -56,7 +57,6 @@ public class XSNMTOKEN extends XSToken {
 	 * 
 	 * @return "NMTOKEN" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "NMTOKEN";
 	}
@@ -70,7 +70,6 @@ public class XSNMTOKEN extends XSToken {
 	 * @return New ResultSequence consisting of the NMTOKEN supplied
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -89,4 +88,9 @@ public class XSNMTOKEN extends XSToken {
 
 		return rs;
 	}
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_NMTOKEN;
+	}
+	
 }

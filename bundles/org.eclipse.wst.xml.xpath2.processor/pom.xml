@@ -27,6 +27,18 @@
          </plugins>
       </pluginManagement>
       <plugins>
+	      <plugin>
+	        <groupId>org.sonatype.tycho</groupId>
+	        <artifactId>maven-osgi-compiler-plugin</artifactId>
+	        <version>${tycho-version}</version>
+	        <configuration>
+	          <compilerId>jdt</compilerId>
+	          <usePdeSourceRoots>true</usePdeSourceRoots>
+	          <source>1.5</source>
+	          <target>jsr14</target>
+	        </configuration>
+	      </plugin>
+
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>

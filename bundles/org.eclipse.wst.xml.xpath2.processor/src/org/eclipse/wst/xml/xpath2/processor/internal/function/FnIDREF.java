@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standard for Technology in Automotive Retail, and others
+ * Copyright (c) 2009, 2010 Standard for Technology in Automotive Retail, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  * 	   David Carver (STAR) - bug 281168 - initial API and implementation
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -49,7 +50,6 @@ public class FnIDREF extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return idref(args, dynamic_context(), dynamic_context());
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,11 +70,11 @@ public class DefaultStaticContext implements StaticContext {
 		_cntxt_item_type = cntxtItemType;
 	}
 
-	public Map<String, List<Document>> get_collections() {
+	public Map get_collections() {
 		return _collections;
 	}
 
-	public void set_collections(Map<String, List<Document>> collections) {
+	public void set_collections(Map collections) {
 		_collections = collections;
 	}
 

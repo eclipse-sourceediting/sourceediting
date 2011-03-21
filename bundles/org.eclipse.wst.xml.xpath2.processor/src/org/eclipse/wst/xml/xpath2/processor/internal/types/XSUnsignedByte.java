@@ -9,15 +9,18 @@
  *     Mukul Gandhi - bug 277650 - Initial API and implementation, of xs:unsignedByte
  *                                 data type.
  *     David Carver (STAR) - bug 262765 - fixed abs value tests.
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 public class XSUnsignedByte extends XSUnsignedShort {
 	
@@ -45,7 +48,6 @@ public class XSUnsignedByte extends XSUnsignedShort {
 	 * 
 	 * @return "xs:unsignedByte" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_UNSIGNED_BYTE;
 	}
@@ -55,7 +57,6 @@ public class XSUnsignedByte extends XSUnsignedShort {
 	 * 
 	 * @return "unsignedByte" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "unsignedByte";
 	}
@@ -69,7 +70,6 @@ public class XSUnsignedByte extends XSUnsignedShort {
 	 * @return New ResultSequence consisting of the 'unsignedByte' supplied
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -103,4 +103,7 @@ public class XSUnsignedByte extends XSUnsignedShort {
 
 	}
 
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_UNSIGNEDBYTE;
+	}
 }

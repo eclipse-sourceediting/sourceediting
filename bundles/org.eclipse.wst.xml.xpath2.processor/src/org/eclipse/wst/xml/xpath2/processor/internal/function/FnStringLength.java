@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
  *     David Carver - bug 282096 - improvements for surrogate handling 
  *     Jesper Steen Moeller - bug 282096 - clean up string storage
  *     Jesper Steen Moller  - bug 281938 - handle context and empty sequences correctly
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -23,6 +24,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+
+import com.ibm.icu.text.UTF16;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -64,7 +67,6 @@ public class FnStringLength extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the string length of the arguments.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return string_length(args, dynamic_context());
 	}
@@ -97,7 +99,7 @@ public class FnStringLength extends Function {
 			str = ((XSString) arg1.first()).value();
 		}
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new XSInteger(BigInteger.valueOf(str.codePointCount(0, str.length()))));
+		rs.add(new XSInteger(BigInteger.valueOf(UTF16.countCodePoint(str))));
 
 		return rs;
 	}

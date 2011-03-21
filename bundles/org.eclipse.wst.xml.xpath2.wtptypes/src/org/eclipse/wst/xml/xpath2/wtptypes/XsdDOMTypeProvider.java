@@ -221,7 +221,6 @@ public class XsdDOMTypeProvider {
 			}
 
 			public Class getNativeType() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		
@@ -231,14 +230,11 @@ public class XsdDOMTypeProvider {
 	static boolean isDerivedFrom(XSDTypeDefinition base, XSDTypeDefinition derived, short derivationMethod) {
 		if (base == derived) return true;
 		
-		
-		
 		// TODO: Check flags
 		return false;
 	}
 
 	public TypeModel getTypeModel() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

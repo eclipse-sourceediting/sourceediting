@@ -8,6 +8,7 @@
  * Contributors:
  *    David Carver - initial API and implementation
  *    Jesper Steen Moller - bug 283404 - fixed locale
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -53,7 +54,7 @@ public class XPathDecimalFormat extends DecimalFormat {
 
 	private String formatXPath(Object obj) {
 		String curPattern = toPattern();
-		String newPattern = curPattern.replace("E0", "");
+		String newPattern = curPattern.replaceAll("E0", "");
 		if (obj instanceof Float) {
             return formatFloatValue(obj, curPattern, newPattern);
 		}
@@ -78,22 +79,22 @@ public class XPathDecimalFormat extends DecimalFormat {
 
 	private void doubleXPathPattern(Object obj, String curPattern,
 			String newPattern) {
-		BigDecimal doubValue = BigDecimal.valueOf(((Double) obj));
+		BigDecimal doubValue = new BigDecimal((((Double) obj)).doubleValue());
 		BigDecimal minValue = new BigDecimal("-1E6");
 		BigDecimal maxValue = new BigDecimal("1E6");
 		if (doubValue.compareTo(minValue) > 0 && doubValue.compareTo(maxValue) < 0) {
 			applyPattern(newPattern);
 		} else { //if (doubValue.compareTo(minValue) < 0) {
-			applyPattern(curPattern.replace("0.#", "0.0"));
+			applyPattern(curPattern.replaceAll("0\\.#", "0.0"));
 		}
 	}
 
 	private boolean isDoublePositiveInfinity(Double doubleValue) {
-		return doubleValue == Double.POSITIVE_INFINITY;
+		return doubleValue.doubleValue() == Double.POSITIVE_INFINITY;
 	}
 
 	private boolean isDoubleNegativeInfinity(Double doubleValue) {
-		return doubleValue == Double.NEGATIVE_INFINITY;
+		return doubleValue.doubleValue() == Double.NEGATIVE_INFINITY;
 	}
 
 	private String formatFloatValue(Object obj, String curPattern,
@@ -110,20 +111,20 @@ public class XPathDecimalFormat extends DecimalFormat {
 	}
 
 	private boolean isFloatPosInfinity(Float floatValue) {
-		return floatValue == Float.POSITIVE_INFINITY;
+		return floatValue.floatValue() == Float.POSITIVE_INFINITY;
 	}
 
 	private boolean isFloatNegInfinity(Float floatValue) {
-		return floatValue == Float.NEGATIVE_INFINITY;
+		return floatValue.floatValue() == Float.NEGATIVE_INFINITY;
 	}
 
 	private void floatXPathPattern(String curPattern, String newPattern,
 			Float floatValue) {
-		if (floatValue > -1E6f && floatValue < 1E6f) {
+		if (floatValue.floatValue() > -1E6f && floatValue.floatValue() < 1E6f) {
 			
 			applyPattern(newPattern);
-		} else if (floatValue <= -1E6f) {
-			applyPattern(curPattern.replace("0.#", "0.0" ));
+		} else if (floatValue.floatValue() <= -1E6f) {
+			applyPattern(curPattern.replaceAll("0\\.#", "0.0" ));
 		}
 	}
 	

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 282096 - clean up string storage and make
  *                                         translate function surrogate aware
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -20,6 +21,8 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.utils.CodePointIterator;
 import org.eclipse.wst.xml.xpath2.processor.internal.utils.StringCodePointIterator;
+
+import com.ibm.icu.lang.UCharacter;
 
 import java.util.*;
 
@@ -82,7 +85,6 @@ public class FnTranslate extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the arguments being translated.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return translate(args);
 	}
@@ -115,19 +117,19 @@ public class FnTranslate extends Function {
 		String mapstr = ((XSString) arg2.first()).value();
 		String transstr = ((XSString) arg3.first()).value();
 
-		Map<Integer, Integer> replacements = buildReplacementMap(mapstr, transstr);
+		Map replacements = buildReplacementMap(mapstr, transstr);
 		
 		StringBuffer sb = new StringBuffer(str.length());
 		CodePointIterator strIter = new StringCodePointIterator(str);
 		for (int input = strIter.current(); input != CodePointIterator.DONE; input = strIter.next()) {
-			Integer inputCodepoint = Integer.valueOf(input);
+			Integer inputCodepoint = new Integer(input);
 			if (replacements.containsKey(inputCodepoint)) {
-				Integer replaceWith = replacements.get(inputCodepoint);
+				Integer replaceWith = (Integer)replacements.get(inputCodepoint);
 				if (replaceWith != null) {
-					sb.appendCodePoint(replaceWith.intValue());
+					sb.append(UCharacter.toChars(replaceWith.intValue()));
 				}					
 			} else {
-				sb.appendCodePoint(input);
+				sb.append(UCharacter.toChars(input));
 			}
 		}
 		
@@ -144,9 +146,9 @@ public class FnTranslate extends Function {
 	 * @param transstr The "mapping into" string
 	 * @return A map which maps input codepoint to output codepoint (or null)
 	 */
-	private static Map<Integer, Integer> buildReplacementMap(String mapstr, String transstr) {
+	private static Map buildReplacementMap(String mapstr, String transstr) {
 		// Build mapping (map from codepoint -> codepoint)		
-		Map<Integer, Integer> replacements = new HashMap<Integer, Integer>(mapstr.length() * 4);
+		Map replacements = new HashMap(mapstr.length() * 4);
 
 		CodePointIterator mapIter = new StringCodePointIterator(mapstr);
 		CodePointIterator transIter = new StringCodePointIterator(transstr);
@@ -154,10 +156,10 @@ public class FnTranslate extends Function {
 		int mapFrom = mapIter.current();
 		int mapTo = transIter.current();
 		while (mapFrom != CodePointIterator.DONE) {
-			Integer codepointFrom = Integer.valueOf(mapFrom);
+			Integer codepointFrom = new Integer(mapFrom);
 			if (! replacements.containsKey(codepointFrom)) {
 				// only overwrite if it doesn't exist already
-				Integer replacement = mapTo != CodePointIterator.DONE ? Integer.valueOf(mapTo) : null;
+				Integer replacement = mapTo != CodePointIterator.DONE ? new Integer(mapTo) : null;
 				replacements.put(codepointFrom, replacement);
 			}
 			mapFrom = mapIter.next();

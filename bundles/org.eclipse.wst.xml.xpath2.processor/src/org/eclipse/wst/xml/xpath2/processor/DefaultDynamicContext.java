@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@
  *     Jesper Moller- bug 280555 - Add pluggable collation support
   *    Mukul Gandhi - bug 325262 - providing ability to store an XPath2 sequence into
  *                                 an user-defined variable.
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -196,7 +197,6 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 *            Function library to add.
 	 * 
 	 */
-	@Override
 	public void add_function_library(FunctionLibrary fl) {
 		super.add_function_library(fl);
 		fl.set_dynamic_context(this);
@@ -268,7 +268,6 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * @param val
 	 *            Variable value.
 	 */
-	@Override
 	public void set_variable(QName var, AnyType val) {
 		super.set_variable(var, val);
 	}
@@ -310,7 +309,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * @since 1.1
 	 * 
 	 */
-	public Comparator<Object> get_collation(String uri) {
+	public Comparator get_collation(String uri) {
 		if (CODEPOINT_COLLATION.equals(uri)) return CODEPOINT_COMPARATOR;
 		
 		return _collation_provider != null ? _collation_provider.get_collation(uri) : null;
@@ -330,7 +329,6 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * Use focus().position() to retrieve the value.
 	 * @deprecated  This will be removed in a future version use focus().position().
 	 */
-	@Deprecated
 	public int node_position(Node node) {
 	  // unused parameter!
 	  return _focus.position();	
@@ -339,7 +337,6 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	/**
 	 * @since 2.0
 	 */
-	@Override
 	public TypeModel getTypeModel(Node node) {
 		return super.getTypeModel(node);
 	}

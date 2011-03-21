@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Jesper Steen Mï¿½ller and others.
+ * Copyright (c) 2009, 2010 Jesper Steen M¿ller and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.utils;
@@ -38,7 +39,7 @@ public class LiteralUtils {
 			return quotedString.substring(1, inputLength-1);
 		}
 		
-		StringBuilder sb = new StringBuilder();
+		StringBuffer sb = new StringBuffer();
 		for (int i = 1; i < inputLength-1; ++i) {
 			char ch = quotedString.charAt(i);
 			sb.append(ch);

@@ -8,15 +8,18 @@
  * Contributors:
  *     Mukul Gandhi - bug 274952 - Initial API and implementation, of xs:long data 
  *                                 type.
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 public class XSLong extends XSInteger {
 	
@@ -44,7 +47,6 @@ public class XSLong extends XSInteger {
 	 * 
 	 * @return "xs:long" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_LONG;
 	}
@@ -54,7 +56,6 @@ public class XSLong extends XSInteger {
 	 * 
 	 * @return "long" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "long";
 	}
@@ -68,7 +69,6 @@ public class XSLong extends XSInteger {
 	 * @return New ResultSequence consisting of the 'long' supplied
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -98,6 +98,10 @@ public class XSLong extends XSInteger {
 			throw DynamicError.cant_cast(null);
 		}
 
+	}
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_LONG;
 	}
 
 }

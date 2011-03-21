@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,18 +13,20 @@
  *     David Carver - bug 282223 - fixed casting errors.
  *     Jesper Steen Moller - Bug 286062 - Fix idiv error cases and increase precision  
  *     Jesper Steen Moller - bug 281028 - Added constructor from string
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the Float datatype
@@ -41,7 +43,7 @@ public class XSFloat extends NumericType {
 	 *            The number to be stored
 	 */
 	public XSFloat(float x) {
-		_value = x;
+		_value = new Float(x);
 	}
 
 	/**
@@ -60,9 +62,9 @@ public class XSFloat extends NumericType {
 	public XSFloat(String init) throws DynamicError {
 		try {
 			if (init.equals("-INF")) {
-				_value = Float.NEGATIVE_INFINITY;
+				_value = new Float(Float.NEGATIVE_INFINITY);
 			} else if (init.equals("INF")) {
-				_value = Float.POSITIVE_INFINITY;
+				_value = new Float(Float.POSITIVE_INFINITY);
 			} else {
 				_value = new Float(init);
 			}
@@ -75,7 +77,6 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return "xs:float" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_FLOAT;
 	}
@@ -85,7 +86,6 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return "float" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "float";
 	}
@@ -95,7 +95,6 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return String representation of the stored number
 	 */
-	@Override
 	public String string_value() {
 		if (zero()) {
 		   return "0";
@@ -117,7 +116,7 @@ public class XSFloat extends NumericType {
 	 * @return True is this datatype represents NaN. False otherwise
 	 */
 	public boolean nan() {
-		return Float.isNaN(_value);
+		return Float.isNaN(_value.floatValue());
 	}
 
 	/**
@@ -126,7 +125,7 @@ public class XSFloat extends NumericType {
 	 * @return True is this datatype represents infinity. False otherwise
 	 */
 	public boolean infinite() {
-		return Float.isInfinite(_value);
+		return Float.isInfinite(_value.floatValue());
 	}
 
 	/**
@@ -134,9 +133,8 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return True if this datatype represents 0. False otherwise
 	 */
-	@Override
 	public boolean zero() {
-	   return (Float.compare(_value, 0) == 0);
+	   return (Float.compare(_value.floatValue(), 0) == 0);
 	}
 	
 	/*
@@ -146,7 +144,7 @@ public class XSFloat extends NumericType {
 	 * @since 1.1
 	 */
 	public boolean negativeZero() {
-	   return (Float.compare(_value, -0.0f) == 0);
+	   return (Float.compare(_value.floatValue(), -0.0f) == 0);
 	}
 	
 	/**
@@ -158,7 +156,6 @@ public class XSFloat extends NumericType {
 	 * @return New ResultSequence consisting of the float supplied
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -184,9 +181,9 @@ public class XSFloat extends NumericType {
 		try {
 			Float f = null;
 			if (aat.string_value().equals("INF")) {
-				f = Float.POSITIVE_INFINITY;
+				f = new Float(Float.POSITIVE_INFINITY);
 			} else if (aat.string_value().equals("-INF")) {
-				f = Float.NEGATIVE_INFINITY;
+				f = new Float(Float.NEGATIVE_INFINITY);
 			} else if (aat instanceof XSBoolean) {
 				if (aat.string_value().equals("true")) {
 					f = new Float("1.0E0");
@@ -210,7 +207,7 @@ public class XSFloat extends NumericType {
 	 * @return The actual float value stored
 	 */
 	public float float_value() {
-		return _value;
+		return _value.floatValue();
 	}
 
 	/**
@@ -360,7 +357,8 @@ public class XSFloat extends NumericType {
 		if (val.zero())
 			throw DynamicError.div_zero(null);
 
-		BigDecimal result = BigDecimal.valueOf((float_value() / val.float_value()));
+		BigDecimal result = BigDecimal.valueOf((new Float((float_value() / 
+				                                 val.float_value()))).longValue());
 		return ResultSequenceFactory.create_new(new XSInteger(result.toBigInteger()));
 	}
 
@@ -385,7 +383,6 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return A XSFloat representing the negation of the number stored
 	 */
-	@Override
 	public ResultSequence unary_minus() {
 		return ResultSequenceFactory
 				.create_new(new XSFloat(-1 * float_value()));
@@ -396,7 +393,6 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return A XSFloat representing the absolute value of the number stored
 	 */
-	@Override
 	public NumericType abs() {
 		return new XSFloat(Math.abs(float_value()));
 	}
@@ -407,7 +403,6 @@ public class XSFloat extends NumericType {
 	 * @return A XSFloat representing the smallest integer greater than the
 	 *         number stored
 	 */
-	@Override
 	public NumericType ceiling() {
 		return new XSFloat((float) Math.ceil(float_value()));
 	}
@@ -418,7 +413,6 @@ public class XSFloat extends NumericType {
 	 * @return A XSFloat representing the largest integer smaller than the
 	 *         number stored
 	 */
-	@Override
 	public NumericType floor() {
 		return new XSFloat((float) Math.floor(float_value()));
 	}
@@ -428,10 +422,9 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return A XSFloat representing the closest long of the number stored.
 	 */
-	@Override
 	public NumericType round() {
 		BigDecimal value = new BigDecimal(float_value());
-		BigDecimal round = value.setScale(0, RoundingMode.HALF_UP);
+		BigDecimal round = value.setScale(0, BigDecimal.ROUND_HALF_UP);
 		return new XSFloat(round.floatValue());
 	}
 
@@ -440,7 +433,6 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return A XSFloat representing the closest long of the number stored.
 	 */
-	@Override
 	public NumericType round_half_to_even() {
 		return round_half_to_even(0);
 	}
@@ -451,11 +443,9 @@ public class XSFloat extends NumericType {
 	 * @param precision An integer precision 
 	 * @return A XSFloat representing the closest long of the number stored.
 	 */
-
-	@Override
 	public NumericType round_half_to_even(int precision) {
-		BigDecimal value = new BigDecimal(_value);
-		BigDecimal round = value.setScale(precision, RoundingMode.HALF_EVEN);
+		BigDecimal value = new BigDecimal(_value.floatValue());
+		BigDecimal round = value.setScale(precision, BigDecimal.ROUND_HALF_EVEN);
 		return new XSFloat(round.floatValue());
 	}
 	
@@ -482,4 +472,7 @@ public class XSFloat extends NumericType {
 		return carg;
 	}	
 	
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_FLOAT;
+	}
 }

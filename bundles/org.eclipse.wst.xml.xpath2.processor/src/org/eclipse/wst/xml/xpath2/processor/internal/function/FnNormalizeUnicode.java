@@ -8,12 +8,11 @@
  * Contributors:
  *     Jesper Steen Moeller - bug 285152 - implement fn:normalize-unicocde
  *     Jesper Steen Moller  - bug 290337 - Revisit use of ICU
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -68,7 +67,7 @@ public class FnNormalizeUnicode extends Function {
 	 */
 	static class ICUNormalizer implements W3CNormalizer {
 		
-		private Map<String, Normalizer.Mode> modeMap = new HashMap<String, Normalizer.Mode>();
+		private Map modeMap = new HashMap();
 		{
 			// Can't handle "FULLY-NORMALIZED" yet
 			
@@ -80,7 +79,7 @@ public class FnNormalizeUnicode extends Function {
 		
 		public String normalize(String argument, String normalizationForm)
 				throws DynamicError {
-			Normalizer.Mode mode = modeMap.get(normalizationForm);
+			Normalizer.Mode mode = (Normalizer.Mode)modeMap.get(normalizationForm);
 			if (mode != null) {
 				return Normalizer.normalize(argument, mode);
 			} else {
@@ -89,11 +88,12 @@ public class FnNormalizeUnicode extends Function {
 		}
 	}
 
+	/*
 	static class JDK6Normalizer implements W3CNormalizer {
 		private Method normalizeMethod;
-		private Map<String, Enum> formMap = new HashMap<String, Enum>();
+		private Map formMap = new HashMap();
 
-		public JDK6Normalizer(Class<?> normalizerCls, Class<? extends Enum> formCls) throws SecurityException, NoSuchMethodException {
+		public JDK6Normalizer(Class normalizerCls, Class formCls) throws SecurityException, NoSuchMethodException {
 			this.normalizeMethod = normalizerCls.getMethod("normalize", CharSequence.class, formCls);
 			Enum[] formConstants = formCls.getEnumConstants();
 			for (Enum form : formConstants) {
@@ -124,6 +124,7 @@ public class FnNormalizeUnicode extends Function {
 			}			
 		}
 	}
+	*/
 
 	static class FailingNormalizer implements W3CNormalizer {
 		
@@ -142,7 +143,6 @@ public class FnNormalizeUnicode extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the space in the arguments being normalized.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return normalize_unicode(args, dynamic_context());
 	}
@@ -192,9 +192,11 @@ public class FnNormalizeUnicode extends Function {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			
 			normalizer = createICUNormalizer(classLoader);
+			/*
 			if (normalizer == null) {
 				normalizer = createJDKNormalizer(classLoader);
 			}
+			*/
 			if (normalizer == null) {
 				normalizer = new FailingNormalizer();
 			}
@@ -202,11 +204,12 @@ public class FnNormalizeUnicode extends Function {
 		return normalizer;
 	}
 
+	/*
 	private static W3CNormalizer createJDKNormalizer(ClassLoader classLoader) {
 		// If that fails, we'll check for the Java 6 Normalizer class
 		try {
-			Class<?> normalizerClass = classLoader.loadClass("java.text.Normalizer");
-			Class<? extends Enum> formClass = (Class<? extends Enum>) classLoader.loadClass("java.text.Normalizer$Form");
+			Class normalizerClass = classLoader.loadClass("java.text.Normalizer");
+			Class formClass = classLoader.loadClass("java.text.Normalizer$Form");
 			
 			return new JDK6Normalizer(normalizerClass, formClass);
 		} catch (ClassNotFoundException e) {
@@ -215,6 +218,7 @@ public class FnNormalizeUnicode extends Function {
 		}
 		return null;
 	}
+	*/
 
 	private static W3CNormalizer createICUNormalizer(ClassLoader classLoader) {
 		// First attempt is to try the IBM ICU library

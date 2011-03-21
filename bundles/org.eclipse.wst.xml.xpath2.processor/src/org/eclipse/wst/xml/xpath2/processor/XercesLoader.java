@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *     Jesper Steen Moller - Fixed namespace awareness
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref.  Correct
  *                                  loading of grammars if non-validating.
+ *     Mukul Gandhi - bug 280798 -  PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -84,8 +85,8 @@ public class XercesLoader implements DOMLoader {
 		factory.setNamespaceAware(true);
 		factory.setAttribute(SCHEMA_VALIDATION_FEATURE,
 				Boolean.valueOf(_validating));
-		factory.setAttribute(LOAD_EXTERNAL_DTD_FEATURE, true);
-		factory.setAttribute(NONVALIDATING_LOAD_DTD_GRAMMAR, true);
+		factory.setAttribute(LOAD_EXTERNAL_DTD_FEATURE, Boolean.TRUE);
+		factory.setAttribute(NONVALIDATING_LOAD_DTD_GRAMMAR, Boolean.TRUE);
 		factory.setAttribute(DOCUMENT_IMPLEMENTATION_PROPERTY,
 				DOCUMENT_PSVI_IMPLEMENTATION);
 		

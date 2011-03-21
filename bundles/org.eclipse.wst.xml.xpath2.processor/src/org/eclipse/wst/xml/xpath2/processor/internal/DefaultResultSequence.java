@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import java.util.*;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -46,7 +48,6 @@ public class DefaultResultSequence extends ResultSequence {
 	 * @param item
 	 *            is added to array _seq
 	 */
-	@Override
 	public void add(AnyType item) {
 		assert item != null;
 		_seq.add(item);
@@ -56,7 +57,6 @@ public class DefaultResultSequence extends ResultSequence {
 	 * @param rs
 	 *            ResultSequence
 	 */
-	@Override
 	public void concat(ResultSequence rs) {
 		for (Iterator i = rs.iterator(); i.hasNext();)
 			_seq.add(i.next());
@@ -65,7 +65,6 @@ public class DefaultResultSequence extends ResultSequence {
 	/**
 	 * @return the next iteration of array _seq
 	 */
-	@Override
 	public ListIterator iterator() {
 		return _seq.listIterator();
 	}
@@ -73,7 +72,6 @@ public class DefaultResultSequence extends ResultSequence {
 	/**
 	 * @return integer of the size of array _seq
 	 */
-	@Override
 	public int size() {
 		return _seq.size();
 	}
@@ -83,7 +81,6 @@ public class DefaultResultSequence extends ResultSequence {
 	 *            is the position of the array item that is wanted.
 	 * @return item i from array _seq
 	 */
-	@Override
 	public AnyType get(int i) {
 		return (AnyType) _seq.get(i);
 	}
@@ -91,7 +88,6 @@ public class DefaultResultSequence extends ResultSequence {
 	/**
 	 * @return first item from array _seq
 	 */
-	@Override
 	public AnyType first() {
 		if (_seq.size() == 0)
 			return null;
@@ -104,7 +100,6 @@ public class DefaultResultSequence extends ResultSequence {
 	 * 
 	 * @return a boolean
 	 */
-	@Override
 	public boolean empty() {
 		return _seq.isEmpty();
 	}
@@ -112,7 +107,6 @@ public class DefaultResultSequence extends ResultSequence {
 	/**
 	 * Clears the sequence.
 	 */
-	@Override
 	public void clear() {
 		_seq.clear();
 	}
@@ -122,7 +116,6 @@ public class DefaultResultSequence extends ResultSequence {
 	 * 
 	 * @return The new sequence.
 	 */
-	@Override
 	public ResultSequence create_new() {
 		return new DefaultResultSequence();
 	}

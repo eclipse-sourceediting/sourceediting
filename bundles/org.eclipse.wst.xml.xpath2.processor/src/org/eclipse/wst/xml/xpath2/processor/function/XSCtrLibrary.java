@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.function;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.ConstructorFL;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -62,12 +63,17 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSNotation());
 
 		add_abstract_type("anyAtomicType", new AnyAtomicType() {
-			@Override
+
 			public String string_type() {
 				return null;
 			}
-			@Override
+
 			public String string_value() {
+				return null;
+			}
+			
+			public TypeDefinition getTypeDefinition() {
+				// TODO Auto-generated method stub
 				return null;
 			}
 		});

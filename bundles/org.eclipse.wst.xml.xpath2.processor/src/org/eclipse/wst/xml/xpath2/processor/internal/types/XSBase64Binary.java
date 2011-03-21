@@ -7,17 +7,20 @@
  *
  * Contributors:
  *     Mukul Gandhi - bug 281046 - initial API and implementation 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.impl.dv.util.Base64;
 import org.apache.xerces.impl.dv.util.HexBin;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the base64Binary datatype
@@ -49,7 +52,6 @@ public class XSBase64Binary extends CtrType implements CmpEq {
 	 * 
 	 * @return "xs:base64Binary" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_BASE64_BINARY;
 	}
@@ -59,7 +61,6 @@ public class XSBase64Binary extends CtrType implements CmpEq {
 	 * 
 	 * @return "base64Binary" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "base64Binary";
 	}
@@ -70,7 +71,6 @@ public class XSBase64Binary extends CtrType implements CmpEq {
 	 * 
 	 * @return The base64Binary stored
 	 */
-	@Override
 	public String string_value() {
 		return _value;
 	}
@@ -93,7 +93,6 @@ public class XSBase64Binary extends CtrType implements CmpEq {
 	 * @return New ResultSequence representing base64Binary value 
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -175,6 +174,10 @@ public class XSBase64Binary extends CtrType implements CmpEq {
       }
       
       return true;
+	}
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_BASE64BINARY;
 	}
 
 }

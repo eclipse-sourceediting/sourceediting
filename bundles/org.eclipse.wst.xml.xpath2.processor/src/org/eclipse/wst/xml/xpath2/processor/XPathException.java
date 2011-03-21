@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moller  - bug 290337 - Revisit use of ICU
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -41,7 +42,6 @@ public class XPathException extends Exception {
 		return _reason;
 	}
 	
-	@Override
 	public String getMessage() {
 		return _reason;
 	}

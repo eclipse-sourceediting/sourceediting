@@ -2,11 +2,9 @@
 <feature
       id="org.eclipse.wst.xml.xpath2.processor.feature"
       label="%featureName"
-      version="1.2.0.qualifier"
+      version="2.0.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.wst.xml.xpath2"
-      license-feature="org.eclipse.license"
-      license-feature-version="1.0.0.qualifier">
+      plugin="org.eclipse.wst.xml.xpath2">
 
    <description>
       %description
@@ -36,6 +34,13 @@
 
    <plugin
          id="org.eclipse.wst.xml.xpath2.processor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.xml.xpath2.wtptypes"
          download-size="0"
          install-size="0"
          version="0.0.0"

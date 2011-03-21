@@ -15,6 +15,7 @@
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *     Jesper Steen Moller  - bug 262765 - Add FORG0006
  *     Jesper Steen Moller  - bug 290337 - Revisit use of ICU
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -108,9 +109,9 @@ public class DynamicError extends XPathException {
 	 * @return the DynamicError.
 	 * @since 1.1
 	 */
-	public static DynamicError argument_type_error(Class<?> type) {
+	public static DynamicError argument_type_error(Class type) {
 		return new DynamicError("FORG0006", type != null ?
-				"Invalid argument type :" + type.getSimpleName() : "Invalid argument type");
+				"Invalid argument type :" + type.getName() : "Invalid argument type");
 	}
 
 	/**

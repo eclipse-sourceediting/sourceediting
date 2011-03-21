@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     David Carver - bug 282096 - improvements for surrogate handling 
  *     Jesper Steen Moeller - bug 282096 - clean up string storage
  *     Jesper Steen Moeller - bug 280553 - further checks of legal Unicode codepoints.
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -20,6 +21,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+
+import com.ibm.icu.text.UTF16;
 
 import java.util.*;
 
@@ -58,7 +61,6 @@ public class FnCodepointsToString extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return codepoints_to_string(args);
 	}
@@ -98,10 +100,8 @@ public class FnCodepointsToString extends Function {
 			codePointIndex++;
 		}
 
-		// "new String(int[] codePoints, int offset, int count)" is a facility
-		// introduced in Java 1.5
 		try {
-			String str = new String(codePointArray, 0, codePointArray.length);
+			String str = UTF16.newString(codePointArray, 0, codePointArray.length);
 			rs.add(new XSString(str));
 		} catch (IllegalArgumentException iae) {
 			// This should be duoble checked above, but rather safe than sorry

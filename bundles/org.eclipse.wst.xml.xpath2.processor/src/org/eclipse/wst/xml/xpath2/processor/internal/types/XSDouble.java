@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,18 +13,20 @@
  *     David Carver (STAR) - bug 262765 - various numeric formatting fixes and calculations
  *     David Carver (STAR) - bug 262765 - fixed rounding errors.      
  *     Jesper Steen Moller - Bug 286062 - Fix idiv error cases and increase precision  
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the Double datatype
@@ -62,9 +64,9 @@ public class XSDouble extends NumericType {
 	public XSDouble(String init) throws DynamicError {
 		try {
 			if (init.equals("-INF")) {
-				_value = Double.NEGATIVE_INFINITY;
+				_value = new Double(Double.NEGATIVE_INFINITY);
 			} else if (init.equals("INF")) {
-				_value = Double.POSITIVE_INFINITY;
+				_value = new Double(Double.POSITIVE_INFINITY);
 			} else {
 				_value = new Double(init);
 			}
@@ -84,9 +86,9 @@ public class XSDouble extends NumericType {
 		try {
 			Double d = null;
 			if (i.equals("INF")) {
-				d = Double.POSITIVE_INFINITY;
+				d = new Double(Double.POSITIVE_INFINITY);
 			} else if (i.equals("-INF")) {
-				d = Double.NEGATIVE_INFINITY;
+				d = new Double(Double.NEGATIVE_INFINITY);
 			} else {
 				d = new Double(i);
 			}
@@ -105,7 +107,6 @@ public class XSDouble extends NumericType {
 	 * @throws DynamicError
 	 * @return A new result sequence consisting of the double number supplied.
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -147,9 +148,9 @@ public class XSDouble extends NumericType {
 	private XSDouble castDouble(AnyType aat) {
 		if (aat instanceof XSBoolean) {
 			if (aat.string_value().equals("true")) {
-				return new XSDouble(new Double("1.0E0"));
+				return new XSDouble(1.0E0);
 			} else {
-				return new XSDouble(new Double("0.0E0"));
+				return new XSDouble(0.0E0);
 			}
 		}
 		return parse_double(aat.string_value());
@@ -161,7 +162,6 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return "xs:double" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_DOUBLE;
 	}
@@ -171,7 +171,6 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return "double" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "double";
 	}
@@ -181,7 +180,6 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return String representation of the Decimal value stored
 	 */
-	@Override
 	public String string_value() {
 		if (zero()) {
 			return "0";
@@ -204,7 +202,7 @@ public class XSDouble extends NumericType {
 	 * @return True if this XSDouble represents NaN. False otherwise.
 	 */
 	public boolean nan() {
-		return Double.isNaN(_value);
+		return Double.isNaN(_value.doubleValue());
 	}
 
 	/**
@@ -213,7 +211,7 @@ public class XSDouble extends NumericType {
 	 * @return True if this XSDouble represents infinity. False otherwise.
 	 */
 	public boolean infinite() {
-		return Double.isInfinite(_value);
+		return Double.isInfinite(_value.doubleValue());
 	}
 
 	/**
@@ -221,9 +219,8 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return True if this XSDouble represents 0. False otherwise.
 	 */
-	@Override
 	public boolean zero() {
-		return (Double.compare(_value, 0.0E0) == 0);
+		return (Double.compare(_value.doubleValue(), 0.0E0) == 0);
 	}
 
 	/*
@@ -234,7 +231,7 @@ public class XSDouble extends NumericType {
 	 * @since 1.1
 	 */
 	public boolean negativeZero() {
-		return (Double.compare(_value, -0.0E0) == 0);
+		return (Double.compare(_value.doubleValue(), -0.0E0) == 0);
 	}
 
 	/**
@@ -429,7 +426,7 @@ public class XSDouble extends NumericType {
 		if (val.zero())
 			throw DynamicError.div_zero(null);
 
-		BigDecimal result = BigDecimal.valueOf((double_value() / val.double_value()));
+		BigDecimal result = new BigDecimal((double_value() / val.double_value()));
 		return ResultSequenceFactory.create_new(new XSInteger(result.toBigInteger()));
 	}
 
@@ -454,7 +451,6 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return A XSDouble representing the negation of this XSDecimal
 	 */
-	@Override
 	public ResultSequence unary_minus() {
 		return ResultSequenceFactory.create_new(new XSDouble(-1
 				* double_value()));
@@ -466,7 +462,6 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return A XSDouble representing the absolute value of the number stored
 	 */
-	@Override
 	public NumericType abs() {
 		return new XSDouble(Math.abs(double_value()));
 	}
@@ -477,7 +472,6 @@ public class XSDouble extends NumericType {
 	 * @return A XSDouble representing the smallest integer greater than the
 	 *         number stored
 	 */
-	@Override
 	public NumericType ceiling() {
 		return new XSDouble(Math.ceil(double_value()));
 	}
@@ -488,7 +482,6 @@ public class XSDouble extends NumericType {
 	 * @return A XSDouble representing the largest integer smaller than the
 	 *         number stored
 	 */
-	@Override
 	public NumericType floor() {
 		return new XSDouble(Math.floor(double_value()));
 	}
@@ -498,10 +491,9 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return A XSDouble representing the closest long of the number stored.
 	 */
-	@Override
 	public NumericType round() {
-		BigDecimal value = new BigDecimal(_value);
-		BigDecimal round = value.setScale(0, RoundingMode.HALF_UP);
+		BigDecimal value = new BigDecimal(_value.doubleValue());
+		BigDecimal round = value.setScale(0, BigDecimal.ROUND_HALF_UP);
 		return new XSDouble(round.doubleValue());
 	}
 
@@ -510,7 +502,6 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return A XSDouble representing the closest long of the number stored.
 	 */
-	@Override
 	public NumericType round_half_to_even() {
 
 		return round_half_to_even(0);
@@ -524,10 +515,14 @@ public class XSDouble extends NumericType {
 	 *            An integer precision
 	 * @return A XSDouble representing the closest long of the number stored.
 	 */
-	@Override
 	public NumericType round_half_to_even(int precision) {
-		BigDecimal value = new BigDecimal(_value);
-		BigDecimal round = value.setScale(precision, RoundingMode.HALF_EVEN);
+		BigDecimal value = new BigDecimal(_value.doubleValue());
+		BigDecimal round = value.setScale(precision, BigDecimal.ROUND_HALF_EVEN);
 		return new XSDouble(round.doubleValue());
 	}
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_DOUBLE;
+	}
+
 }

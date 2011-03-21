@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,12 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 282223 - Implemented XSDuration type for castable checking.
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -19,6 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the xs:duration data type. Other duration implementations
@@ -110,12 +113,10 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 		this(0, 0, 0, 0, 0, 0.0, false);
 	}
 
-	@Override
 	public String type_name() {
 		return "duration";
 	}
 
-	@Override
 	public String string_type() {
 		return XS_DURATION;
 	}
@@ -125,7 +126,6 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 	 * 
 	 * @return String representation of the duration stored
 	 */
-	@Override
 	public String string_value() {
 		String ret = "";
 		boolean did_something = false;
@@ -164,7 +164,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 			did_something = true;
 		}
 		if (seconds != 0) {
-			String doubStr = (Double.valueOf(seconds).toString());
+			String doubStr = (new Double(seconds).toString());
 			if (doubStr.endsWith(".0")) {
 				// string value of x.0 seconds is xS. e.g, 7.0S is converted to
 				// 7S.
@@ -322,7 +322,6 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 	 * @return New ResultSequence consisting of the time duration extracted
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -467,7 +466,6 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 				negative);
 	}
 
-	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return new XSDuration(year(), month(), days(), hours(), minutes(),
 				seconds(), negative());
@@ -510,6 +508,11 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 
 	private boolean isDurationValue(String value) {
 		return value.startsWith("P") || value.startsWith("-P");
+	}
+	
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_DURATION;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Mukul Gandhi, and others
+ * Copyright (c) 2009, 2010 Mukul Gandhi, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Mukul Gandhi - bug 281822 - initial API and implementation
  *     David Carver - bug 282223 - implementation of xs:duration 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -45,7 +46,6 @@ public class FnDateTime extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return dateTime(args, static_context());
 	}
@@ -85,7 +85,7 @@ public class FnDateTime extends Function {
 		cal.set(param1.year(), param1.month() - 1, param1.day());
 		cal.set(Calendar.HOUR_OF_DAY, param2.hour());
 		cal.set(Calendar.MINUTE, param2.minute());
-		cal.set(Calendar.SECOND, (Double.valueOf(Math.floor(param2.second())).intValue()));
+		cal.set(Calendar.SECOND, (new Double(Math.floor(param2.second())).intValue()));
 		cal.set(Calendar.MILLISECOND, 0);
 		
 		XSDuration dateTimeZone = param1.tz();

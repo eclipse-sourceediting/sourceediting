@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moller - bug 312191 - instance of test fails with partial matches
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
@@ -58,7 +59,6 @@ public class SequenceType extends XPathNode {
 	 * 
 	 * @return Result of Visitor operation.
 	 */
-	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

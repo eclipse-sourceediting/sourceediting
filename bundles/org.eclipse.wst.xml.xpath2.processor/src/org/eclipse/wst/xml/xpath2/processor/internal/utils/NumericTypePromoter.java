@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Jesper Steen Moller, and others
+ * Copyright (c) 2009, 2010 Jesper Steen Moller, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
  *     Jesper Steen Moller - bug 281028 - avg/min/max/sum work
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.utils;
@@ -26,8 +27,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
 
 public class NumericTypePromoter extends TypePromoter {
 
-	@Override
-	protected boolean checkCombination(Class<? extends AnyAtomicType> newType) {
+	protected boolean checkCombination(Class newType) {
 		// Note: Double or float will override everything
 		if (newType == XSDouble.class || getTargetType() == XSDouble.class) {
 			setTargetType(XSDouble.class);
@@ -43,7 +43,6 @@ public class NumericTypePromoter extends TypePromoter {
 		return true;
 	}
 
-	@Override
 	public AnyAtomicType doPromote(AnyAtomicType value) throws DynamicError {
 		if (getTargetType() == XSFloat.class) {
 			return new XSFloat(value.string_value());
@@ -57,8 +56,7 @@ public class NumericTypePromoter extends TypePromoter {
 		return null;
 	}
 
-	@Override
-	protected Class<? extends AnyAtomicType> substitute(Class<? extends AnyAtomicType> typeToConsider) {
+	protected Class substitute(Class typeToConsider) {
 		if (typeToConsider == XSUntypedAtomic.class) return XSDouble.class;
 		if (isDerivedFrom(typeToConsider, XSFloat.class)) return XSFloat.class;
 		if (isDerivedFrom(typeToConsider, XSDouble.class)) return XSDouble.class;
@@ -67,7 +65,7 @@ public class NumericTypePromoter extends TypePromoter {
 		return null;
 	}
 
-	private boolean isDerivedFrom(Class<? extends AnyType> typeToConsider, Class<? extends AnyType> superType) {
+	private boolean isDerivedFrom(Class typeToConsider, Class superType) {
 		return superType.isAssignableFrom(typeToConsider);
 	}
 	

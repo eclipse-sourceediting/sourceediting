@@ -26,6 +26,7 @@ import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -80,7 +81,6 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return "element" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return ELEMENT;
 	}
@@ -90,7 +90,6 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return String representation of the element being stored
 	 */
-	@Override
 	public String string_value() {
 		// XXX can we cache ?
 		if (_string_value != null)
@@ -106,7 +105,6 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return New ResultSequence consisting of the element stored
 	 */
-	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -168,14 +166,12 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return QName representation of the name of the node
 	 */
-	@Override
 	public QName node_name() {
 		QName name = new QName(_value.getPrefix(), _value.getLocalName(), _value.getNamespaceURI());
 
 		return name;
 	}
 
-	@Override
 	public ResultSequence nilled() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -193,7 +189,6 @@ public class ElementType extends NodeType {
 	/**
 	 * @since 1.1
 	 */
-	@Override
 	public boolean isID() {
 		return isElementType(SCHEMA_TYPE_ID);
 	}
@@ -201,7 +196,6 @@ public class ElementType extends NodeType {
 	/**
 	 * @since 1.1
 	 */
-	@Override
 	public boolean isIDREF() {
 		return isElementType(SCHEMA_TYPE_IDREF);
 	}
@@ -210,5 +204,8 @@ public class ElementType extends NodeType {
 		TypeInfo typeInfo = _value.getSchemaTypeInfo();
 		return isType(typeInfo, typeName);
 	}
-
+	
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_UNTYPED;
+	}
 }

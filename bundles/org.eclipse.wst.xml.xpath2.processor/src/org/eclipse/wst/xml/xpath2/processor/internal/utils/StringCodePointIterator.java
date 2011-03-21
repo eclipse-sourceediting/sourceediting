@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Jesper Steen Moeller and others.
+ * Copyright (c) 2009, 2010 Jesper Steen Moeller and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,12 @@
  *
  * Contributors:
  *     Jesper Steen Moeller - bug 282096 - initial API and implementation
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
  
 package org.eclipse.wst.xml.xpath2.processor.internal.utils;
+
+import com.ibm.icu.lang.UCharacter;
 
 public final class StringCodePointIterator implements CodePointIterator
 {
@@ -29,7 +32,7 @@ public final class StringCodePointIterator implements CodePointIterator
         
         this.text = text;
         this.end = text.length();
-        if (end > 0 && Character.isHighSurrogate(text.charAt(end-1)))
+        if (end > 0 && UCharacter.isHighSurrogate(text.charAt(end-1)))
             throw new IllegalArgumentException("Invalid UTF-16 sequence ending with a high surrogate");
        
         this.pos = 0;
@@ -72,7 +75,7 @@ public final class StringCodePointIterator implements CodePointIterator
     public int last()
     {
         pos = end;
-        cpPos = Character.codePointCount(text, 0, pos);
+        cpPos = UCharacter.codePointCount(text, 0, pos);
         return previous();
      }
 
@@ -84,7 +87,9 @@ public final class StringCodePointIterator implements CodePointIterator
     {
         if (pos < end) {
             char ch1 =  text.charAt(pos);
-            if (Character.isHighSurrogate(ch1)) return Character.toCodePoint(ch1, text.charAt(pos+1));
+            if (UCharacter.isHighSurrogate(ch1)) 
+               return UCharacter.toCodePoint(ch1, text.charAt(pos+1));
+            
             return ch1;
         }
         else {
@@ -100,7 +105,7 @@ public final class StringCodePointIterator implements CodePointIterator
     {
         if (pos < end - 1) {
             pos++;
-            if (Character.isLowSurrogate(text.charAt(pos))) pos++;
+            if (UCharacter.isLowSurrogate(text.charAt(pos))) pos++;
             cpPos++;
             return current();
         }
@@ -118,7 +123,7 @@ public final class StringCodePointIterator implements CodePointIterator
     {
         if (pos > 0) {
             pos--;
-            if (Character.isLowSurrogate(text.charAt(pos))) pos--; 
+            if (UCharacter.isLowSurrogate(text.charAt(pos))) pos--; 
             cpPos--;
             return current();
         }
@@ -142,7 +147,6 @@ public final class StringCodePointIterator implements CodePointIterator
      * @return true if the given obj is the same as this
      * StringCodePointIterator object; false otherwise.
      */
-    @Override
 	public boolean equals(Object obj)
     {
         if (this == obj)
@@ -165,7 +169,6 @@ public final class StringCodePointIterator implements CodePointIterator
      * Computes a hashcode for this iterator.
      * @return A hash code
      */
-    @Override
 	public int hashCode()
     {
         return text.hashCode() ^ pos ^ end;
@@ -175,7 +178,6 @@ public final class StringCodePointIterator implements CodePointIterator
      * Creates a copy of this iterator.
      * @return A copy of this
      */
-    @Override
 	public Object clone()
     {
         try {

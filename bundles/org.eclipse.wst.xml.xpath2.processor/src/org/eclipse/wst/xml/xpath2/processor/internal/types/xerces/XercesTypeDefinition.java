@@ -11,9 +11,6 @@ import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.ComplexXercesTypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.SimpleXercesType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.SimpleXercesTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -76,21 +73,21 @@ public abstract class XercesTypeDefinition implements TypeDefinition {
 		return xercesFlags;
 	}
 	
-	public List<Short> getSimpleTypes(Attr attr) {
+	public List/*<Short>*/ getSimpleTypes(Attr attr) {
 		PSVIAttrNSImpl psviAttr= (PSVIAttrNSImpl)attr;
 		return mapList(psviAttr.getItemValueTypes());
 	}
 
-	public List<Short> getSimpleTypes(Element element) {
+	public List/*<Short>*/ getSimpleTypes(Element element) {
 		PSVIElementNSImpl psviElement= (PSVIElementNSImpl)element;
 		return mapList(psviElement.getItemValueTypes());
 	}
 
-	private List<Short> mapList(ShortList valueTypes) {
+	private List/*<Short>*/ mapList(ShortList valueTypes) {
 		if (valueTypes == null) return null;
-		List<Short> types = new LinkedList<Short>();
+		List/*<Short>*/ types = new LinkedList/*<Short>*/();
 		int limit = valueTypes.getLength();
-		for (int i = 0; i < limit; ++i) types.add(valueTypes.item(i));
+		for (int i = 0; i < limit; ++i) types.add(Short.valueOf(valueTypes.item(i)));
 		return types;
 	}
 	

@@ -11,9 +11,11 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the xs:token datatype
@@ -44,7 +46,6 @@ public class XSToken extends XSNormalizedString {
 	 * 
 	 * @return "xs:token" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_TOKEN;
 	}
@@ -54,7 +55,6 @@ public class XSToken extends XSNormalizedString {
 	 * 
 	 * @return "token" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "token";
 	}
@@ -68,7 +68,6 @@ public class XSToken extends XSNormalizedString {
 	 * @return New ResultSequence consisting of the supplied String
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -105,5 +104,9 @@ public class XSToken extends XSNormalizedString {
 		return isToken;
 		  
 	} // isSatisfiesConstraints
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_TOKEN;
+	}
 
 }

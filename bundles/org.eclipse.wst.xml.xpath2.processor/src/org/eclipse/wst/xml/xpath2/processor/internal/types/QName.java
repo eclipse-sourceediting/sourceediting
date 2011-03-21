@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,15 +9,18 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Moller- bug 281159 - debugging convenience toString method 
  *     David Carver (STAR) - bug 288886 - add unit tests and fix fn:resolve-qname function
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of a QName datatype (name of a node)
@@ -87,10 +90,12 @@ public class QName extends CtrType implements CmpEq {
 	 */
 	public static QName parse_QName(String str) {
 		int occurs = 0;
-		for (Character ch : str.toCharArray()) {
-			if (ch == ':') {
-				occurs +=1;
-			}
+		
+		char[] strChrArr = str.toCharArray();		
+		for (int chrIndx = 0; chrIndx < strChrArr.length; chrIndx++) {
+		  if (strChrArr[chrIndx] == ':') {
+			 occurs += 1;  
+		  }
 		}
 		
 		if (occurs > 1) {
@@ -118,7 +123,6 @@ public class QName extends CtrType implements CmpEq {
 	 * @return New ResultSequence consisting of the QName supplied
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -146,7 +150,6 @@ public class QName extends CtrType implements CmpEq {
 	 * 
 	 * @return String representation of the node name
 	 */
-	@Override
 	public String string_value() {
 		return string();
 	}
@@ -156,7 +159,6 @@ public class QName extends CtrType implements CmpEq {
 	 * 
 	 * @return "xs:QName" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_Q_NAME;
 	}
@@ -166,7 +168,6 @@ public class QName extends CtrType implements CmpEq {
 	 * 
 	 * @return "QName" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "QName";
 	}
@@ -262,7 +263,6 @@ public class QName extends CtrType implements CmpEq {
 	 *            The object to compare with. Should be of type QName
 	 * @return True if the two represent the same node. False otherwise
 	 */
-	@Override
 	public boolean equals(Object obj) {
 
 		// make sure we are comparing a qname
@@ -305,7 +305,6 @@ public class QName extends CtrType implements CmpEq {
 	 * 
 	 * @return The hashcode for the full pathname
 	 */
-	@Override
 	public int hashCode() {
 		int namespace = 3;
 		int local = 4;
@@ -340,8 +339,11 @@ public class QName extends CtrType implements CmpEq {
 		return equals(val);
 	}
 	
-	@Override
 	public String toString() {
 		return string();
+	}
+	
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_QNAME;
 	}
 }

@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 
 /**
  * @noimplement This interface is not intended to be implemented by clients.
+ * @since 2.0
  */
 public interface XPath2PatternSet {
 	

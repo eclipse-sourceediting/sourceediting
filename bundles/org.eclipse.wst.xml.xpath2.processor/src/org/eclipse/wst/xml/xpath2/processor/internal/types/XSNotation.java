@@ -7,36 +7,39 @@
  *
  * Contributors:
  *     David Carver (STAR) bug 282223 - initial API and implementation
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 public class XSNotation extends CtrType {
 
 	private static final String XS_NOTATION = "xs:NOTATION";
 
-	@Override
 	public String string_type() {
 		return XS_NOTATION;
 	}
 
-	@Override
 	public String string_value() {
 		return null;
 	}
 
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		if (arg.empty())
 			DynamicError.throw_type_error();
 		throw new DynamicError("XPST0080", "Can't Cast to NOTATION");
 	}
 
-	@Override
 	public String type_name() {
 		return "NOTATION";
 	}
 
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_NOTATION;
+	}
+	
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     David Carver (STAR) - bug 262765 - correct implementation to correctly get context node 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Jesper Steen Moller  - bug 281938 - handle context and empty sequences correctly
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -64,7 +65,6 @@ public class FnNormalizeSpace extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the space in the arguments being normalized.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return normalize_space(args, dynamic_context());
 	}

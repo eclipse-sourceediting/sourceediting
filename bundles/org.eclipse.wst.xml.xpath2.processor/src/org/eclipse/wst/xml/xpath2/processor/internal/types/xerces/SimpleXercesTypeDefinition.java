@@ -1,4 +1,4 @@
-package org.eclipse.wst.xml.xpath2.processor.internal.types;
+package org.eclipse.wst.xml.xpath2.processor.internal.types.xerces;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +10,6 @@ import org.apache.xerces.xs.XSObjectList;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.ComplexTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
@@ -39,13 +38,13 @@ public class SimpleXercesTypeDefinition extends XercesTypeDefinition implements 
 		return simpleTypeDefinition.getBuiltInKind();
 	}
 
-	public SimpleTypeDefinition getItemType() {
+	public TypeDefinition getItemType() {
 		return createTypeDefinition(simpleTypeDefinition.getItemType());
 	}
 
-	public List<SimpleTypeDefinition> getMemberTypes() {
+	public List/*<SimpleTypeDefinition>*/ getMemberTypes() {
 		XSObjectList xsMemberTypes = simpleTypeDefinition.getMemberTypes();
-		List<SimpleTypeDefinition> memberTypes = new LinkedList<SimpleTypeDefinition>();
+		List/*<SimpleTypeDefinition>*/ memberTypes = new LinkedList/*<SimpleTypeDefinition>*/();
 		for (int i = 0; i < xsMemberTypes.getLength(); i++) {
 			memberTypes.add(createTypeDefinition((XSSimpleTypeDefinition) xsMemberTypes.item(i)));
 		}

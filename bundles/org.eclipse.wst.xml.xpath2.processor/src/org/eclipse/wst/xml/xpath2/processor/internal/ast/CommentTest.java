@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     David Carver - bug 298535 - Attribute instance of improvements 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
@@ -27,27 +28,22 @@ public class CommentTest extends KindTest {
 	 * 
 	 * @return Result of Visitor operation.
 	 */
-	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
 
-	@Override
 	public AnyType createTestType(ResultSequence rs, StaticContext sc) {
 		return null;
 	}
 
-	@Override
 	public QName name() {
 		return null;
 	}
 
-	@Override
 	public boolean isWild() {
 		return false;
 	}
 
-	@Override
 	public Class getXDMClassType() {
 		return CommentType.class;
 	}

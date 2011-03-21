@@ -243,7 +243,7 @@ public abstract class NodeType extends AnyType {
 	/*
 	 * Construct the "typed value" from a "string value", given the simpleType of the node.
      */
-	protected ResultSequence getXDMTypedValue(TypeDefinition typeDef, List<Short> itemValTypes) {
+	protected ResultSequence getXDMTypedValue(TypeDefinition typeDef, List/*<Short>*/ itemValTypes) {
 		
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
@@ -285,7 +285,7 @@ public abstract class NodeType extends AnyType {
     /*
      * Helper method to construct typed value of an XDM node.
      */
-	private ResultSequence getTypedValueForSimpleContent(SimpleTypeDefinition simpType, List<Short> itemValueTypes) {
+	private ResultSequence getTypedValueForSimpleContent(SimpleTypeDefinition simpType, List/*<Short>*/ itemValueTypes) {
 		
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
@@ -313,7 +313,7 @@ public abstract class NodeType extends AnyType {
 	/*
 	 * If the variety of simpleType was 'list', add the typed "list item" values to the parent result set. 
 	 */
-	private void addAtomicListItemsToResultSet(SimpleTypeDefinition simpType, List<Short> itemValueTypes, ResultSequence rs) {
+	private void addAtomicListItemsToResultSet(SimpleTypeDefinition simpType, List/*<Short>*/ itemValueTypes, ResultSequence rs) {
 		
 		// tokenize the string value by a 'longest sequence' of white-spaces. this gives us the list items as string values.
 		String[] listItemsStrValues = string_value().split("\\s+");
@@ -331,7 +331,7 @@ public abstract class NodeType extends AnyType {
 		    // here the list items may have different atomic types
 			for (int listItemIdx = 0; listItemIdx < listItemsStrValues.length; listItemIdx++) {
 				String listItem = listItemsStrValues[listItemIdx];
-				rs.add(SchemaTypeValueFactory.newSchemaTypeValue(itemValueTypes.get(listItemIdx), listItem));
+				rs.add(SchemaTypeValueFactory.newSchemaTypeValue(((Short)itemValueTypes.get(listItemIdx)).shortValue(), listItem));
 			}
 		}
 		
@@ -345,7 +345,7 @@ public abstract class NodeType extends AnyType {
 	 */
 	private void getTypedValueForVarietyUnion(SimpleTypeDefinition simpType, ResultSequence rs) {
 		
-		List<SimpleTypeDefinition> memberTypes = simpType.getMemberTypes();
+		List/*<SimpleTypeDefinition>*/ memberTypes = simpType.getMemberTypes();
 		// check member types in order, to find that which one can successfully validate the string value.
 		for (int memTypeIdx = 0; memTypeIdx < memberTypes.size(); memTypeIdx++) {
 			PrimitiveType memSimpleType = (PrimitiveType) memberTypes.get(memTypeIdx);

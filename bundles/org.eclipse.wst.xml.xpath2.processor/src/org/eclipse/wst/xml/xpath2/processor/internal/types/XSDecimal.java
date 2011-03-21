@@ -20,10 +20,12 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -503,4 +505,9 @@ public class XSDecimal extends NumericType {
 		BigDecimal round = _value.setScale(precision, BigDecimal.ROUND_HALF_EVEN);
 		return new XSDecimal(round);
 	}
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_DECIMAL;
+	}
+
 }

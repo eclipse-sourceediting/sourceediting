@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,20 +11,23 @@
  *     Mukul Gandhi - bug 279377 - improvements to multiplication and division operations
  *                                 on xs:dayTimeDuration.
  *     David Carver - bug 282223 - implementation of xs:duration
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Calendar;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
+
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the DayTimeDuration datatype
@@ -84,13 +87,11 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return New XSDayTimeDuration representing the duration of time stored
 	 * @throws CloneNotSupportedException
 	 */
-	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return new XSDayTimeDuration(days(), hours(), minutes(), seconds(),
 				negative());
 	}
 
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 	
@@ -229,7 +230,6 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return "dayTimeDuration" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "dayTimeDuration";
 	}
@@ -239,7 +239,6 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return "xs:dayTimeDuration" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_DAY_TIME_DURATION;
 	}
@@ -338,13 +337,13 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			}
 			
 			if (!dt.zero()) {
-				BigDecimal ret = BigDecimal.ZERO;
+				BigDecimal ret = new BigDecimal(0);
 				
 				if (dt.infinite()) {
 					retval = value() / dt.double_value();
 				} else {
-					ret = BigDecimal.valueOf(value());
-					ret = ret.divide(BigDecimal.valueOf(dt.double_value()), 18, RoundingMode.HALF_EVEN);
+					ret = new BigDecimal(value());
+					ret = ret.divide(new BigDecimal(dt.double_value()), 18, BigDecimal.ROUND_HALF_EVEN);
 					retval = ret.doubleValue();
 				}
 			} else {
@@ -358,11 +357,11 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 		} else if (at instanceof XSDecimal) {
 			XSDecimal dt = (XSDecimal) at;
 			
-			BigDecimal ret = BigDecimal.ZERO;
+			BigDecimal ret = new BigDecimal(0);
 							
 			if (!dt.zero()) {
-				ret = BigDecimal.valueOf(value());
-				ret = ret.divide(dt.getValue(), 18, RoundingMode.HALF_EVEN);
+				ret = new BigDecimal(value());
+				ret = ret.divide(dt.getValue(), 18, BigDecimal.ROUND_HALF_EVEN);
 			} else {
 				throw DynamicError.overflowUnderflow();
 			}
@@ -378,9 +377,9 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 				Duration mdduration = DatatypeFactory.newInstance().newDuration(md.string_value());
 				double thistime = thisDuration.getTimeInMillis(Calendar.getInstance());
 				double thattime = mdduration.getTimeInMillis(Calendar.getInstance());
-				res = BigDecimal.valueOf(thistime);
-				BigDecimal l = BigDecimal.valueOf(thattime);
-				res = res.divide(l, 18, RoundingMode.HALF_EVEN);
+				res = new BigDecimal(thistime);
+				BigDecimal l = new BigDecimal(thattime);
+				res = res.divide(l, 18, BigDecimal.ROUND_HALF_EVEN);
 			} catch (DatatypeConfigurationException ex) {
 				
 			}
@@ -393,5 +392,9 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			return null; // unreach
 		}
 	}
-	
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_DAYTIMEDURATION;
+	}
+
 }

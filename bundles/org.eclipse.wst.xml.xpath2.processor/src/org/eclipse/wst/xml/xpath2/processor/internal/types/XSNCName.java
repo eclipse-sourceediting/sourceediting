@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,11 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.util.XMLChar;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the NCName datatype
@@ -46,7 +48,6 @@ public class XSNCName extends XSName {
 	 * 
 	 * @return "xs:NCName" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_NC_NAME;
 	}
@@ -56,7 +57,6 @@ public class XSNCName extends XSName {
 	 * 
 	 * @return "NCName" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "NCName";
 	}
@@ -70,7 +70,6 @@ public class XSNCName extends XSName {
 	 * @return New ResultSequence consisting of the NCName supplied
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
@@ -104,4 +103,8 @@ public class XSNCName extends XSName {
 		return isValidNCName;
 		
 	} // isConstraintSatisfied
+
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_NCNAME;
+	}
 }

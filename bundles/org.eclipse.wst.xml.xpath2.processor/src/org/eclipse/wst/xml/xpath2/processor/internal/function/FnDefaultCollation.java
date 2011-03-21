@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     David Carver (STAR) - initial API and implementation
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Jesper Steen Moeller - bug 280555 - Add pluggable collation support
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
@@ -47,7 +48,6 @@ public class FnDefaultCollation extends Function {
 		super(new QName("default-collation"), 0);
 	}
 
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 		ResultSequence rs = ResultSequenceFactory.create_new();

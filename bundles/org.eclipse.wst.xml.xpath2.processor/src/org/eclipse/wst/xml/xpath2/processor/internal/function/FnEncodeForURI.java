@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 David Carver, University College London, and others
+ * Copyright (c) 2009, 2010 David Carver, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     David Carver - STAR - bug 285321 - initial api and implementation 
  *     Jesper Steen Moeller - bug 285319 - fix UTF-8 escaping
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -67,7 +68,6 @@ public class FnEncodeForURI extends AbstractURIFunction {
 	 * @return The evaluation of the arguments after application of the URI
 	 *         escaping rules.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return escape_uri(args, true, true);
 	}

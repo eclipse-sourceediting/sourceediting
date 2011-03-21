@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -55,7 +56,6 @@ public class RangeResultSequence extends ResultSequence {
 	 * @param item
 	 *            is an integer.
 	 */
-	@Override
 	public void add(AnyType item) {
 		_tail.add(item);
 	}
@@ -66,7 +66,6 @@ public class RangeResultSequence extends ResultSequence {
 	 * @param rs
 	 *            is the range
 	 */
-	@Override
 	public void concat(ResultSequence rs) {
 		_tail.concat(rs);
 	}
@@ -76,7 +75,6 @@ public class RangeResultSequence extends ResultSequence {
 	 * 
 	 * @return tail
 	 */
-	@Override
 	public ListIterator iterator() {
 		// XXX life is getting hard...
 		if (_size != 0) {
@@ -101,7 +99,6 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * @return item from range
 	 */
-	@Override
 	public AnyType get(int i) {
 		if (i < _size)
 			return new XSInteger(BigInteger.valueOf(_start + i));
@@ -112,7 +109,6 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * @return size
 	 */
-	@Override
 	public int size() {
 		return _size + _tail.size();
 	}
@@ -120,7 +116,6 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * clear range
 	 */
-	@Override
 	public void clear() {
 		_size = 0;
 		_tail.clear();
@@ -131,7 +126,6 @@ public class RangeResultSequence extends ResultSequence {
 	 * 
 	 * @return null
 	 */
-	@Override
 	public ResultSequence create_new() {
 		assert false;
 		return null;
@@ -140,7 +134,6 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * @return first item in range
 	 */
-	@Override
 	public AnyType first() {
 		return get(0);
 	}
@@ -150,7 +143,6 @@ public class RangeResultSequence extends ResultSequence {
 	 * 
 	 * @return boolean
 	 */
-	@Override
 	public boolean empty() {
 		return size() == 0;
 	}
@@ -158,7 +150,6 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * release
 	 */
-	@Override
 	public void release() {
 	}
 }

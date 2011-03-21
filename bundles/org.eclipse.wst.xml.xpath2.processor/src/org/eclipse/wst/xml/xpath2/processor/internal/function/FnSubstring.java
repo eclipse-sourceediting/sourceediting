@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     David Carver - bug 282096 - improvements for surrogate handling 
  *     Jesper Steen Moeller - bug 282096 - reimplemented to be surrogate sensitive
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -22,6 +23,8 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.utils.CodePointIterator;
 import org.eclipse.wst.xml.xpath2.processor.internal.utils.StringCodePointIterator;
+
+import com.ibm.icu.lang.UCharacter;
 
 import java.util.*;
 
@@ -69,7 +72,6 @@ public class FnSubstring extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the substring obtained from the arguments.
 	 */
-	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return substring(args);
 	}
@@ -122,7 +124,7 @@ public class FnSubstring extends Function {
 		
 		
 		// could guess too short in cases supplementary chars 
-		StringBuilder sb = new StringBuilder((int) Math.min(str.length(), ilength));
+		StringBuffer sb = new StringBuffer((int) Math.min(str.length(), ilength));
 
 		// This looks like an inefficient way to iterate, but due to surrogate handling,
 		// string indexes are no good here. Welcome to UTF-16!
@@ -130,7 +132,7 @@ public class FnSubstring extends Function {
 		CodePointIterator strIter = new StringCodePointIterator(str);
 		for (long p = 1; strIter.current() != CodePointIterator.DONE; ++p, strIter.next()) {
 			if (istart <= p && p - istart < ilength)
-				sb.appendCodePoint(strIter.current());
+			   sb.append(UCharacter.toChars(strIter.current()));
 		}
 		rs.add(new XSString(sb.toString()));
 

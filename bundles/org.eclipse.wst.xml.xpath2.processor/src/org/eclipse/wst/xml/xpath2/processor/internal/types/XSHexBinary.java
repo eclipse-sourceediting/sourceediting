@@ -8,17 +8,20 @@
  * Contributors:
  *     Mukul Gandhi - bug 281054 - initial API and implementation
  *     David Carver (STAR) - bug 228223 - fixed casting issue.  Needed to encode the value. 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.impl.dv.util.Base64;
 import org.apache.xerces.impl.dv.util.HexBin;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A representation of the xs:hexBinary datatype
@@ -50,7 +53,6 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 * 
 	 * @return "xs:hexBinary" which is the datatype's full pathname
 	 */
-	@Override
 	public String string_type() {
 		return XS_HEX_BINARY;
 	}
@@ -60,7 +62,6 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 * 
 	 * @return "hexBinary" which is the datatype's name
 	 */
-	@Override
 	public String type_name() {
 		return "hexBinary";
 	}
@@ -71,7 +72,6 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 * 
 	 * @return The hexBinary stored
 	 */
-	@Override
 	public String string_value() {
 		return _value.toUpperCase();
 	}
@@ -94,7 +94,6 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 * @return New ResultSequence representing hexBinary value 
 	 * @throws DynamicError
 	 */
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -192,5 +191,7 @@ public class XSHexBinary extends CtrType implements CmpEq {
       
       return true;
 	}
-
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_HEXBINARY;
+	}
 }

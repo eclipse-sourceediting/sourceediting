@@ -12,9 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /*
  * Implements the xs:ID data type.
@@ -33,17 +35,14 @@ public class XSID extends XSNCName {
 		super();
 	}
 
-	@Override
 	public String string_type() {
 		return XS_ID;
 	}
 	
-	@Override
 	public String type_name() {
 		return "ID";
 	}
 	
-	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -62,5 +61,10 @@ public class XSID extends XSNCName {
 
 		return rs;
 	}
+	
+	public TypeDefinition getTypeDefinition() {
+		return BuiltinTypeLibrary.XS_ID;
+	}
+	
 
 }

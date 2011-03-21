@@ -1,4 +1,4 @@
-package org.eclipse.wst.xml.xpath2.processor.internal.types;
+package org.eclipse.wst.xml.xpath2.processor.internal.types.xerces;
 
 import org.apache.xerces.impl.dv.InvalidDatatypeValueException;
 import org.apache.xerces.impl.dv.ValidatedInfo;
