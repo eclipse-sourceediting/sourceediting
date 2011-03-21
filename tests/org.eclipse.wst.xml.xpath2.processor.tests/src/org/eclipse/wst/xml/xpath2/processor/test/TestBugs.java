@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2010 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,6 +50,8 @@
  *  Mukul Gandhi    - bug 334478   implementation of xs:token data type
  *  Mukul Gandhi    - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
  *                                 ID, IDREF and NMTOKEN.
+ *  Mukul Gandhi    - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.                                
+ * Mukul Gandhi     - bug 280798 - PsychoPath support for JDK 1.4
  *  Mukul Gandhi    - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.
  *  Mukul Gandhi    - bug 338999 - improving compliance of function 'fn:subsequence'. implementing full arity support.
  *  Mukul Gandhi    - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.                                
@@ -92,7 +94,6 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	private Bundle bundle;
 
-	@Override
 	protected void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		super.setUp();
@@ -2261,12 +2262,11 @@ public class TestBugs extends AbstractPsychoPathTest {
 	
 	private CollationProvider createLengthCollatorProvider() {
 		return new CollationProvider() {
-			@SuppressWarnings("unchecked")
 			public Comparator get_collation(String name) {
 				if (name.equals(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR)) {
-					return new Comparator<String>() {
-						public int compare(String o1, String o2) {
-							return o1.length() - o2.length();
+					return new Comparator() {
+						public int compare(Object o1, Object o2) {
+							return ((String)o1).length() - ((String)o2).length();
 						}
 					};
 				}

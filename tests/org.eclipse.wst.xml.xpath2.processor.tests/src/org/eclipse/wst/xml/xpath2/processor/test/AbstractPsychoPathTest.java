@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,10 +110,8 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	private static final String IMPORT_SCHEMA_NAMESPACE = "import schema namespace";
 	private static final String REGEX_DN = " namespace\\s+(\\w[-_\\w]*)\\s*=\\s*['\"]([^;]*)['\"];";
 
-	private static HashMap<String, String> inputMap = new HashMap<String, String>(
-			3);
+	private static HashMap inputMap = new HashMap(3);
 
-	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		bundle = Platform
@@ -215,7 +213,6 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		is2.close();
 	}	
 
-	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		domDoc = null;
@@ -493,12 +490,11 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return dc;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected String buildResultString(ResultSequence rs) {
 		String actual = new String();
-		Iterator<AnyType> iterator = rs.iterator();
+		Iterator iterator = rs.iterator();
 		while (iterator.hasNext()) {
-			AnyType anyType = iterator.next();
+			AnyType anyType = (AnyType)iterator.next();
 			
 			actual = actual + anyType.string_value() + " ";
 		}
@@ -506,7 +502,6 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return actual.trim();
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected String buildXMLResultString(ResultSequence rs) throws Exception {
         DOMImplementationLS domLS = (DOMImplementationLS) domDoc.getImplementation().getFeature("LS", "3.0");
         LSOutput outputText = domLS.createLSOutput();
@@ -515,10 +510,10 @@ public class AbstractPsychoPathTest extends XMLTestCase {
         outputText.setByteStream(outputStream);
         
 		String actual = new String();
-		Iterator<NodeType> iterator = rs.iterator();
+		Iterator iterator = rs.iterator();
 		boolean queueSpace = false;
 		while (iterator.hasNext()) {
-			AnyType aat = iterator.next();
+			AnyType aat = (AnyType)iterator.next();
 			if (aat instanceof NodeType) {
 				NodeType nodeType = (NodeType) aat;
 				Node node = nodeType.node_value();
@@ -589,7 +584,8 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	    	  XSObject xsobject = xstypes.item(i);
 	    	  if ("http://www.w3.org/XQueryTest/userDefinedTypes".equals(xsobject.getNamespace())) {
 	    		  if (xsobject instanceof XSSimpleTypeDefinition) {
-	    			  if (((XSSimpleTypeDefinition) xsobject).getNumeric()) {
+	    			XSSimpleTypeDefinition typeDef = (XSSimpleTypeDefinition) xsobject;
+					if (typeDef.getNumeric()) {
 	    				  if (xsobject.getName().equals("floatBased") || xsobject.getName().equals("shoesize")) {
 		    				  XercesFloatUserDefined fudt = new XercesFloatUserDefined(xsobject);
 		    				  udl.add_type(fudt);
@@ -603,7 +599,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	    					  XercesQNameUserDefined qudt = new XercesQNameUserDefined(xsobject);
 	    					  udl.add_type(qudt);
 	    				  } else {
-							XercesUserDefined udt = new XercesUserDefined(xsobject);
+							XercesUserDefined udt = new XercesUserDefined(typeDef);
 							udl.add_type(udt);
 	    				  }
 	    			  }
@@ -616,12 +612,15 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	   }
 
 	protected void assertXPathTrue(String xpath, DynamicContext dc, Document domDoc) {
-		XSBoolean result = evaluateSimpleXPath(xpath, dc, domDoc, XSBoolean.class);
+		XSBoolean result = evaluateBoolXPath(xpath, dc, domDoc);
 		assertEquals(true, result.value());
 	}
 
-	@SuppressWarnings("unchecked")
-	protected <T extends AnyType> T evaluateSimpleXPath(String xpath, DynamicContext dc, Document doc, Class<T> resultClass) {
+	protected XSBoolean evaluateBoolXPath(String xpath, DynamicContext dc, Document doc) {
+		return  (XSBoolean) evaluateSimpleXPath(xpath, dc, doc, XSBoolean.class);
+	}
+		
+	protected AnyType evaluateSimpleXPath(String xpath, DynamicContext dc, Document doc, Class resultClass) {
 		XPath path;
 		try {
 			path = compileXPath(dc, xpath);
@@ -646,7 +645,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		AnyType result = rs.first();
 		assertTrue("Exected XPath result instanceof class " + resultClass.getSimpleName() + " from \'" + xpath + "\', got " + result.getClass(), resultClass.isInstance(result));
 		
-		return (T)result;
+		return result;
 	}
 
 

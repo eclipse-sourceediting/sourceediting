@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver (STAR) - initial API and implementation 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *******************************************************************************/
+
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 import org.eclipse.core.runtime.Plugin;
@@ -18,7 +30,6 @@ public class XPath20TestPlugin extends Plugin {
 	 * @see
 	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
-	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -30,7 +41,6 @@ public class XPath20TestPlugin extends Plugin {
 	 * @see
 	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
-	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);

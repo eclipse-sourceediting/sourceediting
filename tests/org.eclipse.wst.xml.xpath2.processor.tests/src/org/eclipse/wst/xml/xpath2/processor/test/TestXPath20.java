@@ -1,5 +1,5 @@
 /*******************************************************************************
- *Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ *Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
  *All rights reserved. This program and the accompanying materials
  *are made available under the terms of the Eclipse Public License v1.0
  *which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  *Contributors:
  *    David Carver (STAR) - initial API and implementation
  *    Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *    Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -29,7 +30,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XPathDecimalFormat;
 
 public class TestXPath20 extends AbstractPsychoPathTest {
 
-	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		URL fileURL = bundle.getEntry("/TestSources/acme_corp.xml");
@@ -109,7 +109,7 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 	}
 	
 	public void testFloatFormat() throws Exception {
-		Float value = 1.0f;
+		Float value = new Float(1.0f);
 		XPathDecimalFormat format = new XPathDecimalFormat("0.#######E0");
 		String result = format.xpathFormat(value); 
 		assertEquals("1", result);

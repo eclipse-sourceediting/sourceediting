@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Jesper Steen Moller and others.
+ * Copyright (c) 2009, 2010 Jesper Steen Moller and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Jesper S Moller - initial API and implementation
+ *     Mukul Gandhi    - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -116,9 +117,9 @@ public class TestMinMax extends AbstractPsychoPathTest {
 		return new CollationProvider() {
 			public Comparator get_collation(String name) {
 				if (name.equals(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR)) {
-					return new Comparator<String>() {
-						public int compare(String o1, String o2) {
-							return o1.length() - o2.length();
+					return new Comparator() {
+						public int compare(Object o1, Object o2) {
+							return ((String)o1).length() - ((String)o2).length();
 						}
 					};
 				}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.schema;
@@ -188,7 +189,7 @@ public class SeqExprCastSITest extends AbstractPsychoPathTest {
    public void test_notation_cast_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/SchemaImport/SeqExprCastSI/notation-cast-2.xq";
-      List<String> expectedResult = Arrays.asList("XPST0080", "XPST0017");
+      List expectedResult = Arrays.asList(new String[] {"XPST0080", "XPST0017"});
       URL fileURL = bundle.getEntry(inputFile);
       Schema jaxpSchema = loadSchema();
       loadDOMDocument(fileURL, jaxpSchema);

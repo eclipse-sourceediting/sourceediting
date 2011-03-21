@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
@@ -370,10 +371,10 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		Document dom1 = domload.load(fileURL.openStream());
 		fileURL = bundle.getEntry("/TestSources/reviews.xml");
 		Document dom2 = domload.load(fileURL.openStream());
-		ArrayList<Document> arraylist = new ArrayList<Document>();
+		ArrayList arraylist = new ArrayList();
 		arraylist.add(dom1);
 		arraylist.add(dom2);
-		HashMap<String, List<Document>> map = new HashMap();
+		HashMap map = new HashMap();
 		map.put(FnCollection.DEFAULT_COLLECTION_URI, arraylist);
 		map.put(COLLECTION1, arraylist);
 		dc.set_collections(map);
@@ -387,11 +388,11 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		Document dom2 = domload.load(fileURL.openStream());
 		fileURL = bundle.getEntry("/TestSources/books.xml");
 		Document dom3 = domload.load(fileURL.openStream());
-		ArrayList<Document> arraylist = new ArrayList<Document>();
+		ArrayList arraylist = new ArrayList();
 		arraylist.add(dom1);
 		arraylist.add(dom2);
 		arraylist.add(dom3);
-		HashMap<String, List<Document>> map = new HashMap();
+		HashMap map = new HashMap();
 		map.put(FnCollection.DEFAULT_COLLECTION_URI, arraylist);
 		map.put(COLLECTION2, arraylist);
 		dc.set_collections(map);
