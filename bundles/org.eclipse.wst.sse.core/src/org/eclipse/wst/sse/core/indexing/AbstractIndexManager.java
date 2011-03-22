@@ -639,7 +639,9 @@ public abstract class AbstractIndexManager {
 					 * else ask manager implementation if resource and its children should be visited 
 					 */
 					IPath path = proxy.requestFullPath();
-					if(path.toString().equals("/")) { //$NON-NLS-1$
+					if (proxy.isDerived()) { // Do not include derived resources
+						visitChildren = false;
+					} else if(path.isRoot()) { //$NON-NLS-1$
 						visitChildren = true;
 					} else if(isResourceToIndex(proxy.getType(), path)) {
 						if(proxy.getType() == IResource.FILE) {
@@ -942,7 +944,9 @@ public abstract class AbstractIndexManager {
 			/* if root node always visit its children
 			 * else ask manager implementation if resource and its children should be visited 
 			 */
-			if(delta.getFullPath().toString().equals("/")) { //$NON-NLS-1$
+			if (delta.getResource().isDerived()) { // Do not include derived resources
+				visitChildren = false;
+			} else if(delta.getFullPath().isRoot()) { //$NON-NLS-1$
 				visitChildren = true;
 			} else {
 				IResource resource = delta.getResource();
