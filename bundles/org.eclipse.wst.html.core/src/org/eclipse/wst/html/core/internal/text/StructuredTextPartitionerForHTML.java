@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -301,5 +301,18 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			foundAttributeName = StringUtils.contains(attributeNames, tagAttrName, false);
 		}
 		return foundAttributeName;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner#getParserSpecificPreviousRegion(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
+	 */
+	protected IStructuredDocumentRegion getParserSpecificPreviousRegion(IStructuredDocumentRegion currentRegion) {
+		if (currentRegion == null)
+			return null;
+		do {
+			currentRegion = currentRegion.getPrevious();
+		} while (currentRegion != null && currentRegion.getType().equals(DOMRegionContext.BLOCK_TEXT));
+
+		return currentRegion;
 	}
 }

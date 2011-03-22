@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -440,4 +440,31 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			type == DOMJSPRegionContexts.JSP_VBL_SQUOTE;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner#doParserSpecificCheck(int, boolean, org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion, org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion, org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion, org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion)
+	 */
+	protected boolean doParserSpecificCheck(int offset, boolean partitionFound, IStructuredDocumentRegion sdRegion, IStructuredDocumentRegion previousStructuredDocumentRegion, ITextRegion next, ITextRegion previousStart) {
+		if (previousStart != null && previousStart.getType() == DOMRegionContext.XML_TAG_OPEN && next.getType() == DOMRegionContext.XML_END_TAG_OPEN) {
+			ITextRegion previousName = previousStructuredDocumentRegion.getRegionAtCharacterOffset(previousStructuredDocumentRegion.getEndOffset(previousStart));
+			ITextRegion nextName = sdRegion.getRegionAtCharacterOffset(sdRegion.getEndOffset(next));
+			if (previousName != null && nextName != null && previousName.getType() == DOMRegionContext.XML_TAG_NAME && nextName.getType() == DOMRegionContext.XML_TAG_NAME) {
+				setInternalPartition(offset, 0, getPartitionTypeBetween(previousStructuredDocumentRegion, sdRegion));
+				partitionFound = true;
+			}
+		}
+		return partitionFound;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner#getParserSpecificPreviousRegion(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
+	 */
+	protected IStructuredDocumentRegion getParserSpecificPreviousRegion(IStructuredDocumentRegion currentRegion) {
+		if (currentRegion == null)
+			return null;
+		do {
+			currentRegion = currentRegion.getPrevious();
+		} while (currentRegion != null && currentRegion.getType().equals(DOMRegionContext.BLOCK_TEXT));
+
+		return currentRegion;
+	}
 }
