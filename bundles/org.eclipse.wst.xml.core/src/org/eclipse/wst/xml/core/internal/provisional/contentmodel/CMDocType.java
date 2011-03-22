@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,10 @@ public interface CMDocType {
 	 * JSP 2.0 Tag files
 	 */
 	public final static String TAG20_DOC_TYPE = "JSP20.TAG";//$NON-NLS-1$
+	/**
+	 * JSP 2.1 Tag files
+	 */
+	public final static String TAG21_DOC_TYPE = "JSP21.TAG";//$NON-NLS-1$
 	/**
 	 * JSP 2.1 JSP files
 	 */

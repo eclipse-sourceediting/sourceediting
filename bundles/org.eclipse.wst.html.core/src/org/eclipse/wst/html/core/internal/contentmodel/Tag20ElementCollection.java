@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 /**
  * Factory for element declarations of JSP 2.0 Tag files.
  */
-final class Tag20ElementCollection extends JSPElementCollection implements JSP20Namespace.ElementName {
+class Tag20ElementCollection extends JSPElementCollection implements JSP20Namespace.ElementName {
 	// element IDs
 	private static class TagIds20 {
 		public static final int ID_SCRIPTLET = 0;
@@ -75,7 +75,7 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 	}
 
 	// attribute creater
-	private class TACreater20 extends JACreater {
+	class TACreater20 extends JACreater {
 
 		public TACreater20() {
 			super();
@@ -140,7 +140,7 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_DESCRIPTION, adec);
 		}
 
-		private void createForDirTag() {
+		void createForDirTag() {
 			// ("import" URI optional)
 			AttrDecl adec = new AttrDecl(ATTR_NAME_IMPORT);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
@@ -685,9 +685,13 @@ final class Tag20ElementCollection extends JSPElementCollection implements JSP20
 		if (content != null)
 			decl.setContent(content);
 
-		TACreater20 creater = new TACreater20();
+		TACreater20 creater = getAttributeCreater();
 		decl.setAttributes(creater.getDeclarations(eid));
 
 		return decl;
+	}
+	
+	protected TACreater20 getAttributeCreater(){
+		return new TACreater20();
 	}
 }

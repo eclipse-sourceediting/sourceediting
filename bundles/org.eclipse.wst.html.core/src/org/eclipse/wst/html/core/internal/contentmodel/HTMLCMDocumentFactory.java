@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 public final class HTMLCMDocumentFactory {
 
 	private static Hashtable cmdocs = new Hashtable();
-	private static List supportedCMtypes = Arrays.asList(new Object[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE, CMDocType.JSP21_DOC_TYPE, CMDocType.HTML5_DOC_TYPE});
+	private static List supportedCMtypes = Arrays.asList(new Object[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE, CMDocType.TAG21_DOC_TYPE, CMDocType.JSP21_DOC_TYPE, CMDocType.HTML5_DOC_TYPE});
 
 	private static JCMDocImpl jsp11doc = null;
 
@@ -85,6 +85,12 @@ public final class HTMLCMDocumentFactory {
 			CMNamespaceImpl j20ns = new CMNamespaceImpl(JSP20Namespace.JSP20_URI, JSP11Namespace.JSP_TAG_PREFIX);
 			TagCMDocImpl tag20doc = new TagCMDocImpl(CMDocType.TAG20_DOC_TYPE, j20ns);
 			return tag20doc;
+		}
+
+		else if (CMDocType.TAG21_DOC_TYPE.equals(cmtype)) {
+			CMNamespaceImpl j21ns = new CMNamespaceImpl(JSP21Namespace.JSP21_URI, JSP11Namespace.JSP_TAG_PREFIX);
+			TagCM21DocImpl tag21doc = new TagCM21DocImpl(CMDocType.TAG21_DOC_TYPE, j21ns);
+			return tag21doc;
 		}
 
 		else if (CMDocType.JSP11_DOC_TYPE.equals(cmtype) || CMDocType.JSP12_DOC_TYPE.equals(cmtype)) {

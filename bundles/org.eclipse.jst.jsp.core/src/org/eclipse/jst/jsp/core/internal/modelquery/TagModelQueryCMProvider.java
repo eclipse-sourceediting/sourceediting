@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,16 @@ package org.eclipse.jst.jsp.core.internal.modelquery;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.jsp.core.internal.contentmodel.TAGCMDocumentFactory;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
-import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryCMProvider;
-import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
@@ -38,7 +41,15 @@ public class TagModelQueryCMProvider implements ModelQueryCMProvider {
 	 * CMDocument is appropriate for the DOM Node.
 	 */
 	public CMDocument getCorrespondingCMDocument(Node node) {
-		CMDocument tagdoc = HTMLCMDocumentFactory.getCMDocument(CMDocType.TAG20_DOC_TYPE);
+		CMDocument tagdoc =null;
+		if (node instanceof IDOMNode) {
+			IDOMModel model = ((IDOMNode) node).getModel();
+			String modelPath = model.getBaseLocation();
+			if (modelPath != null && !IModelManager.UNMANAGED_MODEL.equals(modelPath)) {
+				float version = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(new Path(modelPath));
+				tagdoc = TAGCMDocumentFactory.getCMDocument(version);
+			}
+		}
 
 		CMDocument result = null;
 		try {
