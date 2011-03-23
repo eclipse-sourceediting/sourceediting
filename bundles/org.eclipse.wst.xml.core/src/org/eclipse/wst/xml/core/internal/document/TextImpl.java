@@ -324,10 +324,8 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		return "#text";//$NON-NLS-1$
 	}
 
-	/**
-	 * getNodeType method
-	 * 
-	 * @return short
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Node#getNodeType()
 	 */
 	public short getNodeType() {
 		return TEXT_NODE;
@@ -1127,8 +1125,23 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		return new StringPair(first, second);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Text#getWholeText()
+	 */
 	public String getWholeText() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not Implemented in this version."); //$NON-NLS-1$
+		Node current = this;
+		// rewind
+		while (current.getPreviousSibling() != null)
+			current = current.getPreviousSibling();
+		// playback
+		StringBuffer buffer = new StringBuffer();
+		while (current != null) {
+			if (current.getNodeType() == Node.TEXT_NODE || current.getNodeType() == Node.CDATA_SECTION_NODE) {
+				buffer.append(current.getNodeValue());
+			}
+			current = current.getNextSibling();
+		}
+		return buffer.toString();
 	}
     /**
 	 * Replaces the text of the current node and all logically-adjacent text

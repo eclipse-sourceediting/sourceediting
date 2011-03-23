@@ -66,22 +66,13 @@ public interface IDOMText extends IDOMNode, Text {
 
 	public boolean isElementContentWhitespace();
 
-	/**
-	 * NOT YET IMPLEMTENTED but exists here interface in preparation for DOM3
-	 * 
-	 * Returns all text of <code>Text</code> nodes logically-adjacent text
-	 * nodes to this node, concatenated in document order. <br>
-	 * For instance, in the example below <code>wholeText</code> on the
-	 * <code>Text</code> node that contains "bar" returns "barfoo", while on
-	 * the <code>Text</code> node that contains "foo" it returns "barfoo".
-	 * 
-	 * @see DOM Level 3
-	 * 
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Text#getWholeText()
 	 */
 	public String getWholeText();
 
 	/**
-	 * NOT YET IMPLEMTENTED but exists here interface in preparation for DOM3
+	 * NOT YET IMPLEMENTED but exists here interface in preparation for DOM3
 	 * 
 	 * Replaces the text of the current node and all logically-adjacent text
 	 * nodes with the specified text. All logically-adjacent text nodes are

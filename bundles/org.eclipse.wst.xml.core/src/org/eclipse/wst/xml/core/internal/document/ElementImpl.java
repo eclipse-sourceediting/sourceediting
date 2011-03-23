@@ -556,6 +556,9 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	}
 
 	public String getNamespaceURI() {
+		if (this.fNamespaceURI != null)
+			return new String(this.fNamespaceURI);
+
 		String nsAttrName = null;
 		String prefix = getPrefix();
 		if (prefix != null && prefix.length() > 0) {
@@ -574,9 +577,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 				return attr.getValue();
 		}
 
-		if (this.fNamespaceURI == null)
-			return null;
-		return new String(this.fNamespaceURI);
+		return null;
 	}
 
 	/**
