@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -166,7 +166,7 @@ public class ValidationInfo implements ValidationReport
       successfullyAdded = true;
       // Add to the appropriate list if nested error support is off or
       // this message is for the current file.
-      if (!WRAPPER_ERROR_SUPPORT_ENABLED || validating_file_url.sameFile(errorURL))
+      if (!WRAPPER_ERROR_SUPPORT_ENABLED || (validating_file_url != null && validating_file_url.sameFile(errorURL)))
       {
 
         ValidationMessage valmes = new ValidationMessage(message, line,
