@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -218,12 +218,12 @@ public class JSPTaglibCompletionProposalComputer extends
 						 * runtime would be nondeterministic anyway)
 						 */
 						Map uriToRecords = new HashMap();
+						IPath localContextRoot = FacetModuleCoreSupport.computeWebContentRootPath(basePath);
 						for (int taglibRecordNumber = 0; taglibRecordNumber < availableTaglibRecords.length; taglibRecordNumber++) {
 							ITaglibRecord taglibRecord = availableTaglibRecords[taglibRecordNumber];
 							String uri = null;
 							if (taglibRecord.getRecordType() == ITaglibRecord.TAGDIR) {
 								IPath path = ((ITagDirRecord) taglibRecord).getPath();
-								IPath localContextRoot = TaglibIndex.getContextRoot(basePath);
 								if (localContextRoot.isPrefixOf(path)) {
 									uri = IPath.SEPARATOR + path.removeFirstSegments(localContextRoot.segmentCount()).toString();
 									uriToRecords.put(uri, taglibRecord);
