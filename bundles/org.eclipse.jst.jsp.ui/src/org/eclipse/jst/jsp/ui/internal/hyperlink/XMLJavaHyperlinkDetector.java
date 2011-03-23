@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.hyperlink;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -42,9 +44,6 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
  */
 public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	/**
-	 * 
-	 */
 	private static final String JAR_FILE_PROTOCOL = "jar:file:"; //$NON-NLS-1$
 
 	/**
@@ -98,6 +97,18 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 
 
 	private IHyperlink createHyperlink(String elementName, IRegion region, IDocument document) {
+		// try file buffers
+		ITextFileBuffer textFileBuffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(document);
+		if (textFileBuffer != null) {
+			IPath basePath = textFileBuffer.getLocation();
+			if (basePath != null && !basePath.isEmpty()) {
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0));
+				if (basePath.segmentCount() > 1 && project.isAccessible()) {
+					return createJavaElementHyperlink(JavaCore.create(project), elementName, region);
+				}
+			}
+		}
+		// fallback to SSE-specific knowledge
 		IStructuredModel model = null;
 		try {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
@@ -141,7 +152,6 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 					}
 				}
 			}
-
 		}
 		finally {
 			if (model != null)
