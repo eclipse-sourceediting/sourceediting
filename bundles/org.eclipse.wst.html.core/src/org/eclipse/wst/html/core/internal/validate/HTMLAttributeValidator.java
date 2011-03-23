@@ -44,7 +44,13 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	private static final char SINGLE_QUOTE = '\'';
 	private static final char DOUBLE_QUOTE = '\"';
 
+	// HTML(5) data attributes
 	private static final String ATTR_NAME_DATA = "data-"; //$NON-NLS-1$
+	private static final int ATTR_NAME_DATA_LENGTH = ATTR_NAME_DATA.length();
+	
+	//WHATWG x-vendor-feature attributes
+	private static final String ATTR_NAME_USER_AGENT_FEATURE = "x-"; //$NON-NLS-1$
+	private static final int ATTR_NAME_USER_AGENT_FEATURE_LENGTH = ATTR_NAME_USER_AGENT_FEATURE.length();
 
 	// D210422
 	/**
@@ -142,7 +148,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			}
 			
 			if (adec == null) {
-				if (attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length())
+				if ((attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA_LENGTH) || (attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH))
 					continue;
 				// No attr declaration was found. That is, the attr name is
 				// undefined.
