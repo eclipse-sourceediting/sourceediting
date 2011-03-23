@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
 import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCoreTest;
+import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCustomTagTest;
 import org.eclipse.jst.jsp.core.tests.translation.JSPTranslatorPersistenceTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPActionValidatorTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPBatchValidatorTest;
@@ -48,20 +49,21 @@ public class JSPCoreTestSuite extends TestSuite {
 
 		addTest(TestCeanupFormat.suite());
 		addTest(ModelCloneSuite.suite());
-		addTest(new TestSuite(TestModelHandlers.class, "TestModelHandlers"));
-		addTest(new TestSuite(TestContentTypeHandlers.class, "TestContentTypeHandlers"));
-		addTest(new TestSuite(TestModelManager.class, "TestModelManager"));
-		addTest(new TestSuite(FormatTester.class, "FormatTester"));
+		addTest(new TestSuite(TestModelHandlers.class, "Test JSP Model Handlers"));
+		addTest(new TestSuite(TestContentTypeHandlers.class, "Test JSP Content Type Handlers"));
+		addTest(new TestSuite(TestModelManager.class, "Test Model Manager with JSP"));
+		addTest(new TestSuite(FormatTester.class, "Format Tester"));
 		addTest(new TestSuite(TestModelRelease.class, "Model Tests"));
 		addTest(new TestSuite(TestModelWithNoFile.class, "Model with no file Tests"));
 		// temporarily removed since unstable, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=213754 
 		// addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
 		addTest(new TestSuite(JSPTokenizerTest.class, "Special Parsing Tests"));
 		addTest(new TestSuite(AttrValueTest.class, "JSP Attribute Tests"));
-		addTest(new TestSuite(JSPJavaTranslatorCoreTest.class, "Core Translator Tests"));
+		addTest(new TestSuite(JSPJavaTranslatorCoreTest.class, "Core Java Translator Tests"));
 		addTest(new TestSuite(TestModelIncludes.class, "Core Fragment Inclusion Tests"));
 		addTest(new TestSuite(JSPCorePreferencesTest.class, "Preference Tests"));
 		addTest(new TestSuite(JSPedCSSSourceParserTest.class, "Special Parsing Tests for JSP-CSS content"));
+		addTest(new TestSuite(JSPJavaTranslatorCustomTagTest.class, "Java Custom Tag Tests"));
 		addTest(new TestSuite(JSPJavaValidatorTest.class, "Java Validator Tests"));
 		addTest(new TestSuite(TestImportedNodes.class, "Imported Nodes Tests"));
 		addTest(new TestSuite(TestFixedCMDocuments.class, "Fixed CMDocument Creation Tests"));
