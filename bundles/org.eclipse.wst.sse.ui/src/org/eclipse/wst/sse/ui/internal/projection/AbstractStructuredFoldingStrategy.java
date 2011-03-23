@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -485,23 +485,33 @@ public abstract class AbstractStructuredFoldingStrategy
 	}
 
 	/**
-	 * <p>Gets all of the {@link IndexedRegion}s from the given {@link IStructuredModel} spand by the given
+	 * <p>Gets all of the {@link IndexedRegion}s from the given {@link IStructuredModel} spanned by the given
 	 * {@link IStructuredDocumentRegion}s.</p>
 	 * 
 	 * @param model the {@link IStructuredModel} used to get the {@link IndexedRegion}s
 	 * @param structRegions get the {@link IndexedRegion}s spanned by these {@link IStructuredDocumentRegion}s
-	 * @return the {@link Set} of {@link IndexedRegion}s from the given {@link IStructuredModel} spaned by the
+	 * @return the {@link Set} of {@link IndexedRegion}s from the given {@link IStructuredModel} spanned by the
 	 * given {@link IStructuredDocumentRegion}s.
 	 */
 	private Set getIndexedRegions(IStructuredModel model, IStructuredDocumentRegion[] structRegions) {
-		Set indexedRegions = new HashSet();
+		Set indexedRegions = new HashSet(structRegions.length);
 
-		//for each text region in each struct doc region find the indexed region it spans/is in
-		for(int structRegionIndex = 0; structRegionIndex < structRegions.length && fProjectionAnnotationModel != null; ++structRegionIndex) {
-			ITextRegionList textRegions = structRegions[structRegionIndex].getRegions();
-			for(int textRegionIndex = 0; textRegionIndex < textRegions.size() && fProjectionAnnotationModel != null; ++textRegionIndex) {
-				int offset = structRegions[structRegionIndex].getStartOffset(textRegions.get(textRegionIndex));
-				indexedRegions.add(model.getIndexedRegion(offset));
+		//for each text region in each structured document region find the indexed region it spans/is in
+		for (int structRegionIndex = 0; structRegionIndex < structRegions.length && fProjectionAnnotationModel != null; ++structRegionIndex) {
+			IStructuredDocumentRegion structuredDocumentRegion = structRegions[structRegionIndex];
+			
+			int offset = structuredDocumentRegion.getStartOffset();
+			IndexedRegion indexedRegion = model.getIndexedRegion(offset);
+			indexedRegions.add(indexedRegion);
+			if (structuredDocumentRegion.getEndOffset() <= indexedRegion.getEndOffset())
+				continue;
+
+			ITextRegionList textRegions = structuredDocumentRegion.getRegions();
+			int textRegionCount = textRegions.size();
+			for (int textRegionIndex = 1; textRegionIndex < textRegionCount; ++textRegionIndex) {
+				offset = structuredDocumentRegion.getStartOffset(textRegions.get(textRegionIndex));
+				indexedRegion = model.getIndexedRegion(offset);
+				indexedRegions.add(indexedRegion);
 			}
 		}
 
