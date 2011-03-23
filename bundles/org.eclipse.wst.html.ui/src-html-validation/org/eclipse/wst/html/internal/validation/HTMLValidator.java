@@ -521,7 +521,12 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 	 * 
 	 */
 	public IResource getResource(String delta) {
-		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
+		Path path = new Path(delta);
+		if (path.segmentCount() > 1)
+			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		if (path.segmentCount() == 1)
+			return ResourcesPlugin.getWorkspace().getRoot().getProject(delta);
+		return null;
 	}
 
 	public ISchedulingRule getSchedulingRule(IValidationContext helper) {
