@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.ConnectException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
@@ -430,24 +432,33 @@ public class XMLValidator
 		// Check the schema provider extension point
 		IExternalSchemaLocationProvider[] providers = ExternalSchemaLocationProviderRegistry.getInstance().getProviders();
 		for (int i = 0; i < providers.length; i++) {
-			long time = _trace ? System.currentTimeMillis(): 0;
-			final Map locations = providers[i].getExternalSchemaLocation(new URI(fileURI));
-			if (_trace) {
-				  long diff = System.currentTimeMillis() - time;
-				  if (diff > 250)
-					  Logger.log(Logger.INFO, "Schema location provider took [" + diff + "ms] for URI [" + fileURI + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			  }
-			if (locations != null && !locations.isEmpty()) {
-				Object path = locations.get(IExternalSchemaLocationProvider.SCHEMA_LOCATION);
-				if (path instanceof String) {
-					if (schemaLocation.length() > 0) {
-						schemaLocation.append(' ');
+			URI uri = null;
+			try {
+				uri = URIUtil.fromString(fileURI);
+			}
+			catch (URISyntaxException e) {
+				Logger.logException(e.getLocalizedMessage(), e);
+			}
+			if (uri != null) {
+				long time = _trace ? System.currentTimeMillis(): 0;
+				final Map locations = providers[i].getExternalSchemaLocation(uri);
+				if (_trace) {
+					  long diff = System.currentTimeMillis() - time;
+					  if (diff > 250)
+						  Logger.log(Logger.INFO, "Schema location provider took [" + diff + "ms] for URI [" + fileURI + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				  }
+				if (locations != null && !locations.isEmpty()) {
+					Object path = locations.get(IExternalSchemaLocationProvider.SCHEMA_LOCATION);
+					if (path instanceof String) {
+						if (schemaLocation.length() > 0) {
+							schemaLocation.append(' ');
+						}
+						schemaLocation.append(path);
 					}
-					schemaLocation.append(path);
-				}
-				path = locations.get(IExternalSchemaLocationProvider.NO_NAMESPACE_SCHEMA_LOCATION);
-				if (path instanceof String) {
-					noNamespaceSchemaLocation = (String)path;
+					path = locations.get(IExternalSchemaLocationProvider.NO_NAMESPACE_SCHEMA_LOCATION);
+					if (path instanceof String) {
+						noNamespaceSchemaLocation = (String)path;
+					}
 				}
 			}
 		}
