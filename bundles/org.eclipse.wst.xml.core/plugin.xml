@@ -4,6 +4,7 @@
 
    <!-- An extension for contributing a XML validation error customizer. -->
    <extension-point id="errorCustomizer" name="%XML_Validation_Error_Customizer.name" schema="schema/errorCustomizer.exsd"/>
+	<extension-point id="externalSchemaLocations" name="%External_Schema_Location.name" schema="schema/externalSchemaLocations.exsd"/>
 
 	<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler

@@ -2,3 +2,4 @@ org.eclipse.wst.xml.core/debug=true
 org.eclipse.wst.xml.core/debug/tracefilter=
 org.eclipse.wst.xml.core/debug/cmdocumentmanager=false
 org.eclipse.wst.xml.core/debug/cmdocumentcache=false
+org.eclipse.wst.xml.core/externalSchemaLocation=false
