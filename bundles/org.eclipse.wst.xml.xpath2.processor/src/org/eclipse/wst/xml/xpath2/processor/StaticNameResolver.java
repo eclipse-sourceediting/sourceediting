@@ -11,6 +11,14 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
+import org.eclipse.wst.xml.xpath2.api.CollationProvider;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Function;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
+import org.eclipse.wst.xml.xpath2.api.StaticVariableResolver;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticAttrNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticElemNameError;
@@ -21,8 +29,14 @@ import org.eclipse.wst.xml.xpath2.processor.internal.StaticTypeNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticVarNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
+import java.net.URI;
 import java.util.*;
+
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 
 /**
  * This class resolves static names.
@@ -36,7 +50,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		private static final long serialVersionUID = 3898564402981741950L;
 	}
 
-	private StaticContext _sc;
+	private org.eclipse.wst.xml.xpath2.api.StaticContext _sc;
 	private StaticNameError _err;
 
 	/**
@@ -44,12 +58,258 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 * 
 	 * @param sc
 	 *            is the static context.
+	 * @since 2.0
 	 */
-	public StaticNameResolver(StaticContext sc) {
-		_sc = sc;
+	public StaticNameResolver(final org.eclipse.wst.xml.xpath2.processor.StaticContext sc) {
+		_sc = new org.eclipse.wst.xml.xpath2.api.StaticContext() {
+
+			public boolean isXPath1Compatible() {
+				return sc.xpath1_compatible();
+			}
+
+			public StaticVariableResolver getInScopeVariables() {
+				return new StaticVariableResolver() {
+					
+					public boolean isVariablePresent(javax.xml.namespace.QName name) {
+						return sc.variable_exists(qn(name));
+					}
+
+					public TypeDefinition getVariableType(javax.xml.namespace.QName name) {
+						return BuiltinTypeLibrary.XS_ANYTYPE;
+					}
+					
+					public short getVariableOccurrence(javax.xml.namespace.QName name) {
+						return StaticVariableResolver.ONE;
+					}
+				};
+			}
+
+			private QName qn(javax.xml.namespace.QName name) {
+				return new QName(name);
+			}
+
+			public TypeDefinition getInitialContextType() {
+				return BuiltinTypeLibrary.XS_UNTYPED;
+			}
+
+			public Collection getFunctionLibraries() {
+				return Collections.emptyList();
+			}
+
+			public CollationProvider getCollationProvider() {
+				return new CollationProvider() {
+					
+					public String getDefaultCollation() {
+						return null;
+					}
+					
+					public Comparator getCollation(String name) {
+						return null;
+					}
+				};
+			}
+
+			public URI getBaseUri() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public NamespaceContext getNamespaceContext() {
+				return new NamespaceContext() {
+					
+					public Iterator getPrefixes(String arg0) {
+						return Collections.emptyList().iterator();
+					}
+					
+					public String getPrefix(String arg0) {
+						return "x";
+					}
+					
+					public String getNamespaceURI(String prefix) {
+						String ns = sc.resolve_prefix(prefix);
+						return ns != null ? ns : XMLConstants.NULL_NS_URI;
+					}
+				};
+			}
+
+			public String getDefaultNamespace() {
+				return sc.default_namespace();
+			}
+
+			public String getDefaultFunctionNamespace() {
+				return sc.default_function_namespace();
+			}
+
+			public TypeModel getTypeModel() {
+				return sc.getTypeModel(null);
+			}
+
+			public Function resolveFunction(javax.xml.namespace.QName name, int arity) {
+				// This is fake
+				if (sc.function_exists(new QName(name), arity)) {
+					return new Function() {
+						public String getName() {
+							return null;
+						}
+						public int getMinArity() {
+							return 0;
+						}
+						public int getMaxArity() {
+							return 0;
+						}
+						public boolean isVariableArgument() {
+							return false;
+						}
+						public boolean canMatchArity(int actualArity) {
+							return false;
+						}
+						public TypeDefinition getResultType() {
+							return null;
+						}
+						public TypeDefinition getArgumentType(int index) {
+							return null;
+						}
+						public String getArgumentNameHint(int index) {
+							return null;
+						}
+						public ResultSequence evaluate(Collection args, EvaluationContext evaluationContext) {
+							return null;
+						}
+						public TypeDefinition computeReturnType(Collection args, StaticContext sc) {
+							return null;
+						} 
+					};
+				} else {
+					return null;
+				}
+			}
+
+			public TypeDefinition getCollectionType(String collectionName) {
+				return BuiltinTypeLibrary.XS_UNTYPED;
+			}
+
+			public TypeDefinition getDefaultCollectionType() {
+				return BuiltinTypeLibrary.XS_UNTYPED;
+
+			}
+			
+		};
 		_err = null;
 	}
 
+	/**
+	 * @since 2.0
+	 */
+	public StaticNameResolver(org.eclipse.wst.xml.xpath2.api.StaticContext context) {
+		_sc = context;
+		_err = null;
+	}
+
+	class VariableScope {
+		public VariableScope(QName name, TypeDefinition typeDef, VariableScope nextScope) {
+			this.name = name;
+			this.typeDef = typeDef;
+			this.nextScope = nextScope;
+		}
+		final public QName name;
+		final public TypeDefinition typeDef;
+		final public VariableScope nextScope; 
+	}	
+	
+	private VariableScope _innerScope = null;
+
+	private TypeDefinition getVariableType(QName name) {
+		VariableScope scope = _innerScope;
+		while (scope != null) {
+			if (name.equals(scope.name)) return scope.typeDef;
+			scope = scope.nextScope;
+		}
+		return _sc.getInScopeVariables().getVariableType(name.asQName());
+	}
+
+	private boolean isVariableInScope(QName name) {
+		VariableScope scope = _innerScope;
+		while (scope != null) {
+			if (name.equals(scope.name)) return true;
+			scope = scope.nextScope;
+		}
+		return _sc.getInScopeVariables().isVariablePresent(name.asQName());
+	}
+	
+	private boolean canResolve(QName var) {
+		if (var.prefix() == null) return true;
+		return ! XMLConstants.NULL_NS_URI.equals(_sc.getNamespaceContext().getNamespaceURI(var.prefix()));
+	}
+
+	private QName resolve(QName var) {
+		String ns = _sc.getNamespaceContext().getNamespaceURI(var.prefix());
+		QName qName = new QName(var.prefix(), var.local());
+		qName.set_namespace(XMLConstants.NULL_NS_URI.equals(ns) ? null : ns);
+		return qName;
+	}
+
+	private void popScope() {
+		if (_innerScope == null) throw new IllegalStateException("Unmatched scope pop");
+		_innerScope = _innerScope.nextScope;
+	}
+
+	private void pushScope(QName var, BuiltinTypeDefinition xsAnytype) {
+		_innerScope = new VariableScope(resolve(var), xsAnytype, _innerScope);		
+	}
+ 
+	private boolean expand_qname(QName name, String def) {
+		String prefix = name.prefix();
+
+		if (prefix == null) {
+			name.set_namespace(def);
+			return true;
+		}
+
+		String namespaceURI = _sc.getNamespaceContext().getNamespaceURI(prefix);
+		if (XMLConstants.NULL_NS_URI.equals(namespaceURI))
+			return false;
+
+		name.set_namespace(namespaceURI);
+		return true;
+
+	}
+
+	/**
+	 * Expands the qname's prefix into a namespace.
+	 * 
+	 * @param name
+	 *            qname to expand.
+	 * @return true on success.
+	 */
+	private boolean expand_qname(QName name) {
+		return expand_qname(name, null);
+	}
+
+	/**
+	 * Expands a qname and uses the default function namespace if unprefixed.
+	 * 
+	 * @param name
+	 *            qname to expand.
+	 * @return true on success.
+	 */
+	private boolean expand_function_qname(QName name) {
+		return expand_qname(name, _sc.getDefaultFunctionNamespace());
+	}
+
+	/**
+	 * Expands a qname and uses the default type/element namespace if
+	 * unprefixed.
+	 * 
+	 * @param name
+	 *            qname to expand.
+	 * @return true on success.
+	 */
+	private boolean expand_elem_type_qname(QName name) {
+		return expand_qname(name, _sc.getDefaultNamespace());
+	}
+
+	
+	
 	// the problem is that visistor interface does not throw exceptions...
 	// so we get around it ;D
 	private void report_error(StaticNameError err) {
@@ -104,25 +364,22 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 			VarExprPair pair = (VarExprPair) iter.next();
 
 			QName var = pair.varname();
-			if (!_sc.expand_qname(var))
+			if (!expand_qname(var))
 				report_bad_prefix(var.prefix());
 
 			Expr e = pair.expr();
 
 			e.accept(this);
 
-			_sc.new_scope();
+			pushScope(var, BuiltinTypeLibrary.XS_ANYTYPE);
 			scopes++;
-			_sc.add_variable(var);
 		}
 
-		_sc.new_scope();
-		scopes++;
 		expr.accept(this);
 
 		// kill the scopes
 		for (int i = 0; i < scopes; i++)
-			_sc.destroy_scope();
+			popScope();
 	}
 
 	/**
@@ -505,7 +762,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	public Object visit(NameTest e) {
 		QName name = e.name();
 
-		if (!_sc.expand_qname(name))
+		if (!expand_qname(name))
 			report_bad_prefix(name.prefix());
 
 		return null;
@@ -520,10 +777,14 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 */
 	public Object visit(VarRef e) {
 		QName var = e.name();
-		if (!_sc.expand_qname(var))
+		
+		if (! isVariableInScope(var))
+			report_error(new StaticNameError(StaticNameError.NAME_NOT_FOUND));
+		
+		if (!expand_qname(var))
 			report_bad_prefix(var.prefix());
 
-		if (!_sc.variable_in_scope(var))
+		if (!canResolve(var))
 			report_error(new StaticVarNameError("Variable not in scope: "
 					+ var.string()));
 		return null;
@@ -606,10 +867,10 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	public Object visit(FunctionCall e) {
 		QName name = e.name();
 
-		if (!_sc.expand_function_qname(name))
+		if (!expand_function_qname(name))
 			report_bad_prefix(name.prefix());
 
-		if (!_sc.function_exists(name, e.arity()))
+		if (_sc.resolveFunction(name.asQName(), e.arity()) == null)
 			report_error(new StaticFunctNameError("Function does not exist: "
 					+ name.string() + " arity: " + e.arity()));
 
@@ -626,7 +887,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 */
 	public Object visit(SingleType e) {
 		QName type = e.type();
-		if (!_sc.expand_elem_type_qname(type))
+		if (!expand_elem_type_qname(type))
 			report_bad_prefix(type.prefix());
 
 		return null;
@@ -662,12 +923,14 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 			break;
 		case ItemType.QNAME:
 			QName type = e.qname();
-			if (!_sc.expand_elem_type_qname(type))
+			if (!expand_elem_type_qname(type))
 				report_bad_prefix(type.prefix());
 
-			if (!_sc.type_defined(e.qname()))
-				report_error(new StaticTypeNameError("Type not defined: "
-						+ e.qname().string()));
+			if (BuiltinTypeLibrary.BUILTIN_TYPES.lookupType(e.qname().namespace(), e.qname().local()) == null) {
+				if (_sc.getTypeModel() == null || _sc.getTypeModel().lookupType(e.qname().namespace(), e.qname().local()) == null)
+					report_error(new StaticTypeNameError("Type not defined: "
+							+ e.qname().string()));
+			}
 			break;
 
 		case ItemType.KINDTEST:
@@ -761,14 +1024,14 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		if (name == null)
 			return null;
 
-		if (!_sc.expand_qname(name))
+		if (!expand_qname(name))
 			report_bad_prefix(name.prefix());
 
 		name = e.type();
 		if (name == null)
 			return null;
 
-		if (!_sc.expand_elem_type_qname(name))
+		if (!expand_elem_type_qname(name))
 			report_bad_prefix(name.prefix());
 
 		return null;
@@ -784,10 +1047,10 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	public Object visit(SchemaAttrTest e) {
 		QName name = e.arg();
 
-		if (!_sc.expand_qname(name))
+		if (!expand_qname(name))
 			report_bad_prefix(name.prefix());
 
-		if (!_sc.attribute_declared(name))
+		if (_sc.getTypeModel().lookupAttributeDeclaration(name.namespace(), name.local()) == null)
 			report_error(new StaticAttrNameError("Attribute not decleared: "
 					+ name.string()));
 
@@ -808,14 +1071,14 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		if (name == null)
 			return null;
 
-		if (!_sc.expand_elem_type_qname(name))
+		if (!expand_elem_type_qname(name))
 			report_bad_prefix(name.prefix());
 
 		name = e.type();
 		if (name == null)
 			return null;
 
-		if (!_sc.expand_elem_type_qname(name))
+		if (!expand_elem_type_qname(name))
 			report_bad_prefix(name.prefix());
 
 		return null;
@@ -831,10 +1094,10 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	public Object visit(SchemaElemTest e) {
 		QName elem = e.name();
 
-		if (!_sc.expand_elem_type_qname(elem))
+		if (!expand_elem_type_qname(elem))
 			report_bad_prefix(elem.prefix());
 
-		if (!_sc.element_declared(elem))
+		if (_sc.getTypeModel().lookupElementDeclaration(elem.namespace(), elem.local()) == null)
 			report_error(new StaticElemNameError("Element not declared: "
 					+ elem.string()));
 		return null;

@@ -98,5 +98,4 @@ public class CommentType extends NodeType {
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_UNTYPEDATOMIC;
 	}
-
 }

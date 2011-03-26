@@ -5,6 +5,6 @@ import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 
 public interface AtomicTypeDefinition extends TypeDefinition {
 
-	public abstract ResultSequence construct(ResultSequence rs);
-
+	public abstract SingleItemSequence construct(ResultSequence rs);
+	public abstract SingleItemSequence constructNative(Object rs);
 }

@@ -14,12 +14,14 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import javax.xml.XMLConstants;
+
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
@@ -79,6 +81,12 @@ public class QName extends CtrType implements CmpEq {
 	 */
 	public QName() {
 		this(null, null);
+	}
+
+	public QName(javax.xml.namespace.QName name) {
+		this(XMLConstants.DEFAULT_NS_PREFIX.equals(name.getPrefix()) ? null : name.getPrefix(), name.getLocalPart());
+		if (! XMLConstants.NULL_NS_URI.equals(name.getNamespaceURI())) set_namespace(name.getNamespaceURI());
+		_expanded = true; 
 	}
 
 	/**
@@ -345,5 +353,14 @@ public class QName extends CtrType implements CmpEq {
 	
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_QNAME;
+	}
+
+	public javax.xml.namespace.QName asQName() {
+		return new javax.xml.namespace.QName(namespace(), local(), prefix() != null ? prefix() : XMLConstants.DEFAULT_NS_PREFIX);
+	}
+	
+	@Override
+	public Object getNativeValue() {
+		return asQName();
 	}
 }

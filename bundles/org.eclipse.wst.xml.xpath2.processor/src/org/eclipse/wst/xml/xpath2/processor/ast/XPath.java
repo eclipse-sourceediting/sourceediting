@@ -14,14 +14,22 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import java.util.*;
 
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
+import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
+import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathNode;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
 
 /**
  * Support for XPath.
+ * 
+ * @deprecated This is only for internal use, use XPath2Expression instead
  */
-public class XPath extends XPathNode {
+public class XPath extends XPathNode implements XPath2Expression {
 	private Collection _exprs;
+	private StaticContext _staticContext;
 
 	/**
 	 * Constructor for XPath.
@@ -49,5 +57,52 @@ public class XPath extends XPathNode {
 	 */
 	public Iterator iterator() {
 		return _exprs.iterator();
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public Collection getFreeVariables() {
+		// TODO: fetch free variables
+		return Collections.emptyList();
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public Collection getResolvedFunctions() {
+		// TODO: fetch the functions in use
+		return Collections.emptyList();
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public Collection getAxes() {
+		// TODO: fetch the axis in uses
+		return Collections.emptyList();
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public ResultSequence evaluate(DynamicContext dynamicContext, Object[] contextItems) {
+		if (_staticContext == null) throw new IllegalStateException("Static Context not set yet!");
+		return new DefaultEvaluator(_staticContext, dynamicContext, contextItems).evaluate(this);
+	}
+	
+	/**
+	 * @since 2.0
+	 */
+	public StaticContext getStaticContext() {
+		return _staticContext;
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public void setStaticContext(StaticContext context) {
+		if (_staticContext != null) throw new IllegalStateException("Static Context already set!");
+		this._staticContext = context;
 	}
 }

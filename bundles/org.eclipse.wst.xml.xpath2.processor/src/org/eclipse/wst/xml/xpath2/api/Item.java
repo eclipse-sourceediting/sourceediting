@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Jesper Moller, and others
+ * Copyright (c) 2011 Jesper Moller, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ public interface Item {
 	/**
 	 * @return The number of matching patterns on the input.
 	 */
-	ItemType getType();
+	ItemType getItemType();
 	
-	Object getValue();
+	Object getNativeValue();
 }

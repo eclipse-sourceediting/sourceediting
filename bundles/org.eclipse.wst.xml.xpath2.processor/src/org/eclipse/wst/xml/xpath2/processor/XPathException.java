@@ -16,7 +16,7 @@ package org.eclipse.wst.xml.xpath2.processor;
 /**
  * This exception is thrown when there is a problem with an XPath exception.
  */
-public class XPathException extends Exception {
+public class XPathException extends RuntimeException {
 	/**
 	 * 
 	 */

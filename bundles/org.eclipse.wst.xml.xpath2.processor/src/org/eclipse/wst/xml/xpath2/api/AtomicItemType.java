@@ -11,24 +11,13 @@
 
 package org.eclipse.wst.xml.xpath2.api;
 
-/**
- * A match found by the XPath2 pattern matcher
- * 
- * * @noimplement This interface is not intended to be implemented by clients.
- * @since 2.0
- *
- */
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 
-public interface Match {
-	/**
-	 * @return The number of matching patterns on the input.
-	 */
-	int getMatchingCount();
-	
-	/**
-	 * Returns the XPath2 pattern which best matched the input (considering mode and priority)
-	 * 
-	 * @return Pattern which was the best match.
-	 */
-	XPath2Pattern getBestMatch();
+/**
+ * @since 2.0
+ */
+public interface AtomicItemType extends ItemType {
+
+	public TypeDefinition getTypeDefinition();
 }

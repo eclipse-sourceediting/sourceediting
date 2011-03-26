@@ -127,7 +127,7 @@ public class BuiltinTypeLibrary {
 	public static final TypeModel BUILTIN_TYPES = new TypeModel() {
 
 		public TypeDefinition lookupType(String namespace, String typeName) {
-			if (! namespace.equals(BuiltinTypeDefinition.XS_NS)) return null;
+			if (! BuiltinTypeDefinition.XS_NS.equals(namespace)) return null;
 			return (TypeDefinition) builtinTypes.get(typeName);
 		}
 

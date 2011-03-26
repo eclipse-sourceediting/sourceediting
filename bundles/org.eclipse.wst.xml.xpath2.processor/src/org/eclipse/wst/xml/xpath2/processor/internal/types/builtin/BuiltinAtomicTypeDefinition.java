@@ -1,5 +1,6 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types.builtin;
 
+
 public class BuiltinAtomicTypeDefinition extends BuiltinTypeDefinition {
 
 	public BuiltinAtomicTypeDefinition(String name, Class implementationClass, Class nativeType, BuiltinTypeDefinition baseType) {
@@ -9,6 +10,4 @@ public class BuiltinAtomicTypeDefinition extends BuiltinTypeDefinition {
 	public boolean isAbstract() {
 		return false;
 	}
-	
-	
 }

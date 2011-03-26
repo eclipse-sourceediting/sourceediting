@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.internal.XPathError;
@@ -22,6 +23,7 @@ public class BuiltinTypeDefinition implements AtomicTypeDefinition  {
 	private final Class nativeType;
 	private final BuiltinTypeDefinition baseType;
 	private final Method constructorMethod;
+	private final Method constructorFromNativeMethod;
 
 	public BuiltinTypeDefinition(QName name, BuiltinTypeDefinition baseType) {
 		this(name, null, null, baseType);
@@ -36,13 +38,26 @@ public class BuiltinTypeDefinition implements AtomicTypeDefinition  {
 		this.implementationClass = implementationClass;
 		this.nativeType = nativeType;
 		this.baseType = baseType;
+		
+		Method m = null;
 		try {
-			this.constructorMethod = implementationClass != null ? implementationClass.getMethod("constructor", ResultSequence.class) : null;
+			m = implementationClass != null ? implementationClass.getMethod("constructor", ResultSequence.class) : null;
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
 		}
+		this.constructorMethod = m;
+
+		m = null;
+		try {
+			m = implementationClass != null ? implementationClass.getMethod("constructor", nativeType) : null;
+		} catch (SecurityException e) {
+			throw new RuntimeException(e);
+		} catch (NoSuchMethodException e) {
+			// We'll live
+		}
+		this.constructorFromNativeMethod = m;
+
 	}
 
 	public boolean isAbstract() {
@@ -90,10 +105,23 @@ public class BuiltinTypeDefinition implements AtomicTypeDefinition  {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.AtomicTypeDefinition#construct(org.eclipse.wst.xml.xpath2.api.ResultSequence)
 	 */
-	public ResultSequence construct(ResultSequence rs) {
+	public SingleItemSequence construct(ResultSequence rs) {
 		try {
 			if (implementationClass == null) throw new XPathError("Type " + getName() + " is abstract!");
-			return (ResultSequence)constructorMethod.invoke(null, new Object[] { rs });
+			return (SingleItemSequence)constructorMethod.invoke(null, new Object[] { rs });
+		}
+		catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+		catch (InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public SingleItemSequence constructNative(Object obj) {
+		try {
+			if (constructorFromNativeMethod == null) throw new XPathError("Type " + getName() + " cannot be constructed from native object!");
+			return (SingleItemSequence)constructorFromNativeMethod.invoke(null, new Object[] { obj });
 		}
 		catch (IllegalAccessException e) {
 			throw new RuntimeException(e);

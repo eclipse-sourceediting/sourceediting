@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+
 /**
  * Common base for every atomic type
  */

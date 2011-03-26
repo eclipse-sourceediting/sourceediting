@@ -8,15 +8,20 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *******************************************************************************/
-
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.util.Collections;
+import java.util.Iterator;
+
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.SingleItemSequence;
 
 /**
  * Common base for every type
  */
-public abstract class AnyType {
+public abstract class AnyType implements SingleItemSequence {
 	/**
 	 * Retrieves the datatype's full pathname
 	 * 
@@ -37,4 +42,52 @@ public abstract class AnyType {
 	 * @return Type definition (possibly backed by a schema type)
 	 */
 	public abstract TypeDefinition getTypeDefinition();
+
+	public boolean empty() {
+		return false;
+	}
+	
+	public Iterator iterator() {
+		return Collections.singletonList(this).iterator();
+	}
+	
+	public ItemType getItemType() {
+		return new SimpleAtomicTypeImpl(getTypeDefinition());
+	}
+	
+//	abstract public Object getNativeValue();
+	public Object getNativeValue() {
+		return Boolean.TRUE;
+	}
+	public int size() {
+		return 1;
+	}
+
+	public Item item(int index) {
+		checkIOOB(index);
+		return this;
+	}
+
+	private void checkIOOB(int index) {
+		throw new IndexOutOfBoundsException("Index out of bounds, index = " + index + ", length = 1");
+	}
+
+	public Object value(int index) {
+		checkIOOB(index);
+		return getNativeValue();
+	}
+	public ItemType itemType(int index) {
+		checkIOOB(index);
+		return getItemType();
+	}
+	
+	public Object first() {
+		return this;
+	}
+	
+	public TypeDefinition sequenceType() {
+		return getTypeDefinition();
+	}
+	
+
 }

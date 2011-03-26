@@ -17,6 +17,7 @@ import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+
 /**
  * An implementation of a Dynamic Context.
  * 

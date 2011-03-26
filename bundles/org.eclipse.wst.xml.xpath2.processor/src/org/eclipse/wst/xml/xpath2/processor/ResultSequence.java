@@ -13,12 +13,16 @@ package org.eclipse.wst.xml.xpath2.processor;
 
 import java.util.*;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
  * Interface to the methods of range of result sequence
+ * @deprecated Use org.eclipse.wst.xml.xpath2.api.ResultSequence instead
  */
-public abstract class ResultSequence {
+public abstract class ResultSequence implements org.eclipse.wst.xml.xpath2.api.ResultSequence {
 
 	/**
 	 * add item
@@ -128,5 +132,33 @@ public abstract class ResultSequence {
 	 */
 	public void release() {
 		ResultSequenceFactory.release(this);
+	}
+	
+	/**
+	 * @since 2.0
+	 */
+	public Item item(int index) {
+		return get(index);
+	}
+	
+	/**
+	 * @since 2.0
+	 */
+	public ItemType itemType(int index) {
+		return get(index).getItemType();
+	}
+	
+	/**
+	 * @since 2.0
+	 */
+	public TypeDefinition sequenceType() {
+		return get(0).getTypeDefinition();
+	}
+	
+	/**
+	 * @since 2.0
+	 */
+	public Object value(int index) {
+		return get(index).getNativeValue();
 	}
 }

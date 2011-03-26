@@ -10,8 +10,12 @@
  *     Jesper Moller - bug 280555 - Add pluggable collation support
  *     David Carver (STAR) - bug 262765 - fixed distinct-values comparison logic.
  *                           There is probably an easier way to do the comparison.
+<<<<<<< FnDistinctValues.java
+ *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+=======
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *     Mukul Gandhi - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.
+>>>>>>> 1.6
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;

@@ -76,6 +76,17 @@ public class XSCtrLibrary extends ConstructorFL {
 				// TODO Auto-generated method stub
 				return null;
 			}
+
+			public TypeDefinition sequenceType() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public Object getNativeValue() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		});
 		
 		// numeric

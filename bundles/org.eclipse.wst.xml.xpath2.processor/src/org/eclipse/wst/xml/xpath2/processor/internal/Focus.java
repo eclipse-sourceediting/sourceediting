@@ -12,15 +12,15 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 
 /**
  * set the focus from a result sequence
  */
 public class Focus {
 	private int _cp; // context position
-	private ResultSequence _rs; // all items in context
+	private org.eclipse.wst.xml.xpath2.api.ResultSequence _rs; // all items in context
 
 	/**
 	 * Sets the _rs to rs and context position to 1.
@@ -41,7 +41,7 @@ public class Focus {
 	public AnyType context_item() {
 		// idexes start at 0
 		if (_cp > _rs.size()) return null;
-		return _rs.get(_cp - 1);
+		return (AnyType)_rs.item(_cp - 1);
 	}
 
 	/**

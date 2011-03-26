@@ -9,26 +9,15 @@
  *     Jesper Moller - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xml.xpath2.api;
+package org.eclipse.wst.xml.xpath2.api.typesystem;
+
+import javax.xml.namespace.QName;
 
 /**
- * A match found by the XPath2 pattern matcher
- * 
- * * @noimplement This interface is not intended to be implemented by clients.
  * @since 2.0
- *
  */
-
-public interface Match {
-	/**
-	 * @return The number of matching patterns on the input.
-	 */
-	int getMatchingCount();
-	
-	/**
-	 * Returns the XPath2 pattern which best matched the input (considering mode and priority)
-	 * 
-	 * @return Pattern which was the best match.
-	 */
-	XPath2Pattern getBestMatch();
+public interface AttributeItem extends ItemType {
+	boolean isWildcard();
+	QName getName();
+	TypeDefinition getType();
 }

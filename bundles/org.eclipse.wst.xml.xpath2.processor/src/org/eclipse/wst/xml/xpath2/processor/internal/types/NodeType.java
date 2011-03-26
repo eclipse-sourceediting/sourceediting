@@ -405,5 +405,8 @@ public abstract class NodeType extends AnyType {
 			 return null;
 		}
 	}
-	
+
+	public Object getNativeValue() {
+		return node_value();
+	}
 }
