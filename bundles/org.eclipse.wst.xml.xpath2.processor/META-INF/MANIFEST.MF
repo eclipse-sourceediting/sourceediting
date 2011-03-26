@@ -16,8 +16,10 @@ Export-Package: org.eclipse.wst.xml.xpath2.api,
  org.eclipse.wst.xml.xpath2.processor.internal.ast;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.function;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.types;x-internal:=true,
- org.eclipse.wst.xml.xpath2.processor.internal.types.xerces;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.internal.types.builtin;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined;x-internal:=true,
- org.eclipse.wst.xml.xpath2.processor.internal.utils;x-internal:=true
+ org.eclipse.wst.xml.xpath2.processor.internal.types.xerces;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.internal.utils;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.util
 Bundle-Vendor: %provider
 Bundle-Localization: plugin
