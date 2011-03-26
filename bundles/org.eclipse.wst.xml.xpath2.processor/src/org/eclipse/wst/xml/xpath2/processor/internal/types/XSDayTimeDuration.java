@@ -17,16 +17,18 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
 
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathDiv;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathMinus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathPlus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathTimes;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
@@ -349,8 +351,6 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			} else {
 				throw DynamicError.overflowUnderflow();
 			}
-//				ret = value() / dt.double_value();
-			
 
 			return ResultSequenceFactory
 					.create_new(new XSDayTimeDuration(retval));
@@ -372,19 +372,9 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			XSDuration md = (XSDuration) at;
 
 			BigDecimal res = null;
-			try {
-                Duration thisDuration  = DatatypeFactory.newInstance().newDuration(string_value());
-				Duration mdduration = DatatypeFactory.newInstance().newDuration(md.string_value());
-				double thistime = thisDuration.getTimeInMillis(Calendar.getInstance());
-				double thattime = mdduration.getTimeInMillis(Calendar.getInstance());
-				res = new BigDecimal(thistime);
-				BigDecimal l = new BigDecimal(thattime);
-				res = res.divide(l, 18, BigDecimal.ROUND_HALF_EVEN);
-			} catch (DatatypeConfigurationException ex) {
-				
-			}
-
-//			double res = value() / md.value();
+			res = new BigDecimal(this.value());
+			BigDecimal l = new BigDecimal(md.value());
+			res = res.divide(l, 18, BigDecimal.ROUND_HALF_EVEN);
 
 			return ResultSequenceFactory.create_new(new XSDecimal(res));
 		} else {
