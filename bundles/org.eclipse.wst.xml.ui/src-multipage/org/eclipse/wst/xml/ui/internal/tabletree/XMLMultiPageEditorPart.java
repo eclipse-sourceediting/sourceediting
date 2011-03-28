@@ -170,36 +170,39 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		 */
 		public void partOpened(IWorkbenchPart part) {
 			if (fDesignViewer instanceof AbstractTreeViewer) {
-				IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-				try {
-					if (model instanceof IDOMModel) {
-						IDOMDocument modelDocument = ((IDOMModel) model).getDocument();
-						NodeList rootChildren = modelDocument.getChildNodes();
+				IDocument document = getDocument();
+				if (document != null) {
+					IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+					try {
+						if (model instanceof IDOMModel) {
+							IDOMDocument modelDocument = ((IDOMModel) model).getDocument();
+							NodeList rootChildren = modelDocument.getChildNodes();
 
-						boolean tooManyChildren = (rootChildren.getLength() > MAX_NUM_CHILD_NODES_FOR_AUTO_EXPAND);
-						/*
-						 * For each root (there should really only be one
-						 * real root but there are also could be empty
-						 * text regions and doc type at the root level)
-						 * determine if it has to many children or not to
-						 * auto expand
-						 */
-						for (int i = 0; i < rootChildren.getLength() && !tooManyChildren; ++i) {
-							tooManyChildren = (rootChildren.item(i).getChildNodes().getLength() > MAX_NUM_CHILD_NODES_FOR_AUTO_EXPAND);
-						}
+							boolean tooManyChildren = (rootChildren.getLength() > MAX_NUM_CHILD_NODES_FOR_AUTO_EXPAND);
+							/*
+							 * For each root (there should really only be one
+							 * real root but there are also could be empty
+							 * text regions and doc type at the root level)
+							 * determine if it has to many children or not to
+							 * auto expand
+							 */
+							for (int i = 0; i < rootChildren.getLength() && !tooManyChildren; ++i) {
+								tooManyChildren = (rootChildren.item(i).getChildNodes().getLength() > MAX_NUM_CHILD_NODES_FOR_AUTO_EXPAND);
+							}
 
-						/*
-						 * if root node does not have to many children then
-						 * auto expand the root node
-						 */
-						if (!tooManyChildren) {
-							((AbstractTreeViewer) fDesignViewer).expandToLevel(2);
+							/*
+							 * if root node does not have to many children
+							 * then auto expand the root node
+							 */
+							if (!tooManyChildren) {
+								((AbstractTreeViewer) fDesignViewer).expandToLevel(2);
+							}
 						}
 					}
-				}
-				finally {
-					if (model != null) {
-						model.releaseFromRead();
+					finally {
+						if (model != null) {
+							model.releaseFromRead();
+						}
 					}
 				}
 			}
