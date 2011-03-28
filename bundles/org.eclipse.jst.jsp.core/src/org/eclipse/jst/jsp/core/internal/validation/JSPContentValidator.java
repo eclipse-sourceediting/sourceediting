@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -242,7 +242,7 @@ public class JSPContentValidator extends JSPValidator {
 	protected void validateFile(IFile f, IReporter reporter) {
 		IStructuredModel model = null;
 		try {
-			if (fragmentCheck(f)) {
+			if (fragmentCheck(f) && !reporter.isCancelled()) {
 				model = StructuredModelManager.getModelManager().getModelForRead(f);
 				if (!reporter.isCancelled() && model instanceof IDOMModel) {
 					reporter.removeAllMessages(this, f);
