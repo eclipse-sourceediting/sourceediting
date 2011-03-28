@@ -1134,8 +1134,11 @@ public abstract class AbstractIndexManager {
 									break;
 								}
 							}
-							//$FALL-THROUGH$ it is intended that sometimes a
-							// change will fall through to add
+							/*
+							 * it is intended that sometimes a change will
+							 * fall through to add
+							 */
+							//$FALL-THROUGH$
 							case IResourceDelta.ADDED : {
 								if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
 									// create add move from action
@@ -1851,7 +1854,7 @@ public abstract class AbstractIndexManager {
 				}
 
 				// if success loading preserved then add to master list
-				if (success) {
+				if (success && preservedResourceEvents != null) {
 					synchronized (this.fResourceEventsLock) {
 						Iterator iter = preservedResourceEvents.keySet().iterator();
 						while (iter.hasNext()) {
