@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.core.JavaModelManager;
-import org.eclipse.wst.jsdt.internal.core.index.Index;
 import org.eclipse.wst.jsdt.internal.core.search.indexing.IndexManager;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
@@ -48,16 +47,14 @@ import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 import org.osgi.framework.Bundle;
 
 /**
-*
-
-* Provisional API: This class/interface is part of an interim API that is still under development and expected to
-* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
-* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
-* (repeatedly) as the API evolves.
-*(copied from JSP)
- * Responsible for keeping the JSP index up to date.
+ *
+ * Provisional API: This class/interface is part of an interim API that is still under development and expected to
+ * change significantly before reaching stability. It is being made available at this early stage to solicit feedback
+ * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
+ * (repeatedly) as the API evolves.
+ *(copied from JSP)
+ * Responsible for keeping the JS index up to date.
  * 
- * @author pavery
  */
 public class JsIndexManager {
 
@@ -101,44 +98,46 @@ public class JsIndexManager {
 	private final String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
 
 	/**
-	 * Collects JSP files from a resource delta.
+	 * Collects web page files from a resource delta. Derived resources should
+	 * be included to handle resources whose derived flag is being toggled.
 	 */
-	private class JSPResourceVisitor implements IResourceDeltaVisitor {
+	private class JSResourceDeltaVisitor implements IResourceDeltaVisitor {
 		// using hash map ensures only one of each file
 		// must be reset before every use
-		private HashMap jspFiles = null;
+		private HashMap webPageFiles = null;
 
-		public JSPResourceVisitor() {
-			this.jspFiles = new HashMap();
+		public JSResourceDeltaVisitor() {
+			this.webPageFiles = new HashMap();
 		}
 
 		public boolean visit(IResourceDelta delta) throws CoreException {
 
-			// in case JSP search was canceled (eg. when closing the editor)
+			// in case JS search was canceled (eg. when closing the editor)
 			if (JsSearchSupport.getInstance().isCanceled() || frameworkIsShuttingDown()) {
 				setCanceledState();
 				return false;
 			}
 
 			try {
-				if (!isHiddenResource(delta.getFullPath())) {
+				// skip anything hidden by name
+				if (isHiddenResource(delta.getFullPath())) {
+					return false;
+				}
 
-					int kind = delta.getKind();
-					boolean added = (kind & IResourceDelta.ADDED) == IResourceDelta.ADDED;
-					boolean isInterestingChange = false;
-					if ((kind & IResourceDelta.CHANGED) == IResourceDelta.CHANGED) {
-						int flags = delta.getFlags();
-						// ignore things like marker changes
-						isInterestingChange = ((flags & IResourceDelta.CONTENT) == IResourceDelta.CONTENT) || ((flags & IResourceDelta.REPLACED) == IResourceDelta.REPLACED);
-					}
-					boolean removed = (kind & IResourceDelta.REMOVED) == IResourceDelta.REMOVED;
-					if (added || isInterestingChange) {
-
-						visitAdded(delta);
-					}
-					else if (removed) {
-						visitRemoved(delta);
-					}
+				int kind = delta.getKind();
+				int flags = delta.getFlags();
+				boolean added = (kind & IResourceDelta.ADDED) == IResourceDelta.ADDED;
+				boolean isInterestingChange = false;
+				if ((kind & IResourceDelta.CHANGED) == IResourceDelta.CHANGED) {
+					// ignore things like marker changes
+					isInterestingChange = (flags & IResourceDelta.CONTENT) > 0 || (flags & IResourceDelta.REPLACED) > 0 || (flags & IResourceDelta.TYPE) > 0 || (flags & IResourceDelta.MOVED_FROM) > 0;
+				}
+				boolean removed = (kind & IResourceDelta.REMOVED) == IResourceDelta.REMOVED;
+				if (added || isInterestingChange) {
+					visitAdded(delta);
+				}
+				else if (removed) {
+					visitRemoved(delta);
 				}
 			}
 			catch (Exception e) {
@@ -164,28 +163,22 @@ public class JsIndexManager {
 
 		private void visitAdded(IResourceDelta delta) {
 			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
-			// quick check if it's even JSP related to improve
+			// quick check if it's even web page related to improve
 			// performance
 			// checking name from the delta before getting
 			// resource because it's lighter
 			String filename = delta.getFullPath().lastSegment();
-			if ((filename != null) && Util.isJsType(filename)) {
+			if (filename != null && Util.isJsType(filename)) {
 				IResource r = delta.getResource();
-				if ((r != null) && r.exists() && (r.getType() == IResource.FILE)) {
-					this.jspFiles.put(r.getFullPath(), r);
+				if (r.isAccessible() && r.getType() == IResource.FILE) {
+					this.webPageFiles.put(r.getFullPath(), r);
 				}
 			}
 		}
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=93463
 		private boolean isHiddenResource(IPath p) {
-			String[] segments = p.segments();
-			for (int i = 0; i < segments.length; i++) {
-				if (segments[i].startsWith(".")) {
-					return true;
-				}
-			}
-			return false;
+			return p.segmentCount() > 0 && p.lastSegment().startsWith(".");
 		}
 
 		private void deleteIndex(IFile folder) {
@@ -201,18 +194,17 @@ public class JsIndexManager {
 		}
 
 		public IFile[] getFiles() {
-			return (IFile[]) this.jspFiles.values().toArray(new IFile[this.jspFiles.size()]);
+			return (IFile[]) this.webPageFiles.values().toArray(new IFile[this.webPageFiles.size()]);
 		}
 
 		public void reset() {
-			this.jspFiles.clear();
+			this.webPageFiles.clear();
 		}
 	}
 
-	// end class JSPResourceVisitor
 
 	/**
-	 * schedules JSP files for indexing by Java core
+	 * schedules web pages for indexing
 	 */
 	private class ProcessFilesJob extends Job {
 		List fileList = null;
@@ -229,7 +221,7 @@ public class JsIndexManager {
 				fileList.add(files[i]);
 			}
 			if (DEBUG) {
-				System.out.println("JSPIndexManager queuing " + files.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
+				System.out.println("JSIndexManager queuing " + files.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
 			}
 		}
 
@@ -256,7 +248,7 @@ public class JsIndexManager {
 				IFile[] filesToBeProcessed = getFiles();
 
 				if (DEBUG) {
-					System.out.println("JSPIndexManager indexing " + filesToBeProcessed.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
+					System.out.println("JSIndexManager indexing " + filesToBeProcessed.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
 				}
 				// API indicates that monitor is never null
 				monitor.beginTask("", filesToBeProcessed.length); //$NON-NLS-1$
@@ -271,17 +263,18 @@ public class JsIndexManager {
 						return Status.CANCEL_STATUS;
 					}
 					IFile file = filesToBeProcessed[lastFileCursor];
+					if(!file.isDerived()) {
 					try {
 						IJavaScriptProject project = JavaScriptCore.create(file.getProject());
 						if (project.exists()) {
 							ss.addJspFile(file);
-							// JSP Indexer processing n files
+							// JS Indexer processing n files
 							processingNFiles = NLS.bind(JsCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed.length - lastFileCursor))});
 							monitor.subTask(processingNFiles + " - " + file.getName()); //$NON-NLS-1$
 							monitor.worked(1);
 
 							if (DEBUG) {
-								System.out.println("JSPIndexManager Job added file: " + file.getName()); //$NON-NLS-1$
+								System.out.println("JSIndexManager Job added file: " + file.getName()); //$NON-NLS-1$
 							}
 						}
 					}
@@ -301,8 +294,9 @@ public class JsIndexManager {
 						// otherwise skip it.
 						if (!frameworkIsShuttingDown()) {
 							String filename = file != null ? file.getFullPath().toString() : ""; //$NON-NLS-1$
-							Logger.logException("JSPIndexer problem indexing:" + filename, e); //$NON-NLS-1$
+							Logger.logException("JSIndexer problem indexing:" + filename, e); //$NON-NLS-1$
 						}
+					}
 					}
 				} // end for
 			}
@@ -328,7 +322,6 @@ public class JsIndexManager {
 		}
 
 		private boolean isCanceled(IProgressMonitor runMonitor) {
-
 			boolean canceled = false;
 			// check specific monitor passed into run method (the progress
 			// group in this case)
@@ -353,9 +346,9 @@ public class JsIndexManager {
 	private boolean initializing = true;
 
 	private IndexJobCoordinator indexJobCoordinator;
-	private IResourceChangeListener jspResourceChangeListener;
+	private IResourceChangeListener jsResourceChangeListener;
 
-	private JSPResourceVisitor fVisitor = null;
+	private JSResourceDeltaVisitor fVisitor = null;
 	static long fTotalTime = 0;
 
 	// Job for processing resource delta
@@ -375,7 +368,6 @@ public class JsIndexManager {
 	}
 
 	public synchronized static JsIndexManager getInstance() {
-
 		if (fSingleton == null) {
 			fSingleton = new JsIndexManager();
 		}
@@ -383,24 +375,22 @@ public class JsIndexManager {
 	}
 
 	public void initialize() {
-
 		JsIndexManager singleInstance = getInstance();
-
 
 		if (!singleInstance.initialized) {
 			singleInstance.initialized = true;
 
 			singleInstance.indexJobCoordinator = new IndexJobCoordinator();
-			singleInstance.jspResourceChangeListener = new JSPResourceChangeListener();
+			singleInstance.jsResourceChangeListener = new JSResourceChangeListener();
 
-			// added as JobChange listener so JSPIndexManager can be smarter
+			// added as JobChange listener so JSIndexManager can be smarter
 			// about when it runs
-			Platform.getJobManager().addJobChangeListener(singleInstance.indexJobCoordinator);
+			Job.getJobManager().addJobChangeListener(singleInstance.indexJobCoordinator);
 
-			// add JSPIndexManager to keep JSP Index up to date
+			// add JSIndexManager to keep JSP Index up to date
 			// listening for IResourceChangeEvent.PRE_DELETE and
 			// IResourceChangeEvent.POST_CHANGE
-			ResourcesPlugin.getWorkspace().addResourceChangeListener(jspResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(jsResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 
 			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
 			// makes sure IndexManager is aware of our indexes
@@ -414,7 +404,7 @@ public class JsIndexManager {
 	
 	synchronized void setIndexState(int state) {
 		if (DEBUG) {
-			System.out.println("JSPIndexManager setting index state to: " + state2String(state)); //$NON-NLS-1$
+			System.out.println("JSIndexManager setting index state to: " + state2String(state)); //$NON-NLS-1$
 		}
 		Plugin jspModelPlugin = JsCorePlugin.getDefault();
 		jspModelPlugin.getPluginPreferences().setValue(PKEY_INDEX_STATE, state);
@@ -472,7 +462,7 @@ public class JsIndexManager {
 	void rebuildIndex() {
 
 		if (DEBUG) {
-			System.out.println("*** JSP Index unstable, requesting re-indexing"); //$NON-NLS-1$
+			System.out.println("*** JS web page Index unstable, requesting re-indexing"); //$NON-NLS-1$
 		}
 
 		getIndexingJob().addJobChangeListener(new JobChangeAdapter() {
@@ -512,10 +502,10 @@ public class JsIndexManager {
 	 * 
 	 * @return
 	 */
-	JSPResourceVisitor getVisitor() {
+	JSResourceDeltaVisitor getVisitor() {
 
 		if (this.fVisitor == null) {
-			this.fVisitor = new JSPResourceVisitor();
+			this.fVisitor = new JSResourceDeltaVisitor();
 		}
 		return this.fVisitor;
 	}
@@ -526,14 +516,14 @@ public class JsIndexManager {
 			if (!JsWebNature.hasNature(allProjects[j]) || !allProjects[j].isOpen()) {
 				continue;
 			}
-			IPath jspModelWorkingLocation = JsSearchSupport.getInstance().getModelJspPluginWorkingLocation(allProjects[j]);
-			File folder = new File(jspModelWorkingLocation.toOSString());
+			IPath jsModelWorkingLocation = JsSearchSupport.getInstance().getModelJspPluginWorkingLocation(allProjects[j]);
+			File folder = new File(jsModelWorkingLocation.toOSString());
 			String[] files = folder.list();
 			String locay = ""; //$NON-NLS-1$
 			try {
 				for (int i = 0; i < files.length; i++) {
 					if (files[i].toLowerCase().endsWith(".index")) { //$NON-NLS-1$
-						locay = jspModelWorkingLocation.toString() + "/" + files[i]; //$NON-NLS-1$
+						locay = jsModelWorkingLocation.toString() + "/" + files[i]; //$NON-NLS-1$
 						// reuse index file
 // index = new Index(locay, allProjects[j].getFullPath().toOSString(), true);
 // //$NON-NLS-1$
@@ -550,39 +540,6 @@ public class JsIndexManager {
 			}
 		}
 	}
-	// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
-	// makes sure IndexManager is aware of our indexes
-	void saveIndexesORIGINAL() {
-		IndexManager indexManager = JavaModelManager.getJavaModelManager().getIndexManager();
-		IPath jspModelWorkingLocation = JsSearchSupport.getInstance().getModelJspPluginWorkingLocation();
-
-		File folder = new File(jspModelWorkingLocation.toOSString());
-		String[] files = folder.list();
-		String locay = ""; //$NON-NLS-1$
-		Index index = null;
-		try {
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].toLowerCase().endsWith(".index")) { //$NON-NLS-1$
-					locay = jspModelWorkingLocation.toString() + "/" + files[i]; //$NON-NLS-1$
-					// reuse index file
-					index = new Index(locay, "Index for " + locay, true); //$NON-NLS-1$
-					indexManager.saveIndex(index);
-				}
-			}
-		}
-		catch (Exception e) {
-			// we should be shutting down, want to shut down quietly
-			if (DEBUG) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-//	IContentType getJspContentType() {
-//		if (this.fContentTypeJSP == null)
-//			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
-//		return this.fContentTypeJSP;
-//	}
 
 	/**
 	 * A check to see if the OSGI framework is shutting down.
@@ -597,7 +554,7 @@ public class JsIndexManager {
 		// R3 spec.
 		boolean shuttingDown = Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
 		if (DEBUG && shuttingDown) {
-			System.out.println("JSPIndexManager: system is shutting down!"); //$NON-NLS-1$
+			System.out.println("JSIndexManager: system is shutting down!"); //$NON-NLS-1$
 		}
 		return shuttingDown;
 	}
@@ -606,14 +563,14 @@ public class JsIndexManager {
 	public void shutdown() {
 
 		// stop listening
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(jspResourceChangeListener);
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(jsResourceChangeListener);
 
 
 		// stop any searching
 		JsSearchSupport.getInstance().setCanceled(true);
 
 		// stop listening to jobs
-		Platform.getJobManager().removeJobChangeListener(indexJobCoordinator);
+		Job.getJobManager().removeJobChangeListener(indexJobCoordinator);
 
 
 		int maxwait = 5000;
@@ -682,7 +639,7 @@ public class JsIndexManager {
 
 	}
 
-	private class JSPResourceChangeListener implements IResourceChangeListener {
+	private class JSResourceChangeListener implements IResourceChangeListener {
 
 
 		/**
@@ -719,7 +676,7 @@ public class JsIndexManager {
 					// hierarchy
 					if (delta.getFullPath().toString().equals("/")) { //$NON-NLS-1$
 						try {
-							JSPResourceVisitor v = getVisitor();
+							JSResourceDeltaVisitor v = getVisitor();
 							// clear from last run
 							v.reset();
 							// count files, possibly do this in a job too...
