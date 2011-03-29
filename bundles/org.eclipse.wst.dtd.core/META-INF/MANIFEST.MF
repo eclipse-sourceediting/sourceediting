@@ -28,8 +28,7 @@ Export-Package: org.eclipse.wst.dtd.core.internal;x-friends:="org.eclipse.wst.dt
  org.eclipse.wst.dtd.core.internal.util;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.core,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.dtd.core.internal.validation;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.core,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.dtd.core.internal.validation.eclipse;x-internal:=true,
- org.eclipse.wst.dtd.core.text,
- rose
+ org.eclipse.wst.dtd.core.text
 Import-Package: com.ibm.icu.util; version="3.8",
  com.ibm.icu.text; version="3.8"
 Require-Bundle: org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
