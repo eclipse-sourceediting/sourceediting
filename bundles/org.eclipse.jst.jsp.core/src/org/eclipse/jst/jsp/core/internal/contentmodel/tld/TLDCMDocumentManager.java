@@ -702,9 +702,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		if (cacheKey == null)
 			return null;
 		
-		long lastModified = getModificationStamp(reference);
 		CMDocument doc = (CMDocument) getDocuments().get(cacheKey);
 		if (doc == null) {
+			long lastModified = getModificationStamp(reference);
 			/*
 			 * If hasn't been moved into the local table, do so and increment
 			 * the count. A local URI reference can be different depending on
@@ -750,7 +750,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					TLDCacheEntry entry = new TLDCacheEntry();
 					doc = entry.document = document;
 					entry.referenceCount = 1;
-					entry.modificationStamp = getModificationStamp(reference);
+					entry.modificationStamp = lastModified;
 					getSharedDocumentCache().put(cacheKey, entry);
 				}
 			}
