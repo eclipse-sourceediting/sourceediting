@@ -120,6 +120,9 @@
                 name="http://schemas.xmlsoap.org/soap/encoding/"
                 uri="xsd/soapenc.xsd" />
             <uri
+                name="http://schemas.xmlsoap.org/soap/envelope/"
+                uri="xsd/soapenv.xsd" />
+            <uri
                 name="urn:oasis:names:tc:entity:xmlns:xml:catalog"
                 uri="xsd/xmlcatalog11.xsd" />
 
