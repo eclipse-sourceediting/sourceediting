@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -702,9 +702,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		if (cacheKey == null)
 			return null;
 		
-		long lastModified = getModificationStamp(reference);
 		CMDocument doc = (CMDocument) getDocuments().get(cacheKey);
 		if (doc == null) {
+			long lastModified = getModificationStamp(reference);
 			/*
 			 * If hasn't been moved into the local table, do so and increment
 			 * the count. A local URI reference can be different depending on
@@ -750,7 +750,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					TLDCacheEntry entry = new TLDCacheEntry();
 					doc = entry.document = document;
 					entry.referenceCount = 1;
-					entry.modificationStamp = getModificationStamp(reference);
+					entry.modificationStamp = lastModified;
 					getSharedDocumentCache().put(cacheKey, entry);
 				}
 			}
@@ -762,7 +762,12 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	private long getModificationStamp(String reference) {
-		ITaglibRecord record = TaglibIndex.resolve(getCurrentParserPath().toString(), reference, false);
+		IPath currentParserPath = getCurrentParserPath();
+		if (currentParserPath == null) {
+			return IResource.NULL_STAMP;
+		}
+		
+		ITaglibRecord record = TaglibIndex.resolve(currentParserPath.toString(), reference, false);
 		long modificationStamp = IResource.NULL_STAMP;
 		if (record != null) {
 			switch (record.getRecordType()) {
