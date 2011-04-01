@@ -245,7 +245,8 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		Attr attr = getAttributeNode(name);
 		// In the absence of the attribute, get the default value
 		if (attr == null) {
-			return getDefaultValue(name, NodeImpl.EMPTY_STRING);
+			final String defaultValue = getDefaultValue(name, NodeImpl.EMPTY_STRING);
+			return defaultValue != null ? defaultValue : NodeImpl.EMPTY_STRING ;
 		}
 		return attr.getValue();
 	}
@@ -336,7 +337,8 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		Attr attr = getAttributeNodeNS(uri, name);
 		// In the absence of the attribute, get the default value
 		if (attr == null) {
-			return getDefaultValue(name, NodeImpl.EMPTY_STRING);
+			final String defaultValue = getDefaultValue(name, NodeImpl.EMPTY_STRING);
+			return defaultValue != null ? defaultValue : NodeImpl.EMPTY_STRING;
 		}
 		return attr.getValue();
 	}
