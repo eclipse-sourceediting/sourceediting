@@ -21,11 +21,22 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMAttributeDeclarationImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMDataTypeImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMElementDeclarationImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -227,6 +238,66 @@ public class ElementImplTests extends TestCase {
 				assertEquals("12", element.getAttribute("hour"));
 				element.removeAttribute("hour"); // value should be reset to default/0
 				assertEquals("0", element.getAttribute("hour")); 
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+	}
+
+	public void testCMAttrWithNullImpliedValue() {
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) getModelForRead("testfiles/time.xml");
+			if (model != null) {
+				IDOMDocument document = model.getDocument();
+				final String ATTR_NAME = "second";
+				// Setup a ModelQueryAdapter whose sole purpose it to provide a attribute declaration with a null implied value
+				document.addAdapter(new ModelQueryAdapter() {
+
+					public boolean isAdapterForType(Object type) {
+						return type.equals(ModelQueryAdapter.class);
+					}
+
+					public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
+					}
+
+					public CMDocumentCache getCMDocumentCache() {
+						return null;
+					}
+
+					public org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver getIdResolver() {
+						return null;
+					}
+
+					public ModelQuery getModelQuery() {
+						return new ModelQueryImpl(null) {
+							/* (non-Javadoc)
+							 * @see org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl#getCMElementDeclaration(org.w3c.dom.Element)
+							 */
+							public CMElementDeclaration getCMElementDeclaration(Element element) {
+								final CMElementDeclaration decl = new CMElementDeclarationImpl(null, null);
+								CMNamedNodeMapImpl map = (CMNamedNodeMapImpl) decl.getAttributes();
+								map.put(new CMAttributeDeclarationImpl(ATTR_NAME, CMAttributeDeclaration.OPTIONAL, new CMDataTypeImpl(ATTR_NAME, (String) null)));
+								return decl;
+							}
+						};
+					}
+
+					public void release() {
+						
+					}
+
+					public void setIdResolver(org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver newIdResolver) {
+						
+					}
+					
+				});
+				Element element = document.getDocumentElement();
+				assertNotNull(element);
+				assertEquals("", element.getAttribute(ATTR_NAME)); // Default value should be 0
 			}
 		}
 		finally {
