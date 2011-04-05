@@ -10,7 +10,8 @@
  *     Mukul Gandhi - bug 318313 - improvements to computation of typed values of nodes, when validated by XML Schema 
  *                                 primitive types.
  *     Mukul Gandhi - bug 323900 - improving computing the typed value of element and attribute nodes, where the schema
- *                                 type of nodes are simple, with varieties 'list' and 'union'.                                 
+ *                                 type of nodes are simple, with varieties 'list' and 'union'.
+ *     Mukul Gandhi - bug 341862 - improvements to computation of typed value of xs:boolean nodes.                                                                  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -34,7 +35,8 @@ public class SchemaTypeValueFactory {
 		}
 		
 		if (typeDef == XSConstants.BOOLEAN_DT) {
-			return new XSBoolean(Boolean.valueOf(strValue).booleanValue());
+			String newStrValue = ("1".equals(strValue) || "true".equals(strValue)) ? "true" : "false";
+			return new XSBoolean(Boolean.valueOf(newStrValue).booleanValue());
 		}
 		
 		if (typeDef == XSConstants.DATE_DT) {       
