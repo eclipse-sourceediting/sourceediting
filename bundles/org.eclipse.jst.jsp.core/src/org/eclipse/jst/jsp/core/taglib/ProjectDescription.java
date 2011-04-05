@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1345,9 +1345,9 @@ class ProjectDescription {
 	}
 
 	void handleElementChanged(IPath libraryPath, int deltaKind, boolean exported) {
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(libraryPath);
+		IFile file = libraryPath.segmentCount() > 1 ? ResourcesPlugin.getWorkspace().getRoot().getFile(libraryPath) : null;
 		String libraryLocation = null;
-		if (file.isAccessible() && file.getLocation() != null)
+		if (file != null && file.isAccessible() && file.getLocation() != null)
 			libraryLocation = file.getLocation().toString();
 		else
 			libraryLocation = libraryPath.toString();
