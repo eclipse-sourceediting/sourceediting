@@ -17,6 +17,7 @@ import org.eclipse.wst.xml.core.internal.document.test.NodeImplTestCase;
 import org.eclipse.wst.xml.core.tests.cache.GlobalCMDocumentCacheTest;
 import org.eclipse.wst.xml.core.tests.cleanup.TestCleanupProcessorXML;
 import org.eclipse.wst.xml.core.tests.contentmodel.CMValidatorValidationTest;
+import org.eclipse.wst.xml.core.tests.contentmodel.ExternalSchemaTest;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestAttributesOrder;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestCatalogRetrivalAndModelCreation;
 import org.eclipse.wst.xml.core.tests.document.FileBufferDocumentTester;
@@ -79,5 +80,6 @@ public class SSEModelXMLTestSuite extends TestSuite {
 
 		addTest(new TestSuite(RegionChangedAdapterNotificationTests.class));
 		addTest(new TestSuite(GlobalCMDocumentCacheTest.class));
+		addTest(new TestSuite(ExternalSchemaTest.class));
 	}
 }

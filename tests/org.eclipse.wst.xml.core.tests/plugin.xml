@@ -24,6 +24,10 @@
                 uri="projecttestfiles/testfiles/GlobalCMDocumentCacheTestSchema.xsd" />
 		</catalogContribution>
 	</extension>
-                
 
+	<extension
+		point="org.eclipse.wst.xml.core.externalSchemaLocations">
+		<provider class="org.eclipse.wst.xml.core.tests.contentmodel.ExternalSchemaTest$ExternalSchemaLocationProvider">
+		</provider>
+	</extension>
 </plugin>
