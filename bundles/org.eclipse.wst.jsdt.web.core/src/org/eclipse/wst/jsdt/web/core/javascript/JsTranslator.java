@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,27 +18,14 @@
 
 package org.eclipse.wst.jsdt.web.core.javascript;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -53,7 +40,6 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.jsdt.core.IBuffer;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -61,7 +47,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.utils.StringUtils;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 /**
 *
@@ -352,58 +337,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		}
 	}
 	
-	protected void finishedTranslation() {
-		if(DEBUG_SAVE_OUTPUT){
-			IDOMModel xmlModel = null;
-			String baseLocation = null;
-			FileOutputStream fout = null;
-			PrintStream out = null;
-			try {
-				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fStructuredDocument);
-				if (xmlModel == null) {
-					xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(fStructuredDocument);
-				}
-				baseLocation = xmlModel.getBaseLocation();
-			}
-			finally {
-				if (xmlModel != null)
-					xmlModel.releaseFromRead();
-			}
-			
-			if(baseLocation!=null){
-				IWorkspace workspace = ResourcesPlugin.getWorkspace();
-				IWorkspaceRoot root = workspace.getRoot();
-				IFile tFile = workspace.getRoot().getFile(new Path(baseLocation + ".js"));
-				File tempFile = tFile.getLocation().toFile();
-				
-				  if(tempFile.exists()){
-					  tempFile.delete();
-				  }
-				 
-				  try {
-					  tempFile.createNewFile();
-					  fout = new FileOutputStream(tempFile);
-					  out = new PrintStream(fout);
-					  out.println(fScriptText);
-					  out.close();
-				} catch (FileNotFoundException e) {
-				
-				} catch (IOException e) {
-					
-				}finally{
-					if(out!=null) out.close();
-				
-					
-				}
-				 try {
-					root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-				} catch (CoreException e) {
-					
-				}
-			}
-			
-		}
-	}
+	protected void finishedTranslation() {}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateInlineJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)

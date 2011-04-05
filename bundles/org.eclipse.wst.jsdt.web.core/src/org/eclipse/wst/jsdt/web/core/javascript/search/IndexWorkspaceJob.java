@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,22 +51,21 @@ public class IndexWorkspaceJob extends Job {
 	}
 	
 	/**
-	 * Visitor that retrieves jsp project paths for all jsp files in the workspace,
+	 * Visitor that retrieves project paths for all web page files in the workspace,
 	 * and adds the files to be indexed as they are encountered
 	 */
-	private class JSPFileVisitor implements IResourceProxyVisitor {
+	private class WebFileVisitor implements IResourceProxyVisitor {
 	    private List files = new ArrayList(); 
 		
 		// monitor from the Job
-		IProgressMonitor fInnerMonitor = null;
-		public JSPFileVisitor(IProgressMonitor monitor) {
-			this.fInnerMonitor = monitor;
+		IProgressMonitor fMonitor = null;
+		public WebFileVisitor(IProgressMonitor monitor) {
+			this.fMonitor = monitor;
 		}
 		
 		public boolean visit(IResourceProxy proxy) throws CoreException {
-			
 			// check job canceled
-			if ((this.fInnerMonitor != null) && this.fInnerMonitor.isCanceled()) {
+			if ((this.fMonitor != null) && this.fMonitor.isCanceled()) {
 				setCanceledState();
 				return false;
 			}
@@ -76,30 +75,27 @@ public class IndexWorkspaceJob extends Job {
 				setCanceledState();
 				return false;
 			}
-			
-			if (proxy.getType() == IResource.FILE) {
-				
+			// skip hidden, unreadable, or derived files
+			if (proxy.getType() == IResource.FILE && !proxy.isDerived() && !proxy.isHidden() && proxy.isAccessible()) {
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
 				// check this before description
 				// check name before actually getting the file (less work)
 				if(Util.isJsType(proxy.getName())) {
+					this.fMonitor.subTask(proxy.getName());
 					IFile file = (IFile) proxy.requestResource();
-					if(file.exists()) {
-						
-						if(DEBUG) {
-							System.out.println("(+) IndexWorkspaceJob adding file: " + file.getName()); //$NON-NLS-1$
-						}
-						// this call will check the ContentTypeDescription, so don't need to do it here.
-						//JSPSearchSupport.getInstance().addJspFile(file);
-						this.files.add(file);
-						this.fInnerMonitor.subTask(proxy.getName());
-						
-						// don't search deeper for files
-						return false;
+
+					if (DEBUG) {
+						System.out.println("(+) IndexWorkspaceJob adding file: " + file.getName()); //$NON-NLS-1$
 					}
+					// this call will check the ContentTypeDescription, so don't need to do it here.
+					//JSPSearchSupport.getInstance().addJspFile(file);
+					this.files.add(file);
+					
+					// don't search deeper for files
+					return false;
 				}
 			}
-			return true;
+			return !proxy.getName().startsWith(".");
 		}
 		
 		public final IFile[] getFiles() {
@@ -143,7 +139,7 @@ public class IndexWorkspaceJob extends Job {
 		long start = System.currentTimeMillis();
 		
 		try {
-		    JSPFileVisitor visitor = new JSPFileVisitor(monitor);
+		    WebFileVisitor visitor = new WebFileVisitor(monitor);
 		    // collect all jsp files
 			ResourcesPlugin.getWorkspace().getRoot().accept(visitor, IResource.DEPTH_INFINITE);
 			// request indexing

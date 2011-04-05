@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -310,7 +310,7 @@ public class JsSearchSupport {
         }
 
         if (DEBUG) {
-			System.out.println("adding JSP file:" + file.getFullPath()); //$NON-NLS-1$
+			System.out.println("adding web page file:" + file.getFullPath()); //$NON-NLS-1$
 		}
 
         // create
@@ -413,16 +413,16 @@ public class JsSearchSupport {
     }
 
     /**
-     * @param jspFile
+     * @param jsFile
      * @return SearchDocument if the file is not null, exists, and is a JSP
      *         file, otherwise null.
      */
-    private SearchDocument createSearchDocument(IFile jspFile) {
+    private SearchDocument createSearchDocument(IFile jsFile) {
 
         JSDTSearchDocumentDelegate delegate = null;
-        if ((jspFile != null) && jspFile.exists() && isJsp(jspFile)) {
+        if ((jsFile != null) && jsFile.exists() && isJsp(jsFile)) {
 
-            delegate = new JSDTSearchDocumentDelegate(new JsSearchDocument(jspFile.getFullPath().toString(), getSearchParticipant()));
+            delegate = new JSDTSearchDocumentDelegate(new JsSearchDocument(jsFile.getFullPath().toString(), getSearchParticipant()));
         }
         return delegate;
 
