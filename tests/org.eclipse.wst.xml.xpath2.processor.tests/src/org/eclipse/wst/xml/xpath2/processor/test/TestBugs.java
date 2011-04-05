@@ -51,10 +51,11 @@
  *  Mukul Gandhi    - bug 334842 - improving support for the data types Name, NCName, ENTITY, 
  *                                 ID, IDREF and NMTOKEN.
  *  Mukul Gandhi    - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.                                
- * Mukul Gandhi     - bug 280798 - PsychoPath support for JDK 1.4
+ *  Mukul Gandhi    - bug 280798 - PsychoPath support for JDK 1.4
  *  Mukul Gandhi    - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.
  *  Mukul Gandhi    - bug 338999 - improving compliance of function 'fn:subsequence'. implementing full arity support.
- *  Mukul Gandhi    - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.                                
+ *  Mukul Gandhi    - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.
+ *  Mukul Gandhi    - bug 341862 - improvements to computation of typed value of xs:boolean nodes.                                 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -2258,6 +2259,76 @@ public class TestBugs extends AbstractPsychoPathTest {
 		rs = eval.evaluate(path);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("false", actual);
+	}
+	
+	public void testBug341862_TypedBooleanNode() throws Exception {
+		// bug 341862
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug341862.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug341862.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+		
+		DynamicContext dc = setupDynamicContext(schema);;		
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+
+		// test a)
+		String xpath = "/X/a[1] = true()";
+		XPath path = compileXPath(dc, xpath);		
+		ResultSequence rs = eval.evaluate(path);
+		String actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test b)
+		xpath = "/X/a[1]/@att = true()";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test c)
+		xpath = "/X/a[2] = true()";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test d)
+		xpath = "/X/a[2]/@att = true()";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test e)
+		xpath = "/X/a[3] = false()";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test f)
+		xpath = "/X/a[3]/@att = false()";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test g)
+		xpath = "/X/a[4] = false()";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
+		
+		// test h)
+		xpath = "/X/a[4]/@att = false()";
+		path = compileXPath(dc, xpath);		
+		rs = eval.evaluate(path);
+		actual = ((XSBoolean) rs.first()).string_value();
+		assertEquals("true", actual);
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {
