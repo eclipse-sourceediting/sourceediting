@@ -1372,9 +1372,9 @@ class ProjectDescription {
 	}
 
 	void handleElementChanged(IPath libraryPath, int deltaKind, boolean exported) {
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(libraryPath);
+		IFile file = libraryPath.segmentCount() > 1 ? ResourcesPlugin.getWorkspace().getRoot().getFile(libraryPath) : null;
 		String libraryLocation = null;
-		if (file.isAccessible() && file.getLocation() != null)
+		if (file != null && file.isAccessible() && file.getLocation() != null)
 			libraryLocation = file.getLocation().toString();
 		else
 			libraryLocation = libraryPath.toString();
