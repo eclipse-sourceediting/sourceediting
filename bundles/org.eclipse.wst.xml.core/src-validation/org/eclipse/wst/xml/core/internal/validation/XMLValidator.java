@@ -20,11 +20,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.ConnectException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -46,6 +49,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
@@ -55,6 +60,8 @@ import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.IExternalSchemaLocationProvider;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ExternalSchemaLocationProviderRegistry;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
@@ -93,7 +100,8 @@ public class XMLValidator
   private MarkupValidator val = new MarkupValidator();
   
   private final String ANNOTATIONMSG = AnnotationMsg.class.getName();
- 
+
+  private final static boolean _trace = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.xml.core/externalSchemaLocation")).booleanValue(); //$NON-NLS-1$
   /**
    * Constructor.
    */
@@ -176,8 +184,7 @@ public class XMLValidator
       reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false); //$NON-NLS-1$
       reader.setFeature("http://xml.org/sax/features/namespace-prefixes", valinfo.isNamespaceEncountered()); //$NON-NLS-1$
       reader.setFeature("http://xml.org/sax/features/namespaces", valinfo.isNamespaceEncountered());               //$NON-NLS-1$
-      reader.setFeature("http://xml.org/sax/features/validation", valinfo.isGrammarEncountered());  //$NON-NLS-1$
-      reader.setFeature("http://apache.org/xml/features/validation/schema", valinfo.isGrammarEncountered()); //$NON-NLS-1$
+     
       reader.setContentHandler(new DefaultHandler()
       {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -338,6 +345,15 @@ public class XMLValidator
         {
           reader.setFeature("http://apache.org/xml/features/xinclude", true); //$NON-NLS-1$      
         }
+
+        // Support external schema locations
+        boolean isGrammarEncountered = helper.isGrammarEncountered;
+        if (!isGrammarEncountered) {
+        	isGrammarEncountered = checkExternalSchemas(reader, valinfo.getFileURI());
+        }
+        reader.setFeature("http://xml.org/sax/features/validation", isGrammarEncountered);  //$NON-NLS-1$
+        reader.setFeature("http://apache.org/xml/features/validation/schema", isGrammarEncountered); //$NON-NLS-1$
+
         XMLErrorHandler errorhandler = new XMLErrorHandler(valinfo);
         reader.setErrorHandler(errorhandler);
         
@@ -345,7 +361,7 @@ public class XMLValidator
         inputSource.setCharacterStream(reader2);
         reader.parse(inputSource);   
         if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) > 0 && 
-        		valinfo.isValid() && !helper.isGrammarEncountered)
+        		valinfo.isValid() && !isGrammarEncountered)
         {
           if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) == 1)
             valinfo.addWarning(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
@@ -414,6 +430,55 @@ public class XMLValidator
        
   }
 
+	private boolean checkExternalSchemas(XMLReader reader, String fileURI) throws Exception {
+		boolean isGrammarEncountered = false;
+		final StringBuffer schemaLocation = new StringBuffer();
+		String noNamespaceSchemaLocation = null;
+		// Check the schema provider extension point
+		IExternalSchemaLocationProvider[] providers = ExternalSchemaLocationProviderRegistry.getInstance().getProviders();
+		for (int i = 0; i < providers.length; i++) {
+			URI uri = null;
+			try {
+				uri = URIUtil.fromString(fileURI);
+			}
+			catch (URISyntaxException e) {
+				Logger.logException(e.getLocalizedMessage(), e);
+			}
+			if (uri != null) {
+				long time = _trace ? System.currentTimeMillis(): 0;
+				final Map locations = providers[i].getExternalSchemaLocation(uri);
+				if (_trace) {
+					  long diff = System.currentTimeMillis() - time;
+					  if (diff > 250)
+						  Logger.log(Logger.INFO, "Schema location provider took [" + diff + "ms] for URI [" + fileURI + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				  }
+				if (locations != null && !locations.isEmpty()) {
+					Object path = locations.get(IExternalSchemaLocationProvider.SCHEMA_LOCATION);
+					if (path instanceof String) {
+						if (schemaLocation.length() > 0) {
+							schemaLocation.append(' ');
+						}
+						schemaLocation.append(path);
+					}
+					path = locations.get(IExternalSchemaLocationProvider.NO_NAMESPACE_SCHEMA_LOCATION);
+					if (path instanceof String) {
+						noNamespaceSchemaLocation = (String)path;
+					}
+				}
+			}
+		}
+
+		if (schemaLocation.length() > 0) {
+			reader.setProperty(IExternalSchemaLocationProvider.SCHEMA_LOCATION, schemaLocation.toString());
+			isGrammarEncountered = true;
+		}
+		if (noNamespaceSchemaLocation != null) {
+			reader.setProperty(IExternalSchemaLocationProvider.NO_NAMESPACE_SCHEMA_LOCATION, noNamespaceSchemaLocation);
+			isGrammarEncountered = true;
+		}
+		return isGrammarEncountered;
+	}
+ 
   private Object[] getMsgArguments(LocalizedMessage msg){
 	  Object obj = msg.getAttribute(ANNOTATIONMSG);
 	  return new Object[]{obj};

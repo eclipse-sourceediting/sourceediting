@@ -12,15 +12,27 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl;
                           
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.IExternalSchemaLocationProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,6 +44,7 @@ import org.w3c.dom.NodeList;
  */
 public class CMDocumentLoader
 {                                           
+  private final static boolean _trace = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.xml.core/externalSchemaLocation")).booleanValue(); //$NON-NLS-1$
   protected Document document;
   protected ModelQuery modelQuery;
   protected CMDocumentManager cmDocumentManager;
@@ -83,17 +96,68 @@ public class CMDocumentLoader
           walkDocument = isInferredGrammarEnabled;
           //System.out.println("is NOT namespaceAware");
         }        
-      }  
+      }
     } 
 
     if (walkDocument)
     {
-      visitNode(document);   
+    	if (!checkExternalSchema())
+    		visitNode(document);   
     } 
 
     //System.out.println("--- elapsed time (" + count + ") = " + (System.currentTimeMillis() - time));
   }
 
+  protected boolean checkExternalSchema() {
+	  boolean externalSchemaLoaded = false;
+	  if (document instanceof IDOMDocument) {
+		  final String baseLocation = ((IDOMDocument) document).getModel().getBaseLocation();
+		  if (baseLocation == null)
+			  return false;
+		  final IPath basePath = new Path(baseLocation);
+		  IFile file = null;
+		  if (basePath.segmentCount() > 1) {
+			  file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+		  }
+		  final URI uri = (file == null || !file.isAccessible()) ? new File(baseLocation).toURI() : file.getLocationURI();
+		  if (uri != null) {
+			  IExternalSchemaLocationProvider[] providers = ExternalSchemaLocationProviderRegistry.getInstance().getProviders();
+			  for (int i = 0; i < providers.length; i++) {
+				  long time = _trace ? System.currentTimeMillis(): 0;
+				  final Map locations = providers[i].getExternalSchemaLocation(uri);
+				  if (_trace) {
+					  long diff = System.currentTimeMillis() - time;
+					  if (diff > 250)
+						  Logger.log(Logger.INFO, "Schema location provider took [" + diff + "ms] for URI [" + uri + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				  }
+				  if (locations != null && !locations.isEmpty()) {
+					  // Use the externalSchemaLocation
+					  if (namespaceTable != null && namespaceTable.isNamespaceEncountered()) {
+						  final String location = locations.get(IExternalSchemaLocationProvider.SCHEMA_LOCATION).toString();
+						  if (location != null) {
+							  final String[] ids = StringUtils.asArray(location);
+							  // namespace : location pairs
+							  if (ids.length >= 2 && ids.length % 2 == 0) {
+								  if (!externalSchemaLoaded)
+									  cmDocumentManager.removeAllReferences();
+								  for (int j = 0; j < ids.length; j+=2) {
+									  handleGrammar(ids[j], ids[j + 1], "XSD"); //$NON-NLS-1$
+									  externalSchemaLoaded = true;
+								  }
+							  }
+						  }
+					  }
+					  else { // noNamespace
+						  handleGrammar(uri.toString(), locations.get(IExternalSchemaLocationProvider.NO_NAMESPACE_SCHEMA_LOCATION).toString(), "XSD"); //$NON-NLS-1$
+						  externalSchemaLoaded = true;
+						  break;
+					  }
+				  }
+			  }
+		  }
+	  }
+	  return externalSchemaLoaded;
+  }
 
   public boolean handleGrammar(String publicId, String systemId, String type)
   {           
