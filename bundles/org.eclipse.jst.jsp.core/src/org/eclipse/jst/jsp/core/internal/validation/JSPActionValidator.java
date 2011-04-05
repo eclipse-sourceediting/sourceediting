@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElement
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
-import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterImpl;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.osgi.util.NLS;
@@ -144,10 +144,22 @@ public class JSPActionValidator extends JSPValidator {
 	private boolean isElIgnored(IPath path, IStructuredModel model) {
 		if (DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(path) < 2.0f)
 			return true;
-		String directiveIsELIgnored = ((PageDirectiveAdapterImpl)(((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class))).getElIgnored();
-		// isELIgnored directive found
-		if (directiveIsELIgnored != null)
-			return Boolean.valueOf(directiveIsELIgnored).booleanValue();
+
+		PageDirectiveAdapter pdAdapter = ((PageDirectiveAdapter) (((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class)));
+		if (pdAdapter == null) {
+			// double-check the factory (although there just might not be a page directive in the file)
+			if (model.getFactoryRegistry().getFactoryFor(PageDirectiveAdapter.class) == null) {
+				model.getFactoryRegistry().addFactory(new PageDirectiveAdapterFactory());
+				pdAdapter = ((PageDirectiveAdapter) (((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class)));
+			}
+		}
+		if (pdAdapter != null) {
+			String directiveIsELIgnored = pdAdapter.getElIgnored();
+			// isELIgnored directive found
+			if (directiveIsELIgnored != null)
+				return Boolean.valueOf(directiveIsELIgnored).booleanValue();
+		}
+		
 		// Check the deployment descriptor for el-ignored
 		PropertyGroup[] groups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(path);
 		if (groups.length > 0)
