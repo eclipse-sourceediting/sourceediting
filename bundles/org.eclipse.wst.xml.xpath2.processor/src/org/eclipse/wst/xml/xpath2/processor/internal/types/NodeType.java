@@ -282,16 +282,15 @@ public abstract class NodeType extends AnyType {
 	} // getXDMTypedValue
 	
 	
-    /*
-     * Helper method to construct typed value of an XDM node.
+	/*
+     * Get the XDM typed value for schema "simple content model". 
      */
 	private ResultSequence getTypedValueForSimpleContent(SimpleTypeDefinition simpType, List/*<Short>*/ itemValueTypes) {
 		
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
 		if (simpType.getVariety() == SimpleTypeDefinition.VARIETY_ATOMIC) {
-		   AnyType schemaTypeValue = SchemaTypeValueFactory.newSchemaTypeValue(PsychoPathTypeHelper.getXSDTypeShortCode(simpType), 
-				                                                               string_value());
+		   AnyType schemaTypeValue = SchemaTypeValueFactory.newSchemaTypeValue(PsychoPathTypeHelper.getXSDTypeShortCode(simpType), string_value());
 		   if (schemaTypeValue != null) {
 				rs.add(schemaTypeValue);
 		   } else {
