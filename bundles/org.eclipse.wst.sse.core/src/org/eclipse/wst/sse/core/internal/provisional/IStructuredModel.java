@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -155,7 +155,11 @@ public interface IStructuredModel extends IAdaptable {
 	 * This is a client-defined value for what that client (and/or loader)
 	 * considers the "base" of the structured model. Frequently the location
 	 * is either a workspace root-relative path of a workspace resource or an
-	 * absolute path in the local file system.
+	 * absolute location in the local file system.
+	 * 
+	 * @return the base location of the model or <code>null</code> when one
+	 *         has not been set, such as in models resulting from calling
+	 *         {@link IModelManager#createNewInstance(IStructuredModel)}
 	 */
 	String getBaseLocation();
 
