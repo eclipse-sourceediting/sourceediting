@@ -1,6 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2011, Jesper Steen Moller, and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Jesper Steen Moller - initial API and implementation
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
+ *******************************************************************************/
+
 package org.eclipse.wst.xml.xpath2.processor.util;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
@@ -21,6 +35,10 @@ import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.StaticVariableResolver;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
+import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.w3c.dom.Node;
 
 public class StaticContextBuilder implements StaticContext {
@@ -31,15 +49,20 @@ public class StaticContextBuilder implements StaticContext {
 	private String _default_namespace = "";
 	private String _default_function_namespace = XPATH_FUNCTIONS_NS;
 	private TypeDefinition _initialContextType = null; 
+	private String _defaultCollation = CollationProvider.CODEPOINT_COLLATION;
 
 	// key: String prefix, contents: String namespace
 	private Map/*<String, String>*/ _namespaces = new HashMap/*<String, String>*/();
-	private Map/*<String, FunctionLibrary>*/ _functionLibraries;
-	private boolean _useDefaultLibraries = true;
+	private Map<String, FunctionLibrary> _functionLibraries = new HashMap<String, FunctionLibrary>();
+	{
+		_functionLibraries.put(XPATH_FUNCTIONS_NS, new FnFunctionLibrary());
+		_functionLibraries.put(XSCtrLibrary.XML_SCHEMA_NS, new XSCtrLibrary());
+	}
 
 	private URI _base_uri;
 	private Map/*<String, TypeDefinition>*/ _documents = new HashMap/*<String, TypeDefinition>*/();
 	private Map/*<String, TypeDefinition>*/ _variableTypes = new HashMap/*<String, TypeDefinition>*/();
+	private Map/*<String, Short>*/ _variableCardinality = new HashMap/*<String, Short>*/();
 	private Map/*<String, TypeDefinition>*/ _collectionTypes = new HashMap/*<String, TypeDefinition>*/();
 
 	private Set/*<QName>*/ _hiddenFunctions = new HashSet/*<QName>*/();
@@ -74,7 +97,9 @@ public class StaticContextBuilder implements StaticContext {
 			}
 			
 			public String getNamespaceURI(String prefix) {
-				return (String)_namespaces.get(prefix);
+				String ns = (String)_namespaces.get(prefix);
+				if (ns == null) ns = XMLConstants.NULL_NS_URI;
+				return ns;
 			}
 		};
 	}
@@ -158,15 +183,32 @@ public class StaticContextBuilder implements StaticContext {
 		_hiddenFunctions.add(functionToSuppress);
 		return this;
 	}
+	public StaticContextBuilder withoutFunction(QName ... functionsToSuppress) {
+		for (QName name : functionsToSuppress)
+			_hiddenFunctions.add(name);
+		return this;
+	}
 	
 	public TypeDefinition getDefaultCollectionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return BuiltinTypeLibrary.XS_UNTYPED;
 	}
 
 	public StaticVariableResolver getInScopeVariables() {
-		// TODO Auto-generated method stub
-		return null;
+		return new StaticVariableResolver() {
+
+			public boolean isVariablePresent(QName name) {
+				return _variableTypes.containsKey(name);
+			}
+
+			public TypeDefinition getVariableType(QName name) {
+				return (TypeDefinition) _variableTypes.get(name);
+			}
+
+			public short getVariableOccurrence(QName name) {
+				return (Short) _variableCardinality.get(name);
+			}
+			
+		};
 	}
 
 	// We are explicitly NOT using generics here, in anticipation of JDK1.4 compatibility
@@ -180,7 +222,7 @@ public class StaticContextBuilder implements StaticContext {
 	private CollationProvider _collationProvider = new CollationProvider() {
 		
 		public String getDefaultCollation() {
-			return CollationProvider.CODEPOINT_COLLATION;
+			return _defaultCollation;
 		}
 		
 		public Comparator getCollation(String uri) {
@@ -188,13 +230,37 @@ public class StaticContextBuilder implements StaticContext {
 			return null;
 		}
 	};
-	
+
 	public CollationProvider getCollationProvider() {
 		return _collationProvider;
 	}
 
 	public StaticContextBuilder withCollationProvider(CollationProvider cp) {
 		_collationProvider = cp;
+		return this;
+	}
+
+	public StaticContextBuilder withVariable(javax.xml.namespace.QName qName,
+			TypeDefinition type, short cardinality) {
+		_variableTypes.put(qName, type);
+		_variableCardinality.put(qName, cardinality);
+		return this;
+	}
+
+	public StaticContextBuilder withBaseUri(String string) throws URISyntaxException {
+		_base_uri = new URI(string);		
+		return this;
+	}
+
+	public StaticContextBuilder withFunctionLibrary(
+			String namespace,
+			FunctionLibrary fl) {
+		_functionLibraries.put(namespace, fl);
+		return this;
+	}
+
+	public StaticContextBuilder withDefaultCollation(String uri) {
+		this._defaultCollation = uri;
 		return this;
 	}
 }

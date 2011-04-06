@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,13 @@
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Jesper Steen Moeller - bug 281159 - implement xs:anyUri -> xs:string promotion
  *     Jesper Steen Moller  - bug 281938 - undefined context should raise error
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -24,13 +27,15 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
+import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 
 import java.util.*;
 
 /**
  * Support for functions.
  */
-public abstract class Function {
+public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Function {
 
 	protected QName _name;
 	/**
@@ -173,8 +178,32 @@ public abstract class Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public abstract ResultSequence evaluate(Collection args)
-			throws DynamicError;
+	public ResultSequence evaluate(Collection args)
+			throws DynamicError {
+		
+		return ResultSequenceUtil.newToOld(evaluate(args, new EvaluationContext() {
+			
+			public org.eclipse.wst.xml.xpath2.api.StaticContext getStaticContext() {
+				throw new UnsupportedOperationException("ikke længere");
+			}
+			
+			public int getLastPosition() {
+				throw new UnsupportedOperationException("ikke længere");
+			}
+			
+			public org.eclipse.wst.xml.xpath2.api.DynamicContext getDynamicContext() {
+				throw new UnsupportedOperationException("ikke længere");
+			}
+			
+			public int getContextPosition() {
+				throw new UnsupportedOperationException("ikke længere");
+			}
+			
+			public Object getContextItem() {
+				throw new UnsupportedOperationException("ikke længere");
+			}
+		}));
+	}
 
 	// convert argument according to section 3.1.5 of xpath 2.0 spec
 	/**
@@ -269,7 +298,7 @@ public abstract class Function {
 
 		// convert all arguments
 		while (argi.hasNext()) {
-			result.add(convert_argument((ResultSequence) argi.next(),
+			result.add(convert_argument(ResultSequenceUtil.newToOld((org.eclipse.wst.xml.xpath2.api.ResultSequence) argi.next()),
 					(SeqType) expi.next()));
 		}
 
@@ -317,6 +346,50 @@ public abstract class Function {
 
 	public boolean is_vararg() {
 		return _min_arity != _max_arity;
+	}
+
+	public String getName() {
+		return name().local();
+	}
+
+	public int getMinArity() {
+		return min_arity();
+	}
+
+	public int getMaxArity() {
+		return max_arity();
+	}
+
+	public boolean isVariableArgument() {
+		return this.is_vararg();
+	}
+
+	public boolean canMatchArity(int actualArity) {
+		return matches_arity(actualArity);
+	}
+
+	public TypeDefinition getResultType() {
+		return BuiltinTypeLibrary.XS_UNTYPED;
+	}
+
+	public TypeDefinition getArgumentType(int index) {
+		return BuiltinTypeLibrary.XS_UNTYPED;
+	}
+
+	public String getArgumentNameHint(int index) {
+		return "argument_"  + index;
+	}
+
+	public TypeDefinition computeReturnType(Collection args,
+			org.eclipse.wst.xml.xpath2.api.StaticContext sc) {
+		return BuiltinTypeLibrary.XS_UNTYPED;
+	}
+
+	public org.eclipse.wst.xml.xpath2.api.ResultSequence evaluate(Collection args,
+			EvaluationContext evaluationContext) {
+		
+		ResultSequence result = evaluate(args);
+		return ResultSequenceUtil.oldToNew(result);
 	}
 
 }

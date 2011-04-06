@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,14 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -47,7 +49,7 @@ public class FnAbs extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
 		// 1 argument only!
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
@@ -78,30 +80,25 @@ public class FnAbs extends Function {
 		if (nt instanceof XSDouble) {
 			XSDouble dat = (XSDouble) nt;
 			if (dat.zero() || dat.negativeZero()) {
-				rs.add(new XSDouble("0"));
-				return rs;
+				return new XSDouble("0");
 			}
 			if (dat.infinite()) {
-				rs.add(new XSDouble(Double.POSITIVE_INFINITY));
-				return rs;
+				return new XSDouble(Double.POSITIVE_INFINITY);
 			}
 		}
 
 		if (nt instanceof XSFloat) {
 			XSFloat dat = (XSFloat) nt;
 			if (dat.zero() || dat.negativeZero()) {
-				rs.add(new XSFloat((new Float(0)).floatValue()));
-				return rs;
+				return new XSFloat((new Float(0)).floatValue());
 			}
 			if (dat.infinite()) {
-				rs.add(new XSFloat(Float.POSITIVE_INFINITY));
-				return rs;
+				return new XSFloat(Float.POSITIVE_INFINITY);
 			}
 		}
 
 
-		rs.add(nt.abs());
-		return rs;
+		return nt.abs();
 	}
 
 	/**
@@ -122,7 +119,7 @@ public class FnAbs extends Function {
 		if (size == 0)
 			return null;
 
-		AnyType at = arg.first();
+		AnyType at = (AnyType) arg.item(0);
 
 		if (!(at instanceof NumericType))
 			throw DynamicError.invalidType();

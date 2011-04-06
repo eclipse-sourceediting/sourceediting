@@ -29,6 +29,8 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLi
  */
 public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	private static final String XS_BOOLEAN = "xs:boolean";
+	public static final XSBoolean TRUE = new XSBoolean(true);
+	public static final XSBoolean FALSE = new XSBoolean(false);
 	private boolean _value;
 
 	/**
@@ -57,6 +59,11 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 		return XS_BOOLEAN;
 	}
 
+	@Override
+	public Object getNativeValue() {
+		return Boolean.valueOf(_value);
+	}
+	
 	/**
 	 * Retrieve the datatype name
 	 * 
@@ -207,6 +214,11 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_BOOLEAN;
+	}
+
+	public static org.eclipse.wst.xml.xpath2.api.ResultSequence valueOf(
+			boolean answer) {
+		return answer ? TRUE : FALSE;
 	}
 
 }

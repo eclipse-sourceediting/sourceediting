@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -259,6 +260,11 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
  
 	private boolean expand_qname(QName name, String def) {
 		String prefix = name.prefix();
+
+		if ("*".equals(prefix)) {
+			name.set_namespace("*");
+			return true;
+		}
 
 		if (prefix == null) {
 			name.set_namespace(def);

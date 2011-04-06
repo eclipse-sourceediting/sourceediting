@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,15 +18,19 @@
  *     Mukul Gandhi - bug 323900 - improving computing the typed value of element &
  *                                 attribute nodes, where the schema type of nodes
  *                                 are simple, with varieties 'list' and 'union'.                                 
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.api.typesystem.ComplexTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.PrimitiveType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition;
@@ -35,6 +39,7 @@ import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.PsychoPathTypeHelper;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -53,7 +58,13 @@ public abstract class NodeType extends AnyType {
 	protected static final String SCHEMA_TYPE_ID = "ID";
 	private Node _node;
 	protected TypeModel _typeModel;
-		
+
+	public static final Comparator NODE_COMPARATOR = new Comparator() {
+		public int compare(Object o1, Object o2) {
+			return compare_node((NodeType)o1, (NodeType)o2);
+		}
+	};
+	
 	/**
 	 * Initialises according to the supplied parameters
 	 * 
@@ -407,5 +418,11 @@ public abstract class NodeType extends AnyType {
 
 	public Object getNativeValue() {
 		return node_value();
+	}
+
+	public static ResultBuffer linarize(ResultBuffer rs) {
+		TreeSet all = new TreeSet(NODE_COMPARATOR);
+		all.addAll(rs.getCollection());
+		return new ResultBuffer().concat(all);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
@@ -59,6 +60,7 @@ public abstract class AnyType implements SingleItemSequence {
 	public Object getNativeValue() {
 		return Boolean.TRUE;
 	}
+	
 	public int size() {
 		return 1;
 	}
@@ -69,7 +71,7 @@ public abstract class AnyType implements SingleItemSequence {
 	}
 
 	private void checkIOOB(int index) {
-		throw new IndexOutOfBoundsException("Index out of bounds, index = " + index + ", length = 1");
+		if (index != 0) throw new IndexOutOfBoundsException("Index out of bounds, index = " + index + ", length = 1");
 	}
 
 	public Object value(int index) {
@@ -81,10 +83,14 @@ public abstract class AnyType implements SingleItemSequence {
 		return getItemType();
 	}
 	
-	public Object first() {
+	public AnyType first() {
 		return this;
 	}
-	
+
+	public Object firstValue() {
+		return this.getNativeValue();
+	}
+
 	public TypeDefinition sequenceType() {
 		return getTypeDefinition();
 	}

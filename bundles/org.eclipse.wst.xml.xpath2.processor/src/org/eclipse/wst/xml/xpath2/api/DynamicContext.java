@@ -7,10 +7,12 @@
  *
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.api;
 
+import java.net.URI;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
@@ -44,7 +46,7 @@ public interface DynamicContext {
 	 *            is the possibly relative URI to resolve
 	 * @return the absolutized, resolved URI.
 	 */
-	public String resolveUri(String uri);
+	public URI resolveUri(String uri);
 
 	/**
 	 * [Definition: Current dateTime. This
@@ -89,7 +91,7 @@ public interface DynamicContext {
 	 *            is the URI of the document.
 	 * @return document.
 	 */
-	public org.w3c.dom.Document getDocument(String uri);
+	public org.w3c.dom.Document getDocument(URI uri);
 	
 	/**
 	 * [Definition: Available collections. This is a mapping of

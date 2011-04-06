@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jesper Moller - initial API and implementation
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.api;
@@ -51,7 +52,7 @@ public interface ResultSequence {
 	 * 
 	 * @return Native object representing the first item.
 	 */
-	Object first();
+	Object firstValue();
 
 	/**
 	 * XPath2 type definition description of the item at location '0'

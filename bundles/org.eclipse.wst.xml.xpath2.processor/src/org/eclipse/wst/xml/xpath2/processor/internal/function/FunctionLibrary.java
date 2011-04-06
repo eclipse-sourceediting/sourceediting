@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Mukul Gandhi - bug 274471 - improvements to fn:string function (support for arity 0)
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -23,7 +24,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 /**
  * Class for Function Library support.
  */
-public class FunctionLibrary {
+public class FunctionLibrary implements org.eclipse.wst.xml.xpath2.api.FunctionLibrary {
 	private String _namespace;
 	private Map _functions;
 	private StaticContext _sc;
@@ -134,5 +135,19 @@ public class FunctionLibrary {
 	 */
 	public DynamicContext dynamic_context() {
 		return _dc;
+	}
+
+	public boolean functionExists(String name, int arity) {
+		return function_exists(new QName(null,name, namespace()), arity);
+	}
+
+	public org.eclipse.wst.xml.xpath2.api.Function resolveFunction(
+			String localName, int arity) {
+
+		return function(new QName("f", localName, namespace()), arity);
+	}
+
+	public String getNamespace() {
+		return namespace();
 	}
 }

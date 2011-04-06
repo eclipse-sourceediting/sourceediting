@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jesper Moller - initial API and implementation
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.api;
@@ -36,21 +37,19 @@ public class ResultBuffer {
 		values.clear();
 	}
 	
-	public ResultBuffer with(Item at) {
+	public ResultBuffer add(Item at) {
 		values.add(at);
 		return this;
 	}
 
-	public void add(Item at) {
+	public ResultBuffer append(Item at) {
 		values.add(at);
+		return this;
 	}
 
-	public void append(Item at) {
-		values.add(at);
-	}
-
-	public void concat(ResultSequence rs) {
+	public ResultBuffer concat(ResultSequence rs) {
 		values.addAll(collectionWrapper(rs));
+		return this;
 	}
 
 	public static final class SingleResultSequence implements ResultSequence {
@@ -94,8 +93,8 @@ public class ResultBuffer {
 		/* (non-Javadoc)
 		 * @see org.eclipse.wst.xml.xpath2.api.ResultSequence#first()
 		 */
-		public Item first() {
-			return value;
+		public Object firstValue() {
+			return value.getNativeValue();
 		}
 		
 		/* (non-Javadoc)
@@ -112,7 +111,7 @@ public class ResultBuffer {
 				public final Object next() {
 					if (! seenIt) {
 						seenIt = true;
-						return SingleResultSequence.this;
+						return value;
 					}
 					throw new IllegalStateException("This iterator is at its end");
 				}
@@ -167,8 +166,8 @@ public class ResultBuffer {
 		/* (non-Javadoc)
 		 * @see org.eclipse.wst.xml.xpath2.api.ResultSequence#first()
 		 */
-		public Item first() {
-			return item(0);
+		public Object firstValue() {
+			return item(0).getNativeValue();
 		}
 		
 		/* (non-Javadoc)
@@ -223,7 +222,7 @@ public class ResultBuffer {
 
 	private Collection collectionWrapper(final ResultSequence rs) {
 		// This is a dummy collections, solely exists for faster inserts into our array
-		return new Collection() {
+		return new Collection/*<Item>*/() {
 
 			public boolean add(Object arg0) {
 				return false;
@@ -248,7 +247,7 @@ public class ResultBuffer {
 				return rs.empty();
 			}
 
-			public Iterator iterator() {
+			public Iterator/*<Item>*/ iterator() {
 				return rs.iterator();
 			}
 
@@ -269,16 +268,21 @@ public class ResultBuffer {
 			}
 
 			public Object[] toArray() {
-				return null;
+				return toArray(new Item[size()]);
 			}
 
 			public Object[] toArray(Object[] arg0) {
-				return null;
+				if (arg0.length < size())
+					arg0 = new Item[size()];
+				for (int i = 0; i< size(); ++i) {
+					arg0[i] = rs.item(i);
+				}
+				return arg0;
 			}
 		};
 	}
 	
-	final static ResultSequence EMPTY = new ResultSequence() {
+	public final static ResultSequence EMPTY = new ResultSequence() {
 
 		public int size() {
 			return 0;
@@ -304,7 +308,7 @@ public class ResultBuffer {
 			throw new IndexOutOfBoundsException("Sequence is empty!");
 		}
 		
-		public Item first() {
+		public Object firstValue() {
 			throw new IndexOutOfBoundsException("Sequence is empty!");
 		}
 		
@@ -325,5 +329,14 @@ public class ResultBuffer {
 			};
 		}
 	};
+
+	public Collection/*<Item>*/ getCollection() {
+		return this.values;
+	}
+
+	public ResultBuffer concat(Collection/*<Item>*/ others) {
+		this.values.addAll(others);
+		return this;
+	}
 
 }

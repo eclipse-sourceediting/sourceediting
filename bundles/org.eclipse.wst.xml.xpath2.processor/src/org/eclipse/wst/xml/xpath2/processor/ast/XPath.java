@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
@@ -19,6 +20,7 @@ import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
+import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator2;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathNode;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
 
@@ -88,7 +90,7 @@ public class XPath extends XPathNode implements XPath2Expression {
 	 */
 	public ResultSequence evaluate(DynamicContext dynamicContext, Object[] contextItems) {
 		if (_staticContext == null) throw new IllegalStateException("Static Context not set yet!");
-		return new DefaultEvaluator(_staticContext, dynamicContext, contextItems).evaluate(this);
+		return new DefaultEvaluator2(_staticContext, dynamicContext, contextItems).evaluate2(this);
 	}
 	
 	/**

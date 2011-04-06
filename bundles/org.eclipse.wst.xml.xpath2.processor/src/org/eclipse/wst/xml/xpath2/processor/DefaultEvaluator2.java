@@ -1,25 +1,18 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2011, Jesper Steen Moller, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
- *     Jesper Steen Moeller - bug 285145 - check arguments to op:to
- *     Jesper Steen Moeller - bug 262765 - fixed node state iteration
- *     Jesper Steen Moller  - bug 275610 - Avoid big time and memory overhead for externals
- *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
- *     Jesper Steen Moller  - bug 281938 - undefined context should raise error
- *     Jesper Steen Moller  - bug 262765 - use correct 'effective boolean value'
- *     Jesper Steen Moller  - bug 312191 - instance of test fails with partial matches
-  *    Mukul Gandhi         - bug 325262 - providing ability to store an XPath2 sequence into
- *                                         an user-defined variable.
+ *     Jesper Steen Moller - initial API and implementation
+ *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
+
+import static org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil.newToOld;
 
 import java.math.BigInteger;
 import java.net.URI;
@@ -33,9 +26,13 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import javax.xml.XMLConstants;
+import javax.xml.datatype.Duration;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Function;
+import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
@@ -106,6 +103,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.VarRef;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathNode;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.ConstructorFL;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnData;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnRoot;
@@ -139,8 +137,10 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.TextType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -150,19 +150,16 @@ import org.w3c.dom.NodeList;
 /**
  * Default evaluator interface
  */
-public class DefaultEvaluator implements XPathVisitor, Evaluator {
+public class DefaultEvaluator2 implements XPathVisitor, Evaluator {
 
 	private static final String XML_SCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
 
 	private static final QName ANY_ATOMIC_TYPE = new QName("xs",
 			"anyAtomicType", XML_SCHEMA_NS);
 
-	private DynamicContext _dc;
-	private org.eclipse.wst.xml.xpath2.api.DynamicContext _newDc;
+	private DynamicContext _legacyDc;
+	private org.eclipse.wst.xml.xpath2.api.DynamicContext _dc;
 	private XPathException _err;
-
-	// stuff anyone may use
-	private XSInteger _g_xsint;
 
 	// this is a parameter that may be set on a call...
 	// the parameter may become invalid on the next call... i.e. the
@@ -173,11 +170,11 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 	private StaticContext _sc;
 
-	private boolean _awaitingPush;
+	private Focus _focus = new Focus(ResultBuffer.EMPTY);
+
+	Focus focus() { return _focus ; }
 	
-	Focus focus() { return _dc.focus(); }
-	
-	void set_focus(Focus f) { _dc.set_focus(f); }
+	void set_focus(Focus f) { _focus = f; }
 
 	static class Pair {
 		public Object _one;
@@ -189,78 +186,30 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		}
 	}
 
-	/**
-	 * set parameters
-	 * 
-	 * @param dc
-	 *            is the dynamic context.
-	 * @param doc
-	 *            is the document.
-	 */
-	public DefaultEvaluator(DynamicContext dc, Document doc) {
-		_dc = dc;
-		_err = null;
-
-		// initialize context item with root of document
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		if (doc != null) rs.add(new DocType(doc, dc.getTypeModel(doc)));
-
-		_dc.set_focus(new Focus(rs));
-
-		_param = null;
-
-		_g_xsint = new XSInteger();
-	}
-
 	private void popScope() {
-		if (_awaitingPush) _awaitingPush = false; 
 		if (_innerScope == null) throw new IllegalStateException("Unmatched scope pop");
 		_innerScope = _innerScope.nextScope;
 	}
 
 	private QName resolve(QName var) {
 		String ns = _sc.getNamespaceContext().getNamespaceURI(var.prefix());
-		return new QName(ns, var.local());
+		QName qName = new QName(null, var.local(), ns);
+
+		return qName;
 	}
 
 	private void pushScope(QName var, org.eclipse.wst.xml.xpath2.api.ResultSequence value) {
-		_awaitingPush = false; 
 		_innerScope = new VariableScope(resolve(var), value, _innerScope);		
 	}
-	
+
 	/**
 	 * @since 2.0
 	 */
-	public DefaultEvaluator(org.eclipse.wst.xml.xpath2.api.StaticContext staticContext, org.eclipse.wst.xml.xpath2.api.DynamicContext dynamicContext, Object[] contextItems) {
+	public DefaultEvaluator2(org.eclipse.wst.xml.xpath2.api.StaticContext staticContext, org.eclipse.wst.xml.xpath2.api.DynamicContext dynamicContext, Object[] contextItems) {
 		_sc = staticContext;
-		_newDc = dynamicContext;
-		_dc = new DynamicContext() {
+		_dc = dynamicContext;
+		_legacyDc = new DynamicContext() {
 
-			private Focus _focus;
-			{
-				_ec = new EvaluationContext() {
-					
-					public org.eclipse.wst.xml.xpath2.api.DynamicContext getDynamicContext() {
-						return _newDc;
-					}
-					
-					public AnyType getContextItem() {
-						return _focus.context_item();
-					}
-					
-					public int getContextPosition() {
-						return _focus.position();
-					}
-
-					public int getLastPosition() {
-						return _focus.last();
-					}
-					
-					public StaticContext getStaticContext() {
-						return _sc;
-					}
-				};
-			}
 			public boolean xpath1_compatible() {
 				return false;
 			}
@@ -270,76 +219,63 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			}
 
 			public String resolve_prefix(String prefix) {
-				return null;
+				return _sc.getNamespaceContext().getNamespaceURI(prefix);
 			}
 
 			public String default_namespace() {
-				return null;
+				return _sc.getDefaultNamespace();
 			}
 
 			public String default_function_namespace() {
-				// TODO Auto-generated method stub
-				return null;
+				return _sc.getDefaultFunctionNamespace();
 			}
 
 			public TypeDefinition attribute_type_definition(QName attr) {
-				// TODO Auto-generated method stub
-				return null;
+				return _sc.getTypeModel().lookupAttributeDeclaration(attr.namespace(), attr.local());
 			}
 
 			public TypeDefinition element_type_definition(QName elem) {
-				// TODO Auto-generated method stub
-				return null;
+				return _sc.getTypeModel().lookupElementDeclaration(elem.namespace(), elem.local());
 			}
 
 			public boolean attribute_declared(QName attr) {
-				// TODO Auto-generated method stub
-				return false;
+				return attribute_type_definition(attr) != null;
 			}
 
 			public boolean element_declared(QName elem) {
-				// TODO Auto-generated method stub
-				return false;
+				return element_type_definition(elem) != null;
 			}
 
 			public boolean function_exists(QName name, int arity) {
-				// TODO Auto-generated method stub
-				return false;
+				return _sc.resolveFunction(name.asQName(), arity) != null;
 			}
 
 			public XSAnyURI base_uri() {
-				// TODO Auto-generated method stub
-				return null;
+				return new XSAnyURI(_sc.getBaseUri().toString());
 			}
 
 			public void new_scope() {
-				// TODO Auto-generated method stub
-				
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public void destroy_scope() {
-				// TODO Auto-generated method stub
-				
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public void add_variable(QName name) {
-				// TODO Auto-generated method stub
-				
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public boolean del_variable(QName name) {
-				// TODO Auto-generated method stub
-				return false;
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public boolean variable_exists(QName name) {
-				// TODO Auto-generated method stub
-				return false;
+				return _sc.getInScopeVariables().isVariablePresent(name.asQName());
 			}
 
 			public boolean variable_in_scope(QName var) {
-				// TODO Auto-generated method stub
-				return false;
+				return _sc.getInScopeVariables().isVariablePresent(var.asQName());
 			}
 
 			public boolean type_defined(QName name) {
@@ -358,53 +294,49 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			}
 
 			public void add_namespace(String prefix, String ns) {
-				// TODO Auto-generated method stub
-				
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public boolean expand_function_qname(QName name) {
-				// TODO Auto-generated method stub
-				return false;
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public boolean expand_elem_type_qname(QName name) {
-				// TODO Auto-generated method stub
-				return false;
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public boolean expand_qname(QName name) {
-				// TODO Auto-generated method stub
-				return false;
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public void add_function_library(FunctionLibrary fl) {
-				// TODO Auto-generated method stub
-				
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public AnyAtomicType make_atomic(QName name) {
-				// TODO Auto-generated method stub
+				String ns = name.namespace();
+				for (Object fl : _sc.getFunctionLibraries()) {
+					if (fl instanceof ConstructorFL) {
+						ConstructorFL cfl = (ConstructorFL)fl;
+						return cfl.atomic_type(name);
+					}
+				}
 				return null;
 			}
 
 			public void set_base_uri(String baseuri) {
-				// TODO Auto-generated method stub
-				
+				throw new UnsupportedOperationException("Don't");
 			}
 
 			public Map get_collections() {
-				// TODO Auto-generated method stub
-				return null;
+				return _dc.getCollections();
 			}
 
 			public void set_collections(Map collections) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			public TypeModel getTypeModel(Node element) {
-				// TODO Auto-generated method stub
-				return null;
+				return _sc.getTypeModel();
 			}
 
 			public AnyType context_item() {
@@ -420,37 +352,34 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			}
 
 			public Object get_variable(QName name) {
-				// TODO Auto-generated method stub
-				return null;
+				return getVariable(name);
 			}
 
 			public void set_variable(QName var, AnyType val) {
 				pushScope(var, (org.eclipse.wst.xml.xpath2.api.ResultSequence)val);
 			}
 
-			public ResultSequence evaluate_function(QName name, Collection args) throws DynamicError {
-				// TODO Auto-generated method stub
-				return null;
+			public org.eclipse.wst.xml.xpath2.processor.ResultSequence evaluate_function(QName name, Collection args) throws DynamicError {
+				throw new UnsupportedOperationException("Use new DynamicContext instead");
 			}
 
 			public XSDuration tz() {
-				// TODO Auto-generated method stub
-				return null;
+				Duration d = _dc.getTimezoneOffset();
+				return new XSDayTimeDuration(0, d.getHours(), d.getMinutes(), 0.0, d.getSign() == -1);
 			}
 
-			public ResultSequence get_doc(URI uri) {
-				// TODO Auto-generated method stub
-				return null;
+			public org.eclipse.wst.xml.xpath2.processor.ResultSequence get_doc(URI uri) {
+				Document document = _dc.getDocument(uri);
+				if (document == null) return ResultSequenceFactory.create_new();
+				return newToOld(new DocType(document, _sc.getTypeModel()));
 			}
 
 			public URI resolve_uri(String uri) {
-				// TODO Auto-generated method stub
-				return null;
+				return _dc.resolveUri(uri);
 			}
 
 			public GregorianCalendar current_date_time() {
-				// TODO Auto-generated method stub
-				return null;
+				return _dc.getCurrentDateTime();
 			}
 
 			public void set_focus(Focus focus) {
@@ -462,13 +391,11 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			}
 
 			public Comparator get_collation(String uri) {
-				// TODO Auto-generated method stub
-				return null;
+				return _sc.getCollationProvider().getCollation(uri);
 			}
 
 			public String default_collation_name() {
-				// TODO Auto-generated method stub
-				return null;
+				return _sc.getCollationProvider().getDefaultCollation();
 			}
 
 			public int node_position(Node node) {
@@ -480,6 +407,28 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 				
 			}
 			
+		};
+		_ec = new EvaluationContext() {
+			
+			public org.eclipse.wst.xml.xpath2.api.DynamicContext getDynamicContext() {
+				return _dc;
+			}
+			
+			public AnyType getContextItem() {
+				return _focus.context_item();
+			}
+			
+			public int getContextPosition() {
+				return _focus.position();
+			}
+
+			public int getLastPosition() {
+				return _focus.last();
+			}
+			
+			public StaticContext getStaticContext() {
+				return _sc;
+			}
 		};
 		
 
@@ -516,7 +465,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			if (name.equals(scope.name)) return scope.value;
 			scope = scope.nextScope;
 		}
-		return (org.eclipse.wst.xml.xpath2.api.ResultSequence) _dc.get_variable(name);
+		return (org.eclipse.wst.xml.xpath2.api.ResultSequence) _dc.getVariable(name.asQName());
 	}
 
 	// XXX this kinda sux
@@ -543,33 +492,54 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 *             error.
 	 * @return result sequence.
 	 */
-	public ResultSequence evaluate(XPathNode node) {
-		return ResultSequenceUtil.newToOld((ResultSequence) node.accept(this));
+	public org.eclipse.wst.xml.xpath2.processor.ResultSequence evaluate(XPathNode node) {
+		return ResultSequenceUtil.newToOld(evaluate2(node));
 	}
 
-	public org.eclipse.wst.xml.xpath2.api.ResultSequence evaluate2(XPath node) {
+	public ResultSequence evaluate2(XPathNode node) {
+		fixFunctions();
+		
 		return (org.eclipse.wst.xml.xpath2.api.ResultSequence) node.accept(this);
 	}
 	
+	private void fixFunctions() {
+		for (Object obj : _sc.getFunctionLibraries()) {
+			if (obj instanceof FunctionLibrary) {
+				FunctionLibrary fl = (FunctionLibrary)obj;
+				fl.set_dynamic_context(_legacyDc);
+				fl.set_static_context(_legacyDc);
+			}
+		}
+	}
+
 	// basically the comma operator...
 	private ResultSequence do_expr(Iterator i) {
 
 		ResultSequence rs = null;
+		ResultBuffer buffer = null;
 
 		while (i.hasNext()) {
 			Expr e = (Expr) i.next();
 
 			ResultSequence result = (ResultSequence) e.accept(this);
 
-			if (rs == null)
+			if (rs == null && buffer == null)
 				rs = result;
-			else
-				rs.concat(result);
+			else {
+				if (buffer == null) {
+					buffer = new ResultBuffer();
+					buffer.concat(rs);
+					rs = null;
+				}
+				buffer.concat(result);
+			}
 		}
 
-		if (rs == null)
-			rs = ResultSequenceFactory.create_new();
-		return rs;
+		if (buffer != null) {
+			return buffer.getSequence();
+		} else if (rs != null) {
+			return rs;
+		} else return ResultBuffer.EMPTY;
 	}
 
 	/**
@@ -586,11 +556,10 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	}
 
 	private void do_for_each(ListIterator iter,
-			Expr finalexpr, ResultSequence destination) {
+			Expr finalexpr, ResultBuffer destination) {
 
 		// we have more vars to bind...
 		if (iter.hasNext()) {
-			boolean allocated_var = false;
 			VarExprPair ve = (VarExprPair) iter.next();
 
 			// evaluate binding sequence
@@ -611,19 +580,10 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			for (Iterator i = rs.iterator(); i.hasNext();) {
 				AnyType item = (AnyType) i.next();
 
-				_dc.set_variable(varname, item);
-				allocated_var = true;
-
-				_dc.new_scope();
+				pushScope(varname, item);
 				do_for_each(iter, finalexpr, destination);
-				_dc.destroy_scope();
+				popScope();
 			}
-
-			if (allocated_var) {
-				boolean del = _dc.del_variable(varname);
-				assert del == true;
-			}
-
 			iter.previous();
 		}
 		// we finally got to do the "last expression"
@@ -642,7 +602,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// we have more vars to bind...
 		if (iter.hasNext()) {
-			boolean allocated_var = false;
 			VarExprPair ve = (VarExprPair) iter.next();
 
 			// evaluate binding sequence
@@ -657,23 +616,16 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 				for (Iterator i = rs.iterator(); i.hasNext();) {
 					AnyType item = (AnyType) i.next();
 	
-					_dc.set_variable(varname, item);
-					allocated_var = true;
-	
-					_dc.new_scope();
+					pushScope(varname, item);
 					XSBoolean effbool = do_for_all(iter, finalexpr);
-					_dc.destroy_scope();
-	
+					popScope();
+					
 					// ok here we got a "real" result, now figure
 					// out what to do with it
 					if (!effbool.value())
 						return XSBoolean.FALSE;
 				}
 			} finally {
-				if (allocated_var) {
-					boolean del = _dc.del_variable(varname);
-					assert del == true;
-				}
 				iter.previous();
 			}
 			return XSBoolean.TRUE;
@@ -690,7 +642,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// we have more vars to bind...
 		if (iter.hasNext()) {
-			boolean allocated_var = false;
 			VarExprPair ve = (VarExprPair) iter.next();
 
 			// evaluate binding sequence
@@ -705,13 +656,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 				for (Iterator i = rs.iterator(); i.hasNext();) {
 					AnyType item = (AnyType) i.next();
 	
-					_dc.set_variable(varname, item);
-					allocated_var = true;
-	
-					_dc.new_scope();
+					pushScope(varname, item);
 					XSBoolean effbool = do_exists(iter, finalexpr);
-					_dc.destroy_scope();
-					assert effbool != null;
+					popScope();
 	
 					// ok here we got a "real" result, now figure
 					// out what to do with it
@@ -719,10 +666,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 						return XSBoolean.TRUE;
 				}
 			} finally {
-				if (allocated_var) {
-					boolean del = _dc.del_variable(varname);
-					assert del == true;
-				}
 				iter.previous();
 			}
 			
@@ -746,9 +689,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	public Object visit(ForExpr fex) {
 		// XXX
 		List pairs = new ArrayList(fex.ve_pairs());
-		ResultSequence dest = ResultSequenceFactory.create_new();
-		do_for_each(pairs.listIterator(), fex.expr(), dest);
-		return dest;
+		ResultBuffer rb = new ResultBuffer(); 
+		do_for_each(pairs.listIterator(), fex.expr(), rb);
+		return rb.getSequence();
 	}
 
 	/**
@@ -762,15 +705,14 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		// XXX
 		List pairs = new ArrayList(qex.ve_pairs());
 
+		int hack = 0;
+
 		switch (qex.type()) {
 		case QuantifiedExpr.SOME:
-		{
-			return ResultSequenceFactory.create_new(do_exists(pairs.listIterator(), qex.expr()));
-		}
+			return do_exists(pairs.listIterator(), qex.expr());
 		case QuantifiedExpr.ALL:
-		{
-			return ResultSequenceFactory.create_new(do_for_all(pairs.listIterator(), qex.expr()));
-		}
+			return do_for_all(pairs.listIterator(), qex.expr());
+
 		default:
 			assert false;
 			return null; // unreach
@@ -839,8 +781,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	}
 
 	private ResultSequence node_cmp(int type, Collection args) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		assert args.size() == 2;
 
 		Iterator argsiter = args.iterator();
@@ -855,10 +795,10 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			report_error(TypeError.invalid_type(null));
 
 		if (size_one == 0 || size_two == 0)
-			return rs;
+			return ResultBuffer.EMPTY;
 
-		AnyType at_one = one.first();
-		AnyType at_two = two.first();
+		Item at_one = one.item(0);
+		Item at_two = two.item(0);
 
 		if (!(at_one instanceof NodeType) || !(at_two instanceof NodeType))
 			report_error(TypeError.invalid_type(null));
@@ -887,8 +827,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			assert false;
 		}
 
-		rs.add(new XSBoolean(answer));
-		return rs;
+		return XSBoolean.valueOf(answer);
 	}
 
 	/**
@@ -904,40 +843,40 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 			switch (cmpex.type()) {
 			case CmpExpr.EQ:
-				return FsEq.fs_eq_value(args, _dc);
+				return FsEq.fs_eq_value(args, _legacyDc);
 
 			case CmpExpr.NE:
-				return FsNe.fs_ne_value(args, _dc);
+				return FsNe.fs_ne_value(args, _legacyDc);
 
 			case CmpExpr.GT:
-				return FsGt.fs_gt_value(args, _dc);
+				return FsGt.fs_gt_value(args, _legacyDc);
 
 			case CmpExpr.LT:
-				return FsLt.fs_lt_value(args, _dc);
+				return FsLt.fs_lt_value(args, _legacyDc);
 
 			case CmpExpr.GE:
-				return FsGe.fs_ge_value(args, _dc);
+				return FsGe.fs_ge_value(args, _legacyDc);
 
 			case CmpExpr.LE:
-				return FsLe.fs_le_value(args, _dc);
+				return FsLe.fs_le_value(args, _legacyDc);
 
 			case CmpExpr.EQUALS:
-				return FsEq.fs_eq_general(args, _dc);
+				return FsEq.fs_eq_general(args, _legacyDc);
 
 			case CmpExpr.NOTEQUALS:
-				return FsNe.fs_ne_general(args, _dc);
+				return FsNe.fs_ne_general(args, _legacyDc);
 
 			case CmpExpr.GREATER:
-				return FsGt.fs_gt_general(args, _dc);
+				return FsGt.fs_gt_general(args, _legacyDc);
 
 			case CmpExpr.LESSTHAN:
-				return FsLt.fs_lt_general(args, _dc);
+				return FsLt.fs_lt_general(args, _legacyDc);
 
 			case CmpExpr.GREATEREQUAL:
-				return FsGe.fs_ge_general(args, _dc);
+				return FsGe.fs_ge_general(args, _legacyDc);
 
 			case CmpExpr.LESSEQUAL:
-				return FsLe.fs_le_general(args, _dc);
+				return FsLe.fs_le_general(args, _legacyDc);
 
 			case CmpExpr.IS:
 			case CmpExpr.LESS_LESS:
@@ -978,7 +917,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 	private XSBoolean effective_boolean_value(ResultSequence rs) {
 		try {
-			return FnBoolean.fn_boolean(rs);
+			return FnBoolean.fn_boolean(ResultSequenceUtil.newToOld(rs));
 		} catch (DynamicError err) {
 			report_error(err);
 			return null; // unreach
@@ -1093,8 +1032,8 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence two = (ResultSequence) e.right().accept(this);
 
 		Collection args = new ArrayList();
-		args.add(one);
-		args.add(two);
+		args.add(newToOld(one));
+		args.add(newToOld(two));
 
 		return args;
 	}
@@ -1191,6 +1130,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			int sequenceLength = rs.size();
 			// Run the matcher
 			seqt.accept(this);
+			rs = (ResultSequence) ((Pair)_param)._two;
 			int lengthAfter = rs.size();
 		
 			if (sequenceLength != lengthAfter)
@@ -1214,10 +1154,10 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence rs = (ResultSequence) taexp.left().accept(this);
 
 		SequenceType seqt = (SequenceType) taexp.right();
-		SeqType st = new SeqType(seqt, _dc, rs);
+		SeqType st = new SeqType(seqt, _legacyDc, ResultSequenceUtil.newToOld(rs));
 
 		try {
-			st.match(rs);
+			st.match(ResultSequenceUtil.newToOld(rs));
 		} catch (DynamicError err) {
 			report_error(err);
 		}
@@ -1259,7 +1199,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence rs = (ResultSequence) cexp.left().accept(this);
 		SingleType st = (SingleType) cexp.right();
 
-		rs = FnData.atomize(rs);
+		rs = FnData.atomize(newToOld(rs));
 
 		if (rs.size() > 1)
 			report_error(TypeError.invalid_type(null));
@@ -1271,7 +1211,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 				report_error(TypeError.invalid_type(null));
 		}
 
-		AnyType at = rs.first();
+		AnyType at = (AnyType) rs.item(0);
 
 		if (!(at instanceof AnyAtomicType))
 			report_error(TypeError.invalid_type(null));
@@ -1282,7 +1222,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// check if constructor exists
 		// try {
-		if (!_dc.function_exists(type, 1))
+		if (!_legacyDc.function_exists(type, 1))
 			report_error(TypeError.invalid_type(null));
 		/*
 		 * } catch(StaticNsNameError err) {
@@ -1293,7 +1233,8 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		args.add(ResultSequenceFactory.create_new(aat));
 
 		try {
-			return _dc.evaluate_function(type, args);
+			Function function = _sc.resolveFunction(type.asQName(), args.size());
+			return function.evaluate(args, _ec);
 		} catch (DynamicError err) {
 			report_error(err);
 			return null; // unreach
@@ -1311,7 +1252,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence rs = (ResultSequence) e.arg().accept(this);
 
 		Collection args = new ArrayList();
-		args.add(rs);
+		args.add(newToOld(rs));
 
 		try {
 			return FsMinus.fs_minus_unary(args);
@@ -1332,7 +1273,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence rs = (ResultSequence) e.arg().accept(this);
 
 		Collection args = new ArrayList();
-		args.add(rs);
+		args.add(newToOld(rs));
 
 		try {
 			return FsPlus.fs_plus_unary(args);
@@ -1349,13 +1290,13 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	// [each time changing the context item].
 	private ResultSequence do_step(StepExpr se) {
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 		ArrayList results = new ArrayList();
 		int type = 0; // 0: don't know yet
 		// 1: atomic
 		// 2: node
 
-		Focus focus = _dc.focus();
+		Focus focus = focus();
 		int original_pos = focus.position();
 
 		// execute step for all items in focus
@@ -1415,11 +1356,10 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// XXX lame
 		if (node_types) {
-			rs = NodeType.eliminate_dups(rs);
-			rs = NodeType.sort_document_order(rs);
+			rs = NodeType.linarize(rs);
 		}
 
-		return rs;
+		return rs.getSequence();
 	}
 
 	private ResultSequence root_self_node() {
@@ -1427,14 +1367,14 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence rs;
 
 		// XXX the cast!!!
-		rs = axis.iterate((NodeType) _dc.context_item(), _dc);
+		rs = axis.iterate((NodeType) focus().context_item(), _legacyDc);
 
 		rs = kind_test(rs, NodeType.class);
 
 		try {
 			List records = new ArrayList();
-			records.add(rs);
-			rs = FnRoot.fn_root(records, _dc);
+			records.add(newToOld(rs));
+			rs = FnRoot.fn_root(records, _legacyDc);
 		} catch (DynamicError err) {
 			report_error(err);
 		}
@@ -1442,20 +1382,20 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	}
 
 	private ResultSequence descendant_or_self_node(ResultSequence rs) {
-		ResultSequence res = ResultSequenceFactory.create_new();
+		ResultBuffer res = new ResultBuffer();
 		Axis axis = new DescendantOrSelfAxis();
 
 		// for all nodes, get descendant or self nodes
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			NodeType item = (NodeType) i.next();
 
-			ResultSequence nodes = axis.iterate(item, _dc);
+			ResultSequence nodes = axis.iterate(item, _legacyDc);
 			nodes = kind_test(nodes, NodeType.class);
 
 			res.concat(nodes);
 		}
 
-		return res;
+		return res.getSequence();
 	}
 
 	/**
@@ -1469,7 +1409,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		XPathExpr xp = e;
 
 		ResultSequence rs = null;
-		Focus original_focus = _dc.focus();
+		Focus original_focus = _legacyDc.focus();
 
 		// do all the steps
 		while (xp != null) {
@@ -1505,7 +1445,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 					// make result of previous step the new
 					// focus
-					_dc.set_focus(new Focus(rs));
+					set_focus(new Focus(rs));
 
 					// do the step for all item in context
 					rs = do_step(se);
@@ -1520,16 +1460,15 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 					// XXX ???
 					if (xp.slashes() == 1) {
 						rs = root_self_node();
-						_dc.set_focus(new Focus(rs));
+						set_focus(new Focus(rs));
 
 						rs = do_step(se);
 					} else if (xp.slashes() == 2) {
-						ResultSequence res = ResultSequenceFactory.create_new();
 						rs = root_self_node();
 
 						rs = descendant_or_self_node(rs);
 
-						_dc.set_focus(new Focus(rs));
+						set_focus(new Focus(rs));
 
 						rs = do_step(se);
 					} else
@@ -1547,7 +1486,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		}
 
 		// restore focus
-		_dc.set_focus(original_focus);
+		set_focus(original_focus);
 
 		return rs;
 	}
@@ -1562,7 +1501,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	public Object visit(ForwardStep e) {
 
 		// get context node
-		AnyType ci = _dc.context_item();
+		AnyType ci = focus().context_item();
 		
 		if (ci == null) 
 			report_error(DynamicError.contextUndefined());
@@ -1574,7 +1513,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// get the nodes on the axis
 		ForwardAxis axis = e.iterator();
-		ResultSequence nodes = axis.iterate(cn, _dc);
+		ResultSequence nodes = axis.iterate(cn, _legacyDc);
 		// get all nodes in the axis, and principal node
 		Pair arg = new Pair(axis.principal_node_kind().string_type(), nodes);
 
@@ -1595,7 +1534,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	// XXX unify with top
 	public Object visit(ReverseStep e) {
 		// get context node
-		AnyType ci = _dc.context_item();
+		AnyType ci = focus().context_item();
 
 		if (!(ci instanceof NodeType))
 			report_error(TypeError.ci_not_node(ci.string_type()));
@@ -1609,12 +1548,12 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		if (e.axis() == ReverseStep.DOTDOT) {
 			axis = new ParentAxis();
 
-			return kind_test(axis.iterate(cn, _dc), NodeType.class);
+			return kind_test(axis.iterate(cn, _legacyDc), NodeType.class);
 		}
 
 		assert axis != null;
 
-		ResultSequence nodes = axis.iterate(cn, _dc);
+		ResultSequence nodes = axis.iterate(cn, _legacyDc);
 		// get all nodes in the axis, and principal node
 		Pair arg = new Pair(axis.principal_node_kind().string_type(), nodes);
 
@@ -1642,10 +1581,10 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		if (test_prefix == null && type.equals("element")) {
 			// XXX make a new copy
 			name = new QName(null, name.local());
-			name.set_namespace(_dc.default_namespace());
+			name.set_namespace(_sc.getDefaultNamespace());
 
 			// if we actually have a namespace, pretend we do =D
-			if (name.namespace() != null)
+			if (name.namespace() != null && name.namespace().length() > 0)
 				test_prefix = "";
 		}
 
@@ -1733,9 +1672,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a result sequence
 	 */
 	public Object visit(VarRef e) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
-		Object var = _dc.get_variable(e.name());
+		Object var = getVariable(e.name());
 
 		assert var != null;
 
@@ -1746,7 +1685,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		   rs.concat((ResultSequence) var);	
 		}
 
-		return rs;
+		return rs.getSequence();
 	}
 
 	/**
@@ -1757,10 +1696,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a result sequence
 	 */
 	public Object visit(StringLiteral e) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		rs.add(e.value());
-		return rs;
+		return e.value();
 	}
 
 	/**
@@ -1771,10 +1707,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a result sequence
 	 */
 	public Object visit(IntegerLiteral e) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		rs.add(e.value());
-		return rs;
+		return e.value();
 	}
 
 	/**
@@ -1785,10 +1718,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a result sequence
 	 */
 	public Object visit(DoubleLiteral e) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		rs.add(e.value());
-		return rs;
+		return e.value();
 	}
 
 	/**
@@ -1799,10 +1729,10 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a result sequence
 	 */
 	public Object visit(DecimalLiteral e) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		rs.add(e.value());
-		return rs;
+		return rs.getSequence();
 	}
 
 	/**
@@ -1824,14 +1754,14 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a result sequence
 	 */
 	public Object visit(CntxItemExpr e) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
-		AnyType contextItem = _dc.context_item();
+		AnyType contextItem = focus().context_item();
 		if (contextItem == null) {
 			report_error(DynamicError.contextUndefined());
 		}
 		rs.add(contextItem);
-		return rs;
+		return rs.getSequence();
 	}
 
 	/**
@@ -1847,12 +1777,13 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		for (Iterator i = e.iterator(); i.hasNext();) {
 			Expr arg = (Expr) i.next();
 			// each argument will produce a result sequence
-			args.add(arg.accept(this));
+			args.add(newToOld((ResultSequence)arg.accept(this)));
 		}
 
 		try {
-			ResultSequence rs = _dc.evaluate_function(e.name(), args);
-			return rs;
+			Function function = _sc.resolveFunction(e.name().asQName(), args.size());
+			
+			return function.evaluate(args, _ec);
 		} catch (DynamicError err) {
 			report_error(err);
 			return null; // unreach
@@ -1901,16 +1832,20 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		case ItemType.QNAME:
 
 			// try {
-			if (!_dc.type_defined(e.qname()))
-				report_error(new StaticTypeNameError("Type not defined: "
-						+ e.qname().string()));
+			if (_sc.getTypeModel().lookupType(e.qname().namespace(), e.qname().local()) == null) {
+				if (BuiltinTypeLibrary.BUILTIN_TYPES.lookupType(e.qname().namespace(), e.qname().local()) == null)
+				{
+					report_error(new StaticTypeNameError("Type not defined: "
+							+ e.qname().string()));
+				}
+			}
 			
 			ResultSequence arg = (ResultSequence) ((Pair) _param)._two;
-			item_test(arg, e.qname());
+			((Pair) _param)._two = item_test(arg, e.qname());
 			break;
 
 		case ItemType.KINDTEST:
-			e.kind_test().accept(this);
+			((Pair) _param)._two = e.kind_test().accept(this);
 			break;
 		}
 
@@ -1918,33 +1853,37 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	}
 
 	private ResultSequence item_test(ResultSequence rs, QName qname) {
+		ResultBuffer rb = new ResultBuffer();
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			AnyType item = (AnyType) i.next();
 			
 			if (item instanceof NodeType) {
 				NodeType node = ((NodeType)item);
-				if (_dc.derives_from(node , qname)) continue;
-				// fall through => non-match
+				if (_legacyDc.derives_from(node , qname)) rb.add(node);
 			} else {
 				// atomic of some sort
-				if (qname.equals(ANY_ATOMIC_TYPE)) continue; // match !
+				if (qname.equals(ANY_ATOMIC_TYPE)) {
+					rb.add(item);
+					continue; // match !
+				}
 				
-				final AnyAtomicType aat = _dc.make_atomic(qname);
-				if (aat.getClass().isInstance(item)) continue;
+				final AnyAtomicType aat = _legacyDc.make_atomic(qname);
+				if (aat.getClass().isInstance(item)) rb.add(item);
 				
 				// fall through => non-match
 			}
-			i.remove();
 		}
-		return rs;
+		return rb.getSequence();
 	}
 
     private ResultSequence kind_test(ResultSequence rs, Class kind) {
+    	ResultBuffer rb = new ResultBuffer();
 		for (Iterator i = rs.iterator(); i.hasNext();) {
-			if (!kind.isInstance(i.next()))
-				i.remove();
+			Item item = (Item) i.next();
+			if (kind.isInstance(item))
+				rb.add(item);
 		}
-		return rs;
+		return rb.getSequence();
 	}
 
 	/**
@@ -1996,7 +1935,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 					if (elem_count > 1)
 						break;
 
-					elem = new ElementType((Element) child, this._dc.getTypeModel(child));
+					elem = new ElementType((Element) child, this._legacyDc.getTypeModel(child));
 				}
 			}
 
@@ -2009,8 +1948,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			assert elem != null;
 
 			// setup parameter for element test
-			ResultSequence res = ResultSequenceFactory.create_new();
-			res.add(elem);
+			ResultSequence res = new ResultBuffer.SingleResultSequence(elem);
 			_param = new Pair("element", res);
 
 			// do name test
@@ -2040,7 +1978,8 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	public Object visit(TextTest e) {
 		ResultSequence arg = (ResultSequence) ((Pair) _param)._two;
 
-		return kind_test(arg, TextType.class);
+		((Pair) _param)._two = kind_test(arg, TextType.class);
+		return ((Pair) _param)._two;
 	}
 
 	/**
@@ -2101,29 +2040,28 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultSequence rs = kind_test((ResultSequence) ((Pair) _param)._two,
 				AttrType.class);
 
-		// match the name if it's not a wild card
+		ResultBuffer rb = new ResultBuffer();
+		
 		QName name = e.name();
-		if (name != null && !e.wild()) {
-			for (Iterator i = rs.iterator(); i.hasNext();) {
-				if (!name_test((NodeType) i.next(), name, "attribute"))
-
-					i.remove();
-			}
-		}
-
-		// match the type
 		QName type = e.type();
-		if (type != null) {
-			for (Iterator i = rs.iterator(); i.hasNext();) {
-				NodeType node = (NodeType) i.next();
 
-				// check if element derives from
-				if (!_dc.derives_from(node, type))
-					i.remove();
+		for (Iterator i = rs.iterator(); i.hasNext();) {
+			NodeType node = (NodeType) i.next();
+			// match the name if it's not a wild card
+			if (name != null && !e.wild()) {
+				if (!name_test(node, name, "attribute"))
+					continue;
 			}
+			// match the type
+			if (type != null) {
+				// check if element derives from
+				if (!_legacyDc.derives_from(node, type))
+					continue;
+			}
+			rb.add(node);
 		}
-
-		return rs;
+		((Pair) _param)._two = rb.getSequence();
+		return ((Pair) _param)._two;
 	}
 
 	/**
@@ -2147,11 +2085,11 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		}
 
 		// check the type
-		TypeDefinition et = _dc.attribute_type_definition(name);
+		TypeDefinition et = _legacyDc.attribute_type_definition(name);
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			NodeType node = (NodeType) i.next();
 
-			if (!_dc.derives_from(node, et))
+			if (!_legacyDc.derives_from(node, et))
 				i.remove();
 
 		}
@@ -2167,45 +2105,35 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 * @return a result sequence
 	 */
 	public Object visit(ElementTest e) {
-
 		// filter out all elements
 		ResultSequence rs = kind_test((ResultSequence) ((Pair) _param)._two,
 				ElementType.class);
 
 		// match the name if it's not a wild card
-		QName name = e.name();
-		if (name != null && !e.wild()) {
-			for (Iterator i = rs.iterator(); i.hasNext();) {
-				if (!name_test((ElementType) i.next(), name, "element"))
+		ResultBuffer rb = new ResultBuffer();
+		QName nameTest = e.name();
+		QName typeTest = e.type();
+		for (Iterator i = rs.iterator(); i.hasNext();) {
+			NodeType node = (NodeType) i.next();
 
-					i.remove();
+			if (nameTest != null && !e.wild()) {
+				// skip if there's a name test and the name does not match
+				if (!name_test((ElementType) node, nameTest, "element")) continue;
 			}
-		}
-
-		// match the type
-		QName type = e.type();
-		if (type != null) {
-			for (Iterator i = rs.iterator(); i.hasNext();) {
-				NodeType node = (NodeType) i.next();
-
+			if (typeTest != null) {
 				// check if element derives from
-				if (_dc.derives_from(node, type)) {
-					// nilled may be true or false
-					if (e.qmark()) {
-					}
-					// nilled has to be false
-					else {
-						XSBoolean nilled = (XSBoolean) node.nilled().first();
-						if (nilled.value())
-							i.remove();
-					}
-
-				} else
-					i.remove();
+				if (! _legacyDc.derives_from(node, typeTest)) continue;
+				
+				// nilled may be true or false
+				if (! e.qmark()) {
+					XSBoolean nilled = (XSBoolean) node.nilled().first();
+					if (nilled.value()) continue;
+				}
+				rb.add(node);
 			}
 		}
-
-		return rs;
+		((Pair) _param)._two = rb.getSequence();
+		return ((Pair) _param)._two;
 	}
 
 	/**
@@ -2230,11 +2158,11 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		}
 
 		// check the type
-		TypeDefinition et = _dc.element_type_definition(name);
+		TypeDefinition et = _legacyDc.element_type_definition(name);
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			NodeType node = (NodeType) i.next();
 
-			if (!_dc.derives_from(node, et)) {
+			if (!_legacyDc.derives_from(node, et)) {
 				i.remove();
 				continue;
 			}
@@ -2252,12 +2180,11 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		// rule 1 of spec... if numeric type:
 		// if num eq position then true else false
 		if (rs.size() == 1) {
-			AnyType at = rs.get(0);
+			AnyType at = (AnyType) rs.item(0);
 
 			if (at instanceof NumericType) {
 				try {
-					_g_xsint.set_int(BigInteger.valueOf(_dc.context_position()));
-					return FsEq.fs_eq_fast(at, _g_xsint, _dc);
+					return FsEq.fs_eq_fast(at, new XSInteger(BigInteger.valueOf(_legacyDc.context_position())), _legacyDc);
 				} catch (DynamicError err) {
 					report_error(err);
 
@@ -2276,9 +2203,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 	// do the predicate for all items in focus
 	private ResultSequence do_predicate(Collection exprs) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
-		Focus focus = _dc.focus();
+		Focus focus = _legacyDc.focus();
 		int original_cp = focus.position();
 
 		// optimization
@@ -2300,7 +2227,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 							rs.add(focus.context_item());
 						}
 						focus.set_position(original_cp);
-						return rs;
+						return rs.getSequence();
 					}
 				}
 			}
@@ -2316,9 +2243,8 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			// if predicate is true, the context item is definitely
 			// in the sequence
 			if (predicate_truth(res))
-				rs.add(_dc.context_item());
+				rs.add(_legacyDc.context_item());
 
-			res.release();
 			if (!focus.advance_cp())
 				break;
 
@@ -2327,7 +2253,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		// restore
 		focus.set_position(original_cp);
 
-		return rs;
+		return rs.getSequence();
 	}
 
 	/**
@@ -2344,7 +2270,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			return rs;
 
 		// I take it predicates are logical ANDS...
-		Focus original_focus = _dc.focus();
+		Focus original_focus = _legacyDc.focus();
 
 		// go through all predicates
 		for (Iterator i = e.iterator(); i.hasNext();) {
@@ -2352,13 +2278,13 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			if (rs.size() == 0)
 				break;
 
-			_dc.set_focus(new Focus(rs));
+			_legacyDc.set_focus(new Focus(rs));
 			rs = do_predicate((Collection) i.next());
 
 		}
 
 		// restore focus [context switching ;D ]
-		_dc.set_focus(original_focus);
+		_legacyDc.set_focus(original_focus);
 		return rs;
 	}
 
@@ -2378,20 +2304,20 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		if (e.predicate_count() == 0)
 			return rs;
 
-		Focus original_focus = _dc.focus();
+		Focus original_focus = _legacyDc.focus();
 
 		// go through all predicates
 		for (Iterator i = e.iterator(); i.hasNext();) {
 			if (rs.size() == 0)
 				break;
 
-			_dc.set_focus(new Focus(rs));
+			_legacyDc.set_focus(new Focus(rs));
 			rs = do_predicate((Collection) i.next());
 
 		}
 
 		// restore focus [context switching ;D ]
-		_dc.set_focus(original_focus);
+		_legacyDc.set_focus(original_focus);
 		return rs;
 	}
 
