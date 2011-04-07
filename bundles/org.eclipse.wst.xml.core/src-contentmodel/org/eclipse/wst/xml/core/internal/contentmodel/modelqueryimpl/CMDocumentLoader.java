@@ -112,6 +112,8 @@ public class CMDocumentLoader
 	  boolean externalSchemaLoaded = false;
 	  if (document instanceof IDOMDocument) {
 		  final String baseLocation = ((IDOMDocument) document).getModel().getBaseLocation();
+		  if (baseLocation == null)
+			  return false;
 		  final IPath basePath = new Path(baseLocation);
 		  IFile file = null;
 		  if (basePath.segmentCount() > 1) {

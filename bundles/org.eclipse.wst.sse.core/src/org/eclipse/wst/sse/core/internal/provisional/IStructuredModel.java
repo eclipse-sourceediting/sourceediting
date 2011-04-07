@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -156,6 +156,9 @@ public interface IStructuredModel extends IAdaptable {
 	 * considers the "base" of the structured model. Frequently the location
 	 * is either a workspace root-relative path of a workspace resource or an
 	 * absolute path in the local file system.
+	 * 
+	 * @return the base location of the model. <code>null</code> may be returned in the scenario
+	 * where the model is created based on another model as in {@link org.eclipse.wst.sse.core.internal.model.ModelManagerImpl#createNewInstance(org.eclipse.wst.sse.core.internal.provisional.IStructuredModel)}
 	 */
 	String getBaseLocation();
 

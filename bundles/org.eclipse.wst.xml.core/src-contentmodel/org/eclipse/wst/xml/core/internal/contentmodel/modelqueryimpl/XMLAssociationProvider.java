@@ -245,6 +245,8 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
 	  final Document document = element.getOwnerDocument();
 	  if (document instanceof IDOMDocument) {
 		  final String baseLocation = ((IDOMDocument) document).getModel().getBaseLocation();
+		  if (baseLocation == null)
+			  return null;
 		  final IPath basePath = new Path(baseLocation);
 		  IFile file = null;
 		  if (basePath.segmentCount() > 1) {
