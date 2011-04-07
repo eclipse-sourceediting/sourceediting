@@ -15,8 +15,10 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -34,7 +36,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -70,7 +72,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -106,7 +108,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -142,7 +144,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -178,7 +180,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -214,7 +216,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -250,7 +252,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -286,7 +288,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -322,7 +324,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -358,7 +360,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -394,7 +396,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -430,7 +432,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -466,7 +468,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -502,7 +504,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -538,7 +540,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -574,7 +576,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -610,7 +612,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -646,7 +648,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -682,7 +684,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -718,7 +720,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -754,7 +756,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -790,7 +792,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -826,7 +828,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -862,7 +864,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -898,7 +900,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -934,7 +936,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -970,7 +972,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1006,7 +1008,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1042,7 +1044,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1078,7 +1080,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1114,7 +1116,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1150,7 +1152,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1186,7 +1188,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1222,7 +1224,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1258,7 +1260,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1294,7 +1296,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1330,7 +1332,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1366,7 +1368,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1402,7 +1404,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1438,7 +1440,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1474,7 +1476,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1510,7 +1512,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1546,7 +1548,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1582,7 +1584,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1618,7 +1620,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1654,7 +1656,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1690,7 +1692,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1726,7 +1728,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1762,7 +1764,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1798,7 +1800,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1834,7 +1836,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1870,7 +1872,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1906,7 +1908,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1942,7 +1944,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -1978,7 +1980,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2014,7 +2016,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2050,7 +2052,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2086,7 +2088,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2122,7 +2124,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2158,7 +2160,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2194,7 +2196,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2230,7 +2232,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2266,7 +2268,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2302,7 +2304,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2338,7 +2340,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2374,7 +2376,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2410,7 +2412,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2446,7 +2448,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2482,7 +2484,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2518,7 +2520,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2554,7 +2556,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2590,7 +2592,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2626,7 +2628,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2662,7 +2664,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2698,7 +2700,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2734,7 +2736,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2770,7 +2772,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2806,7 +2808,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2842,7 +2844,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2878,7 +2880,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2914,7 +2916,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2950,7 +2952,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -2986,7 +2988,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3022,7 +3024,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3058,7 +3060,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3094,7 +3096,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3130,7 +3132,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3166,7 +3168,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3202,7 +3204,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3238,7 +3240,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3274,7 +3276,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3310,7 +3312,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3346,7 +3348,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3382,7 +3384,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3418,7 +3420,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3454,7 +3456,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3490,7 +3492,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3526,7 +3528,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3562,7 +3564,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3598,7 +3600,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3634,7 +3636,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3670,7 +3672,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3706,7 +3708,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3742,7 +3744,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3778,7 +3780,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3814,7 +3816,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3850,7 +3852,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3886,7 +3888,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3922,7 +3924,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3958,7 +3960,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -3994,7 +3996,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4030,7 +4032,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       xpath = "1 instance of item((:comment:))";
@@ -4067,7 +4069,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4103,7 +4105,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4139,7 +4141,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4175,7 +4177,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4211,7 +4213,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4247,7 +4249,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4283,7 +4285,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4319,7 +4321,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4355,7 +4357,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4391,7 +4393,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4427,7 +4429,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4463,7 +4465,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4499,7 +4501,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4535,7 +4537,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4571,7 +4573,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4607,7 +4609,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4643,7 +4645,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4679,7 +4681,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4715,7 +4717,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4751,7 +4753,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4787,7 +4789,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4823,7 +4825,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4859,7 +4861,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4895,7 +4897,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4931,7 +4933,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -4967,7 +4969,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5003,7 +5005,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5039,7 +5041,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5075,7 +5077,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5111,7 +5113,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "not(1 instance of text((:comment:)))";
       String actual = null;
@@ -5147,7 +5149,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "not(1 instance of node((:comment:)))";
       String actual = null;
@@ -5183,7 +5185,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "not(1 instance of element((:comment:)))";
       String actual = null;
@@ -5219,7 +5221,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "not(1 instance of processing-instruction((:comment:)))";
       String actual = null;
@@ -5255,7 +5257,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       // XQuery is hardcoded here since the de-commentizer would catch this, too
       String xpath = "not(1 instance of comment((:comment:)))";
@@ -5292,7 +5294,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5328,7 +5330,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5364,7 +5366,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5400,7 +5402,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "() instance of empty-sequence((:comment:))";
       String actual = null;
@@ -5436,7 +5438,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5473,7 +5475,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5509,7 +5511,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5545,7 +5547,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5581,7 +5583,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5617,7 +5619,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5653,7 +5655,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5689,7 +5691,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5724,7 +5726,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5759,7 +5761,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5794,7 +5796,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5829,7 +5831,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5864,7 +5866,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5899,7 +5901,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5934,7 +5936,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -5969,7 +5971,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6004,7 +6006,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6039,7 +6041,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6074,7 +6076,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6109,7 +6111,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6144,7 +6146,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6179,7 +6181,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6214,7 +6216,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6250,7 +6252,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6286,7 +6288,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -6322,7 +6324,7 @@ public class SeqExprInstanceOfTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;

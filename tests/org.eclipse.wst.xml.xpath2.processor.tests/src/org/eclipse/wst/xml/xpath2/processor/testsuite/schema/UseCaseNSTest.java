@@ -4,8 +4,10 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.schema;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -23,7 +25,7 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       addNamespace("music","http://www.example.org/music/records");
       
 
@@ -61,7 +63,7 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       addNamespace("dt", "http://www.w3.org/2001/XMLSchema");
 
       String xpath = "$input-context//*[@dt:*]";

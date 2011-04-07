@@ -34,7 +34,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -70,7 +70,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -106,7 +106,7 @@ public class CatalogTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;

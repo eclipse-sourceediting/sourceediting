@@ -14,8 +14,10 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.schema;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -33,7 +35,7 @@ public class UseCaseSGMLTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context//report//para";
       String actual = null;
@@ -69,7 +71,7 @@ public class UseCaseSGMLTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context//intro/para";
       String actual = null;
@@ -105,7 +107,7 @@ public class UseCaseSGMLTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "((($input-context//chapter)[2]//section)[3]//para)[2]";
       String actual = null;
@@ -141,7 +143,7 @@ public class UseCaseSGMLTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context//para[@security = \"c\"]";
       String actual = null;
@@ -177,7 +179,7 @@ public class UseCaseSGMLTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context//section[.//title[contains(., \"is SGML\")]]";
       String actual = null;
@@ -213,7 +215,7 @@ public class UseCaseSGMLTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context//section[.//title/text()[contains(., \"is SGML\")]]";
       String actual = null;
@@ -249,7 +251,7 @@ public class UseCaseSGMLTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "for $id in $input-context//xref/@xrefid " +
                      "return $input-context//topic[@topicid = $id]";

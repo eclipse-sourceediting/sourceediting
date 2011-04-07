@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -41,7 +40,6 @@ import java.util.regex.Pattern;
 
 import javax.xml.XMLConstants;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -402,11 +400,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	private XPath2Expression newXPath = null;
 	private XPath oldXPath = null;
 	
-	protected void compileXPath(String xpath) throws XPathParserException, StaticError, XPathParserException {
-		compileXPath(null, xpath);
-	}
-
-	protected XPath compileXPath(DynamicContext dc, String xpath) throws XPathParserException, StaticError {
+	protected XPath compileXPath( String xpath) throws XPathParserException, StaticError {
 		if (useNewApi) {
 			newXPath = new Engine().parseExpression(xpath, staticContextBuilder);
 			return null;
@@ -419,8 +413,8 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			return path;
 		}
 	}
-	
-	protected XPath compileXPath(DynamicContext dc, String xpath, boolean isRootlessAccess) throws XPathParserException, StaticError {
+
+	protected XPath compileXPath(String xpath, boolean isRootlessAccess) throws XPathParserException, StaticError {
        XPathParser xpp = new JFlexCupParser();
        XPath path = null; 
        if (isRootlessAccess) {
@@ -430,7 +424,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
     	   path = xpp.parse(xpath); 
        }
        
-       StaticChecker name_check = new StaticNameResolver(dc);
+       StaticChecker name_check = new StaticNameResolver(dynamicContext);
        name_check.check(path);
        return path;
     }
@@ -711,7 +705,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		}
 	}
 
-	protected void addUserDefinedSimpleTypes(XSModel schema, DynamicContext dc) {
+	protected void addUserDefinedSimpleTypes(XSModel schema) {
 	      XSNamedMap xstypes = schema.getComponents(XSConstants.TYPE_DEFINITION);
 	      if (xstypes.getLength() == 0) {
 	    	  return;
@@ -751,19 +745,18 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	 
 	   }
 
-	protected void assertXPathTrue(String xpath, DynamicContext dc, Document domDoc) {
-		XSBoolean result = evaluateBoolXPath(xpath, dc, domDoc);
+	protected void assertXPathTrue(String xpath, Document domDoc) {
+		XSBoolean result = evaluateBoolXPath(xpath, domDoc);
 		assertEquals(true, result.value());
 	}
 
-	protected XSBoolean evaluateBoolXPath(String xpath, DynamicContext dc, Document doc) {
-		return  (XSBoolean) evaluateSimpleXPath(xpath, dc, doc, XSBoolean.class);
+	protected XSBoolean evaluateBoolXPath(String xpath, Document doc) {
+		return  (XSBoolean) evaluateSimpleXPath(xpath, doc, XSBoolean.class);
 	}
 		
-	protected AnyType evaluateSimpleXPath(String xpath, DynamicContext dc, Document doc, Class resultClass) {
-		XPath path;
+	protected AnyType evaluateSimpleXPath(String xpath, Document doc, Class resultClass) {
 		try {
-			path = compileXPath(dc, xpath);
+			compileXPath(xpath);
 		}
 		catch (XPathParserException e) {
 			throw new RuntimeException("XPath parse: " + e.getMessage(), e);

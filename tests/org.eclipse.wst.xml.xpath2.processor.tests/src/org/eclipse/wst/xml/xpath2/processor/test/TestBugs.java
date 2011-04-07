@@ -70,16 +70,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.xpath2.api.CollationProvider;
-import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
@@ -87,7 +81,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
-import org.eclipse.wst.xml.xpath2.processor.util.StaticContextBuilder;
 import org.osgi.framework.Bundle;
 import org.xml.sax.InputSource;
 
@@ -114,7 +107,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 //		String xpath = "($input-context/atomic:root/atomic:integer) union ($input-context/atomic:root/atomic:integer)";
 		String xpath = "(/element/eq eq 'eq') or //child::xs:*";
@@ -137,7 +130,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "string-length(x) > 2";
           compileXPath(xpath);
@@ -159,7 +152,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// test with arity 2
 		String xpath = "substring(x, 3) = 'happy'";
@@ -182,7 +175,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// test with arity 3
 		String xpath = "substring(x, 3, 4) = 'happ'";
@@ -205,7 +198,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "x/string() = 'unhappy'";
           compileXPath(xpath);
@@ -227,7 +220,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "x/string-length() = 7";
           compileXPath(xpath);
@@ -249,7 +242,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "x/normalize-space() = 'unhappy'";
           compileXPath(xpath);
@@ -272,7 +265,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:anyURI('abc') eq xs:anyURI('abc')";
           compileXPath(xpath);
@@ -299,7 +292,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// we pass XSModel as null for this test case. Otherwise, we would
 		// get an exception.
-		DynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 
 		String xpath = "base-uri(note) eq xs:anyURI('http://resolved-locally/xml/note.xml')";
 
@@ -326,7 +319,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		InputSource inputSource = getTestSource("http://resolved-locally/xml/note.xml");
 		domDoc = docBuilder.parse(inputSource);
 
-		DynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 
 		String xpath = "document-uri(/) eq xs:anyURI('http://resolved-locally/xml/note.xml')";
           compileXPath(xpath);
@@ -353,7 +346,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:boolean('1') eq xs:boolean('true')";
           compileXPath(xpath);
@@ -375,7 +368,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:date(x) eq xs:date('2009-01-01')";
           compileXPath(xpath);
@@ -397,7 +390,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:integer(x) gt 100";
           compileXPath(xpath);
@@ -420,7 +413,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// long min value is -9223372036854775808
 		// and max value can be 9223372036854775807
@@ -445,7 +438,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// int min value is -2147483648
 		// and max value can be 2147483647
@@ -471,7 +464,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "person/@dob eq xs:date('2006-12-10')";
           compileXPath(xpath);
@@ -496,7 +489,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "person/dob eq xs:date('2006-12-10')";
           compileXPath(xpath);
@@ -520,24 +513,22 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
-		assertTrue(evaluateBoolean(dc, "empty( nilled( / ) )"));
-		assertTrue(evaluateBoolean(dc, "empty( nilled( /root/@attr1 ) )"));
-		assertTrue(evaluateBoolean(dc, "empty( nilled( /root/element1/text() ) )"));
+		assertTrue(evaluateBoolean("empty( nilled( / ) )"));
+		assertTrue(evaluateBoolean("empty( nilled( /root/@attr1 ) )"));
+		assertTrue(evaluateBoolean("empty( nilled( /root/element1/text() ) )"));
 
-		assertFalse(evaluateBoolean(dc, "nilled(/root/element1)"));
-		assertTrue(evaluateBoolean(dc, "nilled(/root/element2)"));
-		assertFalse(evaluateBoolean(dc, "nilled(/root/element3)"));
-		assertFalse(evaluateBoolean(dc, "nilled(/root/element4)"));
+		assertFalse(evaluateBoolean("nilled(/root/element1)"));
+		assertTrue(evaluateBoolean("nilled(/root/element2)"));
+		assertFalse(evaluateBoolean("nilled(/root/element3)"));
+		assertFalse(evaluateBoolean("nilled(/root/element4)"));
 	}
 
 	// I can't stand to see so much duplicated code!!!
-	private boolean evaluateBoolean(DynamicContext dc, String xpath) throws Exception {
-          compileXPath(xpath);
-          ResultSequence rs = evaluate(domDoc);
-
-
+	private boolean evaluateBoolean(String xpath) throws Exception {
+		compileXPath(xpath);
+		ResultSequence rs = evaluate(domDoc);
 		XSBoolean result = (XSBoolean) rs.first();
 
 		return result.value();
@@ -553,7 +544,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:nonPositiveInteger is -INF
 		// max value is 0
@@ -579,7 +570,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:negativeInteger is -INF
 		// max value is -1
@@ -605,7 +596,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:short is -32768
 		// max value of xs:short is 32767
@@ -631,7 +622,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:nonNegativeInteger is 0
 		// max value of xs:nonNegativeInteger is INF
@@ -657,7 +648,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:unsignedLong is 0
 		// max value of xs:unsignedLong is 18446744073709551615
@@ -683,7 +674,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:positiveInteger is 1
 		// max value of xs:positiveInteger is INF
@@ -709,7 +700,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:byte is -128
 		// max value of xs:byte is 127
@@ -735,7 +726,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:unsignedInt is 0
 		// max value of xs:unsignedInt is 4294967295
@@ -760,7 +751,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:unsignedShort is 0
 		// max value of xs:unsignedShort is 65535
@@ -785,7 +776,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:yearMonthDuration('P2Y11M') * 2.3";
           compileXPath(xpath);
@@ -808,7 +799,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:yearMonthDuration('P2Y11M') div 1.5";
           compileXPath(xpath);
@@ -831,7 +822,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:yearMonthDuration('P3Y4M') div xs:yearMonthDuration('-P1Y4M')";
           compileXPath(xpath);
@@ -854,7 +845,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:dayTimeDuration('PT2H10M') * 2.1";
           compileXPath(xpath);
@@ -877,7 +868,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:dayTimeDuration('P1DT2H30M10.5S') div 1.5";
           compileXPath(xpath);
@@ -900,7 +891,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "-(xs:double('0'))";
           compileXPath(xpath);
@@ -923,7 +914,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "-(xs:float('0'))";
           compileXPath(xpath);
@@ -946,7 +937,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// min value of xs:unsignedByte is 0
 		// max value of xs:unsignedByte is 255
@@ -971,7 +962,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:base64Binary('cmxjZ3R4c3JidnllcmVuZG91aWpsbXV5Z2NhamxpcmJkaWFhbmFob2VsYXVwZmJ1Z2dmanl2eHlzYmhheXFtZXR0anV2dG1q') eq xs:base64Binary('cmxjZ3R4c3JidnllcmVuZG91aWpsbXV5Z2NhamxpcmJkaWFhbmFob2VsYXVwZmJ1Z2dmanl2eHlzYmhheXFtZXR0anV2dG1q')";
           compileXPath(xpath);
@@ -994,7 +985,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:hexBinary('767479716c6a647663') eq xs:hexBinary('767479716c6a647663')";
           compileXPath(xpath);
@@ -1021,7 +1012,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode eq 'air'";
           compileXPath(xpath);
@@ -1046,7 +1037,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "'\"\"'"; // the expression '""' contains no escapes
           compileXPath(xpath);
@@ -1067,7 +1058,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "concat(  'Don''t try this' ,  \" at \"\"home\"\",\"  ,  ' she said'  )";
           compileXPath(xpath);
@@ -1081,11 +1072,11 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	public void testBug280555_collations() throws Exception {
 		// Setup context
-		DefaultDynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 		setCollationProvider(createLengthCollatorProvider());
 
 		// Parse expression
-		compileXPath(dc, " 'abc' < 'de' ");
+		compileXPath(" 'abc' < 'de' ");
 
 		// Evaluate once
 		XSBoolean bval = (XSBoolean) evaluate(domDoc).first();
@@ -1093,7 +1084,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// Evaluate again with the funny collator
 		setDefaultCollation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
-		XSBoolean bval2 = (XSBoolean) evaluate(null).first();
+		XSBoolean bval2 = (XSBoolean) evaluate(domDoc).first();
 		assertFalse("'abc' < 'de' should be false for the strange collations", bval2.value());
 	}
 
@@ -1107,7 +1098,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		// set up XPath default namespace in Dynamic Context
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addXPathDefaultNamespace("http://xyz");
 
 		String xpath = "X/message = 'hello'";
@@ -1133,7 +1124,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element()";
           compileXPath(xpath);
@@ -1171,7 +1162,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(mode)";
           compileXPath(xpath);
@@ -1196,7 +1187,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(mode, modeType)";
           compileXPath(xpath);
@@ -1221,7 +1212,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(mode, abc)";
           compileXPath(xpath);
@@ -1245,7 +1236,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x instance of element(x, x_Type)*";
           compileXPath(xpath);
@@ -1269,7 +1260,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "(/Example/x, /Example) instance of element(x, x_Type)+";
           compileXPath(xpath);
@@ -1291,7 +1282,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "(/Example/x, /Example/x) instance of element(x, x_Type)";
           compileXPath(xpath);
@@ -1313,7 +1304,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "(/Example/x, /Example/x) instance of element(x, x_Type)+";
           compileXPath(xpath);
@@ -1335,14 +1326,14 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
-		assertXPathTrue("/Example/x instance of x_Type+", dc, domDoc);
-		assertXPathTrue("/Example/x instance of element(x, x_Type)+", dc, domDoc);
-		assertXPathTrue("not (/Example/x instance of element(z, x_Type)+)", dc, domDoc);
-		assertXPathTrue("/Example/x[2]/@mesg instance of mesg_Type", dc, domDoc);
-		assertXPathTrue("/Example/x[2]/@mesg instance of attribute(mesg, mesg_Type)", dc, domDoc);
-		assertXPathTrue("not (/Example/x[2]/@mesg instance of attribute(cesc, mesg_Type))", dc, domDoc);
+		assertXPathTrue("/Example/x instance of x_Type+", domDoc);
+		assertXPathTrue("/Example/x instance of element(x, x_Type)+", domDoc);
+		assertXPathTrue("not (/Example/x instance of element(z, x_Type)+)", domDoc);
+		assertXPathTrue("/Example/x[2]/@mesg instance of mesg_Type", domDoc);
+		assertXPathTrue("/Example/x[2]/@mesg instance of attribute(mesg, mesg_Type)", domDoc);
+		assertXPathTrue("not (/Example/x[2]/@mesg instance of attribute(cesc, mesg_Type))", domDoc);
 	}
 
 	public void testXPathInstanceOf6() throws Exception {
@@ -1355,7 +1346,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x instance of element(*, x_Type)*";
           compileXPath(xpath);
@@ -1379,7 +1370,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x instance of element(x, x_Type)+";
           compileXPath(xpath);
@@ -1403,7 +1394,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 	
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 	
 		String xpath = "/Example/x[1] instance of element(*, x_Type) and not (/Example/x[1] instance of element(*, y_Type))";
           compileXPath(xpath);
@@ -1428,7 +1419,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(x)";
           compileXPath(xpath);
@@ -1452,7 +1443,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "number(Example/x) ge 18";
           compileXPath(xpath);
@@ -1475,7 +1466,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "number(xs:unsignedByte('20')) ge 18";
           compileXPath(xpath);
@@ -1499,7 +1490,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute()";
           compileXPath(xpath);
@@ -1523,7 +1514,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(xx)";
           compileXPath(xpath);
@@ -1547,7 +1538,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(*, mesg_Type)";
           compileXPath(xpath);
@@ -1571,7 +1562,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(*, abc)";
           compileXPath(xpath);
@@ -1595,7 +1586,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(mesg, mesg_Type)";
           compileXPath(xpath);
@@ -1619,7 +1610,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(mesg, abc)";
           compileXPath(xpath);
@@ -1643,7 +1634,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/x/@mesg instance of attribute(mesg, mesg_Type)*";
           compileXPath(xpath);
@@ -1665,7 +1656,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "Example/*[1]/name() eq 'x'";
           compileXPath(xpath);
@@ -1688,10 +1679,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "xs:normalizedString('abcs\t') eq xs:normalizedString('abcs')";
-		 compileXPath(dc, xpath);
+		 compileXPath(xpath);
 
 		boolean testSuccess = false;
 		try {
@@ -1714,7 +1705,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "/element/attribute";
 		compileXPath(xpath);
@@ -1730,7 +1721,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "X gt 99";
           compileXPath(xpath);
@@ -1754,7 +1745,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "data(X) instance of xs:integer+";
           compileXPath(xpath);
@@ -1778,7 +1769,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// 1st test
 		String xpath = "data(X) instance of xs:integer+";
@@ -1803,7 +1794,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		String xpath = "data(X)";
           compileXPath(xpath);
           ResultSequence rs = evaluate(domDoc);
@@ -1828,7 +1819,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		String xpath = "data(X)";
           compileXPath(xpath);
           ResultSequence rs = evaluate(domDoc);
@@ -1848,7 +1839,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		String xpath = "data(X)";
           compileXPath(xpath);
           ResultSequence rs = evaluate(domDoc);
@@ -1861,7 +1852,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_1() 
 	                                                       throws Exception {
 		// Bug 325262
-		DynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 		
         ResultSequence rs = ResultSequenceFactory.create_new();
         setVariable("value",rs);
@@ -1877,7 +1868,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_2() 
 	                                                       throws Exception {
 		// Bug 325262
-		DynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 		
         ResultSequence rs = ResultSequenceFactory.create_new();
         rs.add(new XSInteger(BigInteger.valueOf(2)));
@@ -1894,7 +1885,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		// test b
 		xpath = "deep-equal($value, (2, 4, 6))";
-		compileXPath(dc, xpath);
+		compileXPath(xpath);
 		rsRes = evaluate(domDoc);        
 		result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
@@ -1903,7 +1894,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_3() 
 	                                                      throws Exception {
 		// Bug 325262
-		DynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 		
 		ResultSequence rs = ResultSequenceFactory.create_new();
         rs.add(new XSInteger(BigInteger.valueOf(2)));
@@ -1927,7 +1918,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// the strings in below are not valid tokens (they contain 2 consecutive spaces)
 		String xpath = "xs:token('abcs  abcde') eq xs:token('abcs  abcde')";
@@ -1954,7 +1945,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// test a)
 		String xpath = "xs:Name('x:abc') eq xs:Name('x:abc')"; 
@@ -1965,7 +1956,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		// test b)
 		xpath = "xs:NCName('x:abc') eq xs:NCName('x:abc')"; 
-		compileXPath(dc, xpath);
+		compileXPath(xpath);
 		try {
 		   rsRes = evaluate(domDoc);
 		   assertTrue(false);
@@ -1977,14 +1968,14 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		// test c)
 		xpath = "xs:NCName('abc') eq xs:NCName('abc')"; 
-		compileXPath(dc, xpath);
+		compileXPath(xpath);
 		rsRes = evaluate(domDoc);
 		result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
 		
 		// test d)
 		xpath = "xs:ID('x:abc') eq xs:ID('x:abc')"; 
-		compileXPath(dc, xpath);
+		compileXPath(xpath);
 		try {
 		   rsRes = evaluate(domDoc);
 		   assertTrue(false);
@@ -1996,7 +1987,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		// test e)
 		xpath = "xs:ID('abc') eq xs:ID('abc')"; 
-		compileXPath(dc, xpath);
+		compileXPath(xpath);
 		rsRes = evaluate(domDoc);
 		result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
@@ -2011,13 +2002,13 @@ public class TestBugs extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		// set up XPath default namespace in Dynamic Context
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
         setVariable("value",new XSString("2.5"));
 		addXPathDefaultNamespace("http://www.w3.org/2001/XMLSchema");
 
 		String xpath = "$value castable as double";
 		compileXPath(xpath);
-		ResultSequence rs = evaluate(null);
+		ResultSequence rs = evaluate(domDoc);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -2035,13 +2026,12 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		// test a)
 		String xpath = "/x";
-		XPath path = null;
 		try {
-		    path = compileXPath(dc, xpath, true);
+		    compileXPath(xpath, true);
 		    // test fails
 		    assertTrue(false);
 		}
@@ -2055,7 +2045,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// test b)
 		xpath = "//x";
 		try {
-		    path = compileXPath(dc, xpath, true);
+		    compileXPath(xpath, true);
 		    // test fails
 		    assertTrue(false);
 		}
@@ -2069,7 +2059,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// test c)
 		xpath = "/";
 		try {
-		    path = compileXPath(dc, xpath, true);
+		    compileXPath(xpath, true);
 		    // test fails
 		    assertTrue(false);
 		}
@@ -2083,7 +2073,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// test d)
 		xpath = "x/y[/a]";
 		try {
-		    path = compileXPath(dc, xpath, true);
+		    compileXPath(xpath, true);
 		    // test fails
 		    assertTrue(false);
 		}
@@ -2097,7 +2087,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// test e)
 		xpath = ".//x";
 		try {
-		    path = compileXPath(dc, xpath, true);
+		    compileXPath(xpath, true);
 		    // test passes
 		    assertTrue(true);
 		}
@@ -2117,7 +2107,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		
 		// test a)
 		String xpath = "count(subsequence(X/*, 2)) eq 2";
@@ -2128,14 +2118,14 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		// test b)
 		xpath = "subsequence(X/*, 2) instance of element(*, xs:integer)+";
-		compileXPath(dc, xpath);		
+		compileXPath(xpath);		
 		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test c)
 		xpath = "deep-equal(subsequence((1,2,3,4), 2), (2,3,4))";
-		compileXPath(dc, xpath);		
+		compileXPath(xpath);		
 		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
@@ -2143,7 +2133,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// test d)
 		// hetrogeneous sequence as input. arity 3 mode.
 		xpath = "deep-equal(subsequence(('a', 1, 1.5), 2, 2), (1, 1.5))";
-		compileXPath(dc, xpath);		
+		compileXPath(xpath);		
 		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
@@ -2151,7 +2141,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// test e)
 		// hetrogeneous sequence as input. arity 3 mode (startingLoc is < 0).
 		xpath = "deep-equal(subsequence(('a', 1, 1.5, 'b'), -2, 3), ())";
-		compileXPath(dc, xpath);		
+		compileXPath(xpath);		
 		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
@@ -2167,7 +2157,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 		
-		DynamicContext dc = setupDynamicContext(schema);;		
+		setupDynamicContext(schema);;		
 		
 		// test a)
 		String xpath = "count(//a) = count(distinct-values(//a))";
@@ -2178,14 +2168,14 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		// test b)
 		xpath = "count(X/a) = count(distinct-values(X/a))";
-		compileXPath(dc, xpath);		
+		compileXPath(xpath);		
 		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test c)
 		xpath = "count(//b) = count(distinct-values(//b))";
-		compileXPath(dc, xpath);		
+		compileXPath(xpath);		
 		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("false", actual);
@@ -2201,62 +2191,61 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// Get XSModel object for the Schema
 		XSModel schema = getGrammar(schemaURL);
 		
-		DynamicContext dc = setupDynamicContext(schema);;		
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		setupDynamicContext(schema);		
 
 		// test a)
 		String xpath = "/X/a[1] = true()";
-		XPath path = compileXPath(dc, xpath);		
-		ResultSequence rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		ResultSequence rs = evaluate(domDoc);
 		String actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test b)
 		xpath = "/X/a[1]/@att = true()";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test c)
 		xpath = "/X/a[2] = true()";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test d)
 		xpath = "/X/a[2]/@att = true()";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test e)
 		xpath = "/X/a[3] = false()";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test f)
 		xpath = "/X/a[3]/@att = false()";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test g)
 		xpath = "/X/a[4] = false()";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test h)
 		xpath = "/X/a[4]/@att = false()";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 	}

@@ -11,18 +11,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
-
 import java.net.URL;
-
-
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-
-
 
 public class Bug269833 extends AbstractPsychoPathTest{
 		
@@ -46,7 +37,7 @@ public class Bug269833 extends AbstractPsychoPathTest{
  		   // Get XML Schema Information for the Document  
  		   XSModel schema = getGrammar();  
  		  
- 		   DynamicContext dc = setupDynamicContext(schema);  
+ 		   setupDynamicContext(schema);  
  		    
  		     
  		   String xpath = "/note/to";

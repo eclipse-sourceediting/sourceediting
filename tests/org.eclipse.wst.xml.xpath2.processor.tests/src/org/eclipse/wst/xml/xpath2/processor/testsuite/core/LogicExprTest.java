@@ -14,8 +14,10 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -33,7 +35,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "false() and false()";
       String actual = null;
@@ -69,7 +71,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "true() and false()";
       String actual = null;
@@ -105,7 +107,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "false() and true()";
       String actual = null;
@@ -141,7 +143,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "true() and true()";
       String actual = null;
@@ -177,7 +179,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "() and ()";
       String actual = null;
@@ -213,7 +215,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(1) and ()";
       String actual = null;
@@ -249,7 +251,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "() and (1)";
       String actual = null;
@@ -285,7 +287,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(1) and (1)";
       String actual = null;
@@ -321,7 +323,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(0) and ()";
       String actual = null;
@@ -357,7 +359,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "() and (0)";
       String actual = null;
@@ -393,7 +395,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(0) and (0)";
       String actual = null;
@@ -429,7 +431,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(1) and (0)";
       String actual = null;
@@ -465,7 +467,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(0) and (1)";
       String actual = null;
@@ -501,7 +503,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(0) and ($input-context/bib/book/price/text())";
       String actual = null;
@@ -537,7 +539,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "($input-context/bib/book/price/text()) and (1)";
       String actual = null;
@@ -573,7 +575,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "($input-context/bib/book/price/text()) and ($input-context/bib/book/price/text())";
       String actual = null;
@@ -609,7 +611,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"\" and ''";
       String actual = null;
@@ -645,7 +647,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"\" and 'a'";
       String actual = null;
@@ -681,7 +683,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"0\" and ''";
       String actual = null;
@@ -717,7 +719,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"a\" and '0'";
       String actual = null;
@@ -753,7 +755,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:string(\"\") and xs:string('')";
       String actual = null;
@@ -789,7 +791,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:string(\"\") and xs:string('abc')";
       String actual = null;
@@ -825,7 +827,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:string(\"abc\") and xs:string('')";
       String actual = null;
@@ -861,7 +863,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:string(\"0\") and xs:string('abc')";
       String actual = null;
@@ -897,7 +899,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:untypedAtomic('') and xs:untypedAtomic(\"\")";
       String actual = null;
@@ -933,7 +935,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:untypedAtomic('abc') and xs:untypedAtomic(\"\")";
       String actual = null;
@@ -969,7 +971,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:untypedAtomic('') and xs:untypedAtomic(\"0\")";
       String actual = null;
@@ -1005,7 +1007,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:untypedAtomic('abc') and xs:untypedAtomic(\"0\")";
       String actual = null;
@@ -1041,7 +1043,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "0 and 0";
       String actual = null;
@@ -1077,7 +1079,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "0 and 1";
       String actual = null;
@@ -1113,7 +1115,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "1 and 0";
       String actual = null;
@@ -1149,7 +1151,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "0 and -1";
       String actual = null;
@@ -1185,7 +1187,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "-1 and 1";
       String actual = null;
@@ -1221,7 +1223,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float(0) and xs:float(0)";
       String actual = null;
@@ -1257,7 +1259,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float(0) and xs:float(1)";
       String actual = null;
@@ -1293,7 +1295,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float(-1) and xs:float(0)";
       String actual = null;
@@ -1329,7 +1331,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float(1) and xs:float(-1)";
       String actual = null;
@@ -1365,7 +1367,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('NaN') and xs:float(0)";
       String actual = null;
@@ -1401,7 +1403,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('NaN') and xs:float(1)";
       String actual = null;
@@ -1437,7 +1439,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('NaN') and xs:float('NaN')";
       String actual = null;
@@ -1473,7 +1475,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('INF') and xs:float(0)";
       String actual = null;
@@ -1509,7 +1511,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('INF') and xs:float(1)";
       String actual = null;
@@ -1545,7 +1547,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('INF') and xs:float('NaN')";
       String actual = null;
@@ -1581,7 +1583,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('-INF') and xs:float(0)";
       String actual = null;
@@ -1617,7 +1619,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('-INF') and xs:float(1)";
       String actual = null;
@@ -1653,7 +1655,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('-INF') and xs:float('NaN')";
       String actual = null;
@@ -1689,7 +1691,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('-INF') and xs:float('INF')";
       String actual = null;
@@ -1725,7 +1727,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double(0) and xs:double(0)";
       String actual = null;
@@ -1761,7 +1763,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double(0) and xs:double(1)";
       String actual = null;
@@ -1797,7 +1799,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double(-1) and xs:double(0)";
       String actual = null;
@@ -1833,7 +1835,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double(1) and xs:double(-1)";
       String actual = null;
@@ -1869,7 +1871,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('NaN') and xs:double(0)";
       String actual = null;
@@ -1905,7 +1907,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('NaN') and xs:double(1)";
       String actual = null;
@@ -1941,7 +1943,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('NaN') and xs:double('NaN')";
       String actual = null;
@@ -1977,7 +1979,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('INF') and xs:double(0)";
       String actual = null;
@@ -2013,7 +2015,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('INF') and xs:double(1)";
       String actual = null;
@@ -2049,7 +2051,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('INF') and xs:double('NaN')";
       String actual = null;
@@ -2085,7 +2087,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('-INF') and xs:double(0)";
       String actual = null;
@@ -2121,7 +2123,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('-INF') and xs:double(1)";
       String actual = null;
@@ -2157,7 +2159,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('-INF') and xs:double('NaN')";
       String actual = null;
@@ -2193,7 +2195,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('-INF') and xs:double('INF')";
       String actual = null;
@@ -2229,7 +2231,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(0) and xs:decimal(0)";
       String actual = null;
@@ -2265,7 +2267,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(0) and xs:decimal(1)";
       String actual = null;
@@ -2301,7 +2303,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(-1) and xs:decimal(0)";
       String actual = null;
@@ -2337,7 +2339,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(1) and xs:decimal(-1)";
       String actual = null;
@@ -2373,7 +2375,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(9.99999999999999999999999999) and xs:decimal(0)";
       String actual = null;
@@ -2409,7 +2411,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(-123456789.123456789123456789) and xs:decimal(1)";
       String actual = null;
@@ -2445,7 +2447,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(9.99999999999999999999999999) and xs:decimal(-123456789.123456789123456789)";
       String actual = null;
@@ -2481,7 +2483,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(0) and xs:integer(0)";
       String actual = null;
@@ -2517,7 +2519,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(0) and xs:integer(1)";
       String actual = null;
@@ -2553,7 +2555,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(-1) and xs:integer(0)";
       String actual = null;
@@ -2589,7 +2591,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(1) and xs:integer(-1)";
       String actual = null;
@@ -2625,7 +2627,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(99999999999999999) and xs:integer(0)";
       String actual = null;
@@ -2661,7 +2663,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(-99999999999999999) and xs:integer(1)";
       String actual = null;
@@ -2697,7 +2699,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(99999999999999999) and xs:integer(-99999999999999999)";
       String actual = null;
@@ -2733,7 +2735,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(0) and xs:nonPositiveInteger(0)";
       String actual = null;
@@ -2769,7 +2771,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(0) and xs:nonPositiveInteger(-1)";
       String actual = null;
@@ -2805,7 +2807,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-1) and xs:nonPositiveInteger(0)";
       String actual = null;
@@ -2841,7 +2843,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-1) and xs:nonPositiveInteger(-1)";
       String actual = null;
@@ -2877,7 +2879,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-99999999999999999) and xs:nonPositiveInteger(0)";
       String actual = null;
@@ -2913,7 +2915,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-1) and xs:nonPositiveInteger(-9999999999)";
       String actual = null;
@@ -2949,7 +2951,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-99999999999999999) and xs:nonPositiveInteger(-99999999999999999)";
       String actual = null;
@@ -2985,7 +2987,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(0) and xs:nonNegativeInteger(0)";
       String actual = null;
@@ -3021,7 +3023,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(0) and xs:nonNegativeInteger(1)";
       String actual = null;
@@ -3057,7 +3059,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(1) and xs:nonNegativeInteger(0)";
       String actual = null;
@@ -3093,7 +3095,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(1) and xs:nonNegativeInteger(1)";
       String actual = null;
@@ -3129,7 +3131,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(9999999999) and xs:nonNegativeInteger(0)";
       String actual = null;
@@ -3165,7 +3167,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(1) and xs:nonNegativeInteger(99999999999999999)";
       String actual = null;
@@ -3201,7 +3203,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(99999999999999999) and xs:nonNegativeInteger(99999999999999999)";
       String actual = null;
@@ -3237,7 +3239,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:negativeInteger(-1) and xs:negativeInteger(-1)";
       String actual = null;
@@ -3273,7 +3275,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:negativeInteger(-99999999999999999) and xs:negativeInteger(-1)";
       String actual = null;
@@ -3309,7 +3311,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:negativeInteger(-99999999999999999) and xs:negativeInteger(-99999999999999999)";
       String actual = null;
@@ -3345,7 +3347,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:positiveInteger(1) and xs:positiveInteger(1)";
       String actual = null;
@@ -3381,7 +3383,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:positiveInteger(99999999999999999) and xs:positiveInteger(1)";
       String actual = null;
@@ -3417,7 +3419,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:positiveInteger(99999999999999999) and xs:positiveInteger(99999999999999999)";
       String actual = null;
@@ -3453,7 +3455,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(0) and xs:long(0)";
       String actual = null;
@@ -3489,7 +3491,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(0) and xs:long(1)";
       String actual = null;
@@ -3525,7 +3527,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(-1) and xs:long(0)";
       String actual = null;
@@ -3561,7 +3563,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(1) and xs:long(-1)";
       String actual = null;
@@ -3597,7 +3599,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(9223372036854775807) and xs:long(0)";
       String actual = null;
@@ -3633,7 +3635,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(9223372036854775807) and xs:long(-1)";
       String actual = null;
@@ -3669,7 +3671,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(-99999999999999999) and xs:long(0)";
       String actual = null;
@@ -3705,7 +3707,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(-99999999999999999) and xs:long(1)";
       String actual = null;
@@ -3741,7 +3743,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(99999999999999999) and xs:long(-99999999999999999)";
       String actual = null;
@@ -3777,7 +3779,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(0) and xs:unsignedLong(0)";
       String actual = null;
@@ -3813,7 +3815,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(0) and xs:unsignedLong(1)";
       String actual = null;
@@ -3849,7 +3851,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(1) and xs:unsignedLong(0)";
       String actual = null;
@@ -3885,7 +3887,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(1) and xs:unsignedLong(1)";
       String actual = null;
@@ -3921,7 +3923,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(9223372036854775807) and xs:unsignedLong(0)";
       String actual = null;
@@ -3957,7 +3959,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(9223372036854775807) and xs:unsignedLong(1)";
       String actual = null;
@@ -3993,7 +3995,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(99999999999999999) and xs:unsignedLong(99999999999999999)";
       String actual = null;
@@ -4029,7 +4031,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(0) and xs:int(0)";
       String actual = null;
@@ -4065,7 +4067,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(0) and xs:int(1)";
       String actual = null;
@@ -4101,7 +4103,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(-1) and xs:int(0)";
       String actual = null;
@@ -4137,7 +4139,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(1) and xs:int(-1)";
       String actual = null;
@@ -4173,7 +4175,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(2147483647) and xs:int(0)";
       String actual = null;
@@ -4209,7 +4211,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(2147483647) and xs:int(-1)";
       String actual = null;
@@ -4245,7 +4247,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(-2147483648) and xs:int(0)";
       String actual = null;
@@ -4281,7 +4283,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(-2147483648) and xs:int(1)";
       String actual = null;
@@ -4317,7 +4319,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(2147483647) and xs:int(-2147483648)";
       String actual = null;
@@ -4353,7 +4355,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(0) and xs:unsignedInt(0)";
       String actual = null;
@@ -4389,7 +4391,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(0) and xs:unsignedInt(1)";
       String actual = null;
@@ -4425,7 +4427,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(1) and xs:unsignedInt(0)";
       String actual = null;
@@ -4461,7 +4463,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(1) and xs:unsignedInt(1)";
       String actual = null;
@@ -4497,7 +4499,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(4294967295) and xs:unsignedInt(0)";
       String actual = null;
@@ -4533,7 +4535,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(4294967295) and xs:unsignedInt(1)";
       String actual = null;
@@ -4569,7 +4571,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(4294967295) and xs:unsignedInt(4294967295)";
       String actual = null;
@@ -4605,7 +4607,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(0) and xs:short(0)";
       String actual = null;
@@ -4641,7 +4643,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(0) and xs:short(1)";
       String actual = null;
@@ -4677,7 +4679,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(-1) and xs:short(0)";
       String actual = null;
@@ -4713,7 +4715,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(1) and xs:short(-1)";
       String actual = null;
@@ -4749,7 +4751,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(32767) and xs:short(0)";
       String actual = null;
@@ -4785,7 +4787,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(32767) and xs:short(-1)";
       String actual = null;
@@ -4821,7 +4823,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(-32768) and xs:short(0)";
       String actual = null;
@@ -4857,7 +4859,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(-32768) and xs:short(1)";
       String actual = null;
@@ -4893,7 +4895,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(32767) and xs:short(-32768)";
       String actual = null;
@@ -4929,7 +4931,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(0) and xs:unsignedShort(0)";
       String actual = null;
@@ -4965,7 +4967,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(0) and xs:unsignedShort(1)";
       String actual = null;
@@ -5001,7 +5003,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(1) and xs:unsignedShort(0)";
       String actual = null;
@@ -5037,7 +5039,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(1) and xs:unsignedShort(1)";
       String actual = null;
@@ -5073,7 +5075,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(65535) and xs:unsignedShort(0)";
       String actual = null;
@@ -5109,7 +5111,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(65535) and xs:unsignedShort(1)";
       String actual = null;
@@ -5145,7 +5147,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(65535) and xs:unsignedShort(65535)";
       String actual = null;
@@ -5181,7 +5183,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(0) and xs:byte(0)";
       String actual = null;
@@ -5217,7 +5219,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(0) and xs:byte(1)";
       String actual = null;
@@ -5253,7 +5255,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(-1) and xs:byte(0)";
       String actual = null;
@@ -5289,7 +5291,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(1) and xs:byte(-1)";
       String actual = null;
@@ -5325,7 +5327,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(127) and xs:byte(0)";
       String actual = null;
@@ -5361,7 +5363,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(127) and xs:byte(-1)";
       String actual = null;
@@ -5397,7 +5399,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(-128) and xs:byte(0)";
       String actual = null;
@@ -5433,7 +5435,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(-128) and xs:byte(1)";
       String actual = null;
@@ -5469,7 +5471,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(127) and xs:byte(-128)";
       String actual = null;
@@ -5505,7 +5507,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(0) and xs:unsignedByte(0)";
       String actual = null;
@@ -5541,7 +5543,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(0) and xs:unsignedByte(1)";
       String actual = null;
@@ -5577,7 +5579,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(1) and xs:unsignedByte(0)";
       String actual = null;
@@ -5613,7 +5615,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(1) and xs:unsignedByte(1)";
       String actual = null;
@@ -5649,7 +5651,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(255) and xs:unsignedByte(0)";
       String actual = null;
@@ -5685,7 +5687,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(255) and xs:unsignedByte(1)";
       String actual = null;
@@ -5721,7 +5723,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(255) and xs:unsignedByte(255)";
       String actual = null;
@@ -5757,7 +5759,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "false() or false()";
       String actual = null;
@@ -5793,7 +5795,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "false() or true()";
       String actual = null;
@@ -5829,7 +5831,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "false() or true()";
       String actual = null;
@@ -5865,7 +5867,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "true() or true()";
       String actual = null;
@@ -5901,7 +5903,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "() or ()";
       String actual = null;
@@ -5937,7 +5939,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(1) or ()";
       String actual = null;
@@ -5973,7 +5975,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "() or (1)";
       String actual = null;
@@ -6009,7 +6011,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(1) or (1)";
       String actual = null;
@@ -6045,7 +6047,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(0) or ()";
       String actual = null;
@@ -6081,7 +6083,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "() or (0)";
       String actual = null;
@@ -6117,7 +6119,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(0) or (0)";
       String actual = null;
@@ -6153,7 +6155,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(1) or (0)";
       String actual = null;
@@ -6189,7 +6191,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(0) or (1)";
       String actual = null;
@@ -6225,7 +6227,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(0) or ($input-context/bib/book/price/text())";
       String actual = null;
@@ -6261,7 +6263,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "($input-context/bib/book/price/text()) or (1)";
       String actual = null;
@@ -6297,7 +6299,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "($input-context/bib/book/price/text()) or ($input-context/bib/book/price/text())";
       String actual = null;
@@ -6333,7 +6335,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"\" or ''";
       String actual = null;
@@ -6369,7 +6371,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"\" or 'a'";
       String actual = null;
@@ -6405,7 +6407,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"0\" or ''";
       String actual = null;
@@ -6441,7 +6443,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"a\" or '0'";
       String actual = null;
@@ -6477,7 +6479,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:string(\"\") or xs:string('')";
       String actual = null;
@@ -6513,7 +6515,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:string(\"\") or xs:string('abc')";
       String actual = null;
@@ -6549,7 +6551,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:string(\"abc\") or xs:string('')";
       String actual = null;
@@ -6585,7 +6587,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:string(\"0\") or xs:string('abc')";
       String actual = null;
@@ -6621,7 +6623,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:untypedAtomic('') or xs:untypedAtomic(\"\")";
       String actual = null;
@@ -6657,7 +6659,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:untypedAtomic('abc') or xs:untypedAtomic(\"\")";
       String actual = null;
@@ -6693,7 +6695,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:untypedAtomic('') or xs:untypedAtomic(\"0\")";
       String actual = null;
@@ -6729,7 +6731,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:untypedAtomic('abc') or xs:untypedAtomic(\"0\")";
       String actual = null;
@@ -6765,7 +6767,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "0 or 0";
       String actual = null;
@@ -6801,7 +6803,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "0 or 1";
       String actual = null;
@@ -6837,7 +6839,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "1 or 0";
       String actual = null;
@@ -6873,7 +6875,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "-1 or 1";
       String actual = null;
@@ -6909,7 +6911,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "-1 or 1";
       String actual = null;
@@ -6945,7 +6947,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float(0) or xs:float(0)";
       String actual = null;
@@ -6981,7 +6983,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float(0) or xs:float(1)";
       String actual = null;
@@ -7017,7 +7019,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float(-1) or xs:float(0)";
       String actual = null;
@@ -7053,7 +7055,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float(1) or xs:float(-1)";
       String actual = null;
@@ -7089,7 +7091,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('NaN') or xs:float(0)";
       String actual = null;
@@ -7125,7 +7127,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('NaN') or xs:float(1)";
       String actual = null;
@@ -7161,7 +7163,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('NaN') or xs:float('NaN')";
       String actual = null;
@@ -7197,7 +7199,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('INF') or xs:float(0)";
       String actual = null;
@@ -7233,7 +7235,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('INF') or xs:float(1)";
       String actual = null;
@@ -7269,7 +7271,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('INF') or xs:float('NaN')";
       String actual = null;
@@ -7305,7 +7307,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('-INF') or xs:float(0)";
       String actual = null;
@@ -7341,7 +7343,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('-INF') or xs:float(1)";
       String actual = null;
@@ -7377,7 +7379,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('-INF') or xs:float('NaN')";
       String actual = null;
@@ -7413,7 +7415,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:float('-INF') or xs:float('INF')";
       String actual = null;
@@ -7449,7 +7451,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double(0) or xs:double(0)";
       String actual = null;
@@ -7485,7 +7487,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double(0) or xs:double(1)";
       String actual = null;
@@ -7521,7 +7523,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double(-1) or xs:double(0)";
       String actual = null;
@@ -7557,7 +7559,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double(1) or xs:double(-1)";
       String actual = null;
@@ -7593,7 +7595,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('NaN') or xs:double(0)";
       String actual = null;
@@ -7629,7 +7631,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('NaN') or xs:double(1)";
       String actual = null;
@@ -7665,7 +7667,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('NaN') or xs:double('NaN')";
       String actual = null;
@@ -7701,7 +7703,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('INF') or xs:double(0)";
       String actual = null;
@@ -7737,7 +7739,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('INF') or xs:double(1)";
       String actual = null;
@@ -7773,7 +7775,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('INF') or xs:double('NaN')";
       String actual = null;
@@ -7809,7 +7811,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('-INF') or xs:double(0)";
       String actual = null;
@@ -7845,7 +7847,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('-INF') or xs:double(1)";
       String actual = null;
@@ -7881,7 +7883,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('-INF') or xs:double('NaN')";
       String actual = null;
@@ -7917,7 +7919,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:double('-INF') or xs:double('INF')";
       String actual = null;
@@ -7953,7 +7955,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(0) or xs:decimal(0)";
       String actual = null;
@@ -7989,7 +7991,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(0) or xs:decimal(1)";
       String actual = null;
@@ -8025,7 +8027,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(-1) or xs:decimal(0)";
       String actual = null;
@@ -8061,7 +8063,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(1) or xs:decimal(-1)";
       String actual = null;
@@ -8097,7 +8099,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(9.99999999999999999999999999) or xs:decimal(0)";
       String actual = null;
@@ -8133,7 +8135,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(-123456789.123456789123456789) or xs:decimal(1)";
       String actual = null;
@@ -8169,7 +8171,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:decimal(9.99999999999999999999999999) or xs:decimal(-123456789.123456789123456789)";
       String actual = null;
@@ -8205,7 +8207,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(0) or xs:integer(0)";
       String actual = null;
@@ -8241,7 +8243,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(0) or xs:integer(1)";
       String actual = null;
@@ -8277,7 +8279,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(-1) or xs:integer(0)";
       String actual = null;
@@ -8313,7 +8315,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(1) or xs:integer(-1)";
       String actual = null;
@@ -8349,7 +8351,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(99999999999999999) or xs:integer(0)";
       String actual = null;
@@ -8385,7 +8387,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(-99999999999999999) or xs:integer(1)";
       String actual = null;
@@ -8421,7 +8423,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:integer(99999999999999999) or xs:integer(-99999999999999999)";
       String actual = null;
@@ -8457,7 +8459,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(0) or xs:nonPositiveInteger(0)";
       String actual = null;
@@ -8493,7 +8495,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(0) or xs:nonPositiveInteger(-1)";
       String actual = null;
@@ -8529,7 +8531,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-1) or xs:nonPositiveInteger(0)";
       String actual = null;
@@ -8565,7 +8567,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-1) or xs:nonPositiveInteger(-1)";
       String actual = null;
@@ -8601,7 +8603,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-99999999999999999) or xs:nonPositiveInteger(0)";
       String actual = null;
@@ -8637,7 +8639,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = " xs:nonPositiveInteger(-1) or xs:nonPositiveInteger(-99999999999999999)";
       String actual = null;
@@ -8673,7 +8675,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonPositiveInteger(-99999999999999999) or xs:nonPositiveInteger(-99999999999999999)";
       String actual = null;
@@ -8709,7 +8711,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(0) or xs:nonNegativeInteger(0)";
       String actual = null;
@@ -8745,7 +8747,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(0) or xs:nonNegativeInteger(1)";
       String actual = null;
@@ -8781,7 +8783,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(1) or xs:nonNegativeInteger(0)";
       String actual = null;
@@ -8817,7 +8819,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(1) or xs:nonNegativeInteger(1)";
       String actual = null;
@@ -8853,7 +8855,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(99999999999999999) or xs:nonNegativeInteger(0)";
       String actual = null;
@@ -8889,7 +8891,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(99999999999999999) or xs:nonNegativeInteger(0)";
       String actual = null;
@@ -8925,7 +8927,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:nonNegativeInteger(99999999999999999) or xs:nonNegativeInteger(99999999999999999)";
       String actual = null;
@@ -8961,7 +8963,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:negativeInteger(-1) or xs:negativeInteger(-1)";
       String actual = null;
@@ -8997,7 +8999,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:negativeInteger(-99999999999999999) or xs:negativeInteger(-1)";
       String actual = null;
@@ -9033,7 +9035,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:negativeInteger(-99999999999999999) or xs:negativeInteger(-99999999999999999)";
       String actual = null;
@@ -9069,7 +9071,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:positiveInteger(1) or xs:positiveInteger(1)";
       String actual = null;
@@ -9105,7 +9107,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:positiveInteger(99999999999999999) or xs:positiveInteger(1)";
       String actual = null;
@@ -9141,7 +9143,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:positiveInteger(99999999999999999) or xs:positiveInteger(99999999999999999)";
       String actual = null;
@@ -9177,7 +9179,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(0) or xs:long(0)";
       String actual = null;
@@ -9213,7 +9215,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(0) or xs:long(1)";
       String actual = null;
@@ -9249,7 +9251,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(-1) or xs:long(0)";
       String actual = null;
@@ -9285,7 +9287,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(1) or xs:long(-1)";
       String actual = null;
@@ -9321,7 +9323,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(9223372036854775807) or xs:long(0)";
       String actual = null;
@@ -9357,7 +9359,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(9223372036854775807) or xs:long(-1)";
       String actual = null;
@@ -9393,7 +9395,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(-99999999999999999) or xs:long(0)";
       String actual = null;
@@ -9429,7 +9431,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:long(-99999999999999999) or xs:long(1)";
       String actual = null;
@@ -9465,7 +9467,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = " xs:long(99999999999999999) or xs:long(-99999999999999999)";
       String actual = null;
@@ -9501,7 +9503,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(0) or xs:unsignedLong(0)";
       String actual = null;
@@ -9537,7 +9539,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(0) or xs:unsignedLong(1)";
       String actual = null;
@@ -9573,7 +9575,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = " xs:unsignedLong(1) or xs:unsignedLong(0)";
       String actual = null;
@@ -9609,7 +9611,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(1) or xs:unsignedLong(1)";
       String actual = null;
@@ -9645,7 +9647,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(9223372036854775807) or xs:unsignedLong(0)";
       String actual = null;
@@ -9681,7 +9683,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(9223372036854775807) or xs:unsignedLong(1)";
       String actual = null;
@@ -9717,7 +9719,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedLong(99999999999999999) or xs:unsignedLong(99999999999999999)";
       String actual = null;
@@ -9753,7 +9755,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(0) or xs:int(0)";
       String actual = null;
@@ -9789,7 +9791,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(0) or xs:int(1)";
       String actual = null;
@@ -9825,7 +9827,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(-1) or xs:int(0)";
       String actual = null;
@@ -9861,7 +9863,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(1) or xs:int(-1)";
       String actual = null;
@@ -9897,7 +9899,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(2147483647) or xs:int(0)";
       String actual = null;
@@ -9933,7 +9935,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(2147483647) or xs:int(-1)";
       String actual = null;
@@ -9969,7 +9971,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(-2147483648) or xs:int(0)";
       String actual = null;
@@ -10005,7 +10007,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(-2147483648) or xs:int(1)";
       String actual = null;
@@ -10041,7 +10043,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:int(2147483647) or xs:int(-2147483648)";
       String actual = null;
@@ -10077,7 +10079,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(0) or xs:unsignedInt(0)";
       String actual = null;
@@ -10113,7 +10115,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(0) or xs:unsignedInt(1)";
       String actual = null;
@@ -10149,7 +10151,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(1) or xs:unsignedInt(0)";
       String actual = null;
@@ -10185,7 +10187,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(1) or xs:unsignedInt(1)";
       String actual = null;
@@ -10221,7 +10223,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(4294967295) or xs:unsignedInt(0)";
       String actual = null;
@@ -10257,7 +10259,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(4294967295) or xs:unsignedInt(1)";
       String actual = null;
@@ -10293,7 +10295,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedInt(4294967295) or xs:unsignedInt(4294967295)";
       String actual = null;
@@ -10329,7 +10331,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(0) or xs:short(0)";
       String actual = null;
@@ -10365,7 +10367,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(0) or xs:short(1)";
       String actual = null;
@@ -10401,7 +10403,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(-1) or xs:short(0)";
       String actual = null;
@@ -10437,7 +10439,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(1) or xs:short(-1)";
       String actual = null;
@@ -10473,7 +10475,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(32767) or xs:short(0)";
       String actual = null;
@@ -10509,7 +10511,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(32767) or xs:short(-1)";
       String actual = null;
@@ -10545,7 +10547,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(-32768) or xs:short(0)";
       String actual = null;
@@ -10581,7 +10583,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(-32768) or xs:short(1)";
       String actual = null;
@@ -10617,7 +10619,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:short(32767) or xs:short(-32768)";
       String actual = null;
@@ -10653,7 +10655,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(0) or xs:unsignedShort(0)";
       String actual = null;
@@ -10689,7 +10691,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(0) or xs:unsignedShort(1)";
       String actual = null;
@@ -10725,7 +10727,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(1) or xs:unsignedShort(0)";
       String actual = null;
@@ -10761,7 +10763,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(1) or xs:unsignedShort(1)";
       String actual = null;
@@ -10797,7 +10799,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(65535) or xs:unsignedShort(0)";
       String actual = null;
@@ -10833,7 +10835,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(65535) or xs:unsignedShort(1)";
       String actual = null;
@@ -10869,7 +10871,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedShort(65535) or xs:unsignedShort(65535)";
       String actual = null;
@@ -10905,7 +10907,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(0) or xs:byte(0)";
       String actual = null;
@@ -10941,7 +10943,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(0) or xs:byte(1)";
       String actual = null;
@@ -10977,7 +10979,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(-1) or xs:byte(0)";
       String actual = null;
@@ -11013,7 +11015,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(1) or xs:byte(-1)";
       String actual = null;
@@ -11049,7 +11051,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = " xs:byte(127) or xs:byte(0) ";
       String actual = null;
@@ -11085,7 +11087,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(127) or xs:byte(-1)";
       String actual = null;
@@ -11121,7 +11123,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(-128) or xs:byte(0)";
       String actual = null;
@@ -11157,7 +11159,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(-128) or xs:byte(1)";
       String actual = null;
@@ -11193,7 +11195,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:byte(127) or xs:byte(-128)";
       String actual = null;
@@ -11229,7 +11231,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(0) or xs:unsignedByte(0)";
       String actual = null;
@@ -11265,7 +11267,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(0) or xs:unsignedByte(1)";
       String actual = null;
@@ -11301,7 +11303,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(1) or xs:unsignedByte(0)";
       String actual = null;
@@ -11337,7 +11339,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(1) or xs:unsignedByte(1)";
       String actual = null;
@@ -11373,7 +11375,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(255) or xs:unsignedByte(0)";
       String actual = null;
@@ -11409,7 +11411,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(255) or xs:unsignedByte(1)";
       String actual = null;
@@ -11445,7 +11447,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "xs:unsignedByte(255) or xs:unsignedByte(255)";
       String actual = null;

@@ -18,8 +18,10 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
 import org.xml.sax.SAXException;
       
@@ -39,8 +41,8 @@ public class NumericEqualSITest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
-      addUserDefinedSimpleTypes(schema, dc);
+      setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -77,8 +79,8 @@ public class NumericEqualSITest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
-      addUserDefinedSimpleTypes(schema, dc);
+      setupDynamicContext(schema);
+      addUserDefinedSimpleTypes(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;

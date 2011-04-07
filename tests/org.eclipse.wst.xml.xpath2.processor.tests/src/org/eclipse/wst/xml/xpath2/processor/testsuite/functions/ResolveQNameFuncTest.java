@@ -13,14 +13,10 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.StaticError;
 import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
 
 public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
@@ -35,7 +31,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "fn:resolve-QName(\"aName::\", /doc)";
 
@@ -69,7 +65,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "fn:resolve-QName(\"p1:doc\", /doc)";
 
@@ -103,7 +99,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "fn:resolve-QName((), /doc)";
 
@@ -137,7 +133,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace("cm", "http://www.example.com");
 		addNamespace("ed", "http://www.example.edu");
 
@@ -173,7 +169,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace("cm", "http://www.example.com");
 		addNamespace("ed", "http://www.example.edu");
 
@@ -209,7 +205,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace("cm", "http://www.example.com");
 		addNamespace("ed", "http://www.example.edu");
 
@@ -245,7 +241,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace("cm", "http://www.example.com");
 		addNamespace("ed", "http://www.example.edu");
 
@@ -281,7 +277,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace(null, "http://www.w3.org/XQueryTest/someExamples");
 
 		String xpath = "fn:string(fn:namespace-uri-from-QName(fn:resolve-QName(\"E6-Root\", /E6-Root)))";
@@ -316,7 +312,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "fn:resolve-QName()";
 
@@ -350,7 +346,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "fn:resolve-QName(\"wrongparam\")";
 
@@ -384,7 +380,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "fn:resolve-QName(\"wrongparam\", \"takes a node\", \"wrong\")";
 
@@ -418,7 +414,7 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = "fn:empty(fn:resolve-QName((), \"a string\"))";
 

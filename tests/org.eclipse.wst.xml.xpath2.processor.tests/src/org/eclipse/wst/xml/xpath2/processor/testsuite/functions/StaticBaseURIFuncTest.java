@@ -14,8 +14,10 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -32,7 +34,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -68,7 +70,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String uri = "ftp://ftp.is.co.za/rfc/somefile.txt";
       setBaseUri(uri);
 
@@ -107,7 +109,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "mailto:John.Doe@example.com"; 
       setBaseUri(baseuri);
 
@@ -145,7 +147,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "news:comp.infosystems.www.servers.unix";
       setBaseUri(baseuri);
 
@@ -183,7 +185,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "telnet://192.0.2.16:80/";
       setBaseUri(baseuri);
 
@@ -221,7 +223,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "tel:+1-816-555-1212";
       setBaseUri(baseuri);
 
@@ -259,7 +261,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
       setBaseUri(baseuri);
 
@@ -297,7 +299,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "http://www.example.com";
       setBaseUri(baseuri);
 
@@ -335,7 +337,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       setBaseUri("http://www.example.com");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
@@ -372,7 +374,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "http://www.example.com";
       setBaseUri(baseuri);
 
@@ -410,7 +412,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "http://www.example.com";
       setBaseUri(baseuri);
 
@@ -448,7 +450,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "http://www.example.com";
       setBaseUri(baseuri);
 
@@ -486,7 +488,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "http://www.example.com";
       setBaseUri(baseuri);
 
@@ -524,7 +526,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       String baseuri = "http://www.example.com";
       setBaseUri(baseuri);
 

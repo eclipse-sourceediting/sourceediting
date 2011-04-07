@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined;
 
-import org.apache.xerces.xs.XSObject;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;

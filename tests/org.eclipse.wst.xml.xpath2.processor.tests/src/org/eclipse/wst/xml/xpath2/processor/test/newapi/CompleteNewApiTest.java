@@ -35,14 +35,11 @@ import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
 import org.eclipse.wst.xml.xpath2.processor.Engine;
-import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.StaticError;
 import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.XercesLoader;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeModel;
 import org.eclipse.wst.xml.xpath2.processor.util.StaticContextBuilder;
 import org.osgi.framework.Bundle;
@@ -81,12 +78,12 @@ public class CompleteNewApiTest extends XMLTestCase {
 		return schema;
 	}
 
-	private Schema getSchema(InputStream schemaIs) throws SAXException {
-		SchemaFactory sf = SchemaFactory
-				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Schema schema = sf.newSchema(new StreamSource(schemaIs));
-		return schema;
-	}
+//	private Schema getSchema(InputStream schemaIs) throws SAXException {
+//		SchemaFactory sf = SchemaFactory
+//				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//		Schema schema = sf.newSchema(new StreamSource(schemaIs));
+//		return schema;
+//	}
 
 	protected XSModel getGrammar(URL schemaURL) throws IOException,
 			SAXException {

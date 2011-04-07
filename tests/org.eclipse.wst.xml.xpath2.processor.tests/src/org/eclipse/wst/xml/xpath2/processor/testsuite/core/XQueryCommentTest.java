@@ -14,8 +14,10 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -34,7 +36,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       addNamespace("fsm", "http://www.example.com/filesystem");
 
       String xpath = "(: comment :)\n($input-context//fsm:Folder)[1]/fsm:File[1]/fsm:FileName";
@@ -72,7 +74,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       addNamespace("fsm", "http://www.example.com/filesystem");
 
       String xpath = "if (:test (: yada (: neato :) :) :) ($input-context/fsm:MyComputer)\n" + 
@@ -111,7 +113,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
       addNamespace("fsm", "http://www.example.com/filesystem");
 
       String xpath = "if (:test:)(:t2:)(:t3:) ($input-context/fsm:MyComputer) then \"true\" else \"false\"";
@@ -148,7 +150,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context/south(: comment :)";
       String actual = null;
@@ -184,7 +186,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "(1, 2, (: comment :) 3, 4)";
       String actual = null;
@@ -220,7 +222,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "\"10\" cast as (: type comment :) xs:integer ?";
       String actual = null;
@@ -255,7 +257,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -290,7 +292,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -325,7 +327,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -360,7 +362,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -395,7 +397,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;

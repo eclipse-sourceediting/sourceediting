@@ -12,8 +12,6 @@
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -21,7 +19,6 @@ import javax.xml.validation.SchemaFactory;
 import org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.xml.sax.SAXException;
 
@@ -37,7 +34,7 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
@@ -71,7 +68,7 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
@@ -105,7 +102,7 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
@@ -142,7 +139,7 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
@@ -171,7 +168,7 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 

@@ -15,11 +15,14 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
+import org.eclipse.wst.xml.xpath2.processor.XercesLoader;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnCollection;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
 import org.w3c.dom.Document;
@@ -40,7 +43,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
@@ -75,7 +78,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
@@ -110,7 +113,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
+		setupDynamicContext(schema);
 
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
@@ -146,8 +149,8 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
-		loadCollection1Default(dc);
+		setupDynamicContext(schema);
+		loadCollection1Default();
 
 		String xpath = "fn:count(fn:collection(\"" + COLLECTION1 + "\"))";
 		String actual = null;
@@ -183,8 +186,8 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
-		loadCollection1Default(dc);
+		setupDynamicContext(schema);
+		loadCollection1Default();
 
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
@@ -220,8 +223,8 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
-		loadCollection2Default(dc);
+		setupDynamicContext(schema);
+		loadCollection2Default();
 
 		String xpath = "fn:count(fn:collection(\"" + COLLECTION2 + "\"))";
 		String actual = null;
@@ -257,8 +260,8 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
-		loadCollection2Default(dc);
+		setupDynamicContext(schema);
+		loadCollection2Default();
 
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
@@ -294,8 +297,8 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
-		loadCollection2Default(dc);
+		setupDynamicContext(schema);
+		loadCollection2Default();
 
 		String xpath = "fn:collection(\"" + COLLECTION2 + "\")//*[text()[contains(.,\"TCP/IP\")]]";
 		String actual = null;
@@ -331,8 +334,8 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		// Get XML Schema Information for the Document
 		XSModel schema = getGrammar();
 
-		DynamicContext dc = setupDynamicContext(schema);
-		loadCollection1Default(dc);
+		setupDynamicContext(schema);
+		loadCollection1Default();
 
 		String xpath = "for $d in fn:collection(\"" + COLLECTION1 + "\") return ($d//title)[1]";
 		String actual = null;
@@ -356,7 +359,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 
 	}
 
-	private void loadCollection1Default(DynamicContext dc) throws Exception {
+	private void loadCollection1Default() throws Exception {
 		DOMLoader domload = new XercesLoader();
 		URL fileURL = bundle.getEntry("/TestSources/bib.xml");
 		Document dom1 = domload.load(fileURL.openStream());
@@ -371,7 +374,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		setCollections(map);
 	}
 
-	private void loadCollection2Default(DynamicContext dc) throws Exception {
+	private void loadCollection2Default() throws Exception {
 		DOMLoader domload = new XercesLoader();
 		URL fileURL = bundle.getEntry("/TestSources/bib.xml");
 		Document dom1 = domload.load(fileURL.openStream());

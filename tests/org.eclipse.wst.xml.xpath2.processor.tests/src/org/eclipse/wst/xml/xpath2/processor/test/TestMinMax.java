@@ -14,15 +14,10 @@ package org.eclipse.wst.xml.xpath2.processor.test;
 import java.util.Comparator;
 
 import org.eclipse.wst.xml.xpath2.api.CollationProvider;
-import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.StaticError;
 import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 
 public class TestMinMax extends AbstractPsychoPathTest {
 
@@ -60,7 +55,7 @@ public class TestMinMax extends AbstractPsychoPathTest {
 
 	private void assertXPathEvalation(String xpath, String expectedResult) throws XPathParserException, StaticError,
 			DynamicError {
-		DynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
           compileXPath(xpath);
           ResultSequence rs = evaluate(domDoc);
 
@@ -87,7 +82,7 @@ public class TestMinMax extends AbstractPsychoPathTest {
 	}
 
 	public void testStringMax() throws Exception {
-		DefaultDynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 		setCollationProvider(createLengthCollatorProvider());
 
 		String xpath = "max( ('1000', '200', '30', '4') )";

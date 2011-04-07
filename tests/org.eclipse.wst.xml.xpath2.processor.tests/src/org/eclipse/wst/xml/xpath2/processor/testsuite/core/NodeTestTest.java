@@ -14,8 +14,10 @@ package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
 
 // NodeTests need to compare based on Fragments.  We which means need to compare DOM outputs.
@@ -33,7 +35,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -69,7 +71,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -105,7 +107,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       //String xpath = extractXPathExpression(xqFile, inputFile);
       String xpath = "$input-context/bib/book/editor/affiliation/text()";
@@ -142,7 +144,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//processing-instruction('a-pi'))";
       String actual = null;
@@ -178,7 +180,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//processing-instruction('a-pi'))";
       String actual = null;
@@ -214,7 +216,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//center/text())";
       String actual = null;
@@ -250,7 +252,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//center/text())";
       String actual = null;
@@ -286,7 +288,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//center/comment())";
       String actual = null;
@@ -322,7 +324,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//center/comment())";
       String actual = null;
@@ -358,7 +360,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//comment())";
       String actual = null;
@@ -394,7 +396,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//comment())";
       String actual = null;
@@ -430,7 +432,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//center/processing-instruction())";
       String actual = null;
@@ -466,7 +468,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//center/processing-instruction())";
       String actual = null;
@@ -502,7 +504,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//processing-instruction())";
       String actual = null;
@@ -538,7 +540,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//processing-instruction())";
       String actual = null;
@@ -574,7 +576,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "fn:count($input-context//center/processing-instruction('a-pi'))";
       String actual = null;
@@ -610,7 +612,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context1//text() and fn:true()";
       String actual = null;
@@ -646,7 +648,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context1//text() or fn:true()";
       String actual = null;
@@ -682,7 +684,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context1//text() and fn:false()";
       String actual = null;
@@ -718,7 +720,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context1//text() or fn:false()";
       String actual = null;
@@ -754,7 +756,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context1//overtime/node() or fn:false()";
       String actual = null;
@@ -790,7 +792,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context1//overtime/node() or fn:true()";
       String actual = null;
@@ -826,7 +828,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context1//overtime/node() and fn:false()";
       String actual = null;
@@ -862,7 +864,7 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
+      setupDynamicContext(schema);
 
       String xpath = "$input-context1//overtime/node() and fn:true()";
       String actual = null;
