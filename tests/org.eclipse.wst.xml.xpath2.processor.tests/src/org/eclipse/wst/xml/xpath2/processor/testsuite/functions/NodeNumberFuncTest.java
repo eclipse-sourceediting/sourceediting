@@ -39,10 +39,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -76,10 +75,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -113,10 +111,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -150,10 +147,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -188,10 +184,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -225,10 +220,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -262,10 +256,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -299,10 +292,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -336,10 +328,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -373,10 +364,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -410,10 +400,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -447,10 +436,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -484,10 +472,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -521,10 +508,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -558,10 +544,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -595,10 +580,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -632,10 +616,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -669,10 +652,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -706,10 +688,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -743,10 +724,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -780,10 +760,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -817,10 +796,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -854,10 +832,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -891,10 +868,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -928,10 +904,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -965,10 +940,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1002,10 +976,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1039,10 +1012,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1076,10 +1048,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1113,10 +1084,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1150,10 +1120,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1187,10 +1156,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1224,10 +1192,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1261,10 +1228,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1298,10 +1264,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1335,10 +1300,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1372,10 +1336,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1409,10 +1372,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1446,10 +1408,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1483,10 +1444,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1520,10 +1480,9 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -1557,10 +1516,8 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String xpath = "fn:number()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, null);
-	      ResultSequence rs = eval.evaluate(path);
+	   	  compileXPath(xpath);
+	      ResultSequence rs = evaluate(null);
          
           actual = buildResultString(rs);
 	
@@ -1596,8 +1553,7 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
-	      ResultSequence rs = eval.evaluate(path);
+	      ResultSequence rs = evaluate(null); // no context
          
           actual = buildResultString(rs);
 	

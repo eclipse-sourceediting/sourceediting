@@ -38,10 +38,9 @@ public class CatalogTest extends AbstractPsychoPathTest {
       String xpath = "for $x in $input-context//*:input-file[count(@variable) = 0 and ./text() != \"emptydoc\"] return string($x/../@name)";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<missing-variable>" + buildXMLResultString(rs) + "</missing-variable>";
 	
@@ -75,10 +74,9 @@ public class CatalogTest extends AbstractPsychoPathTest {
       String xpath = "$input-context//*:test-case[@scenario = \"standard\"][fn:count(*:output-file) = 0]/@name/string()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<standard-no-outputfile>" + buildXMLResultString(rs) + "</standard-no-outputfile>";
 	
@@ -113,10 +111,9 @@ public class CatalogTest extends AbstractPsychoPathTest {
     	  "$input-context//*:test-case[@scenario = \"runtime-error\" or @scenario = \"parse-error\"][fn:count(*:expected-error) = 0 and fn:count(*:output-file[@compare = \"Inspect\"]) = 0]/@name/string()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<error-no-expected-error>" + buildXMLResultString(rs) + "</error-no-expected-error>";
 	

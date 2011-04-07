@@ -29,10 +29,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -66,10 +65,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -103,10 +101,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -140,10 +137,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -177,10 +173,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -214,10 +209,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -251,11 +245,7 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
-
-	      Evaluator eval = new DefaultEvaluator(dc, null); // no context document!
-	      Focus focus = new Focus(ResultSequenceFactory.create_new());
-	      dc.set_focus(focus);
-	      ResultSequence rs = eval.evaluate(path);
+	      ResultSequence rs = evaluate(null); // no context document!
          
           actual = buildResultString(rs);
 	
@@ -289,10 +279,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -326,10 +315,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -363,10 +351,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -400,10 +387,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -437,10 +423,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -474,10 +459,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -511,10 +495,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -548,10 +531,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -585,10 +567,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -622,10 +603,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -659,10 +639,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -696,10 +675,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -733,10 +711,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -770,10 +747,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -807,10 +783,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -844,10 +819,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -881,10 +855,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -918,10 +891,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -955,10 +927,9 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	

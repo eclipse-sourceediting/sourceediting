@@ -40,10 +40,9 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -76,10 +75,9 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -112,10 +110,9 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -149,10 +146,9 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -182,15 +178,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -221,16 +216,15 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context1"), new XSAnyURI(inputFile));
-	  dc.set_variable(new QName("input-context2"), new XSAnyURI(inputFile2));
+	  setVariable("input-context1",new XSAnyURI(inputFile));
+	  setVariable("input-context2",new XSAnyURI(inputFile2));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -260,15 +254,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildXMLResultString(rs);
 	
@@ -298,15 +291,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -336,15 +328,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -377,10 +368,9 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -410,15 +400,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -448,15 +437,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -486,15 +474,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -524,15 +511,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -562,15 +548,14 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
+	  setVariable("input-context",new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	

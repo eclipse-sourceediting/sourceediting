@@ -39,10 +39,8 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = "name";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, null); // no context node
-	      ResultSequence rs = eval.evaluate(path);
+	   	  compileXPath(xpath);
+	      ResultSequence rs = evaluate(null); // no context node
 	
 	      AnyType result = rs.first();
 
@@ -78,10 +76,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -116,10 +113,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -154,10 +150,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -192,10 +187,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -230,10 +224,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -268,10 +261,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -306,10 +298,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -344,10 +335,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -383,10 +373,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -421,10 +410,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -459,10 +447,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -497,10 +484,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -535,10 +521,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -573,10 +558,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -611,10 +595,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -649,10 +632,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -687,10 +669,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -725,10 +706,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -763,10 +743,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -801,10 +780,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      AnyType result = rs.first();
 	
@@ -839,10 +817,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      actual = buildXMLResultString(rs); 
       } catch (XPathParserException ex) {
@@ -874,10 +851,8 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
-	      ResultSequence rs = eval.evaluate(path);
+	   	  compileXPath(xpath);
+	      ResultSequence rs = evaluate(null); // no context node
 	      
 	      AnyType result = rs.first();
 	      actual = result.string_value();
@@ -911,10 +886,9 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 	      actual = buildXMLResultString(rs);
       } catch (XPathParserException ex) {

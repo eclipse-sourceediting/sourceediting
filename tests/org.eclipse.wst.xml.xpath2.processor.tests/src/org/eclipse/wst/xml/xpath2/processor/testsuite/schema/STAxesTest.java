@@ -37,10 +37,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -73,10 +72,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -109,10 +107,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -145,10 +142,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -181,10 +177,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -217,10 +212,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -253,10 +247,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -289,10 +282,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -325,10 +317,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -361,10 +352,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -397,10 +387,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -433,10 +422,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -469,10 +457,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -505,10 +492,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -541,10 +527,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -577,10 +562,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -613,10 +597,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -649,10 +632,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -685,10 +667,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -721,10 +702,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -757,10 +737,9 @@ public class STAxesTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	

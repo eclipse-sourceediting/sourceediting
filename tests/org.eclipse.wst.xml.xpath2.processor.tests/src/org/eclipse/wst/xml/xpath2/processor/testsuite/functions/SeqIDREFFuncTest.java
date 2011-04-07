@@ -40,8 +40,7 @@ public class SeqIDREFFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
-	      ResultSequence rs = eval.evaluate(path);
+	      ResultSequence rs = evaluate(null); // no context
          
           actual = buildResultString(rs);
 	
@@ -77,8 +76,7 @@ public class SeqIDREFFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
-	      ResultSequence rs = eval.evaluate(path);
+	      ResultSequence rs = evaluate(null); // no context
          
           actual = buildResultString(rs);
 	

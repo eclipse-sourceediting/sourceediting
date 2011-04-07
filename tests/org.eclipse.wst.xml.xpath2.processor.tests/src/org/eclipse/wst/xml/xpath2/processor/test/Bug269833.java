@@ -37,6 +37,7 @@ public class Bug269833 extends AbstractPsychoPathTest{
     }    
     
 	protected void setUp() throws Exception {
+		super.setUp();
         URL fileURL = new URL("http://resolve-locally/xml/note.xml");
         loadDOMDocument(fileURL);
      }
@@ -49,10 +50,9 @@ public class Bug269833 extends AbstractPsychoPathTest{
  		    
  		     
  		   String xpath = "/note/to";
- 		   XPath path = compileXPath(dc, xpath);  
- 		    
- 		   Evaluator eval = new DefaultEvaluator(dc, domDoc);  
- 		   ResultSequence rs = eval.evaluate(path);  
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+  
  		    	    
  		   String actual = rs.first().string_value();
  		   

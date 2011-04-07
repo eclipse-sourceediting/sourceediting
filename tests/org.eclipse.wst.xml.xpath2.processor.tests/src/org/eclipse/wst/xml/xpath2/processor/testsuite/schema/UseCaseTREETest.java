@@ -38,10 +38,9 @@ public class UseCaseTREETest extends AbstractPsychoPathTest {
       String xpath = "count($input-context/book/section)";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<top_section_count>" + buildResultString(rs) + "</top_section_count>";
 	

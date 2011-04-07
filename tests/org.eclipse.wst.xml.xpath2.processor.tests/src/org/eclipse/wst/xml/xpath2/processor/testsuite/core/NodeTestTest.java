@@ -38,10 +38,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
           actual = buildXMLResultString(rs);
           
 	
@@ -75,10 +74,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildXMLResultString(rs);
 	
@@ -113,10 +111,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context/bib/book/editor/affiliation/text()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
@@ -150,10 +147,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//processing-instruction('a-pi'))";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -187,10 +183,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//processing-instruction('a-pi'))";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -224,10 +219,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//center/text())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -261,10 +255,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//center/text())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -298,10 +291,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//center/comment())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -335,10 +327,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//center/comment())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -372,10 +363,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//comment())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -409,10 +399,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//comment())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -446,10 +435,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//center/processing-instruction())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -483,10 +471,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//center/processing-instruction())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -520,10 +507,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//processing-instruction())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -557,10 +543,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//processing-instruction())";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -594,10 +579,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "fn:count($input-context//center/processing-instruction('a-pi'))";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<out>" + buildResultString(rs) + "</out>";
 	
@@ -631,10 +615,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context1//text() and fn:true()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildResultString(rs) + "</result>";
 	
@@ -668,10 +651,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context1//text() or fn:true()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildResultString(rs) + "</result>";
 	
@@ -705,10 +687,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context1//text() and fn:false()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildResultString(rs) + "</result>";
 	
@@ -742,10 +723,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context1//text() or fn:false()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildResultString(rs) + "</result>";
 	
@@ -779,10 +759,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context1//overtime/node() or fn:false()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildResultString(rs) + "</result>";
 	
@@ -816,10 +795,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context1//overtime/node() or fn:true()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildResultString(rs) + "</result>";
 	
@@ -853,10 +831,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context1//overtime/node() and fn:false()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildResultString(rs) + "</result>";
 	
@@ -890,10 +867,9 @@ public class NodeTestTest extends AbstractPsychoPathTest {
       String xpath = "$input-context1//overtime/node() and fn:true()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<result>" + buildResultString(rs) + "</result>";
 	

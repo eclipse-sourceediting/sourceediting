@@ -35,15 +35,14 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
 
       
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("fsm", "http://www.example.com/filesystem");
+      addNamespace("fsm", "http://www.example.com/filesystem");
 
       String xpath = "(: comment :)\n($input-context//fsm:Folder)[1]/fsm:File[1]/fsm:FileName";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildXMLResultString(rs);
 	
@@ -74,17 +73,16 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("fsm", "http://www.example.com/filesystem");
+      addNamespace("fsm", "http://www.example.com/filesystem");
 
       String xpath = "if (:test (: yada (: neato :) :) :) ($input-context/fsm:MyComputer)\n" + 
 	       "then (: yada :) \"true\"\n" +
 	       " else \"false\"";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildXMLResultString(rs);
 	
@@ -114,15 +112,14 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("fsm", "http://www.example.com/filesystem");
+      addNamespace("fsm", "http://www.example.com/filesystem");
 
       String xpath = "if (:test:)(:t2:)(:t3:) ($input-context/fsm:MyComputer) then \"true\" else \"false\"";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -156,10 +153,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String xpath = "$input-context/south(: comment :)";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildXMLResultString(rs);
 	
@@ -193,10 +189,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String xpath = "(1, 2, (: comment :) 3, 4)";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -230,10 +225,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String xpath = "\"10\" cast as (: type comment :) xs:integer ?";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -266,10 +260,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -302,10 +295,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -338,10 +330,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -374,10 +365,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	
@@ -410,10 +400,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = buildResultString(rs);
 	

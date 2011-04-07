@@ -24,16 +24,15 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("music","http://www.example.org/music/records");
+      addNamespace("music","http://www.example.org/music/records");
       
 
       String xpath = "$input-context//music:title";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<Q2>" + buildXMLResultString(rs) + "</Q2>";
 	
@@ -63,15 +62,14 @@ public class UseCaseNSTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-      dc.add_namespace("dt", "http://www.w3.org/2001/XMLSchema");
+      addNamespace("dt", "http://www.w3.org/2001/XMLSchema");
 
       String xpath = "$input-context//*[@dt:*]";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
          
           actual = "<Q3>" + buildXMLResultString(rs) + "</Q3>";
 	

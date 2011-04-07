@@ -55,11 +55,9 @@ public class TestSumAvg extends AbstractPsychoPathTest {
 	private void assertXPathEvalation(String xpath, String expectedResult) throws XPathParserException, StaticError,
 			DynamicError {
 		DynamicContext dc = setupDynamicContext(null);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		String resultValue = buildResultString(rs);
 
@@ -68,13 +66,12 @@ public class TestSumAvg extends AbstractPsychoPathTest {
 
 
 	private void assertDynamicError(String xpath, String errorCode) throws XPathParserException, StaticError {
-		DynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 
-		XPath path = compileXPath(dc, xpath);
+		compileXPath(xpath);
 
 		try {
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			eval.evaluate(path);
+			evaluate(null);
 			fail("Error " + errorCode + " expected here");
 		} catch (DynamicError de) {
 			assertEquals("Wrong error code", errorCode, de.code());

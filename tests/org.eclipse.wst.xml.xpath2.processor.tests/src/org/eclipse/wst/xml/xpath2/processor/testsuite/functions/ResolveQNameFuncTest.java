@@ -41,10 +41,9 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -76,10 +75,9 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -111,10 +109,9 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -141,17 +138,16 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace("cm", "http://www.example.com");
-		dc.add_namespace("ed", "http://www.example.edu");
+		addNamespace("cm", "http://www.example.com");
+		addNamespace("ed", "http://www.example.edu");
 
 		String xpath = "fn:string(fn:local-name-from-QName(fn:resolve-QName(\"cm:c\", /a/b/cm:c)))";
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -178,17 +174,16 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace("cm", "http://www.example.com");
-		dc.add_namespace("ed", "http://www.example.edu");
+		addNamespace("cm", "http://www.example.com");
+		addNamespace("ed", "http://www.example.edu");
 
 		String xpath = "fn:string(fn:namespace-uri-from-QName(fn:resolve-QName(\"cm:c\", /a/b/cm:c)))";
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -215,17 +210,16 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace("cm", "http://www.example.com");
-		dc.add_namespace("ed", "http://www.example.edu");
+		addNamespace("cm", "http://www.example.com");
+		addNamespace("ed", "http://www.example.edu");
 
 		String xpath = "fn:string(fn:local-name-from-QName(fn:resolve-QName(\"ed:c\", /a/b/ed:c)))";
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -252,17 +246,16 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace("cm", "http://www.example.com");
-		dc.add_namespace("ed", "http://www.example.edu");
+		addNamespace("cm", "http://www.example.com");
+		addNamespace("ed", "http://www.example.edu");
 
 		String xpath = "fn:string(fn:local-name-from-QName(fn:resolve-QName(\"c\", /a/b/cm:c)))";
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -289,16 +282,15 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace(null, "http://www.w3.org/XQueryTest/someExamples");
+		addNamespace(null, "http://www.w3.org/XQueryTest/someExamples");
 
 		String xpath = "fn:string(fn:namespace-uri-from-QName(fn:resolve-QName(\"E6-Root\", /E6-Root)))";
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -330,10 +322,9 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -365,10 +356,9 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -400,10 +390,9 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -435,10 +424,9 @@ public class ResolveQNameFuncTest extends AbstractPsychoPathTest {
 
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 

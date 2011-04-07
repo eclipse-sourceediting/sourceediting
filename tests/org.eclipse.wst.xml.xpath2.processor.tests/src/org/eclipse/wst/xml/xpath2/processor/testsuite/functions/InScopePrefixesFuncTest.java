@@ -36,10 +36,9 @@ public class InScopePrefixesFuncTest extends AbstractPsychoPathTest {
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -66,13 +65,12 @@ public class InScopePrefixesFuncTest extends AbstractPsychoPathTest {
 
 		// set up XPath default namespace in Dynamic Context
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace("fsx", "http://www.example.com/filesystem");
+		addNamespace("fsx", "http://www.example.com/filesystem");
 
 		String xpath = "fn:in-scope-prefixes(./fsx:MyComputer)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 		
 		String actual = buildResultString(rs);
 		
@@ -91,13 +89,12 @@ public class InScopePrefixesFuncTest extends AbstractPsychoPathTest {
 
 		// set up XPath default namespace in Dynamic Context
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace("fsx", "http://www.example.com/filesystem");
+		addNamespace("fsx", "http://www.example.com/filesystem");
 
 		String xpath = "fn:in-scope-prefixes(./fsx:MyComputer/fsx:Drive[1])";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 		
 		String actual = buildResultString(rs);
 		

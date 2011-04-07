@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Jesper Steen Moller
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Jesper Steen Moller  - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.wst.xml.xpath2.processor.test.newapi;
 
 import java.io.IOException;
@@ -135,8 +146,11 @@ public class CompleteNewApiTest extends XMLTestCase {
 		assertEquals(Boolean.TRUE, b);
 	}
 
-	public void xtestNamesWhichAreKeywords() throws Exception {
+	public void testNamesWhichAreKeywords() throws Exception {
 		// Bug 273719
+		bundle = Platform
+		.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
+
 		URL fileURL = bundle.getEntry("/bugTestFiles/bug311480.xml");
 		loadDOMDocument(fileURL);
 
@@ -144,11 +158,11 @@ public class CompleteNewApiTest extends XMLTestCase {
 		XSModel schema = getGrammar();
 
 //		String xpath = "($input-context/atomic:root/atomic:integer) union ($input-context/atomic:root/atomic:integer)";
-		String xpath = "(/element/eq eq 'eq') or //child::xs:*";
+		String xpath = "((/element/eq eq 'eq') or //child::xs:*) and false";
 		
-		Boolean b = (Boolean)evaluateSimpleXPath(xpath, new StaticContextBuilder().withTypeModel(new XercesTypeModel(schema)), domDoc, Boolean.class);
+		Boolean b = (Boolean)evaluateSimpleXPath(xpath, new StaticContextBuilder().withNamespace("xs", "urn:joe").withTypeModel(new XercesTypeModel(schema)), domDoc, Boolean.class);
 
-		assertEquals(Boolean.TRUE, b);
+		assertEquals(Boolean.FALSE, b);
 	}
 
 

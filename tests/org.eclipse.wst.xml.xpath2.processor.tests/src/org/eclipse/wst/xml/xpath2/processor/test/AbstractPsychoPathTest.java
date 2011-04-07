@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2011 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@
  *     Jesper Steen Moeller - bug 282096 - make test harness handle all string encoding
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *     Mukul Gandhi         - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.
+ *     Jesper Steen Moller  - bug 340933 - Migrate tests to new XPath2 API
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -26,15 +27,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.XMLConstants;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -52,6 +60,10 @@ import org.apache.xerces.xs.XSObject;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.xml.xpath2.api.CollationProvider;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
+import org.eclipse.wst.xml.xpath2.api.StaticVariableResolver;
+import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoaderException;
@@ -59,6 +71,7 @@ import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.Engine;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.JFlexCupParser;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -71,17 +84,22 @@ import org.eclipse.wst.xml.xpath2.processor.XercesLoader;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeModel;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesFloatUserDefined;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesIntegerUserDefined;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesQNameUserDefined;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined.XercesUserDefined;
+import org.eclipse.wst.xml.xpath2.processor.util.DynamicContextBuilder;
+import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
+import org.eclipse.wst.xml.xpath2.processor.util.StaticContextBuilder;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -99,7 +117,10 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	protected Document domDoc2 = null;
 	protected Bundle bundle = null;
 
-	private DynamicContext dynamicContext = null;
+	private DefaultDynamicContext dynamicContext = null;
+	protected boolean useNewApi = false;
+	private StaticContextBuilder staticContextBuilder;
+	private DynamicContextBuilder dynamicContextBuilder;
 	
 	private static final String INPUT_CONTEXT = "input-context";
 	private static final String INPUT_CONTEXT1 = "input-context1";
@@ -121,6 +142,8 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
 		}
 		System.setProperty("javax.xml.validation.SchemaFactory:http://www.w3.org/2001/XMLSchema","org.apache.xerces.jaxp.validation.XMLSchemaFactory");
+		
+		staticContextBuilder = new StaticContextBuilder();
 	}
 
 	protected void loadDOMDocument(URL fileURL) throws IOException,
@@ -262,12 +285,68 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return xsGrammars[0].toXSModel(xsGrammars);
 	}
 
+
+   protected void setVariable(String name, ResultSequence values) {
+	   if (useNewApi) {
+			staticContextBuilder.withVariable(new javax.xml.namespace.QName(
+					name), BuiltinTypeLibrary.XS_UNTYPEDATOMIC,
+					StaticVariableResolver.ANY);
+		   dynamicContextBuilder.withVariable(new javax.xml.namespace.QName(name), values);
+	   } else {
+		   dynamicContext.set_variable(new QName(name), values);
+	   }
+   }
+
+   protected void setVariable(String name, AnyType value) {
+	   if (useNewApi) {
+			staticContextBuilder
+					.withVariable(new javax.xml.namespace.QName(name),
+							value != null ? value.getTypeDefinition()
+									: BuiltinTypeLibrary.XS_UNTYPED,
+							StaticVariableResolver.ONE);
+		   dynamicContextBuilder.withVariable(new javax.xml.namespace.QName(name), value);
+	   } else {
+		   dynamicContext.set_variable(new QName(name), value);
+	   }
+   }
+	
+   void setCollationProvider(final CollationProvider cp) {
+	   if (useNewApi) {
+		   staticContextBuilder.withCollationProvider(cp);
+	   } else {
+		   dynamicContext.set_collation_provider(new org.eclipse.wst.xml.xpath2.processor.CollationProvider() {
+			
+			public Comparator get_collation(String name) {
+				return cp.getCollation(name);
+			}
+		});
+	   }
+   }
+   
 	protected DefaultDynamicContext setupDynamicContext(XSModel schema) {
-		XercesTypeModel typeModel = schema != null ? new XercesTypeModel(schema) : null;
+		XercesTypeModel typeModel = schema != null ? new XercesTypeModel(
+				schema) : null;
+		if (useNewApi) {
+			staticContextBuilder.withTypeModel(typeModel);
+			
+			staticContextBuilder.withNamespace("xs", "http://www.w3.org/2001/XMLSchema");
+			staticContextBuilder.withNamespace("xsd", "http://www.w3.org/2001/XMLSchema");
+			staticContextBuilder.withNamespace("fn", "http://www.w3.org/2005/xpath-functions");
+			staticContextBuilder.withNamespace("xml", "http://www.w3.org/XML/1998/namespace");
+			
+			dynamicContextBuilder = new DynamicContextBuilder(staticContextBuilder);
+			setupVariables(dynamicContext);
+			try {
+				dynamicContextBuilder.withTimezoneOffset(DatatypeFactory.newInstance().newDuration(false/*i.e. negative*/, 0, 0, 0, 5, 0, 0));
+			} catch (DatatypeConfigurationException e) {
+				throw new RuntimeException("Shouldn't fail here", e);
+			}
+			return null;
+		}
+	
 		DefaultDynamicContext dc = new DefaultDynamicContext(typeModel);
-//		DefaultDynamicContext dc = new DefaultDynamicContext(schema, domDoc);
 		dynamicContext = dc;
-		
+
 		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
 		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
 		dc.add_namespace("fn", "http://www.w3.org/2005/xpath-functions");
@@ -279,32 +358,66 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return dc;
 	}
 
-	protected DefaultDynamicContext setupDynamicContext2(TypeModel model) {
-		DefaultDynamicContext dc = new DefaultDynamicContext(model);
-		dynamicContext = dc;
-		
-		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
-		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
-		dc.add_namespace("fn", "http://www.w3.org/2005/xpath-functions");
-		dc.add_namespace("xml", "http://www.w3.org/XML/1998/namespace");
+	protected void setCollections(Map map) {
+		if (useNewApi) {
+			dynamicContextBuilder.withCollections(map);
+		} else {
+			dynamicContext.set_collections(map);
+		}
+	}
+	
+	protected void addNamespace(String prefix, String nsURI) {
+		if (useNewApi) {
+			if (prefix == null || "".equals(prefix)) {
+				staticContextBuilder.withDefaultNamespace(nsURI);
+			} else {
+				staticContextBuilder.withNamespace(prefix, nsURI);
+			}
+		} else {
+			dynamicContext.add_namespace(prefix, nsURI);
+		}
+	}
 
-		dc.add_function_library(new FnFunctionLibrary());
-		dc.add_function_library(new XSCtrLibrary());
-		setupVariables(dc);
-		return dc;
+	protected void addFunctionLibrary(FunctionLibrary fl) {
+		if (useNewApi) {
+			staticContextBuilder.withFunctionLibrary(fl.getNamespace(), fl);
+		} else {
+			dynamicContext.add_function_library(fl);
+		}
 	}
 
 	protected void addXPathDefaultNamespace(String uri) {
-	   dynamicContext.add_namespace(null, uri);	
+	   addNamespace(null, uri);	
+	}
+
+	protected void setDefaultCollation(String uri) {
+		if (useNewApi) {
+			staticContextBuilder.withDefaultCollation(uri);
+		} else {
+			dynamicContext.set_default_collation(uri);
+		}
+		
+	}
+
+	private XPath2Expression newXPath = null;
+	private XPath oldXPath = null;
+	
+	protected void compileXPath(String xpath) throws XPathParserException, StaticError, XPathParserException {
+		compileXPath(null, xpath);
 	}
 
 	protected XPath compileXPath(DynamicContext dc, String xpath) throws XPathParserException, StaticError {
-		XPathParser xpp = new JFlexCupParser();
-		XPath path = xpp.parse(xpath);
-
-		StaticChecker name_check = new StaticNameResolver(dc);
-		name_check.check(path);
-		return path;
+		if (useNewApi) {
+			newXPath = new Engine().parseExpression(xpath, staticContextBuilder);
+			return null;
+		} else {
+			XPathParser xpp = new JFlexCupParser();
+			XPath path = oldXPath = xpp.parse(xpath);
+			
+			StaticChecker name_check = new StaticNameResolver(dynamicContext);
+			name_check.check(path);
+			return path;
+		}
 	}
 	
 	protected XPath compileXPath(DynamicContext dc, String xpath, boolean isRootlessAccess) throws XPathParserException, StaticError {
@@ -321,6 +434,15 @@ public class AbstractPsychoPathTest extends XMLTestCase {
        name_check.check(path);
        return path;
     }
+
+	protected ResultSequence evaluate(Document domDoc) {
+		if (useNewApi) {
+			return ResultSequenceUtil.newToOld(newXPath.evaluate(dynamicContextBuilder, new Object[]{domDoc}));
+		} else {
+			Evaluator eval = new DefaultEvaluator(dynamicContext, domDoc);
+			return eval.evaluate(oldXPath);
+		}
+	}
 
 	protected String getExpectedResult(String xqFile) {
 		return getExpectedResult(xqFile, true);
@@ -400,8 +522,17 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		try {
 			URL entryUrl = bundle.getEntry(xqFile);
 			InputStream isxq = testResolve(entryUrl);
-			if (dynamicContext.base_uri().string_value() == null)
-				dynamicContext.set_base_uri(entryUrl.toString());
+			if (useNewApi) {
+				if (staticContextBuilder.getBaseUri() == null)
+					try {
+						staticContextBuilder.withBaseUri(entryUrl.toString());
+					} catch (URISyntaxException e) {
+						throw new RuntimeException(e); // drats
+					}
+			} else {
+				if (dynamicContext.base_uri().string_value() == null)
+					dynamicContext.set_base_uri(entryUrl.toString());
+			}
 			BufferedReader xqreader = new BufferedReader(new InputStreamReader(
 					isxq, Charset.forName("UTF-8")));
 			int nByte = xqreader.read(cbuf);
@@ -463,33 +594,42 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	}
 
 	protected void setupNamespace(String content) {
-		if (dynamicContext == null) return; // Can't set it up if nonexistent
+		if (!useNewApi && dynamicContext == null) return; // Can't set it up if nonexistent
 		Pattern p = Pattern.compile(REGEX_DN);
 		Matcher m = p.matcher(content);
 		while (m.find()) {
 			assertTrue(m.groupCount() == 2);//
-			dynamicContext.add_namespace(m.group(1), m.group(2));
+			addNamespace(m.group(1), m.group(2));
 		}
 
 	}
 
 	protected DynamicContext setupVariables(DynamicContext dc) {
-		dc.add_variable(new QName("x"));
-		dc.add_variable(new QName("var"));
+		setVariable("x", (AnyType)null);
+		setVariable("var", (AnyType)null);
 		
 		if (domDoc != null) {
-			AnyType docType = new DocType(domDoc, dc.getTypeModel(domDoc));
-			dc.set_variable(new QName("input-context1"), docType);
-			dc.set_variable(new QName("input-context"), docType);
+			TypeModel typeModel = dynamicContext != null ? dynamicContext.getTypeModel(domDoc) : staticContextBuilder.getTypeModel();
+			AnyType docType = new DocType(domDoc, typeModel);
+			setVariable("input-context1", docType);
+			setVariable("input-context", docType);
 			if (domDoc2 == null) {
-				dc.set_variable(new QName("input-context2"), docType);
+				setVariable("input-context2", docType);
 			} else {
-				dc.set_variable(new QName("input-context2"), (AnyType) new DocType(domDoc2, dc.getTypeModel(domDoc2)));
+				setVariable("input-context2", (AnyType) new DocType(domDoc2, typeModel));
 			}
 		}
 		return dc;
 	}
 
+	protected void setBaseUri(String uri) throws URISyntaxException {
+		if (useNewApi) {
+			staticContextBuilder.withBaseUri(uri);
+		} else {
+			dynamicContext.set_base_uri(uri);
+		}
+	}
+	
 	protected String buildResultString(ResultSequence rs) {
 		String actual = new String();
 		Iterator iterator = rs.iterator();
@@ -577,7 +717,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	    	  return;
 	      }
 	      
-	      dc.add_namespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
+	      addNamespace("myType", "http://www.w3.org/XQueryTest/userDefinedTypes");
 	      UserDefinedCtrLibrary udl = new UserDefinedCtrLibrary("http://www.w3.org/XQueryTest/userDefinedTypes");
 	      
 	      for (int i = 0; i < xstypes.getLength(); i++) {
@@ -607,7 +747,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	    	  }
 	      }
 	      
-	      dc.add_function_library(udl);
+	      addFunctionLibrary(udl);
 	 
 	   }
 
@@ -632,10 +772,9 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			throw new RuntimeException("Static error: " + e.getMessage(), e);
 		}
 	
-		Evaluator eval = new DefaultEvaluator(dc, doc);
 		ResultSequence rs;
 		try {
-			rs = eval.evaluate(path);
+			rs = evaluate(domDoc);
 		}
 		catch (DynamicError e) {
 			throw new RuntimeException("Evaluation error: " + e.getMessage(), e);
@@ -646,6 +785,10 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		assertTrue("Exected XPath result instanceof class " + resultClass.getSimpleName() + " from \'" + xpath + "\', got " + result.getClass(), resultClass.isInstance(result));
 		
 		return result;
+	}
+
+	protected StaticContext getStaticContext() {
+		return staticContextBuilder;
 	}
 
 

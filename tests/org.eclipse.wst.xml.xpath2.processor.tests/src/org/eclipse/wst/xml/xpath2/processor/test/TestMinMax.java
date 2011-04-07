@@ -13,7 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.test;
 
 import java.util.Comparator;
 
-import org.eclipse.wst.xml.xpath2.processor.CollationProvider;
+import org.eclipse.wst.xml.xpath2.api.CollationProvider;
 import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
@@ -61,11 +61,9 @@ public class TestMinMax extends AbstractPsychoPathTest {
 	private void assertXPathEvalation(String xpath, String expectedResult) throws XPathParserException, StaticError,
 			DynamicError {
 		DynamicContext dc = setupDynamicContext(null);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		String resultValue = buildResultString(rs);
 
@@ -74,13 +72,12 @@ public class TestMinMax extends AbstractPsychoPathTest {
 
 
 	private void assertDynamicError(String xpath, String errorCode) throws XPathParserException, StaticError {
-		DynamicContext dc = setupDynamicContext(null);
+		setupDynamicContext(null);
 
-		XPath path = compileXPath(dc, xpath);
+		compileXPath(xpath);
 
 		try {
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			eval.evaluate(path);
+			evaluate(domDoc);
 			fail("Error " + errorCode + " expected here");
 		} catch (DynamicError de) {
 			assertEquals("Wrong error code", errorCode, de.code());
@@ -91,22 +88,20 @@ public class TestMinMax extends AbstractPsychoPathTest {
 
 	public void testStringMax() throws Exception {
 		DefaultDynamicContext dc = setupDynamicContext(null);
-		dc.set_collation_provider(createLengthCollatorProvider());
+		setCollationProvider(createLengthCollatorProvider());
 
 		String xpath = "max( ('1000', '200', '30', '4') )";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		String resultValue = rs.first().string_value();
 
 		// lexicographically, '4' is biggest
 		assertEquals("4", resultValue);
-		dc.set_default_collation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
+		setDefaultCollation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
 
-		rs = eval.evaluate(path);
+		rs = evaluate(null);
 		resultValue = rs.first().string_value();
 
 		// length-wise, '1000' is biggest!
@@ -114,8 +109,10 @@ public class TestMinMax extends AbstractPsychoPathTest {
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {
+		final CollationProvider oldProvider = getStaticContext().getCollationProvider();
 		return new CollationProvider() {
-			public Comparator get_collation(String name) {
+			
+			public Comparator getCollation(String name) {
 				if (name.equals(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR)) {
 					return new Comparator() {
 						public int compare(Object o1, Object o2) {
@@ -123,10 +120,13 @@ public class TestMinMax extends AbstractPsychoPathTest {
 						}
 					};
 				}
-				return null;
+				return oldProvider.getCollation(name);
+			}
+
+			public String getDefaultCollation() {
+				return oldProvider.getDefaultCollation();
 			}
 		};
 	}
-
 	
 }

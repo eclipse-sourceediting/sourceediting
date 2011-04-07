@@ -56,6 +56,7 @@
  *  Mukul Gandhi    - bug 338999 - improving compliance of function 'fn:subsequence'. implementing full arity support.
  *  Mukul Gandhi    - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.
  *  Mukul Gandhi    - bug 341862 - improvements to computation of typed value of xs:boolean nodes.                                 
+ *  Jesper Steen Moller  - bug 340933 - Migrate tests to new XPath2 API
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -68,7 +69,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.xml.xpath2.processor.CollationProvider;
+import org.eclipse.wst.xml.xpath2.api.CollationProvider;
 import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
@@ -86,6 +87,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
+import org.eclipse.wst.xml.xpath2.processor.util.StaticContextBuilder;
 import org.osgi.framework.Bundle;
 import org.xml.sax.InputSource;
 
@@ -116,10 +118,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 //		String xpath = "($input-context/atomic:root/atomic:integer) union ($input-context/atomic:root/atomic:integer)";
 		String xpath = "(/element/eq eq 'eq') or //child::xs:*";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -139,10 +140,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "string-length(x) > 2";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -163,10 +163,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// test with arity 2
 		String xpath = "substring(x, 3) = 'happy'";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -187,10 +186,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// test with arity 3
 		String xpath = "substring(x, 3, 4) = 'happ'";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -210,10 +208,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "x/string() = 'unhappy'";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -233,10 +230,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "x/string-length() = 7";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -256,10 +252,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "x/normalize-space() = 'unhappy'";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -280,10 +275,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:anyURI('abc') eq xs:anyURI('abc')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -313,11 +307,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// arity 0.
 		// String xpath =
 		// "note/base-uri() eq xs:anyURI('http://resolved-locally/xml/note.xml')";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -337,11 +329,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(null);
 
 		String xpath = "document-uri(/) eq xs:anyURI('http://resolved-locally/xml/note.xml')";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -366,10 +356,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:boolean('1') eq xs:boolean('true')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -389,10 +378,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:date(x) eq xs:date('2009-01-01')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -412,10 +400,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:integer(x) gt 100";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -438,10 +425,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// long min value is -9223372036854775808
 		// and max value can be 9223372036854775807
 		String xpath = "xs:long('9223372036854775807') gt 0";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -464,10 +450,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// int min value is -2147483648
 		// and max value can be 2147483647
 		String xpath = "xs:int('2147483647') gt 0";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -489,10 +474,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "person/@dob eq xs:date('2006-12-10')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -515,10 +499,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "person/dob eq xs:date('2006-12-10')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -551,10 +534,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	// I can't stand to see so much duplicated code!!!
 	private boolean evaluateBoolean(DynamicContext dc, String xpath) throws Exception {
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -576,10 +558,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:nonPositiveInteger is -INF
 		// max value is 0
 		String xpath = "xs:nonPositiveInteger('0') eq 0";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -603,10 +584,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:negativeInteger is -INF
 		// max value is -1
 		String xpath = "xs:negativeInteger('-1') eq -1";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -630,10 +610,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:short is -32768
 		// max value of xs:short is 32767
 		String xpath = "xs:short('-32768') eq -32768";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -657,10 +636,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:nonNegativeInteger is 0
 		// max value of xs:nonNegativeInteger is INF
 		String xpath = "xs:nonNegativeInteger('0') eq 0";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -684,10 +662,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:unsignedLong is 0
 		// max value of xs:unsignedLong is 18446744073709551615
 		String xpath = "xs:unsignedLong('0') eq 0";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -711,10 +688,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:positiveInteger is 1
 		// max value of xs:positiveInteger is INF
 		String xpath = "xs:positiveInteger('1') eq 1";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -738,10 +714,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:byte is -128
 		// max value of xs:byte is 127
 		String xpath = "xs:byte('-128') eq -128";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -765,10 +740,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:unsignedInt is 0
 		// max value of xs:unsignedInt is 4294967295
 		String xpath = "xs:unsignedInt('4294967295') eq xs:unsignedInt('4294967295')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -791,10 +765,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:unsignedShort is 0
 		// max value of xs:unsignedShort is 65535
 		String xpath = "xs:unsignedShort('65535') eq 65535";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -815,10 +788,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:yearMonthDuration('P2Y11M') * 2.3";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSDuration result = (XSDuration) rs.first();
 
@@ -839,10 +811,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:yearMonthDuration('P2Y11M') div 1.5";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSDuration result = (XSDuration) rs.first();
 
@@ -863,10 +834,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:yearMonthDuration('P3Y4M') div xs:yearMonthDuration('-P1Y4M')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSDecimal result = (XSDecimal) rs.first();
 
@@ -887,10 +857,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:dayTimeDuration('PT2H10M') * 2.1";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSDuration result = (XSDuration) rs.first();
 
@@ -911,10 +880,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:dayTimeDuration('P1DT2H30M10.5S') div 1.5";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSDuration result = (XSDuration) rs.first();
 
@@ -935,10 +903,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "-(xs:double('0'))";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSDouble result = (XSDouble) rs.first();
 
@@ -959,10 +926,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "-(xs:float('0'))";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSFloat result = (XSFloat) rs.first();
 
@@ -985,10 +951,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:unsignedByte is 0
 		// max value of xs:unsignedByte is 255
 		String xpath = "xs:unsignedByte('255') eq 255";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1009,10 +974,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:base64Binary('cmxjZ3R4c3JidnllcmVuZG91aWpsbXV5Z2NhamxpcmJkaWFhbmFob2VsYXVwZmJ1Z2dmanl2eHlzYmhheXFtZXR0anV2dG1q') eq xs:base64Binary('cmxjZ3R4c3JidnllcmVuZG91aWpsbXV5Z2NhamxpcmJkaWFhbmFob2VsYXVwZmJ1Z2dmanl2eHlzYmhheXFtZXR0anV2dG1q')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1033,10 +997,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:hexBinary('767479716c6a647663') eq xs:hexBinary('767479716c6a647663')";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1061,10 +1024,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode eq 'air'";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1087,11 +1049,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "'\"\"'"; // the expression '""' contains no escapes
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		String resultValue = rs.first().string_value();
 
@@ -1110,11 +1070,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "concat(  'Don''t try this' ,  \" at \"\"home\"\",\"  ,  ' she said'  )";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		String resultValue = rs.first().string_value();
 
@@ -1124,20 +1082,19 @@ public class TestBugs extends AbstractPsychoPathTest {
 	public void testBug280555_collations() throws Exception {
 		// Setup context
 		DefaultDynamicContext dc = setupDynamicContext(null);
-		dc.set_collation_provider(createLengthCollatorProvider());
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		setCollationProvider(createLengthCollatorProvider());
 
 		// Parse expression
-		XPath path = compileXPath(dc, " 'abc' < 'de' ");
+		compileXPath(dc, " 'abc' < 'de' ");
 
 		// Evaluate once
-		XSBoolean bval = (XSBoolean) eval.evaluate(path).first();
-		assertTrue("'abc' < 'def' for normal collations", bval.value());
+		XSBoolean bval = (XSBoolean) evaluate(domDoc).first();
+		assertTrue("'abc' < 'de' for normal collations", bval.value());
 
 		// Evaluate again with the funny collator
-		dc.set_default_collation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
-		XSBoolean bval2 = (XSBoolean) eval.evaluate(path).first();
-		assertFalse("'abc' < 'def' for normal collations", bval2.value());
+		setDefaultCollation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
+		XSBoolean bval2 = (XSBoolean) evaluate(null).first();
+		assertFalse("'abc' < 'de' should be false for the strange collations", bval2.value());
 	}
 
 	public void testXPathDefaultNamespace() throws Exception {
@@ -1154,10 +1111,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		addXPathDefaultNamespace("http://xyz");
 
 		String xpath = "X/message = 'hello'";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1180,10 +1136,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element()";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1191,7 +1146,20 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
+	public void testNestedABCs() throws Exception {
+		URL fileURL = bundle.getEntry("/bugTestFiles/nested-abc.xml");
+
+		loadDOMDocument(fileURL);
+		setupDynamicContext(null);
+
+		String xpath = "a/b[2 > 1]/c[3 < 4]";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
+		assertEquals(9, rs.size());
+	}
+
 	public void testXPathInstanceOf2() throws Exception {
 		// Bug 298267
 		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
@@ -1206,10 +1174,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(mode)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1232,10 +1199,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(mode, modeType)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1258,10 +1224,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(mode, abc)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1283,10 +1248,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x instance of element(x, x_Type)*";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1308,10 +1272,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "(/Example/x, /Example) instance of element(x, x_Type)+";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1331,10 +1294,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "(/Example/x, /Example/x) instance of element(x, x_Type)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1354,10 +1316,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "(/Example/x, /Example/x) instance of element(x, x_Type)+";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1397,10 +1358,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x instance of element(*, x_Type)*";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1422,10 +1382,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x instance of element(x, x_Type)+";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1447,10 +1406,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 	
 		String xpath = "/Example/x[1] instance of element(*, x_Type) and not (/Example/x[1] instance of element(*, y_Type))";
-		XPath path = compileXPath(dc, xpath);
-	
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
 	
 		XSBoolean result = (XSBoolean) rs.first();
 	
@@ -1473,10 +1431,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/Transportation/mode instance of element(x)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1498,10 +1455,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "number(Example/x) ge 18";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1522,10 +1478,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "number(xs:unsignedByte('20')) ge 18";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1547,10 +1502,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute()";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1572,10 +1526,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(xx)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1597,10 +1550,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(*, mesg_Type)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1622,10 +1574,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(*, abc)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1647,10 +1598,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(mesg, mesg_Type)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1672,10 +1622,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x[1]/@mesg instance of attribute(mesg, abc)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1697,10 +1646,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/x/@mesg instance of attribute(mesg, mesg_Type)*";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1720,10 +1668,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "Example/*[1]/name() eq 'x'";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1744,13 +1691,11 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "xs:normalizedString('abcs\t') eq xs:normalizedString('abcs')";
-		XPath path = compileXPath(dc, xpath);
+		 compileXPath(dc, xpath);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		
 		boolean testSuccess = false;
 		try {
-		  ResultSequence rs = eval.evaluate(path);
+		  ResultSequence rs = evaluate(domDoc);
 		}
 		catch(DynamicError ex) {
 		  // a 'DynamicError' exception indicates, that this test is a success 
@@ -1772,7 +1717,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "/element/attribute";
-		XPath path = compileXPath(dc, xpath);
+		compileXPath(xpath);
 	}
 	
 	public void testTypedValueEnhancement_primitiveTypes() throws Exception {
@@ -1788,10 +1733,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "X gt 99";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1813,10 +1757,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "data(X) instance of xs:integer+";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1839,10 +1782,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// 1st test
 		String xpath = "data(X) instance of xs:integer+";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -1863,17 +1805,17 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 		String xpath = "data(X)";
-		XPath path = compileXPath(dc, xpath);
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
-		
-		boolean result1 = ((XSInteger) rs.get(0)).eq(new XSInteger(BigInteger.
-				                                     valueOf(1)), dc);
-		boolean result2 = ((XSInteger) rs.get(1)).eq(new XSInteger(BigInteger.
-				                                     valueOf(2)), dc);
-		boolean result3 = ((XSString) rs.get(2)).eq(new XSString("3.3"), dc);
-		
-		assertEquals(true, result1 && result2 && result3);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
+  		assertTrue(rs.get(0) instanceof XSInteger);
+  		assertEquals(BigInteger.ONE, ((XSInteger) rs.get(0)).int_value());
+
+  		assertTrue(rs.get(1) instanceof XSInteger);
+  		assertEquals(BigInteger.valueOf(2), ((XSInteger) rs.get(1)).int_value());
+          
+  		assertTrue(rs.get(2) instanceof XSString);
+  		assertEquals("3.3", ((XSString) rs.get(2)).string_value());
 	}
 	
 	public void testTypedValueEnhancement_Bug323900_4() throws Exception {
@@ -1888,9 +1830,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 		String xpath = "data(X)";
-		XPath path = compileXPath(dc, xpath);
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
         
 		XSString result = (XSString) rs.get(0);
 		assertEquals("3.3", result.string_value());
@@ -1908,9 +1850,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 		String xpath = "data(X)";
-		XPath path = compileXPath(dc, xpath);
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
         
 		XSInteger result = (XSInteger) rs.get(0);
 		assertEquals("10", result.string_value());
@@ -1922,12 +1864,11 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(null);
 		
         ResultSequence rs = ResultSequenceFactory.create_new();
-        dc.set_variable(new QName("value"), rs);
+        setVariable("value",rs);
         
 		String xpath = "deep-equal($value,())";
-		XPath path = compileXPath(dc, xpath);
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rsRes = eval.evaluate(path);
+		compileXPath(xpath);
+		ResultSequence rsRes = evaluate(domDoc);
         
 		XSBoolean result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
@@ -1942,21 +1883,19 @@ public class TestBugs extends AbstractPsychoPathTest {
         rs.add(new XSInteger(BigInteger.valueOf(2)));
         rs.add(new XSInteger(BigInteger.valueOf(4)));
         rs.add(new XSInteger(BigInteger.valueOf(6)));
-        dc.set_variable(new QName("value"), rs);
+        setVariable("value",rs);
         
         // test a
 		String xpath = "$value instance of xs:integer+";
-		XPath path = compileXPath(dc, xpath);
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rsRes = eval.evaluate(path);        
+		compileXPath(xpath);
+		ResultSequence rsRes = evaluate(domDoc);        
 		XSBoolean result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
 		
 		// test b
 		xpath = "deep-equal($value, (2, 4, 6))";
-		path = compileXPath(dc, xpath);
-		eval = new DefaultEvaluator(dc, domDoc);
-		rsRes = eval.evaluate(path);        
+		compileXPath(dc, xpath);
+		rsRes = evaluate(domDoc);        
 		result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
 	}
@@ -1970,12 +1909,11 @@ public class TestBugs extends AbstractPsychoPathTest {
         rs.add(new XSInteger(BigInteger.valueOf(2)));
         rs.add(new XSInteger(BigInteger.valueOf(4)));
         rs.add(new XSInteger(BigInteger.valueOf(6)));
-        dc.set_variable(new QName("value"), rs);
+        setVariable("value",rs);
         
 		String xpath = "count(data($value)) = 3";
-		XPath path = compileXPath(dc, xpath);
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rsRes = eval.evaluate(path);        
+		compileXPath(xpath);
+		ResultSequence rsRes = evaluate(domDoc);        
 		XSBoolean result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
 	}
@@ -1993,13 +1931,11 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// the strings in below are not valid tokens (they contain 2 consecutive spaces)
 		String xpath = "xs:token('abcs  abcde') eq xs:token('abcs  abcde')";
-		XPath path = compileXPath(dc, xpath);
+		compileXPath(xpath);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		
 		boolean testSuccess = false;
 		try {
-		   ResultSequence rs = eval.evaluate(path);
+		   ResultSequence rs = evaluate(domDoc);
 		}
 		catch(DynamicError ex) {
 		   // a 'DynamicError' exception indicates, that this test is a success 
@@ -2022,17 +1958,16 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// test a)
 		String xpath = "xs:Name('x:abc') eq xs:Name('x:abc')"; 
-		XPath path = compileXPath(dc, xpath);
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rsRes = eval.evaluate(path);
+		compileXPath(xpath);
+		ResultSequence rsRes = evaluate(domDoc);
 		XSBoolean result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
 		
 		// test b)
 		xpath = "xs:NCName('x:abc') eq xs:NCName('x:abc')"; 
-		path = compileXPath(dc, xpath);
+		compileXPath(dc, xpath);
 		try {
-		   rsRes = eval.evaluate(path);
+		   rsRes = evaluate(domDoc);
 		   assertTrue(false);
 		}
 		catch(DynamicError ex) {
@@ -2042,16 +1977,16 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		// test c)
 		xpath = "xs:NCName('abc') eq xs:NCName('abc')"; 
-		path = compileXPath(dc, xpath);
-		rsRes = eval.evaluate(path);
+		compileXPath(dc, xpath);
+		rsRes = evaluate(domDoc);
 		result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
 		
 		// test d)
 		xpath = "xs:ID('x:abc') eq xs:ID('x:abc')"; 
-		path = compileXPath(dc, xpath);
+		compileXPath(dc, xpath);
 		try {
-		   rsRes = eval.evaluate(path);
+		   rsRes = evaluate(domDoc);
 		   assertTrue(false);
 		}
 		catch(DynamicError ex) {
@@ -2061,8 +1996,8 @@ public class TestBugs extends AbstractPsychoPathTest {
 		
 		// test e)
 		xpath = "xs:ID('abc') eq xs:ID('abc')"; 
-		path = compileXPath(dc, xpath);
-		rsRes = eval.evaluate(path);
+		compileXPath(dc, xpath);
+		rsRes = evaluate(domDoc);
 		result = (XSBoolean) rsRes.get(0);
 		assertEquals("true", result.string_value());
 	}
@@ -2077,14 +2012,12 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// set up XPath default namespace in Dynamic Context
 		DynamicContext dc = setupDynamicContext(schema);
-        dc.set_variable(new QName("value"), new XSString("2.5"));
+        setVariable("value",new XSString("2.5"));
 		addXPathDefaultNamespace("http://www.w3.org/2001/XMLSchema");
 
 		String xpath = "$value castable as double";
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, null);
-		ResultSequence rs = eval.evaluate(path);
+		compileXPath(xpath);
+		ResultSequence rs = evaluate(null);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -2186,42 +2119,40 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 		
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		
 		// test a)
 		String xpath = "count(subsequence(X/*, 2)) eq 2";
-		XPath path = compileXPath(dc, xpath);		
-		ResultSequence rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		ResultSequence rs = evaluate(domDoc);
 		String actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test b)
 		xpath = "subsequence(X/*, 2) instance of element(*, xs:integer)+";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(dc, xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test c)
 		xpath = "deep-equal(subsequence((1,2,3,4), 2), (2,3,4))";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(dc, xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test d)
 		// hetrogeneous sequence as input. arity 3 mode.
 		xpath = "deep-equal(subsequence(('a', 1, 1.5), 2, 2), (1, 1.5))";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(dc, xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test e)
 		// hetrogeneous sequence as input. arity 3 mode (startingLoc is < 0).
 		xpath = "deep-equal(subsequence(('a', 1, 1.5, 'b'), -2, 3), ())";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(dc, xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 	}
@@ -2237,26 +2168,25 @@ public class TestBugs extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar(schemaURL);
 		
 		DynamicContext dc = setupDynamicContext(schema);;		
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		
 		// test a)
 		String xpath = "count(//a) = count(distinct-values(//a))";
-		XPath path = compileXPath(dc, xpath);		
-		ResultSequence rs = eval.evaluate(path);
+		compileXPath(xpath);		
+		ResultSequence rs = evaluate(domDoc);
 		String actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test b)
 		xpath = "count(X/a) = count(distinct-values(X/a))";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(dc, xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("true", actual);
 		
 		// test c)
 		xpath = "count(//b) = count(distinct-values(//b))";
-		path = compileXPath(dc, xpath);		
-		rs = eval.evaluate(path);
+		compileXPath(dc, xpath);		
+		rs = evaluate(domDoc);
 		actual = ((XSBoolean) rs.first()).string_value();
 		assertEquals("false", actual);
 	}
@@ -2332,8 +2262,10 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 	
 	private CollationProvider createLengthCollatorProvider() {
+		final CollationProvider oldProvider = getStaticContext().getCollationProvider();
 		return new CollationProvider() {
-			public Comparator get_collation(String name) {
+			
+			public Comparator getCollation(String name) {
 				if (name.equals(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR)) {
 					return new Comparator() {
 						public int compare(Object o1, Object o2) {
@@ -2341,7 +2273,11 @@ public class TestBugs extends AbstractPsychoPathTest {
 						}
 					};
 				}
-				return null;
+				return oldProvider.getCollation(name);
+			}
+
+			public String getDefaultCollation() {
+				return oldProvider.getDefaultCollation();
 			}
 		};
 	}

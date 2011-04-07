@@ -77,11 +77,9 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "/employees/employee[1]/location";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		ElementType result = (ElementType) rs.first();
 		String resultValue = result.node_value().getTextContent();
@@ -96,11 +94,9 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "$input-context/employees/employee[1]/location";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		XPath path = compileXPath(dc, xpath);
-
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		ElementType result = (ElementType) rs.first();
 		String resultValue = result.node_value().getTextContent();

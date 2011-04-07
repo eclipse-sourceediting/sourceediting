@@ -38,16 +38,15 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace(null, "http://typedecl");
+		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
 		String xpath = "/root/InterleaveType instance of element()";
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -73,16 +72,15 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace(null, "http://typedecl");
+		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
 		String xpath = "/root/InterleaveType instance of element(InterleaveType)";
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -108,16 +106,15 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace(null, "http://typedecl");
+		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
 		String xpath = "/root/InterleaveType instance of element(integer)";
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -146,14 +143,13 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace(null, "http://typedecl");
+		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
 		String xpath = "/root/InterleaveType instance of element(InterleaveType, InterleaveType)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 
@@ -176,14 +172,13 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 		XSModel schema = getGrammar();
 
 		DynamicContext dc = setupDynamicContext(schema);
-		dc.add_namespace(null, "http://typedecl");
+		addNamespace(null, "http://typedecl");
 		// addUserDefinedSimpleTypes(schema, dc);
 
 		String xpath = "/root/InterleaveType instance of element(InterleaveType, InterleaveType2)";
-		XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-		Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		ResultSequence rs = eval.evaluate(path);
 
 		XSBoolean result = (XSBoolean) rs.first();
 

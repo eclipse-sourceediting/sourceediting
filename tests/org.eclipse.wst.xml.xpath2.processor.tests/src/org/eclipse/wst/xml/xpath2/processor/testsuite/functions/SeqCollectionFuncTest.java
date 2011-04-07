@@ -45,10 +45,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -81,10 +80,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -117,10 +115,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -155,10 +152,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = "fn:count(fn:collection(\"" + COLLECTION1 + "\"))";
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -193,10 +189,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -231,10 +226,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = "fn:count(fn:collection(\"" + COLLECTION2 + "\"))";
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -269,10 +263,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = extractXPathExpression(xqFile, inputFile);
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = buildResultString(rs);
 
@@ -307,10 +300,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = "fn:collection(\"" + COLLECTION2 + "\")//*[text()[contains(.,\"TCP/IP\")]]";
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = "<result>" + buildXMLResultString(rs) + "</result>";
 
@@ -345,10 +337,9 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		String xpath = "for $d in fn:collection(\"" + COLLECTION1 + "\") return ($d//title)[1]";
 		String actual = null;
 		try {
-			XPath path = compileXPath(dc, xpath);
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
 
-			Evaluator eval = new DefaultEvaluator(dc, domDoc);
-			ResultSequence rs = eval.evaluate(path);
 
 			actual = "<result>" + buildXMLResultString(rs) + "</result>";
 
@@ -377,7 +368,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		HashMap map = new HashMap();
 		map.put(FnCollection.DEFAULT_COLLECTION_URI, arraylist);
 		map.put(COLLECTION1, arraylist);
-		dc.set_collections(map);
+		setCollections(map);
 	}
 
 	private void loadCollection2Default(DynamicContext dc) throws Exception {
@@ -395,7 +386,7 @@ public class SeqCollectionFuncTest extends AbstractPsychoPathTest {
 		HashMap map = new HashMap();
 		map.put(FnCollection.DEFAULT_COLLECTION_URI, arraylist);
 		map.put(COLLECTION2, arraylist);
-		dc.set_collections(map);
+		setCollections(map);
 	}
 
 }
