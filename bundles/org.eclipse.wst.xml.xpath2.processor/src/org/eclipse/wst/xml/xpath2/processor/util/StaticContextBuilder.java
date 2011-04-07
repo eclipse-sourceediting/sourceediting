@@ -33,11 +33,11 @@ import org.eclipse.wst.xml.xpath2.api.Function;
 import org.eclipse.wst.xml.xpath2.api.FunctionLibrary;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.StaticVariableResolver;
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.w3c.dom.Node;
 
@@ -60,7 +60,6 @@ public class StaticContextBuilder implements StaticContext {
 	}
 
 	private URI _base_uri;
-	private Map/*<String, TypeDefinition>*/ _documents = new HashMap/*<String, TypeDefinition>*/();
 	private Map/*<String, TypeDefinition>*/ _variableTypes = new HashMap/*<String, TypeDefinition>*/();
 	private Map/*<String, Short>*/ _variableCardinality = new HashMap/*<String, Short>*/();
 	private Map/*<String, TypeDefinition>*/ _collectionTypes = new HashMap/*<String, TypeDefinition>*/();
@@ -262,5 +261,9 @@ public class StaticContextBuilder implements StaticContext {
 	public StaticContextBuilder withDefaultCollation(String uri) {
 		this._defaultCollation = uri;
 		return this;
+	}
+
+	public ItemType getDocumentType(URI documentUri) {
+		return null;
 	}
 }

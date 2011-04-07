@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.internal.XPathError;
@@ -134,5 +133,4 @@ public class BuiltinTypeDefinition implements AtomicTypeDefinition  {
 	public Class getNativeType() {
 		return nativeType;
 	}
-
 }

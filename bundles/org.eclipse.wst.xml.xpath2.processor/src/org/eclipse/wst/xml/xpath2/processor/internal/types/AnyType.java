@@ -53,7 +53,7 @@ public abstract class AnyType implements SingleItemSequence {
 	}
 	
 	public ItemType getItemType() {
-		return new SimpleAtomicTypeImpl(getTypeDefinition());
+		return new SimpleAtomicItemTypeImpl(getTypeDefinition());
 	}
 	
 //	abstract public Object getNativeValue();

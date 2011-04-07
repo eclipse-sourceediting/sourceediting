@@ -14,14 +14,12 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
-import java.util.Collections;
-
-import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
+import org.w3c.dom.Comment;
 
 /**
  * A representation of the CommentType datatype

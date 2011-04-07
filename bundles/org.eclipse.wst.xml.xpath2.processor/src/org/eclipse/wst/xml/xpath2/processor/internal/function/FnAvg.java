@@ -27,16 +27,10 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.utils.ScalarTypePromoter;
 import org.eclipse.wst.xml.xpath2.processor.internal.utils.TypePromoter;
 

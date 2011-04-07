@@ -3,18 +3,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types.xerces;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.xerces.dom.PSVIAttrNSImpl;
-import org.apache.xerces.dom.PSVIElementNSImpl;
-import org.apache.xerces.xs.ShortList;
 import org.apache.xerces.xs.XSObjectList;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.api.typesystem.ComplexTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class SimpleXercesTypeDefinition extends XercesTypeDefinition implements SimpleTypeDefinition {

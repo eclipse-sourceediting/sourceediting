@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 
 /**
  * Class for compare for equal function.

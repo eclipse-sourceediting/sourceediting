@@ -13,7 +13,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
@@ -23,7 +22,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**

@@ -32,6 +32,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
+import org.w3c.dom.Node;
 
 import java.net.URI;
 import java.util.*;
@@ -192,6 +193,11 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 			public TypeDefinition getDefaultCollectionType() {
 				return BuiltinTypeLibrary.XS_UNTYPED;
 
+			}
+
+			public org.eclipse.wst.xml.xpath2.api.typesystem.ItemType getDocumentType(
+					URI documentUri) {
+				return new NodeItemTypeImpl(org.eclipse.wst.xml.xpath2.api.typesystem.ItemType.OCCURRENCE_OPTIONAL, Node.DOCUMENT_NODE);
 			}
 			
 		};
@@ -785,6 +791,9 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		QName var = e.name();
 		
 		if (! isVariableInScope(var))
+			report_error(new StaticNameError(StaticNameError.NAME_NOT_FOUND));
+		
+		if (getVariableType(var) == null)
 			report_error(new StaticNameError(StaticNameError.NAME_NOT_FOUND));
 		
 		if (!expand_qname(var))

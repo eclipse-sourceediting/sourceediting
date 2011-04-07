@@ -16,9 +16,24 @@ import javax.xml.namespace.QName;
 /**
  * @since 2.0
  */
-public interface ElementItem extends ItemType {
-
+public interface NodeItemType extends ItemType {
+	/**
+	 * For attribute and element types, return whether the name
+	 * part of the type test is a wildcard.
+	 * 
+	 * @return Wildcard test?
+	 */
 	boolean isWildcard();
+	
+	/**
+	 * @return name of the item type, if applicable, otherwise null
+	 */
 	QName getName();
-	TypeDefinition getType();
+
+	/**
+	 * Node type as per list in org.w3c.dom.Node
+	 * 
+	 * @return The DOM node type
+	 */
+	short getNodeType();
 }

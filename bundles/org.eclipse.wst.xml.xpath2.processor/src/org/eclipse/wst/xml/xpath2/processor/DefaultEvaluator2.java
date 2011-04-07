@@ -159,7 +159,6 @@ public class DefaultEvaluator2 implements XPathVisitor, Evaluator {
 
 	private DynamicContext _legacyDc;
 	private org.eclipse.wst.xml.xpath2.api.DynamicContext _dc;
-	private XPathException _err;
 
 	// this is a parameter that may be set on a call...
 	// the parameter may become invalid on the next call... i.e. the
@@ -430,9 +429,6 @@ public class DefaultEvaluator2 implements XPathVisitor, Evaluator {
 				return _sc;
 			}
 		};
-		
-
-		_err = null;
 
 		// initialize context item with root of document
 		ResultBuffer rs = new ResultBuffer();

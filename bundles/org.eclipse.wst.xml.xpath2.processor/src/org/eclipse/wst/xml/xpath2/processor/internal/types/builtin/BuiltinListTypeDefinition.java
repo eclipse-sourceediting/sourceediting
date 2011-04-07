@@ -42,8 +42,7 @@ public class BuiltinListTypeDefinition extends BuiltinTypeDefinition implements 
 	}
 
 	public TypeDefinition getItemType() {
-		// TODO Auto-generated method stub
-		return null;
+		return itemType;
 	}
 
 	public List getMemberTypes() {

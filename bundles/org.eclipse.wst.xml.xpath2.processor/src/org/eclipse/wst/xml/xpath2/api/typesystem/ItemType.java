@@ -16,13 +16,13 @@ package org.eclipse.wst.xml.xpath2.api.typesystem;
  */
 public interface ItemType {
 	
-	public int getOccurrence();
+	public short getOccurrence();
 	
-	public final static int OCCURRENCE_OPTIONAL = 0;
-	public final static int OCCURRENCE_ONE = 1;
-	public final static int OCCURRENCE_NONE_OR_MANY = 2;
-	public final static int OCCURRENCE_ONE_OR_MANY = 3;
+	public final static short OCCURRENCE_OPTIONAL = 0;
+	public final static short OCCURRENCE_ONE = 1;
+	public final static short OCCURRENCE_NONE_OR_MANY = 2;
+	public final static short OCCURRENCE_ONE_OR_MANY = 3;
 
-	public final static int ALWAYS_ONE_MASK = 0x01;
-	public final static int MAYBE_MANY_MASK = 0x02;
+	public final static short ALWAYS_ONE_MASK = 0x01;
+	public final static short MAYBE_MANY_MASK = 0x02;
 }

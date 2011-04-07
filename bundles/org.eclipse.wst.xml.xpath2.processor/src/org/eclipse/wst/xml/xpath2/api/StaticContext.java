@@ -17,6 +17,7 @@ import java.util.Collection;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 
@@ -91,7 +92,7 @@ public interface StaticContext {
 	 * documents are available. A URI need not be found in the statically
 	 * known documents to be accessed using fn:doc.
 	 */
-
+	public ItemType getDocumentType(URI documentUri);
 
 	/**
 	 * [Definition: Statically known namespaces. This is a set of (prefix,
@@ -101,7 +102,6 @@ public interface StaticContext {
 	 * Schema]. Note the difference between in-scope namespaces, which is a
 	 * dynamic property of an element node, and statically known namespaces,
 	 * which is a static property of an expression.
-	 * 
 	 * @return The statically known namespace context 
 	 */
 	public NamespaceContext getNamespaceContext();

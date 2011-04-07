@@ -22,23 +22,13 @@
 package org.eclipse.wst.xml.xpath2.processor;
 
 import java.math.BigInteger;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
-import javax.xml.XMLConstants;
-
-import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
-import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
-import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.Axis;
 import org.eclipse.wst.xml.xpath2.processor.internal.DescendantOrSelfAxis;
@@ -121,7 +111,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.FsMod;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FsNe;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FsPlus;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FsTimes;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.FunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.OpExcept;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.OpIntersect;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.OpTo;
@@ -137,9 +126,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.PIType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.TextType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
 import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 import org.w3c.dom.Document;
@@ -158,8 +145,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			"anyAtomicType", XML_SCHEMA_NS);
 
 	private DynamicContext _dc;
-	private org.eclipse.wst.xml.xpath2.api.DynamicContext _newDc;
-	private XPathException _err;
 
 	// stuff anyone may use
 	private XSInteger _g_xsint;
@@ -169,12 +154,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	// previous parameter is not saved... so use with care! [remember...
 	// this thing is highly recursive]
 	private Object _param;
-	private EvaluationContext _ec;
 
-	private StaticContext _sc;
-
-	private boolean _awaitingPush;
-	
 	Focus focus() { return _dc.focus(); }
 	
 	void set_focus(Focus f) { _dc.set_focus(f); }
@@ -199,7 +179,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 */
 	public DefaultEvaluator(DynamicContext dc, Document doc) {
 		_dc = dc;
-		_err = null;
 
 		// initialize context item with root of document
 		ResultSequence rs = ResultSequenceFactory.create_new();
@@ -210,313 +189,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		_param = null;
 
 		_g_xsint = new XSInteger();
-	}
-
-	private void popScope() {
-		if (_awaitingPush) _awaitingPush = false; 
-		if (_innerScope == null) throw new IllegalStateException("Unmatched scope pop");
-		_innerScope = _innerScope.nextScope;
-	}
-
-	private QName resolve(QName var) {
-		String ns = _sc.getNamespaceContext().getNamespaceURI(var.prefix());
-		return new QName(ns, var.local());
-	}
-
-	private void pushScope(QName var, org.eclipse.wst.xml.xpath2.api.ResultSequence value) {
-		_awaitingPush = false; 
-		_innerScope = new VariableScope(resolve(var), value, _innerScope);		
-	}
-	
-	/**
-	 * @since 2.0
-	 */
-	public DefaultEvaluator(org.eclipse.wst.xml.xpath2.api.StaticContext staticContext, org.eclipse.wst.xml.xpath2.api.DynamicContext dynamicContext, Object[] contextItems) {
-		_sc = staticContext;
-		_newDc = dynamicContext;
-		_dc = new DynamicContext() {
-
-			private Focus _focus;
-			{
-				_ec = new EvaluationContext() {
-					
-					public org.eclipse.wst.xml.xpath2.api.DynamicContext getDynamicContext() {
-						return _newDc;
-					}
-					
-					public AnyType getContextItem() {
-						return _focus.context_item();
-					}
-					
-					public int getContextPosition() {
-						return _focus.position();
-					}
-
-					public int getLastPosition() {
-						return _focus.last();
-					}
-					
-					public StaticContext getStaticContext() {
-						return _sc;
-					}
-				};
-			}
-			public boolean xpath1_compatible() {
-				return false;
-			}
-
-			public boolean prefix_exists(String prefix) {
-				return ! XMLConstants.NULL_NS_URI.equals(_sc.getNamespaceContext().getNamespaceURI(prefix));
-			}
-
-			public String resolve_prefix(String prefix) {
-				return null;
-			}
-
-			public String default_namespace() {
-				return null;
-			}
-
-			public String default_function_namespace() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public TypeDefinition attribute_type_definition(QName attr) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public TypeDefinition element_type_definition(QName elem) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public boolean attribute_declared(QName attr) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean element_declared(QName elem) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean function_exists(QName name, int arity) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public XSAnyURI base_uri() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void new_scope() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void destroy_scope() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void add_variable(QName name) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public boolean del_variable(QName name) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean variable_exists(QName name) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean variable_in_scope(QName var) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean type_defined(QName name) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean derives_from(NodeType at, QName et) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean derives_from(NodeType at, TypeDefinition et) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public void add_namespace(String prefix, String ns) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public boolean expand_function_qname(QName name) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean expand_elem_type_qname(QName name) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean expand_qname(QName name) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public void add_function_library(FunctionLibrary fl) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public AnyAtomicType make_atomic(QName name) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void set_base_uri(String baseuri) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public Map get_collections() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void set_collections(Map collections) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public TypeModel getTypeModel(Node element) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public AnyType context_item() {
-				return _focus.context_item();
-			}
-
-			public int context_position() {
-				return _focus.position();
-			}
-
-			public int last() {
-				return _focus.last();
-			}
-
-			public Object get_variable(QName name) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void set_variable(QName var, AnyType val) {
-				pushScope(var, (org.eclipse.wst.xml.xpath2.api.ResultSequence)val);
-			}
-
-			public ResultSequence evaluate_function(QName name, Collection args) throws DynamicError {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public XSDuration tz() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ResultSequence get_doc(URI uri) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public URI resolve_uri(String uri) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public GregorianCalendar current_date_time() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void set_focus(Focus focus) {
-				_focus = focus;
-			}
-
-			public Focus focus() {
-				return _focus;
-			}
-
-			public Comparator get_collation(String uri) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public String default_collation_name() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public int node_position(Node node) {
-				return 0;
-			}
-
-			public void set_variable(QName var, org.eclipse.wst.xml.xpath2.processor.ResultSequence val) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		};
-		
-
-		_err = null;
-
-		// initialize context item with root of document
-		ResultBuffer rs = new ResultBuffer();
-		for (Object obj : contextItems) {
-			if (obj instanceof Node) rs.add(NodeType.dom_to_xpath((Node)obj, _sc.getTypeModel()));
-		}
-
-		set_focus(new Focus(rs.getSequence()));
-		_param = null;
-	}
-
-
-	class VariableScope {
-		public VariableScope(QName name, org.eclipse.wst.xml.xpath2.api.ResultSequence value, VariableScope nextScope) {
-			this.name = name;
-			this.value = value;
-			this.nextScope = nextScope;
-		}
-		final public QName name;
-		final public org.eclipse.wst.xml.xpath2.api.ResultSequence value;
-		final public VariableScope nextScope; 
-	}	
-	
-	private VariableScope _innerScope = null;
-
-	private org.eclipse.wst.xml.xpath2.api.ResultSequence getVariable(QName name) {
-		// First, try local scopes
-		VariableScope scope = _innerScope;
-		while (scope != null) {
-			if (name.equals(scope.name)) return scope.value;
-			scope = scope.nextScope;
-		}
-		return (org.eclipse.wst.xml.xpath2.api.ResultSequence) _dc.get_variable(name);
 	}
 
 	// XXX this kinda sux

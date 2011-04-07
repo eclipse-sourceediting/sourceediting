@@ -11,15 +11,75 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.math.BigInteger;
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AddExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AndExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AnyKindTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AttributeTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AxisStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.BinExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CastExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CastableExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CmpExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CntxItemExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CommentTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DecimalLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DivExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DocumentTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DoubleLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ElementTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ExceptExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.Expr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.FilterExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ForExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ForwardStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.FunctionCall;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IDivExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IfExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.InstOfExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntegerLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntersectExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ItemType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.MinusExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ModExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.MulExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.NameTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.NodeTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.OrExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PITest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ParExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PipeExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PlusExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PrimaryExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.QuantifiedExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.RangeExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ReverseStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SchemaAttrTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SchemaElemTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SequenceType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SingleType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.Step;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.StepExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.StringLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SubExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.TextTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.TreatAsExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.UnExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.UnionExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.VarExprPair;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.VarRef;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathNode;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.OpFunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**
  * Normalizer that uses XPathVisitor.

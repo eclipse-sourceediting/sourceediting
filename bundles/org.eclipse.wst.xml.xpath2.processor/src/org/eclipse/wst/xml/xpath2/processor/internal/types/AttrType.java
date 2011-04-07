@@ -21,7 +21,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
@@ -30,7 +29,6 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
 import org.w3c.dom.TypeInfo;
 
 /**
