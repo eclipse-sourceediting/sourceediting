@@ -119,6 +119,9 @@
             <uri
                 name="http://schemas.xmlsoap.org/soap/encoding/"
                 uri="xsd/soapenc.xsd" />
+            <uri
+                name="http://schemas.xmlsoap.org/soap/envelope/"
+                uri="xsd/soapenv.xsd" />
 
 
             <!-- these are removed from the catalog, since they are -not- 
