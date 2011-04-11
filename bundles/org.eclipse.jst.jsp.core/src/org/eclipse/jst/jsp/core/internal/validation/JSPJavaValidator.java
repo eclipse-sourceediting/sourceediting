@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -332,6 +332,12 @@ public class JSPJavaValidator extends JSPValidator {
 				// add new messages
 				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
 					IProblem problem = (IProblem) problems.get(i);
+					/*
+					 * Possible error in problem collection; EL translation is
+					 * extensible, so we must be paranoid about this.
+					 */
+					if (problem == null)
+						continue;
 					IMessage m = createMessageFromProblem(problem, f, translation, domModel.getStructuredDocument());
 					if (m != null) {
 						if (problem.getID() == IProblem.Task) {
