@@ -283,13 +283,31 @@ public class DefaultEvaluator2 implements XPathVisitor, Evaluator {
 			}
 
 			public boolean derives_from(NodeType at, QName et) {
-				// TODO Auto-generated method stub
-				return false;
+				
+				TypeDefinition td = _sc.getTypeModel().getType(at.node_value());
+
+				short method = TypeDefinition.DERIVATION_EXTENSION | TypeDefinition.DERIVATION_RESTRICTION;
+
+				// XXX
+				if (!et.expanded()) {
+					String pre = et.prefix();
+
+					if (pre != null) {
+						if (prefix_exists(pre)) {
+							et.set_namespace(resolve_prefix(pre));
+						} else
+							assert false;
+					} else
+						et.set_namespace(default_namespace());
+				}
+
+				return td != null && td.derivedFrom(et.namespace(), et.local(), method);
 			}
 
 			public boolean derives_from(NodeType at, TypeDefinition et) {
-				// TODO Auto-generated method stub
-				return false;
+				TypeDefinition td = _sc.getTypeModel().getType(at.node_value());
+				short method = 0;
+				return td.derivedFromType(et, method);
 			}
 
 			public void add_namespace(String prefix, String ns) {
@@ -369,7 +387,7 @@ public class DefaultEvaluator2 implements XPathVisitor, Evaluator {
 
 			public org.eclipse.wst.xml.xpath2.processor.ResultSequence get_doc(URI uri) {
 				Document document = _dc.getDocument(uri);
-				if (document == null) return ResultSequenceFactory.create_new();
+				if (document == null) return null;
 				return newToOld(new DocType(document, _sc.getTypeModel()));
 			}
 
@@ -1303,7 +1321,7 @@ public class DefaultEvaluator2 implements XPathVisitor, Evaluator {
 			if (!focus.advance_cp())
 				break;
 		}
-
+		
 		// make sure we didn't change focus
 		focus.set_position(original_pos);
 
@@ -1349,12 +1367,10 @@ public class DefaultEvaluator2 implements XPathVisitor, Evaluator {
 				}
 			}
 		}
-
 		// XXX lame
 		if (node_types) {
 			rs = NodeType.linarize(rs);
 		}
-
 		return rs.getSequence();
 	}
 
@@ -2125,8 +2141,8 @@ public class DefaultEvaluator2 implements XPathVisitor, Evaluator {
 					XSBoolean nilled = (XSBoolean) node.nilled().first();
 					if (nilled.value()) continue;
 				}
-				rb.add(node);
 			}
+			rb.add(node);
 		}
 		((Pair) _param)._two = rb.getSequence();
 		return ((Pair) _param)._two;

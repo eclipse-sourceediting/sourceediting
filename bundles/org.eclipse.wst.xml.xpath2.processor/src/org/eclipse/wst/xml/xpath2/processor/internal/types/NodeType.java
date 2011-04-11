@@ -229,8 +229,7 @@ public abstract class NodeType extends AnyType {
 	private static int compareDocuments(Document docA, Document docB) {
 		// Arbitrary but fulfills the spec (provided documenURI is always set)
 		if (docB.getDocumentURI() == null && docA.getDocumentURI() == null) {
-			// Best guess
-			return 0; 
+			return System.identityHashCode(docA) - System.identityHashCode(docB); 
 		}
 		return docB.getDocumentURI().compareTo(docA.getDocumentURI());
 	}
