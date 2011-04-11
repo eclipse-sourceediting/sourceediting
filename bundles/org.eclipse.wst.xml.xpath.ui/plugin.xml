@@ -59,9 +59,6 @@
 
    <extension
          point="org.eclipse.ui.views">
-      <category      
-            name="%xmlCategoryName"
-            id="org.eclipse.wst.xml"/>
     <view
           category="org.eclipse.wst.xml"
           class="org.eclipse.wst.xml.xpath.ui.internal.views.XPathView"
