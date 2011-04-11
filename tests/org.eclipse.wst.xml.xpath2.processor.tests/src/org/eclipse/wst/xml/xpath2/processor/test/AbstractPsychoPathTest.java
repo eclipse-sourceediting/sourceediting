@@ -116,7 +116,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	protected Bundle bundle = null;
 
 	private DefaultDynamicContext dynamicContext = null;
-	protected boolean useNewApi = false;
+	protected boolean useNewApi = true;
 	private StaticContextBuilder staticContextBuilder;
 	private DynamicContextBuilder dynamicContextBuilder;
 	
