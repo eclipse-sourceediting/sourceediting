@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,42 +29,58 @@ class CharOperation {
 
 
 	/**
-	 * note: This method taken from org.eclipse.jdt.core.compiler.CharOperation
+	 * note: This method taken from
+	 * org.eclipse.jdt.core.compiler.CharOperation
 	 * 
-	 * Answers true if the two arrays are identical character by character, otherwise false.
-	 * The equality is case sensitive.
-	 * <br>
+	 * Answers true if the two arrays are identical character by character,
+	 * otherwise false, respecting the value of ignoreCase. <br>
 	 * <br>
 	 * For example:
 	 * <ol>
-	 * <li><pre>
+	 * <li>
+	 * 
+	 * <pre>
 	 *    first = null
 	 *    second = null
 	 *    result => true
 	 * </pre>
+	 * 
 	 * </li>
-	 * <li><pre>
+	 * <li>
+	 * 
+	 * <pre>
 	 *    first = { }
 	 *    second = null
 	 *    result => false
 	 * </pre>
+	 * 
 	 * </li>
-	 * <li><pre>
+	 * <li>
+	 * 
+	 * <pre>
 	 *    first = { 'a' }
 	 *    second = { 'a' }
 	 *    result => true
 	 * </pre>
+	 * 
 	 * </li>
-	 * <li><pre>
+	 * <li>
+	 * 
+	 * <pre>
 	 *    first = { 'a' }
 	 *    second = { 'A' }
 	 *    result => false
 	 * </pre>
+	 * 
 	 * </li>
 	 * </ol>
-	 * @param first the first array
-	 * @param second the second array
-	 * @return true if the two arrays are identical character by character, otherwise false
+	 * 
+	 * @param first
+	 *            the first array
+	 * @param second
+	 *            the second array
+	 * @return true if the two arrays are identical character by character,
+	 *         otherwise false, acounting for <code>ignoreCase</code>
 	 */
 	public static final boolean equals(char[] first, char[] second, boolean ignoreCase) {
 		if (first == second)
