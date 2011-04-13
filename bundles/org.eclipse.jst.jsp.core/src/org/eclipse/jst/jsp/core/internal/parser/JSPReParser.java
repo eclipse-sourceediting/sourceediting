@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,17 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 		// None of the superclass' cases were valid, so check for JSP cases
 		if (result == null) {
 			result = checkForJSP();
+			if (result == null)
+				result = checkForJSPEL();
 		}
+		return result;
+	}
+	
+	private StructuredDocumentEvent checkForJSPEL() {
+		StructuredDocumentEvent result = null;
+		result =  checkForCriticalKey("${"); //$NON-NLS-1$
+		if (result == null) 
+			result = checkForCriticalKey("}"); //$NON-NLS-1$
 		return result;
 	}
 
