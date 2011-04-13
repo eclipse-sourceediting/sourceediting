@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xml.core.internal.validation;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
@@ -20,9 +21,12 @@ import java.util.Vector;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.sse.core.internal.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
@@ -56,10 +60,10 @@ public class ValidatorHelper
    * Create an XML Reader.
    * 
    * @return An XML Reader if one can be created or null.
-   * @throws Exception
+   * @throws SAXNotSupportedException 
+   * @throws SAXNotRecognizedException 
    */
-  protected XMLReader createXMLReader(String uri) throws Exception
-  {     
+  protected XMLReader createXMLReader(String uri) throws SAXNotRecognizedException, SAXNotSupportedException {     
     XMLReader reader = null;
     
     reader = new org.apache.xerces.parsers.SAXParser();     
@@ -146,9 +150,11 @@ public class ValidatorHelper
       inputSource.setCharacterStream(characterStream);
       reader.parse(inputSource);
     }
-    catch (Exception e)
-    {     
-      //System.out.println(e);
+    catch (SAXException saxEx) {
+    	Logger.log(Logger.ERROR, saxEx.getMessage());
+    }
+    catch(IOException ioEx) {
+    	Logger.log(Logger.ERROR, ioEx.getMessage());
     }
   }
   
