@@ -125,4 +125,10 @@ public interface DynamicContext {
 	 */	
 	public ResultSequence/*<String, List<Document>>*/ getDefaultCollection();
 
+	/** 
+	 * Actual collation providers available for use dynamically. This could
+	 * differ from the collations available statically, but would give
+	 * unexpected results.
+	 */
+	public CollationProvider getCollationProvider();
 }

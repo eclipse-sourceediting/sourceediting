@@ -14,11 +14,13 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
 
 /**
  * Returns the value of the base-uri property from the static context. If the
@@ -43,8 +45,8 @@ public class FnStaticBaseUri extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return static_base_uri(args, static_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return static_base_uri(args, ec.getStaticContext());
 	}
 
 	/**
@@ -64,6 +66,6 @@ public class FnStaticBaseUri extends Function {
 		assert sc != null;
 
 		// make a copy prolly
-		return ResultSequenceFactory.create_new(sc.base_uri());
+		return ResultSequenceFactory.create_new(new XSAnyURI(sc.getBaseUri().toString()));
 	}
 }

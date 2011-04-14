@@ -14,8 +14,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -159,7 +159,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * @return New XSBoolean representation of true/false result of the equality
 	 *         comparison
 	 */
-	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
 		XSBoolean barg = (XSBoolean) NumericType.get_single_type(arg,
 				XSBoolean.class);
 

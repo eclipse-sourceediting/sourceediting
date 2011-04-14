@@ -17,10 +17,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.ListIterator;
 
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
@@ -49,7 +49,7 @@ public class FnData extends Function {
 	 *            argument expressions.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
 		// 1 argument only!
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
@@ -67,7 +67,7 @@ public class FnData extends Function {
 	 */
 	public static ResultSequence atomize(ResultSequence arg) {
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
@@ -83,31 +83,7 @@ public class FnData extends Function {
 			}
 		}
 
-		return rs;
-	}
-
-	/**
-	 * Atomize a ResultSequnce argument expression.
-	 * 
-	 * @param arg
-	 *            input expression.
-	 */
-	public static void fast_atomize(ResultSequence arg) {
-		for (ListIterator i = arg.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			if (at instanceof AnyAtomicType) {
-				continue;
-			}
-
-			// XXX prolly wrong!
-			else if (at instanceof NodeType) {
-				NodeType nt = (NodeType) at;
-
-				i.set(nt.typed_value().first());
-			} else
-				assert false;
-		}
+		return rs.getSequence();
 	}
 
 	/**

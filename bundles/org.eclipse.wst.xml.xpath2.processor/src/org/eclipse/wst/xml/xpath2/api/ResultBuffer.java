@@ -19,6 +19,7 @@ import java.util.ListIterator;
 
 import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.SingleItemSequence;
 
 /**
  * @since 2.0
@@ -29,7 +30,8 @@ public class ResultBuffer {
 	
 	public ResultSequence getSequence() {
 		if (values.size() == 0) return EMPTY;
-		if (values.size() == 1) return new SingleResultSequence((Item) values.get(0));
+		if (values.size() == 1) return wrap((Item) values.get(0));
+		
 		return new ArrayResultSequence((Item[]) values.toArray(new Item[values.size()]));
 	}
 	
@@ -337,6 +339,13 @@ public class ResultBuffer {
 	public ResultBuffer concat(Collection/*<Item>*/ others) {
 		this.values.addAll(others);
 		return this;
+	}
+
+	public static ResultSequence wrap(Item item) {
+		if (item instanceof SingleItemSequence)
+			return (SingleItemSequence)item;
+		
+		return new SingleResultSequence(item); 
 	}
 
 }

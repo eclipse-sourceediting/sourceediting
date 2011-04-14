@@ -87,7 +87,7 @@ public interface Function {
 	 *            argument expressions.
 	 * @return Result of evaluation.
 	 */
-	ResultSequence evaluate(Collection/*<ResultSequence>*/ args, EvaluationContext evaluationContext);
+	ResultSequence evaluate(Collection<ResultSequence> args, EvaluationContext evaluationContext);
 
 	/**
 	 * Evaluate the exact result type.
@@ -96,5 +96,5 @@ public interface Function {
 	 *            argument expressions.
 	 * @return Result of evaluation.
 	 */
-	TypeDefinition computeReturnType(Collection/*<TypeDefinition>*/ args, StaticContext sc);
+	TypeDefinition computeReturnType(Collection<TypeDefinition> args, StaticContext sc);
 }

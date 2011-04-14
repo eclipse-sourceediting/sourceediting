@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -143,8 +144,8 @@ public class FnNormalizeUnicode extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the space in the arguments being normalized.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return normalize_unicode(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return normalize_unicode(args, ec.getDynamicContext());
 	}
 
 	/**

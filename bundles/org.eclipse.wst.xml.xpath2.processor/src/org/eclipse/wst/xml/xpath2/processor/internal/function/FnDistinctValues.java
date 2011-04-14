@@ -23,7 +23,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -57,8 +58,8 @@ public class FnDistinctValues extends AbstractCollationEqualFunction {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return distinct_values(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return distinct_values(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class FnDistinctValues extends AbstractCollationEqualFunction {
 			arg2 = (ResultSequence) citer.next();
 		}
 		
-		String collationURI = context.default_collation_name();
+		String collationURI = context.getCollationProvider().getDefaultCollation();
 		if (!arg2.empty()) {
 			XSString collation = (XSString) arg2.first();
 			collationURI = collation.string_value();
@@ -109,7 +110,7 @@ public class FnDistinctValues extends AbstractCollationEqualFunction {
 	 * @return Result of operation.
 	 */
 	protected static boolean contains(ResultSequence rs, AnyAtomicType item,
-			DynamicContext context, String collationURI) throws DynamicError {
+			DynamicContext context, String collationURI)  {
 		if (!(item instanceof CmpEq))
 			return false;
 

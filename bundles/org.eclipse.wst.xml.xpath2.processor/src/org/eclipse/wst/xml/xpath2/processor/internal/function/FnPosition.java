@@ -16,7 +16,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.math.BigInteger;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -45,8 +45,8 @@ public class FnPosition extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return position(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return position(args, ec);
 	}
 
 	/**
@@ -60,15 +60,15 @@ public class FnPosition extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:position operation.
 	 */
-	public static ResultSequence position(Collection args, DynamicContext dc)
+	public static ResultSequence position(Collection args, EvaluationContext ec)
 			throws DynamicError {
 		assert args.size() == 0;
 
-		if (dc.focus().context_item() == null) {
+		if (ec.getContextItem() == null) {
 			throw DynamicError.contextUndefined();
 		}
 		
-		return ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(dc
-				.context_position())));
+		return ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(ec
+				.getContextPosition())));
 	}
 }

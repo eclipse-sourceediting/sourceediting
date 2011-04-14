@@ -18,7 +18,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -53,8 +54,8 @@ public class FnMax extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return max(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
+		return max(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -68,7 +69,7 @@ public class FnMax extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:max operation.
 	 */
-	public static ResultSequence max(Collection args, DynamicContext context) throws DynamicError {
+	public static ResultSequence max(Collection args, DynamicContext dynamicContext) throws DynamicError {
 
 		ResultSequence arg = get_arg(args, CmpGt.class);
 		if (arg.empty())
@@ -85,7 +86,7 @@ public class FnMax extends Function {
 			if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
 				return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
 			}
-			if (max == null || ((CmpGt)conv).gt((AnyType)max, context)) {
+			if (max == null || ((CmpGt)conv).gt((AnyType)max, dynamicContext)) {
 				max = (CmpGt)conv;
 			}
 		}

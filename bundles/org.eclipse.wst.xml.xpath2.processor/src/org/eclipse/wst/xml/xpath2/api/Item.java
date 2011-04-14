@@ -28,4 +28,6 @@ public interface Item {
 	ItemType getItemType();
 	
 	Object getNativeValue();
+
+	String string_value();
 }

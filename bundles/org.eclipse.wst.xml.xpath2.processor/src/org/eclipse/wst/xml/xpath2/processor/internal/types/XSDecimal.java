@@ -20,16 +20,16 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Iterator;
+
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Iterator;
 
 /**
  * A representation of the Decimal datatype
@@ -227,7 +227,7 @@ public class XSDecimal extends NumericType {
 	 * @return True if the 2 representation represent the same number. False
 	 *         otherwise
 	 */
-	public boolean eq(AnyType at, DynamicContext context) throws DynamicError {
+	public boolean eq(AnyType at, DynamicContext dynamicContext) throws DynamicError {
 		XSDecimal dt = null;
 		if (!(at instanceof XSDecimal)) { 
 			ResultSequence rs = ResultSequenceFactory.create_new(at);

@@ -18,6 +18,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
 
+import javax.xml.datatype.Duration;
+
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -81,6 +83,10 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 */
 	public XSDayTimeDuration() {
 		super(0, 0, 0, 0, 0, 0.0, false);
+	}
+
+	public XSDayTimeDuration(Duration d) {
+		this(d.getDays(), d.getHours(), d.getMinutes(), 0.0, d.getSign() == -1);
 	}
 
 	/**

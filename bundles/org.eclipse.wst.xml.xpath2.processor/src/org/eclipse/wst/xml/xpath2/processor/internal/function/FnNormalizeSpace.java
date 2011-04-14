@@ -19,7 +19,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -67,8 +67,8 @@ public class FnNormalizeSpace extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the space in the arguments being normalized.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return normalize_space(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return normalize_space(args, ec);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class FnNormalizeSpace extends Function {
 	 *             Dynamic error.
 	 * @return The result of normalizing the space in the arguments.
 	 */
-	public static ResultSequence normalize_space(Collection args, DynamicContext d_context)
+	public static ResultSequence normalize_space(Collection args, EvaluationContext ec)
 			throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -88,7 +88,7 @@ public class FnNormalizeSpace extends Function {
 		
 		if (cargs.isEmpty()) {
 		  // support for arity = 0
-		  arg1 = getResultSetForArityZero(d_context);
+		  arg1 = getResultSetForArityZero(ec);
 		}
 		else {
 		  arg1 = (ResultSequence) cargs.iterator().next();

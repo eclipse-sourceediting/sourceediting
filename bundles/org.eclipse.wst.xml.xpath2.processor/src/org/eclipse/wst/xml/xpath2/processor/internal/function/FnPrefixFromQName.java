@@ -15,7 +15,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import javax.xml.XMLConstants;
+
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -46,8 +49,8 @@ public class FnPrefixFromQName extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return prefix(args, _fl.dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
+		return prefix(args, ec.getStaticContext());
 	}
 
 	/**
@@ -59,7 +62,7 @@ public class FnPrefixFromQName extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:prefix-from-QName operation.
 	 */
-	public static ResultSequence prefix(Collection args, DynamicContext dc) throws DynamicError {
+	public static ResultSequence prefix(Collection args, StaticContext sc) throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -77,7 +80,7 @@ public class FnPrefixFromQName extends Function {
 		
 
 		if (prefix != null) {
-			if (dc.prefix_exists(prefix)) {
+			if (! XMLConstants.NULL_NS_URI.equals(sc.getNamespaceContext().getNamespaceURI(prefix))) {
 				  rs.add(new XSNCName(prefix));
 			} else {
 				throw DynamicError.invalidPrefix();

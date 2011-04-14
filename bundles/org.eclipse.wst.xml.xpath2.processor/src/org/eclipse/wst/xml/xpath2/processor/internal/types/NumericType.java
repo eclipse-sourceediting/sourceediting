@@ -13,7 +13,15 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathDiv;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathIDiv;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathMinus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathMod;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathPlus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathTimes;
 
 /**
  * A representation of the NumericType datatype

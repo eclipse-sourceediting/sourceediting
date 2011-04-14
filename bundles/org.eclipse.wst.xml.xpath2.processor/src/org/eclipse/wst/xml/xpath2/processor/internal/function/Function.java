@@ -23,12 +23,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
@@ -56,8 +55,6 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 	 * If "at least", this speci, unlimited if -1
 	 */
 	protected int _max_arity;
-	
-	protected FunctionLibrary _fl;
 
 	/**
 	 * Constructor for Function.
@@ -74,7 +71,6 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 		}
 		_min_arity = arity;
 		_max_arity = arity;
-		_fl = null;
 	}
 
 	/**
@@ -92,7 +88,6 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 		}
 		_min_arity = min_arity;
 		_max_arity = max_arity;
-		_fl = null;
 	}
 
 	/**
@@ -208,7 +203,7 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 				throw new UnsupportedOperationException("ikke længere");
 			}
 			
-			public Object getContextItem() {
+			public Item getContextItem() {
 				throw new UnsupportedOperationException("ikke længere");
 			}
 		}));
@@ -238,7 +233,7 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 			AnyAtomicType expected_aat = (AnyAtomicType) expected_type;
 			
 			// atomize
-			ResultSequence rs = FnData.atomize(arg);
+			ResultSequence rs = ResultSequenceUtil.newToOld(FnData.atomize(arg));
 
 			// cast untyped to expected type
 			result = ResultSequenceFactory.create_new();
@@ -314,11 +309,11 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 		return result;
 	}
 
-	protected static ResultSequence getResultSetForArityZero(DynamicContext d_context)
+	protected static ResultSequence getResultSetForArityZero(EvaluationContext ec)
 			throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		
-		AnyType contextItem = d_context.context_item();
+		Item contextItem = ec.getContextItem();
 		if (contextItem != null) {
 		  // if context item is defined, then that is the default argument
 		  // to fn:string function
@@ -327,30 +322,6 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 			throw DynamicError.contextUndefined();
 		}
 		return rs;
-	}
-
-	/**
-	 * Set the function library variable.
-	 * 
-	 * @param fl
-	 *            Function Library.
-	 */
-	public void set_function_library(FunctionLibrary fl) {
-		_fl = fl;
-	}
-
-	protected StaticContext static_context() {
-		if (_fl == null)
-			return null;
-
-		return _fl.static_context();
-	}
-
-	protected DynamicContext dynamic_context() {
-		if (_fl == null)
-			return null;
-
-		return _fl.dynamic_context();
 	}
 
 	public boolean is_vararg() {
@@ -394,7 +365,7 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 		return BuiltinTypeLibrary.XS_UNTYPED;
 	}
 
-	public org.eclipse.wst.xml.xpath2.api.ResultSequence evaluate(Collection args,
+	public org.eclipse.wst.xml.xpath2.api.ResultSequence evaluate(Collection/*<ResultSequence>*/ args,
 			EvaluationContext evaluationContext) {
 		
 		ResultSequence result = evaluate(args);

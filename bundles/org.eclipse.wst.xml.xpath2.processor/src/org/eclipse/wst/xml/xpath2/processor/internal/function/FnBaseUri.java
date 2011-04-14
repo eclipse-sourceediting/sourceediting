@@ -17,7 +17,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -60,8 +61,8 @@ public class FnBaseUri extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return base_uri(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return base_uri(args, ec);
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class FnBaseUri extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:base-uri operation.
 	 */
-	public static ResultSequence base_uri(Collection args, DynamicContext d_context) 
+	public static ResultSequence base_uri(Collection args, EvaluationContext ec) 
 	                       throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 		
@@ -84,7 +85,7 @@ public class FnBaseUri extends Function {
 		if (cargs.size() == 0) {
 		  // support for arity 0
 		  // get base-uri from the context item.
-		  AnyType contextItem = d_context.context_item();
+		  Item contextItem = ec.getContextItem();
 		  if (contextItem != null) {
 			rs = getBaseUri(contextItem);
 		  }
@@ -110,7 +111,7 @@ public class FnBaseUri extends Function {
 	/*
 	 * Helper function for base-uri support
 	 */
-	public static ResultSequence getBaseUri(AnyType att) {
+	public static ResultSequence getBaseUri(Item att) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		XSAnyURI baseUri = null;
 		  // depending on the node type, we get the base-uri for the node.

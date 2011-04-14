@@ -76,7 +76,7 @@ public class FsMinus extends Function {
 		// make sure we got only one arg
 		if (args.size() != 1)
 			DynamicError.throw_type_error();
-		ResultSequence arg = ResultSequenceUtil.newToOld((org.eclipse.wst.xml.xpath2.api.ResultSequence) args.iterator().next());
+		ResultSequence arg = ResultSequenceUtil.newToOld((org.eclipse.wst.xml.xpath2.processor.ResultSequence) args.iterator().next());
 
 		// make sure we got only one numeric atom
 		if (arg.size() != 1)

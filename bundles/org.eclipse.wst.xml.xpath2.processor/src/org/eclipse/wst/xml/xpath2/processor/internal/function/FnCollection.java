@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -81,8 +81,8 @@ public class FnCollection extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return collection(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return collection(args, ec);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class FnCollection extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:doc operation.
 	 */
-	public static ResultSequence collection(Collection args, DynamicContext dc)
+	public static ResultSequence collection(Collection args, EvaluationContext ec)
 			throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -107,7 +107,7 @@ public class FnCollection extends Function {
 		if (argiter.hasNext()) {
 			arg1 = (ResultSequence) argiter.next();
 		} else {
-			return getCollection(DEFAULT_COLLECTION_URI, dc);
+			return getCollection(DEFAULT_COLLECTION_URI, ec);
 		}
 			
 
@@ -128,11 +128,11 @@ public class FnCollection extends Function {
 		}
 		
 
-		URI resolved = dc.resolve_uri(uri);
+		URI resolved = ec.getDynamicContext().resolveUri(uri);
 		if (resolved == null)
 			throw DynamicError.invalid_doc(null);
 
-		rs = getCollection(uri, dc);
+		rs = getCollection(uri, ec);
 		if (rs.empty())
 			throw DynamicError.doc_not_found(null);
 
@@ -154,13 +154,13 @@ public class FnCollection extends Function {
 		return _expected_args;
 	}
 	
-	private static ResultSequence getCollection(String uri, DynamicContext dc) {
+	private static ResultSequence getCollection(String uri, EvaluationContext ec) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		Map/*<String, List<Document>>*/ collectionMap = dc.get_collections();
+		Map/*<String, List<Document>>*/ collectionMap = ec.getDynamicContext().getCollections();
 		List/*<Document>*/ docList = (List) collectionMap.get(uri);
 		for (int i = 0; i < docList.size(); i++) {
 			Document doc = (Document) docList.get(i);
-			rs.add(new DocType(doc, dc.getTypeModel(doc)));
+			rs.add(new DocType(doc, ec.getStaticContext().getTypeModel()));
 		}
 		return rs;
 		

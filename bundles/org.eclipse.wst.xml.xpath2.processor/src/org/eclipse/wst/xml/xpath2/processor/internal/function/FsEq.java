@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -36,6 +37,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
+import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 
 /**
  * Class for the Equality function.
@@ -57,10 +59,10 @@ public class FsEq extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
-		return fs_eq_value(args, dynamic_context());
+		return fs_eq_value(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -81,7 +83,7 @@ public class FsEq extends Function {
 			ResultSequence rs = (ResultSequence) i.next();
 
 			//FnData.fast_atomize(rs);
-			rs = FnData.atomize(rs);
+			rs = ResultSequenceUtil.newToOld(FnData.atomize(rs));
 
 			if (rs.empty())
 				return new ArrayList();
@@ -111,9 +113,9 @@ public class FsEq extends Function {
 	 *             Dynamic error.
 	 * @return Result of conversion.
 	 */
-	public static ResultSequence fs_eq_value(Collection args, DynamicContext dynamicContext)
+	public static ResultSequence fs_eq_value(Collection args, DynamicContext context)
 			throws DynamicError {
-		return do_cmp_value_op(args, CmpEq.class, "eq", dynamicContext);
+		return do_cmp_value_op(args, CmpEq.class, "eq", context);
 	}
 
 	/**
@@ -127,7 +129,7 @@ public class FsEq extends Function {
 	 *             Dynamic error.
 	 * @return Result of Equality operation.
 	 */
-	public static boolean fs_eq_fast(AnyType one, AnyType two, DynamicContext dynamicContext)
+	public static boolean fs_eq_fast(AnyType one, AnyType two, DynamicContext context)
 			throws DynamicError {
 
 		one = FnData.atomize(one);
@@ -144,7 +146,7 @@ public class FsEq extends Function {
 
 		CmpEq cmpone = (CmpEq) one;
 
-		return cmpone.eq(two, dynamicContext);
+		return cmpone.eq(two, context);
 	}
 
 	/**
@@ -161,7 +163,7 @@ public class FsEq extends Function {
 	 * @return Result of Equality operation.
 	 */
 	private static boolean do_general_pair(AnyType a, AnyType b,
-			Method comparator, DynamicContext dc) throws DynamicError {
+			Method comparator, DynamicContext ec) throws DynamicError {
 
 		// section 3.5.2
 
@@ -214,7 +216,7 @@ public class FsEq extends Function {
 		args.add(one);
 		args.add(two);
 
-		Object margs[] = { args, dc };
+		Object margs[] = { args, ec };
 
 		ResultSequence result = null;
 		try {
@@ -244,12 +246,10 @@ public class FsEq extends Function {
 	 *            input arguments.
 	 * @param dc
 	 *         Dynamic context 
-	 * @throws DynamicError
-	 *             Dynamic error.
 	 * @return Result of general equality operation.
 	 */
 	public static ResultSequence fs_eq_general(Collection args, DynamicContext dc)
-			throws DynamicError {
+			{
 		return do_cmp_general_op(args, FsEq.class, "fs_eq_value", dc);
 	}
 
@@ -288,16 +288,16 @@ public class FsEq extends Function {
 
 		Iterator argiter = args.iterator();
 
-		ResultSequence one = (ResultSequence) argiter.next();
-		ResultSequence two = (ResultSequence) argiter.next();
+		org.eclipse.wst.xml.xpath2.processor.ResultSequence one = (org.eclipse.wst.xml.xpath2.processor.ResultSequence) argiter.next();
+		org.eclipse.wst.xml.xpath2.processor.ResultSequence two = (org.eclipse.wst.xml.xpath2.processor.ResultSequence) argiter.next();
 
 		// XXX ?
 		if (one.empty() || two.empty())
 			return ResultSequenceFactory.create_new(new XSBoolean(false));
 
 		// atomize
-		one = FnData.atomize(one);
-		two = FnData.atomize(two);
+		one = ResultSequenceUtil.newToOld(FnData.atomize(one));
+		two = ResultSequenceUtil.newToOld(FnData.atomize(two));
 
 		// we gotta find a pair that satisfied the condition
 		for (Iterator i = one.iterator(); i.hasNext();) {
@@ -331,7 +331,7 @@ public class FsEq extends Function {
 	 * @return Result of the operation.
 	 */
 	public static ResultSequence do_cmp_value_op(Collection args, Class type,
-			String mname, DynamicContext dynamicContext) throws DynamicError {
+			String mname, DynamicContext context) throws DynamicError {
 
 		// sanity check args + convert em
 		if (args.size() != 2)
@@ -361,7 +361,7 @@ public class FsEq extends Function {
 
 			method = type.getMethod(mname, margsdef);
 
-			Object margs[] = { arg2.first(), dynamicContext };
+			Object margs[] = { arg2.first(), context };
 			Boolean cmpres = (Boolean) method.invoke(arg, margs);
 
 			return ResultSequenceFactory.create_new(new XSBoolean(cmpres

@@ -19,11 +19,12 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -51,8 +52,8 @@ public class FnName extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return name(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return name(args, ec);
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class FnName extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:name operation.
 	 */
-	public static ResultSequence name(Collection args, DynamicContext context) throws DynamicError {
+	public static ResultSequence name(Collection args, EvaluationContext ec) throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -76,11 +77,11 @@ public class FnName extends Function {
 		ResultSequence arg1 = null;
 		
 		if (cargs.isEmpty()) {
-			if (context.context_item() == null)
+			if (ec.getContextItem() == null)
 				throw DynamicError.contextUndefined();
 			else {
 				arg1 = ResultSequenceFactory.create_new();
-				arg1.add(context.context_item());
+				arg1.add((AnyType) ec.getContextItem());
 			}
 		} else {
 			arg1 = (ResultSequence) cargs.iterator().next();

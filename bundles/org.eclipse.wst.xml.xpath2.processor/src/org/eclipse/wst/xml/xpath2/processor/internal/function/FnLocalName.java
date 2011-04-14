@@ -17,11 +17,12 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -49,8 +50,8 @@ public class FnLocalName extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return local_name(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return local_name(args, ec);
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class FnLocalName extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:local-name operation.
 	 */
-	public static ResultSequence local_name(Collection args, DynamicContext context)
+	public static ResultSequence local_name(Collection args, EvaluationContext context)
 			throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
@@ -73,11 +74,11 @@ public class FnLocalName extends Function {
 		ResultSequence arg1 = null;
 		
 		if (cargs.isEmpty()) {
-			if (context.context_item() == null)
+			if (context.getContextItem() == null)
 				throw DynamicError.contextUndefined();
 			else {
 				arg1 = ResultSequenceFactory.create_new();
-				arg1.add(context.context_item());
+				arg1.add((AnyType) context.getContextItem());
 			}
 		} else {
 			arg1 = (ResultSequence) cargs.iterator().next();

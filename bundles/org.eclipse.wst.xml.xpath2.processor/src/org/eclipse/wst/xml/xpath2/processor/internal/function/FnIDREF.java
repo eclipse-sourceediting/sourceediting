@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -58,8 +58,8 @@ public class FnIDREF extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return idref(args, dynamic_context(), dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return idref(args, ec);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class FnIDREF extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:insert-before operation.
 	 */
-	public static ResultSequence idref(Collection args, DynamicContext context, DynamicContext dc) throws DynamicError {
+	public static ResultSequence idref(Collection args, EvaluationContext ec) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
@@ -88,13 +88,13 @@ public class FnIDREF extends Function {
 			nodeArg = (ResultSequence) argIt.next();
 			nodeType = (NodeType)nodeArg.first();
 		} else {
-			if (context.context_item() == null) {
+			if (ec.getContextItem() == null) {
 				throw DynamicError.contextUndefined();
 			}
-			if (!(context.context_item() instanceof NodeType)) {
+			if (!(ec.getContextItem() instanceof NodeType)) {
 				throw new DynamicError(TypeError.invalid_type(null));
 			}
-			nodeType = (NodeType) context.context_item();
+			nodeType = (NodeType) ec.getContextItem();
 			if (nodeType.node_value().getOwnerDocument() == null) {
 				throw DynamicError.contextUndefined();
 			}
@@ -108,12 +108,12 @@ public class FnIDREF extends Function {
 		}
 		
 		if (hasID(ids, node)) {
-			ElementType element = new ElementType((Element) node, dc.getTypeModel(node));
+			ElementType element = new ElementType((Element) node, ec.getStaticContext().getTypeModel());
 			rs.add(element);
 		}
 		
-		rs = processAttributes(node, ids, rs, dc);
-		rs = processChildNodes(node, ids, rs, dc);
+		rs = processAttributes(node, ids, rs, ec);
+		rs = processChildNodes(node, ids, rs, ec);
 
 		return rs;
 	}
@@ -127,7 +127,7 @@ public class FnIDREF extends Function {
 		return xsid;
 	}
 	
-	private static ResultSequence processChildNodes(Node node, List ids, ResultSequence rs, DynamicContext dc) {
+	private static ResultSequence processChildNodes(Node node, List ids, ResultSequence rs, EvaluationContext ec) {
 		if (!node.hasChildNodes()) {
 			return rs;
 		}
@@ -136,14 +136,14 @@ public class FnIDREF extends Function {
 		for (int nodecnt = 0; nodecnt < nodeList.getLength(); nodecnt++) {
 			Node childNode = nodeList.item(nodecnt);
 			if (childNode.getNodeType() == Node.ELEMENT_NODE && !isDuplicate(childNode, rs)) {
-				ElementType element = new ElementType((Element)childNode, dc.getTypeModel(node));
+				ElementType element = new ElementType((Element)childNode, ec.getStaticContext().getTypeModel());
 				if (element.isIDREF()) {
 					if (hasID(ids, childNode)) {
 						rs.add(element);
 					}
 				} 
-				rs = processAttributes(childNode, ids, rs, dc);
-				rs = processChildNodes(childNode, ids, rs, dc);
+				rs = processAttributes(childNode, ids, rs, ec);
+				rs = processChildNodes(childNode, ids, rs, ec);
 			}
 		}
 		
@@ -151,7 +151,7 @@ public class FnIDREF extends Function {
 
 	}
 	
-	private static ResultSequence processAttributes(Node node, List idrefs, ResultSequence rs, DynamicContext dc) {
+	private static ResultSequence processAttributes(Node node, List idrefs, ResultSequence rs, EvaluationContext ec) {
 		if (!node.hasAttributes()) {
 			return rs;
 		}
@@ -159,11 +159,11 @@ public class FnIDREF extends Function {
 		NamedNodeMap attributeList = node.getAttributes();
 		for (int atsub = 0; atsub < attributeList.getLength(); atsub++) {
 			Attr atNode = (Attr) attributeList.item(atsub);
-			NodeType atType = new AttrType(atNode, dc.getTypeModel(atNode));
+			NodeType atType = new AttrType(atNode, ec.getStaticContext().getTypeModel());
 			if (atType.isID()) {
 				if (hasID(idrefs, atNode)) {
 					if (!isDuplicate(node, rs)) {
-						ElementType element = new ElementType((Element)node, dc.getTypeModel(node));
+						ElementType element = new ElementType((Element)node, ec.getStaticContext().getTypeModel());
 						rs.add(element);
 					}
 				}

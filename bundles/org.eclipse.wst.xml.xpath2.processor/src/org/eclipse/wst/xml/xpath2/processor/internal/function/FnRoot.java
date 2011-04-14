@@ -19,13 +19,13 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.w3c.dom.Attr;
@@ -55,13 +55,13 @@ public class FnRoot extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
 
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		//ResultSequence argument = (ResultSequence) args.iterator().next();
 
-		return fn_root(args, dynamic_context());
+		return fn_root(args, ec);
 	}
 
 	/**
@@ -75,36 +75,28 @@ public class FnRoot extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:root operation.
 	 */
-	public static ResultSequence fn_root(Collection args, DynamicContext dc)
-			throws DynamicError {
+	public static ResultSequence fn_root(Collection args, EvaluationContext ec) {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 		
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		// sanity check arg
-//		if (cargs.isEmpty())
-//			return rs;
-
 		if (cargs.size() > 1)
 			throw new DynamicError(TypeError.invalid_type(null));
 		
 		ResultSequence arg = null;
 		if (cargs.isEmpty()) {
-			arg = ResultSequenceFactory.create_new();
-			if (dc.context_item() == null) {
+			if (ec.getContextItem() == null) {
 				throw DynamicError.contextUndefined();
 			}
-			arg.add(dc.context_item());
+			arg = ResultBuffer.wrap(ec.getContextItem());
 		} else {
 			arg = (ResultSequence) cargs.iterator().next();			
 		}
 		
 		if (arg.empty()) {
-			return rs;
+			return ResultBuffer.EMPTY;
 		}
 		
-		AnyType aa = arg.first();
+		Item aa = arg.item(0);
 
 		if (!(aa instanceof NodeType))
 			throw new DynamicError(TypeError.invalid_type(null));
@@ -112,7 +104,6 @@ public class FnRoot extends Function {
 		NodeType nt = (NodeType) aa;
 
 		// ok we got a sane argument... own it.
-
 		Node root = nt.node_value();
 
 		while (root != null && ! (root instanceof Document)) {
@@ -128,9 +119,7 @@ public class FnRoot extends Function {
 			root = newroot;
 		}
 
-		rs.add(NodeType.dom_to_xpath(root, dc.getTypeModel(root)));
-
-		return rs;
+		return NodeType.dom_to_xpath(root, ec.getStaticContext().getTypeModel());
 	}
 	
 	/**

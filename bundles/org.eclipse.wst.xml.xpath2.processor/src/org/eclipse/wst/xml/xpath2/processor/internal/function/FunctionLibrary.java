@@ -51,7 +51,6 @@ public class FunctionLibrary implements org.eclipse.wst.xml.xpath2.api.FunctionL
 	 */
 	public void add_function(Function x) {
 		x.name().set_namespace(_namespace);
-		x.set_function_library(this);
 		_functions.put(x.signature(), x);
 	}
 

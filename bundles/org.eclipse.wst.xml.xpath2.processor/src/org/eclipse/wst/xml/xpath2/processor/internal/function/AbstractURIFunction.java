@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -112,14 +111,11 @@ public abstract class AbstractURIFunction extends Function {
 		Iterator argi = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argi.next();
 	
-		ResultSequence rs = ResultSequenceFactory.create_new();
-	
 		if (arg1.empty()) {
-			rs.add(new XSString(""));
-			return rs;
+			return new XSString("");
 		}
 				
-		AnyType aat = arg1.first();
+		AnyType aat = (AnyType) arg1.item(0);
 		String str = aat.string_value();
 
 		ByteBuffer buffer = UTF_8.encode(str);
@@ -135,9 +131,7 @@ public abstract class AbstractURIFunction extends Function {
 				sb.append((char)x);
 		}
 	
-		rs.add(new XSString(sb.toString()));
-	
-		return rs;
+		return new XSString(sb.toString());
 	}
 
 	/**
@@ -160,11 +154,6 @@ public abstract class AbstractURIFunction extends Function {
 
 	public AbstractURIFunction(QName name, int min_arity, int max_arity) {
 		super(name, min_arity, max_arity);
-	}
-
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

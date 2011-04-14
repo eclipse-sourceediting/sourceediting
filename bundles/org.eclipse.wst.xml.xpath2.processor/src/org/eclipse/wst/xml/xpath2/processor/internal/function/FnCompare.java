@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -78,8 +79,8 @@ public class FnCompare extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the comparison of the arguments.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return compare(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
+		return compare(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -93,14 +94,14 @@ public class FnCompare extends Function {
 	 *             Dynamic error.
 	 * @return The result of the comparison of the arguments.
 	 */
-	public static ResultSequence compare(Collection args, DynamicContext dynamicContext) throws DynamicError {
+	public static ResultSequence compare(Collection args, DynamicContext context) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		Iterator argiter = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argiter.next();
 		ResultSequence arg2 = (ResultSequence) argiter.next();
 
-		String collationUri = dynamicContext.default_collation_name();
+		String collationUri = context.getCollationProvider().getDefaultCollation();
 		if (argiter.hasNext()) {
 			ResultSequence collArg = (ResultSequence) argiter.next();
 			collationUri = collArg.first().string_value();
@@ -109,7 +110,7 @@ public class FnCompare extends Function {
 		XSString xstr1 = arg1.empty() ? null : (XSString) arg1.first();
 		XSString xstr2 = arg2.empty() ? null : (XSString) arg2.first();
 
-		BigInteger result = compare_string(collationUri, xstr1, xstr2, dynamicContext);
+		BigInteger result = compare_string(collationUri, xstr1, xstr2, context);
 		if (result != null) {
 			return ResultSequenceFactory.create_new(new XSInteger(result));
 		} else {
@@ -118,8 +119,8 @@ public class FnCompare extends Function {
 	}
 
 	public static BigInteger compare_string(String collationUri, XSString xstr1,
-			XSString xstr2, DynamicContext dynamicContext) throws DynamicError {
-		Comparator collator = dynamicContext.get_collation(collationUri);
+			XSString xstr2, DynamicContext context) throws DynamicError {
+		Comparator collator = context.getCollationProvider().getCollation(collationUri);
 		if (collator == null) throw DynamicError.unsupported_collation(collationUri);
 
 		if (xstr1 == null || xstr2 == null) return null;

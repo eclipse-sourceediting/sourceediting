@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -47,8 +47,8 @@ public class FnString extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return string(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return string(args, ec);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class FnString extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:string operation.
 	 */
-	public static ResultSequence string(Collection args, DynamicContext d_context) throws DynamicError {
+	public static ResultSequence string(Collection args, EvaluationContext ec) throws DynamicError {
 
 		assert (args.size() == 0 || args.size() == 1);
 
@@ -68,7 +68,7 @@ public class FnString extends Function {
 				
 		if (args.isEmpty()) {
 			// support for arity = 0
-			return getResultSetForArityZero(d_context);
+			return getResultSetForArityZero(ec);
 		}
 		else {
 			arg1 = (ResultSequence) args.iterator().next();	

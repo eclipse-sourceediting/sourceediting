@@ -17,8 +17,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**
@@ -104,7 +105,7 @@ public class FnEscapeHTMLUri extends AbstractURIFunction {
 	 * @return The evaluation of the arguments after application of the URI
 	 *         escaping rules.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
 		return escape_uri(args, false, false);
 	}
 }

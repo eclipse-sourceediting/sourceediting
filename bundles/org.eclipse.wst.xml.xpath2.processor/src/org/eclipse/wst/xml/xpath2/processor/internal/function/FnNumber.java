@@ -18,7 +18,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -54,19 +54,19 @@ public class FnNumber extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
 
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		ResultSequence argument = null;
 		if (args.isEmpty()) {
-			argument = getResultSetForArityZero(dynamic_context());
+			argument = getResultSetForArityZero(ec);
 		} else {
 			argument = (ResultSequence) args.iterator().next();
 		}
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(fn_number(argument, dynamic_context()));
+		rs.add(fn_number(argument, ec));
 		return rs;
 	}
 
@@ -81,7 +81,7 @@ public class FnNumber extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:number operation.
 	 */
-	public static XSDouble fn_number(ResultSequence arg, DynamicContext dc)
+	public static XSDouble fn_number(ResultSequence arg, EvaluationContext ec)
 			throws DynamicError {
 
 		if (arg.size() > 1) {

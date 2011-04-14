@@ -18,7 +18,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
@@ -56,7 +58,7 @@ public class FnBoolean extends Function {
 	 *            argument expressions.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection/*<ResultSequence>*/ args, EvaluationContext ec) {
 		// 1 argument only!
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
@@ -65,10 +67,6 @@ public class FnBoolean extends Function {
 		return ResultSequenceFactory.create_new(fn_boolean(argument));
 	}
 
-	private static final XSBoolean TRUE = new XSBoolean(true);
-	
-	private static final XSBoolean FALSE = new XSBoolean(false);
-	
 	/**
 	 * Boolean operation.
 	 * 
@@ -79,50 +77,49 @@ public class FnBoolean extends Function {
 	 */
 	public static XSBoolean fn_boolean(ResultSequence arg) throws DynamicError {
 		if (arg.empty())
-			return FALSE;
+			return XSBoolean.FALSE;
 
-		AnyType at = arg.first();
+		Item at = arg.item(0);
 		
 		if (at instanceof CalendarType) {
 			throw DynamicError.throw_type_error();
 		}
-
 		
 		if (at instanceof NodeType)
-			return TRUE;
+			return XSBoolean.TRUE;
 		
 		if (arg.size() > 1)
 			throw DynamicError.throw_type_error();
 
 		// XXX ??
 		if (!(at instanceof AnyAtomicType))
-			return TRUE;
+			return XSBoolean.TRUE;
 
 		// ok we got 1 single atomic type element
 
 		if (at instanceof XSBoolean) {
 			if (!((XSBoolean) at).value())
-				return FALSE;
+				return XSBoolean.FALSE;
 		}
 
 		if ((at instanceof XSString) || (at instanceof XSUntypedAtomic)) {
-			if (at.string_value().equals(""))
-				return FALSE;
+			if (((AnyType)at).string_value().equals(""))
+				return XSBoolean.FALSE;
 		}
 
 		if (at instanceof NumericType) {
 			if (((NumericType) at).zero())
-				return FALSE;
+				return XSBoolean.FALSE;
 		}
 
 		if ((at instanceof XSFloat) && (((XSFloat) at).nan()))
-			return FALSE;
+			return XSBoolean.FALSE;
 
 		if ((at instanceof XSDouble) && (((XSDouble) at).nan()))
-			return FALSE;
+			return XSBoolean.FALSE;
 		
 
-		return TRUE;
+		return XSBoolean.TRUE;
 	}
 
 }

@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
  * 
  * This is necessary if normalization is being used.
  */
-public class OpFunctionLibrary extends FunctionLibrary {
+public class OpFunctionLibrary extends FunctionLibraryImpl {
 
 	// XXX should be internal
 	public static final String XPATH_OP_NS = "http://www.w3.org/TR/2003/WD-xquery-semantics-20030502/";
@@ -29,26 +29,26 @@ public class OpFunctionLibrary extends FunctionLibrary {
 		super(XPATH_OP_NS);
 
 		// operators according to formal semantics
-		add_function(new FsDiv());
-		add_function(new FsEq());
-		add_function(new FsGe());
-		add_function(new FsGt());
-		add_function(new FsIDiv());
-		add_function(new FsLe());
-		add_function(new FsLt());
-		add_function(new FsMinus());
-		add_function(new FsMod());
-		add_function(new FsNe());
-		add_function(new FsPlus());
-		add_function(new FsTimes());
+		addFunction(new FsDiv());
+		addFunction(new FsEq());
+		addFunction(new FsGe());
+		addFunction(new FsGt());
+		addFunction(new FsIDiv());
+		addFunction(new FsLe());
+		addFunction(new FsLt());
+		addFunction(new FsMinus());
+		addFunction(new FsMod());
+		addFunction(new FsNe());
+		addFunction(new FsPlus());
+		addFunction(new FsTimes());
 
 		// utility functions in formal semantics
-		add_function(new FsConvertOperand());
+		addFunction(new FsConvertOperand());
 
 		// operators according to functions & operators
-		add_function(new OpExcept());
-		add_function(new OpIntersect());
-		add_function(new OpTo());
-		add_function(new OpUnion());
+		addFunction(new OpExcept());
+		addFunction(new OpIntersect());
+		addFunction(new OpTo());
+		addFunction(new OpUnion());
 	}
 }

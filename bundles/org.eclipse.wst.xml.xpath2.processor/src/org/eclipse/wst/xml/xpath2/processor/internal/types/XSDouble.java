@@ -21,8 +21,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.math.BigDecimal;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -253,7 +253,7 @@ public class XSDouble extends NumericType {
 	 *         otherwise
 	 * @since 1.1
 	 */
-	public boolean eq(AnyType aa, DynamicContext context) throws DynamicError {
+	public boolean eq(AnyType aa, DynamicContext dynamicContext) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new(aa);
 		ResultSequence crs = constructor(rs);
 		

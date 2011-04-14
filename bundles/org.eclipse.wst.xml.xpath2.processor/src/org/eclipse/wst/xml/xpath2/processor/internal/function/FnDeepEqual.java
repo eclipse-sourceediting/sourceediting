@@ -17,7 +17,8 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -57,8 +58,8 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return deep_equal(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return deep_equal(args, ec);
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 	 *             Dynamic error.
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static ResultSequence deep_equal(Collection args, DynamicContext context)
+	public static ResultSequence deep_equal(Collection args, EvaluationContext context)
 			throws DynamicError {
 
 		// get args
@@ -80,7 +81,7 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 		ResultSequence arg1 = (ResultSequence) citer.next();
 		ResultSequence arg2 = (ResultSequence) citer.next();
 		ResultSequence arg3 = null;
-		String collationURI = context.default_collation_name();
+		String collationURI = context.getStaticContext().getCollationProvider().getDefaultCollation();
 		if (citer.hasNext()) {
 			arg3 = (ResultSequence) citer.next();
 			if (!arg3.empty()) {
@@ -104,7 +105,7 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 	 *            Current dynamic context 
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(ResultSequence one, ResultSequence two, DynamicContext context, String collationURI) {
+	public static boolean deep_equal(ResultSequence one, ResultSequence two, EvaluationContext context, String collationURI) {
 		if (one.empty() && two.empty())
 			return true;
 
@@ -134,15 +135,15 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 	 * @param context 
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(AnyType one, AnyType two, DynamicContext context, String collationURI) {
+	public static boolean deep_equal(AnyType one, AnyType two, EvaluationContext context, String collationURI) {
 		if ((one instanceof AnyAtomicType) && (two instanceof AnyAtomicType))
-			return deep_equal((AnyAtomicType) one, (AnyAtomicType) two, context, collationURI);
+			return deep_equal_atomic((AnyAtomicType) one, (AnyAtomicType) two, context.getDynamicContext(), collationURI);
 
 		else if (((one instanceof AnyAtomicType) && (two instanceof NodeType))
 				|| ((one instanceof NodeType) && (two instanceof AnyAtomicType)))
 			return false;
 		else if ((one instanceof NodeType) && (two instanceof NodeType))
-			return deep_equal((NodeType) one, (NodeType) two, context);
+			return deep_equal_node((NodeType) one, (NodeType) two, context);
 		else {
 			return false;
 		}
@@ -157,7 +158,7 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 	 *            input2 xpath expression/variable.
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(AnyAtomicType one, AnyAtomicType two, DynamicContext context, String collationURI) {
+	public static boolean deep_equal_atomic(AnyAtomicType one, AnyAtomicType two, DynamicContext context, String collationURI) {
 		if (!(one instanceof CmpEq))
 			return false;
 		if (!(two instanceof CmpEq))
@@ -204,7 +205,7 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 	 *            input2 xpath expression/variable.
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(NodeType one, NodeType two, DynamicContext context) {
+	public static boolean deep_equal_node(NodeType one, NodeType two, EvaluationContext context) {
 		Node a = one.node_value();
 		Node b = two.node_value();
 		

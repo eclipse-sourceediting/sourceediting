@@ -27,6 +27,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.namespace.QName;
 
+import org.eclipse.wst.xml.xpath2.api.CollationProvider;
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
@@ -161,5 +162,9 @@ public class DynamicContextBuilder implements DynamicContext {
 
 	public void withCollections(Map<String, ResultSequence> map) {
 		this._collections = map;
+	}
+	
+	public CollationProvider getCollationProvider() {
+		return _staticContext.getCollationProvider();
 	}
 }

@@ -19,11 +19,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
@@ -61,8 +62,8 @@ public class FnLang extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return lang(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return lang(args, ec);
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class FnLang extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:lang operation.
 	 */
-	public static ResultSequence lang(Collection args, DynamicContext context) throws DynamicError {
+	public static ResultSequence lang(Collection args, EvaluationContext ec) throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -85,11 +86,11 @@ public class FnLang extends Function {
 		ResultSequence arg1 = (ResultSequence) citer.next();
 		ResultSequence arg2 = null;
 		if (cargs.size() == 1) {
-			if (context.context_item() == null) {
+			if (ec.getContextItem() == null) {
 				throw DynamicError.contextUndefined();
 			}
 			arg2 = ResultSequenceFactory.create_new();
-			arg2.add(context.context_item());
+			arg2.add((AnyType) ec.getContextItem());
 		} else {
 			arg2 = (ResultSequence) citer.next();
 		}

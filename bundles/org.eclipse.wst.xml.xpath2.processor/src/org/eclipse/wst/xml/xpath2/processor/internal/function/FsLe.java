@@ -16,7 +16,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -43,10 +44,10 @@ public class FsLe extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
-		return fs_le_value(args, dynamic_context());
+		return fs_le_value(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -86,8 +87,7 @@ public class FsLe extends Function {
 	 *             Dynamic error.
 	 * @return Result of the operation.
 	 */
-	public static ResultSequence fs_le_general(Collection args, DynamicContext dc)
-			throws DynamicError {
+	public static ResultSequence fs_le_general(Collection args, DynamicContext dc) {
 		return FsEq.do_cmp_general_op(args, FsLe.class, "fs_le_value", dc);
 	}
 }

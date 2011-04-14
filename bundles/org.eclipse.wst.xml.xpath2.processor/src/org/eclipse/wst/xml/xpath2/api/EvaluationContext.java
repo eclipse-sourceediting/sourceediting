@@ -29,7 +29,7 @@ public interface EvaluationContext {
 	 * sequence obtained by evaluating E1 becomes the context item in the
 	 * inner focus for an evaluation of E2.
 	 */
-	Object getContextItem();
+	Item getContextItem();
 
 	/**
 	 * [Definition: The context position
@@ -45,6 +45,7 @@ public interface EvaluationContext {
 	 * size.
 	 */
 	int getContextPosition();
+	
 	/**
 	 * [Definition: The context size is the number of items in the
 	 * sequence of items currently being processed.] Its value is always an

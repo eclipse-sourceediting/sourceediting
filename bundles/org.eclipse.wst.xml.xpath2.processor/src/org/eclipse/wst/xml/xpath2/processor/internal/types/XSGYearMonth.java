@@ -14,15 +14,17 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
-
-import java.util.*;
 
 /**
  * A representation of the YearMonth datatype
@@ -298,7 +300,7 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	 *         False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
 		XSGYearMonth val = (XSGYearMonth) NumericType.get_single_type(arg,
 				XSGYearMonth.class);
 		Calendar thiscal = normalizeCalendar(calendar(), tz());

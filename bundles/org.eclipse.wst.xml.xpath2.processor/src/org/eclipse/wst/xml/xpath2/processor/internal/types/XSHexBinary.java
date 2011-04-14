@@ -15,8 +15,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.impl.dv.util.Base64;
 import org.apache.xerces.impl.dv.util.HexBin;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -169,7 +169,7 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 *         
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
       String valToCompare = arg.string_value();
       
       byte[] value1 = HexBin.decode(_value);

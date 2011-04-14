@@ -22,7 +22,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -70,8 +70,8 @@ public class FnStringLength extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the string length of the arguments.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return string_length(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return string_length(args, ec);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class FnStringLength extends Function {
 	 *             Dynamic error.
 	 * @return The result of obtaining the string length from the arguments.
 	 */
-	public static ResultSequence string_length(Collection args, DynamicContext d_context)
+	public static ResultSequence string_length(Collection args, EvaluationContext ec)
 			throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -91,7 +91,7 @@ public class FnStringLength extends Function {
 
 		if (cargs.isEmpty()) {
 		  // support for arity = 0
-		  return getResultSetForArityZero(d_context);
+		  return getResultSetForArityZero(ec);
 		}
 		else {
 		  arg1 = (ResultSequence) cargs.iterator().next();

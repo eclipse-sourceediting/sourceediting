@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -100,5 +101,11 @@ public class FnAvg extends Function {
 			DynamicError.throw_type_error();
 
 		return ((MathDiv)total).div(ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(elems))));
+	}
+	
+	@Override
+	public TypeDefinition getResultType() {
+		// TODO Auto-generated method stub
+		return super.getResultType();
 	}
 }

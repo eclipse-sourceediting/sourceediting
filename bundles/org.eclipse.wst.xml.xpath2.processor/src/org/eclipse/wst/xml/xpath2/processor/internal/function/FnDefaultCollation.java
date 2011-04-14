@@ -15,6 +15,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -48,10 +49,10 @@ public class FnDefaultCollation extends Function {
 		super(new QName("default-collation"), 0);
 	}
 
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new XSString(dynamic_context().default_collation_name()));
+		rs.add(new XSString(ec.getDynamicContext().getCollationProvider().getDefaultCollation()));
 		return rs;
 	}
 

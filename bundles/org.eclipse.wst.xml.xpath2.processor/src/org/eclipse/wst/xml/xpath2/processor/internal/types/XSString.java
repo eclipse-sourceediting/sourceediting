@@ -17,8 +17,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
 
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -124,7 +124,7 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 		XSString comparand = arg instanceof XSString ? (XSString)arg : new XSString(arg.string_value());
 		
-		BigInteger result = FnCompare.compare_string(dc.default_collation_name(), this, comparand, dc);
+		BigInteger result = FnCompare.compare_string(dc.getCollationProvider().getDefaultCollation(), this, comparand, dc);
 
 		return result.intValue();
 	}
@@ -139,8 +139,8 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 *         otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
-		int cmp = do_compare(arg, context);
+	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
+		int cmp = do_compare(arg, dynamicContext);
 
 		// XXX im not sure what to do here!!! because eq has to return
 		// something i fink....

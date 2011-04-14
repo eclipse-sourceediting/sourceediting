@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.CollationProvider;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -68,8 +70,8 @@ public class FnCodepointEqual extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the comparison of the arguments.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return codepoint_equals(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return codepoint_equals(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -96,7 +98,7 @@ public class FnCodepointEqual extends Function {
 		XSString xstr2 = arg2.empty() ? null : (XSString) arg2.first();
 
 		// This delegates to FnCompare
-		BigInteger result = FnCompare.compare_string(DynamicContext.CODEPOINT_COLLATION, xstr1, xstr2, dynamicContext);
+		BigInteger result = FnCompare.compare_string(CollationProvider.CODEPOINT_COLLATION, xstr1, xstr2, dynamicContext);
 		if (result != null) rs.add(new XSBoolean(BigInteger.ZERO.equals(result)));
 		
 		return rs;

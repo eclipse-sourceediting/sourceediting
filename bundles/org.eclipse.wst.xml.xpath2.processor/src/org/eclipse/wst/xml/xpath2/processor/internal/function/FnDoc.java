@@ -18,13 +18,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
+import org.w3c.dom.Document;
 
 /**
  * Retrieves a document using an xs:anyURI supplied as an xs:string. If $uri is
@@ -57,8 +60,8 @@ public class FnDoc extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return doc(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return doc(args, ec);
 	}
 
 	/**
@@ -72,7 +75,7 @@ public class FnDoc extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:doc operation.
 	 */
-	public static ResultSequence doc(Collection args, DynamicContext dc)
+	public static ResultSequence doc(Collection args, EvaluationContext ec)
 			throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -83,17 +86,18 @@ public class FnDoc extends Function {
 		if (arg1.empty())
 			return ResultSequenceFactory.create_new();
 
-		String uri = ((XSString) arg1.first()).value();
+		String uri = ((XSString) arg1.item(0)).value();
 
-		URI resolved = dc.resolve_uri(uri);
+		DynamicContext dc = ec.getDynamicContext();
+		URI resolved = dc.resolveUri(uri);
 		if (resolved == null)
 			throw DynamicError.invalid_doc(null);
 
-		ResultSequence rs = dc.get_doc(resolved);
-		if (rs == null)
+		Document doc = dc.getDocument(resolved);
+		if (doc == null)
 			throw DynamicError.doc_not_found(null);
 
-		return rs;
+		return new DocType(doc, ec.getStaticContext().getTypeModel());
 	}
 
 	/**

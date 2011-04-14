@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -61,8 +61,8 @@ public class FnResolveURI extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return resolveURI(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return resolveURI(args, ec);
 	}
 
 	/**
@@ -77,8 +77,8 @@ public class FnResolveURI extends Function {
 	 * @return Result of fn:resolve-uri operation.
 	 */
 	public static ResultSequence resolveURI(Collection args,
-			DynamicContext d_context) throws DynamicError {
-		if (d_context.base_uri() == null) {
+			EvaluationContext ec) throws DynamicError {
+		if (ec.getStaticContext().getBaseUri() == null) {
 			throw DynamicError.noBaseURI();
 		}
 		
@@ -100,7 +100,7 @@ public class FnResolveURI extends Function {
 		String resolvedURI = null;
 				
 		if (baseUriRS == null) {
-			resolvedURI = resolveURI(d_context.base_uri().string_value(), relativeURI.string_value());
+			resolvedURI = resolveURI(ec.getStaticContext().getBaseUri().toString(), relativeURI.string_value());
 		} else {
 			AnyType baseURI = baseUriRS.first();
 			resolvedURI = resolveURI(baseURI.string_value(), relativeURI.string_value());

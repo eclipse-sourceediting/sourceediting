@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.math.BigInteger;
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -44,8 +44,8 @@ public class FnLast extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return last(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return last(args, ec);
 	}
 
 	/**
@@ -59,15 +59,15 @@ public class FnLast extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:last operation.
 	 */
-	public static ResultSequence last(Collection args, DynamicContext dc)
+	public static ResultSequence last(Collection args, EvaluationContext ec)
 			throws DynamicError {
 		assert args.size() == 0;
 		
-		if (dc.focus() == null || dc.context_item() == null) {
+		if (ec.getContextItem() == null) {
 			throw DynamicError.contextUndefined();
 		}
 
-		int last = dc.last();
+		int last = ec.getLastPosition();
 
 		assert last != 0;
 

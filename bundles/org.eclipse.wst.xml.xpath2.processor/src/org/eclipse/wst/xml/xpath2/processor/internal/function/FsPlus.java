@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -31,6 +34,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
+import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 
 /**
  * Class for Plus function.
@@ -52,7 +56,7 @@ public class FsPlus extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		return fs_plus(args);
@@ -77,7 +81,7 @@ public class FsPlus extends Function {
 		
 		// atomize arguments
 		for (Iterator i = args.iterator(); i.hasNext();) {
-			ResultSequence rs = FnData.atomize((ResultSequence) i.next());
+			org.eclipse.wst.xml.xpath2.api.ResultSequence rs = FnData.atomize((org.eclipse.wst.xml.xpath2.api.ResultSequence) i.next());
 
 			if (rs.empty())
 				return new ArrayList();
@@ -85,27 +89,27 @@ public class FsPlus extends Function {
 			if (rs.size() > 1)
 				throw new DynamicError(TypeError.invalid_type(null));
 
-			AnyType arg = rs.first();
+			AnyType arg = (AnyType) rs.item(0);
 
 			if (arg instanceof XSUntypedAtomic) {
 				arg = new XSDouble(arg.string_value());
 			}
 
-			rs = ResultSequenceFactory.create_new();
-			rs.add(arg);
 			if (arg instanceof XSDouble) has_double = true;
 			if (arg instanceof XSFloat) has_float = true;
-			result.add(rs);
+			result.add(ResultBuffer.wrap(arg));
 		}
 
 		if (has_double) has_float = false;
 		
 		if (has_double || has_float) {
+			Collection result2 = new ArrayList();
+
 			// promote arguments
 			for (Iterator i = result.iterator(); i.hasNext();) {
-				ResultSequence rs = (ResultSequence) i.next();
+				org.eclipse.wst.xml.xpath2.api.ResultSequence rs = (org.eclipse.wst.xml.xpath2.api.ResultSequence) i.next();
 								
-				AnyType arg = rs.first();
+				Item arg = rs.item(0);
 				
 				if (has_double && (arg instanceof XSFloat)) {
 					arg = new XSDouble(((XSFloat)arg).float_value());
@@ -114,14 +118,9 @@ public class FsPlus extends Function {
 				} else if (has_float && (arg instanceof XSDecimal)) {
 					arg = new XSFloat(((XSDecimal)arg).getValue().floatValue());
 				}
-
-				if (rs.first() != arg) {
-					// Replace arg
-					rs.clear();
-					rs.add(arg);
-				}
+				result2.add(arg);
 			}
-			
+			return result2;
 		}
 		
 		return result;
@@ -201,8 +200,8 @@ public class FsPlus extends Function {
 
 		// make sure arugments are good [at least the first one]
 		Iterator argi = cargs.iterator();
-		AnyType arg = ((ResultSequence) argi.next()).first();
-		ResultSequence arg2 = (ResultSequence) argi.next();
+		Item arg = ((org.eclipse.wst.xml.xpath2.api.ResultSequence) argi.next()).item(0);
+		org.eclipse.wst.xml.xpath2.api.ResultSequence arg2 = (org.eclipse.wst.xml.xpath2.api.ResultSequence) argi.next();
 
 		if (!(type.isInstance(arg)))
 			DynamicError.throw_type_error();
@@ -214,7 +213,7 @@ public class FsPlus extends Function {
 
 			method = type.getMethod(mname, margsdef);
 
-			Object margs[] = { arg2 };
+			Object margs[] = { ResultSequenceUtil.newToOld(arg2) };
 			return (ResultSequence) method.invoke(arg, margs);
 
 		} catch (NoSuchMethodException err) {

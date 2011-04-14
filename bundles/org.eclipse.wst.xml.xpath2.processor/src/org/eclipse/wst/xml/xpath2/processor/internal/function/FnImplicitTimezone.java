@@ -16,13 +16,14 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
 
 /**
  * Returns the value of the implicit timezone property from the dynamic context.
@@ -46,8 +47,8 @@ public class FnImplicitTimezone extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return implicit_timezone(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return implicit_timezone(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -65,13 +66,8 @@ public class FnImplicitTimezone extends Function {
 			DynamicContext dc) throws DynamicError {
 		assert args.size() == 0;
 
-		try {
-			AnyType res = (XSDuration) dc.tz().clone();
+		AnyType res = new XSDayTimeDuration(dc.getTimezoneOffset());
 
-			return ResultSequenceFactory.create_new(res);
-		} catch (CloneNotSupportedException err) {
-			assert false;
-			return null;
-		}
+		return ResultSequenceFactory.create_new(res);
 	}
 }

@@ -22,10 +22,10 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.CalendarType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -61,8 +61,8 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return adjustdateTime(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
+		return adjustdateTime(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -77,47 +77,42 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 	 * @return Result of the fn:dateTime operation.
 	 */
 	public static ResultSequence adjustdateTime(Collection args,
-			DynamicContext dc) throws DynamicError {
+			org.eclipse.wst.xml.xpath2.api.DynamicContext dynamicContext) throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expectedArgs());
-
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
 		Iterator argiter = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argiter.next();
 		if (arg1.empty()) {
-			return rs;
+			return ResultBuffer.EMPTY;
 		}
 		ResultSequence arg2 = null;
 		if (argiter.hasNext()) {
 			arg2 = (ResultSequence) argiter.next();
 		}
-		XSDateTime dateTime = (XSDateTime) arg1.first();
+		XSDateTime dateTime = (XSDateTime) arg1.item(0);
 		XSDayTimeDuration timezone = null;
 		
 		if (arg2 != null && arg2.empty()) {
 			if (dateTime.timezoned()) {
 				CalendarType localized = new XSDateTime(dateTime.calendar(), null);
-				rs.add(localized);
-				return rs;
+				return localized;
 			} else {
 				return arg1;
 			}
 		} else if (arg2 == null) {
 			CalendarType localized = new XSDateTime(dateTime.normalizeCalendar(dateTime.calendar(), dateTime.tz()), null);
-			rs.add(localized);
-			return rs;
+			return localized;
 		}
 
-		timezone = (XSDayTimeDuration) arg2.first();
-		if (timezone.lt(minDuration, dc) || timezone.gt(maxDuration, dc)) {
+		timezone = (XSDayTimeDuration) arg2.item(0);
+		if (timezone.lt(minDuration, dynamicContext) || timezone.gt(maxDuration, dynamicContext)) {
 			throw DynamicError.invalidTimezone();
 		}
 		
 		if (dateTime.tz() == null) {
-			rs.add(new XSDateTime(dateTime.calendar(), timezone));
-			return rs;
+			return new XSDateTime(dateTime.calendar(), timezone);
 		}
 		
 		try {			
@@ -126,13 +121,11 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 			Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 			xmlCalendar.add(duration);
 
-			rs.add(new XSDateTime(xmlCalendar.toGregorianCalendar(), timezone));
+			return new XSDateTime(xmlCalendar.toGregorianCalendar(), timezone);
 			
 		} catch (DatatypeConfigurationException e) {
 			throw DynamicError.invalidTimezone();
 		}
-		
-		return rs;
 	}
 
 	/**

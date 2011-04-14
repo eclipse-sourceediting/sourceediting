@@ -13,12 +13,12 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
-import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
+import org.w3c.dom.Document;
 
 /**
  * A representation of the DocumentType datatype

@@ -15,13 +15,15 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDate;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
 
 /**
  * Returns xs:date(fn:current-dateTime()). This is a xs:date (with timezone)
@@ -47,8 +49,8 @@ public class FnCurrentDate extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return current_date(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return current_date(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -66,7 +68,8 @@ public class FnCurrentDate extends Function {
 			throws DynamicError {
 		assert args.size() == 0;
 
-		AnyType res = new XSDate(dc.current_date_time(), dc.tz());
+		XSDayTimeDuration tz = new XSDayTimeDuration(dc.getTimezoneOffset());
+		AnyType res = new XSDate(dc.getCurrentDateTime(), tz);
 
 		return ResultSequenceFactory.create_new(res);
 	}

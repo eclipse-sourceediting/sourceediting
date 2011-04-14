@@ -17,8 +17,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import javax.xml.XMLConstants;
 
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -343,7 +343,7 @@ public class QName extends CtrType implements CmpEq {
 	 * @return True if the two represent the same node. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
 		QName val = (QName) NumericType.get_single_type(arg, QName.class);
 		return equals(val);
 	}

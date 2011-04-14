@@ -18,12 +18,18 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
 
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathDiv;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathMinus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathPlus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.MathTimes;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
@@ -282,7 +288,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return True if they both represent the duration of time. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
 		if (arg instanceof XSDayTimeDuration) {
 			XSDayTimeDuration dayTimeDuration = (XSDayTimeDuration)arg;
 			return (monthValue() == 0 && dayTimeDuration.value() == 0.0);
@@ -292,7 +298,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		}
 		XSDuration val = (XSDuration) NumericType
 				.get_single_type(arg, XSDuration.class);
-		return super.eq(val, context);
+		return super.eq(val, dynamicContext);
 	}
 
 	/**

@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -58,8 +59,8 @@ public class FnIndexOf extends AbstractCollationEqualFunction {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return index_of(args, dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
+		return index_of(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class FnIndexOf extends AbstractCollationEqualFunction {
 	 *             Dynamic error.
 	 * @return Result of fn:index-of operation.
 	 */
-	public static ResultSequence index_of(Collection args, DynamicContext dynamicContext) throws DynamicError {
+	public static ResultSequence index_of(Collection args, DynamicContext dc) {
 		Function.convert_arguments(args, expected_args());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
@@ -114,7 +115,7 @@ public class FnIndexOf extends AbstractCollationEqualFunction {
 		if (arg2.size() != 1)
 			DynamicError.throw_type_error();
 		
-		String collationUri = dynamicContext.default_collation_name();
+		String collationUri = dc.getCollationProvider().getDefaultCollation();
 		if (citer.hasNext()) {
 			ResultSequence arg3 = (ResultSequence) citer.next();
 			if (!arg3.empty()) {
@@ -138,21 +139,21 @@ public class FnIndexOf extends AbstractCollationEqualFunction {
 			
 			if (isBoolean(cmptype, at)) {
 				XSBoolean boolat = (XSBoolean) cmptype;
-				if (boolat.eq(at, dynamicContext)) {
+				if (boolat.eq(at, dc)) {
  				   rs.add(new XSInteger(BigInteger.valueOf(index)));
 				}
 			} else 
 			
 			if (isNumeric(cmptype, at)) {
 				NumericType numericat = (NumericType) at;
-				if (numericat.eq(cmptype, dynamicContext)) {
+				if (numericat.eq(cmptype, dc)) {
 					rs.add(new XSInteger(BigInteger.valueOf(index)));
 				}
 			} else
 			
 			if (isDuration(cmptype, at)) {
 				XSDuration durat = (XSDuration) at;
-				if (durat.eq(cmptype, dynamicContext)) {
+				if (durat.eq(cmptype, dc)) {
 					rs.add(new XSInteger(BigInteger.valueOf(index)));
 				}
 			} else
@@ -160,7 +161,7 @@ public class FnIndexOf extends AbstractCollationEqualFunction {
 			if (needsStringComparison(cmptype, at)) {
 				XSString xstr1 = new XSString(cmptype.string_value());
 				XSString itemStr = new XSString(at.string_value());
-				if (FnCompare.compare_string(collationUri, xstr1, itemStr, dynamicContext).equals(BigInteger.ZERO)) {
+				if (FnCompare.compare_string(collationUri, xstr1, itemStr, dc).equals(BigInteger.ZERO)) {
 					rs.add(new XSInteger(BigInteger.valueOf(index)));
 				}
 			} 

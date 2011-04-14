@@ -18,13 +18,14 @@ import java.util.List;
 
 import javax.xml.XMLConstants;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -54,8 +55,8 @@ public class FnInScopePrefixes extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return inScopePrefixes(args, _fl.dynamic_context());
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) throws DynamicError {
+		return inScopePrefixes(args, ec.getDynamicContext());
 	}
 
 	/**
@@ -72,25 +73,25 @@ public class FnInScopePrefixes extends Function {
 //		Collection cargs = Function.convert_arguments(args, expected_args());
 		Collection cargs = args;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
 		if (arg1.empty())
-		  return rs;
+		  return ResultBuffer.EMPTY;
+
+		ResultBuffer rs = new ResultBuffer();
 		
-		AnyType anytype = arg1.first();
+		Item anytype = arg1.item(0);
 		if (!(anytype instanceof ElementType)) {
 			throw new DynamicError(TypeError.invalid_type(null));
 		}
 
-		ElementType element = (ElementType) arg1.first();
+		ElementType element = (ElementType) anytype;
 		List prefixList = lookupPrefixes(element);
 		createPrefixResultSet(rs, prefixList);
-		return rs;
+		return rs.getSequence();
 	}
 
-	private static void createPrefixResultSet(ResultSequence rs, List prefixList) {
+	private static void createPrefixResultSet(ResultBuffer rs, List prefixList) {
 		for (int i = 0; i < prefixList.size(); i++) {
 			String prefix = (String) prefixList.get(i);
 			rs.add(new XSString(prefix));
