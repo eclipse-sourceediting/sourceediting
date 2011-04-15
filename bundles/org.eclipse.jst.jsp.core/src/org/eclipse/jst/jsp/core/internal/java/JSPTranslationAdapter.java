@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -160,11 +160,13 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 				StringBuffer emptyContents = translator.getEmptyTranslation();
 				fJavaDocument = new Document(emptyContents.toString());
 			}
-			// it's going to be rebuilt, so we release it here
+			// Just a dirty translation, re-translate
 			if (fJSPTranslation != null) {
 				if (DEBUG)
 					System.out.println("JSPTranslationAdapter retranslating:" + fJSPTranslation); //$NON-NLS-1$
-				fJSPTranslation.retranslate();
+				fJSPTranslation.retranslate(fJavaDocument, translator);
+				fDocumentIsDirty = false;
+				return fJSPTranslation;
 			}
 			fJSPTranslation = new JSPTranslationExtension(getXMLModel().getStructuredDocument(), fJavaDocument, getJavaProject(), translator);
 			fDocumentIsDirty = false;
