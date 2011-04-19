@@ -21,9 +21,8 @@ import java.util.Map;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -181,11 +180,8 @@ public class FnNormalizeUnicode extends Function {
 		String argument = "";
 		if (! arg1.empty()) argument = ((XSString) arg1.first()).value();
 				
-		ResultSequence rs = ResultSequenceFactory.create_new();
 		String normalized = normalizationType.equals("") ? argument : getNormalizer().normalize(argument, normalizationType);
-		rs.add(new XSString(normalized));
-		
-		return rs;
+		return new XSString(normalized);
 	}
 
 	private static W3CNormalizer getNormalizer() {

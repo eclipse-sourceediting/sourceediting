@@ -13,7 +13,7 @@ package org.eclipse.wst.xml.xpath2.api;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 
 /**
  * @since 2.0
@@ -32,16 +32,5 @@ public interface StaticVariableResolver {
 	 * @param name
 	 * @return
 	 */
-	TypeDefinition getVariableType(QName name);
-
-	/** 
-	 * @param name
-	 * @return
-	 */
-	short getVariableOccurrence(QName name);
-
-	public static final short OPTIONAL = 0;
-	public static final short ONE = 1;
-	public static final short ANY = 2;
-	public static final short MANY = 3;
+	ItemType getVariableType(QName name);
 }

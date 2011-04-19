@@ -19,11 +19,10 @@ import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
@@ -96,7 +95,7 @@ public class FnBaseUri extends Function {
 		else if (cargs.size() == 1) {
 	      // support for arity 1
 		  ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
-		  AnyType att = arg1.first();
+		  Item att = arg1.empty() ? null : arg1.first();
 
 		  rs = getBaseUri(att);
 		}
@@ -112,7 +111,7 @@ public class FnBaseUri extends Function {
 	 * Helper function for base-uri support
 	 */
 	public static ResultSequence getBaseUri(Item att) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 		XSAnyURI baseUri = null;
 		  // depending on the node type, we get the base-uri for the node.
 		  // if base-uri property in DOM is null, we set the base-uri as string "null". This
@@ -133,7 +132,7 @@ public class FnBaseUri extends Function {
 	        rs.add(baseUri);	
 	      }
 	      
-	      return rs;
+	      return rs.getSequence();
 	}
 
 	/**

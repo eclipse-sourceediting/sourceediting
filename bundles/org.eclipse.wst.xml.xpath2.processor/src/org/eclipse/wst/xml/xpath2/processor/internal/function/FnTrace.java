@@ -15,8 +15,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -45,7 +46,7 @@ public class FnTrace extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return trace(args);
 	}
 
@@ -72,7 +73,7 @@ public class FnTrace extends Function {
 		if (arg2.size() != 1)
 			DynamicError.throw_type_error();
 
-		AnyType at = arg2.first();
+		Item at = arg2.first();
 		if (!(at instanceof XSString))
 			DynamicError.throw_type_error();
 
@@ -84,7 +85,7 @@ public class FnTrace extends Function {
 			at = (AnyType) i.next();
 
 			System.out.println(label.value() + " [" + index + "] "
-					+ at.string_type() + ":" + at.string_value());
+					+ ((AnyType)at).string_type() + ":" + at.getStringValue());
 
 		}
 

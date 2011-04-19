@@ -16,10 +16,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 
@@ -63,7 +63,7 @@ public class FnConcat extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the concatenation of the arguments.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return concat(args);
 	}
 
@@ -82,7 +82,7 @@ public class FnConcat extends Function {
 		if (args.size() < 2)
 			DynamicError.throw_type_error();
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		String result = "";
 
@@ -101,15 +101,15 @@ public class FnConcat extends Function {
 				continue;
 			}
 
-			AnyType at = arg.first();
+			Item at = arg.first();
 			
-			buf.append(at.string_value());
+			buf.append(at.getStringValue());
 
 		}
 		result = buf.toString();
 		
 		rs.add(new XSString(result));
 
-		return rs;
+		return rs.getSequence();
 	}
 }

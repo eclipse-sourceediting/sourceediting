@@ -15,9 +15,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
@@ -48,7 +48,7 @@ public class FnFloor extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		// 1 argument only!
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
@@ -68,16 +68,14 @@ public class FnFloor extends Function {
 	 */
 	public static ResultSequence fn_floor(ResultSequence arg)
 			throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// sanity chex
 		NumericType nt = FnAbs.get_single_numeric_arg(arg);
 
 		// empty arg
 		if (nt == null)
-			return rs;
+			return ResultBuffer.EMPTY;
 
-		rs.add(nt.floor());
-		return rs;
+		return nt.floor();
 	}
 }

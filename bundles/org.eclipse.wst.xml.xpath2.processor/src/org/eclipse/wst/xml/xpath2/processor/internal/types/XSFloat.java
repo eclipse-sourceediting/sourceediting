@@ -22,9 +22,11 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
@@ -95,7 +97,7 @@ public class XSFloat extends NumericType {
 	 * 
 	 * @return String representation of the stored number
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		if (zero()) {
 		   return "0";
 		}
@@ -157,12 +159,10 @@ public class XSFloat extends NumericType {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
-		AnyType aat = arg.first();
+		AnyType aat = (AnyType) arg.first();
 		
 		if (aat instanceof XSDuration || aat instanceof CalendarType ||
 			aat instanceof XSBase64Binary || aat instanceof XSHexBinary ||
@@ -179,22 +179,21 @@ public class XSFloat extends NumericType {
 		
 
 		try {
-			Float f = null;
-			if (aat.string_value().equals("INF")) {
-				f = new Float(Float.POSITIVE_INFINITY);
-			} else if (aat.string_value().equals("-INF")) {
-				f = new Float(Float.NEGATIVE_INFINITY);
+			float f;
+			if (aat.getStringValue().equals("INF")) {
+				f = Float.POSITIVE_INFINITY;
+			} else if (aat.getStringValue().equals("-INF")) {
+				f = Float.NEGATIVE_INFINITY;
 			} else if (aat instanceof XSBoolean) {
-				if (aat.string_value().equals("true")) {
-					f = new Float("1.0E0");
+				if (aat.getStringValue().equals("true")) {
+					f = 1.0f;
 				} else {
-					f = new Float("0.0E0");
+					f = 0.0f;
 				}
 			} else {
-			    f = new Float(aat.string_value());
+			    f = Float.valueOf(aat.getStringValue());
 			}
-			rs.add(new XSFloat(f.floatValue()));
-			return rs;
+			return new XSFloat(f);
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
 		}
@@ -220,7 +219,7 @@ public class XSFloat extends NumericType {
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType aa, DynamicContext dynamicContext) throws DynamicError {
-		AnyType carg = convertArg(aa);
+		Item carg = convertArg(aa);
 		if (!(carg instanceof XSFloat))
 			DynamicError.throw_type_error();
 
@@ -245,7 +244,7 @@ public class XSFloat extends NumericType {
 	 * @throws DynamicError
 	 */
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
-		AnyType carg = convertArg(arg);
+		Item carg = convertArg(arg);
 		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return float_value() > val.float_value();
 	}
@@ -260,7 +259,7 @@ public class XSFloat extends NumericType {
 	 * @throws DynamicError
 	 */
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
-		AnyType carg = convertArg(arg);
+		Item carg = convertArg(arg);
 		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return float_value() < val.float_value();
 	}
@@ -275,7 +274,7 @@ public class XSFloat extends NumericType {
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
 		ResultSequence carg = convertResultSequence(arg);
-		AnyType at = get_single_arg(carg);
+		Item at = get_single_arg(carg);
 		if (!(at instanceof XSFloat))
 			DynamicError.throw_type_error();
 		XSFloat val = (XSFloat) at;
@@ -295,7 +294,7 @@ public class XSFloat extends NumericType {
 	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
 		ResultSequence carg = constructor(arg);
-		AnyType at = get_single_arg(carg);
+		Item at = get_single_arg(carg);
 		if (!(at instanceof XSFloat))
 			DynamicError.throw_type_error();
 		XSFloat val = (XSFloat) at;
@@ -449,10 +448,10 @@ public class XSFloat extends NumericType {
 		return new XSFloat(round.floatValue());
 	}
 	
-	protected AnyType convertArg(AnyType arg) throws DynamicError {
+	protected Item convertArg(AnyType arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new(arg);
 		rs = constructor(rs);
-		AnyType carg = rs.first();
+		Item carg = rs.first();
 		return carg;
 	}
 	
@@ -474,5 +473,9 @@ public class XSFloat extends NumericType {
 	
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_FLOAT;
+	}
+	
+	public Object getNativeValue() {
+		return float_value();
 	}
 }

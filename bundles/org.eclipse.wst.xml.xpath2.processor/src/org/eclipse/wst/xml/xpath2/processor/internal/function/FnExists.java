@@ -15,9 +15,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 
@@ -42,7 +41,7 @@ public class FnExists extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return exists(args);
 	}
 
@@ -59,17 +58,10 @@ public class FnExists extends Function {
 
 		assert args.size() == 1;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg1 = (ResultSequence) citer.next();
 
-		if (arg1.empty())
-			rs.add(new XSBoolean(false));
-		else
-			rs.add(new XSBoolean(true));
-
-		return rs;
+		return XSBoolean.valueOf(! arg1.empty());
 	}
 }

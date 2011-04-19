@@ -11,10 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * The descendant-or-self axis contains the context node and the descendants of
@@ -29,22 +27,17 @@ public class DescendantOrSelfAxis extends ForwardAxis {
 	 * 
 	 * @param node
 	 *            is the type of node.
-	 * @param dc
-	 *            is the dynamic context.
-	 * @return The context node and its descendants.
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+	public void iterate(NodeType node, ResultBuffer rs) {
 
 		// add self
 		rs.add(node);
 
 		// add descendants
-		DescendantAxis da = new DescendantAxis();
-		ResultSequence desc = da.iterate(node, dc);
-		rs.concat(desc);
-
-		return rs;
+		new DescendantAxis().iterate(node, rs);
 	}
 
+	public String name() {
+		return "descendant-or-self";
+	}
 }

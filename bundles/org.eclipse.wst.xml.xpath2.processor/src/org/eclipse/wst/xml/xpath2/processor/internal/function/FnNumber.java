@@ -19,12 +19,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
@@ -65,9 +64,7 @@ public class FnNumber extends Function {
 			argument = (ResultSequence) args.iterator().next();
 		}
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(fn_number(argument, ec));
-		return rs;
+		return fn_number(argument, ec);
 	}
 
 	/**
@@ -87,7 +84,7 @@ public class FnNumber extends Function {
 		if (arg.size() > 1) {
 			throw new DynamicError(TypeError.invalid_type("bad argument passed to fn:number()"));
 		} else if (arg.size() == 1) {
-			AnyType at = arg.first();
+			Item at = arg.first();
 
 			/*
 			if (!(at instanceof AnyAtomicType))
@@ -109,12 +106,12 @@ public class FnNumber extends Function {
 					  return new XSDouble((double)value); 
 				  }
 			  } else {
-				 XSDouble d = XSDouble.parse_double(at.string_value());
+				 XSDouble d = XSDouble.parse_double(at.getStringValue());
 				 return d != null ? d : new XSDouble(Double.NaN);
 			  }
 			}
 			else if (at instanceof NodeType) {
-				XSDouble d = XSDouble.parse_double((FnData.atomize(at)).string_value());
+				XSDouble d = XSDouble.parse_double((FnData.atomize(at)).getStringValue());
 				return d != null ? d : new XSDouble(Double.NaN);
 			}
 		} else {

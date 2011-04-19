@@ -22,10 +22,10 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.dom.PSVIElementNSImpl;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -90,7 +90,7 @@ public class ElementType extends NodeType {
 	 * 
 	 * @return String representation of the element being stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		// XXX can we cache ?
 		if (_string_value != null)
 			return _string_value;
@@ -106,25 +106,23 @@ public class ElementType extends NodeType {
 	 * @return New ResultSequence consisting of the element stored
 	 */
 	public ResultSequence typed_value() {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		
 		TypeDefinition typeDef = getType();
 
 		if (typeDef != null) {
 			if (!isNilled(_value)) {
 				if (typeDef != null) {
-					rs = getXDMTypedValue(typeDef, typeDef.getSimpleTypes(_value));
+					return getXDMTypedValue(typeDef, typeDef.getSimpleTypes(_value));
 				}
 				else {
-					rs.add(new XSUntypedAtomic(string_value()));
+					return new XSUntypedAtomic(getStringValue());
 				}
 			}
 		}
 		else {
-			rs.add(new XSUntypedAtomic(string_value()));
+			return new XSUntypedAtomic(getStringValue());
 		}
-		return rs;
+		return ResultBuffer.EMPTY;
 	}
 
 	private boolean isNilled(Element _value2) {
@@ -173,17 +171,14 @@ public class ElementType extends NodeType {
 	}
 
 	public ResultSequence nilled() {
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		if (_value instanceof PSVIElementNSImpl) {
 			PSVIElementNSImpl psviElement = (PSVIElementNSImpl) _value;
-			rs.add(new XSBoolean(psviElement.getNil()));
+			return XSBoolean.valueOf(psviElement.getNil());
 		}
 		else {
-			rs.add(new XSBoolean(false));
+			return XSBoolean.FALSE;
 		}
-
-		return rs;
 	}
 
 	/**

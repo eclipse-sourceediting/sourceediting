@@ -18,10 +18,10 @@ import java.util.Collection;
 import javax.xml.XMLConstants;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSNCName;
@@ -66,28 +66,24 @@ public class FnPrefixFromQName extends Function {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get arg
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
 		if (arg1.empty())
-		  return rs;
+		  return ResultBuffer.EMPTY;
 
 		QName qname = (QName) arg1.first();
 
 		String prefix = qname.prefix();
 		
-
 		if (prefix != null) {
 			if (! XMLConstants.NULL_NS_URI.equals(sc.getNamespaceContext().getNamespaceURI(prefix))) {
-				  rs.add(new XSNCName(prefix));
+				  return new XSNCName(prefix);
 			} else {
 				throw DynamicError.invalidPrefix();
 			}
 		} 
-
-		return rs;
+		return ResultBuffer.EMPTY;
 	}
 	
 	/**

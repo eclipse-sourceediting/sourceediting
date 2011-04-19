@@ -15,10 +15,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 public class XSLong extends XSInteger {
@@ -70,17 +71,16 @@ public class XSLong extends XSInteger {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		// the function conversion rules apply here too. Get the argument
 		// and convert it's string value to a long.
-		AnyType aat = arg.first();
+		Item aat = arg.first();
 
 		try {
-			BigInteger bigInt = new BigInteger(aat.string_value());
+			BigInteger bigInt = new BigInteger(aat.getStringValue());
 			
 			// doing the range checking
 			BigInteger min = BigInteger.valueOf(-9223372036854775808L);
@@ -91,9 +91,7 @@ public class XSLong extends XSInteger {
 			   DynamicError.throw_type_error();	
 			}
 			
-			rs.add(new XSLong(bigInt));
-			
-			return rs;
+			return new XSLong(bigInt);
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
 		}

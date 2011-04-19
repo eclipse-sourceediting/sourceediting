@@ -17,7 +17,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
@@ -69,7 +70,7 @@ public abstract class TypePromoter {
 	
 	public void considerSequence(ResultSequence sequenceToConsider) throws DynamicError {
 		for (int i = 0; i < sequenceToConsider.size(); ++i) {
-			AnyType item = sequenceToConsider.get(i);
+			Item item = sequenceToConsider.item(i);
 			considerValue(item);
 		}
 	}
@@ -82,7 +83,7 @@ public abstract class TypePromoter {
 		this.targetType = class1;
 	}
 
-	public AnyAtomicType atomize(AnyType at) {
+	public AnyAtomicType atomize(Item at) {
 		if (at instanceof NodeType) {
 			return (AnyAtomicType)((NodeType)at).typed_value().first();
 		}
@@ -91,7 +92,7 @@ public abstract class TypePromoter {
 		}
 	}
 	
-	public void considerValue(AnyType at) throws DynamicError {
+	public void considerValue(Item at) throws DynamicError {
 		considerType(atomize(at).getClass());
 	}
 

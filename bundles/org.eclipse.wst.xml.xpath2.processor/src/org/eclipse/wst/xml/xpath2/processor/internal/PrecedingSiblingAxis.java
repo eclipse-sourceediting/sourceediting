@@ -11,11 +11,9 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
 
 /**
  * the preceding axis contains all nodes that are descendants of the root of the
@@ -31,44 +29,24 @@ public class PrecedingSiblingAxis extends ReverseAxis {
 	 *            is the node type.
 	 * @throws dc
 	 *             is the Dynamic context.
-	 * @return the descendants and the context node
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		boolean found = false;
+	public void iterate(NodeType node, ResultBuffer copyInto) {
 		// XXX check for attribute / namespace node... if so return
 		// empty sequence
 
-		// get the parent
-		ParentAxis pa = new ParentAxis();
-		ResultSequence rs = pa.iterate(node, dc);
-
-		// XXX: if no parent, out of luck i guess
-		if (rs.size() == 0)
-			return rs;
-
+		int pos = copyInto.size();
+		Node iterNode = node.node_value();
 		// get the children of the parent [siblings]
-		ChildAxis ca = new ChildAxis();
-		NodeType parent = (NodeType) rs.get(0);
-		rs = ca.iterate(parent, dc);
-
-		// get the preceding siblings
-		for (Iterator i = rs.iterator(); i.hasNext();) {
-			NodeType n = (NodeType) i.next();
-
-			// ok we passed the node, so just erase the rest of the
-			// results
-			if (found) {
-				i.remove();
-				continue;
+		do {
+			iterNode = iterNode.getPreviousSibling();
+			if (iterNode != null) {
+				copyInto.addAt(pos, NodeType.dom_to_xpath(iterNode, node.getTypeModel()));
 			}
+		} while (iterNode != null);
+	}
 
-			if (n.node_value() == node.node_value()) {
-				i.remove();
-				found = true;
-			}
-		}
-
-		return rs;
+	public String name() {
+		return "preceding-sibling";
 	}
 
 }

@@ -16,9 +16,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
@@ -45,7 +47,7 @@ public class FnInsertBefore extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, EvaluationContext ec) {
 		return insert_before(args);
 	}
 
@@ -63,7 +65,7 @@ public class FnInsertBefore extends Function {
 
 		assert args.size() == 3;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		// get args
 		Iterator citer = args.iterator();
@@ -75,7 +77,7 @@ public class FnInsertBefore extends Function {
 		if (arg2.size() != 1)
 			DynamicError.throw_type_error();
 
-		AnyType at = arg2.first();
+		Item at = arg2.first();
 		if (!(at instanceof XSInteger))
 			DynamicError.throw_type_error();
 
@@ -109,6 +111,6 @@ public class FnInsertBefore extends Function {
 		if (curpos == position)
 			rs.concat(inserts);
 
-		return rs;
+		return rs.getSequence();
 	}
 }

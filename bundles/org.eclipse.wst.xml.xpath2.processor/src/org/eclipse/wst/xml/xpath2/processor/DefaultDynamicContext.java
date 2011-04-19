@@ -44,6 +44,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeModel;
+import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -187,7 +188,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 
 		assert funct != null;
 
-		return funct.evaluate(args);
+		return ResultSequenceUtil.newToOld(funct.evaluate(args));
 	}
 
 	/**
@@ -232,7 +233,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 			if (realURI.isAbsolute()) {
 				return realURI;
 			} else {
-				URI baseURI = URI.create(base_uri().string_value());
+				URI baseURI = URI.create(base_uri().getStringValue());
 				return baseURI.resolve(uri);
 			}
 		} catch (IllegalArgumentException iae) {

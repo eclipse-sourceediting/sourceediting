@@ -13,10 +13,11 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.StaticContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
@@ -111,7 +112,7 @@ public class ElementTest extends AttrElemTest {
 			return new ElementType();
 		}
 
-		AnyType at = rs.first();
+		Item at = rs.first();
 
 		if (!(at instanceof NodeType)) {
 			return new ElementType();
@@ -120,7 +121,7 @@ public class ElementTest extends AttrElemTest {
 		return createElementType(at, sc);
 	}
 
-	private AnyType createElementType(AnyType at, StaticContext sc) {
+	private AnyType createElementType(Item at, StaticContext sc) {
 		anyType = new ElementType();
 		NodeType nodeType = (NodeType) at;
 		Node node = nodeType.node_value();
@@ -149,7 +150,7 @@ public class ElementTest extends AttrElemTest {
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Element element = (Element) nodeList.item(i);
 			
-			TypeModel typeModel = sc.getTypeModel(element);
+			TypeModel typeModel = sc.getTypeModel();
 			TypeDefinition typedef = typeModel.getType(element);
 			if (type() == null || typedef == null) {
 				anyType = new ElementType(element, typeModel);

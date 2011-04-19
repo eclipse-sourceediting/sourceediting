@@ -22,9 +22,11 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
@@ -108,12 +110,11 @@ public class XSDouble extends NumericType {
 	 * @return A new result sequence consisting of the double number supplied.
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
-		AnyType aat = arg.first();
+		Item aat = arg.first();
 
 		if (aat instanceof XSDuration || aat instanceof CalendarType ||
 			aat instanceof XSBase64Binary || aat instanceof XSHexBinary ||
@@ -130,11 +131,10 @@ public class XSDouble extends NumericType {
 		if (d == null)
 			throw DynamicError.cant_cast(null);
 
-		rs.add(d);
-		return rs;
+		return d;
 	}
 	
-	private boolean isCastable(AnyType aat) {
+	private boolean isCastable(Item aat) {
 		if (aat instanceof XSString || aat instanceof XSUntypedAtomic ||
 			aat instanceof NodeType) {
 			return true;
@@ -145,15 +145,15 @@ public class XSDouble extends NumericType {
 		return false;
 	}
 	
-	private XSDouble castDouble(AnyType aat) {
+	private XSDouble castDouble(Item aat) {
 		if (aat instanceof XSBoolean) {
-			if (aat.string_value().equals("true")) {
+			if (aat.getStringValue().equals("true")) {
 				return new XSDouble(1.0E0);
 			} else {
 				return new XSDouble(0.0E0);
 			}
 		}
-		return parse_double(aat.string_value());
+		return parse_double(aat.getStringValue());
 		
 	}
 
@@ -180,7 +180,7 @@ public class XSDouble extends NumericType {
 	 * 
 	 * @return String representation of the Decimal value stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		if (zero()) {
 			return "0";
 		}
@@ -260,7 +260,7 @@ public class XSDouble extends NumericType {
 		if (crs.empty()) {
 			throw DynamicError.throw_type_error();
 		}
-		AnyType cat = crs.first();
+		Item cat = crs.first();
 
 		XSDouble d = (XSDouble) cat;
 		if (d.nan() && nan()) {
@@ -283,16 +283,16 @@ public class XSDouble extends NumericType {
 	 *         one stored. False otherwise
 	 */
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
-		AnyType carg = convertArg(arg);
+		Item carg = convertArg(arg);
 		
 		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 		return double_value() > val.double_value();
 	}
 
-	protected AnyType convertArg(AnyType arg) throws DynamicError {
+	protected Item convertArg(AnyType arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new(arg);
 		rs = constructor(rs);
-		AnyType carg = rs.first();
+		Item carg = rs.first();
 		return carg;
 	}
 
@@ -308,7 +308,7 @@ public class XSDouble extends NumericType {
 	 *         one stored. False otherwise
 	 */
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
-		AnyType carg = convertArg(arg);
+		Item carg = convertArg(arg);
 
 		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 		return double_value() < val.double_value();
@@ -325,7 +325,7 @@ public class XSDouble extends NumericType {
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
 		ResultSequence carg = convertResultSequence(arg);
-		AnyType at = get_single_arg(carg);
+		Item at = get_single_arg(carg);
 		
 		if (!(at instanceof XSDouble))
 			DynamicError.throw_type_error();
@@ -525,4 +525,7 @@ public class XSDouble extends NumericType {
 		return BuiltinTypeLibrary.XS_DOUBLE;
 	}
 
+    public Object getNativeValue() {
+    	return double_value();
+    }
 }

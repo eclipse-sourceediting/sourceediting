@@ -14,10 +14,10 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
@@ -126,7 +126,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 	 * 
 	 * @return String representation of the duration stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		String ret = "";
 		boolean did_something = false;
 		String tret = "";
@@ -323,10 +323,8 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		
@@ -345,9 +343,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 		if (duration == null)
 			throw DynamicError.cant_cast(null);
 
-		rs.add(duration);
-
-		return rs;
+		return duration;
 	}
 
 	private XSDuration castDuration(AnyAtomicType aat) {
@@ -356,7 +352,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 			return new XSDuration(duration.year(), duration.month(), duration.days(), duration.hours(), duration.minutes(), duration.seconds(), duration.negative());
 		}
 		
-		return parseDTDuration(aat.string_value());
+		return parseDTDuration(aat.getStringValue());
 	}
 	/**
 	 * Creates a new XSDayTimeDuration by parsing the supplied String
@@ -490,7 +486,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 	}
 
 	protected boolean isCastable(AnyAtomicType aat) {
-		String value = aat.string_value(); // get this once so we don't recreate everytime.
+		String value = aat.getStringValue(); // get this once so we don't recreate everytime.
 		String type = aat.string_type();
 		if (type.equals("xs:string") || type.equals("xs:untypedAtomic")) {
 			if (isDurationValue(value)) {
@@ -515,4 +511,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt, Cloneabl
 		return BuiltinTypeLibrary.XS_DURATION;
 	}
 
+	public Object getNativeValue() {
+		return _datatypeFactory.newDuration(! negative(), year(), month(), days(), hours(), minutes(), (int)seconds());
+	}
 }

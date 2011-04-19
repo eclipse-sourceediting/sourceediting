@@ -17,9 +17,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
@@ -52,7 +52,7 @@ public class FnSecondsFromTime extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return seconds_from_time(args);
 	}
 
@@ -71,19 +71,15 @@ public class FnSecondsFromTime extends Function {
 
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg1.empty()) {
-			return rs;
+			return ResultBuffer.EMPTY;
 		}
 
 		XSTime dt = (XSTime) arg1.first();
 
 		double res = dt.second();
 
-		rs.add(new XSDecimal(new BigDecimal(res)));
-
-		return rs;
+		return new XSDecimal(new BigDecimal(res));
 	}
 
 	/**

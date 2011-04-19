@@ -225,7 +225,7 @@ public class DefaultStaticContext implements StaticContext {
 		return fl.function_exists(name, arity);
 	}
 
-	protected Function function(QName name, int arity) {
+	public Function function(QName name, int arity) {
 		String ns = name.namespace();
 		if (!_functions.containsKey(ns))
 			return null;
@@ -615,7 +615,7 @@ public class DefaultStaticContext implements StaticContext {
 				String string_val = "null";
 
 				if (val != null)
-					string_val = val.string_value();
+					string_val = val.getStringValue();
 
 				System.out.println("Varname: " + varname.string()
 						+ " expanded=" + varname.expanded() + " Value: "
@@ -644,5 +644,9 @@ public class DefaultStaticContext implements StaticContext {
 
 	public TypeModel getTypeModel(Node node) {
 		return _model;
+	}
+
+	public Map get_function_libraries() {
+		return _functions;
 	}
 }

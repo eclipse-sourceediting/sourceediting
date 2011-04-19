@@ -14,20 +14,23 @@ package org.eclipse.wst.xml.xpath2.api;
 import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 
 /**
- * A match found by the XPath2 pattern matcher
+ * An item in the XPath2 data model
  * 
- * * @noimplement This interface is not intended to be implemented by clients.
  * @since 2.0
- *
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 
 public interface Item {
 	/**
-	 * @return The number of matching patterns on the input.
+	 * @return A description of the item type.
 	 */
 	ItemType getItemType();
-	
+
+	/**
+	 * @return The "Raw" Java object, e.g. org.w3.Node for a node,
+	 *         java.util.String for strings, etc.
+	 */
 	Object getNativeValue();
 
-	String string_value();
+	String getStringValue();
 }

@@ -12,24 +12,12 @@
 
 package org.eclipse.wst.xml.xpath2.processor.util;
 
-import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 
+@SuppressWarnings("deprecation")
 public class ResultSequenceUtil {
-
-	public static org.eclipse.wst.xml.xpath2.api.ResultSequence oldToNew(
-			ResultSequence result) {
-		if (result instanceof org.eclipse.wst.xml.xpath2.api.ResultSequence) 
-			return (org.eclipse.wst.xml.xpath2.api.ResultSequence)result;
-		
-		ResultBuffer buff = new ResultBuffer();
-		for (int i = 0; i < result.size(); ++i) {
-			buff.add(result.get(i));
-		}
-		return buff.getSequence();
-	}
 
 	public static ResultSequence newToOld(
 			org.eclipse.wst.xml.xpath2.api.ResultSequence result) {

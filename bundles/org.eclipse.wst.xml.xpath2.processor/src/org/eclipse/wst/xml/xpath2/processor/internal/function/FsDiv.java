@@ -15,9 +15,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**

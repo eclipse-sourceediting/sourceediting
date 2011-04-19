@@ -17,9 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
@@ -50,7 +49,7 @@ public class FnContains extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return contains(args);
 	}
 
@@ -65,8 +64,6 @@ public class FnContains extends Function {
 	 */
 	public static ResultSequence contains(Collection args) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
-
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
 		Iterator argiter = cargs.iterator();
@@ -84,21 +81,14 @@ public class FnContains extends Function {
 		int str2len = str2.length();
 
 		if (str2len == 0) {
-			rs.add(new XSBoolean(true));
-			return rs;
+			return XSBoolean.TRUE;
 		}
 		
 		if (str1len == 0) {
-			rs.add(new XSBoolean(false));
-			return rs;
+			return XSBoolean.FALSE;
 		}
 
-		if (str1.indexOf(str2) == -1)
-			rs.add(new XSBoolean(false));
-		else
-			rs.add(new XSBoolean(true));
-
-		return rs;
+		return XSBoolean.valueOf(str1.indexOf(str2) != -1);
 	}
 
 	/**

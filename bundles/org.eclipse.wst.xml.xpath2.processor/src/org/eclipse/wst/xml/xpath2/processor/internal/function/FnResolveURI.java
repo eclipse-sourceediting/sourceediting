@@ -18,11 +18,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
 
@@ -90,25 +90,21 @@ public class FnResolveURI extends Function {
 			baseUriRS = (ResultSequence) argit.next();
 		}
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		
 		if (relativeRS.empty()) {
-			return rs;
+			return ResultBuffer.EMPTY;
 		}
 
-		AnyType relativeURI = relativeRS.first();
+		Item relativeURI = relativeRS.first();
 		String resolvedURI = null;
 				
 		if (baseUriRS == null) {
-			resolvedURI = resolveURI(ec.getStaticContext().getBaseUri().toString(), relativeURI.string_value());
+			resolvedURI = resolveURI(ec.getStaticContext().getBaseUri().toString(), relativeURI.getStringValue());
 		} else {
-			AnyType baseURI = baseUriRS.first();
-			resolvedURI = resolveURI(baseURI.string_value(), relativeURI.string_value());
+			Item baseURI = baseUriRS.first();
+			resolvedURI = resolveURI(baseURI.getStringValue(), relativeURI.getStringValue());
 		}
 
-		rs.add(new XSAnyURI(resolvedURI));
-
-		return rs;
+		return new XSAnyURI(resolvedURI);
 	}
 
 	private static String resolveURI(String base, String relative) throws DynamicError {

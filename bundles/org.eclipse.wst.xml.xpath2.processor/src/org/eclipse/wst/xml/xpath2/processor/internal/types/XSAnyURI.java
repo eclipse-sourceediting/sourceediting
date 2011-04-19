@@ -18,10 +18,10 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
@@ -91,12 +91,10 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * @return new result sequence consisting of the URI supplied
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
-		AnyType aat = arg.first();
+		AnyType aat = (AnyType) arg.first();
 
 		if (!(aat.string_type().equals("xs:string")
 				|| aat.string_type().equals(XS_ANY_URI) || aat.string_type()
@@ -104,9 +102,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 			throw DynamicError.invalidType();
 		}
 
-		rs.add(new XSAnyURI(aat.string_value()));
-
-		return rs;
+		return new XSAnyURI(aat.string_value());
 	}
 
 	/**
@@ -172,5 +168,9 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_ANYURI;
+	}
+
+	public String getStringValue() {
+		return _value;
 	}
 }

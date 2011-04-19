@@ -18,9 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
@@ -67,22 +66,19 @@ public class FnNamespaceUri extends Function {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
 		ResultSequence arg1 = null;
 		if (cargs.isEmpty()) {
 			if (context.getContextItem() == null) {
 				throw DynamicError.contextUndefined();
 			}
-			arg1 = ResultSequenceFactory.create_new();
-			arg1.add((AnyType) context.getContextItem());
+			arg1 = (AnyType) context.getContextItem();
 		} else {
 			// get arg
 			arg1 = (ResultSequence) cargs.iterator().next();
 		}
 
 		if (arg1.empty()) {
-			rs.add(new XSAnyURI(""));
-			return rs;
+			return new XSAnyURI("");
 		}
 
 		NodeType an = (NodeType) arg1.first();
@@ -93,9 +89,7 @@ public class FnNamespaceUri extends Function {
 		if (name != null)
 			sname = name.namespace();
 
-		rs.add(new XSAnyURI(sname));
-
-		return rs;
+		return new XSAnyURI(sname);
 	}
 
 	/**

@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
 import java.util.*;
 
+import org.eclipse.wst.xml.xpath2.api.Function;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
@@ -22,6 +23,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 public class FunctionCall extends PrimaryExpr {
 	private QName _name;
 	private Collection _args;
+	private Function _function;
 
 	/**
 	 * Constructor for FunctionCall.
@@ -34,6 +36,14 @@ public class FunctionCall extends PrimaryExpr {
 	public FunctionCall(QName name, Collection args) {
 		_name = name;
 		_args = args;
+	}
+	
+	public Function function() {
+		return _function;
+	}
+	
+	public void set_function(Function _function) {
+		this._function = _function;
 	}
 
 	/**

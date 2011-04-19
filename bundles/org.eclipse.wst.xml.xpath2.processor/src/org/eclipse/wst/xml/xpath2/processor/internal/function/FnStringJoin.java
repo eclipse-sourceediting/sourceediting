@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -63,7 +62,7 @@ public class FnStringJoin extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the joining of the arguments.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return string_join(args);
 	}
 
@@ -84,8 +83,6 @@ public class FnStringJoin extends Function {
 		ResultSequence arg1 = (ResultSequence) argi.next();
 		ResultSequence arg2 = (ResultSequence) argi.next();
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		String result = "";
 		String separator = ((XSString) arg2.first()).value();
 
@@ -99,9 +96,7 @@ public class FnStringJoin extends Function {
 		}
 		
 		result = buf.toString();
-		rs.add(new XSString(result));
-
-		return rs;
+		return new XSString(result);
 	}
 
 	/**

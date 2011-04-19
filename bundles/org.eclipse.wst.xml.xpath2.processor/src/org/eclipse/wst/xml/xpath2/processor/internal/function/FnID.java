@@ -19,9 +19,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AttrType;
@@ -75,11 +75,11 @@ public class FnID extends Function {
 	public static ResultSequence id(Collection args, EvaluationContext context) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 		
 		Iterator argIt = cargs.iterator();
 		ResultSequence idrefRS = (ResultSequence) argIt.next();
-		String[] idrefst = idrefRS.first().string_value().split(" ");
+		String[] idrefst = idrefRS.first().getStringValue().split(" ");
 
 		ArrayList idrefs = createIDRefs(idrefst);
 		ResultSequence nodeArg = null;
@@ -112,10 +112,10 @@ public class FnID extends Function {
 			rs.add(element);
 		}
 		
-		rs = processAttributes(node, idrefs, rs, context);
-		rs = processChildNodes(node, idrefs, rs, context);
+		processAttributes(node, idrefs, rs, context);
+		processChildNodes(node, idrefs, rs, context);
 
-		return rs;
+		return rs.getSequence();
 	}
 	
 	private static ArrayList createIDRefs(String[] idReftokens) {
@@ -127,9 +127,9 @@ public class FnID extends Function {
 		return xsidRef;
 	}
 	
-	private static ResultSequence processChildNodes(Node node, List idrefs, ResultSequence rs, EvaluationContext context) {
+	private static void processChildNodes(Node node, List idrefs, ResultBuffer rs, EvaluationContext context) {
 		if (!node.hasChildNodes()) {
-			return rs;
+			return;
 		}
 		
 		NodeList nodeList = node.getChildNodes();
@@ -142,18 +142,16 @@ public class FnID extends Function {
 						rs.add(element);
 					}
 				} 
-				rs = processAttributes(childNode, idrefs, rs, context);
-				rs = processChildNodes(childNode, idrefs, rs, context);
+				processAttributes(childNode, idrefs, rs, context);
+				processChildNodes(childNode, idrefs, rs, context);
 			}
 		}
-		
-		return rs;
 
 	}
 	
-	private static ResultSequence processAttributes(Node node, List idrefs, ResultSequence rs, EvaluationContext context) {
+	private static void processAttributes(Node node, List idrefs, ResultBuffer rs, EvaluationContext context) {
 		if (!node.hasAttributes()) {
-			return rs;
+			return;
 		}
 		
 		NamedNodeMap attributeList = node.getAttributes();
@@ -169,20 +167,19 @@ public class FnID extends Function {
 				}
 			}
 		}
-		return rs;
 	}
 	
 	private static boolean hasIDREF(List idrefs, Node node) {
 		for (int i = 0; i < idrefs.size(); i++) {
 			XSIDREF idref = (XSIDREF) idrefs.get(i);
-			if (idref.string_value().equals(node.getNodeValue())) {
+			if (idref.getStringValue().equals(node.getNodeValue())) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	private static boolean isDuplicate(Node node, ResultSequence rs) {
+	private static boolean isDuplicate(Node node, ResultBuffer rs) {
 		Iterator it = rs.iterator();
 		while (it.hasNext()) {
 			if (it.next().equals(node)) {

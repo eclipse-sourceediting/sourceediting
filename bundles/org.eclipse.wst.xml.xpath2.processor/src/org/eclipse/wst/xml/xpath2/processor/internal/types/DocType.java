@@ -13,10 +13,9 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.w3c.dom.Document;
 
@@ -63,7 +62,7 @@ public class DocType extends NodeType {
 	 * 
 	 * @return String representation of the document being stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		// XXX caching
 		if (_string_value == null)
 			_string_value = ElementType.textnode_strings(_value);
@@ -77,12 +76,8 @@ public class DocType extends NodeType {
 	 * @return New ResultSequence consisting of the document being stored
 	 */
 	public ResultSequence typed_value() {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// XXX no psvi
-		rs.add(new XSUntypedAtomic(string_value()));
-
-		return rs;
+		return new XSUntypedAtomic(getStringValue());
 	}
 
 	/**

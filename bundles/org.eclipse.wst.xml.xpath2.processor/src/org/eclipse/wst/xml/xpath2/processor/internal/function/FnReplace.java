@@ -19,9 +19,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.PatternSyntaxException;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -50,7 +49,7 @@ public class FnReplace extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return replace(args);
 	}
 
@@ -66,8 +65,6 @@ public class FnReplace extends Function {
 	public static ResultSequence replace(Collection args) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get args
 		Iterator argiter = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argiter.next();
@@ -80,7 +77,7 @@ public class FnReplace extends Function {
 		ResultSequence arg4 = null;
 		if (argiter.hasNext()) {
 			arg4 = (ResultSequence) argiter.next();
-			String flags = arg4.first().string_value();
+			String flags = arg4.first().getStringValue();
 			
 			if (flags.length() == 0) {
 				arg4 = null;
@@ -92,8 +89,7 @@ public class FnReplace extends Function {
 		String replacement = ((XSString) arg3.first()).value();
 		
 		try {
-			rs.add(new XSString(str1.replaceAll(pattern, replacement)));
-			return rs; 
+			return new XSString(str1.replaceAll(pattern, replacement));
 		} catch (PatternSyntaxException err) {
 			throw DynamicError.regex_error(null);
 		} catch (IllegalArgumentException ex) {

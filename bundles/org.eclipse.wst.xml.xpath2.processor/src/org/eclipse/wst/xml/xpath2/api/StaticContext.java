@@ -12,7 +12,7 @@
 package org.eclipse.wst.xml.xpath2.api;
 
 import java.net.URI;
-import java.util.Collection;
+import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -62,7 +62,7 @@ public interface StaticContext {
 	 * of constructor functions, which are discussed in 3.10.4 Constructor
 	 * Functions.
 	 */
-	public Collection/* <FunctionLibrary> */getFunctionLibraries();
+	public Map<String, FunctionLibrary> getFunctionLibraries();
 
 	/** 
 	 * [Definition: Statically known collations. This is an

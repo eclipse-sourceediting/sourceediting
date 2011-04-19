@@ -23,9 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
@@ -101,10 +100,7 @@ public class FnStringLength extends Function {
 		if (! arg1.empty()) {
 			str = ((XSString) arg1.first()).value();
 		}
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new XSInteger(BigInteger.valueOf(UTF16.countCodePoint(str))));
-
-		return rs;
+		return new XSInteger(BigInteger.valueOf(UTF16.countCodePoint(str)));
 	}
 
 	/**

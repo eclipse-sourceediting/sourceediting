@@ -19,6 +19,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -63,7 +64,7 @@ public class DynamicContextBuilder implements DynamicContext {
 	private Map<QName,ResultSequence> _variables = new HashMap<QName,ResultSequence>();
 	private final StaticContext _staticContext;
 
-	private Map<String, ResultSequence> _collections;
+	private Map<String, List<Document>> _collections;
 
 	private Map<URI, Document> _loaded_documents = new HashMap<URI, Document>();
 
@@ -95,19 +96,18 @@ public class DynamicContextBuilder implements DynamicContext {
 	}
 
 	public ResultSequence getVariable(QName name) {
-		return (ResultSequence) _variables.get(name);
+		return _variables.get(name);
 	}
 
 	public Document getDocument(URI resolved) {
 		Document doc = null;
 		if (_loaded_documents.containsKey(resolved)) {
 			 //tried before
-			doc = (Document)_loaded_documents.get(resolved);
+			doc = _loaded_documents.get(resolved);
 		} else {
 			doc = retrieve_doc(resolved);
 			_loaded_documents.put(resolved, doc);
 		}
-
 		return doc;
 	}
 
@@ -134,19 +134,18 @@ public class DynamicContextBuilder implements DynamicContext {
 			URI realURI = URI.create(uri);
 			if (realURI.isAbsolute()) {
 				return realURI;
-			} else {
-				return _staticContext.getBaseUri().resolve(uri);
 			}
+			return _staticContext.getBaseUri().resolve(uri);
 		} catch (IllegalArgumentException iae) {
 			return null;
 		}
 	}
 
-	public Map<String, ResultSequence> getCollections() {
+	public Map<String, List<Document>> getCollections() {
 		return _collections;
 	}
 
-	public ResultSequence getDefaultCollection() {
+	public List<Document> getDefaultCollection() {
 		return getCollections().get(FnCollection.DEFAULT_COLLECTION_URI);
 	}
 
@@ -160,7 +159,7 @@ public class DynamicContextBuilder implements DynamicContext {
 		return this;
 	}
 
-	public void withCollections(Map<String, ResultSequence> map) {
+	public void withCollections(Map<String, List<Document>> map) {
 		this._collections = map;
 	}
 	

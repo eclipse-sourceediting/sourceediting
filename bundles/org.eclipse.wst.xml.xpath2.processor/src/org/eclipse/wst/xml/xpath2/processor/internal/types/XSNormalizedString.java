@@ -12,10 +12,11 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
@@ -70,22 +71,18 @@ public class XSNormalizedString extends XSString {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-		   return rs;
+		   return ResultBuffer.EMPTY;
 
-		AnyType aat = arg.first();
+		Item aat = arg.first();
 
-		String srcString = aat.string_value();
+		String srcString = aat.getStringValue();
 		if (!isSatisfiesConstraints(srcString)) {
 			// invalid input
 			DynamicError.throw_type_error();
 		}
 		
-		rs.add(new XSNormalizedString(srcString));
-
-		return rs;
+		return new XSNormalizedString(srcString);
 	}
 	
 	/*

@@ -18,10 +18,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
-import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -74,14 +74,12 @@ public class FnResolveQName extends Function {
 		//Collection cargs = Function.convert_arguments(args, expected_args());
 		Collection cargs = args;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get args
 		Iterator argiter = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argiter.next();
 
 		if (arg1.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 		
 		ResultSequence arg2 = (ResultSequence) argiter.next();
 
@@ -109,9 +107,7 @@ public class FnResolveQName extends Function {
 		}
 		
 
-		rs.add(qn);
-
-		return rs;
+		return qn;
 	}
 
 	/**

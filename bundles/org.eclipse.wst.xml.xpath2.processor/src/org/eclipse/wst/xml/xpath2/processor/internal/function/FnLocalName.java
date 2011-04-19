@@ -18,9 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
@@ -68,8 +67,6 @@ public class FnLocalName extends Function {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get arg
 		ResultSequence arg1 = null;
 		
@@ -77,8 +74,7 @@ public class FnLocalName extends Function {
 			if (context.getContextItem() == null)
 				throw DynamicError.contextUndefined();
 			else {
-				arg1 = ResultSequenceFactory.create_new();
-				arg1.add((AnyType) context.getContextItem());
+				arg1 = (AnyType) context.getContextItem();
 			}
 		} else {
 			arg1 = (ResultSequence) cargs.iterator().next();
@@ -86,8 +82,7 @@ public class FnLocalName extends Function {
 		}
 		
 		if (arg1.empty()) {
-			rs.add(new XSString(""));
-			return rs;
+			return new XSString("");
 		}
 
 		NodeType an = (NodeType) arg1.first();
@@ -99,9 +94,7 @@ public class FnLocalName extends Function {
 		if (name != null)
 			sname = name.local();
 
-		rs.add(new XSString(sname));
-
-		return rs;
+		return new XSString(sname);
 	}
 
 	/**

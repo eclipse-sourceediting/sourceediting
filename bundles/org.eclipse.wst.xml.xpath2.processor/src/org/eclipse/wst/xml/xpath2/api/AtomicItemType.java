@@ -15,9 +15,16 @@ import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 
 /**
+ * Defines an sequence or item of atomic types.
+ * 
  * @since 2.0
  */
 public interface AtomicItemType extends ItemType {
 
+	/**
+	 * Returns the schema type of the sequence or type.
+	 * 
+	 * @return The Schema type of the sequence or item.
+	 */
 	public TypeDefinition getTypeDefinition();
 }

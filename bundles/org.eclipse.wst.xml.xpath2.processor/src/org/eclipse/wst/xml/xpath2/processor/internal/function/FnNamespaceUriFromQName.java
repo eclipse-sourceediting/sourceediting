@@ -15,9 +15,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
@@ -46,7 +46,7 @@ public class FnNamespaceUriFromQName extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return namespace(args);
 	}
 
@@ -63,13 +63,11 @@ public class FnNamespaceUriFromQName extends Function {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get arg
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
 		if (arg1.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		QName qname = (QName) arg1.first();
 
@@ -77,9 +75,7 @@ public class FnNamespaceUriFromQName extends Function {
 
 		if (ns == null)
 			ns = "";
-		rs.add(new XSAnyURI(ns));
-
-		return rs;
+		return new XSAnyURI(ns);
 	}
 
 	/**

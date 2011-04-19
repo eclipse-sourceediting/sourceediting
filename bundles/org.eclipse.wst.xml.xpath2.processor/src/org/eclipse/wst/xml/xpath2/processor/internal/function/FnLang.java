@@ -20,9 +20,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
@@ -79,8 +78,6 @@ public class FnLang extends Function {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get arg
 		Iterator citer = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) citer.next();
@@ -89,8 +86,7 @@ public class FnLang extends Function {
 			if (ec.getContextItem() == null) {
 				throw DynamicError.contextUndefined();
 			}
-			arg2 = ResultSequenceFactory.create_new();
-			arg2.add((AnyType) ec.getContextItem());
+			arg2 = (AnyType) ec.getContextItem();
 		} else {
 			arg2 = (ResultSequence) citer.next();
 		}
@@ -108,9 +104,7 @@ public class FnLang extends Function {
 		
 		NodeType an = (NodeType) arg2.first();
 
-		rs.add(new XSBoolean(test_lang(an.node_value(), lang)));
-
-		return rs;
+		return new XSBoolean(test_lang(an.node_value(), lang));
 	}
 
 	/**

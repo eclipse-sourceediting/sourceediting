@@ -12,9 +12,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * Returns the ancestors of the context node, this always includes the root
@@ -27,28 +26,22 @@ public class AncestorAxis extends ParentAxis {
 	 * 
 	 * @param node
 	 *            is the type of node.
-	 * @param dc
-	 *            is the dynamic context.
-	 * @return The nodes that are ancestors of the context node.
 	 */
 	// XXX unify this with descendants axis ?
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
+	public void iterate(NodeType node, ResultBuffer copyInto) {
 
+		int before = copyInto.size();
 		// get the parent
-		ResultSequence rs = super.iterate(node, dc);
+		super.iterate(node, copyInto);
 
 		// no parent
-		if (rs.size() == 0)
-			return rs;
+		if (copyInto.size() == before)
+			return;
 
-		NodeType parent = (NodeType) rs.get(0);
+		NodeType parent = (NodeType) copyInto.item(before);
 
 		// get ancestors of parent
-		ResultSequence ances = iterate(parent, dc);
-
-		ances.concat(rs);
-
-		return ances;
+		iterate(parent, copyInto);
 	}
 
 }

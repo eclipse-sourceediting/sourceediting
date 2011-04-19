@@ -11,8 +11,9 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
@@ -88,7 +89,7 @@ MathPlus, MathMinus, MathTimes, MathDiv, MathIDiv, MathMod {
 	
 	public abstract NumericType round_half_to_even(int precision);
 
-	protected AnyType get_single_arg(ResultSequence rs) throws DynamicError {
+	protected Item get_single_arg(ResultSequence rs) throws DynamicError {
 		if (rs.size() != 1)
 			DynamicError.throw_type_error();
 
@@ -106,13 +107,18 @@ MathPlus, MathMinus, MathTimes, MathDiv, MathIDiv, MathMod {
 	 * @throws DynamicError
 	 *             If node being tested is not of expected type
 	 */
-	public static AnyType get_single_type(AnyType at, Class type)
+	public static Item get_single_type(Item at, Class type)
 			throws DynamicError {
 
 		if (!type.isInstance(at))
 			DynamicError.throw_type_error();
 
 		return at;
+	}
+
+	public static Item get_single_type(AnyType at, Class type)
+	throws DynamicError {
+		return get_single_type((Item)at, type);
 	}
 
 	/***
@@ -132,11 +138,11 @@ MathPlus, MathMinus, MathTimes, MathDiv, MathIDiv, MathMod {
 		if (rs.size() != 1)
 			DynamicError.throw_type_error();
 
-		AnyType at = rs.first();
+		Item at = rs.first();
 
 		if (!type.isInstance(at))
 			DynamicError.throw_type_error();
 
-		return at;
+		return (AnyType) at;
 	}
 }

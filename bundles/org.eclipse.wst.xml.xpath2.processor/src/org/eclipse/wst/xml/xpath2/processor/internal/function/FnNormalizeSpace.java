@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -94,13 +93,11 @@ public class FnNormalizeSpace extends Function {
 		  arg1 = (ResultSequence) cargs.iterator().next();
 		}
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
 		String str = "";
 		if (! arg1.empty()) {
 			str = ((XSString) arg1.first()).value();
 		} 
-		rs.add(new XSString(normalize(str)));
-		return rs;
+		return new XSString(normalize(str));
 	}
 
 	/**

@@ -13,11 +13,12 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.w3c.dom.*;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AttrType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Attr;
+import org.w3c.dom.NamedNodeMap;
 
 /**
  * The attribute axis contains the attributes of the context node. The axis will
@@ -30,16 +31,11 @@ public class AttributeAxis extends ForwardAxis {
 	 * 
 	 * @param node
 	 *            is the type of node.
-	 * @param dc
-	 *            is the dynamic context.
-	 * @return The attibutes of the context node.
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
+	public void iterate(NodeType node, ResultBuffer copyInto) {
 		// only elements have attributes
 		if (!(node instanceof ElementType))
-			return rs;
+			return;
 
 		// get attributes
 		ElementType elem = (ElementType) node;
@@ -49,11 +45,8 @@ public class AttributeAxis extends ForwardAxis {
 		for (int i = 0; i < attrs.getLength(); i++) {
 			Attr attr = (Attr) attrs.item(i);
 
-			rs.add(NodeType.dom_to_xpath(attr, dc.getTypeModel(attr)));
+			copyInto.add(NodeType.dom_to_xpath(attr, node.getTypeModel()));
 		}
-
-		return rs;
-
 	}
 
 	/**
@@ -65,4 +58,7 @@ public class AttributeAxis extends ForwardAxis {
 		return new AttrType();
 	}
 
+	public String name() {
+		return "attribute";
+	}
 }

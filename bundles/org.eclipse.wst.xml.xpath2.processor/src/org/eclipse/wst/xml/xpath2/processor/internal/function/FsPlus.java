@@ -23,9 +23,8 @@ import java.util.Iterator;
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
@@ -34,7 +33,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
-import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 
 /**
  * Class for Plus function.
@@ -92,7 +90,7 @@ public class FsPlus extends Function {
 			AnyType arg = (AnyType) rs.item(0);
 
 			if (arg instanceof XSUntypedAtomic) {
-				arg = new XSDouble(arg.string_value());
+				arg = new XSDouble(arg.getStringValue());
 			}
 
 			if (arg instanceof XSDouble) has_double = true;
@@ -161,7 +159,7 @@ public class FsPlus extends Function {
 		// make sure we got only one numeric atom
 		if (arg.size() != 1)
 			DynamicError.throw_type_error();
-		AnyType at = arg.first();
+		Item at = arg.first();
 		if (!(at instanceof NumericType))
 			DynamicError.throw_type_error();
 
@@ -193,10 +191,8 @@ public class FsPlus extends Function {
 
 		Collection cargs = convert_args(args);
 
-		ResultSequence result = ResultSequenceFactory.create_new();
-
 		if (cargs.size() == 0)
-			return result;
+			return ResultBuffer.EMPTY;
 
 		// make sure arugments are good [at least the first one]
 		Iterator argi = cargs.iterator();
@@ -213,7 +209,7 @@ public class FsPlus extends Function {
 
 			method = type.getMethod(mname, margsdef);
 
-			Object margs[] = { ResultSequenceUtil.newToOld(arg2) };
+			Object margs[] = { arg2 };
 			return (ResultSequence) method.invoke(arg, margs);
 
 		} catch (NoSuchMethodException err) {
@@ -224,13 +220,10 @@ public class FsPlus extends Function {
 			assert false;
 		} catch (InvocationTargetException err) {
 			Throwable ex = err.getTargetException();
-
 			if (ex instanceof DynamicError) {
 				throw (DynamicError) ex;
-			}
-			else {
-				ex.printStackTrace();
-				System.exit(1);
+			} else {
+				throw new RuntimeException(ex);
 			}
 		}
 		return null; // unreach!

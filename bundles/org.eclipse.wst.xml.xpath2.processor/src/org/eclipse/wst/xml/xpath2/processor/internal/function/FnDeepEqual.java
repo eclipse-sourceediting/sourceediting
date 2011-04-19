@@ -19,8 +19,8 @@ import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
@@ -85,7 +85,7 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 		if (citer.hasNext()) {
 			arg3 = (ResultSequence) citer.next();
 			if (!arg3.empty()) {
-				collationURI = arg3.first().string_value();
+				collationURI = arg3.first().getStringValue();
 			}
 		}
 
@@ -172,7 +172,7 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 				if (numeric.eq(two, context)) {
 					return true;
 				} else {
-					XSString value1 = new XSString(one.string_value());
+					XSString value1 = new XSString(one.getStringValue());
 					if (value1.eq(two, context)) {
 						return true;
 					}
@@ -183,8 +183,8 @@ public class FnDeepEqual extends AbstractCollationEqualFunction {
 				return true;
 			
 			if (needsStringComparison(one, two)) {
-				XSString xstr1 = new XSString(one.string_value());
-				XSString xstr2 = new XSString(two.string_value());
+				XSString xstr1 = new XSString(one.getStringValue());
+				XSString xstr2 = new XSString(two.getStringValue());
 				if (FnCompare.compare_string(collationURI, xstr1, xstr2,
 						context).equals(BigInteger.ZERO)) {
 					return true;

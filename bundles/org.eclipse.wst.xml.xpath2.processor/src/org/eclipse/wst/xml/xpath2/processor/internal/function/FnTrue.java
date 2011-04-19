@@ -14,9 +14,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 
@@ -40,7 +39,7 @@ public class FnTrue extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return fn_true(args);
 	}
 
@@ -56,10 +55,6 @@ public class FnTrue extends Function {
 	public static ResultSequence fn_true(Collection args) throws DynamicError {
 		assert args.size() == 0;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		rs.add(new XSBoolean(true));
-
-		return rs;
+		return XSBoolean.TRUE;
 	}
 }

@@ -22,8 +22,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -38,12 +42,21 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
-import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 
 /**
  * Support for functions.
  */
 public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Function {
+
+	protected static DatatypeFactory _datatypeFactory;
+	static {
+		try {
+			_datatypeFactory = DatatypeFactory.newInstance();
+		}
+		catch (DatatypeConfigurationException e) {
+			throw new RuntimeException("Cannot initialize XML datatypes", e);
+		}
+	}
 
 	protected QName _name;
 	/**
@@ -182,31 +195,9 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args)
+	public org.eclipse.wst.xml.xpath2.processor.ResultSequence evaluate(Collection args)
 			throws DynamicError {
-		
-		return ResultSequenceUtil.newToOld(evaluate(args, new EvaluationContext() {
-			
-			public org.eclipse.wst.xml.xpath2.api.StaticContext getStaticContext() {
-				throw new UnsupportedOperationException("ikke længere");
-			}
-			
-			public int getLastPosition() {
-				throw new UnsupportedOperationException("ikke længere");
-			}
-			
-			public org.eclipse.wst.xml.xpath2.api.DynamicContext getDynamicContext() {
-				throw new UnsupportedOperationException("ikke længere");
-			}
-			
-			public int getContextPosition() {
-				throw new UnsupportedOperationException("ikke længere");
-			}
-			
-			public Item getContextItem() {
-				throw new UnsupportedOperationException("ikke længere");
-			}
-		}));
+		throw new UnsupportedOperationException();
 	}
 
 	// convert argument according to section 3.1.5 of xpath 2.0 spec
@@ -221,9 +212,9 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 	 *             Dynamic error.
 	 * @return Converted argument.
 	 */
-	public static ResultSequence convert_argument(ResultSequence arg,
+	public static org.eclipse.wst.xml.xpath2.api.ResultSequence convert_argument(org.eclipse.wst.xml.xpath2.api.ResultSequence arg,
 			SeqType expected) throws DynamicError {
-		ResultSequence result = arg;
+		ResultBuffer result = new ResultBuffer();
 
 		// XXX: Should use type_class instead and use item.getClass().isAssignableTo(expected.type_class())
 		AnyType expected_type = expected.type();
@@ -233,10 +224,9 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 			AnyAtomicType expected_aat = (AnyAtomicType) expected_type;
 			
 			// atomize
-			ResultSequence rs = ResultSequenceUtil.newToOld(FnData.atomize(arg));
+			org.eclipse.wst.xml.xpath2.api.ResultSequence rs = FnData.atomize(arg);
 
 			// cast untyped to expected type
-			result = ResultSequenceFactory.create_new();
 			for (Iterator i = rs.iterator(); i.hasNext();) {
 				AnyType item = (AnyType) i.next();
 				
@@ -246,7 +236,7 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 					// value of the item
 					ResultSequence converted = null;
 					if (expected_aat instanceof XSString) {
-					   XSString strType = new XSString(item.string_value());
+					   XSString strType = new XSString(item.getStringValue());
 					   converted = ResultSequenceFactory.create_new(strType);
 					}
 					else {
@@ -257,12 +247,12 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 				}
 				// xs:anyURI promotion to xs:string
 				else if (item instanceof XSAnyURI && expected_aat instanceof XSString) {
-					result.add(new XSString(item.string_value()));
+					result.add(new XSString(item.getStringValue()));
 				}
 				// numeric type promotion
 				else if (item instanceof NumericType) {
 					if (expected_aat instanceof XSDouble) {
-					  XSDouble doubleType = new XSDouble(item.string_value());
+					  XSDouble doubleType = new XSDouble(item.getStringValue());
 					  result.add(doubleType);
 					}
 					else {
@@ -272,10 +262,12 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 					result.add(item);
 				}
 			}
+			// do sequence type matching on converted arguments
+			return expected.match(result.getSequence());
+		} else {
+			// do sequence type matching on converted arguments
+			return expected.match(arg);
 		}
-
-		// do sequence type matching on converted arguments
-		return expected.match(result);
 	}
 
 	// convert arguments
@@ -302,7 +294,7 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 
 		// convert all arguments
 		while (argi.hasNext()) {
-			result.add(convert_argument(ResultSequenceUtil.newToOld((org.eclipse.wst.xml.xpath2.api.ResultSequence) argi.next()),
+			result.add(convert_argument((org.eclipse.wst.xml.xpath2.api.ResultSequence) argi.next(),
 					(SeqType) expi.next()));
 		}
 
@@ -317,7 +309,7 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 		if (contextItem != null) {
 		  // if context item is defined, then that is the default argument
 		  // to fn:string function
-		  rs.add(new XSString(contextItem.string_value()));
+		  rs.add(new XSString(contextItem.getStringValue()));
 		} else {
 			throw DynamicError.contextUndefined();
 		}
@@ -368,8 +360,8 @@ public abstract class Function implements org.eclipse.wst.xml.xpath2.api.Functio
 	public org.eclipse.wst.xml.xpath2.api.ResultSequence evaluate(Collection/*<ResultSequence>*/ args,
 			EvaluationContext evaluationContext) {
 		
-		ResultSequence result = evaluate(args);
-		return ResultSequenceUtil.oldToNew(result);
+		org.eclipse.wst.xml.xpath2.processor.ResultSequence result = evaluate(args);
+		return result;
 	}
 
 }

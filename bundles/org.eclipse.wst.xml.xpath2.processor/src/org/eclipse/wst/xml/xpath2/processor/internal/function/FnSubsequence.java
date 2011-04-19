@@ -18,9 +18,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -51,7 +52,7 @@ public class FnSubsequence extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return subsequence(args);
 	}
 
@@ -65,14 +66,14 @@ public class FnSubsequence extends Function {
 	 * @return Result of fn:subsequence operation.
 	 */
 	public static ResultSequence subsequence(Collection args) throws DynamicError {		
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		// get args
 		Iterator citer = args.iterator();
 		
 		ResultSequence seq = (ResultSequence) citer.next();		
 		if (seq.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 		
 		ResultSequence startLoc = (ResultSequence) citer.next();
 		ResultSequence length = null; 		
@@ -80,12 +81,12 @@ public class FnSubsequence extends Function {
 			length = (ResultSequence) citer.next(); 
 		}
 
-		AnyType at = startLoc.first();
+		Item at = startLoc.first();
 		if (!(at instanceof NumericType)) {
 			DynamicError.throw_type_error();
 		}
 
-		at = new XSDouble(at.string_value());
+		at = new XSDouble(at.getStringValue());
 
 		int start = (int) ((XSDouble) at).double_value();
         int effectiveNoItems = 0; // no of items beyond index >= 1 that are added to the result
@@ -98,7 +99,7 @@ public class FnSubsequence extends Function {
 			if (!(at instanceof NumericType)) {
 				DynamicError.throw_type_error();
 			}
-			at = new XSDouble(at.string_value());
+			at = new XSDouble(at.getStringValue());
 			int len = (int) ((XSDouble) at).double_value();
 			if (len < 0) {
 				DynamicError.throw_type_error();	
@@ -136,8 +137,7 @@ public class FnSubsequence extends Function {
 			}
 		}
 		
-		return rs;
-		
+		return rs.getSequence();
 	}
 	
 }

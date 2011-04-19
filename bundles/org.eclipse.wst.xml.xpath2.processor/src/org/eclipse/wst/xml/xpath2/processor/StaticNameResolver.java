@@ -12,33 +12,85 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import org.eclipse.wst.xml.xpath2.api.CollationProvider;
-import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.xml.XMLConstants;
+
 import org.eclipse.wst.xml.xpath2.api.Function;
-import org.eclipse.wst.xml.xpath2.api.ResultSequence;
-import org.eclipse.wst.xml.xpath2.api.StaticContext;
-import org.eclipse.wst.xml.xpath2.api.StaticVariableResolver;
-import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.ReverseAxis;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticAttrNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticContextAdapter;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticElemNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticFunctNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticNsNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticTypeNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticVarNameError;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AddExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AndExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AnyKindTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AttributeTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.AxisStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.BinExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CastExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CastableExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CmpExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CntxItemExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.CommentTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DecimalLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DivExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DocumentTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.DoubleLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ElementTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ExceptExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.Expr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.FilterExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ForExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ForwardStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.FunctionCall;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IDivExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IfExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.InstOfExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntegerLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntersectExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ItemType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.MinusExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ModExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.MulExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.NameTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.NodeTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.OrExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PITest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ParExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PipeExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.PlusExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.QuantifiedExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.RangeExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ReverseStep;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SchemaAttrTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SchemaElemTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SequenceType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SingleType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.StepExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.StringLiteral;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SubExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.TextTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.TreatAsExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.UnExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.UnionExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.VarExprPair;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.VarRef;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathExpr;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathNode;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.SimpleAtomicItemTypeImpl;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
-import org.w3c.dom.Node;
-
-import java.net.URI;
-import java.util.*;
-
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 
 /**
  * This class resolves static names.
@@ -54,7 +106,10 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 
 	private org.eclipse.wst.xml.xpath2.api.StaticContext _sc;
 	private StaticNameError _err;
-
+	
+	private Set<javax.xml.namespace.QName> _resolvedFunctions = new HashSet<javax.xml.namespace.QName>();
+	private Set<String> _axes = new HashSet<String>();
+	private Set<javax.xml.namespace.QName> _freeVariables = new HashSet<javax.xml.namespace.QName>();
 	/**
 	 * Constructor for static name resolver
 	 * 
@@ -63,144 +118,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 * @since 2.0
 	 */
 	public StaticNameResolver(final org.eclipse.wst.xml.xpath2.processor.StaticContext sc) {
-		_sc = new org.eclipse.wst.xml.xpath2.api.StaticContext() {
-
-			public boolean isXPath1Compatible() {
-				return sc.xpath1_compatible();
-			}
-
-			public StaticVariableResolver getInScopeVariables() {
-				return new StaticVariableResolver() {
-					
-					public boolean isVariablePresent(javax.xml.namespace.QName name) {
-						return sc.variable_exists(qn(name));
-					}
-
-					public TypeDefinition getVariableType(javax.xml.namespace.QName name) {
-						return BuiltinTypeLibrary.XS_ANYTYPE;
-					}
-					
-					public short getVariableOccurrence(javax.xml.namespace.QName name) {
-						return StaticVariableResolver.ONE;
-					}
-				};
-			}
-
-			private QName qn(javax.xml.namespace.QName name) {
-				return new QName(name);
-			}
-
-			public TypeDefinition getInitialContextType() {
-				return BuiltinTypeLibrary.XS_UNTYPED;
-			}
-
-			public Collection getFunctionLibraries() {
-				return Collections.emptyList();
-			}
-
-			public CollationProvider getCollationProvider() {
-				return new CollationProvider() {
-					
-					public String getDefaultCollation() {
-						return null;
-					}
-					
-					public Comparator getCollation(String name) {
-						return null;
-					}
-				};
-			}
-
-			public URI getBaseUri() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public NamespaceContext getNamespaceContext() {
-				return new NamespaceContext() {
-					
-					public Iterator getPrefixes(String arg0) {
-						return Collections.emptyList().iterator();
-					}
-					
-					public String getPrefix(String arg0) {
-						return "x";
-					}
-					
-					public String getNamespaceURI(String prefix) {
-						String ns = sc.resolve_prefix(prefix);
-						return ns != null ? ns : XMLConstants.NULL_NS_URI;
-					}
-				};
-			}
-
-			public String getDefaultNamespace() {
-				return sc.default_namespace();
-			}
-
-			public String getDefaultFunctionNamespace() {
-				return sc.default_function_namespace();
-			}
-
-			public TypeModel getTypeModel() {
-				return sc.getTypeModel(null);
-			}
-
-			public Function resolveFunction(javax.xml.namespace.QName name, int arity) {
-				// This is fake
-				if (sc.function_exists(new QName(name), arity)) {
-					return new Function() {
-						public String getName() {
-							return null;
-						}
-						public int getMinArity() {
-							return 0;
-						}
-						public int getMaxArity() {
-							return 0;
-						}
-						public boolean isVariableArgument() {
-							return false;
-						}
-						public boolean canMatchArity(int actualArity) {
-							return false;
-						}
-						public TypeDefinition getResultType() {
-							return null;
-						}
-						public TypeDefinition getArgumentType(int index) {
-							return null;
-						}
-						public String getArgumentNameHint(int index) {
-							return null;
-						}
-						public ResultSequence evaluate(Collection args, EvaluationContext evaluationContext) {
-							return null;
-						}
-						public TypeDefinition computeReturnType(Collection args, StaticContext sc) {
-							return null;
-						} 
-					};
-				} else {
-					return null;
-				}
-			}
-
-			public TypeDefinition getCollectionType(String collectionName) {
-				return BuiltinTypeLibrary.XS_UNTYPED;
-			}
-
-			public TypeDefinition getDefaultCollectionType() {
-				return BuiltinTypeLibrary.XS_UNTYPED;
-
-			}
-
-			public org.eclipse.wst.xml.xpath2.api.typesystem.ItemType getDocumentType(
-					URI documentUri) {
-				return new NodeItemTypeImpl(org.eclipse.wst.xml.xpath2.api.typesystem.ItemType.OCCURRENCE_OPTIONAL, Node.DOCUMENT_NODE);
-			}
-			
-		};
+		_sc = new StaticContextAdapter(sc);
 		_err = null;
 	}
 
@@ -213,19 +131,31 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	}
 
 	class VariableScope {
-		public VariableScope(QName name, TypeDefinition typeDef, VariableScope nextScope) {
+		public VariableScope(QName name, org.eclipse.wst.xml.xpath2.api.typesystem.ItemType typeDef, VariableScope nextScope) {
 			this.name = name;
 			this.typeDef = typeDef;
 			this.nextScope = nextScope;
 		}
 		final public QName name;
-		final public TypeDefinition typeDef;
+		final public org.eclipse.wst.xml.xpath2.api.typesystem.ItemType typeDef;
 		final public VariableScope nextScope; 
 	}	
 	
+	public Set<String> getAxes() {
+		return _axes;
+	}
+	
+	public Set<javax.xml.namespace.QName> getFreeVariables() {
+		return _freeVariables;
+	}
+	
+	public Set<javax.xml.namespace.QName> getResolvedFunctions() {
+		return _resolvedFunctions;
+	}
+	
 	private VariableScope _innerScope = null;
 
-	private TypeDefinition getVariableType(QName name) {
+	private org.eclipse.wst.xml.xpath2.api.typesystem.ItemType getVariableType(QName name) {
 		VariableScope scope = _innerScope;
 		while (scope != null) {
 			if (name.equals(scope.name)) return scope.typeDef;
@@ -234,13 +164,17 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		return _sc.getInScopeVariables().getVariableType(name.asQName());
 	}
 
-	private boolean isVariableInScope(QName name) {
+	private boolean isVariableCaptured(QName name) {
 		VariableScope scope = _innerScope;
 		while (scope != null) {
 			if (name.equals(scope.name)) return true;
 			scope = scope.nextScope;
 		}
-		return _sc.getInScopeVariables().isVariablePresent(name.asQName());
+		return false;
+	}
+
+	private boolean isVariableInScope(QName name) {
+		return isVariableCaptured(name) || _sc.getInScopeVariables().isVariablePresent(name.asQName());
 	}
 	
 	private boolean canResolve(QName var) {
@@ -261,7 +195,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	}
 
 	private void pushScope(QName var, BuiltinTypeDefinition xsAnytype) {
-		_innerScope = new VariableScope(resolve(var), xsAnytype, _innerScope);		
+		_innerScope = new VariableScope(resolve(var), new SimpleAtomicItemTypeImpl(xsAnytype), _innerScope);		
 	}
  
 	private boolean expand_qname(QName name, String def) {
@@ -674,6 +608,16 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 */
 	public Object visit(CastExpr cexp) {
 		printBinExpr("CAST", cexp);
+		
+		SingleType st = (SingleType) cexp.right();
+		QName type = st.type();
+		
+		Function f = _sc.resolveFunction(type.asQName(), 1);
+		if (f == null)
+			report_error(new StaticFunctNameError("Type does not exist: "
+					+ type.toString()));
+		cexp.set_function(f);
+
 		return null;
 	}
 
@@ -745,6 +689,8 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	public Object visit(ForwardStep e) {
 		e.node_test().accept(this);
 
+		_axes.add(e.iterator().name());
+		
 		return null;
 	}
 
@@ -760,6 +706,10 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		NodeTest nt = e.node_test();
 		if (nt != null)
 			nt.accept(this);
+		
+		ReverseAxis iterator = e.iterator();
+		if (iterator != null)
+			_axes.add(iterator.name());
 
 		return null;
 	}
@@ -802,6 +752,10 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		if (!canResolve(var))
 			report_error(new StaticVarNameError("Variable not in scope: "
 					+ var.string()));
+
+		// The variable is good. If it was not captured, it must be referring to an external var
+		if (! isVariableCaptured(var)) _freeVariables.add(var.asQName());
+		
 		return null;
 	}
 
@@ -885,10 +839,12 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		if (!expand_function_qname(name))
 			report_bad_prefix(name.prefix());
 
-		if (_sc.resolveFunction(name.asQName(), e.arity()) == null)
+		Function f = _sc.resolveFunction(name.asQName(), e.arity());
+		if (f == null)
 			report_error(new StaticFunctNameError("Function does not exist: "
 					+ name.string() + " arity: " + e.arity()));
-
+		e.set_function(f);
+		
 		printExprs(e.iterator());
 		return null;
 	}
@@ -1035,20 +991,16 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	// XXX NO CHECK ?
 	public Object visit(AttributeTest e) {
 		QName name = e.name();
-
-		if (name == null)
-			return null;
-
-		if (!expand_qname(name))
-			report_bad_prefix(name.prefix());
-
+		if (name != null) {
+			if (!expand_qname(name))
+				report_bad_prefix(name.prefix());
+		}
+		
 		name = e.type();
-		if (name == null)
-			return null;
-
-		if (!expand_elem_type_qname(name))
-			report_bad_prefix(name.prefix());
-
+		if (name != null) {
+			if (!expand_elem_type_qname(name))
+				report_bad_prefix(name.prefix());
+		}
 		return null;
 	}
 
@@ -1081,21 +1033,15 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 */
 	// XXX NO SEMANTIC CHECK?!
 	public Object visit(ElementTest e) {
-		QName name = e.name();
-
-		if (name == null)
-			return null;
-
-		if (!expand_elem_type_qname(name))
-			report_bad_prefix(name.prefix());
-
-		name = e.type();
-		if (name == null)
-			return null;
-
-		if (!expand_elem_type_qname(name))
-			report_bad_prefix(name.prefix());
-
+		if (e.name() != null) {
+			if (!expand_elem_type_qname(e.name()))
+				report_bad_prefix(e.name().prefix());
+		}
+		
+		if (e.type() != null) {
+			if (!expand_elem_type_qname(e.type()))
+				report_bad_prefix(e.type().prefix());
+		}
 		return null;
 	}
 

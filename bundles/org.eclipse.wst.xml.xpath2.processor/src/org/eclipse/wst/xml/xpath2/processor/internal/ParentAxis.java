@@ -12,11 +12,10 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.w3c.dom.*;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
 
 /**
  * the parent axis contains the sequence returned by the dm:parent accessor in,
@@ -32,12 +31,17 @@ public class ParentAxis extends ReverseAxis {
 	 *            is the node type.
 	 * @throws dc
 	 *             is the Dynamic context.
-	 * @return the accessors.
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
+	public void iterate(NodeType node, ResultBuffer copyInto) {
 		Node n = node.node_value();
+		Node parent = findParent(n);
+
+		// if a parent exists... add it
+		if (parent != null)
+			copyInto.add(NodeType.dom_to_xpath(parent, node.getTypeModel()));
+	}
+
+	public Node findParent(Node n) {
 		Node parent = n.getParentNode();
 
 		// special case attribute elements...
@@ -47,12 +51,10 @@ public class ParentAxis extends ReverseAxis {
 
 			parent = att.getOwnerElement();
 		}
-
-		// if a parent exists... add it
-		if (parent != null)
-			rs.add(NodeType.dom_to_xpath(parent, dc.getTypeModel(n)));
-
-		return rs;
+		return parent;
 	}
-
+	
+	public String name() {
+		return "parent";
+	}
 }

@@ -14,6 +14,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 // common base for anything that uses a calendar... basically stuff doing with
 // time... hopefully in the future this may be factored out here
@@ -22,6 +23,8 @@ import java.util.Calendar;
  */
 public abstract class CalendarType extends CtrType {
 
+	public abstract Calendar calendar();
+	
 	public Calendar normalizeCalendar(Calendar cal, XSDuration timezone) {
 		Calendar adjusted = (Calendar) cal.clone();
 		
@@ -52,5 +55,9 @@ public abstract class CalendarType extends CtrType {
 			return true;
 		}
 		return false;
+	}
+	
+	public Object getNativeValue() {
+		return _datatypeFactory.newXMLGregorianCalendar((GregorianCalendar)calendar());
 	}
 }

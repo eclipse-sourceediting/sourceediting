@@ -11,12 +11,10 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import java.util.Iterator;
 
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * the following axis contains the context node's following siblings, those
@@ -30,43 +28,39 @@ public class FollowingAxis extends ForwardAxis {
 	 * 
 	 * @param node
 	 *            is the type of node.
-	 * @param dc
-	 *            is the dynamic context.
-	 * @return The result of FollowingAxis.
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		ResultSequence result = ResultSequenceFactory.create_new();
+	public void iterate(NodeType node, ResultBuffer result) {
 
 		// XXX should be root... not parent!!! read the spec.... BUG BUG
 		// BUG LAME LAME....
 
 		// get the parent
 		NodeType parent = null;
-		ParentAxis pa = new ParentAxis();
-		ResultSequence rs = pa.iterate(node, dc);
-		if (rs.size() == 1)
-			parent = (NodeType) rs.get(0);
+		ResultBuffer parentBuffer = new ResultBuffer();
+		new ParentAxis().iterate(node, parentBuffer);
+		if (parentBuffer.size() == 1)
+			parent = (NodeType) parentBuffer.item(0);
 
 		// get the following siblings of this node, and add them
 		FollowingSiblingAxis fsa = new FollowingSiblingAxis();
-		rs = fsa.iterate(node, dc);
-		result.concat(rs);
+		ResultBuffer siblingBuffer = new ResultBuffer();
+		fsa.iterate(node, siblingBuffer);
 
 		// for each sibling, get all its descendants
 		DescendantAxis da = new DescendantAxis();
-		for (Iterator i = rs.iterator(); i.hasNext();) {
-			ResultSequence desc = da.iterate((NodeType) i.next(), dc);
-
-			// add all descendants to the result
-			result.concat(desc);
+		for (Iterator i = siblingBuffer.iterator(); i.hasNext();) {
+			result.add((NodeType)i);
+			da.iterate((NodeType) i.next(), result);
 		}
 
 		// if we got a parent, we gotta repeat the story for the parent
 		// and add the results
 		if (parent != null) {
-			rs = iterate(parent, dc);
-			result.concat(rs);
+			iterate(parent, result);
 		}
-		return result;
+	}
+	
+	public String name() {
+		return "following";
 	}
 }

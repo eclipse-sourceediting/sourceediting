@@ -17,9 +17,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
@@ -43,7 +43,7 @@ public class FnUnordered extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return unordered(args);
 	}
 
@@ -60,14 +60,12 @@ public class FnUnordered extends Function {
 
 		assert args.size() == 1;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg = (ResultSequence) citer.next();
 
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		// XXX lame
 		ArrayList tmp = new ArrayList();
@@ -76,9 +74,10 @@ public class FnUnordered extends Function {
 
 		Collections.shuffle(tmp);
 
+		ResultBuffer rb = new ResultBuffer();
 		for (Iterator i = tmp.iterator(); i.hasNext();)
-			rs.add((AnyType) i.next());
+			rb.add((AnyType) i.next());
 
-		return rs;
+		return rb.getSequence();
 	}
 }

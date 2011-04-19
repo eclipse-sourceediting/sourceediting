@@ -11,12 +11,14 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
-import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**
  * Interface to the methods of range of result sequence
@@ -109,7 +111,7 @@ public abstract class ResultSequence implements org.eclipse.wst.xml.xpath2.api.R
 
 			buf.append(elem.string_type() + ": ");
 
-			String value = elem.string_value();
+			String value = elem.getStringValue();
 
 			if (elem instanceof NodeType) {
 				QName tmp = ((NodeType) elem).node_name();
@@ -146,13 +148,6 @@ public abstract class ResultSequence implements org.eclipse.wst.xml.xpath2.api.R
 	 */
 	public ItemType itemType(int index) {
 		return get(index).getItemType();
-	}
-	
-	/**
-	 * @since 2.0
-	 */
-	public TypeDefinition sequenceType() {
-		return get(0).getTypeDefinition();
 	}
 	
 	/**

@@ -19,10 +19,10 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
@@ -118,10 +118,8 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		if (aat instanceof NumericType || aat instanceof XSDuration ||
@@ -140,9 +138,7 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 		if (val == null)
 			throw DynamicError.cant_cast(null);
 
-		rs.add(val);
-
-		return rs;
+		return val;
 	}
 	
 	protected boolean isGDataType(AnyAtomicType aat) {
@@ -198,7 +194,7 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 			return new XSGYearMonth(dateTime.calendar(), dateTime.tz());
 		}
 		
-		return parse_gYearMonth(aat.string_value());
+		return parse_gYearMonth(aat.getStringValue());
 	}
 
 	/**
@@ -237,7 +233,7 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	 * 
 	 * @return String representation of the stored year and month
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		String ret = "";
 
 		ret += XSDateTime.pad_int(year(), 4);
@@ -321,5 +317,4 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_GYEARMONTH;
 	}
-	
 }

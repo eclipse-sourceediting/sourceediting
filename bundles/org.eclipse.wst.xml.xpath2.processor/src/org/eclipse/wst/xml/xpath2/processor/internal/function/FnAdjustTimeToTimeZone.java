@@ -17,16 +17,14 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
@@ -39,6 +37,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSTime;
  * <code>xs:dateTime</code> with a timezone.
  */
 public class FnAdjustTimeToTimeZone extends Function {
+
 	private static Collection _expected_args = null;
 	private static final XSDayTimeDuration minDuration = new XSDayTimeDuration(
 			0, 14, 0, 0, true);
@@ -81,15 +80,13 @@ public class FnAdjustTimeToTimeZone extends Function {
 
 		Collection cargs = Function.convert_arguments(args, expectedArgs());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get args
 		Iterator argiter = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argiter.next();
 		if (arg1.empty()) {
-			return rs;
+			return ResultBuffer.EMPTY;
 		}
-		ResultSequence arg2 = ResultSequenceFactory.create_new();
+		ResultSequence arg2 = ResultBuffer.EMPTY;
 		if (argiter.hasNext()) {
 			arg2 = (ResultSequence) argiter.next();
 		}
@@ -99,8 +96,7 @@ public class FnAdjustTimeToTimeZone extends Function {
 		if (arg2.empty()) {
 			if (time.timezoned()) {
 				XSTime localized = new XSTime(time.calendar(), null);
-				rs.add(localized);
-				return rs;
+				return localized;
 			} else {
 				return arg1;
 			}
@@ -109,32 +105,25 @@ public class FnAdjustTimeToTimeZone extends Function {
 
 		XMLGregorianCalendar xmlCalendar = null;
 		
-		try {
-			if (time.tz() != null) {
-				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)time.normalizeCalendar(time.calendar(), time.tz()));
-			} else {
-				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendarTime(time.hour(), time.minute(), (int)time.second(), 0);
-			}
-	
-			timezone = (XSDayTimeDuration) arg2.first();
-			if (timezone.lt(minDuration, dc) || timezone.gt(maxDuration, dc)) {
-				throw DynamicError.invalidTimezone();
-			}
-			
-			if (time.tz() == null) {
-				rs.add(new XSTime(time.calendar(), timezone));
-				return rs;
-			}
-			
-			Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
-			xmlCalendar.add(duration);
-	
-			rs.add(new XSTime(xmlCalendar.toGregorianCalendar(), timezone));
-		} catch (DatatypeConfigurationException ex) {
-			throw DynamicError.invalidTimezone();
+		if (time.tz() != null) {
+			xmlCalendar = _datatypeFactory.newXMLGregorianCalendar((GregorianCalendar)time.normalizeCalendar(time.calendar(), time.tz()));
+		} else {
+			xmlCalendar = _datatypeFactory.newXMLGregorianCalendarTime(time.hour(), time.minute(), (int)time.second(), 0);
 		}
 
-		return rs;
+		timezone = (XSDayTimeDuration) arg2.first();
+		if (timezone.lt(minDuration, dc) || timezone.gt(maxDuration, dc)) {
+			throw DynamicError.invalidTimezone();
+		}
+		
+		if (time.tz() == null) {
+			return new XSTime(time.calendar(), timezone);
+		}
+		
+		Duration duration = _datatypeFactory.newDuration(timezone.getStringValue());
+		xmlCalendar.add(duration);
+
+		return new XSTime(xmlCalendar.toGregorianCalendar(), timezone);
 	}
 
 	/**

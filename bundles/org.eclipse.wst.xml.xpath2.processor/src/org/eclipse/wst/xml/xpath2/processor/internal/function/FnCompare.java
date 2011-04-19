@@ -22,8 +22,8 @@ import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -104,7 +104,7 @@ public class FnCompare extends Function {
 		String collationUri = context.getCollationProvider().getDefaultCollation();
 		if (argiter.hasNext()) {
 			ResultSequence collArg = (ResultSequence) argiter.next();
-			collationUri = collArg.first().string_value();
+			collationUri = collArg.first().getStringValue();
 		}
 
 		XSString xstr1 = arg1.empty() ? null : (XSString) arg1.first();

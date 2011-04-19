@@ -12,11 +12,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * The descendant axis contains the descendants of the context node
@@ -28,31 +25,9 @@ public class DescendantAxis extends ChildAxis {
 	 * 
 	 * @param node
 	 *            is the type of node.
-	 * @param dc
-	 *            is the dynamic context.
-	 * @return The descendants of the context node.
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		// get the children
-		ResultSequence rs = super.iterate(node, dc);
-
-		ArrayList descendants = new ArrayList();
-
-		// get descendants of all children
-		for (Iterator i = rs.iterator(); i.hasNext();) {
-			NodeType n = (NodeType) i.next();
-
-			descendants.add(iterate(n, dc));
-		}
-
-		// add descendants to result
-		for (Iterator i = descendants.iterator(); i.hasNext();) {
-			ResultSequence desc = (ResultSequence) i.next();
-
-			rs.concat(desc);
-		}
-
-		return rs;
+	public void iterate(NodeType node, ResultBuffer copyInto) {
+		addChildren(node, copyInto, true);
 	}
 
 }

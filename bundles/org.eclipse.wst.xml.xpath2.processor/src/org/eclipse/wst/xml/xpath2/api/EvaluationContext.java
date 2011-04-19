@@ -61,6 +61,13 @@ public interface EvaluationContext {
 	 */
 	int getLastPosition();
 	
+	/**
+	 * @return The current dynamic context in effect.
+	 */
 	DynamicContext getDynamicContext();
+	
+	/**
+	 * @return The current static context in effect.
+	 */
 	StaticContext getStaticContext();
 }

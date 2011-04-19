@@ -22,15 +22,15 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
@@ -154,12 +154,10 @@ Cloneable {
 	 * @return A new result sequence consisting of the date value supplied.
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
-		AnyType aat = arg.first();
+		Item aat = arg.first();
 
 		if (!isCastable(aat)) {
 			throw DynamicError.invalidType();
@@ -170,12 +168,10 @@ Cloneable {
 		if (dt == null)
 			throw DynamicError.cant_cast(null);
 
-		rs.add(dt);
-
-		return rs;
+		return dt;
 	}
 
-	private boolean isCastable(AnyType aat) {
+	private boolean isCastable(Item aat) {
 
 		// We might be able to cast these.
 		if (aat instanceof XSString || aat instanceof XSUntypedAtomic
@@ -199,7 +195,7 @@ Cloneable {
 		return false;
 	}
 
-	private XSDate castDate(AnyType aat) {
+	private XSDate castDate(Item aat) {
 		if (aat instanceof XSDate) {
 			XSDate date = (XSDate) aat;
 			return new XSDate(date.calendar(), date.tz());
@@ -210,7 +206,7 @@ Cloneable {
 			return new XSDate(dateTime.calendar(), dateTime.tz());
 		}
 
-		return parse_date(aat.string_value());
+		return parse_date(aat.getStringValue());
 	}
 
 	/**
@@ -259,7 +255,7 @@ Cloneable {
 	 * 
 	 * @return String representation of the date stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		String ret = "";
 
 		Calendar adjustFortimezone = calendar();
@@ -340,7 +336,7 @@ Cloneable {
 	 *         False otherwise.
 	 */
 	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
-		XSDate val = (XSDate) NumericType.get_single_type(arg, XSDate.class);
+		XSDate val = (XSDate) NumericType.get_single_type((Item)arg, XSDate.class);
 		Calendar thiscal = normalizeCalendar(calendar(), tz());
 		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
@@ -357,7 +353,7 @@ Cloneable {
 	 *         otherwise.
 	 */
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
-		XSDate val = (XSDate) NumericType.get_single_type(arg, XSDate.class);
+		XSDate val = (XSDate) NumericType.get_single_type((Item)arg, XSDate.class);
 		Calendar thiscal = normalizeCalendar(calendar(), tz());
 		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
@@ -374,7 +370,7 @@ Cloneable {
 	 *         otherwise.
 	 */
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
-		XSDate val = (XSDate) NumericType.get_single_type(arg, XSDate.class);
+		XSDate val = (XSDate) NumericType.get_single_type((Item)arg, XSDate.class);
 		Calendar thiscal = normalizeCalendar(calendar(), tz());
 		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
@@ -412,7 +408,7 @@ Cloneable {
 		if (arg.size() != 1)
 			throw DynamicError.throw_type_error();
 
-		AnyType at = arg.first();
+		Item at = arg.first();
 
 		if (!(at instanceof XSDate) && !(at instanceof XSYearMonthDuration)
 				&& !(at instanceof XSDayTimeDuration)) {
@@ -424,11 +420,11 @@ Cloneable {
 		}
 		
 		if (at instanceof XSYearMonthDuration) {
-			return minusXSYearMonthDuration(at);
+			return minusXSYearMonthDuration((XSYearMonthDuration)at);
 		}
 		
 		if (at instanceof XSDayTimeDuration) {
-			return minusXSDayTimeDuration(at);
+			return minusXSDayTimeDuration((XSDayTimeDuration)at);
 		}
 
 		return null;
@@ -439,20 +435,15 @@ Cloneable {
 
 		try {
 			XSDate res = (XSDate) clone();
-			try {
-				XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance()
-						.newXMLGregorianCalendar(
-								(GregorianCalendar) calendar());
-				Duration dtduration = DatatypeFactory.newInstance()
-						.newDuration(val.string_value());
-				xmlCal.add(dtduration.negate());
-				res = new XSDate(xmlCal.toGregorianCalendar(), res.tz());
-			} catch (DatatypeConfigurationException ex) {
-
-			}
+			XMLGregorianCalendar xmlCal = _datatypeFactory
+					.newXMLGregorianCalendar(
+							(GregorianCalendar) calendar());
+			Duration dtduration = _datatypeFactory
+					.newDuration(val.getStringValue());
+			xmlCal.add(dtduration.negate());
+			res = new XSDate(xmlCal.toGregorianCalendar(), res.tz());
 			return ResultSequenceFactory.create_new(res);
 		} catch (CloneNotSupportedException ex) {
-
 		}
 		return null;
 	}
@@ -473,19 +464,13 @@ Cloneable {
 	private ResultSequence minusXSDate(ResultSequence arg) throws DynamicError {
 		XSDate val = (XSDate) NumericType.get_single_type(arg, XSDate.class);
 		Duration dtduration = null;
-		try {
-			Calendar thisCal = normalizeCalendar(calendar(), tz());
-			Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
-			long duration = thisCal.getTimeInMillis()
-					- thatCal.getTimeInMillis();
-			dtduration = DatatypeFactory.newInstance().newDuration(duration);
-			return ResultSequenceFactory.create_new(XSDayTimeDuration
-					.parseDTDuration(dtduration.toString()));
-
-		} catch (DatatypeConfigurationException ex) {
-
-		}
-		return null;
+		Calendar thisCal = normalizeCalendar(calendar(), tz());
+		Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
+		long duration = thisCal.getTimeInMillis()
+				- thatCal.getTimeInMillis();
+		dtduration = _datatypeFactory.newDuration(duration);
+		return ResultSequenceFactory.create_new(XSDayTimeDuration
+				.parseDTDuration(dtduration.toString()));
 	}
 
 	/**
@@ -505,7 +490,7 @@ Cloneable {
 		if (arg.size() != 1)
 			DynamicError.throw_type_error();
 
-		AnyType at = arg.first();
+		Item at = arg.first();
 
 		try {
 			if (at instanceof XSYearMonthDuration) {

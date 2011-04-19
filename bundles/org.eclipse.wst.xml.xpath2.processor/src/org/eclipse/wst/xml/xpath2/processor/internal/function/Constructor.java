@@ -16,12 +16,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.CtrType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
-import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 
 /**
  * Constructor class for functions.
@@ -63,7 +62,7 @@ public class Constructor extends Function {
 			DynamicError.throw_type_error();
 
 		// do it
-		return _atomic_type.constructor(ResultSequenceUtil.newToOld(arg));
+		return _atomic_type.constructor(arg);
 	}
 
 }

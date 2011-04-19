@@ -32,6 +32,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.function;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.ConstructorFL;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
@@ -68,23 +69,20 @@ public class XSCtrLibrary extends ConstructorFL {
 				return null;
 			}
 
-			public String string_value() {
+			public String getStringValue() {
 				return null;
 			}
 			
 			public TypeDefinition getTypeDefinition() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
-			public TypeDefinition sequenceType() {
-				// TODO Auto-generated method stub
+			public ItemType sequenceType() {
 				return null;
 			}
 
 			@Override
 			public Object getNativeValue() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});

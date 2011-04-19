@@ -15,8 +15,8 @@ import java.math.BigInteger;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
@@ -43,7 +43,7 @@ public abstract class AbstractCollationEqualFunction extends Function {
 
 
 	protected static boolean hasValue(AnyType itema, AnyType itemb, DynamicContext context, String collationURI) throws DynamicError {
-		XSString itemStr = new XSString(itema.string_value());
+		XSString itemStr = new XSString(itema.getStringValue());
 		if (isBoolean(itema, itemb)) {
 			XSBoolean boolat = (XSBoolean) itema;
 			if (boolat.eq(itemb, context)) {
@@ -66,7 +66,7 @@ public abstract class AbstractCollationEqualFunction extends Function {
 		}
 
 		if (needsStringComparison(itema, itemb)) {
-			XSString xstr1 = new XSString(itema.string_value());
+			XSString xstr1 = new XSString(itema.getStringValue());
 			if (FnCompare.compare_string(collationURI, xstr1, itemStr,
 					context).equals(BigInteger.ZERO)) {
 				return true;
@@ -75,9 +75,9 @@ public abstract class AbstractCollationEqualFunction extends Function {
 		return false;
 	}
 	
-	protected static boolean hasValue(ResultSequence rs, AnyAtomicType item,
+	protected static boolean hasValue(ResultBuffer rs, AnyAtomicType item,
 			DynamicContext context, String collationURI) throws DynamicError {
-		XSString itemStr = new XSString(item.string_value());
+		XSString itemStr = new XSString(item.getStringValue());
 
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
@@ -107,7 +107,7 @@ public abstract class AbstractCollationEqualFunction extends Function {
 			}
 
 			if (needsStringComparison(item, at)) {
-				XSString xstr1 = new XSString(at.string_value());
+				XSString xstr1 = new XSString(at.getStringValue());
 				if (FnCompare.compare_string(collationURI, xstr1, itemStr,
 						context).equals(BigInteger.ZERO)) {
 					return true;

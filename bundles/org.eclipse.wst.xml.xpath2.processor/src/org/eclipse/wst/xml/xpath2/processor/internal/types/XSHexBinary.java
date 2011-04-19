@@ -16,10 +16,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.apache.xerces.impl.dv.util.HexBin;
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
@@ -72,7 +72,7 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 * 
 	 * @return The hexBinary stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		return _value.toUpperCase();
 	}
 
@@ -95,10 +95,8 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		if (aat instanceof NumericType || aat instanceof XSDuration ||
@@ -107,7 +105,7 @@ public class XSHexBinary extends CtrType implements CmpEq {
 			throw DynamicError.invalidType();
 		}
 
-		String str_value = aat.string_value();
+		String str_value = aat.getStringValue();
 		
 		if (!(aat instanceof XSHexBinary ||
 				  aat instanceof XSString ||
@@ -147,17 +145,13 @@ public class XSHexBinary extends CtrType implements CmpEq {
  		}
 		
 		if (decodedValue != null) {
-		  rs.add(new XSHexBinary(new String(decodedValue)));
+		  return new XSHexBinary(new String(decodedValue));
 		}
 		else {
 		  // invalid hexBinary string
 		  throw DynamicError.throw_type_error();	
 		}
-
-		return rs;
 	}
-
-
 
 	/**
 	 * Equality comparison between this and the supplied representation which
@@ -170,7 +164,7 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
-      String valToCompare = arg.string_value();
+      String valToCompare = arg.getStringValue();
       
       byte[] value1 = HexBin.decode(_value);
       byte[] value2 = HexBin.decode(valToCompare);
@@ -193,5 +187,9 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	}
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_HEXBINARY;
+	}
+	
+	public Object getNativeValue() {
+		return HexBin.decode(_value);
 	}
 }

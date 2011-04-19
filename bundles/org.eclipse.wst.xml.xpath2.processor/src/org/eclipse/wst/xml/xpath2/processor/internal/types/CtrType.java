@@ -11,8 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 
 /**
  * A representation of the CtrType datatype
@@ -36,4 +36,8 @@ public abstract class CtrType extends AnyAtomicType {
 	 * @return String representation of the datatype's name
 	 */
 	public abstract String type_name();
+	
+	public Object getNativeValue() {
+		return string_value();
+	}
 }

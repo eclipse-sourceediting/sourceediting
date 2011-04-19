@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.RangeResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -48,7 +48,7 @@ public class OpTo extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		assert args.size() == 2;
 
 		// Iterator i = args.iterator();
@@ -67,8 +67,6 @@ public class OpTo extends Function {
 	 * @return Result of operation.
 	 */
 	public static ResultSequence op_to(Collection args) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// convert arguments
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -78,18 +76,16 @@ public class OpTo extends Function {
 		int one = ((XSInteger) r.first()).int_value().intValue();
 		r = (ResultSequence) iter.next();
 		if (r.first() == null) {
-			return rs;
+			return ResultBuffer.EMPTY;
 		}
 		int two = ((XSInteger) r.first()).int_value().intValue();
 
 		if (one > two)
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		// inclusive first and last
-		rs.add(new XSInteger(BigInteger.valueOf(one)));
-
 		if (one == two) {
-			return rs;
+			return new XSInteger(BigInteger.valueOf(one));
 		}
 		/*
 		 * for(one++; one <= two; one++) { rs.add(new XSInteger(one)); }

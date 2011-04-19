@@ -21,10 +21,10 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
@@ -148,10 +148,8 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		if (aat instanceof NumericType || aat instanceof XSDuration || 
@@ -170,9 +168,7 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 		if (val == null)
 			throw DynamicError.cant_cast(null);
 
-		rs.add(val);
-
-		return rs;
+		return val;
 	}
 
 	protected boolean isGDataType(AnyAtomicType aat) {
@@ -219,7 +215,7 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 			return new XSGMonthDay(dateTime.calendar(), dateTime.tz());
 		}
 		
-		return parse_gMonthDay(aat.string_value());
+		return parse_gMonthDay(aat.getStringValue());
 	}
 	
 	/**
@@ -254,7 +250,7 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 	 * 
 	 * @return String representation of the stored month and day
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		String ret = "--";
 
 		Calendar adjustFortimezone = calendar();
@@ -338,5 +334,4 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_GMONTHDAY;
 	}
-	
 }

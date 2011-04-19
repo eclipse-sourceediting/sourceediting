@@ -14,6 +14,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.util.Collections;
 import java.util.Iterator;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+
 import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
@@ -23,6 +26,17 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.SingleItemSeq
  * Common base for every type
  */
 public abstract class AnyType implements SingleItemSequence {
+
+	protected static DatatypeFactory _datatypeFactory;
+	static {
+		try {
+			_datatypeFactory = DatatypeFactory.newInstance();
+		}
+		catch (DatatypeConfigurationException e) {
+			throw new RuntimeException("Cannot initialize XML datatypes", e);
+		}
+	}
+
 	/**
 	 * Retrieves the datatype's full pathname
 	 * 
@@ -31,11 +45,15 @@ public abstract class AnyType implements SingleItemSequence {
 	public abstract String string_type();
 
 	/**
-	 * Retrieves the datatype's name
+	 * Retrieves the datatype's text representation
 	 * 
-	 * @return Datatype's name
+	 * @return Value as a string
 	 */
-	public abstract String string_value();
+	public abstract String getStringValue();
+	
+	public String string_value() {
+		return getStringValue();
+	}
 	
 	/**
 	 * Returns the "new style" of TypeDefinition for this item.
@@ -48,18 +66,15 @@ public abstract class AnyType implements SingleItemSequence {
 		return false;
 	}
 	
-	public Iterator iterator() {
-		return Collections.singletonList(this).iterator();
+	public Iterator<Item> iterator() {
+		return Collections.singletonList((Item)this).iterator();
 	}
 	
 	public ItemType getItemType() {
 		return new SimpleAtomicItemTypeImpl(getTypeDefinition());
 	}
 	
-//	abstract public Object getNativeValue();
-	public Object getNativeValue() {
-		return Boolean.TRUE;
-	}
+	abstract public Object getNativeValue();
 	
 	public int size() {
 		return 1;
@@ -91,9 +106,7 @@ public abstract class AnyType implements SingleItemSequence {
 		return this.getNativeValue();
 	}
 
-	public TypeDefinition sequenceType() {
-		return getTypeDefinition();
+	public ItemType sequenceType() {
+		return new SimpleAtomicItemTypeImpl(getTypeDefinition(), ItemType.OCCURRENCE_ONE);
 	}
-	
-
 }

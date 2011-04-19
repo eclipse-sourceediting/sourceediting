@@ -20,9 +20,9 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.PatternSyntaxException;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -51,7 +51,7 @@ public class FnTokenize extends AbstractRegExFunction {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return tokenize(args);
 	}
 
@@ -67,7 +67,7 @@ public class FnTokenize extends AbstractRegExFunction {
 	public static ResultSequence tokenize(Collection args) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		// get args
 		Iterator argiter = cargs.iterator();
@@ -84,7 +84,7 @@ public class FnTokenize extends AbstractRegExFunction {
 		if (argiter.hasNext()) {
 			ResultSequence flagRS = null;
 			flagRS = (ResultSequence) argiter.next();
-			flags = flagRS.first().string_value();
+			flags = flagRS.first().getStringValue();
 			if (validflags.indexOf(flags) == -1 && flags.length() > 0 ) {
 				throw DynamicError.regex_flags_error(null);
 			}
@@ -101,7 +101,7 @@ public class FnTokenize extends AbstractRegExFunction {
 			throw DynamicError.regex_error(null);
 		}
 
-		return rs;
+		return rs.getSequence();
 	}
 	
 	private static ArrayList tokenize(String pattern, String flags, String src) throws DynamicError {

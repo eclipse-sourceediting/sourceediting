@@ -38,7 +38,7 @@ public interface CollationProvider {
 	 * @return The collation to use, or null if no such collation exists by
 	 *         this provider
 	 */
-	Comparator/*<String>*/ getCollation(String name);
+	Comparator<String> getCollation(String name);
 	
 	String getDefaultCollation();
 }

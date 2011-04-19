@@ -16,10 +16,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 public class XSNonPositiveInteger extends XSInteger {
@@ -71,17 +72,15 @@ public class XSNonPositiveInteger extends XSInteger {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		// the function conversion rules apply here too. Get the argument
 		// and convert it's string value to a nonPositiveInteger.
-		AnyType aat = arg.first();
+		Item aat = arg.first();
 
 		try {
-			BigInteger bigInt = new BigInteger(aat.string_value());
+			BigInteger bigInt = new BigInteger(aat.getStringValue());
 			
 			// doing the range checking
 			// min value is, -INF
@@ -93,9 +92,7 @@ public class XSNonPositiveInteger extends XSInteger {
 			   throw DynamicError.cant_cast(null);	
 			}
 			
-			rs.add(new XSNonPositiveInteger(bigInt));
-			
-			return rs;
+			return new XSNonPositiveInteger(bigInt);
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
 		}
@@ -104,6 +101,10 @@ public class XSNonPositiveInteger extends XSInteger {
 
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_NONPOSITIVEINTEGER;
+	}
+
+	public Object getNativeValue() {
+		return getValue().longValue();
 	}
 
 }

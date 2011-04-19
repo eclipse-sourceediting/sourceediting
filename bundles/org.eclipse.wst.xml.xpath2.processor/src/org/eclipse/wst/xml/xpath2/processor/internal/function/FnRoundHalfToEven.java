@@ -16,9 +16,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -50,7 +50,7 @@ public class FnRoundHalfToEven extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		ResultSequence argument = (ResultSequence) args.iterator().next();
 		if (args.size() == 2) {
 			return fn_round_half_to_even(args);
@@ -70,16 +70,14 @@ public class FnRoundHalfToEven extends Function {
 	 */
 	public static ResultSequence fn_round_half_to_even(ResultSequence arg)
 			throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		NumericType nt = FnAbs.get_single_numeric_arg(arg);
 
 		// empty arg
 		if (nt == null)
-			return rs;
+			return ResultBuffer.EMPTY;
 		
-		rs.add(nt.round_half_to_even());
-		return rs;
+		return nt.round_half_to_even();
 	}
 	
 	public static ResultSequence fn_round_half_to_even(Collection args) throws DynamicError {
@@ -95,10 +93,6 @@ public class FnRoundHalfToEven extends Function {
 		NumericType nt = (NumericType) rsArg1.first();
 		NumericType ntPrecision = (NumericType) rsPrecision.first();
 		
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		
-		rs.add(nt.round_half_to_even(Integer.parseInt(ntPrecision.string_value())));
-		return rs;
-
+		return nt.round_half_to_even(Integer.parseInt(ntPrecision.getStringValue()));
 	}
 }

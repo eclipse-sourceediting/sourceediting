@@ -18,7 +18,8 @@ import java.util.Iterator;
 import java.util.ListIterator;
 
 import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
-import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.SimpleAtomicItemTypeImpl;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.SingleItemSequence;
 
 /**
@@ -26,13 +27,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.SingleItemSeq
  */
 public class ResultBuffer {
 
-	private ArrayList/*<Item>*/ values = new ArrayList/*<Item>*/();
+	private ArrayList<Item> values = new ArrayList<Item>();
 	
 	public ResultSequence getSequence() {
 		if (values.size() == 0) return EMPTY;
-		if (values.size() == 1) return wrap((Item) values.get(0));
+		if (values.size() == 1) return wrap(values.get(0));
 		
-		return new ArrayResultSequence((Item[]) values.toArray(new Item[values.size()]));
+		return new ArrayResultSequence(values.toArray(new Item[values.size()]));
 	}
 	
 	public void clear() {
@@ -75,6 +76,13 @@ public class ResultBuffer {
 		public Item item(int index) {
 			if (index != 0) throw new IndexOutOfBoundsException("Length is one, you looked up number "+ index);
 			return value;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.wst.xml.xpath2.api.ResultSequence#first()
+		 */
+		public Item first() {
+			return item(0);
 		}
 		
 		/* (non-Javadoc)
@@ -125,13 +133,11 @@ public class ResultBuffer {
 		}
 
 		public ItemType itemType(int index) {
-			// TODO - we should have this directly
 			return item(index).getItemType();
 		}
-
-		public TypeDefinition sequenceType() {
-			// TODO Auto-generated method stub
-			return null;
+		
+		public ItemType sequenceType() {
+			return value.getItemType();
 		}
 	}
 
@@ -171,7 +177,14 @@ public class ResultBuffer {
 		public Object firstValue() {
 			return item(0).getNativeValue();
 		}
-		
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.wst.xml.xpath2.api.ResultSequence#first()
+		 */
+		public Item first() {
+			return item(0);
+		}
+
 		/* (non-Javadoc)
 		 * @see org.eclipse.wst.xml.xpath2.api.ResultSequence#iterator()
 		 */
@@ -201,8 +214,8 @@ public class ResultBuffer {
 			return results[index].getItemType();
 		}
 
-		public TypeDefinition sequenceType() {
-			return null;
+		public ItemType sequenceType() {
+			return new SimpleAtomicItemTypeImpl(BuiltinTypeLibrary.XS_ANYTYPE, ItemType.OCCURRENCE_ONE_OR_MANY);
 		}
 
 		public Object value(int index) {
@@ -222,11 +235,11 @@ public class ResultBuffer {
 		values.addAll(0, collectionWrapper(rs));
 	}
 
-	private Collection collectionWrapper(final ResultSequence rs) {
+	private Collection<Item> collectionWrapper(final ResultSequence rs) {
 		// This is a dummy collections, solely exists for faster inserts into our array
-		return new Collection/*<Item>*/() {
+		return new Collection<Item>() {
 
-			public boolean add(Object arg0) {
+			public boolean add(Item arg0) {
 				return false;
 			}
 
@@ -302,8 +315,8 @@ public class ResultBuffer {
 			throw new IndexOutOfBoundsException("Sequence is empty!");
 		}
 		
-		public TypeDefinition sequenceType() {
-			throw new IndexOutOfBoundsException("Sequence is empty!");
+		public ItemType sequenceType() {
+			return new SimpleAtomicItemTypeImpl(BuiltinTypeLibrary.XS_ANYTYPE, ItemType.OCCURRENCE_ONE_OR_MANY);
 		}
 		
 		public Object value(int index) {
@@ -311,6 +324,10 @@ public class ResultBuffer {
 		}
 		
 		public Object firstValue() {
+			throw new IndexOutOfBoundsException("Sequence is empty!");
+		}
+
+		public Item first() {
 			throw new IndexOutOfBoundsException("Sequence is empty!");
 		}
 		
@@ -332,7 +349,7 @@ public class ResultBuffer {
 		}
 	};
 
-	public Collection/*<Item>*/ getCollection() {
+	public Collection<Item> getCollection() {
 		return this.values;
 	}
 
@@ -348,4 +365,11 @@ public class ResultBuffer {
 		return new SingleResultSequence(item); 
 	}
 
+	public Item item(int index) {
+		return values.get(index);
+	}
+
+	public void addAt(int pos, Item element) {
+		values.add(pos, element);
+	}
 }

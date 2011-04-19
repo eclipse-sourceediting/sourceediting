@@ -17,9 +17,8 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -63,7 +62,7 @@ public class FnLowerCase extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the arguments being converted to lower case.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return lower_case(args);
 	}
 
@@ -82,18 +81,13 @@ public class FnLowerCase extends Function {
 
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg1.empty()) {
-			rs.add(new XSString(""));
-			return rs;
+			return new XSString("");
 		}
 
 		String str = ((XSString) arg1.first()).value();
 
-		rs.add(new XSString(str.toLowerCase()));
-
-		return rs;
+		return new XSString(str.toLowerCase());
 	}
 
 	/**

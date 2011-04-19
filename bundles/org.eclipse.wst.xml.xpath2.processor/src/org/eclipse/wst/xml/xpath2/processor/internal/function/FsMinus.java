@@ -16,12 +16,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
-import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 
 /**
  * Class for Minus function.
@@ -43,7 +42,7 @@ public class FsMinus extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		return fs_minus(args);
@@ -76,12 +75,12 @@ public class FsMinus extends Function {
 		// make sure we got only one arg
 		if (args.size() != 1)
 			DynamicError.throw_type_error();
-		ResultSequence arg = ResultSequenceUtil.newToOld((org.eclipse.wst.xml.xpath2.processor.ResultSequence) args.iterator().next());
+		ResultSequence arg = (org.eclipse.wst.xml.xpath2.api.ResultSequence) args.iterator().next();
 
 		// make sure we got only one numeric atom
 		if (arg.size() != 1)
 			DynamicError.throw_type_error();
-		AnyType at = arg.first();
+		Item at = arg.first();
 		if (!(at instanceof NumericType))
 			DynamicError.throw_type_error();
 

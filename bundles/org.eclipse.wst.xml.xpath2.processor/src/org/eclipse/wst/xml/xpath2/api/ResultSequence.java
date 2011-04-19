@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.xpath2.api;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
-import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 
 /**
  * Immutable representation of a result
@@ -63,15 +62,9 @@ public interface ResultSequence {
 	ItemType itemType(int index);
 	
 	/**
-	 * XPath2 type definition description of the item at location '0'
+	 * Is the sequence empty.
 	 * 
-	 * @param index
-	 * @return
-	 */
-	TypeDefinition sequenceType();
-	
-	/**
-	 * @return
+	 * @return true for empty sequences
 	 */
 	boolean empty();
 
@@ -80,5 +73,19 @@ public interface ResultSequence {
 	 * 
 	 * @return
 	 */
-	Iterator iterator();
+	Iterator<Item> iterator();
+
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	Item first();
+	
+	/**
+	 * Describe the whole sequence's type.
+	 * 
+	 * @return Item type definition.
+	 */
+	ItemType sequenceType();
 }

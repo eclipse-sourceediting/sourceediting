@@ -13,11 +13,12 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.w3c.dom.*;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * The child axis contains the children of the context node.
@@ -29,15 +30,14 @@ public class ChildAxis extends ForwardAxis {
 	 * 
 	 * @param node
 	 *            is the type of node.
-	 * @param dc
-	 *            is the dynamic context.
-	 * @return The context node's children.
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+	public void iterate(NodeType node, ResultBuffer copyInto) {
+		addChildren(node, copyInto, false);
+	}
+
+	protected void addChildren(NodeType node, ResultBuffer copyInto, boolean recurse) {
 		NodeList nl = null;
 		
-
 		// only document and element nodes have children
 		if (node instanceof DocType) {
 			nl = ((DocType) node).value().getChildNodes();
@@ -49,12 +49,15 @@ public class ChildAxis extends ForwardAxis {
 		if (nl != null) {
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node dnode = nl.item(i);
-				NodeType n = NodeType.dom_to_xpath(dnode, dc.getTypeModel(dnode));
-				rs.add(n);
+				NodeType n = NodeType.dom_to_xpath(dnode, node.getTypeModel());
+				copyInto.add(n);
+				
+				if (recurse) addChildren(n, copyInto, recurse);
 			}
 		}
-
-		return rs;
 	}
-
+	
+	public String name() {
+		return "child";
+	}
 }

@@ -14,12 +14,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.ListIterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**
@@ -54,7 +52,7 @@ public class FnReverse extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the reversal of the arguments.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return reverse(args);
 	}
 
@@ -71,24 +69,18 @@ public class FnReverse extends Function {
 
 		assert args.size() == 1;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg = (ResultSequence) citer.next();
 
-		if (arg.empty())
-			return rs;
+		if (arg.size() <= 1)
+			return arg;
 
-		// XXX lame
-		ListIterator i = arg.iterator();
+		ResultBuffer rs = new ResultBuffer();
 
-		while (i.hasNext())
-			i.next();
+		for (int i = arg.size()-1; i >= 0; --i)
+			rs.add(arg.item(i));
 
-		while (i.hasPrevious())
-			rs.add((AnyType) i.previous());
-
-		return rs;
+		return rs.getSequence();
 	}
 }

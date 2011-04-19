@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
@@ -65,7 +64,7 @@ public class FnCodepointsToString extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return codepoints_to_string(args);
 	}
 
@@ -82,12 +81,9 @@ public class FnCodepointsToString extends Function {
 			throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 		if (arg1.empty()) {
-			rs.add(new XSString(""));
-			return rs;
+			return new XSString("");
 		}
 
 		int[] codePointArray = new int[arg1.size()];
@@ -106,13 +102,11 @@ public class FnCodepointsToString extends Function {
 
 		try {
 			String str = UTF16.newString(codePointArray, 0, codePointArray.length);
-			rs.add(new XSString(str));
+			return new XSString(str);
 		} catch (IllegalArgumentException iae) {
 			// This should be duoble checked above, but rather safe than sorry
 			throw DynamicError.unsupported_codepoint(iae.getMessage());
 		}
-		
-		return rs;
 	}
 
 	/**

@@ -11,11 +11,9 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
 
 /**
  * The following-sibling axis contains the context node's following siblings,
@@ -30,44 +28,22 @@ public class FollowingSiblingAxis extends ForwardAxis {
 	 * 
 	 * @param node
 	 *            is the type of node.
-	 * @param dc
-	 *            is the dynamic context.
-	 * @return The result of FollowingSiblingAxis.
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
+	public void iterate(NodeType node, ResultBuffer copyInto) {
 		// XXX check for attribute / namespace node... if so return
 		// empty sequence
 
-		// get the parent
-		ParentAxis pa = new ParentAxis();
-		ResultSequence rs = pa.iterate(node, dc);
-
-		// XXX: if no parent, out of luck i guess
-		if (rs.size() == 0)
-			return rs;
-
+		Node iterNode = node.node_value();
 		// get the children of the parent [siblings]
-		ChildAxis ca = new ChildAxis();
-		NodeType parent = (NodeType) rs.get(0);
-		rs = ca.iterate(parent, dc);
-
-		// get the following siblings
-		for (Iterator i = rs.iterator(); i.hasNext();) {
-			NodeType n = (NodeType) i.next();
-
-			// if we haven't found the node yet, remove elements
-			// [preciding siblings]
-			// note: if node is first... its ok... cuz we don't
-			// include node...
-			i.remove();
-
-			// check reference of DOM object... should be correct ?!
-			// dunno... XXX
-			if (n.node_value() == node.node_value())
-				break;
-		}
-
-		return rs;
+		do {
+			iterNode = iterNode.getNextSibling();
+			if (iterNode != null) {
+				copyInto.add(NodeType.dom_to_xpath(iterNode, node.getTypeModel()));
+			}
+		} while (iterNode != null);
 	}
-
+	
+	public String name() {
+		return "following";
+	}
 }

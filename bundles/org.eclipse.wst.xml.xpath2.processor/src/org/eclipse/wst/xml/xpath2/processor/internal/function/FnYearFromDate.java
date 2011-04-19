@@ -17,9 +17,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDate;
@@ -49,7 +49,7 @@ public class FnYearFromDate extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return year_from_date(args);
 	}
 
@@ -68,19 +68,15 @@ public class FnYearFromDate extends Function {
 
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg1.empty()) {
-			return rs;
+			return ResultBuffer.EMPTY;
 		}
 
 		XSDate dt = (XSDate) arg1.first();
 
 		int res = dt.year();
 
-		rs.add(new XSInteger(BigInteger.valueOf(res)));
-
-		return rs;
+		return new XSInteger(BigInteger.valueOf(res));
 	}
 
 	/**

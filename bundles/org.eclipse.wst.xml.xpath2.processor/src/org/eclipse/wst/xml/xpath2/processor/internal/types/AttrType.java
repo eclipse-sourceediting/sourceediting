@@ -23,10 +23,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.util.List;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.w3c.dom.Attr;
 import org.w3c.dom.TypeInfo;
@@ -72,7 +71,7 @@ public class AttrType extends NodeType {
 	 * 
 	 * @return String representation of the attribute being stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		return _value.getValue();
 	}
 
@@ -82,18 +81,15 @@ public class AttrType extends NodeType {
 	 * @return New ResultSequence consisting of the attribute being stored
 	 */
 	public ResultSequence typed_value() {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		TypeDefinition typeDef = getType();
 
 		if (typeDef != null) {
 			List/*<Short>*/ types = typeDef.getSimpleTypes(_value);
- 		    rs = getXDMTypedValue(typeDef, types);
+ 		    return getXDMTypedValue(typeDef, types);
 		}
 		else {
-		   rs.add(new XSUntypedAtomic(string_value()));  
+		   return new XSUntypedAtomic(getStringValue());  
 		}
-		return rs;
 	}
 
 	/**

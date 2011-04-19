@@ -19,10 +19,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
-import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDate;
@@ -74,20 +74,18 @@ public class FnDateTime extends Function {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// get args
 		Iterator argiter = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argiter.next();
 		ResultSequence arg2 = (ResultSequence) argiter.next();
-		XSDate param1 = (XSDate)arg1.first();
-		XSTime param2 = (XSTime)arg2.first();
-		
+
 		// if either of the parameter is an empty sequence, the result
 		// is an empty sequence
-		if (param1 == null || param2 == null) {
-		  return rs;	
+		if (arg1.empty() || arg2.empty()) {
+			  return ResultBuffer.EMPTY;	
 		}
+		XSDate param1 = (XSDate)arg1.first();
+		XSTime param2 = (XSTime)arg2.first();
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(param1.year(), param1.month() - 1, param1.day());
@@ -99,23 +97,21 @@ public class FnDateTime extends Function {
 		XSDuration dateTimeZone = param1.tz();
 		XSDuration timeTimeZone = param2.tz();
 		if ((dateTimeZone != null && timeTimeZone != null) &&
-		     !dateTimeZone.string_value().equals(timeTimeZone.string_value())) {
+		     !dateTimeZone.getStringValue().equals(timeTimeZone.getStringValue())) {
 		  // it's an error, if the arguments have different timezones
 		  throw DynamicError.inconsistentTimeZone();
 		} else if (dateTimeZone == null && timeTimeZone != null) {
-           rs.add(new XSDateTime(cal, timeTimeZone));
+           return new XSDateTime(cal, timeTimeZone);
 		} else if (dateTimeZone != null && timeTimeZone == null) {
-		   rs.add(new XSDateTime(cal, dateTimeZone));
+		   return new XSDateTime(cal, dateTimeZone);
 		}
 		else if ((dateTimeZone != null && timeTimeZone != null) &&
-			     dateTimeZone.string_value().equals(timeTimeZone.string_value())) {
-		   rs.add(new XSDateTime(cal, dateTimeZone));
+			     dateTimeZone.getStringValue().equals(timeTimeZone.getStringValue())) {
+		   return new XSDateTime(cal, dateTimeZone);
 		}
 		else {
-		   rs.add(new XSDateTime(cal, null));
+		   return new XSDateTime(cal, null);
 		}
-
-		return rs;
 	}
 
 	/**

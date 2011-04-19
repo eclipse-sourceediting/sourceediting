@@ -11,10 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * Create a result sequence that contains the context node
@@ -26,16 +24,13 @@ public class SelfAxis extends ForwardAxis {
 	 * 
 	 * @param node
 	 *            is the node type
-	 * @param dc
-	 *            is the dynamic context
-	 * @return rs containing node
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		rs.add(node);
-
-		return rs;
+	public void iterate(NodeType node, ResultBuffer copyInto) {
+		copyInto.add(node);
+	}
+	
+	public String name() {
+		return "self";
 	}
 
 }

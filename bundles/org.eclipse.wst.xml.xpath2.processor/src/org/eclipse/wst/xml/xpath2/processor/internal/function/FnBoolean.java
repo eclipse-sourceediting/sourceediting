@@ -17,10 +17,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.util.Collection;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
@@ -103,7 +103,7 @@ public class FnBoolean extends Function {
 		}
 
 		if ((at instanceof XSString) || (at instanceof XSUntypedAtomic)) {
-			if (((AnyType)at).string_value().equals(""))
+			if (((AnyType)at).getStringValue().equals(""))
 				return XSBoolean.FALSE;
 		}
 

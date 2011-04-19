@@ -41,13 +41,13 @@ public class NumericTypePromoter extends TypePromoter {
 
 	public AnyAtomicType doPromote(AnyAtomicType value) throws DynamicError {
 		if (getTargetType() == XSFloat.class) {
-			return new XSFloat(value.string_value());
+			return new XSFloat(value.getStringValue());
 		} else if (getTargetType() == XSDouble.class) {
-			return new XSDouble(value.string_value());
+			return new XSDouble(value.getStringValue());
 		} else if (getTargetType() == XSInteger.class) {
-			return new XSInteger(value.string_value());
+			return new XSInteger(value.getStringValue());
 		} else if (getTargetType() == XSDecimal.class) {
-			return new XSDecimal(value.string_value());
+			return new XSDecimal(value.getStringValue());
 		}
 		return null;
 	}

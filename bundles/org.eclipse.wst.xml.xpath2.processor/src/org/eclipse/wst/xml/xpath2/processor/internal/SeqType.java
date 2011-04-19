@@ -14,14 +14,22 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.StaticContext;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-import org.w3c.dom.Node;
+import java.util.Iterator;
+import java.util.Map;
 
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.ItemType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.KindTest;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.SequenceType;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.ConstructorFL;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.w3c.dom.Node;
 
 /**
  * represents a Sequence types used for matching expected arguments of functions
@@ -108,7 +116,7 @@ public class SeqType {
 
 			// XXX IMPLEMENT THIS
 		case ItemType.QNAME:
-			final AnyAtomicType aat = sc.make_atomic(item.qname());
+			final AnyAtomicType aat = make_atomic(sc, item.qname());
 
 			assert aat != null;
 			anytype = aat;
@@ -133,6 +141,23 @@ public class SeqType {
 		anytype = ktest.createTestType(rs, sc);
 		nodeName = ktest.name();
 		wild = ktest.isWild();
+	}
+
+	private AnyAtomicType make_atomic(StaticContext sc, QName qname) {
+		String ns = qname.namespace();
+
+		Map functionLibraries = sc.getFunctionLibraries();
+		if (!functionLibraries.containsKey(ns))
+			return null;
+
+		FunctionLibrary fl = (FunctionLibrary) functionLibraries.get(ns);
+
+		if (!(fl instanceof ConstructorFL))
+			return null;
+
+		ConstructorFL cfl = (ConstructorFL) fl;
+
+		return cfl.atomic_type(qname);
 	}
 
 	public static int mapSequenceTypeOccurrence(int occurrence) {

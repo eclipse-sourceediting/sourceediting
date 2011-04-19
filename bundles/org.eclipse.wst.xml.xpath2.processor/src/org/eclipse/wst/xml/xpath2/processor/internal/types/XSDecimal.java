@@ -25,9 +25,11 @@ import java.math.BigInteger;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
@@ -85,7 +87,7 @@ public class XSDecimal extends NumericType {
 	 * 
 	 * @return String representation of the Decimal value stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		
 		if (zero()) {
 			return "0";
@@ -116,12 +118,10 @@ public class XSDecimal extends NumericType {
 	 * @return A new result sequence consisting of the decimal number supplied.
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
-		AnyType aat = arg.first();
+		Item aat = arg.first();
 		
 		if (aat instanceof XSDuration || aat instanceof CalendarType ||
 			aat instanceof XSBase64Binary || aat instanceof XSHexBinary ||
@@ -129,11 +129,11 @@ public class XSDecimal extends NumericType {
 			throw DynamicError.invalidType();
 		}
 		
-		if (aat.string_value().indexOf("-INF") != -1) {
+		if (aat.getStringValue().indexOf("-INF") != -1) {
 			throw DynamicError.cant_cast(null);
 		}
 		
-		if (!isLexicalValue(aat.string_value())) {
+		if (!isLexicalValue(aat.getStringValue())) {
 			throw DynamicError.invalidLexicalValue();
 		}
 		
@@ -144,10 +144,7 @@ public class XSDecimal extends NumericType {
 		try {
 			// XPath doesn't allow for converting Exponents to Decimal values.
 			
-			XSDecimal decimal = castDecimal(aat);
-			
-			rs.add(decimal);
-			return rs;
+			return castDecimal(aat);
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
 		}
@@ -164,13 +161,14 @@ public class XSDecimal extends NumericType {
 		}
 		return true;
 	}
-	private boolean isCastable(AnyType aat) throws DynamicError {
+	
+	private boolean isCastable(Item aat) throws DynamicError {
 		if (aat instanceof XSBoolean || aat instanceof NumericType) {
 			return true;
 		}		
 		
-		if ((aat.string_value().indexOf("E") != -1) || 
-			(aat.string_value().indexOf("e") != -1)) {
+		if ((aat.getStringValue().indexOf("E") != -1) || 
+			(aat.getStringValue().indexOf("e") != -1)) {
 			return false;
 		}
 
@@ -181,15 +179,15 @@ public class XSDecimal extends NumericType {
 		return false;
 	}
 
-	private XSDecimal castDecimal(AnyType aat) {
+	private XSDecimal castDecimal(Item aat) {
 		if (aat instanceof XSBoolean) {
-			if (aat.string_value().equals("true")) {
+			if (aat.getStringValue().equals("true")) {
 				return new XSDecimal(new BigDecimal("1"));
 			} else {
 				return new XSDecimal(new BigDecimal("0"));
 			}
 		}
-		return new XSDecimal(aat.string_value());
+		return new XSDecimal(aat.getStringValue());
 	}
 	
 	/**
@@ -237,7 +235,7 @@ public class XSDecimal extends NumericType {
 				throw DynamicError.throw_type_error();
 			}
 		
-			AnyType cat = crs.first();
+			Item cat = crs.first();
 
 			dt = (XSDecimal) cat;
 	    } else {
@@ -256,16 +254,16 @@ public class XSDecimal extends NumericType {
 	 *         one stored. False otherwise
 	 */
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
-		AnyType carg = convertArg(arg);
+		Item carg = convertArg(arg);
 		
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		return (_value.compareTo(val.getValue()) == 1);
 	}
 
-	protected AnyType convertArg(AnyType arg) throws DynamicError {
+	protected Item convertArg(AnyType arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new(arg);
 		rs = constructor(rs);
-		AnyType carg = rs.first();
+		Item carg = rs.first();
 		return carg;
 	}
 	
@@ -279,7 +277,7 @@ public class XSDecimal extends NumericType {
 	 *         one stored. False otherwise
 	 */
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
-		AnyType carg = convertArg(arg);
+		Item carg = convertArg(arg);
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		return (_value.compareTo(val.getValue()) == -1);
 	}
@@ -298,7 +296,7 @@ public class XSDecimal extends NumericType {
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
 		// get arg
 		ResultSequence carg = convertResultSequence(arg);
-		AnyType at = get_single_arg(carg);
+		Item at = get_single_arg(carg);
 		if (!(at instanceof XSDecimal))
 			DynamicError.throw_type_error();
 		XSDecimal dt = (XSDecimal) at;
@@ -335,7 +333,7 @@ public class XSDecimal extends NumericType {
 		
 		ResultSequence carg = convertResultSequence(arg);
 
-		AnyType at = get_single_arg(carg);
+		Item at = get_single_arg(carg);
 		if (!(at instanceof XSDecimal))
 			DynamicError.throw_type_error();
 		XSDecimal dt = (XSDecimal) at;
@@ -352,7 +350,7 @@ public class XSDecimal extends NumericType {
 	 * @return A XSDecimal consisting of the result of the mathematical
 	 *         multiplication.
 	 */
-	public ResultSequence times(ResultSequence arg) throws DynamicError {
+	public ResultSequence times(ResultSequence arg) {
 		ResultSequence carg = convertResultSequence(arg);
 
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
@@ -508,6 +506,11 @@ public class XSDecimal extends NumericType {
 
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_DECIMAL;
+	}
+
+	@Override
+	public Object getNativeValue() {
+		return _value;
 	}
 
 }

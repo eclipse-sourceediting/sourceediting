@@ -11,7 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * An axis that only ever contains the context node or nodes that are before the

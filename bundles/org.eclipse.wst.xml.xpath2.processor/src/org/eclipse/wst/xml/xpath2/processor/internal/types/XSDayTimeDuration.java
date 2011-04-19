@@ -20,9 +20,11 @@ import java.math.BigDecimal;
 
 import javax.xml.datatype.Duration;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
@@ -101,10 +103,8 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	}
 
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-	
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 	
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		if (aat instanceof NumericType || aat instanceof CalendarType ||
@@ -122,9 +122,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 		if (dtd == null)
 			throw DynamicError.cant_cast(null);
 	
-		rs.add(dtd);
-	
-		return rs;
+		return dtd;
 	}
 	
 	private XSDuration castDayTimeDuration(AnyAtomicType aat) {
@@ -133,7 +131,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			return new XSDayTimeDuration(duration.days(), duration.hours(), duration.minutes(), duration.seconds(), duration.negative());
 		}
 		
-		return parseDTDuration(aat.string_value());
+		return parseDTDuration(aat.getStringValue());
 	}
 
 	
@@ -303,9 +301,9 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 		ResultSequence convertedRS = arg;
 		
 		if (arg.size() == 1) {
-			AnyType argValue = arg.first();
+			Item argValue = arg.first();
             if (argValue instanceof XSDecimal) {
-            	convertedRS = ResultSequenceFactory.create_new(new XSDouble(argValue.string_value()));	
+            	convertedRS = ResultSequenceFactory.create_new(new XSDouble(argValue.getStringValue()));	
             }
 		}
 		
@@ -334,7 +332,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 		if (arg.size() != 1)
 			DynamicError.throw_type_error();
 
-		AnyType at = arg.first();
+		Item at = arg.first();
 
 		if (at instanceof XSDouble) {
 			XSDouble dt = (XSDouble) at;

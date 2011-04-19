@@ -18,8 +18,8 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
@@ -58,7 +58,7 @@ public class FnSum extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		Iterator argIterator = args.iterator();
 		ResultSequence argSequence = (ResultSequence)argIterator.next();
 		AnyAtomicType zero = ZERO;
@@ -67,7 +67,7 @@ public class FnSum extends Function {
 			if (zeroSequence.size() != 1)
 				throw new DynamicError(TypeError.invalid_type(null));
 			if (! (zeroSequence.first() instanceof AnyAtomicType))
-				throw new DynamicError(TypeError.invalid_type(zeroSequence.first().string_value()));
+				throw new DynamicError(TypeError.invalid_type(zeroSequence.first().getStringValue()));
 			zero = (AnyAtomicType)zeroSequence.first();
 		}
 		return sum(argSequence, zero);

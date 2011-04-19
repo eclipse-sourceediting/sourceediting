@@ -13,12 +13,13 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.StaticContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AttrType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.w3c.dom.Attr;
@@ -80,7 +81,7 @@ public class AttributeTest extends AttrElemTest {
 			return new AttrType();
 		}
 
-		AnyType at = rs.first();
+		Item at = rs.first();
 
 		if (!(at instanceof NodeType)) {
 			return new AttrType();
@@ -89,7 +90,7 @@ public class AttributeTest extends AttrElemTest {
 		return createAttrType(at, sc);
 	}
 
-	private AnyType createAttrType(AnyType at, StaticContext sc) {
+	private AnyType createAttrType(Item at, StaticContext sc) {
 		anyType = new AttrType();
 		NodeType nodeType = (NodeType) at;
 		Node node = nodeType.node_value();
@@ -107,7 +108,7 @@ public class AttributeTest extends AttrElemTest {
 			if (type() != null) {
 				anyType = createAttrForXSDType(node, sc);
 			} else {
-				anyType = new AttrType((Attr) node, sc.getTypeModel(node));
+				anyType = new AttrType((Attr) node, sc.getTypeModel());
 			}
 		}
 		return anyType;
@@ -116,16 +117,16 @@ public class AttributeTest extends AttrElemTest {
 	private AnyType createAttrForXSDType(Node node, StaticContext sc) {
 		Attr attr = (Attr) node;
 		
-		TypeModel typeModel = sc.getTypeModel(attr);
+		TypeModel typeModel = sc.getTypeModel();
 		TypeDefinition typedef = typeModel.getType(attr);
 
 		if (typedef != null) {
 			if (typedef.derivedFrom(type().namespace(), type().local(),
 					getDerviationTypes())) {
-				anyType = new AttrType(attr, sc.getTypeModel(node));
+				anyType = new AttrType(attr, sc.getTypeModel());
 			}
 		} else {
-			anyType = new AttrType(attr, sc.getTypeModel(node));
+			anyType = new AttrType(attr, sc.getTypeModel());
 		}
 		return anyType;
 	}

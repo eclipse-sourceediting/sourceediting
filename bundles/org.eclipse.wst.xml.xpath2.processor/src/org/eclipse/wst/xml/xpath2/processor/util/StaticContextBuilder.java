@@ -14,7 +14,6 @@ package org.eclipse.wst.xml.xpath2.processor.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -135,7 +134,7 @@ public class StaticContextBuilder implements StaticContext {
 
 	public Function resolveFunction(QName name, int arity) {
 		if (_hiddenFunctions.contains(name)) return null;
-		FunctionLibrary flib = (FunctionLibrary) _functionLibraries.get(name.getNamespaceURI());
+		FunctionLibrary flib = _functionLibraries.get(name.getNamespaceURI());
 		if (flib != null) {
 			return flib.resolveFunction(name.getLocalPart(), arity);
 		}
@@ -146,8 +145,8 @@ public class StaticContextBuilder implements StaticContext {
 		return _base_uri;
 	}
 
-	public Collection getFunctionLibraries() {
-		return _functionLibraries.values();
+	public Map<String, FunctionLibrary> getFunctionLibraries() {
+		return _functionLibraries;
 	}
 
 	public TypeDefinition getCollectionType(String collectionName) {
@@ -199,14 +198,9 @@ public class StaticContextBuilder implements StaticContext {
 				return _variableTypes.containsKey(name);
 			}
 
-			public TypeDefinition getVariableType(QName name) {
-				return (TypeDefinition) _variableTypes.get(name);
+			public ItemType getVariableType(QName name) {
+				return (ItemType) _variableTypes.get(name);
 			}
-
-			public short getVariableOccurrence(QName name) {
-				return (Short) _variableCardinality.get(name);
-			}
-			
 		};
 	}
 
@@ -240,9 +234,8 @@ public class StaticContextBuilder implements StaticContext {
 	}
 
 	public StaticContextBuilder withVariable(javax.xml.namespace.QName qName,
-			TypeDefinition type, short cardinality) {
+			ItemType type) {
 		_variableTypes.put(qName, type);
-		_variableCardinality.put(qName, cardinality);
 		return this;
 	}
 

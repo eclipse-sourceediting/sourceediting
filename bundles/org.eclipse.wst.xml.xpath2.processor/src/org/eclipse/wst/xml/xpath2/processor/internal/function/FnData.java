@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
@@ -93,13 +94,13 @@ public class FnData extends Function {
 	 *            input expression.
 	 * @return Result of operation.
 	 */
-	public static AnyType atomize(AnyType arg) {
+	public static AnyType atomize(Item arg) {
 		if (arg instanceof AnyAtomicType)
-			return arg;
+			return (AnyAtomicType)arg;
 		else if (arg instanceof NodeType) {
 			NodeType nt = (NodeType) arg;
 
-			return nt.typed_value().first();
+			return (AnyType) nt.typed_value().first();
 		} else {
 			assert false;
 			return null;

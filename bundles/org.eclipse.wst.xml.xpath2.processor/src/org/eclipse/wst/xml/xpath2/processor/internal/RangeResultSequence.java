@@ -17,9 +17,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal;
 import java.math.BigInteger;
 import java.util.*;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * A range expression can be used to construct a sequence of consecutive
@@ -153,6 +155,10 @@ public class RangeResultSequence extends ResultSequence {
 	 */
 	public boolean empty() {
 		return size() == 0;
+	}
+
+	public ItemType sequenceType() {
+		return new SimpleAtomicItemTypeImpl(BuiltinTypeLibrary.XS_INTEGER, ItemType.OCCURRENCE_NONE_OR_MANY);
 	}
 
 	/**

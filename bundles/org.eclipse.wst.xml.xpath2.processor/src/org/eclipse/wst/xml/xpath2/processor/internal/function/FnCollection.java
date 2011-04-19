@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -103,19 +103,12 @@ public class FnCollection extends Function {
 		// get args
 		Iterator argiter = cargs.iterator();
 		ResultSequence arg1 = null;
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		String uri = DEFAULT_COLLECTION_URI;
 		if (argiter.hasNext()) {
 			arg1 = (ResultSequence) argiter.next();
-		} else {
-			return getCollection(DEFAULT_COLLECTION_URI, ec);
+			uri = ((XSString) arg1.first()).value();
 		}
-			
-
-		if (arg1.empty())
-			return ResultSequenceFactory.create_new();
-
-		String uri = ((XSString) arg1.first()).value();
-		
 		
 		try {
 			new URI(uri);
@@ -132,7 +125,7 @@ public class FnCollection extends Function {
 		if (resolved == null)
 			throw DynamicError.invalid_doc(null);
 
-		rs = getCollection(uri, ec);
+		ResultSequence rs = getCollection(uri, ec);
 		if (rs.empty())
 			throw DynamicError.doc_not_found(null);
 
@@ -155,14 +148,14 @@ public class FnCollection extends Function {
 	}
 	
 	private static ResultSequence getCollection(String uri, EvaluationContext ec) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 		Map/*<String, List<Document>>*/ collectionMap = ec.getDynamicContext().getCollections();
 		List/*<Document>*/ docList = (List) collectionMap.get(uri);
 		for (int i = 0; i < docList.size(); i++) {
 			Document doc = (Document) docList.get(i);
 			rs.add(new DocType(doc, ec.getStaticContext().getTypeModel()));
 		}
-		return rs;
+		return rs.getSequence();
 		
 	}
 }

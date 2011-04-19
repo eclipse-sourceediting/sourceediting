@@ -15,9 +15,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -46,7 +46,7 @@ public class FnNodeName extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return node_name(args);
 	}
 
@@ -62,21 +62,17 @@ public class FnNodeName extends Function {
 	public static ResultSequence node_name(Collection args) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 		if (arg1.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		NodeType nt = (NodeType) arg1.first();
 
 		QName nodename = nt.node_name();
 		if (nodename == null)
-			return rs;
+			return ResultBuffer.EMPTY;
 
-		rs.add(nodename);
-
-		return rs;
+		return nodename;
 	}
 
 	/**

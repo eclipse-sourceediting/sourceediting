@@ -12,6 +12,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
+import org.eclipse.wst.xml.xpath2.api.Function;
+
 /**
  * A class that creates a new value of a specific type based on an existing
  * value. A cast expression takes two operands: an input expression and a target
@@ -22,6 +24,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.ast;
  * element/type namespace.
  */
 public class CastExpr extends BinExpr {
+	private Function _function;
 
 	/**
 	 * Constructor for CastExpr.
@@ -35,6 +38,15 @@ public class CastExpr extends BinExpr {
 		super(l, r);
 	}
 
+	
+	public Function function() {
+		return _function;
+	}
+	
+	public void set_function(Function _function) {
+		this._function = _function;
+	}
+	
 	/**
 	 * Support for Visitor interface.
 	 * 

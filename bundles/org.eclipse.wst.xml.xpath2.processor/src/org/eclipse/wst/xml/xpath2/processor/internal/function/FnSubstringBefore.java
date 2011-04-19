@@ -18,9 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -50,7 +49,7 @@ public class FnSubstringBefore extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return substring_before(args);
 	}
 
@@ -66,8 +65,6 @@ public class FnSubstringBefore extends Function {
 	public static ResultSequence substring_before(Collection args)
 			throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
-
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
 		Iterator argiter = cargs.iterator();
@@ -86,20 +83,16 @@ public class FnSubstringBefore extends Function {
 		int str2len = str2.length();
 
 		if (str2len == 0) {
-			rs.add(new XSString(""));
-			return rs;
+			return new XSString("");
 		}
 
 		int index = str1.indexOf(str2);
 		if (index == -1) {
-			rs.add(new XSString(""));
-			return rs;
+			return new XSString("");
 		}
 
 		
-		rs.add(new XSString(str1.substring(0, index)));
-
-		return rs;
+		return new XSString(str1.substring(0, index));
 	}
 
 	/**

@@ -14,10 +14,10 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.util.XMLChar;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
@@ -71,22 +71,18 @@ public class XSNCName extends XSName {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
-		String strValue = aat.string_value();
+		String strValue = aat.getStringValue();
 		
 		if (!isConstraintSatisfied(strValue)) {
 			// invalid input
 			DynamicError.throw_type_error();
 		}
 
-		rs.add(new XSNCName(strValue));
-
-		return rs;
+		return new XSNCName(strValue);
 	}
 	
 	/*

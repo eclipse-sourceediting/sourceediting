@@ -13,10 +13,10 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
@@ -58,21 +58,16 @@ public class XSUntypedAtomic extends CtrType {
 	 * 
 	 * @return String representation of the value of this untyped atomic node
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		return _value;
 	}
 
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
-
-		rs.add(new XSUntypedAtomic(aat.string_value()));
-
-		return rs;
+		return new XSUntypedAtomic(aat.getStringValue());
 	}
 
 	public String type_name() {
@@ -81,6 +76,10 @@ public class XSUntypedAtomic extends CtrType {
 
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_UNTYPEDATOMIC;
+	}
+
+	public Object getNativeValue() {
+		return _value;
 	}
 
 }

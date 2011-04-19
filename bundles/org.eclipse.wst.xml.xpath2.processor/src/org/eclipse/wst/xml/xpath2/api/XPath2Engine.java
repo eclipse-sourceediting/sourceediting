@@ -28,5 +28,4 @@ public interface XPath2Engine {
 	 * @return A compiled expression.
 	 */
 	XPath2Expression parseExpression(String expression, StaticContext context);
-	XPath2PatternSet createPatternSet();
 }

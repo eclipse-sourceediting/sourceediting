@@ -11,9 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * This is the interface class for an Axis.
@@ -27,11 +26,9 @@ public interface Axis {
 	 * 
 	 * @param node
 	 *            is the type of node.
-	 * @param dc
-	 *            is the dynamic context.
-	 * @return The result sequence.
+	 * @param copyInto TODO
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc);
+	public void iterate(NodeType node, ResultBuffer copyInto);
 
 	/**
 	 * Get the principle kind of node.
@@ -39,4 +36,11 @@ public interface Axis {
 	 * @return The principle node kind.
 	 */
 	public NodeType principal_node_kind();
+	
+	/**
+	 * Returns the title of the sequence as it appears in the XPath source
+	 * 
+	 * @return Axis title
+	 */
+	public String name();
 }

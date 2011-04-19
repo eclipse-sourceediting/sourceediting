@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
@@ -76,7 +75,7 @@ public class FnSubstring extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the substring obtained from the arguments.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return substring(args);
 	}
 
@@ -91,7 +90,6 @@ public class FnSubstring extends Function {
 	 */
 	public static ResultSequence substring(Collection args) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args(args));
-		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		Iterator argi = cargs.iterator();
 		ResultSequence stringArg = (ResultSequence) argi.next();
@@ -103,7 +101,7 @@ public class FnSubstring extends Function {
 		}
 
 		if (stringArg.empty()) {
-			return emptyString(rs);
+			return emptyString();
 		}
 
 		String str = ((XSString) stringArg.first()).value();
@@ -111,7 +109,7 @@ public class FnSubstring extends Function {
 		
 		// is start is NaN, no chars are returned
 		if (Double.isNaN(dstart) || Double.NEGATIVE_INFINITY == dstart) {
-			return emptyString(rs);
+			return emptyString();
 		}
 		long istart = Math.round(dstart);
 		
@@ -119,11 +117,11 @@ public class FnSubstring extends Function {
 		if (lengthArg != null) {
 			double dlength = ((XSDouble) lengthArg.first()).double_value();
 			if (Double.isNaN(dlength))
-				return emptyString(rs);
+				return emptyString();
 			// Switch to the rounded kind
 			ilength = Math.round(dlength);
 			if (ilength <= 0)
-				return emptyString(rs);
+				return emptyString();
 		}
 		
 		
@@ -138,14 +136,11 @@ public class FnSubstring extends Function {
 			if (istart <= p && p - istart < ilength)
 			   sb.append(UCharacter.toChars(strIter.current()));
 		}
-		rs.add(new XSString(sb.toString()));
-
-		return rs;
+		return new XSString(sb.toString());
 	}
 	
-	private static ResultSequence emptyString(ResultSequence rs) {
-		rs.add(new XSString(""));
-		return rs;
+	private static ResultSequence emptyString() {
+		return new XSString("");
 	}
 
 	/**

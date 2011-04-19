@@ -18,10 +18,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import javax.xml.XMLConstants;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
@@ -133,8 +132,6 @@ public class QName extends CtrType implements CmpEq {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
 			DynamicError.throw_type_error();
 
@@ -143,14 +140,12 @@ public class QName extends CtrType implements CmpEq {
 		if (!(aat instanceof XSString) && !(aat instanceof QName))
 			DynamicError.throw_type_error();
 		
-		String sarg = aat.string_value();
+		String sarg = aat.getStringValue();
 
 		QName qname = parse_QName(sarg);
 		if (qname == null)
 			return null;
-		rs.add(qname);
-
-		return rs;
+		return qname;
 	}
 
 	/**
@@ -159,7 +154,7 @@ public class QName extends CtrType implements CmpEq {
 	 * 
 	 * @return String representation of the node name
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		return string();
 	}
 

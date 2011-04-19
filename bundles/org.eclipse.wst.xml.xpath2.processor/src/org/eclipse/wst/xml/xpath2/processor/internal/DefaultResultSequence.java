@@ -18,8 +18,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.SimpleAtomicItemTypeImpl;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 /**
  * Default implementation of a result sequence.
@@ -114,6 +117,10 @@ public class DefaultResultSequence extends ResultSequence {
 		return _seq.isEmpty();
 	}
 
+	public ItemType sequenceType() {
+		return new SimpleAtomicItemTypeImpl(BuiltinTypeLibrary.XS_ANYTYPE, ItemType.OCCURRENCE_NONE_OR_MANY);
+	}
+
 	/**
 	 * Clears the sequence.
 	 */
@@ -129,4 +136,5 @@ public class DefaultResultSequence extends ResultSequence {
 	public ResultSequence create_new() {
 		return new DefaultResultSequence();
 	}
+	
 }

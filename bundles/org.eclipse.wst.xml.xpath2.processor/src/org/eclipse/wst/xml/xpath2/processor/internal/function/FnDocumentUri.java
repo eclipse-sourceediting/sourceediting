@@ -17,9 +17,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
@@ -53,7 +53,7 @@ public class FnDocumentUri extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return document_uri(args);
 	}
 
@@ -72,23 +72,22 @@ public class FnDocumentUri extends Function {
 
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
 		if (arg1.empty())
-		  return rs;
+		  return ResultBuffer.EMPTY;
 
 		NodeType nt = (NodeType) arg1.first();
 
 		if (!(nt instanceof DocType))
-		  return rs;
+		  return ResultBuffer.EMPTY;
 
 		DocType dt = (DocType) nt;
 		String documentURI = dt.value().getDocumentURI();
 		
 		if (documentURI != null) {
 			XSAnyURI docUri = new XSAnyURI(documentURI);
-			rs.add(docUri);
+			return docUri;
 		}
-		return rs;
+		return ResultBuffer.EMPTY;
 	}
 
 	/**

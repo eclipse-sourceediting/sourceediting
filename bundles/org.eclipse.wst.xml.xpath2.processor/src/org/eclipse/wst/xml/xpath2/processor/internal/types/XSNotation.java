@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 
 public class XSNotation extends CtrType {
@@ -24,7 +24,7 @@ public class XSNotation extends CtrType {
 		return XS_NOTATION;
 	}
 
-	public String string_value() {
+	public String getStringValue() {
 		return null;
 	}
 
@@ -40,6 +40,10 @@ public class XSNotation extends CtrType {
 
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_NOTATION;
+	}
+
+	public Object getNativeValue() {
+		return getStringValue();
 	}
 	
 }

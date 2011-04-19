@@ -17,9 +17,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -72,14 +72,12 @@ public class FnAbs extends Function {
 	 * @return Result of fn:abs operation.
 	 */
 	public static ResultSequence fn_abs(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		// sanity chex
 		NumericType nt = get_single_numeric_arg(arg);
 
 		// empty arg
 		if (nt == null)
-			return rs;
+			return ResultBuffer.EMPTY;
 		
 		if (nt instanceof XSDouble) {
 			XSDouble dat = (XSDouble) nt;

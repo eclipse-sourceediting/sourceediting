@@ -24,10 +24,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
@@ -37,7 +39,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
-import org.eclipse.wst.xml.xpath2.processor.util.ResultSequenceUtil;
 
 /**
  * Class for the Equality function.
@@ -83,7 +84,7 @@ public class FsEq extends Function {
 			ResultSequence rs = (ResultSequence) i.next();
 
 			//FnData.fast_atomize(rs);
-			rs = ResultSequenceUtil.newToOld(FnData.atomize(rs));
+			rs = FnData.atomize(rs);
 
 			if (rs.empty())
 				return new ArrayList();
@@ -91,14 +92,12 @@ public class FsEq extends Function {
 			if (rs.size() > 1)
 				throw new DynamicError(TypeError.invalid_type(null));
 
-			AnyType arg = rs.first();
+			Item arg = rs.first();
 
 			if (arg instanceof XSUntypedAtomic)
-				arg = new XSString(arg.string_value());
+				arg = new XSString(arg.getStringValue());
 
-			rs = ResultSequenceFactory.create_new();
-			rs.add(arg);
-			result.add(rs);
+			result.add(arg);
 		}
 
 		return result;
@@ -132,14 +131,14 @@ public class FsEq extends Function {
 	public static boolean fs_eq_fast(AnyType one, AnyType two, DynamicContext context)
 			throws DynamicError {
 
-		one = FnData.atomize(one);
-		two = FnData.atomize(two);
+		one = FnData.atomize((Item)one);
+		two = FnData.atomize((Item)two);
 
 		if (one instanceof XSUntypedAtomic)
-			one = new XSString(one.string_value());
+			one = new XSString(one.getStringValue());
 
 		if (two instanceof XSUntypedAtomic)
-			two = new XSString(two.string_value());
+			two = new XSString(two.getStringValue());
 
 		if (!(one instanceof CmpEq))
 			DynamicError.throw_type_error();
@@ -173,9 +172,9 @@ public class FsEq extends Function {
 		if ((a instanceof XSUntypedAtomic && b instanceof NumericType)
 				|| (b instanceof XSUntypedAtomic && a instanceof NumericType)) {
 			if (a instanceof XSUntypedAtomic)
-				a = new XSDouble(a.string_value());
+				a = new XSDouble(a.getStringValue());
 			else
-				b = new XSDouble(b.string_value());
+				b = new XSDouble(b.getStringValue());
 
 		}
 
@@ -186,9 +185,9 @@ public class FsEq extends Function {
 				&& (b instanceof XSString || b instanceof XSUntypedAtomic) || (b instanceof XSUntypedAtomic && (a instanceof XSString || a instanceof XSUntypedAtomic)))) {
 
 			if (a instanceof XSUntypedAtomic)
-				a = new XSString(a.string_value());
+				a = new XSString(a.getStringValue());
 			if (b instanceof XSUntypedAtomic)
-				b = new XSString(b.string_value());
+				b = new XSString(b.getStringValue());
 		}
 
 		// rule c
@@ -196,14 +195,15 @@ public class FsEq extends Function {
 		// cast untyped to dynamic type of other
 
 		// XXX?
+		// TODO: This makes no sense as implemented before
 		else if (a instanceof XSUntypedAtomic) {
-			ResultSequence converted = ResultSequenceFactory.create_new(a);
-			assert converted.size() == 1;
-			a = converted.first();
+//			ResultSequence converted = ResultSequenceFactory.create_new(a);
+//			assert converted.size() == 1;
+//			a = converted.first();
 		} else if (b instanceof XSUntypedAtomic) {
-			ResultSequence converted = ResultSequenceFactory.create_new(b);
-			assert converted.size() == 1;
-			b = converted.first();
+//			ResultSequence converted = ResultSequenceFactory.create_new(b);
+//			assert converted.size() == 1;
+//			b = converted.first();
 		}
 
 		// rule d
@@ -226,11 +226,9 @@ public class FsEq extends Function {
 		} catch (InvocationTargetException err) {
 			Throwable ex = err.getTargetException();
 
-			if (ex instanceof DynamicError)
-				throw (DynamicError) ex;
-
-			ex.printStackTrace();
-			System.exit(1);
+			if (ex instanceof RuntimeException)
+				throw (RuntimeException) ex;
+			throw new RuntimeException(ex);
 		}
 
 		if (((XSBoolean) result.first()).value())
@@ -288,16 +286,16 @@ public class FsEq extends Function {
 
 		Iterator argiter = args.iterator();
 
-		org.eclipse.wst.xml.xpath2.processor.ResultSequence one = (org.eclipse.wst.xml.xpath2.processor.ResultSequence) argiter.next();
-		org.eclipse.wst.xml.xpath2.processor.ResultSequence two = (org.eclipse.wst.xml.xpath2.processor.ResultSequence) argiter.next();
+		org.eclipse.wst.xml.xpath2.api.ResultSequence one = (org.eclipse.wst.xml.xpath2.api.ResultSequence) argiter.next();
+		org.eclipse.wst.xml.xpath2.api.ResultSequence two = (org.eclipse.wst.xml.xpath2.api.ResultSequence) argiter.next();
 
 		// XXX ?
 		if (one.empty() || two.empty())
 			return ResultSequenceFactory.create_new(new XSBoolean(false));
 
 		// atomize
-		one = ResultSequenceUtil.newToOld(FnData.atomize(one));
-		two = ResultSequenceUtil.newToOld(FnData.atomize(two));
+		one = FnData.atomize(one);
+		two = FnData.atomize(two);
 
 		// we gotta find a pair that satisfied the condition
 		for (Iterator i = one.iterator(); i.hasNext();) {
@@ -339,14 +337,12 @@ public class FsEq extends Function {
 
 		Collection cargs = value_convert_args(args);
 
-		ResultSequence result = ResultSequenceFactory.create_new();
-
 		if (cargs.size() == 0)
-			return result;
+			return ResultBuffer.EMPTY;
 
 		// make sure arugments are comparable by equality
 		Iterator argi = cargs.iterator();
-		AnyType arg = ((ResultSequence) argi.next()).first();
+		Item arg = ((ResultSequence) argi.next()).first();
 		ResultSequence arg2 = (ResultSequence) argi.next();
 
 		if (arg2.size() != 1)

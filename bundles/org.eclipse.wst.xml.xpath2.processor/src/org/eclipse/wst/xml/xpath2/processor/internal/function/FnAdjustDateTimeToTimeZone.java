@@ -17,8 +17,6 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -115,17 +113,12 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 			return new XSDateTime(dateTime.calendar(), timezone);
 		}
 		
-		try {			
-			XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)dateTime.normalizeCalendar(dateTime.calendar(), dateTime.tz()));
-			
-			Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
-			xmlCalendar.add(duration);
+		XMLGregorianCalendar xmlCalendar = _datatypeFactory.newXMLGregorianCalendar((GregorianCalendar)dateTime.normalizeCalendar(dateTime.calendar(), dateTime.tz()));
+		
+		Duration duration = _datatypeFactory.newDuration(timezone.getStringValue());
+		xmlCalendar.add(duration);
 
-			return new XSDateTime(xmlCalendar.toGregorianCalendar(), timezone);
-			
-		} catch (DatatypeConfigurationException e) {
-			throw DynamicError.invalidTimezone();
-		}
+		return new XSDateTime(xmlCalendar.toGregorianCalendar(), timezone);
 	}
 
 	/**

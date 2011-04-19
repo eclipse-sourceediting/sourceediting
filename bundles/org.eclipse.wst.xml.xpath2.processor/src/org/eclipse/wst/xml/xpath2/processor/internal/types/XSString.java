@@ -18,10 +18,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.math.BigInteger;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
@@ -77,7 +78,7 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * 
 	 * @return The String stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		return _value;
 	}
 
@@ -88,7 +89,7 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * @return The String stored
 	 */
 	public String value() {
-		return string_value();
+		return getStringValue();
 	}
 
 	/**
@@ -101,17 +102,13 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * @throws DynamicError
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-			return rs;
+			return ResultBuffer.EMPTY;
 
 		//AnyAtomicType aat = (AnyAtomicType) arg.first();
-		AnyType aat = arg.first();
+		Item aat = arg.first();
 
-		rs.add(new XSString(aat.string_value()));
-
-		return rs;
+		return new XSString(aat.getStringValue());
 	}
 
 	// comparisons
@@ -122,7 +119,7 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 		// XXX: This can't happen, I guess
 		if (arg == null) return 666;
 
-		XSString comparand = arg instanceof XSString ? (XSString)arg : new XSString(arg.string_value());
+		XSString comparand = arg instanceof XSString ? (XSString)arg : new XSString(arg.getStringValue());
 		
 		BigInteger result = FnCompare.compare_string(dc.getCollationProvider().getDefaultCollation(), this, comparand, dc);
 
@@ -187,6 +184,10 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	}
 	public TypeDefinition getTypeDefinition() {
 		return BuiltinTypeLibrary.XS_STRING;
+	}
+
+	public Object getNativeValue() {
+		return _value;
 	}
 
 }

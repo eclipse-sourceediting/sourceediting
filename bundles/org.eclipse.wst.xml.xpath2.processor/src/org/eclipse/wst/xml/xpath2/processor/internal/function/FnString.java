@@ -18,11 +18,11 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 
@@ -78,15 +78,15 @@ public class FnString extends Function {
 		if (arg1.size() > 1)
 			throw new DynamicError(TypeError.invalid_type(null));
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 		if (arg1.empty()) {
 			rs.add(new XSString(""));
 		} else {
-			AnyType at = arg1.first();
-			rs.add(new XSString(at.string_value()));
+			Item at = arg1.first();
+			rs.add(new XSString(at.getStringValue()));
 		}
 		
-		return rs;
+		return rs.getSequence();
 	}
 
 }

@@ -20,9 +20,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
@@ -90,7 +89,7 @@ public class FnTranslate extends Function {
 	 *             Dynamic error.
 	 * @return The evaluation of the arguments being translated.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return translate(args);
 	}
 
@@ -111,11 +110,8 @@ public class FnTranslate extends Function {
 		ResultSequence arg2 = (ResultSequence) argi.next();
 		ResultSequence arg3 = (ResultSequence) argi.next();
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg1.empty()) {
-			rs.add(new XSString(""));
-			return rs;
+			return new XSString("");
 		}
 
 		String str = ((XSString) arg1.first()).value();
@@ -138,9 +134,7 @@ public class FnTranslate extends Function {
 			}
 		}
 		
-		rs.add(new XSString(sb.toString()));
-
-		return rs;
+		return new XSString(sb.toString());
 	}
 
 	/**

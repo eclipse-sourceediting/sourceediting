@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -46,7 +46,7 @@ public class OpUnion extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		return op_union(args);
@@ -62,7 +62,7 @@ public class OpUnion extends Function {
 	 * @return Result of operation.
 	 */
 	public static ResultSequence op_union(Collection args) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		// convert arguments
 		Collection cargs = Function.convert_arguments(args, expected_args());
@@ -75,10 +75,9 @@ public class OpUnion extends Function {
 		// XXX i don't fink u've ever seen anything lamer than this
 		rs.concat(one);
 		rs.concat(two);
-		rs = NodeType.eliminate_dups(rs);
-		rs = NodeType.sort_document_order(rs);
+		rs = NodeType.linarize(rs);
 
-		return rs;
+		return rs.getSequence();
 	}
 
 	/**

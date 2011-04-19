@@ -14,11 +14,13 @@ package org.eclipse.wst.xml.xpath2.api;
 
 import java.net.URI;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.datatype.Duration;
 import javax.xml.namespace.QName;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
@@ -28,6 +30,12 @@ import org.w3c.dom.Node;
  */
 public interface DynamicContext {
 
+	/**
+	 * Returns a "top" node which the XPath2 engine is not allowed to
+	 * leave
+	 * 
+	 * @return DOM node which limits axis navigation.
+	 */
 	public Node getLimitNode();
 
 	/**
@@ -116,14 +124,14 @@ public interface DynamicContext {
 	 * mapping the collection URI to a set of document URIs, which are then
 	 * resolved using the same catalog or URI resolver that is used by the
 	 * fn:doc function.*/
-	public Map/*<String, List<Document>>*/ getCollections();
+	public Map<String, List<Document>> getCollections();
 	/**
 	 * [Definition: Default collection. This is the sequence
 	 * of nodes that would result from calling the fn:collection function with
 	 * no arguments.] The value of default collection may be initialized by
 	 * the implementation.
 	 */	
-	public ResultSequence/*<String, List<Document>>*/ getDefaultCollection();
+	public List<Document> getDefaultCollection();
 
 	/** 
 	 * Actual collation providers available for use dynamically. This could

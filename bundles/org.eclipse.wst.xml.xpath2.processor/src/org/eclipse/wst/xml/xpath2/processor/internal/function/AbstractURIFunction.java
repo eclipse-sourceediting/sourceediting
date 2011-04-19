@@ -116,7 +116,7 @@ public abstract class AbstractURIFunction extends Function {
 		}
 				
 		AnyType aat = (AnyType) arg1.item(0);
-		String str = aat.string_value();
+		String str = aat.getStringValue();
 
 		ByteBuffer buffer = UTF_8.encode(str);
 		StringBuffer sb = new StringBuffer();

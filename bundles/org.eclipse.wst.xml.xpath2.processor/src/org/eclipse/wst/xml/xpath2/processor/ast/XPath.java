@@ -14,14 +14,15 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
-import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator2;
+import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathNode;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
 
@@ -33,6 +34,9 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
 public class XPath extends XPathNode implements XPath2Expression {
 	private Collection _exprs;
 	private StaticContext _staticContext;
+	private Collection<QName> _resolvedFunctions;
+	private Collection<String> _axes;
+	private Collection<QName> _freeVariables;
 
 	/**
 	 * Constructor for XPath.
@@ -65,33 +69,51 @@ public class XPath extends XPathNode implements XPath2Expression {
 	/**
 	 * @since 2.0
 	 */
-	public Collection getFreeVariables() {
-		// TODO: fetch free variables
-		return Collections.emptyList();
+	public Collection<QName> getFreeVariables() {
+		return _freeVariables;
 	}
 
 	/**
 	 * @since 2.0
 	 */
-	public Collection getResolvedFunctions() {
-		// TODO: fetch the functions in use
-		return Collections.emptyList();
+	public void setFreeVariables(Collection<QName> _freeVariables) {
+		this._freeVariables = _freeVariables;
+	}
+	
+	/**
+	 * @since 2.0
+	 */
+	public Collection<QName> getResolvedFunctions() {
+		return _resolvedFunctions;
 	}
 
 	/**
 	 * @since 2.0
 	 */
-	public Collection getAxes() {
-		// TODO: fetch the axis in uses
-		return Collections.emptyList();
+	public void setResolvedFunctions(Collection<QName> _resolvedFunctions) {
+		this._resolvedFunctions = _resolvedFunctions;
+	}
+	
+	/**
+	 * @since 2.0
+	 */
+	public Collection<String> getAxes() {
+		return _axes;
 	}
 
+	/**
+	 * @since 2.0
+	 */
+	public void setAxes(Collection<String> _axes) {
+		this._axes = _axes;
+	}
+	
 	/**
 	 * @since 2.0
 	 */
 	public ResultSequence evaluate(DynamicContext dynamicContext, Object[] contextItems) {
 		if (_staticContext == null) throw new IllegalStateException("Static Context not set yet!");
-		return new DefaultEvaluator2(_staticContext, dynamicContext, contextItems).evaluate2(this);
+		return new DefaultEvaluator(_staticContext, dynamicContext, contextItems).evaluate2(this);
 	}
 	
 	/**

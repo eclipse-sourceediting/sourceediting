@@ -11,12 +11,10 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import java.util.Iterator;
 
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 
 /**
  * the preceding axis contains all nodes that are descendants of the root of the
@@ -32,40 +30,33 @@ public class PrecedingAxis extends ReverseAxis {
 	 *            is the node type.
 	 * @throws dc
 	 *             is the Dynamic context.
-	 * @return the descendants of the context node
 	 */
-	public ResultSequence iterate(NodeType node, DynamicContext dc) {
-		ResultSequence result = ResultSequenceFactory.create_new();
-
+	public void iterate(NodeType node, ResultBuffer result) {
 		// get the parent
 		NodeType parent = null;
-		ParentAxis pa = new ParentAxis();
-		ResultSequence rs = pa.iterate(node, dc);
-		if (rs.size() == 1)
-			parent = (NodeType) rs.get(0);
+		ResultBuffer parentBuffer = new ResultBuffer();
+		new ParentAxis().iterate(node, parentBuffer);
+		if (parentBuffer.size() == 1) {
+			parent = (NodeType) parentBuffer.item(0);
+			// if we got a parent, we gotta repeat the story for the parent
+			// and add the results
+			iterate(parent, result);
+		}
 
-		// get the preceding siblings of this node, and add them
+		// get the following siblings of this node, and add them
 		PrecedingSiblingAxis psa = new PrecedingSiblingAxis();
-		rs = psa.iterate(node, dc);
-		result.concat(rs);
+		ResultBuffer siblingBuffer = new ResultBuffer();
+		psa.iterate(node, siblingBuffer);
 
 		// for each sibling, get all its descendants
 		DescendantAxis da = new DescendantAxis();
-		for (Iterator i = rs.iterator(); i.hasNext();) {
-			ResultSequence desc = da.iterate((NodeType) i.next(), dc);
-
-			// add all descendants to the result
-			result.concat(desc);
+		for (Iterator i = siblingBuffer.iterator(); i.hasNext();) {
+			result.add((NodeType)i);
+			da.iterate((NodeType) i.next(), result);
 		}
-
-		// if we got a parent, we gotta repeat the story for the parent
-		// and add the results
-		if (parent != null) {
-			rs = iterate(parent, dc);
-
-			rs.concat(result);
-			result = rs;
-		}
-		return result;
+	}
+	
+	public String name() {
+		return "preceding";
 	}
 }

@@ -16,9 +16,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
@@ -49,7 +50,7 @@ public class FnRemove extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return remove(args);
 	}
 
@@ -66,7 +67,7 @@ public class FnRemove extends Function {
 
 		assert args.size() == 2;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		// get args
 		Iterator citer = args.iterator();
@@ -77,7 +78,7 @@ public class FnRemove extends Function {
 		if (arg2.size() != 1)
 			DynamicError.throw_type_error();
 
-		AnyType at = arg2.first();
+		Item at = arg2.first();
 		if (!(at instanceof XSInteger))
 			DynamicError.throw_type_error();
 
@@ -90,7 +91,7 @@ public class FnRemove extends Function {
 			return target;
 
 		if (target.empty())
-			return rs;
+			return rs.getSequence();
 
 		int curpos = 1;
 
@@ -103,6 +104,6 @@ public class FnRemove extends Function {
 			curpos++;
 		}
 
-		return rs;
+		return rs.getSequence();
 	}
 }

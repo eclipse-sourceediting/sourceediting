@@ -15,9 +15,10 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.CtrType;
@@ -45,7 +46,7 @@ public class FsConvertOperand extends Function {
 	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
-	public ResultSequence evaluate(Collection args) throws DynamicError {
+	public ResultSequence evaluate(Collection args, org.eclipse.wst.xml.xpath2.api.EvaluationContext ec) throws DynamicError {
 		return convert_operand(args);
 	}
 
@@ -71,18 +72,18 @@ public class FsConvertOperand extends Function {
 		if (expected.size() != 1)
 			DynamicError.throw_type_error();
 
-		AnyType at = expected.first();
+		Item at = expected.first();
 
 		if (!(at instanceof AnyAtomicType))
 			DynamicError.throw_type_error();
 
 		AnyAtomicType exp_aat = (AnyAtomicType) at;
 
-		ResultSequence result = ResultSequenceFactory.create_new();
+		ResultBuffer result = new ResultBuffer();
 
 		// 1
 		if (actual.empty())
-			return result;
+			return result.getSequence();
 
 		// convert sequence
 		for (Iterator i = actual.iterator(); i.hasNext();) {
@@ -92,23 +93,15 @@ public class FsConvertOperand extends Function {
 			if (item instanceof XSUntypedAtomic) {
 				// a
 				if (exp_aat instanceof XSUntypedAtomic)
-					result.add(new XSString(item.string_value()));
+					result.add(new XSString(item.getStringValue()));
 				// b
 				else if (exp_aat instanceof NumericType)
-					result.add(new XSDouble(item.string_value()));
+					result.add(new XSDouble(item.getStringValue()));
 				// c
 				else {
 					assert exp_aat instanceof CtrType;
-
 					CtrType cons = (CtrType) exp_aat;
-
-					ResultSequence tmp = ResultSequenceFactory
-							.create_new(new XSString(item.string_value()));
-
-					ResultSequence converted = cons.constructor(tmp);
-					result.concat(converted);
-
-					tmp.release();
+					result.concat(cons.constructor(new XSString(item.getStringValue())));
 				}
 			}
 			// 4
@@ -117,6 +110,6 @@ public class FsConvertOperand extends Function {
 
 		}
 
-		return result;
+		return result.getSequence();
 	}
 }

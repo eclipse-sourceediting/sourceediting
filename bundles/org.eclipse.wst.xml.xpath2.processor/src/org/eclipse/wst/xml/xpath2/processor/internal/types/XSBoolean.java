@@ -15,10 +15,11 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
@@ -78,7 +79,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * 
 	 * @return the String representation of the boolean value stored
 	 */
-	public String string_value() {
+	public String getStringValue() {
 		return "" + _value;
 	}
 
@@ -101,12 +102,10 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * @return A new result sequence consisting of the boolean value supplied.
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
 		if (arg.empty())
-		  return rs;
+		  return ResultBuffer.EMPTY;
 		
-		AnyType anyType = arg.first();
+		Item anyType = arg.first();
 		
 		if (anyType instanceof XSDuration || anyType instanceof CalendarType ||
 			anyType instanceof XSBase64Binary || anyType instanceof XSHexBinary ||
@@ -114,24 +113,14 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 			throw DynamicError.invalidType();
 		}
 		
-		String str_value = anyType.string_value();
+		String str_value = anyType.getStringValue();
 		
 		
 		if (!(isCastable(anyType, str_value))) {
 		   throw DynamicError.cant_cast(null);
 		}
 
-		Boolean b = null;
-		if (isFalse(str_value)) {
-		  b = Boolean.FALSE;	
-		}
-		else {
-		  b = Boolean.TRUE;		
-		}
-		
-		rs.add(new XSBoolean(b.booleanValue()));
-
-		return rs;
+		return XSBoolean.valueOf(! isFalse(str_value));
 	}
 
 	private boolean isFalse(String str_value) {
@@ -140,7 +129,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 		    str_value.equals("0.0E0") || str_value.equals("NaN");
 	}
 
-	private boolean isCastable(AnyType anyType, String str_value) {
+	private boolean isCastable(Item anyType, String str_value) {
 		return str_value.equals("0") || str_value.equals("1") || 
 			 str_value.equals("true") || str_value.equals("false") ||
 			 anyType instanceof NumericType;
@@ -160,7 +149,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 *         comparison
 	 */
 	public boolean eq(AnyType arg, DynamicContext dynamicContext) throws DynamicError {
-		XSBoolean barg = (XSBoolean) NumericType.get_single_type(arg,
+		XSBoolean barg = (XSBoolean) NumericType.get_single_type((Item)arg,
 				XSBoolean.class);
 
 		return value() == barg.value();
@@ -179,7 +168,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 *         comparison
 	 */
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
-		XSBoolean barg = (XSBoolean) NumericType.get_single_type(arg,
+		XSBoolean barg = (XSBoolean) NumericType.get_single_type((Item)arg,
 				XSBoolean.class);
 
 		boolean result = false;
@@ -202,7 +191,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 *         comparison
 	 */
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
-		XSBoolean barg = (XSBoolean) NumericType.get_single_type(arg,
+		XSBoolean barg = (XSBoolean) NumericType.get_single_type((Item)arg,
 				XSBoolean.class);
 
 		boolean result = false;

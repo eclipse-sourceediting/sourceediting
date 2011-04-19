@@ -13,6 +13,8 @@ package org.eclipse.wst.xml.xpath2.api;
 
 import java.util.Collection;
 
+import javax.xml.namespace.QName;
+
 /**
  * This interface represents a parsed and statically bound XPath2 expression.
  * 
@@ -27,21 +29,21 @@ public interface XPath2Expression {
 	 *  
 	 * @return A Collection containing javax.xml.namespacing.QName of free variables
 	 */
-	Collection/*<QName>*/ getFreeVariables();
+	Collection<QName> getFreeVariables();
 
 	/**
 	 * Return a collections of the functions used in the XPath2 expression.
 	 *  
 	 * @return A Collection containing javax.xml.namespacing.QName of functions in use.
 	 */
-	Collection/*<QName>*/ getResolvedFunctions();
+	Collection<QName> getResolvedFunctions();
 
 	/**
 	 * Return a collections of the functions used in the XPath2 expression.
 	 *  
 	 * @return A Collection containing javax.xml.namespacing.QName of functions in use.
 	 */
-	Collection/*<String>*/ getAxes();
+	Collection<String> getAxes();
 
 	/**
 	 * Evaluate the XPath2 expression, using the supplied DynamicContext.

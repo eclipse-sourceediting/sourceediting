@@ -20,9 +20,9 @@ import java.util.Iterator;
 import org.eclipse.wst.xml.xpath2.api.CollationProvider;
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.EvaluationContext;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
@@ -88,7 +88,7 @@ public class FnCodepointEqual extends Function {
 	public static ResultSequence codepoint_equals(Collection args, DynamicContext dynamicContext) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultBuffer rs = new ResultBuffer();
 
 		Iterator argiter = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argiter.next();
@@ -101,7 +101,7 @@ public class FnCodepointEqual extends Function {
 		BigInteger result = FnCompare.compare_string(CollationProvider.CODEPOINT_COLLATION, xstr1, xstr2, dynamicContext);
 		if (result != null) rs.add(new XSBoolean(BigInteger.ZERO.equals(result)));
 		
-		return rs;
+		return rs.getSequence();
 	}
 
 	/**
