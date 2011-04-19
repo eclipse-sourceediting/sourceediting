@@ -46,7 +46,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -81,7 +81,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -116,7 +116,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -151,7 +151,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -186,7 +186,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -221,7 +221,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -256,7 +256,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -291,7 +291,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -326,7 +326,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -361,7 +361,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -396,7 +396,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -431,7 +431,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -466,7 +466,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -501,7 +501,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -536,7 +536,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -571,7 +571,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -606,7 +606,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -641,7 +641,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -676,7 +676,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -711,7 +711,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -746,7 +746,7 @@ public class SequenceTypeSyntaxTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {

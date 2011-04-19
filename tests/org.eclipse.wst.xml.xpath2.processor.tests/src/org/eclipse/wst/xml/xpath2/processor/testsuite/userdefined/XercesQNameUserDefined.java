@@ -37,7 +37,7 @@ public class XercesQNameUserDefined extends QName {
 		//AnyAtomicType aat = (AnyAtomicType) arg.first();
 		AnyType aat = arg.first();
 		
-		QName qname = QName.parse_QName(aat.string_value());
+		QName qname = QName.parse_QName(aat.getStringValue());
 		
 		rs.add(qname);
 

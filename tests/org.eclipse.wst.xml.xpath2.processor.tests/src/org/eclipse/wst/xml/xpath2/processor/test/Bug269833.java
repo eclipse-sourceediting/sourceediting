@@ -45,7 +45,7 @@ public class Bug269833 extends AbstractPsychoPathTest{
           ResultSequence rs = evaluate(domDoc);
   
  		    	    
- 		   String actual = rs.first().string_value();
+ 		   String actual = rs.first().getStringValue();
  		   
  		   assertEquals("Self", actual);	     
  		}  

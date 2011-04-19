@@ -117,7 +117,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -139,7 +139,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -162,7 +162,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -185,7 +185,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -207,7 +207,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -229,7 +229,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("false", actual);
 	}
@@ -251,7 +251,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -274,7 +274,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -306,7 +306,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -331,7 +331,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = "false";
 
 		if (result != null) {
-			actual = result.string_value();
+			actual = result.getStringValue();
 		}
 
 		assertEquals("true", actual);
@@ -355,7 +355,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -377,7 +377,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -399,7 +399,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -424,7 +424,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -449,7 +449,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -473,7 +473,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 
@@ -498,7 +498,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -555,7 +555,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -581,7 +581,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -607,7 +607,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -633,7 +633,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -659,7 +659,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -685,7 +685,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -711,7 +711,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -737,7 +737,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -762,7 +762,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -785,7 +785,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSDuration result = (XSDuration) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("P6Y9M", actual);
 	}
@@ -808,7 +808,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSDuration result = (XSDuration) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("P1Y11M", actual);
 	}
@@ -831,7 +831,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSDecimal result = (XSDecimal) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("-2.5", actual);
 	}
@@ -854,7 +854,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSDuration result = (XSDuration) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("PT4H33M", actual);
 	}
@@ -877,7 +877,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSDuration result = (XSDuration) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("PT17H40M7S", actual);
 	}
@@ -900,7 +900,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSDouble result = (XSDouble) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("-0", actual);
 	}
@@ -923,7 +923,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSFloat result = (XSFloat) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("-0", actual);
 	}
@@ -948,7 +948,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -971,7 +971,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -994,7 +994,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1021,7 +1021,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 
@@ -1044,7 +1044,7 @@ public class TestBugs extends AbstractPsychoPathTest {
           ResultSequence rs = evaluate(domDoc);
 
 
-		String resultValue = rs.first().string_value();
+		String resultValue = rs.first().getStringValue();
 
 		assertEquals("\"\"", resultValue);
 	}
@@ -1065,7 +1065,7 @@ public class TestBugs extends AbstractPsychoPathTest {
           ResultSequence rs = evaluate(domDoc);
 
 
-		String resultValue = rs.first().string_value();
+		String resultValue = rs.first().getStringValue();
 
 		assertEquals("Don't try this at \"home\", she said", resultValue);
 	}
@@ -1108,7 +1108,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1133,7 +1133,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1171,7 +1171,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1196,7 +1196,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1221,7 +1221,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("false", actual);
 	}
@@ -1245,7 +1245,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1355,7 +1355,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1379,7 +1379,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1403,7 +1403,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	
 		XSBoolean result = (XSBoolean) rs.first();
 	
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 	
 		assertEquals("true", actual);
 	}
@@ -1428,7 +1428,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("false", actual);
 	}
@@ -1452,7 +1452,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1475,7 +1475,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1499,7 +1499,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1523,7 +1523,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("false", actual);
 	}
@@ -1547,7 +1547,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1571,7 +1571,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("false", actual);
 	}
@@ -1595,7 +1595,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1619,7 +1619,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("false", actual);
 	}
@@ -1643,7 +1643,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1665,7 +1665,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1730,7 +1730,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1754,7 +1754,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -1779,7 +1779,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("false", actual);
 	}
@@ -1806,7 +1806,7 @@ public class TestBugs extends AbstractPsychoPathTest {
   		assertEquals(BigInteger.valueOf(2), ((XSInteger) rs.get(1)).int_value());
           
   		assertTrue(rs.get(2) instanceof XSString);
-  		assertEquals("3.3", ((XSString) rs.get(2)).string_value());
+  		assertEquals("3.3", ((XSString) rs.get(2)).getStringValue());
 	}
 	
 	public void testTypedValueEnhancement_Bug323900_4() throws Exception {
@@ -1826,7 +1826,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
         
 		XSString result = (XSString) rs.get(0);
-		assertEquals("3.3", result.string_value());
+		assertEquals("3.3", result.getStringValue());
 	}
 	
 	public void testTypedValueEnhancement_Bug323900_5() throws Exception {
@@ -1846,7 +1846,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
         
 		XSInteger result = (XSInteger) rs.get(0);
-		assertEquals("10", result.string_value());
+		assertEquals("10", result.getStringValue());
 	}
 	
 	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_1() 
@@ -1862,7 +1862,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		ResultSequence rsRes = evaluate(domDoc);
         
 		XSBoolean result = (XSBoolean) rsRes.get(0);
-		assertEquals("true", result.string_value());
+		assertEquals("true", result.getStringValue());
 	}
 	
 	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_2() 
@@ -1881,14 +1881,14 @@ public class TestBugs extends AbstractPsychoPathTest {
 		compileXPath(xpath);
 		ResultSequence rsRes = evaluate(domDoc);        
 		XSBoolean result = (XSBoolean) rsRes.get(0);
-		assertEquals("true", result.string_value());
+		assertEquals("true", result.getStringValue());
 		
 		// test b
 		xpath = "deep-equal($value, (2, 4, 6))";
 		compileXPath(xpath);
 		rsRes = evaluate(domDoc);        
 		result = (XSBoolean) rsRes.get(0);
-		assertEquals("true", result.string_value());
+		assertEquals("true", result.getStringValue());
 	}
 	
 	public void testTypedValueEnhancement_BugUsingSeqIntoVariable_3() 
@@ -1906,7 +1906,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		compileXPath(xpath);
 		ResultSequence rsRes = evaluate(domDoc);        
 		XSBoolean result = (XSBoolean) rsRes.get(0);
-		assertEquals("true", result.string_value());
+		assertEquals("true", result.getStringValue());
 	}
 	
 	public void testXSToken() throws Exception {
@@ -1952,7 +1952,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		compileXPath(xpath);
 		ResultSequence rsRes = evaluate(domDoc);
 		XSBoolean result = (XSBoolean) rsRes.get(0);
-		assertEquals("true", result.string_value());
+		assertEquals("true", result.getStringValue());
 		
 		// test b)
 		xpath = "xs:NCName('x:abc') eq xs:NCName('x:abc')"; 
@@ -1971,7 +1971,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		compileXPath(xpath);
 		rsRes = evaluate(domDoc);
 		result = (XSBoolean) rsRes.get(0);
-		assertEquals("true", result.string_value());
+		assertEquals("true", result.getStringValue());
 		
 		// test d)
 		xpath = "xs:ID('x:abc') eq xs:ID('x:abc')"; 
@@ -1990,7 +1990,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		compileXPath(xpath);
 		rsRes = evaluate(domDoc);
 		result = (XSBoolean) rsRes.get(0);
-		assertEquals("true", result.string_value());
+		assertEquals("true", result.getStringValue());
 	}
 	
 	public void testDefNamespaceOnbuiltInTypes() throws Exception {
@@ -2012,7 +2012,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals("true", actual);
 	}
@@ -2113,21 +2113,21 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String xpath = "count(subsequence(X/*, 2)) eq 2";
 		compileXPath(xpath);		
 		ResultSequence rs = evaluate(domDoc);
-		String actual = ((XSBoolean) rs.first()).string_value();
+		String actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test b)
 		xpath = "subsequence(X/*, 2) instance of element(*, xs:integer)+";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test c)
 		xpath = "deep-equal(subsequence((1,2,3,4), 2), (2,3,4))";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test d)
@@ -2135,7 +2135,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		xpath = "deep-equal(subsequence(('a', 1, 1.5), 2, 2), (1, 1.5))";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test e)
@@ -2143,7 +2143,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		xpath = "deep-equal(subsequence(('a', 1, 1.5, 'b'), -2, 3), ())";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 	}
 	
@@ -2163,21 +2163,21 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String xpath = "count(//a) = count(distinct-values(//a))";
 		compileXPath(xpath);		
 		ResultSequence rs = evaluate(domDoc);
-		String actual = ((XSBoolean) rs.first()).string_value();
+		String actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test b)
 		xpath = "count(X/a) = count(distinct-values(X/a))";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test c)
 		xpath = "count(//b) = count(distinct-values(//b))";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("false", actual);
 	}
 	
@@ -2197,56 +2197,56 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String xpath = "/X/a[1] = true()";
 		compileXPath(xpath);		
 		ResultSequence rs = evaluate(domDoc);
-		String actual = ((XSBoolean) rs.first()).string_value();
+		String actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test b)
 		xpath = "/X/a[1]/@att = true()";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test c)
 		xpath = "/X/a[2] = true()";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test d)
 		xpath = "/X/a[2]/@att = true()";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test e)
 		xpath = "/X/a[3] = false()";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test f)
 		xpath = "/X/a[3]/@att = false()";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test g)
 		xpath = "/X/a[4] = false()";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 		
 		// test h)
 		xpath = "/X/a[4]/@att = false()";
 		compileXPath(xpath);		
 		rs = evaluate(domDoc);
-		actual = ((XSBoolean) rs.first()).string_value();
+		actual = ((XSBoolean) rs.first()).getStringValue();
 		assertEquals("true", actual);
 	}
 	

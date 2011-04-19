@@ -12,11 +12,10 @@
 package org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined;
 
 import org.apache.xerces.xs.XSTypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.CtrType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeDefinition;
@@ -30,26 +29,20 @@ public class XercesUserDefined extends CtrType {
 		this.typeInfo = typeInfo;
 	}
 	
-	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-			ResultSequence rs = ResultSequenceFactory.create_new();
-
+	public org.eclipse.wst.xml.xpath2.api.ResultSequence constructor(org.eclipse.wst.xml.xpath2.api.ResultSequence arg) throws DynamicError {
 			if (arg.empty())
-				return rs;
+				return ResultBuffer.EMPTY;
 
+			AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-			//AnyAtomicType aat = (AnyAtomicType) arg.first();
-			AnyType aat = arg.first();			
-
-			rs.add(new XSString(aat.string_value()));
-
-			return rs;
+			return new XSString(aat.string_value());
 	}
 
 	public String string_type() {
 		return null;
 	}
 
-	public String string_value() {
+	public String getStringValue() {
 		return value;
 	}
 	

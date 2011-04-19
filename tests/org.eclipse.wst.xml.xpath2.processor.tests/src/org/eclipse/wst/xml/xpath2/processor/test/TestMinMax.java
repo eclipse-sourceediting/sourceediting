@@ -90,14 +90,14 @@ public class TestMinMax extends AbstractPsychoPathTest {
           ResultSequence rs = evaluate(domDoc);
 
 
-		String resultValue = rs.first().string_value();
+		String resultValue = rs.first().getStringValue();
 
 		// lexicographically, '4' is biggest
 		assertEquals("4", resultValue);
 		setDefaultCollation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
 
 		rs = evaluate(null);
-		resultValue = rs.first().string_value();
+		resultValue = rs.first().getStringValue();
 
 		// length-wise, '1000' is biggest!
 		assertEquals("1000", resultValue);

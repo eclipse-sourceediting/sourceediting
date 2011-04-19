@@ -44,8 +44,6 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       try {
           compileXPath(xpath);
           ResultSequence rs = evaluate(domDoc);
-
-         
           actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {

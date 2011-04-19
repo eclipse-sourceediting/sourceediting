@@ -49,7 +49,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	      	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -86,7 +86,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -123,7 +123,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -160,7 +160,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -197,7 +197,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -234,7 +234,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -271,7 +271,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -308,7 +308,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -345,7 +345,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -382,7 +382,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -419,7 +419,7 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 	
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      actual = result.getStringValue();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -458,7 +458,7 @@ public void test_Parenexpr_14() throws Exception {
 	      actual = new String();
 	      while (iterator.hasNext()) {
 	    	  AnyType result = (AnyType)iterator.next();
-	    	  actual = actual + result.string_value() + " ";
+	    	  actual = actual + result.getStringValue() + " ";
 	      }
 
 	      actual = actual.trim();

@@ -60,8 +60,8 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.xpath2.api.CollationProvider;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
-import org.eclipse.wst.xml.xpath2.api.StaticVariableResolver;
 import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoaderException;
@@ -87,6 +87,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.SimpleAtomicItemTypeImpl;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary;
@@ -287,8 +288,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
    protected void setVariable(String name, ResultSequence values) {
 	   if (useNewApi) {
 			staticContextBuilder.withVariable(new javax.xml.namespace.QName(
-					name), BuiltinTypeLibrary.XS_UNTYPEDATOMIC,
-					StaticVariableResolver.ANY);
+					name), new SimpleAtomicItemTypeImpl(BuiltinTypeLibrary.XS_ANYATOMICTYPE, ItemType.OCCURRENCE_NONE_OR_MANY));
 		   dynamicContextBuilder.withVariable(new javax.xml.namespace.QName(name), values);
 	   } else {
 		   dynamicContext.set_variable(new QName(name), values);
@@ -297,11 +297,13 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
    protected void setVariable(String name, AnyType value) {
 	   if (useNewApi) {
-			staticContextBuilder
-					.withVariable(new javax.xml.namespace.QName(name),
-							value != null ? value.getTypeDefinition()
-									: BuiltinTypeLibrary.XS_UNTYPED,
-							StaticVariableResolver.ONE);
+		   if (value != null) {
+				staticContextBuilder.withVariable(new javax.xml.namespace.QName(
+						name), new SimpleAtomicItemTypeImpl(value.getTypeDefinition(), ItemType.OCCURRENCE_ONE));
+		   } else {		
+				staticContextBuilder.withVariable(new javax.xml.namespace.QName(
+						name), new SimpleAtomicItemTypeImpl(BuiltinTypeLibrary.XS_UNTYPEDATOMIC, ItemType.OCCURRENCE_OPTIONAL));
+		   }
 		   dynamicContextBuilder.withVariable(new javax.xml.namespace.QName(name), value);
 	   } else {
 		   dynamicContext.set_variable(new QName(name), value);
@@ -524,7 +526,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 						throw new RuntimeException(e); // drats
 					}
 			} else {
-				if (dynamicContext.base_uri().string_value() == null)
+				if (dynamicContext.base_uri().getStringValue() == null)
 					dynamicContext.set_base_uri(entryUrl.toString());
 			}
 			BufferedReader xqreader = new BufferedReader(new InputStreamReader(
@@ -630,7 +632,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		while (iterator.hasNext()) {
 			AnyType anyType = (AnyType)iterator.next();
 			
-			actual = actual + anyType.string_value() + " ";
+			actual = actual + anyType.getStringValue() + " ";
 		}
 
 		return actual.trim();
@@ -655,7 +657,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 				queueSpace = false;
 			} else {
 				if (queueSpace) outputText.getByteStream().write(32);
-				outputText.getByteStream().write(aat.string_value().getBytes("UTF-8"));
+				outputText.getByteStream().write(aat.getStringValue().getBytes("UTF-8"));
 				queueSpace = true;
 			}
 		}

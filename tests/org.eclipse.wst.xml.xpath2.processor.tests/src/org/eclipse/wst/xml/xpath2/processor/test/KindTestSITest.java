@@ -150,7 +150,7 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals(expectedResult, actual);
 
@@ -179,7 +179,7 @@ public class KindTestSITest extends AbstractPsychoPathTest {
 
 		XSBoolean result = (XSBoolean) rs.first();
 
-		String actual = result.string_value();
+		String actual = result.getStringValue();
 
 		assertEquals(expectedResult, actual);
 

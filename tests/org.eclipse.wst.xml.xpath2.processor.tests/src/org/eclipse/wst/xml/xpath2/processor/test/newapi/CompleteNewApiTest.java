@@ -31,16 +31,15 @@ import org.custommonkey.xmlunit.XMLConstants;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
 import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
 import org.eclipse.wst.xml.xpath2.processor.Engine;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.StaticError;
-import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.XercesLoader;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.xerces.XercesTypeModel;
+import org.eclipse.wst.xml.xpath2.processor.util.DynamicContextBuilder;
 import org.eclipse.wst.xml.xpath2.processor.util.StaticContextBuilder;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
@@ -51,8 +50,6 @@ public class CompleteNewApiTest extends XMLTestCase {
 	protected Document domDoc = null;
 	protected Bundle bundle = null;
 
-	private DynamicContext dynamicContext = null;
-	
 	protected void setUp() throws Exception {
 		super.setUp();
 		bundle = Platform
@@ -107,26 +104,17 @@ public class CompleteNewApiTest extends XMLTestCase {
 		Iterator iterator = rs.iterator();
 		while (iterator.hasNext()) {
 			AnyType anyType = (AnyType)iterator.next();
-			
-			actual = actual + anyType.string_value() + " ";
+			actual = actual + anyType.getStringValue() + " ";
 		}
 
 		return actual.trim();
 	}
-	
 		
 	protected Object evaluateSimpleXPath(String xpath, StaticContext sc, Document doc, Class resultClass) {
-		XPath2Expression path;
-		try {
-			path = new Engine().parseExpression(xpath, sc);
-		}
-		catch (XPathParserException e) {
-			throw new RuntimeException("XPath parse: " + e.getMessage(), e);
-		}
-		catch (StaticError e) {
-			throw new RuntimeException("Static error: " + e.getMessage(), e);
-		}
+		XPath2Expression path = new Engine().parseExpression(xpath, sc);
 	
+		DynamicContext dynamicContext = new DynamicContextBuilder(sc);
+		
 		org.eclipse.wst.xml.xpath2.api.ResultSequence rs = path.evaluate(dynamicContext, doc != null ? new Object[] { doc } : new Object[0]);
 		assertEquals("Expected single result from \'" + xpath + "\'", 1, rs.size());
 		Object result = rs.value(0);

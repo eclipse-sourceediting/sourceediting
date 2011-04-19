@@ -48,7 +48,7 @@ public class XercesFloatUserDefined extends XSFloat {
 				if (simpletype.isDefinedFacet(XSSimpleTypeDefinition.FACET_MININCLUSIVE)) {
 					String minValue = simpletype.getLexicalFacetValue(XSSimpleTypeDefinition.FACET_MININCLUSIVE);
 					float iminValue = Float.parseFloat(minValue);
-					float actualValue = Float.parseFloat(aat.string_value());
+					float actualValue = Float.parseFloat(aat.getStringValue());
 	
 					if (actualValue < iminValue) {
 						throw DynamicError.invalidForCastConstructor();
@@ -58,14 +58,14 @@ public class XercesFloatUserDefined extends XSFloat {
 				if (simpletype.isDefinedFacet(XSSimpleTypeDefinition.FACET_MAXINCLUSIVE)) {
 					String maxValue = simpletype.getLexicalFacetValue(XSSimpleTypeDefinition.FACET_MAXINCLUSIVE);
 					float imaxValue = Float.parseFloat(maxValue);
-					float actualValue = Float.parseFloat(aat.string_value());
+					float actualValue = Float.parseFloat(aat.getStringValue());
 					if (actualValue > imaxValue) {
 						throw DynamicError.invalidForCastConstructor();
 					}
 				}
 			}
 			
-			rs.add(new XercesFloatUserDefined(Float.parseFloat(aat.string_value())));
+			rs.add(new XercesFloatUserDefined(Float.parseFloat(aat.getStringValue())));
 
 			return rs;
 	}	

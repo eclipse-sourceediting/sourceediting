@@ -15,10 +15,10 @@ import java.math.BigInteger;
 
 import org.apache.xerces.xs.XSObject;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
 
 public class XercesIntegerUserDefined extends XSInteger {
@@ -41,14 +41,14 @@ public class XercesIntegerUserDefined extends XSInteger {
 
 
 			//AnyAtomicType aat = (AnyAtomicType) arg.first();
-			AnyType aat = arg.first();
+			Item aat = arg.first();
 			
 			XSSimpleTypeDefinition simpletype = (XSSimpleTypeDefinition) typeInfo;
 			if (simpletype != null) {
 				if (simpletype.isDefinedFacet(XSSimpleTypeDefinition.FACET_MININCLUSIVE)) {
 					String minValue = simpletype.getLexicalFacetValue(XSSimpleTypeDefinition.FACET_MININCLUSIVE);
 					int iminValue = Integer.parseInt(minValue);
-					int actualValue = Integer.parseInt(aat.string_value());
+					int actualValue = Integer.parseInt(aat.getStringValue());
 	
 					if (actualValue < iminValue) {
 						throw DynamicError.invalidForCastConstructor();
@@ -58,16 +58,14 @@ public class XercesIntegerUserDefined extends XSInteger {
 				if (simpletype.isDefinedFacet(XSSimpleTypeDefinition.FACET_MAXINCLUSIVE)) {
 					String maxValue = simpletype.getLexicalFacetValue(XSSimpleTypeDefinition.FACET_MAXINCLUSIVE);
 					int imaxValue = Integer.parseInt(maxValue);
-					int actualValue = Integer.parseInt(aat.string_value());
+					int actualValue = Integer.parseInt(aat.getStringValue());
 					if (actualValue > imaxValue) {
 						throw DynamicError.invalidForCastConstructor();
 					}
 				}
 			}
 			
-			rs.add(new XercesIntegerUserDefined(new BigInteger(aat.string_value())));
-
-			return rs;
+			return new XercesIntegerUserDefined(new BigInteger(aat.getStringValue()));
 	}	
 
 	public String type_name() {
