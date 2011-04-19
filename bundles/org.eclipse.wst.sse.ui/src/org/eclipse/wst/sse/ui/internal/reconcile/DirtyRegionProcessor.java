@@ -19,12 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.DocumentRewriteSessionEvent;
@@ -41,9 +36,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilerExtension;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
 /**
  * This Job holds a queue of updates from the editor (DirtyRegions) to
@@ -52,7 +45,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
  * 
  * @author pavery
  */
-public class DirtyRegionProcessor extends Job implements IReconciler, IReconcilerExtension, IConfigurableReconciler {
+public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, IConfigurableReconciler {
 	class DocumentListener implements IDocumentListener {
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			/*
@@ -172,6 +165,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 
 		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
 			handleInputDocumentChanged(oldInput, newInput);
+
+			startReconciling();
 		}
 	}
 
@@ -270,15 +265,12 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	private boolean fHasReconciled = false;
 	private Object LOCK = new Object();
 
+	private BackgroundThread fThread;
+
 	/**
 	 * Creates a new StructuredRegionProcessor
 	 */
 	public DirtyRegionProcessor() {
-		// init job stuff
-		super(SSEUIMessages.proc_dirty_regions_0); //$NON-NLS-1$
-		setPriority(Job.LONG);
-		setSystem(true);
-
 		// init reconciler stuff
 		setDelay(UPDATE_DELAY);
 		fReconcilingStrategies = new HashMap();
@@ -421,7 +413,9 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	}
 
 	protected void flushDirtyRegionQueue() {
-		fDirtyRegionQueue.clear();
+		synchronized (fDirtyRegionQueue) {
+			fDirtyRegionQueue.clear();
+		}
 	}
 
 	/**
@@ -534,9 +528,11 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * @return an array of the currently requested Nodes to refresh
 	 */
 	private synchronized DirtyRegion[] getRequests() {
-		DirtyRegion[] toRefresh = (DirtyRegion[]) fDirtyRegionQueue.toArray(new DirtyRegion[fDirtyRegionQueue.size()]);
-		flushDirtyRegionQueue();
-		return toRefresh;
+		synchronized (fDirtyRegionQueue) {
+			DirtyRegion[] toRefresh = (DirtyRegion[]) fDirtyRegionQueue.toArray(new DirtyRegion[fDirtyRegionQueue.size()]);
+			flushDirtyRegionQueue();
+			return toRefresh;
+		}
 	}
 
 	/**
@@ -571,6 +567,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			fTextInputListener = new TextInputListener();
 			textViewer.addTextInputListener(fTextInputListener);
 			setInstalled(true);
+		}
+		synchronized (this) {
+			if (fThread == null)
+				fThread = new BackgroundThread(getClass().getName());
 		}
 	}
 
@@ -633,59 +633,77 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		}
 	}
 
-	protected IStatus run(IProgressMonitor monitor) {
-		IStatus status = Status.OK_STATUS;
-		if (!PlatformUI.isWorkbenchRunning())
-			return status;
+	/**
+	 * Based on {@link org.eclipse.jface.text.reconciler.AbstractReconciler.BackgroundThread}
+	 *
+	 */
+	class BackgroundThread extends Thread {
 
-		if (!fHasReconciled) {
-			initialReconcile();
-			fHasReconciled = true;
+		public BackgroundThread(String name) {
+			super(name);
+			setPriority(Thread.MIN_PRIORITY);
+			setDaemon(true);
 		}
 
-		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-		boolean processed = false;
-		try {
-			synchronized (LOCK) {
-				if (fReset) {
-					fReset = false;
-					return status;
-				}
+		public void cancel() {
+			synchronized (fDirtyRegionQueue) {
+				fDirtyRegionQueue.notifyAll();
 			}
+		}
+
+		public void run() {
+			synchronized (fDirtyRegionQueue) {
+				try {
+					fDirtyRegionQueue.wait(getDelay());
+				} catch (InterruptedException e) {}
+			}
+
 			if (fIsCanceled)
-				return status;
+				return;
 
-			DirtyRegion[] toRefresh = getRequests();
-			if (toRefresh.length > 0) {
-				processed = true;
-				beginProcessing();
+			if (!fHasReconciled) {
+				initialReconcile();
+				fHasReconciled = true;
 			}
 
-			for (int i = 0; i < toRefresh.length && fDocument != null; i++) {
-				if (monitor.isCanceled())
-					throw new OperationCanceledException();
-				process(toRefresh[i]);
+			while (!fIsCanceled) {
+				synchronized (fDirtyRegionQueue) {
+					try {
+						fDirtyRegionQueue.wait(getDelay());
+					} catch (InterruptedException e) {}
+				}
+
+				if (fIsCanceled)
+					return;
+
+				synchronized (LOCK) {
+					if (fReset) {
+						fReset = false;
+						continue;
+					}
+				}
+
+				boolean processed = false;
+				try {
+					DirtyRegion[] toRefresh = getRequests();
+					if (toRefresh.length > 0) {
+						processed = true;
+						beginProcessing();
+					}
+	
+					for (int i = 0; i < toRefresh.length && fDocument != null; i++) {
+						if (fIsCanceled)
+							return;
+						process(toRefresh[i]);
+					}
+				}
+				finally {
+					if (processed)
+						endProcessing();
+				}
+				
 			}
 		}
-		catch (Exception e) {
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=103676
-			// stop errors from popping up a dialog
-			// from the job manager
-
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=106052
-			// don't log OperationCanceledException
-			if (!(e instanceof OperationCanceledException))
-				Logger.logException("problem with reconciling", e); //$NON-NLS-1$
-		}
-		finally {
-			if (processed)
-				endProcessing();
-			if (!fIsCanceled)
-				schedule(getDelay());
-
-			monitor.done();
-		}
-		return status;
 	}
 
 	public void setDelay(long delay) {
@@ -772,7 +790,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 				DirtyRegion entireDocument = createDirtyRegion(0, document.getLength(), DirtyRegion.INSERT);
 				processDirtyRegion(entireDocument);
 			}
-			schedule(getDelay());
 		}
 	}
 
@@ -805,10 +822,26 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			// removes widget listener
 			getTextViewer().removeTextInputListener(fTextInputListener);
 			setInstalled(false);
-			cancel();
 			fIsCanceled = true;
+			synchronized (this) {
+				BackgroundThread bt = fThread;
+				fThread= null;
+				bt.cancel();
+			}
 		}
-		fDirtyRegionQueue.clear();
+		synchronized (fDirtyRegionQueue) {
+			fDirtyRegionQueue.clear();
+		}
 		setDocument(null);
+	}
+
+	protected synchronized void startReconciling() {
+		if (fThread == null)
+			return;
+		if (!fThread.isAlive()) {
+			try {
+				fThread.start();
+			} catch (IllegalThreadStateException e) { }
+		}
 	}
 }
