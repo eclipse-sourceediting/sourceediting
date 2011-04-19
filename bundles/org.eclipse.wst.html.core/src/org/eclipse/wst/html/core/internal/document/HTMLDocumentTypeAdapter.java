@@ -190,7 +190,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	 */
 	public int getAttrNameCase() {
 		if (isXMLType())
-			return LOWER_CASE; // XHTML
+			return super.getAttrNameCase(); // XHTML
 		return this.fFactory.getAttrNameCase();
 	}
 
