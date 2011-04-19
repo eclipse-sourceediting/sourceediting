@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,8 @@ public class XMLFoldingStrategy extends AbstractStructuredFoldingStrategy {
 			//else if the region is a comment
 			//else if the region is only an open tag or an open/close tag then don't fold it
 			if(startRegion != null && endRegion != null) {
-				retPos = new XMLElementFoldingPosition(startRegion, endRegion);
+				if (endRegion.getEndOffset() >= startRegion.getStartOffset())
+					retPos = new XMLElementFoldingPosition(startRegion, endRegion);
 			} else if(startRegion != null && indexedRegion instanceof CommentImpl) {
 				retPos = new XMLCommentFoldingPosition(startRegion);
 			}

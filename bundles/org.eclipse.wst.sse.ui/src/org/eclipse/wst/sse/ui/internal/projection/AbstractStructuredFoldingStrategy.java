@@ -291,15 +291,17 @@ public abstract class AbstractStructuredFoldingStrategy
 	 */
 	protected void markInvalidAnnotationsForDeletion(DirtyRegion dirtyRegion, List deletions) {
 		Iterator iter = getAnnotationIterator(dirtyRegion);
-		while(iter.hasNext()) {
-			Annotation anno = (Annotation)iter.next();
-			if(anno instanceof FoldingAnnotation) {
-				Position pos = fProjectionAnnotationModel.getPosition(anno);
-				if(pos.length == 0) {
-					deletions.add(anno);
-	 			}
-	 		}
-	 	}
+		if (iter != null) {
+			while(iter.hasNext()) {
+				Annotation anno = (Annotation)iter.next();
+				if(anno instanceof FoldingAnnotation) {
+					Position pos = fProjectionAnnotationModel.getPosition(anno);
+					if(pos.length == 0) {
+						deletions.add(anno);
+		 			}
+		 		}
+		 	}
+		}
 	}
 
 	/**
