@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 /**
  * 
  */
-abstract class CSSRegionContainer extends CSSNodeImpl {
+public abstract class CSSRegionContainer extends CSSNodeImpl {
 
 	private ITextRegion fFirstRegion = null;
 	private ITextRegion fLastRegion = null;
@@ -81,7 +81,7 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 		return fParentRegion;
 	}
 
-	ITextRegion getFirstRegion() {
+	public ITextRegion getFirstRegion() {
 		return fFirstRegion;
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
+import org.eclipse.wst.css.core.internal.document.CSSRegionContainer;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
@@ -163,7 +164,21 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 				else if (((ICSSPrimitiveValue) child).getPrimitiveType() == ICSSPrimitiveValue.CSS_SLASH)
 					toAppend = "/";//$NON-NLS-1$
 				ICSSNode prevSibling = child.getPreviousSibling();
-				if (prevSibling instanceof ICSSPrimitiveValue && ((ICSSPrimitiveValue)prevSibling).getPrimitiveType() == ICSSPrimitiveValue.CSS_SLASH)
+				if (prevSibling instanceof ICSSPrimitiveValue) {
+					if (((ICSSPrimitiveValue)prevSibling).getPrimitiveType() == ICSSPrimitiveValue.CSS_SLASH)
+						append = false;
+					if (prevSibling instanceof CSSRegionContainer) {
+						// If the previous region was unknown, don't append whitespace
+						final ITextRegion region = ((CSSRegionContainer) prevSibling).getFirstRegion();
+						if (region != null && CSSRegionContexts.CSS_UNKNOWN.equals(region.getType()))
+							append = false;
+					}
+				}
+			}
+			if (child instanceof CSSRegionContainer) {
+				final ITextRegion region = ((CSSRegionContainer) child).getFirstRegion();
+				// If the current region is unknown, don't append whitespace
+				if (region != null && CSSRegionContexts.CSS_UNKNOWN.equals(region.getType()))
 					append = false;
 			}
 			if (toAppend != null && !toAppend.equals(",") && !toAppend.equals("/") && append) {//$NON-NLS-1$ //$NON-NLS-2$
