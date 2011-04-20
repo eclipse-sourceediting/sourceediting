@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Jesper Steen Moller - jesper@selskabet.org
+ * Copyright (c) 2010,2011 Jesper Steen Moller - jesper@selskabet.org
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
+ *     Jesper Steen Moller - bug 323448 - XPath view doesn't show runtime error information well (or at all)
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath.ui.internal.views.tests;
@@ -17,6 +18,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
@@ -58,7 +60,7 @@ public class TestXPathComputer extends TestCase {
 			return lastList;
 		}
 		
-		protected void xpathRecomputed(NodeList nodeList) {
+		protected void xpathRecomputed(NodeList nodeList, final IStatus error) {
 			this.lastList = nodeList;
 		}
 		
