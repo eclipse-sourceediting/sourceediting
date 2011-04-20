@@ -189,15 +189,8 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		_innerScope = _innerScope.nextScope;
 	}
 
-	private QName resolve(QName var) {
-		String ns = _sc.getNamespaceContext().getNamespaceURI(var.prefix());
-		QName qName = new QName(null, var.local(), ns);
-
-		return qName;
-	}
-
 	private void pushScope(QName var, org.eclipse.wst.xml.xpath2.api.ResultSequence value) {
-		_innerScope = new VariableScope(resolve(var), value, _innerScope);		
+		_innerScope = new VariableScope(var, value, _innerScope);		
 	}
 
 	private boolean derivesFrom(NodeType at, QName et) {

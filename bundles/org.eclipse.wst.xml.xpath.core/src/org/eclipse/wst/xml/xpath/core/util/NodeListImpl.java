@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.core.util;
 
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.api.Item;
+import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -38,12 +38,12 @@ public class NodeListImpl implements NodeList {
 	}
 
 	public Node item(int arg0) {
-		final AnyType type = rs.get(arg0);
+		final Item type = rs.item(arg0);
 		if (type instanceof NodeType) {
 			NodeType nodeType = (NodeType) type;
 			return nodeType.node_value();
 		}
-		return createTextNode(type.string_value());
+		return createTextNode(type.getStringValue());
 	}
 
 	private static Node createTextNode(final String value) {

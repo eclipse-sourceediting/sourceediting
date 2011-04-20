@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.xml.xpath.XPathExpressionException;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.action.IAction;
@@ -279,6 +280,7 @@ public class XPathView extends ViewPart {
 		this.location = XSLTXPathHelper.calculateXPathToNode(selected);
 		contextNode = selected;
 		updateLocationText();
+		recomputeXPath();
 	}
 
 	private void recomputeXPath() {
@@ -306,7 +308,7 @@ public class XPathView extends ViewPart {
 		}
 	}
 
-	protected void xpathRecomputed(final NodeList nodeList) {
+	protected void xpathRecomputed(final NodeList nodeList, final IStatus error) {
 		if (getSite() == null) return;
 		Shell shell = getSite().getShell();
 		if (shell == null) return;
@@ -321,6 +323,14 @@ public class XPathView extends ViewPart {
 					treeViewer.setSelection(currentSelection, true);
 					refreshControl.setRedraw(true);
 				}
+				if (error.getSeverity() == IStatus.OK) {
+					expressionValid = true;
+					message = "";
+				} else {
+					expressionValid = false;
+					message = error.getMessage();
+				}
+				updateLocationText();
 			}
 		});
 	}

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.CoreException;
@@ -31,7 +30,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.osgi.framework.BundleContext;
-import org.w3c.dom.Document;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -166,9 +164,16 @@ public class XPathUIPlugin extends AbstractUIPlugin {
 				info.addAll((Collection<NamespaceInfo>) namespaces);
 				namespaceInfo.put(modelID, info);
 				plugin.setNamespaceInfo(namespaceInfo);
+				
+				ensureDefault(namespaceTable, "xs", "http://www.w3.org/2001/XMLSchema");
 			}
 		}
 		return info;
+	}
+
+	private void ensureDefault(NamespaceTable namespaceTable, String prefix,
+			String uri) {
+		if (namespaceTable.getURIForPrefix(prefix) == null) namespaceTable.addNamespaceInfo(prefix, uri, null);
 	}
 	
 }
