@@ -399,7 +399,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		
 	}
 
-	private XPath2Expression newXPath = null;
+	protected XPath2Expression newXPath = null;
 	private XPath oldXPath = null;
 	
 	protected XPath compileXPath( String xpath) throws XPathParserException, StaticError {

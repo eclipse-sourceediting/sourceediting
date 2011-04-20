@@ -62,7 +62,9 @@ package org.eclipse.wst.xml.xpath2.processor.test;
 
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -73,7 +75,9 @@ import org.eclipse.wst.xml.xpath2.api.CollationProvider;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
 import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
+import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
@@ -2095,6 +2099,112 @@ public class TestBugs extends AbstractPsychoPathTest {
 		   // test fails
 		   assertTrue(false);
 		}
+	}
+
+	public void testExprParsingBeginnigWithRootNode_new_API_bug338494() throws Exception {
+		useNewApi = true;
+		
+		// Bug 338494
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+		setupDynamicContext(schema);
+
+		// test simple case
+	    compileXPath("x/y//z");
+	    assertFalse("Not navigating to root", newXPath.isRootPathUsed());
+
+	    // test a)
+	    compileXPath("/a");
+	    assertTrue("/a means a at root, so root path should be true", newXPath.isRootPathUsed());
+
+	    // test b)
+	    compileXPath("//x");
+	    assertTrue("//x means x anywhere under root, so root path should be true", newXPath.isRootPathUsed());		    
+
+		// test c)
+	    compileXPath("/");
+	    assertTrue("/ is root, so root path should be true", newXPath.isRootPathUsed());		    
+		
+		// test d)
+	    compileXPath("x/y[/a]");
+	    assertTrue("a predicate refers to root, so root path should be true", newXPath.isRootPathUsed());		    
+
+	    // test e)
+	    compileXPath(".//x");
+	    assertFalse(".//x is just relative, so root path should be false", newXPath.isRootPathUsed());		    
+	}
+
+	public void testExpression_variables_API() throws Exception {
+		useNewApi = true;
+		setupDynamicContext(null);
+		
+		setVariable("x", ResultSequenceFactory.create_new());
+		String xpath = "count(subsequence($x/parent::*, 2)) eq (for $y in (1) return $y+1)";
+		compileXPath(xpath);
+	    assertTrue(newXPath.getFreeVariables().contains(new javax.xml.namespace.QName("x")));		    
+	    assertFalse(newXPath.getFreeVariables().contains(new javax.xml.namespace.QName("y")));		    
+	}
+
+	public void testExpression_functions_API() throws Exception {
+		useNewApi = true;
+		setupDynamicContext(null);
+		
+		String xpath = "count(subsequence(parent::*, 2)) eq (for $y in (1) return $y+1)";
+		compileXPath(xpath);
+	    javax.xml.namespace.QName fnCount = new javax.xml.namespace.QName(FnFunctionLibrary.XPATH_FUNCTIONS_NS, "count");
+
+	    assertTrue(newXPath.getResolvedFunctions().contains(fnCount));
+	    javax.xml.namespace.QName fnSubsequence = new javax.xml.namespace.QName(FnFunctionLibrary.XPATH_FUNCTIONS_NS, "subsequence");
+		
+	    assertTrue(newXPath.getResolvedFunctions().contains(fnSubsequence));
+	    assertEquals(2, newXPath.getResolvedFunctions().size());		    
+	}
+	
+	public void testNamespaceAxis() {
+		setupDynamicContext(null);
+		
+		String xpath = "count(namespace::*)";
+		try {
+			compileXPath(xpath);
+			fail("This should have failed since we don't support the namespace axis");
+		} catch (StaticError se) {
+			assertEquals("XPST0010", se.code());
+		}
+	}
+	
+	public void testExpression_axis_API() throws Exception {
+		useNewApi = true;
+		setupDynamicContext(null);
+		
+		String xpath = "count(subsequence(./parent::*, 2)) + count(ancestor-or-self::*)";
+		compileXPath(xpath);
+	    assertTrue(newXPath.getAxes().contains("parent"));		    
+	    assertTrue(newXPath.getAxes().contains("ancestor-or-self"));		    
+	    assertEquals(2, newXPath.getAxes().size());
+
+	    xpath = "(child::*, descendant::*, attribute::*, self::*, descendant-or-self::*, following-sibling::*,  following::*, parent::*," +
+	    "ancestor::*, preceding-sibling::*, preceding::*, ancestor-or-self::*)";
+
+	    compileXPath(xpath);
+	    assertEquals(new TreeSet(Arrays.asList(new Object[] {
+	    "child",
+	    "descendant",
+	    "attribute",
+	    "self",
+	    "descendant-or-self",
+
+	    "following-sibling",
+	    "following",
+	    "parent",
+
+	    "ancestor",
+	    "preceding-sibling",
+	    "preceding",
+	    "ancestor-or-self" })), newXPath.getAxes());
 	}
 	
 	public void testBug338999_Fnsubsequence() throws Exception {
