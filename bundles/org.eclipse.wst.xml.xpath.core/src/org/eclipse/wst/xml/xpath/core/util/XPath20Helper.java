@@ -15,7 +15,10 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
 import org.eclipse.wst.xml.xpath2.processor.Engine;
+import org.eclipse.wst.xml.xpath2.processor.JFlexCupParser;
 import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParser;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.util.DynamicContextBuilder;
 import org.eclipse.wst.xml.xpath2.processor.util.StaticContextBuilder;
 import org.w3c.dom.Node;
@@ -29,6 +32,14 @@ public class XPath20Helper {
 	public XPath20Helper() {
 	}
 	
+	public static void compile(String xpathExp) throws XPathExpressionException {
+		try {
+			XPathParser xpathParser = new JFlexCupParser();
+			xpathParser.parse(xpathExp);
+		} catch (XPathParserException ex) {
+			throw new XPathExpressionException(ex.getMessage());
+		}
+	}
 	public static class XPath2Engine implements SimpleXPathEngine {
 
 		private NamespaceContext namespaceContext;
