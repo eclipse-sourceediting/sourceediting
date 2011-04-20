@@ -21,7 +21,6 @@ import java.util.Vector;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
-import org.eclipse.wst.sse.core.internal.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -141,21 +140,12 @@ public class ValidatorHelper
    * @param uri The uri of the file to validate.
    * @param uriResolver A helper to resolve locations.
    */
-  public void computeValidationInformation(String uri, Reader characterStream, URIResolver uriResolver)
+  public void computeValidationInformation(String uri, Reader characterStream, URIResolver uriResolver) throws SAXException, IOException
   {
-    try
-    {
       XMLReader reader = createXMLReader(uri);  
       InputSource inputSource = new InputSource(uri);
       inputSource.setCharacterStream(characterStream);
       reader.parse(inputSource);
-    }
-    catch (SAXException saxEx) {
-    	Logger.log(Logger.ERROR, saxEx.getMessage());
-    }
-    catch(IOException ioEx) {
-    	Logger.log(Logger.ERROR, ioEx.getMessage());
-    }
   }
   
  
