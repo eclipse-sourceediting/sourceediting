@@ -45,7 +45,7 @@ public class XPath20Helper {
 			try {
 				xPathExpression = new Engine().parseExpression(expression, staticContextBuilder);
 			} catch (StaticError se) {
-				throw new XPathExpressionException(se.getMessage());
+				throw new XPathExpressionException(se.getMessage() + " (" + se.code() + ")");
 			}
 		}
 

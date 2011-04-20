@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk and others
+ * Copyright (c) 2008-2011 Chase Technology Ltd - http://www.chasetechnology.co.uk and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 261428 - XPath View not respecting namespaces.
  *     Jesper Steen Moller - bug 313992 - XPath evaluation does not show atomics
+ *     Jesper Steen Moller - bug 323448 - XPath view doesn't show runtime error information well (or at all)
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
@@ -36,6 +37,7 @@ import org.eclipse.wst.xml.xpath.core.util.XPath20Helper;
 import org.eclipse.wst.xml.xpath.core.util.XPathCoreHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.Messages;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.internal.DefaultResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 import org.w3c.dom.Document;
@@ -187,7 +189,7 @@ public class XPathComputer {
 				}
 			}
 		} catch (XPathExpressionException e) {
-			return new Status(IStatus.WARNING, XPathCorePlugin.PLUGIN_ID, e.getMessage());
+			return new Status(IStatus.CANCEL, XPathCorePlugin.PLUGIN_ID, e.getMessage());
 		}
 		return status;
 	}
@@ -204,9 +206,10 @@ public class XPathComputer {
 		try {
 			this.nodeList = (NodeList) engine.execute(node);
 			return Status.OK_STATUS;
-		} catch(Throwable t) {
-			return new Status(IStatus.CANCEL, XPathCorePlugin.PLUGIN_ID, t.getMessage());
-//			return Status.CANCEL_STATUS;
+		} catch (DynamicError de) {
+			return new Status(IStatus.CANCEL, XPathCorePlugin.PLUGIN_ID, de.getMessage() + " (" + de.code() + ")");
+		} catch (Throwable t) {
+			return new Status(IStatus.ERROR, XPathCorePlugin.PLUGIN_ID, t.getMessage());
 		}
 	}
 
