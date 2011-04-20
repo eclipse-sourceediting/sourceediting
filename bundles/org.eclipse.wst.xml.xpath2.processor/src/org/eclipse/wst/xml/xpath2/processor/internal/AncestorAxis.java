@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
 
 /**
  * Returns the ancestors of the context node, this always includes the root
@@ -28,11 +29,13 @@ public class AncestorAxis extends ParentAxis {
 	 *            is the type of node.
 	 */
 	// XXX unify this with descendants axis ?
-	public void iterate(NodeType node, ResultBuffer copyInto) {
+	public void iterate(NodeType node, ResultBuffer copyInto, Node limitNode) {
 
+		if (limitNode != null && limitNode.isSameNode(node.node_value())) return;
+		
 		int before = copyInto.size();
 		// get the parent
-		super.iterate(node, copyInto);
+		super.iterate(node, copyInto, limitNode);
 
 		// no parent
 		if (copyInto.size() == before)
@@ -41,7 +44,10 @@ public class AncestorAxis extends ParentAxis {
 		NodeType parent = (NodeType) copyInto.item(before);
 
 		// get ancestors of parent
-		iterate(parent, copyInto);
+		iterate(parent, copyInto, limitNode);
 	}
 
+	public String name() {
+		return "ancestor";
+	}
 }

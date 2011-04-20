@@ -19,6 +19,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 /**
  * The attribute axis contains the attributes of the context node. The axis will
@@ -32,7 +33,7 @@ public class AttributeAxis extends ForwardAxis {
 	 * @param node
 	 *            is the type of node.
 	 */
-	public void iterate(NodeType node, ResultBuffer copyInto) {
+	public void iterate(NodeType node, ResultBuffer copyInto, Node limitNode) {
 		// only elements have attributes
 		if (!(node instanceof ElementType))
 			return;

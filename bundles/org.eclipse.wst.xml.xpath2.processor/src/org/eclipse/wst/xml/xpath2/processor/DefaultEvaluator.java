@@ -1175,17 +1175,13 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultBuffer buffer = new ResultBuffer();
 
 		// XXX the cast!!!
-		axis.iterate((NodeType) focus().context_item(), buffer);
+		axis.iterate((NodeType) focus().context_item(), buffer, _dc.getLimitNode());
 
 		ResultSequence rs = kind_test(buffer.getSequence(), NodeType.class);
 
-		try {
-			List records = new ArrayList();
-			records.add(rs);
-			rs = FnRoot.fn_root(records, _ec);
-		} catch (DynamicError err) {
-			report_error(err);
-		}
+		List records = new ArrayList();
+		records.add(rs);
+		rs = FnRoot.fn_root(records, _ec);
 		return rs;
 	}
 
@@ -1197,7 +1193,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			NodeType item = (NodeType) i.next();
 
-			axis.iterate(item, res);
+			axis.iterate(item, res, _dc.getLimitNode());
 		}
 
 		return res.getSequence();
@@ -1319,7 +1315,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		// get the nodes on the axis
 		ForwardAxis axis = e.iterator();
 		ResultBuffer rb = new ResultBuffer();
-		axis.iterate(cn, rb);
+		axis.iterate(cn, rb, _dc.getLimitNode());
 		// get all nodes in the axis, and principal node
 		Pair arg = new Pair(axis.principal_node_kind().string_type(), rb.getSequence());
 
@@ -1353,13 +1349,13 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		ResultBuffer result = new ResultBuffer();
 		// short for "gimme da parent"
 		if (e.axis() == ReverseStep.DOTDOT) {
-			new ParentAxis().iterate(cn, result);
+			new ParentAxis().iterate(cn, result, _dc.getLimitNode());
 			return result.getSequence();
 		}
 
 		assert axis != null;
 
-		axis.iterate(cn, result);
+		axis.iterate(cn, result, null);
 		// get all nodes in the axis, and principal node
 		Pair arg = new Pair(axis.principal_node_kind().string_type(), result.getSequence());
 

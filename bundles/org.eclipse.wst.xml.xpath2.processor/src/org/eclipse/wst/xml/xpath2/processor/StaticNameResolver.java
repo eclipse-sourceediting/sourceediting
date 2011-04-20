@@ -154,6 +154,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	}
 	
 	private VariableScope _innerScope = null;
+	private boolean _rootUsed;
 
 	private org.eclipse.wst.xml.xpath2.api.typesystem.ItemType getVariableType(QName name) {
 		VariableScope scope = _innerScope;
@@ -612,11 +613,13 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		SingleType st = (SingleType) cexp.right();
 		QName type = st.type();
 		
-		Function f = _sc.resolveFunction(type.asQName(), 1);
+		javax.xml.namespace.QName qName = type.asQName();
+		Function f = _sc.resolveFunction(qName, 1);
 		if (f == null)
 			report_error(new StaticFunctNameError("Type does not exist: "
 					+ type.toString()));
 		cexp.set_function(f);
+		_resolvedFunctions.add(qName);
 
 		return null;
 	}
@@ -667,8 +670,13 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 */
 	public Object visit(XPathExpr e) {
 		XPathExpr xp = e;
-
+		boolean firstStep = true;
+		
 		while (xp != null) {
+			if (firstStep && xp.slashes() != 0)
+				_rootUsed = true;
+			
+			firstStep = false;
 			StepExpr se = xp.expr();
 
 			if (se != null)
@@ -839,11 +847,13 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		if (!expand_function_qname(name))
 			report_bad_prefix(name.prefix());
 
-		Function f = _sc.resolveFunction(name.asQName(), e.arity());
+		javax.xml.namespace.QName qName = name.asQName();
+		Function f = _sc.resolveFunction(qName, e.arity());
 		if (f == null)
 			report_error(new StaticFunctNameError("Function does not exist: "
 					+ name.string() + " arity: " + e.arity()));
 		e.set_function(f);
+		_resolvedFunctions.add(qName);
 		
 		printExprs(e.iterator());
 		return null;
@@ -1099,5 +1109,9 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 
 		printCollExprs(e.iterator());
 		return null;
+	}
+
+	public boolean isRootUsed() {
+		return _rootUsed;
 	}
 }

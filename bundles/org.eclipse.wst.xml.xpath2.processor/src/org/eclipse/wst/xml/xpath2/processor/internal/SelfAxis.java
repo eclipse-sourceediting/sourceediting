@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
 
 /**
  * Create a result sequence that contains the context node
@@ -25,7 +26,7 @@ public class SelfAxis extends ForwardAxis {
 	 * @param node
 	 *            is the node type
 	 */
-	public void iterate(NodeType node, ResultBuffer copyInto) {
+	public void iterate(NodeType node, ResultBuffer copyInto, Node limitNode) {
 		copyInto.add(node);
 	}
 	

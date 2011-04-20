@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
 
 /**
  * the following axis contains the context node's following siblings, those
@@ -29,34 +30,39 @@ public class FollowingAxis extends ForwardAxis {
 	 * @param node
 	 *            is the type of node.
 	 */
-	public void iterate(NodeType node, ResultBuffer result) {
+	public void iterate(NodeType node, ResultBuffer result, Node limitNode) {
 
 		// XXX should be root... not parent!!! read the spec.... BUG BUG
 		// BUG LAME LAME....
 
+		if (limitNode != null && limitNode.isSameNode(node.node_value())) {
+			// no further, we have reached the limit node
+			return;
+		}
+		
 		// get the parent
 		NodeType parent = null;
 		ResultBuffer parentBuffer = new ResultBuffer();
-		new ParentAxis().iterate(node, parentBuffer);
+		new ParentAxis().iterate(node, parentBuffer, limitNode);
 		if (parentBuffer.size() == 1)
 			parent = (NodeType) parentBuffer.item(0);
 
 		// get the following siblings of this node, and add them
 		FollowingSiblingAxis fsa = new FollowingSiblingAxis();
 		ResultBuffer siblingBuffer = new ResultBuffer();
-		fsa.iterate(node, siblingBuffer);
+		fsa.iterate(node, siblingBuffer, limitNode);
 
 		// for each sibling, get all its descendants
 		DescendantAxis da = new DescendantAxis();
 		for (Iterator i = siblingBuffer.iterator(); i.hasNext();) {
 			result.add((NodeType)i);
-			da.iterate((NodeType) i.next(), result);
+			da.iterate((NodeType) i.next(), result, null);
 		}
 
 		// if we got a parent, we gotta repeat the story for the parent
 		// and add the results
 		if (parent != null) {
-			iterate(parent, result);
+			iterate(parent, result, limitNode);
 		}
 	}
 	

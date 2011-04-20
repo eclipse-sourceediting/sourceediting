@@ -22,6 +22,7 @@ public class Engine implements XPath2Engine {
 		xPath.setAxes(name_check.getAxes());
 		xPath.setFreeVariables(name_check.getFreeVariables());
 		xPath.setResolvedFunctions(name_check.getResolvedFunctions());
+		xPath.setRootUsed(name_check.isRootUsed());
 		
 		return xPath;
 	}

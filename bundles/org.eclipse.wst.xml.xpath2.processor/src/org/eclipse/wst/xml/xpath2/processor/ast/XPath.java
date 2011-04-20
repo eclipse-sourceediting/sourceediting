@@ -37,6 +37,7 @@ public class XPath extends XPathNode implements XPath2Expression {
 	private Collection<QName> _resolvedFunctions;
 	private Collection<String> _axes;
 	private Collection<QName> _freeVariables;
+	private boolean _rootUsed;
 
 	/**
 	 * Constructor for XPath.
@@ -106,6 +107,20 @@ public class XPath extends XPathNode implements XPath2Expression {
 	 */
 	public void setAxes(Collection<String> _axes) {
 		this._axes = _axes;
+	}
+	
+	/**
+	 * @since 2.0
+	 */
+	public boolean isRootPathUsed() {
+		return _rootUsed;
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public void setRootUsed(boolean _rootUsed) {
+		this._rootUsed = _rootUsed;
 	}
 	
 	/**

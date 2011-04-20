@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
 
 /**
  * The descendant-or-self axis contains the context node and the descendants of
@@ -28,13 +29,13 @@ public class DescendantOrSelfAxis extends ForwardAxis {
 	 * @param node
 	 *            is the type of node.
 	 */
-	public void iterate(NodeType node, ResultBuffer rs) {
+	public void iterate(NodeType node, ResultBuffer rs, Node limitNode) {
 
 		// add self
 		rs.add(node);
 
 		// add descendants
-		new DescendantAxis().iterate(node, rs);
+		new DescendantAxis().iterate(node, rs, null);
 	}
 
 	public String name() {

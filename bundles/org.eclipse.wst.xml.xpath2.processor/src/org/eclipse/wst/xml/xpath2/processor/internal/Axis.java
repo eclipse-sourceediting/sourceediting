@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
 
 /**
  * This is the interface class for an Axis.
@@ -27,8 +28,9 @@ public interface Axis {
 	 * @param node
 	 *            is the type of node.
 	 * @param copyInto TODO
+	 * @param limitNode TODO
 	 */
-	public void iterate(NodeType node, ResultBuffer copyInto);
+	public void iterate(NodeType node, ResultBuffer copyInto, Node limitNode);
 
 	/**
 	 * Get the principle kind of node.

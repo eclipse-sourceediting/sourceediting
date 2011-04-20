@@ -48,6 +48,8 @@ public class JFlexCupParser implements XPathParser {
 			throw new XPathParserException("JFlex lexer error: " + e.reason());
 		} catch (CupError e) {
 			throw new XPathParserException("CUP parser error: " + e.reason());
+		} catch (StaticError e) {
+			throw e;
 		} catch (Exception e) {
 			String err = "Unknown error at line " + lexer.lineno();
 

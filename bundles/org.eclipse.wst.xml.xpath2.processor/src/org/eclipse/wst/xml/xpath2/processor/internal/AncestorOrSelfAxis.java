@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import org.eclipse.wst.xml.xpath2.api.ResultBuffer;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.w3c.dom.Node;
 
 /**
  * The ancestor-or-self axis contains the context node and the ancestors of the
@@ -27,10 +28,10 @@ public class AncestorOrSelfAxis extends ReverseAxis {
 	 * @param node
 	 *            is the type of node.
 	 */
-	public void iterate(NodeType node, ResultBuffer copyInto) {
+	public void iterate(NodeType node, ResultBuffer copyInto, Node limitNode) {
 		// get ancestors
 		AncestorAxis aa = new AncestorAxis();
-		aa.iterate(node, copyInto);
+		aa.iterate(node, copyInto, null);
 
 		// add self
 		copyInto.add(node);

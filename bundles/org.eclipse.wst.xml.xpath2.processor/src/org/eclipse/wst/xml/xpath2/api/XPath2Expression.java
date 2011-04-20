@@ -39,12 +39,19 @@ public interface XPath2Expression {
 	Collection<QName> getResolvedFunctions();
 
 	/**
-	 * Return a collections of the functions used in the XPath2 expression.
+	 * Return a collections of the axis used in the XPath2 expression.
 	 *  
-	 * @return A Collection containing javax.xml.namespacing.QName of functions in use.
+	 * @return A Collection containing Strings with the axis names in use.
 	 */
 	Collection<String> getAxes();
 
+	/**
+	 * Whether or not the root path is in use in the XPath2 expression.
+	 *  
+	 * @return true if the expression uses / or //, false otherwise.
+	 */
+	boolean isRootPathUsed();
+	
 	/**
 	 * Evaluate the XPath2 expression, using the supplied DynamicContext.
 	 * 

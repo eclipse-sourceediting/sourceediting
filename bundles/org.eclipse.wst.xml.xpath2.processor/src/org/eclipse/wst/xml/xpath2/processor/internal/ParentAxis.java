@@ -32,8 +32,14 @@ public class ParentAxis extends ReverseAxis {
 	 * @throws dc
 	 *             is the Dynamic context.
 	 */
-	public void iterate(NodeType node, ResultBuffer copyInto) {
+	public void iterate(NodeType node, ResultBuffer copyInto, Node limitNode) {
 		Node n = node.node_value();
+		
+		if (limitNode != null && limitNode.isSameNode(n)) {
+			// no further, we have reached the limit node
+			return;
+		}
+
 		Node parent = findParent(n);
 
 		// if a parent exists... add it

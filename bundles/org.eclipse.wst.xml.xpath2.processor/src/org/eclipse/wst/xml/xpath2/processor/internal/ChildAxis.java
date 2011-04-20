@@ -31,7 +31,7 @@ public class ChildAxis extends ForwardAxis {
 	 * @param node
 	 *            is the type of node.
 	 */
-	public void iterate(NodeType node, ResultBuffer copyInto) {
+	public void iterate(NodeType node, ResultBuffer copyInto, Node limitNode) {
 		addChildren(node, copyInto, false);
 	}
 

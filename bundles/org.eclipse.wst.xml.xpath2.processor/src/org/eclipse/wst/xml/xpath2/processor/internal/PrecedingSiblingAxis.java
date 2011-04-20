@@ -30,7 +30,7 @@ public class PrecedingSiblingAxis extends ReverseAxis {
 	 * @throws dc
 	 *             is the Dynamic context.
 	 */
-	public void iterate(NodeType node, ResultBuffer copyInto) {
+	public void iterate(NodeType node, ResultBuffer copyInto, Node limitNode) {
 		// XXX check for attribute / namespace node... if so return
 		// empty sequence
 
