@@ -305,6 +305,12 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 			IFlatResource[] children = ((IFlatFolder)delegate).members();
 			return convert(children);
 		}
+
+		@Override
+		public String toString() {
+
+			return getName();
+		}
 	}
 
 	public static class ComponentModuleFile extends ComponentModuleResource implements IModuleFile{
@@ -359,7 +365,6 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 		public int hashCode() {
 			return getName().hashCode() * 37 + getModuleRelativePath().hashCode();
 		}
-		
 	}
 
 	protected static boolean isProjectOfType(IProject project, String typeID) {
