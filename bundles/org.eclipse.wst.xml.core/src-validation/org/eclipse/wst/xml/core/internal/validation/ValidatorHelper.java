@@ -18,9 +18,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -48,6 +50,7 @@ public class ValidatorHelper
   public int numDTDElements = 0;
   public boolean isDocumentElementEncountered = false;
 
+  private static final boolean _trace = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.xml.core/debug/validation")).booleanValue(); //$NON-NLS-1$
   /**
    * Constructor.
    */
@@ -140,12 +143,22 @@ public class ValidatorHelper
    * @param uri The uri of the file to validate.
    * @param uriResolver A helper to resolve locations.
    */
-  public void computeValidationInformation(String uri, Reader characterStream, URIResolver uriResolver) throws SAXException, IOException
+  public void computeValidationInformation(String uri, Reader characterStream, URIResolver uriResolver)
   {
-      XMLReader reader = createXMLReader(uri);  
-      InputSource inputSource = new InputSource(uri);
-      inputSource.setCharacterStream(characterStream);
-      reader.parse(inputSource);
+	  try {
+	      XMLReader reader = createXMLReader(uri);  
+	      InputSource inputSource = new InputSource(uri);
+	      inputSource.setCharacterStream(characterStream);
+	      reader.parse(inputSource);
+	  }
+	  catch (SAXException e) {
+		  if (_trace)
+			  Logger.logException(e);
+	  }
+	  catch (IOException e) {
+		  if (_trace)
+			  Logger.logException(e);
+	  }
   }
   
  
