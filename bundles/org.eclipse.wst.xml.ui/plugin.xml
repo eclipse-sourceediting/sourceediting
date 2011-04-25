@@ -1532,8 +1532,8 @@
 		<!-- XPath on the "bottom" left from its own UI plug-in since neither this bundle nor its owning feature require it -->
 		<!-- Content Outline on the right -->
 		<view id="org.eclipse.ui.views.ContentOutline" relative="org.eclipse.ui.editorss" relationship="right" ratio="0.7" />
-		<!-- Templates on the bottom right -->
-		<view id="org.eclipse.ui.texteditor.TemplatesView" relative="org.eclipse.ui.views.ContentOutline" relationship="bottom" ratio="0.6" />
+		<!-- Templates on the bottom right [removed for 333271]
+		<view id="org.eclipse.ui.texteditor.TemplatesView" relative="org.eclipse.ui.views.ContentOutline" relationship="bottom" ratio="0.6" />-->
 		<!-- everything else on the bottom -->
 		<view id="org.eclipse.ui.views.ProblemView" relative="org.eclipse.ui.editorss" relationship="bottom" ratio="0.6" />
 		<view id="org.eclipse.wst.xml.ui.views.annotations.XMLAnnotationsView" relative="org.eclipse.ui.views.ProblemView" relationship="stack" />
@@ -1560,7 +1560,7 @@
 		<viewShortcut id="org.eclipse.ui.views.ProblemView"/>
 		<viewShortcut id="org.eclipse.ui.console.ConsoleView"/>
 		<viewShortcut id="org.eclipse.ui.views.TaskList"/>
-		<viewShortcut id="org.eclipse.ui.texteditor.TemplatesView"/>
+		<!--<viewShortcut id="org.eclipse.ui.texteditor.TemplatesView"/>-->
 		<viewShortcut id="org.eclipse.search.ui.views.SearchView"/>
 		<viewShortcut id="org.eclipse.ui.views.ProgressView"/>
 
