@@ -115,7 +115,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		fDocumentIsDirty = true;
 	}
 
-	public synchronized void release() {
+	public void release() {
 
 		if (fJspDocument != null)
 			fJspDocument.removeDocumentListener(this);
@@ -129,7 +129,6 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 				System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
 
 			fJSPTranslation.release();
-			fJSPTranslation = null;
 		}
 	}
 
