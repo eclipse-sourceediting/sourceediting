@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,6 +50,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocumen
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.NotImplementedException;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -772,22 +773,31 @@ public class TaglibHelper {
 		ITextRegion r = null;
 		String attrName = ""; //$NON-NLS-1$
 		String attrValue = ""; //$NON-NLS-1$
-		for (int i = 2; i < regions.size(); i++) {
+		final int size = regions.size();
+		for (int i = 2; i < size; i++) {
 			r = regions.get(i);
 			// check if attr name
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				attrName = customTag.getText(r);
 				// check equals is next region
-				if (regions.size() > ++i) {
+				if (size > ++i) {
 					r = regions.get(i);
-					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS && regions.size() > ++i) {
+					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS && size > ++i) {
 						// get attr value
 						r = regions.get(i);
-						if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+						final String type = r.getType();
+						if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 							// attributes in our document have quotes, so we
 							// need to strip them
 							attrValue = StringUtils.stripQuotes(customTag.getText(r));
 							tagDataTable.put(attrName, attrValue);
+						}
+						else if (type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_SQUOTE) {
+							final StringBuffer buffer = new StringBuffer();
+							while (size > ++i && (r = regions.get(i)).getType() != type) {
+								buffer.append(customTag.getText(r));
+							}
+							tagDataTable.put(attrName, buffer.toString());
 						}
 					}
 				}
