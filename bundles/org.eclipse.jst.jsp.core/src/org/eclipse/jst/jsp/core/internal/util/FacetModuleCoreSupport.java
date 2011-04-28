@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,8 +65,7 @@ public final class FacetModuleCoreSupport {
 
 	/**
 	 * @param project
-	 * @return a default value if the project does not have the JST Web facet, the version
-	 *         number of the installed facet otherwise
+	 * @return the version of the JST Web facet installed on the project, a default version otherwise
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public static float getDynamicWebProjectVersion(IProject project) {

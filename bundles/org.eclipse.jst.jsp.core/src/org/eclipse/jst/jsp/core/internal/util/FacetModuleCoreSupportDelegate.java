@@ -48,8 +48,7 @@ final class FacetModuleCoreSupportDelegate {
 	private final static String JST_WEB_MODULE = "jst.web"; //$NON-NLS-1$
 	/**
 	 * @param project
-	 * @return -1 if the project does not have the JST Web facet, the version
-	 *         number of it otherwise
+	 * @return the version of the JST Web facet, a default otherwise
 	 * @throws CoreException
 	 */
 	static float getDynamicWebProjectVersion(IProject project) {
