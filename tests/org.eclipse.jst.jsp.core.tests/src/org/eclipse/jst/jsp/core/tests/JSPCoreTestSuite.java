@@ -24,6 +24,7 @@ import org.eclipse.jst.jsp.core.tests.model.TestModelIncludes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
 import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
+import org.eclipse.jst.jsp.core.tests.tei.TEIValidation;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCoreTest;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCustomTagTest;
 import org.eclipse.jst.jsp.core.tests.translation.JSPTranslatorPersistenceTest;
@@ -63,6 +64,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestModelIncludes.class, "Core Fragment Inclusion Tests"));
 		addTest(new TestSuite(JSPCorePreferencesTest.class, "Preference Tests"));
 		addTest(new TestSuite(JSPedCSSSourceParserTest.class, "Special Parsing Tests for JSP-CSS content"));
+		addTest(new TestSuite(TEIValidation.class, "TagExtraInfo Validation Tests"));
 		addTest(new TestSuite(JSPJavaTranslatorCustomTagTest.class, "Java Custom Tag Tests"));
 		addTest(new TestSuite(JSPJavaValidatorTest.class, "Java Validator Tests"));
 		addTest(new TestSuite(TestImportedNodes.class, "Imported Nodes Tests"));
