@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2011 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,9 @@
  * 
  * Contributors:
  *     David Carver (STAR) - bug 226245 - initial API and implementation
+ *     Jesper Steen Moller - bug 343804 - Updated API information
  *******************************************************************************/
+
 package org.eclipse.wst.xml.xpath.core.util;
 
 import javax.xml.namespace.NamespaceContext;
@@ -40,6 +42,9 @@ public class XPath20Helper {
 			throw new XPathExpressionException(ex.getMessage());
 		}
 	}
+	/**
+	 * @since 1.2
+	 */
 	public static class XPath2Engine implements SimpleXPathEngine {
 
 		private NamespaceContext namespaceContext;

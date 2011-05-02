@@ -8,6 +8,7 @@
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
+ *     Jesper Steen Moller - bug 343804 - Updated API information
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.util;
@@ -40,6 +41,9 @@ import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary;
 import org.w3c.dom.Node;
 
+/**
+ * @since 2.0
+ */
 public class StaticContextBuilder implements StaticContext {
 
 	public static final String XPATH_FUNCTIONS_NS = "http://www.w3.org/2005/xpath-functions";

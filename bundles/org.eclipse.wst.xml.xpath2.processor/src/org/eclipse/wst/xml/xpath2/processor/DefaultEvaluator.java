@@ -18,6 +18,7 @@
   *    Mukul Gandhi         - bug 325262 - providing ability to store an XPath2 sequence into
  *                                         an user-defined variable.
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
+ *     Jesper Steen Moller - bug 343804 - Updated API information
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -317,6 +318,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		return ResultSequenceUtil.newToOld(evaluate2(node));
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public ResultSequence evaluate2(XPathNode node) {
 		return (org.eclipse.wst.xml.xpath2.api.ResultSequence) node.accept(this);
 	}

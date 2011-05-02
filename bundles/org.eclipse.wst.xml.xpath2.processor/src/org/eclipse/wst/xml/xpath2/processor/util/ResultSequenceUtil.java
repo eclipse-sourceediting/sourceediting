@@ -8,6 +8,7 @@
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
+ *     Jesper Steen Moller - bug 343804 - Updated API information
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.util;
@@ -16,6 +17,11 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 
+/**
+ * Introduced, but deprecated since it deals with old-style ResultSequences.
+ * 
+ * @since 2.0
+ */
 @SuppressWarnings("deprecation")
 public class ResultSequenceUtil {
 

@@ -8,6 +8,7 @@
  * Contributors:
  *     Jesper Steen Moller - initial API and implementation
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
+ *     Jesper Steen Moller - bug 343804 - Updated API information
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.util;
@@ -44,6 +45,8 @@ import org.w3c.dom.Node;
  * 
  * Initializes and provides functionality of a dynamic context according to the
  * XPath 2.0 specification.
+ * 
+ * @since 2.0
  */
 public class DynamicContextBuilder implements DynamicContext {
 

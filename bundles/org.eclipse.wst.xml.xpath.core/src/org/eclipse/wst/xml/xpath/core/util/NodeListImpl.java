@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2011 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
  *     Jesper Steen Moller - bug 313992 - XPath evaluation does not show atomics
+ *     Jesper Steen Moller - bug 343804 - Updated API information
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.core.util;
 
@@ -29,6 +30,9 @@ public class NodeListImpl implements NodeList {
 
 	ResultSequence rs;
 	
+	/**
+	 * @since 1.2
+	 */
 	public NodeListImpl(ResultSequence result) {
 		rs = result;
 	}

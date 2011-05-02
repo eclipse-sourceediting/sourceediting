@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
+ *     Jesper Steen Moller - bug 343804 - Updated API information
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -141,14 +142,23 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		final public VariableScope nextScope; 
 	}	
 	
+	/**
+	 * @since 2.0
+	 */
 	public Set<String> getAxes() {
 		return _axes;
 	}
 	
+	/**
+	 * @since 2.0
+	 */
 	public Set<javax.xml.namespace.QName> getFreeVariables() {
 		return _freeVariables;
 	}
 	
+	/**
+	 * @since 2.0
+	 */
 	public Set<javax.xml.namespace.QName> getResolvedFunctions() {
 		return _resolvedFunctions;
 	}
@@ -1111,6 +1121,9 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 		return null;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean isRootUsed() {
 		return _rootUsed;
 	}
