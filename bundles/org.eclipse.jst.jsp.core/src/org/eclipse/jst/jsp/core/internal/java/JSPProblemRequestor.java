@@ -26,8 +26,11 @@ class JSPProblemRequestor implements IProblemRequestor {
 
     public void acceptProblem(IProblem problem) {
 
-        if (isActive())
-            fCollectedProblems.add(problem);
+        if (isActive()) {
+        	synchronized (fCollectedProblems) {
+        		fCollectedProblems.add(problem);
+			}
+        }
     }
 
     public void endReporting() {

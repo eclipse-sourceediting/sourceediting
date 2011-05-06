@@ -501,7 +501,10 @@ public class JSPTranslation implements IJSPTranslation {
 			if (fTranslationProblems.isEmpty()) {
 				return problems;
 			}
-			List combinedProblems = new ArrayList(problems);
+			List combinedProblems = null;
+			synchronized (problems) {
+				combinedProblems = new ArrayList(problems);
+			}
 			combinedProblems.addAll(fTranslationProblems);
 			return combinedProblems;
 		}
