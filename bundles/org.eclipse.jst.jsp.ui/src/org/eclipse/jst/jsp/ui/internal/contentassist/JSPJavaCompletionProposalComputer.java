@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jface.text.BadLocationException;
@@ -57,7 +56,6 @@ import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposa
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistUtilities;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
-import org.osgi.framework.Bundle;
 
 /**
  * <p>Generates Java proposals for JSP documents</p>
@@ -65,7 +63,6 @@ import org.osgi.framework.Bundle;
  * @base org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor
  */
 public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionProposalComputer {
-	private static final String JDT_CORE_PLUGIN_ID = "org.eclipse.jdt.core"; //$NON-NLS-1$
 
 	/** The translation adapter used to create the Java proposals */
 	private JSPTranslationAdapter fTranslationAdapter = null;
@@ -199,8 +196,6 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 	protected List computeJavaCompletionProposals(ITextViewer viewer,
 			int pos, int javaPositionExtraOffset) {
 		
-		initializeJavaPlugins();
-
 		JSPProposalCollector collector = null;
 		
 		IDOMModel xmlModel = null;
@@ -277,33 +272,6 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 			}
 		}
 		return false;
-	}
-	
-	/**
-	 * Initialize the Java Plugins that the JSP processor requires.
-	 * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=143765
-	 * We should not call "start", because that will cause that 
-	 * state to be remembered, and re-started automatically during 
-	 * the next boot up sequence. 
-	 * 
-	 * ISSUE: we may be able to get rid of this all together, in future, 
-	 * since 99% we probably have already used some JDT class by the time 
-	 * we need JDT to be active ... but ... this is the safest fix for 
-	 * this point in 1.5 stream. Next release, let's just remove this, 
-	 * re-discover what ever bug this was fixing (if any) and if there is 
-	 * one, then we'll either put back in, as is, or come up with a 
-	 * more appropriate fix. 
-	 * 
-	 */
-	private void initializeJavaPlugins() {
-		try {
-			Bundle bundle = Platform.getBundle(JDT_CORE_PLUGIN_ID);
-			bundle.loadClass("dummyClassNameThatShouldNeverExist"); //$NON-NLS-1$
-		}
-		catch (ClassNotFoundException e) {
-			// this is the expected result, we just want to 
-			// nudge the bundle to be sure its activated. 
-		}
 	}
 	
 	/**
