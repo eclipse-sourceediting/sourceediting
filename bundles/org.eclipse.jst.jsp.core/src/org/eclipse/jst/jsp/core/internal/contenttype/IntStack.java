@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@ package org.eclipse.jst.jsp.core.internal.contenttype;
 
 /*
  * 
- * A non-resizable class implementing the behavior of java.util.Stack, but
+ * A resizable class implementing the behavior of java.util.Stack, but
  * directly for the <code> integer </code> primitive.
  */
 import java.util.EmptyStackException;
@@ -25,7 +25,7 @@ public class IntStack {
 	private int size = 0;
 
 	public IntStack() {
-		this(100);
+		this(10);
 	}
 
 	public IntStack(int maxdepth) {
@@ -87,7 +87,9 @@ public class IntStack {
 	 */
 	public int push(int newValue) {
 		if (size == list.length) {
-			throw new StackOverflowError();
+			int[] newList = new int[size * 2];
+			System.arraycopy(list, 0, newList, 0, size);
+			list = newList;
 		}
 		list[size++] = newValue;
 		return newValue;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,9 +54,12 @@ class PresentationCollector extends AbstractCollection {
 	public boolean add(Object o) {
 		StyleRange range = (StyleRange) o;
 		if (lastOffset > range.start) {
-			IllegalArgumentException e = new IllegalArgumentException("Overlapping start in StyleRange " + range.start + ":" + range.length); //$NON-NLS-1$ //$NON-NLS-2$
-			Logger.logException(e);
-			throw e;
+			Logger.log(Logger.ERROR, "Overlapping start in StyleRange " + range.start + ":" + range.length); //$NON-NLS-1$ //$NON-NLS-2$
+			return false;
+		}
+		else if (range.length < 0) {
+			Logger.log(Logger.ERROR, "StyleRange with negative length" + range.start + ":" + range.length); //$NON-NLS-1$ //$NON-NLS-2$
+			return false;
 		}
 		lastOffset = range.start + range.length;
 		fPresentation.addStyleRange(range);
