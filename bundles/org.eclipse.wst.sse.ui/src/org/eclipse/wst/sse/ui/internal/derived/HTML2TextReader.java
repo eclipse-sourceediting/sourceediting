@@ -70,8 +70,6 @@ public class HTML2TextReader extends SubstitutionTextReader {
 		fgTags.add("tl"); //$NON-NLS-1$
 		fgTags.add("em"); //$NON-NLS-1$
 		fgTags.add("i"); //$NON-NLS-1$
-		fgTags.add("style"); //$NON-NLS-1$
-		fgTags.add("base"); //$NON-NLS-1$
 
 		fgEntityLookup= new HashMap(7);
 		fgEntityLookup.put("lt", "<"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -166,6 +164,20 @@ public class HTML2TextReader extends SubstitutionTextReader {
 			tag = tag.substring(0, ws);
 		}
 
+		if ("head".equals(html) && !fHeaderDetected) { //$NON-NLS-1$
+			fHeaderDetected= true;
+			fIgnore= true;
+			return EMPTY_STRING;
+		}
+
+		if ("/head".equals(html) && fHeaderDetected && fIgnore) { //$NON-NLS-1$
+			fIgnore= false;
+			return EMPTY_STRING;
+		}
+
+		if (fIgnore)
+			return EMPTY_STRING;
+
 		if (!fgTags.contains(tag))
 			return '<' + html + '>';
 
@@ -227,17 +239,6 @@ public class HTML2TextReader extends SubstitutionTextReader {
 
 		if ("/dd".equals(html)) //$NON-NLS-1$
 			return LINE_DELIM;
-
-		if ("head".equals(html) && !fHeaderDetected) { //$NON-NLS-1$
-			fHeaderDetected= true;
-			fIgnore= true;
-			return EMPTY_STRING;
-		}
-
-		if ("/head".equals(html) && fHeaderDetected && fIgnore) { //$NON-NLS-1$
-			fIgnore= false;
-			return EMPTY_STRING;
-		}
 
 		return EMPTY_STRING;
 	}
