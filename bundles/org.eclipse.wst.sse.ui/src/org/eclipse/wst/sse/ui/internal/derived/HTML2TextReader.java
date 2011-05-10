@@ -60,6 +60,7 @@ public class HTML2TextReader extends SubstitutionTextReader {
 		fgTags.add("ul"); //$NON-NLS-1$
 		fgTags.add("pre"); //$NON-NLS-1$
 		fgTags.add("html"); //$NON-NLS-1$
+		fgTags.add("head"); //$NON-NLS-1$
 		fgTags.add("body"); //$NON-NLS-1$
 		fgTags.add("code"); //$NON-NLS-1$
 		fgTags.add("font"); //$NON-NLS-1$
@@ -69,6 +70,8 @@ public class HTML2TextReader extends SubstitutionTextReader {
 		fgTags.add("tl"); //$NON-NLS-1$
 		fgTags.add("em"); //$NON-NLS-1$
 		fgTags.add("i"); //$NON-NLS-1$
+		fgTags.add("style"); //$NON-NLS-1$
+		fgTags.add("base"); //$NON-NLS-1$
 
 		fgEntityLookup= new HashMap(7);
 		fgEntityLookup.put("lt", "<"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -86,6 +89,8 @@ public class HTML2TextReader extends SubstitutionTextReader {
 	private int fStartOffset= -1;
 	private boolean fInParagraph= false;
 	private boolean fIsPreformattedText= false;
+	private boolean fIgnore= false;
+	private boolean fHeaderDetected= false;
 
 	/**
 	 * Transforms the html text from the reader to formatted text.
@@ -137,6 +142,8 @@ public class HTML2TextReader extends SubstitutionTextReader {
 
 		if (c == '<')
 			return  processHTMLTag();
+		else if (fIgnore)
+			return EMPTY_STRING;
 		else if (c == '&')
 			return processEntity();
 		else if (fIsPreformattedText)
@@ -161,7 +168,6 @@ public class HTML2TextReader extends SubstitutionTextReader {
 
 		if (!fgTags.contains(tag))
 			return '<' + html + '>';
-
 
 		if ("pre".equals(html)) { //$NON-NLS-1$
 			startPreformattedText();
@@ -221,6 +227,17 @@ public class HTML2TextReader extends SubstitutionTextReader {
 
 		if ("/dd".equals(html)) //$NON-NLS-1$
 			return LINE_DELIM;
+
+		if ("head".equals(html) && !fHeaderDetected) { //$NON-NLS-1$
+			fHeaderDetected= true;
+			fIgnore= true;
+			return EMPTY_STRING;
+		}
+
+		if ("/head".equals(html) && fHeaderDetected && fIgnore) { //$NON-NLS-1$
+			fIgnore= false;
+			return EMPTY_STRING;
+		}
 
 		return EMPTY_STRING;
 	}
