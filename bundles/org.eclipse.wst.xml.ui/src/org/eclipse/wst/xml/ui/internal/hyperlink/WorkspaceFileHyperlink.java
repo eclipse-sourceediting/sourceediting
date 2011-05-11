@@ -12,7 +12,6 @@ package org.eclipse.wst.xml.ui.internal.hyperlink;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.osgi.util.NLS;
@@ -88,8 +87,7 @@ class WorkspaceFileHyperlink implements IHyperlink {
 	}
 
 	private String getEditorLabel() throws CoreException {
-		final IContentDescription description = fFile.getContentDescription();
-		final IEditorDescriptor defaultEditor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(fFile.getName(), description != null ? description.getContentType() : null);
+		final IEditorDescriptor defaultEditor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(fFile.getName(), fFile.getContentDescription().getContentType());
 		return defaultEditor != null ? defaultEditor.getLabel() : null;
 	}
 
