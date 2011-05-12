@@ -61,18 +61,32 @@
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeSet;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.xpath2.api.CollationProvider;
+import org.eclipse.wst.xml.xpath2.api.Function;
+import org.eclipse.wst.xml.xpath2.api.StaticContext;
+import org.eclipse.wst.xml.xpath2.api.StaticVariableResolver;
+import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
+import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.Engine;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.StaticError;
@@ -102,7 +116,83 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	}
 
+	public void testNulVarNamespacePrefix() throws Exception {
+		//Bug 345326
+		String xpath = "for $a in //* return $a";
+		new Engine().parseExpression(xpath, new StaticContext() {
 
+			public boolean isXPath1Compatible() {
+				return false;
+			}
+
+			public StaticVariableResolver getInScopeVariables() {
+				return null;
+			}
+
+			public TypeDefinition getInitialContextType() {
+				return null;
+			}
+
+			public Map getFunctionLibraries() {
+				return null;
+			}
+
+			public CollationProvider getCollationProvider() {
+				return null;
+			}
+
+			public URI getBaseUri() {
+				return null;
+			}
+
+			public ItemType getDocumentType(URI documentUri) {
+				return null;
+			}
+
+			public NamespaceContext getNamespaceContext() {
+				return new NamespaceContext() {
+					public String getNamespaceURI(String arg0) {
+						if (arg0 == null) throw new IllegalArgumentException("#fail");
+						return XMLConstants.NULL_NS_URI;
+					}
+					public String getPrefix(String arg0) {
+						if (arg0 == null) throw new IllegalArgumentException("#fail");
+						return XMLConstants.DEFAULT_NS_PREFIX;
+					}
+					public Iterator getPrefixes(String arg0) {
+						if (arg0 == null) throw new IllegalArgumentException("#fail");
+						return Collections.emptyList().iterator();
+					}
+				};
+			}
+
+			public String getDefaultNamespace() {
+				return XMLConstants.NULL_NS_URI;
+			}
+
+			public String getDefaultFunctionNamespace() {
+				return null;
+			}
+
+			public TypeModel getTypeModel() {
+				return null;
+			}
+
+			public Function resolveFunction(QName name, int arity) {
+				return null;
+			}
+
+			public TypeDefinition getCollectionType(String collectionName) {
+				return null;
+			}
+
+			public TypeDefinition getDefaultCollectionType() {
+				return null;
+			}
+			
+		});
+	}
+	
 	public void testNamesWhichAreKeywords() throws Exception {
 		// Bug 273719
 		URL fileURL = bundle.getEntry("/bugTestFiles/bug311480.xml");
@@ -2007,8 +2097,8 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// set up XPath default namespace in Dynamic Context
 		setupDynamicContext(schema);
-        setVariable("value",new XSString("2.5"));
 		addXPathDefaultNamespace("http://www.w3.org/2001/XMLSchema");
+        setVariable("value",new XSString("2.5"));
 
 		String xpath = "$value castable as double";
 		compileXPath(xpath);
@@ -2023,6 +2113,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 	
 	public void testExprParsingBeginnigWithRootNode_bug338494() throws Exception {
 		// Bug 338494
+		boolean useNew = useNewApi;
+		try {
+		useNewApi = false;
 		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
@@ -2099,6 +2192,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		   // test fails
 		   assertTrue(false);
 		}
+		} finally { useNewApi = useNew; }		
 	}
 
 	public void testExprParsingBeginnigWithRootNode_new_API_bug338494() throws Exception {
