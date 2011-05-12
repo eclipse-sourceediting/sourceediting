@@ -122,7 +122,11 @@
             <uri
                 name="http://schemas.xmlsoap.org/soap/envelope/"
                 uri="xsd/soapenv.xsd" />
-
+                
+            <system
+                  systemId="http://schemas.xmlsoap.org/soap/envelope/"
+                  uri="xsd/soapenv.xsd">
+            </system>
 
             <!-- these are removed from the catalog, since they are -not- 
             the same as those in the xsd.ui plugin, which 
