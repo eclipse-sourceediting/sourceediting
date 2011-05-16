@@ -256,7 +256,7 @@ class ProjectDescription {
 		boolean isMappedInWebXML;
 		boolean isConsistent = false;
 		IPath location;
-		List urlRecords;
+		Collection urlRecords;
 
 		public boolean equals(Object obj) {
 			if (!(obj instanceof JarRecord))
@@ -297,7 +297,7 @@ class ProjectDescription {
 			return info.uri;
 		}
 
-		public List getURLRecords() {
+		public Collection getURLRecords() {
 			return urlRecords;
 		}
 
@@ -306,8 +306,8 @@ class ProjectDescription {
 			s.append(location);
 			if (urlRecords.size() > 0) {
 				s.append('\n');//$NON-NLS-1$ 
-				for (int i = 0; i < urlRecords.size(); i++) {
-					s.append(urlRecords.get(i));
+				for (Iterator it = urlRecords.iterator(); it.hasNext();) {
+					s.append(it.next());
 					s.append('\n');//$NON-NLS-1$ 
 				}
 			}
@@ -378,7 +378,7 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof TaglibInfo))
 				return false;
-			return ((TaglibInfo) obj).jspVersion == jspVersion && ((TaglibInfo) obj).description.equals(description) && ((TaglibInfo) obj).largeIcon.equals(largeIcon) && ((TaglibInfo) obj).shortName.equals(shortName) && ((TaglibInfo) obj).smallIcon.equals(smallIcon) && ((TaglibInfo) obj).tlibVersion.equals(tlibVersion) && ((TaglibInfo) obj).uri.equals(uri);
+			return ((TaglibInfo) obj).jspVersion.equals(jspVersion) && ((TaglibInfo) obj).description.equals(description) && ((TaglibInfo) obj).largeIcon.equals(largeIcon) && ((TaglibInfo) obj).shortName.equals(shortName) && ((TaglibInfo) obj).smallIcon.equals(smallIcon) && ((TaglibInfo) obj).tlibVersion.equals(tlibVersion) && ((TaglibInfo) obj).uri.equals(uri);
 		}
 
 		public String getDescription() {
@@ -479,6 +479,10 @@ class ProjectDescription {
 			if (!(obj instanceof URLRecord))
 				return false;
 			return ((URLRecord) obj).baseLocation.equals(baseLocation) && ((URLRecord) obj).url.equals(url) && ((URLRecord) obj).info.equals(info);
+		}
+
+		public int hashCode() {
+			return baseLocation.hashCode() + url.hashCode() + (isExported ? 1 : 0);
 		}
 
 		public String getBaseLocation() {
@@ -929,7 +933,7 @@ class ProjectDescription {
 				record = new JarRecord();
 				record.info = new TaglibInfo();
 				record.location = new Path(fileLocation);
-				record.urlRecords = new ArrayList();
+				record.urlRecords = new HashSet(0);
 				fSharedJarRecords.put(fileLocation, record);
 			}
 			return record;
@@ -2011,11 +2015,11 @@ class ProjectDescription {
 
 										InputStream tldStream = JarUtilities.getInputStream(urlRecord.url);
 										if(tldStream != null) {
-											libraryRecord.urlRecords.add(urlRecord);
 											TaglibInfo info = extractInfo(urlRecord.url.toString(), tldStream);
 											if (info != null) {
 												urlRecord.info = info;
 											}
+											libraryRecord.urlRecords.add(urlRecord);
 											try {
 												tldStream.close();
 											}
