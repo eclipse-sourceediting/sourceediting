@@ -1634,10 +1634,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 		yybegin(ST_ABORT_EMBEDDED);
 		char c = yy_buffer[yy_markedPos - 1];
 		if (fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_DQUOTED && c == '\"') {
-			return XML_TAG_ATTRIBUTE_VALUE_DQUOTE;
+			return isJspTag() ? JSP_TAG_ATTRIBUTE_VALUE_DQUOTE : XML_TAG_ATTRIBUTE_VALUE_DQUOTE;
 		}		
 		if (fStateStack.peek()==ST_XML_ATTRIBUTE_VALUE_SQUOTED && c == '\'') {
-			return XML_TAG_ATTRIBUTE_VALUE_SQUOTE;
+			return isJspTag() ? JSP_TAG_ATTRIBUTE_VALUE_SQUOTE : XML_TAG_ATTRIBUTE_VALUE_SQUOTE;
 		}
 		yypushback(yylength()-1);
 		return XML_TAG_ATTRIBUTE_VALUE;
