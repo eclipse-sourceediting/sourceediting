@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -197,6 +197,25 @@ public class JSPTokenizerTest extends TestCase {
 			assertNotNull("This region should exist", region);
 			assertEquals("The region did not have the expected start location", 7, region.getStart());
 			assertEquals("The region did not have the expected length", 4, region.getLength());
+		}
+		catch (IOException e) {
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
+		}
+	}
+
+	public void test343387() {
+		final String input = "<h:commandButton value=\"<\"/>";
+		final String[] regions = {DOMRegionContext.XML_TAG_OPEN, DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS, DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMRegionContext.XML_EMPTY_TAG_CLOSE};
+		try {
+			reset(new StringReader(input));
+			ITextRegion region = null;
+			int i = 0;
+			while ((region = tokenizer.getNextToken()) != null) {
+				assertEquals("Region [" + i + "] does not match.", regions[i++], region.getType());
+			}
+			assertEquals("Not enough regions found.", regions.length, i);
 		}
 		catch (IOException e) {
 			StringWriter s = new StringWriter();
