@@ -1,0 +1,157 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.api</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.api</strong></font><br>
+               Class StaticContext</h2><br><hr><pre>public class <strong>StaticContext</strong>
+extends </pre>interface to static context<p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public java.net.URI</code></td><td width="" align="left"><code><a href="#method_getBaseUri">getBaseUri</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Base URI. This is an absolute URI, used when necessary in
+ the resolution of relative URIs (for example, by the fn:resolve-uri
+ function.)] The URI value is whitespace normalized according to the
+ rules for the xs:anyURI type in [XML Schema].</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.CollationProvider</code></td><td width="" align="left"><code><a href="#method_getCollationProvider">getCollationProvider</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Statically known collations. This is an
+ implementation-defined set of (URI, collation) pairs. It defines the
+ names of the collations that are available for use in processing
+ expressions.]</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></td><td width="" align="left"><code><a href="#method_getCollectionType">getCollectionType</a>(java.lang.String collectionName)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Statically known collections. This is a mapping from
+ strings onto types. The string represents the absolute URI of a
+ resource that is potentially available using the fn:collection
+ function. The type is the type of the sequence of nodes that would
+ result from calling the fn:collection function with this URI as its
+ argument.] If the argument to fn:collection is a string literal that is
+ not present in statically known collections, then the static type of
+ fn:collection is node()*. Note: The purpose of the statically known
+ collections is to provide static type information, not to determine
+ which collections are available. A URI need not be found in the
+ statically known collections to be accessed using fn:collection.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></td><td width="" align="left"><code><a href="#method_getDefaultCollectionType">getDefaultCollectionType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Statically known default collection type. This is the type
+ of the sequence of nodes that would result from calling the
+ fn:collection function with no arguments.] Unless initialized to some
+ other value by an implementation, the value of statically known default
+ collection type is node()*.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_getDefaultFunctionNamespace">getDefaultFunctionNamespace</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Definition: Default function namespace. This is a namespace URI or
+ "none". The namespace URI, if present, is used for any unprefixed QName
+ appearing in a position where a function name is expected.] The URI
+ value is whitespace normalized according to the rules for the xs:anyURI
+ type in [XML Schema].</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_getDefaultNamespace">getDefaultNamespace</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Default element/type namespace. This is a namespace URI or
+ "none". The namespace URI, if present, is used for any unprefixed QName
+ appearing in a position where an element or type name is expected.] The
+ URI value is whitespace normalized according to the rules for the
+ xs:anyURI type in [XML Schema].</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.ItemType</code></td><td width="" align="left"><code><a href="#method_getDocumentType">getDocumentType</a>(java.net.URI documentUri)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Statically known documents. This is a mapping from strings
+ onto types. The string represents the absolute URI of a resource that
+ is potentially available using the fn:doc function. The type is the
+ static type of a call to fn:doc with the given URI as its literal
+ argument. ] If the argument to fn:doc is a string literal that is not
+ present in statically known documents, then the static type of fn:doc
+ is document-node()?. Note: The purpose of the statically known
+ documents is to provide static type information, not to determine which
+ documents are available. A URI need not be found in the statically
+ known documents to be accessed using fn:doc.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.Map</code></td><td width="" align="left"><code><a href="#method_getFunctionLibraries">getFunctionLibraries</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Function signatures. This component defines the set of
+ functions that are available to be called from within an expression.
+ Each function is uniquely identified by its expanded QName and its
+ arity (number of parameters).] In addition to the name and arity, each
+ function signature specifies the static types of the function
+ parameters and result. The function signatures include the signatures
+ of constructor functions, which are discussed in 3.10.4 Constructor
+ Functions.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></td><td width="" align="left"><code><a href="#method_getInitialContextType">getInitialContextType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Context item static type. This component defines the
+ static type of the context item within the scope of a given
+ expression.]</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.StaticVariableResolver</code></td><td width="" align="left"><code><a href="#method_getInScopeVariables">getInScopeVariables</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: In-scope variables. This is a set of (expanded QName,
+ type) pairs. It defines the set of variables that are available for
+ reference within an expression. The expanded QName is the name of the
+ variable, and the type is the static type of the variable.] An
+ expression that binds a variable (such as a for, some, or every
+ expression) extends the in-scope variables of its subexpressions with
+ the new bound variable and its type.</td></tr><tr valign="top"><td width="20%" align="right"><code>public javax.xml.namespace.NamespaceContext</code></td><td width="" align="left"><code><a href="#method_getNamespaceContext">getNamespaceContext</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Statically known namespaces. This is a set of (prefix,
+ URI) pairs that define all the namespaces that are known during static
+ processing of a given expression.] The URI value is whitespace
+ normalized according to the rules for the xs:anyURI type in [XML
+ Schema]. Note the difference between in-scope namespaces, which is a
+ dynamic property of an element node, and statically known namespaces,
+ which is a static property of an expression.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel</code></td><td width="" align="left"><code><a href="#method_getTypeModel">getTypeModel</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: In-scope schema definitions. This is a generic term for
+ all the element declarations, attribute declarations, and schema type
+ definitions that are in scope during processing of an expression.]</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_isXPath1Compatible">isXPath1Compatible</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               XPath 1.0 compatibility mode.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.Function</code></td><td width="" align="left"><code><a href="#method_resolveFunction">resolveFunction</a>(javax.xml.namespace.QName name
+         ,
+      int arity)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               is the function declared/available in the source context?</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getBaseUri">getBaseUri</a></h2><p><code>public java.net.URI <strong>getBaseUri</strong>()</code></p><p>[Definition: Base URI. This is an absolute URI, used when necessary in
+ the resolution of relative URIs (for example, by the fn:resolve-uri
+ function.)] The URI value is whitespace normalized according to the
+ rules for the xs:anyURI type in [XML Schema].</p><h3>Returns</h3><p><code>java.net.URI</code></p><hr><h2><a name="method_getCollationProvider">getCollationProvider</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.CollationProvider <strong>getCollationProvider</strong>()</code></p><p>[Definition: Statically known collations. This is an
+ implementation-defined set of (URI, collation) pairs. It defines the
+ names of the collations that are available for use in processing
+ expressions.]</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.CollationProvider</code></p><hr><h2><a name="method_getCollectionType">getCollectionType</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition <strong>getCollectionType</strong>(java.lang.String collectionName)</code></p><p>[Definition: Statically known collections. This is a mapping from
+ strings onto types. The string represents the absolute URI of a
+ resource that is potentially available using the fn:collection
+ function. The type is the type of the sequence of nodes that would
+ result from calling the fn:collection function with this URI as its
+ argument.] If the argument to fn:collection is a string literal that is
+ not present in statically known collections, then the static type of
+ fn:collection is node()*. Note: The purpose of the statically known
+ collections is to provide static type information, not to determine
+ which collections are available. A URI need not be found in the
+ statically known collections to be accessed using fn:collection.</p><h3>Parameters</h3><p><code>collectionName</code></p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></p><hr><h2><a name="method_getDefaultCollectionType">getDefaultCollectionType</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition <strong>getDefaultCollectionType</strong>()</code></p><p>[Definition: Statically known default collection type. This is the type
+ of the sequence of nodes that would result from calling the
+ fn:collection function with no arguments.] Unless initialized to some
+ other value by an implementation, the value of statically known default
+ collection type is node()*.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></p><hr><h2><a name="method_getDefaultFunctionNamespace">getDefaultFunctionNamespace</a></h2><p><code>public java.lang.String <strong>getDefaultFunctionNamespace</strong>()</code></p><p>Definition: Default function namespace. This is a namespace URI or
+ "none". The namespace URI, if present, is used for any unprefixed QName
+ appearing in a position where a function name is expected.] The URI
+ value is whitespace normalized according to the rules for the xs:anyURI
+ type in [XML Schema].</p><h3>Returns</h3><p><code>java.lang.String</code> - The default function namespace</p><hr><h2><a name="method_getDefaultNamespace">getDefaultNamespace</a></h2><p><code>public java.lang.String <strong>getDefaultNamespace</strong>()</code></p><p>[Definition: Default element/type namespace. This is a namespace URI or
+ "none". The namespace URI, if present, is used for any unprefixed QName
+ appearing in a position where an element or type name is expected.] The
+ URI value is whitespace normalized according to the rules for the
+ xs:anyURI type in [XML Schema].</p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_getDocumentType">getDocumentType</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.ItemType <strong>getDocumentType</strong>(java.net.URI documentUri)</code></p><p>[Definition: Statically known documents. This is a mapping from strings
+ onto types. The string represents the absolute URI of a resource that
+ is potentially available using the fn:doc function. The type is the
+ static type of a call to fn:doc with the given URI as its literal
+ argument. ] If the argument to fn:doc is a string literal that is not
+ present in statically known documents, then the static type of fn:doc
+ is document-node()?. Note: The purpose of the statically known
+ documents is to provide static type information, not to determine which
+ documents are available. A URI need not be found in the statically
+ known documents to be accessed using fn:doc.</p><h3>Parameters</h3><p><code>documentUri</code></p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.ItemType</code></p><hr><h2><a name="method_getFunctionLibraries">getFunctionLibraries</a></h2><p><code>public java.util.Map <strong>getFunctionLibraries</strong>()</code></p><p>[Definition: Function signatures. This component defines the set of
+ functions that are available to be called from within an expression.
+ Each function is uniquely identified by its expanded QName and its
+ arity (number of parameters).] In addition to the name and arity, each
+ function signature specifies the static types of the function
+ parameters and result. The function signatures include the signatures
+ of constructor functions, which are discussed in 3.10.4 Constructor
+ Functions.</p><h3>Returns</h3><p><code>java.util.Map</code></p><hr><h2><a name="method_getInitialContextType">getInitialContextType</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition <strong>getInitialContextType</strong>()</code></p><p>[Definition: Context item static type. This component defines the
+ static type of the context item within the scope of a given
+ expression.]</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></p><hr><h2><a name="method_getInScopeVariables">getInScopeVariables</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.StaticVariableResolver <strong>getInScopeVariables</strong>()</code></p><p>[Definition: In-scope variables. This is a set of (expanded QName,
+ type) pairs. It defines the set of variables that are available for
+ reference within an expression. The expanded QName is the name of the
+ variable, and the type is the static type of the variable.] An
+ expression that binds a variable (such as a for, some, or every
+ expression) extends the in-scope variables of its subexpressions with
+ the new bound variable and its type.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.StaticVariableResolver</code></p><hr><h2><a name="method_getNamespaceContext">getNamespaceContext</a></h2><p><code>public javax.xml.namespace.NamespaceContext <strong>getNamespaceContext</strong>()</code></p><p>[Definition: Statically known namespaces. This is a set of (prefix,
+ URI) pairs that define all the namespaces that are known during static
+ processing of a given expression.] The URI value is whitespace
+ normalized according to the rules for the xs:anyURI type in [XML
+ Schema]. Note the difference between in-scope namespaces, which is a
+ dynamic property of an element node, and statically known namespaces,
+ which is a static property of an expression.</p><h3>Returns</h3><p><code>javax.xml.namespace.NamespaceContext</code> - The statically known namespace context</p><hr><h2><a name="method_getTypeModel">getTypeModel</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel <strong>getTypeModel</strong>()</code></p><p>[Definition: In-scope schema definitions. This is a generic term for
+ all the element declarations, attribute declarations, and schema type
+ definitions that are in scope during processing of an expression.]</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel</code> - A type model which covers the</p><hr><h2><a name="method_isXPath1Compatible">isXPath1Compatible</a></h2><p><code>public boolean <strong>isXPath1Compatible</strong>()</code></p><p>XPath 1.0 compatibility mode.</p><h3>Returns</h3><p><code>boolean</code> - true if rules for backward compatibility with XPath Version 1.0          are in effect; otherwise false.</p><hr><h2><a name="method_resolveFunction">resolveFunction</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.Function <strong>resolveFunction</strong>(javax.xml.namespace.QName name
+         ,
+      int arity)</code></p><p>is the function declared/available in the source context?</p><h3>Parameters</h3><p><code>name</code> - is the qname name</p><p><code>arity</code> - integer of qname</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.Function</code> - boolean</p><hr></body></html>

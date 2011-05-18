@@ -1,13 +1,19 @@
 <html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.processor.internal</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.processor.internal</strong></font><br>
                Class SelfAxis</h2><br><hr><pre>public class <strong>SelfAxis</strong>
-extends org.eclipse.wst.xml.xpath2.processor.internal.ForwardAxis</pre>Create a result sequence that contains the context node<hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_SelfAxis">SelfAxis</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.processor.ResultSequence</code></td><td width="" align="left"><code><a href="#method_iterate">iterate</a>(org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType node
+extends org.eclipse.wst.xml.xpath2.processor.internal.ForwardAxis</pre>Create a result sequence that contains the context node<hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_SelfAxis">SelfAxis</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_iterate">iterate</a>(org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType node
          ,
-      org.eclipse.wst.xml.xpath2.processor.DynamicContext dc)</code><br>
+      org.eclipse.wst.xml.xpath2.api.ResultBuffer copyInto
+         ,
+      org.w3c.dom.Node limitNode)</code><br>
                &nbsp;&nbsp;&nbsp;&nbsp;
-               create new rs and add the context node to it</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+               create new rs and add the context node to it</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_name">name</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
                   Constructor Detail
                </h2></td></tr></table><h2><a name="con_SelfAxis">SelfAxis</a></h2><p><code>public <strong>SelfAxis</strong>()</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
                   Methods Detail
-               </h2></td></tr></table><h2><a name="method_iterate">iterate</a></h2><p><code>public org.eclipse.wst.xml.xpath2.processor.ResultSequence <strong>iterate</strong>(org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType node
+               </h2></td></tr></table><h2><a name="method_iterate">iterate</a></h2><p><code>public void <strong>iterate</strong>(org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType node
          ,
-      org.eclipse.wst.xml.xpath2.processor.DynamicContext dc)</code></p><p>create new rs and add the context node to it</p><h3>Parameters</h3><p><code>node</code> - is the node type</p><p><code>dc</code> - is the dynamic context</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.processor.ResultSequence</code> - rs containing node</p><hr></body></html>
+      org.eclipse.wst.xml.xpath2.api.ResultBuffer copyInto
+         ,
+      org.w3c.dom.Node limitNode)</code></p><p>create new rs and add the context node to it</p><h3>Parameters</h3><p><code>node</code> - is the node type</p><p><code>copyInto</code></p><p><code>limitNode</code></p><hr><h2><a name="method_name">name</a></h2><p><code>public java.lang.String <strong>name</strong>()</code></p><p></p><h3>Returns</h3><p><code>java.lang.String</code></p><hr></body></html>

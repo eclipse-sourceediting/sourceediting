@@ -1,0 +1,29 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.api.typesystem</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.api.typesystem</strong></font><br>
+               Class PrimitiveType</h2><br><hr><pre>public class <strong>PrimitiveType</strong>
+extends </pre><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.Item</code></td><td width="" align="left"><code><a href="#method_construct">construct</a>(java.lang.Object content)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               validate a given string against this simple type.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.Class</code></td><td width="" align="left"><code><a href="#method_getInterfaceClass">getInterfaceClass</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.Class</code></td><td width="" align="left"><code><a href="#method_getNativeType">getNativeType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_isEqual">isEqual</a>(java.lang.Object value1
+         ,
+      java.lang.Object value2)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Check whether two actual values are equal.</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_isIDType">isIDType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Check whether this type is or is derived from ID.
+ REVISIT: this method makes ID special, which is not a good design.
+          but since ID is not a primitive, there doesn't seem to be a
+          clean way of doing it except to define special method like this.</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_validate">validate</a>(java.lang.String content)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               validate a given string against this simple type.</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_validateNative">validateNative</a>(java.lang.Object content)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               validate a given string against this simple type.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_construct">construct</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.Item <strong>construct</strong>(java.lang.Object content)</code></p><p>validate a given string against this simple type.</p><h3>Parameters</h3><p><code>content</code> - the string value that needs to be validated</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.Item</code> - the actual value (QName, Boolean) of the string value</p><hr><h2><a name="method_getInterfaceClass">getInterfaceClass</a></h2><p><code>public java.lang.Class <strong>getInterfaceClass</strong>()</code></p><p></p><h3>Returns</h3><p><code>java.lang.Class</code> - the actual value (QName, Boolean) of the string value</p><hr><h2><a name="method_getNativeType">getNativeType</a></h2><p><code>public java.lang.Class <strong>getNativeType</strong>()</code></p><p></p><h3>Returns</h3><p><code>java.lang.Class</code> - The expected native type (class or interface) to expect when calling getValue.</p><hr><h2><a name="method_isEqual">isEqual</a></h2><p><code>public boolean <strong>isEqual</strong>(java.lang.Object value1
+         ,
+      java.lang.Object value2)</code></p><p>Check whether two actual values are equal.</p><h3>Parameters</h3><p><code>value1</code> - the first value</p><p><code>value2</code> - the second value</p><h3>Returns</h3><p><code>boolean</code> - true if the two value are equal</p><hr><h2><a name="method_isIDType">isIDType</a></h2><p><code>public boolean <strong>isIDType</strong>()</code></p><p>Check whether this type is or is derived from ID.
+ REVISIT: this method makes ID special, which is not a good design.
+          but since ID is not a primitive, there doesn't seem to be a
+          clean way of doing it except to define special method like this.</p><h3>Returns</h3><p><code>boolean</code> - whether this simple type is or is derived from ID.</p><hr><h2><a name="method_validate">validate</a></h2><p><code>public boolean <strong>validate</strong>(java.lang.String content)</code></p><p>validate a given string against this simple type.</p><h3>Parameters</h3><p><code>content</code> - the string value that needs to be validated</p><h3>Returns</h3><p><code>boolean</code> - the actual value (QName, Boolean) of the string value</p><hr><h2><a name="method_validateNative">validateNative</a></h2><p><code>public boolean <strong>validateNative</strong>(java.lang.Object content)</code></p><p>validate a given string against this simple type.</p><h3>Parameters</h3><p><code>content</code> - the string value that needs to be validated</p><h3>Returns</h3><p><code>boolean</code> - the actual value (QName, Boolean) of the string value</p><hr></body></html>

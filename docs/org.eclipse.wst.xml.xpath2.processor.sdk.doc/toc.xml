@@ -1,6 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<toc label="XPath 2.0 - PsychoPath Processor SDK Documentation">
+<?xml version="1.0" encoding="UTF-8"?><toc label="XSL Tools SDK Documentation">
    <topic label="Reference">
+      <topic label="org.eclipse.wst.xml.xpath2.api">
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.AtomicItemType.html" label="org.eclipse.wst.xml.xpath2.api.AtomicItemType"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.CollationProvider.html" label="org.eclipse.wst.xml.xpath2.api.CollationProvider"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.DynamicContext.html" label="org.eclipse.wst.xml.xpath2.api.DynamicContext"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.EvaluationContext.html" label="org.eclipse.wst.xml.xpath2.api.EvaluationContext"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.Function.html" label="org.eclipse.wst.xml.xpath2.api.Function"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.FunctionLibrary.html" label="org.eclipse.wst.xml.xpath2.api.FunctionLibrary"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.Item.html" label="org.eclipse.wst.xml.xpath2.api.Item"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.Match.html" label="org.eclipse.wst.xml.xpath2.api.Match"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.ResultBuffer.html" label="org.eclipse.wst.xml.xpath2.api.ResultBuffer"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.ResultBuffer.SingleResultSequence.html" label="org.eclipse.wst.xml.xpath2.api.ResultBuffer.SingleResultSequence"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.ResultBuffer.ArrayResultSequence.html" label="org.eclipse.wst.xml.xpath2.api.ResultBuffer.ArrayResultSequence"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.ResultBuffer.SingleResultSequence.html" label="org.eclipse.wst.xml.xpath2.api.ResultBuffer.SingleResultSequence"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.ResultBuffer.ArrayResultSequence.html" label="org.eclipse.wst.xml.xpath2.api.ResultBuffer.ArrayResultSequence"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.ResultSequence.html" label="org.eclipse.wst.xml.xpath2.api.ResultSequence"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.StaticContext.html" label="org.eclipse.wst.xml.xpath2.api.StaticContext"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.StaticVariableResolver.html" label="org.eclipse.wst.xml.xpath2.api.StaticVariableResolver"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.XPath2Engine.html" label="org.eclipse.wst.xml.xpath2.api.XPath2Engine"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.XPath2Expression.html" label="org.eclipse.wst.xml.xpath2.api.XPath2Expression"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.XPath2Pattern.html" label="org.eclipse.wst.xml.xpath2.api.XPath2Pattern"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.XPath2PatternSet.html" label="org.eclipse.wst.xml.xpath2.api.XPath2PatternSet"/>
+      </topic>
+      <topic label="org.eclipse.wst.xml.xpath2.api.typesystem">
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.typesystem.ComplexTypeDefinition.html" label="org.eclipse.wst.xml.xpath2.api.typesystem.ComplexTypeDefinition"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.typesystem.ItemType.html" label="org.eclipse.wst.xml.xpath2.api.typesystem.ItemType"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.typesystem.NodeItemType.html" label="org.eclipse.wst.xml.xpath2.api.typesystem.NodeItemType"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.typesystem.PrimitiveType.html" label="org.eclipse.wst.xml.xpath2.api.typesystem.PrimitiveType"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition.html" label="org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition.html" label="org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel.html" label="org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel"/>
+      </topic>
       <topic label="org.eclipse.wst.xml.xpath2.processor">
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.CollationProvider.html" label="org.eclipse.wst.xml.xpath2.processor.CollationProvider"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DOMBuilder.html" label="org.eclipse.wst.xml.xpath2.processor.DOMBuilder"/>
@@ -8,14 +38,16 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DOMLoaderException.html" label="org.eclipse.wst.xml.xpath2.processor.DOMLoaderException"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext.html" label="org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.html" label="org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.DummyError.html" label="org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.DummyError"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.Pair.html" label="org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.Pair"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.DummyError.html" label="org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.DummyError"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.VariableScope.html" label="org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.VariableScope"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.Pair.html" label="org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.Pair"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.VariableScope.html" label="org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator.VariableScope"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DynamicContext.html" label="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.DynamicError.html" label="org.eclipse.wst.xml.xpath2.processor.DynamicError"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.Engine.html" label="org.eclipse.wst.xml.xpath2.processor.Engine"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.Evaluator.html" label="org.eclipse.wst.xml.xpath2.processor.Evaluator"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.JFlexCupParser.html" label="org.eclipse.wst.xml.xpath2.processor.JFlexCupParser"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.PsychoPathTypeHelper.html" label="org.eclipse.wst.xml.xpath2.processor.PsychoPathTypeHelper"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.ResultSequence.html" label="org.eclipse.wst.xml.xpath2.processor.ResultSequence"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory.html" label="org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.StaticChecker.html" label="org.eclipse.wst.xml.xpath2.processor.StaticChecker"/>
@@ -23,7 +55,9 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.StaticError.html" label="org.eclipse.wst.xml.xpath2.processor.StaticError"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.html" label="org.eclipse.wst.xml.xpath2.processor.StaticNameResolver"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.DummyError.html" label="org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.DummyError"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.VariableScope.html" label="org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.VariableScope"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.DummyError.html" label="org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.DummyError"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.VariableScope.html" label="org.eclipse.wst.xml.xpath2.processor.StaticNameResolver.VariableScope"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.XPathException.html" label="org.eclipse.wst.xml.xpath2.processor.XPathException"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.XPathParser.html" label="org.eclipse.wst.xml.xpath2.processor.XPathParser"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.XPathParserException.html" label="org.eclipse.wst.xml.xpath2.processor.XPathParserException"/>
@@ -48,6 +82,7 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.DefaultStaticContext.html" label="org.eclipse.wst.xml.xpath2.processor.internal.DefaultStaticContext"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.DescendantAxis.html" label="org.eclipse.wst.xml.xpath2.processor.internal.DescendantAxis"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.DescendantOrSelfAxis.html" label="org.eclipse.wst.xml.xpath2.processor.internal.DescendantOrSelfAxis"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.DynamicContextAdapter.html" label="org.eclipse.wst.xml.xpath2.processor.internal.DynamicContextAdapter"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.Focus.html" label="org.eclipse.wst.xml.xpath2.processor.internal.Focus"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.FollowingAxis.html" label="org.eclipse.wst.xml.xpath2.processor.internal.FollowingAxis"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.FollowingSiblingAxis.html" label="org.eclipse.wst.xml.xpath2.processor.internal.FollowingSiblingAxis"/>
@@ -62,6 +97,7 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.SelfAxis.html" label="org.eclipse.wst.xml.xpath2.processor.internal.SelfAxis"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.SeqType.html" label="org.eclipse.wst.xml.xpath2.processor.internal.SeqType"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.StaticAttrNameError.html" label="org.eclipse.wst.xml.xpath2.processor.internal.StaticAttrNameError"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.StaticContextAdapter.html" label="org.eclipse.wst.xml.xpath2.processor.internal.StaticContextAdapter"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.StaticElemNameError.html" label="org.eclipse.wst.xml.xpath2.processor.internal.StaticElemNameError"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.StaticFunctNameError.html" label="org.eclipse.wst.xml.xpath2.processor.internal.StaticFunctNameError"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.StaticNameError.html" label="org.eclipse.wst.xml.xpath2.processor.internal.StaticNameError"/>
@@ -69,9 +105,9 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.StaticTypeNameError.html" label="org.eclipse.wst.xml.xpath2.processor.internal.StaticTypeNameError"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.StaticVarNameError.html" label="org.eclipse.wst.xml.xpath2.processor.internal.StaticVarNameError"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.TypeError.html" label="org.eclipse.wst.xml.xpath2.processor.internal.TypeError"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.XPath2Plugin.html" label="org.eclipse.wst.xml.xpath2.processor.internal.XPath2Plugin"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.XPathCup.html" label="org.eclipse.wst.xml.xpath2.processor.internal.XPathCup"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.CUP$XPathCup$actions.html" label="org.eclipse.wst.xml.xpath2.processor.internal.CUP$XPathCup$actions"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.XPathCupRestricted.html" label="org.eclipse.wst.xml.xpath2.processor.internal.XPathCupRestricted"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.XPathError.html" label="org.eclipse.wst.xml.xpath2.processor.internal.XPathError"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.XPathFlex.html" label="org.eclipse.wst.xml.xpath2.processor.internal.XPathFlex"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.XpathSym.html" label="org.eclipse.wst.xml.xpath2.processor.internal.XpathSym"/>
@@ -151,10 +187,13 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.CtrType.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.CtrType"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.DocType.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.DocType"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.NodeItemTypeImpl.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.NodeItemTypeImpl"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.PIType.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.PIType"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.QName.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.QName"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.SchemaTypeValueFactory.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.SchemaTypeValueFactory"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.SimpleAtomicItemTypeImpl.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.SimpleAtomicItemTypeImpl"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.TextType.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.TextType"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XPathDecimalFormat.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XPathDecimalFormat"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI"/>
@@ -181,20 +220,32 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSLong.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSLong"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSNCName.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSNCName"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSNMTOKEN.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSNMTOKEN"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSName.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSName"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSNegativeInteger.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSNegativeInteger"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSNonNegativeInteger.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSNonNegativeInteger"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSNonPositiveInteger.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSNonPositiveInteger"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSNormalizedString.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSNormalizedString"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSNotation.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSNotation"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSPositiveInteger.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSPositiveInteger"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSShort.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSShort"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSString.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSString"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSTime.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSTime"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSToken.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSToken"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSUnsignedByte.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSUnsignedByte"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSUnsignedInt.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSUnsignedInt"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSUnsignedLong.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSUnsignedLong"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSUnsignedShort.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSUnsignedShort"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration"/>
+      </topic>
+      <topic label="org.eclipse.wst.xml.xpath2.processor.internal.types.builtin">
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.AtomicTypeDefinition.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.AtomicTypeDefinition"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinAtomicTypeDefinition.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinAtomicTypeDefinition"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinListTypeDefinition.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinListTypeDefinition"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeDefinition.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeDefinition"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.BuiltinTypeLibrary"/>
+         <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.SingleItemSequence.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.builtin.SingleItemSequence"/>
       </topic>
       <topic label="org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined">
          <topic href="doc/html/org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary.html" label="org.eclipse.wst.xml.xpath2.processor.internal.types.userdefined.UserDefinedCtrLibrary"/>

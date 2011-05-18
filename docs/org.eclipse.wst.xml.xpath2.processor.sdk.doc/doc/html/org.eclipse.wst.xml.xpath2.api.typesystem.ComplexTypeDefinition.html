@@ -1,0 +1,57 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.api.typesystem</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.api.typesystem</strong></font><br>
+               Class ComplexTypeDefinition</h2><br><hr><pre>public class <strong>ComplexTypeDefinition</strong>
+extends </pre><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_CONTENT_ELEMENT">CONTENT_ELEMENT</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Represents an element-only content type. An element-only content type 
+ validates elements with children that conform to the supplied content 
+ model.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_CONTENT_EMPTY">CONTENT_EMPTY</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Represents an empty content type. A content type with the distinguished 
+ value empty validates elements with no character or element 
+ information item children.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_CONTENT_MIXED">CONTENT_MIXED</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Represents a mixed content type.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_CONTENT_SIMPLE">CONTENT_SIMPLE</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Represents a simple content type. A content type which is simple 
+ validates elements with character-only children.</td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_getAbstract">getAbstract</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [abstract]: a boolean. Complex types for which <code>abstract</code> is 
+ true must not be used as the type definition for the validation of 
+ element information items.</td></tr><tr valign="top"><td width="20%" align="right"><code>public short</code></td><td width="" align="left"><code><a href="#method_getContentType">getContentType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [content type]: one of empty (<code>CONTENTTYPE_EMPTY</code>), a simple 
+ type definition (<code>CONTENTTYPE_SIMPLE</code>), mixed (
+ <code>CONTENTTYPE_MIXED</code>), or element-only (
+ <code>CONTENTTYPE_ELEMENT</code>).</td></tr><tr valign="top"><td width="20%" align="right"><code>public short</code></td><td width="" align="left"><code><a href="#method_getDerivationMethod">getDerivationMethod</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [derivation method]: either <code>DERIVATION_EXTENSION</code>, 
+ <code>DERIVATION_RESTRICTION</code>, or <code>DERIVATION_NONE</code> 
+ (see <code>XSConstants</code>).</td></tr><tr valign="top"><td width="20%" align="right"><code>public short</code></td><td width="" align="left"><code><a href="#method_getProhibitedSubstitutions">getProhibitedSubstitutions</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [prohibited substitutions]: A subset of {extension, restriction} or 
+ <code>DERIVATION_NONE</code> represented as a bit flag (see 
+ <code>XSConstants</code>).</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition</code></td><td width="" align="left"><code><a href="#method_getSimpleType">getSimpleType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               A simple type definition corresponding to a simple content model, 
+ otherwise <code>null</code>.</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_isProhibitedSubstitution">isProhibitedSubstitution</a>(short restriction)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [prohibited substitutions]: a subset of {extension, restriction}</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_CONTENT_ELEMENT">CONTENT_ELEMENT</a></h2><p><code>public static  short <strong>CONTENT_ELEMENT</strong></code></p><table><tr><td>Represents an element-only content type. An element-only content type 
+ validates elements with children that conform to the supplied content 
+ model.</td></tr></table><hr><h2><a name="field_CONTENT_EMPTY">CONTENT_EMPTY</a></h2><p><code>public static  short <strong>CONTENT_EMPTY</strong></code></p><table><tr><td>Represents an empty content type. A content type with the distinguished 
+ value empty validates elements with no character or element 
+ information item children.</td></tr></table><hr><h2><a name="field_CONTENT_MIXED">CONTENT_MIXED</a></h2><p><code>public static  short <strong>CONTENT_MIXED</strong></code></p><table><tr><td>Represents a mixed content type.</td></tr></table><hr><h2><a name="field_CONTENT_SIMPLE">CONTENT_SIMPLE</a></h2><p><code>public static  short <strong>CONTENT_SIMPLE</strong></code></p><table><tr><td>Represents a simple content type. A content type which is simple 
+ validates elements with character-only children.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getAbstract">getAbstract</a></h2><p><code>public boolean <strong>getAbstract</strong>()</code></p><p>[abstract]: a boolean. Complex types for which <code>abstract</code> is 
+ true must not be used as the type definition for the validation of 
+ element information items.</p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_getContentType">getContentType</a></h2><p><code>public short <strong>getContentType</strong>()</code></p><p>[content type]: one of empty (<code>CONTENTTYPE_EMPTY</code>), a simple 
+ type definition (<code>CONTENTTYPE_SIMPLE</code>), mixed (
+ <code>CONTENTTYPE_MIXED</code>), or element-only (
+ <code>CONTENTTYPE_ELEMENT</code>).</p><h3>Returns</h3><p><code>short</code></p><hr><h2><a name="method_getDerivationMethod">getDerivationMethod</a></h2><p><code>public short <strong>getDerivationMethod</strong>()</code></p><p>[derivation method]: either <code>DERIVATION_EXTENSION</code>, 
+ <code>DERIVATION_RESTRICTION</code>, or <code>DERIVATION_NONE</code> 
+ (see <code>XSConstants</code>).</p><h3>Returns</h3><p><code>short</code></p><hr><h2><a name="method_getProhibitedSubstitutions">getProhibitedSubstitutions</a></h2><p><code>public short <strong>getProhibitedSubstitutions</strong>()</code></p><p>[prohibited substitutions]: A subset of {extension, restriction} or 
+ <code>DERIVATION_NONE</code> represented as a bit flag (see 
+ <code>XSConstants</code>).</p><h3>Returns</h3><p><code>short</code></p><hr><h2><a name="method_getSimpleType">getSimpleType</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition <strong>getSimpleType</strong>()</code></p><p>A simple type definition corresponding to a simple content model, 
+ otherwise <code>null</code>.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition</code></p><hr><h2><a name="method_isProhibitedSubstitution">isProhibitedSubstitution</a></h2><p><code>public boolean <strong>isProhibitedSubstitution</strong>(short restriction)</code></p><p>[prohibited substitutions]: a subset of {extension, restriction}</p><h3>Parameters</h3><p><code>restriction</code> - Extension or restriction constants (see     <code>XSConstants</code>).</p><h3>Returns</h3><p><code>boolean</code> - True if <code>restriction</code> is a prohibited substitution,     otherwise false.</p><hr></body></html>

@@ -1,0 +1,47 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.api.typesystem</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.api.typesystem</strong></font><br>
+               Class TypeDefinition</h2><br><hr><pre>public class <strong>TypeDefinition</strong>
+extends </pre><p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_DERIVATION_EXTENSION">DERIVATION_EXTENSION</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_DERIVATION_LIST">DERIVATION_LIST</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_DERIVATION_NONE">DERIVATION_NONE</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_DERIVATION_RESTRICTION">DERIVATION_RESTRICTION</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_DERIVATION_SUBSTITUTION">DERIVATION_SUBSTITUTION</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_DERIVATION_UNION">DERIVATION_UNION</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_derivedFrom">derivedFrom</a>(java.lang.String namespace
+         ,
+      java.lang.String name
+         ,
+      short derivationMethod)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_derivedFromType">derivedFromType</a>(org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition ancestorType
+         ,
+      short derivationMethod)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></td><td width="" align="left"><code><a href="#method_getBaseType">getBaseType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_getName">getName</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_getNamespace">getNamespace</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.Class</code></td><td width="" align="left"><code><a href="#method_getNativeType">getNativeType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getSimpleTypes">getSimpleTypes</a>(org.w3c.dom.Attr attr)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getSimpleTypes">getSimpleTypes</a>(org.w3c.dom.Element attr)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_DERIVATION_EXTENSION">DERIVATION_EXTENSION</a></h2><p><code>public static  short <strong>DERIVATION_EXTENSION</strong></code></p><hr><h2><a name="field_DERIVATION_LIST">DERIVATION_LIST</a></h2><p><code>public static  short <strong>DERIVATION_LIST</strong></code></p><hr><h2><a name="field_DERIVATION_NONE">DERIVATION_NONE</a></h2><p><code>public static  short <strong>DERIVATION_NONE</strong></code></p><hr><h2><a name="field_DERIVATION_RESTRICTION">DERIVATION_RESTRICTION</a></h2><p><code>public static  short <strong>DERIVATION_RESTRICTION</strong></code></p><hr><h2><a name="field_DERIVATION_SUBSTITUTION">DERIVATION_SUBSTITUTION</a></h2><p><code>public static  short <strong>DERIVATION_SUBSTITUTION</strong></code></p><hr><h2><a name="field_DERIVATION_UNION">DERIVATION_UNION</a></h2><p><code>public static  short <strong>DERIVATION_UNION</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_derivedFrom">derivedFrom</a></h2><p><code>public boolean <strong>derivedFrom</strong>(java.lang.String namespace
+         ,
+      java.lang.String name
+         ,
+      short derivationMethod)</code></p><p></p><h3>Parameters</h3><p><code>namespace</code></p><p><code>name</code></p><p><code>derivationMethod</code></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_derivedFromType">derivedFromType</a></h2><p><code>public boolean <strong>derivedFromType</strong>(org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition ancestorType
+         ,
+      short derivationMethod)</code></p><p></p><h3>Parameters</h3><p><code>ancestorType</code></p><p><code>derivationMethod</code></p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_getBaseType">getBaseType</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition <strong>getBaseType</strong>()</code></p><p></p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></p><hr><h2><a name="method_getName">getName</a></h2><p><code>public java.lang.String <strong>getName</strong>()</code></p><p></p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_getNamespace">getNamespace</a></h2><p><code>public java.lang.String <strong>getNamespace</strong>()</code></p><p></p><h3>Returns</h3><p><code>java.lang.String</code></p><hr><h2><a name="method_getNativeType">getNativeType</a></h2><p><code>public java.lang.Class <strong>getNativeType</strong>()</code></p><p></p><h3>Returns</h3><p><code>java.lang.Class</code></p><hr><h2><a name="method_getSimpleTypes">getSimpleTypes</a></h2><p><code>public java.util.List <strong>getSimpleTypes</strong>(org.w3c.dom.Attr attr)</code></p><p></p><h3>Parameters</h3><p><code>attr</code></p><h3>Returns</h3><p><code>java.util.List</code></p><hr><h2><a name="method_getSimpleTypes">getSimpleTypes</a></h2><p><code>public java.util.List <strong>getSimpleTypes</strong>(org.w3c.dom.Element attr)</code></p><p></p><h3>Parameters</h3><p><code>attr</code></p><h3>Returns</h3><p><code>java.util.List</code></p><hr></body></html>
