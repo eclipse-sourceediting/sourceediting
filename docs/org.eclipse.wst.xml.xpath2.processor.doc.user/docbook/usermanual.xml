@@ -1,423 +1,253 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<?xml version='1.0' ?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book>
-  <title>XPath 2.0 Processor User Manual</title>
-
-  <chapter id="Introduction">
-    <title>Introduction</title>
-
-    <para>What is PsychohPath? PsychoPath is a XPath 2.0 XML Schema Aware
-    processor. It is nearly fully compliant to the XPath 2.0 test suite. It is
-    a library that does not require eclipse to be used. Known adopters of
-    PsychoPath include the Xerces-J project for XML Schemas 1.1 assertion
-    support.</para>
-
-    <para>PsychoPath is the only known open-source java XPath 2.0 processor
-    that is fully schema aware. SAXON HE only supports the core functionality.
-    XML Schema awarness provides tighter static checking, and can be used to
-    help determine if certain operations can or should occur on an XML node.
-    For a detailed description of the PsychoPath's design please see the
-    <ulink url="/PsychoPathXPathProcessor/Design">design</ulink>
-    document.</para>
-
-    <section id="Getting_PsychoPath">
-      <title>Getting PsychoPath</title>
-
-      <para>Currently there is no standalone build of PsychoPath. However, you
-      can download the <ulink
-      url="http://download.eclipse.org/webtools/downloads/drops/R3.1/R-3.1-20090616035105/">WTP
-      WST 3.1</ulink> zip file, and use the
-      org.eclipse.wst.xml.xpath2.processor.jar file. This jar has no
-      dependencies on eclipse, and will work as a standard jar file. If you
-      are using an OSGI container, then this is treated as a standard OSGI
-      bundle.</para>
-
-      <tip>
-        <title>PsychoPath 1.1M1</title>
-
-        <para>PsychoPath 1.1M1 is also available to <ulink
-        url="http://download.eclipse.org/webtools/downloads/drops/R3.2/S-3.2M1b-20090814143519/">download</ulink>.
-        1.1M1 passes 96% of the XPath 2.0 test suite.</para>
-      </tip>
-
-      <para>Additional dependencies you currently need are:</para>
-
-      <itemizedlist>
-        <listitem>
-          <para>IBM ICU 4.0 or greater</para>
-        </listitem>
-
-        <listitem>
-          <para>Xerces 2.8.0 or greater</para>
-        </listitem>
-
-        <listitem>
-          <para>JavaCup 0.10 or greater.</para>
-        </listitem>
-      </itemizedlist>
-
-      <para>If using eclipse, these are all available from the Orbit project.
-      Others can find the necessary jars from their respective project
-      pages.</para>
-    </section>
-  </chapter>
-
-  <chapter id="How_to_feed_Psychopath_XPath_expressions">
-    <title>Using PsychoPath XPath 2.0 API</title>
-
-    <para>Since PsychoPath has been implemented as an external library and not
-    as a complete program, in order to use it, it needs to be accessed from
-    inside another program. To process XPath 2.0 expressions using PsychoPath
-    from another programs one needs to go through the following
-    process:</para>
-
-    <orderedlist>
-      <listitem>
-        <para>Load the XML document</para>
-      </listitem>
-
-      <listitem>
-        <para>Optionally validate the XML document</para>
-      </listitem>
-
-      <listitem>
-        <para>Initialize static and dynamic context in respect to the document
-        root</para>
-      </listitem>
-
-      <listitem>
-        <para>Parse the XPath 2.0 expression</para>
-      </listitem>
-
-      <listitem>
-        <para>Statically verify the XPath 2.0 expression</para>
-      </listitem>
-
-      <listitem>
-        <para>Evaluate the XPath 2.0 expression in respect to the XML
-        document</para>
-      </listitem>
-    </orderedlist>
-
-    <para>To give a better idea of how this process actually works, we’ll go
-    through an example of processing and evaluating the string expression
-    “Hello World!”. In this example the XML document that we load is called
-    “XPexample.xml”.</para>
-
-    <section id="Non-Schema_Aware">
-      <title>Non-Schema Aware</title>
-
-      <programlisting>/**
- * First load and optionally validate the XML document 
+	<title>usermanual</title>
+	<chapter id="Introduction">
+		<title>Introduction</title>
+		<para>What is PsychohPath?   PsychoPath is a XPath 2.0 XML Schema Aware processor.  It is nearly fully compliant to the XPath 2.0 test suite.  It is a library that does not require eclipse to be used.   Known adopters of PsychoPath include the Xerces-J project for XML Schemas 1.1 assertion support.</para>
+		<para>PsychoPath is the only known open-source java XPath 2.0 processor that is fully schema aware.   SAXON HE only supports the core functionality.   XML Schema awarness provides tighter static checking, and can be used to help determine if certain operations can or should occur on an XML node.   For a detailed description of the PsychoPath's design please see the 
+			<ulink url="/wiki/PsychoPathXPathProcessor/Design">design</ulink> document.
+		</para>
+		<section id="Getting_PsychoPath">
+			<title>Getting PsychoPath</title>
+			<para>Standalone jars are only available through nightly builds.  However, you can download the current WTP builds, and use the org.eclipse.wst.xml.xpath2.processor.jar file.   This jar has no dependencies on eclipse, and will work as a standard jar file.  If you are using an OSGI container, then this is treated as a standard OSGI bundle.</para>
+			<para>Additional dependencies you currently need are:</para>
+			<itemizedlist>
+				<listitem>
+					<para>IBM ICU 3.8</para>
+				</listitem>
+				<listitem>
+					<para>Xerces 2.8.0 or greater</para>
+				</listitem>
+				<listitem>
+					<para>JavaCup 0.10 or greater.</para>
+				</listitem>
+			</itemizedlist>
+			<para>These are all available from the 
+				<ulink url="http://download.eclipse.org/tools/orbit/downloads/">Orbit project.</ulink>
+			</para>
+		</section>
+	</chapter>
+	<chapter id="How_to_feed_Psychopath_XPath_expressions">
+		<title>How to feed Psychopath XPath expressions</title>
+		<para>Since PsychoPath has been implemented as an external library and not as a complete program, in order to use it, it needs to be accessed from inside another program. To process XPath 2.0 expressions using PsychoPath from another programs one needs to go through the following process: </para>
+		<orderedlist>
+			<listitem>
+				<para>Load the XML document </para>
+			</listitem>
+			<listitem>
+				<para>Optionally validate the XML document </para>
+			</listitem>
+			<listitem>
+				<para>Initialize static and dynamic context in respect to the document root </para>
+			</listitem>
+			<listitem>
+				<para>Parse the XPath 2.0 expression </para>
+			</listitem>
+			<listitem>
+				<para>Statically verify the XPath 2.0 expression </para>
+			</listitem>
+			<listitem>
+				<para>Evaluate the XPath 2.0 expression in respect to the XML document</para>
+			</listitem>
+		</orderedlist>
+		<para>To give a better idea of how this process actually works, we’ll go through an example of processing and evaluating the string expression “Hello World!”. In this example the XML document that we load is called “XPexample.xml”. </para>
+		<para>All 5 main steps have been explained in detail in 
+			<ulink url="/wiki/PsychoPathXPathProcessor/UserInterface">User Interface</ulink>, so below is just a brief code summary:
+			 
+		</para>
+		<section id="Non-Schema_Aware">
+			<title>Non-Schema Aware</title>
+			
+			<literallayout>/**
+* First load and optionally validate the XML document 
 */
-// Create an InputStream from the XML document
-InputStream is = new FileInputStream(“XPexample.xml”);
-
-// Initializing the Xerces DOM loader.
+</literallayout>
+			<literallayout>// Create an InputStream from the XML document
+InputStream is = new FileInputStream("XPexample.xml");
+</literallayout>
+			<literallayout>// Initializing the Xerces DOM loader.
 DOMLoader loader = new XercesLoader();
-
-// Optionally set flag to validate XML document loader.setvalidating(validate);
+</literallayout>
+			<literallayout>// Optionally set flag to validate XML document
+// loader.set_validating(validate);
 // Loads the XML document and stores the DOM root
 Document doc = loader.load(is);
-
-/**
- * Dynamic contexts must be initialised to defaults
- * dependent on the XML Schema.
-*/
-
-// Extracting the schema from DOM root of Xpexpression.xml.
-ElementPSVI rootPSVI = (ElementPSVI)doc.getDocumentElement();
-XSModel schema = rootPSVI.getSchemaInformation();
-
-// Initialising the DynamicContext.
-DynamicContext dc = new DefaultDynamicContext(schema, doc);
-
-// Register the namespaces of the XPath 2.0 predefined datatypes
-dc.addnamespace(“xs”,”[http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema]”);
-
-// Register the XPath 2.0 standard functions
-dc.addfunctionlibrary(new FnFunctionLibrary());
-dc.addfunctionlibrary(new XSCtrLibrary());
-
-/**
- * Parsing the XPath 2.0 expression into an AST representation
+</literallayout>
+			<literallayout>// Initialising the StaticContext using a builder with suitable defaults.
+StaticContextBuilder scb = new StaticContextBuilder();
+</literallayout>
+			<literallayout>/**
+ * Parsing the XPath 2.0 expression into an executable expression, including
+ * a static check and verification.
  */
-// Initialises PsychoPath’s supplied parser.
-XPathParser xpp = new JflexCupParser();
-
-// Parses the XPath expression.
-XPath xp = xpp.parse(xpath);
-/**
- * Static check the AST to verift structural validity of  
- * XPath 2.0 expression
- */
-
-// Initializing StaticChecker.
-StaticChecker namecheck = new StaticNameResolver(sc);
-
-// Static Checking the Xpath expression ’Hello World!’ namecheck.check(xp);
-/**
- * Evaluate the XPath 2.0 expression
- */
- 
-// Initializing the evaluator with DynamicContext and the name
-// of the XML document XPexample.xml as parameters.
-Evaluator eval = new DefaultEvaluator(dc, doc);
- 
-// Evaluates the XPath 2.0 expression, storing the result
+String xpathText = "string-join(//character/name, ', ')";
+XPath2Expression expr = new Engine().parseExpression(xpathText, scb);
+</literallayout>
+			<literallayout>// Evaluates the XPath 2.0 expression, storing the result
 // in the ResultSequence
-ResultSequence rs = eval.evaluate(xp); 
-</programlisting>
-    </section>
+ResultSequence rs = expr.evaluate(new DynamicContextBuilder(scb),
+	new Object[] { doc });
+</literallayout>
+			<literallayout>for (int i = 0; i &lt; rs.size(); ++i) {
+	System.out.println("#" + i + ": " + rs.value(i));
+}
+</literallayout>
+			<para>
 
-    <section id="Schema_Aware">
-      <title>Schema Aware</title>
-
-      <para></para>
-
-      <programlisting>/**
+</para>
+		</section>
+		<section id="Schema_Aware">
+			<title>Schema Aware</title>
+			
+			<literallayout>/**
  * First load and optionally validate the XML document 
-*/
-
- SchemaFactory schemaFactory = new XMLSchemaFactory();
- URL schemaURL = new File("XPexample.xsd").toURL();
- Schema jaxpschema = schemaFactory.newSchema(schemaURL);
-
+ */
 // Create an InputStream from the XML document
-InputStream is = new FileInputStream(“XPexample.xml”);
-
-// Initializing the Xerces DOM loader.
+InputStream is = new FileInputStream("XPexample.xml");
+</literallayout>
+			<literallayout>SchemaFactory schemaFactory = new XMLSchemaFactory();
+URL schemaURL = new File("XPexample.xsd").toURL();
+Schema jaxpschema = schemaFactory.newSchema(schemaURL);
+</literallayout>
+			<literallayout>// Initializing the Xerces DOM loader.
 DOMLoader loader = new XercesLoader(jaxpschema);
-
-// Optionally set flag to validate XML document loader.setvalidating(validate);
+loader.set_validating(true);
+</literallayout>
+			<literallayout>// Optionally set flag to validate XML document
+// loader.set_validating(validate);
 // Loads the XML document and stores the DOM root
 Document doc = loader.load(is);
-
-/**
- * Dynamic contexts must be initialised to defaults
- * dependent on the XML Schema.
-*/
-
-// Initialising the DynamicContext.
-DynamicContext dc = new DefaultDynamicContext(jaxpschema, doc);
-
-// Register the namespaces of the XPath 2.0 predefined datatypes
-dc.addnamespace(“xs”,”[http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema]”);
-
-// Register the XPath 2.0 standard functions
-dc.addfunctionlibrary(new FnFunctionLibrary());
-dc.addfunctionlibrary(new XSCtrLibrary());
-
-/**
- * Parsing the XPath 2.0 expression into an AST representation
+</literallayout>
+			<literallayout>// Initialising the StaticContext using a builder with suitable defaults.
+StaticContextBuilder scb = new StaticContextBuilder();
+scb.withNamespace("xs", "http://www.w3.org/2001/XMLSchema");
+scb.withTypeModel(new XercesTypeModel(doc));
+</literallayout>
+			<literallayout>/**
+ * Parsing the XPath 2.0 expression into an executable expression, including
+ * a static check and verification.
  */
-// Initialises PsychoPath’s supplied parser.
-XPathParser xpp = new JflexCupParser();
-
-// Parses the XPath expression.
-XPath xp = xpp.parse(xpath);
-
-/**
- * Static check the AST to verift structural validity of  
- * XPath 2.0 expression
- */
-
-// Initilising StaticChecker.
-StaticChecker namecheck = new StaticNameResolver(sc);
-
-// Static Checking the Xpath expression ’Hello World!’ namecheck.check(xp);
-/**
- * Evaluate the XPath 2.0 expression
- */
-
-// Initialising the evaluator with DynamicContext and the name
-// of the XML document XPexample.xml as parameters.
-Evaluator eval = new DefaultEvaluator(dc, doc); 
-
-// Evaluates the XPath 2.0 expression, storing the result
+String xpathText = "for $elem in //*[. instance of xs:normalizedString] return concat(local-name($elem), ' : ', $elem/text())";
+XPath2Expression expr = new Engine().parseExpression(xpathText, scb);
+</literallayout>
+			<literallayout>// Evaluates the XPath 2.0 expression, storing the result
 // in the ResultSequence
-ResultSequence rs = eval.evaluate(xp); 
-</programlisting>
-
-      <para>XPath 2.0 defines everything to be a sequence of items, including
-      the arguments to expressions and the result of operations. Thus, the
-      overall result of an XPath expression evaluation is also a sequence of
-      items. PsychoPath uses the class ResultSequence as a Collections wrapper
-      to store these sequences and therefore, the result of an evaluation is
-      of this type also. The ResultSequence consists of zero or more items; an
-      item may be a node or a simple-value. “Hello World!” is an example of a
-      single value with length 1. A general sequence could be written as (“a”,
-      “s”, “d”, “f”).</para>
-
-      <para>Extraction of certain items from the ResultSequence class is
-      described below, with details of the different operations that one might
-      apply on the ResultSequence. Consider that ’rs’ is the ResultSequence,
-      then:</para>
-
-      <para></para>
-
-      <programlisting>// Will return the number of elements in the sequence, in this
-// case of ’Hello World!’ expression size = 1.
-rs.size(); 
-
-// Will return the n’th element in the sequence, in this case of
-// ’Hello World!’, if n = 1, then it will return
-// XSString of “Hello World!”, but if n = 2, it will return
-// Empty Result.
-rs.get(n);
-
-//Will return true if the sequence is empty.
+ResultSequence rs = expr.evaluate(new DynamicContextBuilder(scb),
+	new Object[] { doc });
+</literallayout>
+			<literallayout>for (int i = 0; i &lt; rs.size(); ++i) {
+	System.out.println("#" + i + ": " + rs.value(i));
+}
+</literallayout>
+			
+			<para>XPath 2.0 defines everything to be a sequence of items, including the arguments to expressions and the result of operations. Thus, the overall result of an XPath expression evaluation is also a sequence of items. PsychoPath uses the class ResultSequence as a Collections wrapper to store these sequences and therefore, the result of an evaluation is of this type also. The ResultSequence consists of zero or more items; an item may be a node or a simple-value. “Hello World!” is an example of a single value with length 1. A general sequence could be written as (“a”, “s”, “d”, “f”). </para>
+			<para>Extraction of certain items from the ResultSequence class is described below, with details of the different operations that one might apply on the ResultSequence. Consider that ’rs’ is the ResultSequence, then: </para>
+			<para>// Will return the number of elements in the sequence, in this </para>
+			<literallayout>// case of ’Hello World!’ expression size = 1. 
+</literallayout>
+			<literallayout>rs.size();
+</literallayout>
+			<literallayout>// Will return the n’th element in the sequence, in this case of 
+// ’Hello World!’, if n = 0, then it will return
+// “Hello World!”.
+</literallayout>
+			<literallayout>rs.value(n);
+</literallayout>
+			<literallayout>//Will return true if the sequence is empty.
 rs.empty(); 
+</literallayout>
+			<literallayout>// Will return the first element of the sequence, 
+// in this example it will return xs:string of “Hello World!” 
+rs.firstValue() 
+</literallayout>
+			<para> 
 
-// Will return the first element of the sequence, 
-// in this example it will return XSString of “Hello World!” 
-rs.first() 
-</programlisting>
-
-      <para>However, all the items extracted will be of the type’s base class
-      AnyType and need to be casted into its actual subtype.</para>
-
-      <para>Certain operations always return a particular type and using this
-      knowledge, the extracted item can be immediately casted. In our example
-      “Hello World!” returns a string (easily known as it is inside the quotes
-      ’ ’ ), so this can safely be casted as such:</para>
-
-      <para><programlisting>XSString xsstring = XSString)(rs.first());</programlisting>The
-      actual result can now be extracted from this XSString in the following
-      manner: <programlisting>String str = xsstring.value();</programlisting></para>
-
-      <para>The details of how to cast extracted items from AnyType into their
-      actual subtypes with examples is in the next section on How to use each
-      production in the grammar.</para>
-
-      <para>However, if the expected return type is unknown or multiple types
-      are possible, the types hierarchy can be traversed in a breadth first
-      manner making use of the Java instanceof operator to ascertain the
-      actual type. </para>
-    </section>
-
-    <section id="How_to_use_the_XPath_2.0_grammar_with_PsychoPath">
-      <title>How to use the XPath 2.0 grammar with PsychoPath</title>
-
-      <para>In this section we will try to give you an overview of the XPath
-      2.0 grammar in general and how each production in the grammar should be
-      used with PsychoPath. For the formal specifications, see the W3C
-      web-site for XPath 2.0 specification <ulink
-      url="http://www.w3.org/TR/xpath20">http://www.w3.org/TR/xpath20</ulink>.</para>
-
-      <section id="Constants">
-        <title>Constants</title>
-
-        <para>String literals are written as “Hello” or ‘Hello’. In each case
-        the opposite kind of quotation mark can be used within the string: ‘He
-        said “Hello” ’ or “London is a big city”. To feed PsychoPath, “ ‘Hello
-        World!’ ”or “ “Hello World!” ” can be used to feed it with strings.
-        Remember that the ResultSequence returns AnyType so since a string is
-        being expected as the result, first it has to be casted in the code
-        like this: <programlisting>XSString xsstring = (XSString)(rs.first());</programlisting>
-        Numeric constants follow the Java rules for decimal literals: for
-        example, 4 or 4.67; a negative number can be written as -3.05. The
-        numeric literal is taken as a double precision floating point number
-        if it uses scientific notation (e.g. 1.0e7), as a fixed point decimal
-        if it includes a decimal point, or as an integer otherwise. When
-        extracting number literals from the ResultSequence, possible types to
-        be returned include <emphasis role="italic">XSDecima''l (e.g. :
-        xs:decimal: 4.67),''XSInteger ''(e.g. : xs:integer: 4) or
-        ''XSDouble</emphasis> (e.g. : xs:double 1e0). All of which need to be
-        cast in the same manner as stated before: from AnyType to their
-        corresponding types.</para>
-
-        <para>There are no boolean constants as such: <emphasis
-        role="italic">true, false</emphasis> instead the function calls
-        <emphasis role="bold">true()</emphasis> and <emphasis
-        role="bold">false()</emphasis> are used.</para>
-
-        <para>Constants of other data types can be written using constructors.
-        These look like function calls but require a string literal as their
-        argument. For example, <emphasis
-        role="bold">xs:float(“10.7”)</emphasis> produces a single-precision
-        floating point number.</para>
-      </section>
-
-      <section id="Path_expressions">
-        <title>Path expressions</title>
-
-        <para>A path expression is a sequence of steps separated by the
-        <emphasis role="bold">/''' or '''//</emphasis> operator. For example,
-        <emphasis role="bold">../@desc</emphasis> selects the desc attribute
-        of the parent of the context node.</para>
-
-        <para>In XPath 2.0, path expressions have been generalized so that any
-        expression can be used as an operand of <emphasis
-        role="bold">/</emphasis>, (both on the left and the right), as long as
-        its value is a sequence of nodes. For example, it is possible to use a
-        union expression (in parentheses) or a call to the id()
-        function.</para>
-
-        <para>In practice, it only makes sense to use expressions on the right
-        of <emphasis role="bold">"/"</emphasis> if they depend on the context
-        item. It is legal to write $x/$y provided both $x and $y are sequences
-        of nodes, but the result is exactly the same as writing <emphasis
-        role="bold"> <emphasis role="italic">./$y</emphasis>
-        </emphasis>.</para>
-
-        <para>Note that the expressions <emphasis role="bold">./$X</emphasis>
-        or <emphasis role="bold">$X/.</emphasis> can be used to remove
-        duplicates from <emphasis role="bold">$X</emphasis> and sort the
-        results into document order.</para>
-
-        <para>The operator <emphasis role="bold">//</emphasis> is an
-        abbreviation for <emphasis
-        role="bold">/descendant-or-self::node()</emphasis>. An expression of
-        the form <emphasis role="bold">/E</emphasis> is shorthand for
-        <emphasis role="bold">root(.)/E</emphasis>, and the expression
-        <emphasis role="bold">/''' on its own is shorthand for
-        '''root(.)</emphasis>.</para>
-      </section>
-
-      <section id="Axis_steps">
-        <title>Axis steps</title>
-
-        <para>The basic primitive for accessing a source document is the axis
-        step. Axis steps may be combined into path expressions using the path
-        operators "/" and "//", and they may be filtered using filter
-        expressions in the same way as the result of any other
-        expression.</para>
-
-        <para>An axis step has the basic form axis::node-test, and selects
-        nodes on a given axis that satisfy the node-test. The axes available
-        are:</para>
-
-        <orderedlist>
-          <listitem>
-            <para>element: age</para>
-          </listitem>
-
-          <listitem>
-            <para>element: age</para>
-          </listitem>
-        </orderedlist>
-
-        <para>The rest of the axes act in the same manner.</para>
-      </section>
-
-      <section id="Set_difference.2C_intersection_and_Union">
-        <title>Set difference, intersection and Union</title>
-
-        <para>The expression E1 except E2 selects all nodes that are in E1
-        unless they are also in E2. Both expressions must return sequences of
-        nodes. The results are returned in document order. For example, @*
-        except @note returns all attributes except the note attribute. The
-        expression E1 intersect E2 selects all nodes that are in both E1 and
-        E2. Both expressions must return sequences of nodes. The results are
-        returned in document order. The expression E1 union E2 selects all
-        nodes that are in either E1 or E2 or both. Both expressions must
-        return sequences of nodes. The results are returned in document order.
-        A complete example of the above expression would be as follows.
-        Consider an XML document which looks like this:</para>
-
-        <programlisting>&lt;nodes&gt;
+				 However, all the items extracted will be of the type’s "native" value (statically known as Object) and need to be casted into its actual subtype. </para>
+			<para>Certain operations always return a particular type and using this knowledge, the extracted item can be immediately casted. In our example “Hello World!” returns a string (easily known as it is inside the quotes ’ ’ ), so this can safely be casted as such: 
+				</para>
+			<literallayout>String string = (String)(rs.value(0));
+ 
+</literallayout>
+			<para>The details of how to cast extracted items from Object into their actual subtypes with examples is in the next section on How to use each production in the grammar. As an alternative, you can call
+				</para>
+			<literallayout>ItemType itype = rs.itemType(n);
+Which will return the type of the n'th item in the result sequence.
+</literallayout>
+			<para>
+</para>
+		</section>
+		<section id="How_to_use_the_XPath_2.0_grammar_with_PsychoPath">
+			<title>How to use the XPath 2.0 grammar with PsychoPath</title>
+			<para>In this section we will try to give you an overview of the XPath 2.0 grammar in general and how each production in the grammar should be used with PsychoPath. For the formal specifications, see the W3C web-site for XPath 2.0 specification 
+				<ulink url="http://www.w3.org/TR/xpath20">http://www.w3.org/TR/xpath20</ulink>.
+				 
+			</para>
+			<section id="Constants">
+				<title>Constants</title>
+				<para>String literals are written as “Hello” or ‘Hello’. In each case the opposite kind of quotation mark can be used within the string: ‘He said “Hello” ’ or “London is a big city”. To feed PsychoPath, “ ‘Hello World!’ ”or “ “Hello World!” ” can be used to feed it with strings. Remember that the ResultSequence returns AnyType so since a string is being expected as the result, first it has to be casted in the code like this: 
+					String xsstring = (String)(rs.firstValue()); 
+					Numeric constants follow the Java rules for decimal literals: for example, 4 or 4.67; a negative number can be written as -3.05. The numeric literal is taken as a double precision floating point number if it uses scientific notation (e.g. 1.0e7), as a fixed point decimal if it includes a decimal point, or as an integer otherwise. When extracting number literals from the ResultSequence, possible types to be returned include 
+					<emphasis role="italic">BigDecima''l (e.g.&nbsp;: xs:decimal: 4.67),''Int ''(e.g.&nbsp;: xs:integer: 4) or ''XSDouble</emphasis> (e.g.&nbsp;: xs:double 1e0). All of which need to be casted in the same manner as stated before: from AnyType to their corresponding types. 
+				</para>
+				<para>There are no boolean constants as such: 
+					<emphasis role="italic">true, false</emphasis> instead the function calls 
+					<emphasis role="bold">true()</emphasis> and 
+					<emphasis role="bold">false()</emphasis> are used. 
+				</para>
+				<para>Constants of other data types can be written using constructors. These look like function calls but require a string literal as their argument. For example, 
+					<emphasis role="bold">xs:float(“10.7”)</emphasis> produces a single-precision floating point number.
+					 
+				</para>
+			</section>
+			<section id="Path_expressions">
+				<title>Path expressions</title>
+				<para>A path expression is a sequence of steps separated by the 
+					<emphasis role="bold">/''' or '''//</emphasis> operator. For example, 
+					<emphasis role="bold">../@desc</emphasis> selects the desc attribute of the parent of the context node. 
+				</para>
+				<para>In XPath 2.0, path expressions have been generalized so that any expression can be used as an operand of 
+					<emphasis role="bold">/</emphasis>, (both on the left and the right), as long as its value is a sequence of nodes. For example, it is possible to use a union expression (in parentheses) or a call to the id() function. 
+				</para>
+				<para>In practice, it only makes sense to use expressions on the right of 
+					<emphasis role="bold">"/"</emphasis> if they depend on the context item. It is legal to write $x/$y provided both $x and $y are sequences of nodes, but the result is exactly the same as writing 
+					<emphasis role="bold">
+						<emphasis role="italic">./$y</emphasis>
+					</emphasis>. 
+				</para>
+				<para>Note that the expressions 
+					<emphasis role="bold">./$X</emphasis> or 
+					<emphasis role="bold">$X/.</emphasis> can be used to remove duplicates from 
+					<emphasis role="bold">$X</emphasis> and sort the results into document order. 
+					 
+				</para>
+				<para>The operator 
+					<emphasis role="bold">//</emphasis> is an abbreviation for 
+					<emphasis role="bold">/descendant-or-self::node()</emphasis>. An expression of the form 
+					<emphasis role="bold">/E</emphasis> is shorthand for 
+					<emphasis role="bold">root(.)/E</emphasis>, and the expression 
+					<emphasis role="bold">/''' on its own is shorthand for '''root(.)</emphasis>. 
+				</para>
+			</section>
+			<section id="Axis_steps">
+				<title>Axis steps</title>
+				<para>The basic primitive for accessing a source document is the axis step. Axis steps may be combined into path expressions using the path operators "/" and "//", and they may be filtered using filter expressions in the same way as the result of any other expression. </para>
+				<para>An axis step has the basic form axis::node-test, and selects nodes on a given axis that satisfy the node-test. The axes available are: </para>
+				<orderedlist>
+					<listitem>
+						<para>element: age </para>
+					</listitem>
+					<listitem>
+						<para>element: age</para>
+					</listitem>
+				</orderedlist>
+				<para>The rest of the axes act in the same manner.
+					 </para>
+			</section>
+			<section id="Set_difference.2C_intersection_and_Union">
+				<title>Set difference, intersection and Union</title>
+				<para>The expression E1 except E2 selects all nodes that are in E1 unless they are also in E2. Both expressions must return sequences of nodes. The results are returned in document order. For example, @* except @note returns all attributes except the note attribute. The expression E1 intersect E2 selects all nodes that are in both E1 and E2. Both expressions must return sequences of nodes. The results are returned in document order. The expression E1 union E2 selects all nodes that are in either E1 or E2 or both. Both expressions must return sequences of nodes. The results are returned in document order. A complete example of the above expression would be as follows. Consider an XML document which looks like this: </para>
+				<literallayout>&lt;source lang="xml"&gt;
+&lt;nodes&gt;
   &lt;a&gt;
     &lt;connecteda&gt;A&lt;/connecteda&gt;
     &lt;connecteda&gt;B&lt;/connecteda&gt;
@@ -429,269 +259,257 @@ rs.first()
     &lt;connectedb&gt;D&lt;/connectedb&gt;
   &lt;/b&gt;
 &lt;/nodes&gt;
-</programlisting>
-
-        <para>Then an example of each of the expressions would be:</para>
-
-        <para><programlisting>data(/a/*) union data(/b/*)</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:string: A</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:string: B</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:string: C</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:string: D</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>data(/a/*) intersect data(/b/*)</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:string: B</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:string: C</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>data(/a/*) except data(/b/*)</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:string: D</para>
-          </listitem>
-        </orderedlist>
-      </section>
-
-      <section id="Arithmetic_Expressions">
-        <title>Arithmetic Expressions</title>
-
-        <section id="Unary">
-          <title>Unary</title>
-
-          <para>minus and plus: The unary minus operator changes the sign of a
-          number. For example -1 is minus one, and -1e0 is the double value
-          negative -1.</para>
-        </section>
-
-        <section id="Multiplication_and_Division:">
-          <title>Multiplication and Division:</title>
-
-          <para>The operator * multiplies two numbers. If the operands are of
-          different types, XPath 2.0 specifications say that one of them is
-          promoted to the type of the other. The result is the same type as
-          the operands after promotion.</para>
-
-          <para>The operator div divides two numbers. Dividing two integers
-          produces a double; in other cases the result is the same type as the
-          operands.</para>
-
-          <para>The operator idiv performs integer division. For example, the
-          result of 10 idiv 3 is 3.</para>
-
-          <para>The mod operator returns the modulus (or remainder) after
-          division.</para>
-
-          <para>The operators * and div may also be used to multiply or divide
-          a range by a number.</para>
-
-          <para>For example, <emphasis role="italic">(1 idiv 1 to
-          3)</emphasis> returns the result: <emphasis
-          role="italic">xs:integer: 1, xs:integer: 2, xs:integer:
-          3</emphasis></para>
-        </section>
-
-        <section id="Addition_and_Subtraction:">
-          <title>Addition and Subtraction:</title>
-
-          <para>The operators <emphasis role="bold">+</emphasis> and <emphasis
-          role="italic">'-'</emphasis> perform addition and subtraction of
-          numbers, in the usual way. Once again, if the operands are of
-          different types, XPath 2.0 specifications say one of them is
-          promoted but numeric type promotion is currently unsupported by
-          PsychoPath. The result is of the same type as the operands.</para>
-
-          <para>Examples of above would be:</para>
-
-          <para><programlisting> -(5 + 7)</programlisting></para>
-
-          <para> <emphasis role="bold">result:</emphasis></para>
-
-          <orderedlist>
-            <listitem>
-              <para>xs:integer: -12</para>
-            </listitem>
-          </orderedlist>
-
-          <para><programlisting>-xs:float(’1.23’)</programlisting></para>
-
-          <para> <emphasis role="bold">result:</emphasis></para>
-
-          <orderedlist>
-            <listitem>
-              <para>xs:float: -1.23</para>
-            </listitem>
-          </orderedlist>
-
-          <para><programlisting>-xs:double(’1.23’)</programlisting></para>
-
-          <para> <emphasis role="bold">result:</emphasis></para>
-
-          <orderedlist>
-            <listitem>
-              <para>xs:double: -1.23</para>
-            </listitem>
-          </orderedlist>
-
-          <para><programlisting>(+5 - +7)</programlisting></para>
-
-          <para> <emphasis role="bold">result:</emphasis></para>
-
-          <orderedlist>
-            <listitem>
-              <para>xs:integer: -2</para>
-            </listitem>
-          </orderedlist>
-
-          <para><programlisting>(1 to 5 div 0 )</programlisting></para>
-
-          <para> <emphasis role="bold">result:</emphasis></para>
-
-          <itemizedlist>
-            <listitem>
-              <para>FAIL (division by zero!)</para>
-            </listitem>
-          </itemizedlist>
-
-          <para><programlisting>5*6*10*5*96 div 20 div 3 div 1</programlisting></para>
-
-          <para> <emphasis role="bold">result:</emphasis></para>
-
-          <orderedlist>
-            <listitem>
-              <para>xs:decimal: 2400.0</para>
-            </listitem>
-          </orderedlist>
-
-          <para><programlisting>31 mod 15</programlisting></para>
-
-          <para> <emphasis role="bold">result:</emphasis></para>
-
-          <orderedlist>
-            <listitem>
-              <para>xs:integer: 1</para>
-            </listitem>
-          </orderedlist>
-        </section>
-      </section>
-
-      <section id="Range_expressions">
-        <title>Range expressions</title>
-
-        <para>The expression E1 to E2 returns a sequence of integers. For
-        example, 1 to 5 returns the sequence 1, 2, 3, 4, 5. This is useful in
-        for expressions, for example the first five nodes of a node sequence
-        can be processed by writing for $i in 1 to 5 return (//x) <ulink
-        url="$i">$i</ulink>. Another example:</para>
-
-        <para><programlisting>(1+1 to 10)</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:integer: 2</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:integer: 3</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:integer: 4</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:integer: 5</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:integer: 6</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:integer: 7</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:integer: 8</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:integer: 9</para>
-          </listitem>
-
-          <listitem>
-            <para>xs:integer: 10</para>
-          </listitem>
-        </orderedlist>
-      </section>
-
-      <section id="Comparisons">
-        <title>Comparisons</title>
-
-        <para>The simplest comparison operators are <emphasis
-        role="bold">eq</emphasis>, <emphasis role="bold">ne</emphasis>,
-        <emphasis role="bold">lt</emphasis>, <emphasis
-        role="bold">le</emphasis>, <emphasis role="bold">gt</emphasis>,
-        <emphasis role="bold">ge</emphasis>. These compare two atomic values
-        of the same type, for example two integers, two dates, or two strings.
-        (Collation hasn’t been implemented in current version of PsychoPath).
-        If the operands are not atomic values, an error is raised.</para>
-
-        <para>The operators <emphasis role="bold">=''', </emphasis>!='
-        <emphasis role="italic">, '</emphasis>&lt;=' <emphasis role="italic">,
-        '</emphasis>&gt; <emphasis role="bold">, '''&lt;</emphasis>, and
-        <emphasis role="bold">&gt;=</emphasis> can compare arbitrary
-        sequences. The result is true if any pair of items from the two
-        sequences has the specified relationship, for example <emphasis
-        role="italic">$A = $B</emphasis> is true if there is an item in
-        <emphasis role="italic">$A</emphasis> that is equal to some item in
-        <emphasis role="italic">$B</emphasis>.</para>
-
-        <para>The operators <emphasis role="bold">is</emphasis> and <emphasis
-        role="bold">isnot</emphasis> test whether the operands represent the
-        same (identical) node. For example, <emphasis role="italic">title
-        <ulink url="1">1</ulink> is * <ulink url="@note">@note</ulink> <ulink
-        url="1">1</ulink> </emphasis> is true if the first title child is the
-        first child element that has a <emphasis
-        role="italic">@note</emphasis> attribute. If either operand is an
-        empty sequence the result is an empty sequence (which will usually be
-        treated as false).</para>
-
-        <para>The operators <emphasis role="bold">&lt;&lt;</emphasis> and
-        <emphasis role="bold">&gt;&gt;</emphasis> test whether one node
-        precedes or follows another in document order. Consider this XML
-        document:</para>
-
-        <programlisting>&lt;book&gt;
+</literallayout>
+				<para> 
+					then an example of each of the expressions would be: </para>
+				<literallayout>data(/a/*) union data(/b/*)
+</literallayout>
+				<para> 
+
+					<emphasis role="italic">'result: '</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:string: A </para>
+					</listitem>
+					<listitem>
+						<para>xs:string: B </para>
+					</listitem>
+					<listitem>
+						<para>xs:string: C </para>
+					</listitem>
+					<listitem>
+						<para>xs:string: D
+</para>
+					</listitem>
+				</orderedlist>
+				<literallayout>data(/a/*) intersect data(/b/*)
+</literallayout>
+				<para> 
+
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:string: B </para>
+					</listitem>
+					<listitem>
+						<para>xs:string: C
+</para>
+					</listitem>
+				</orderedlist>
+				<literallayout>data(/a/*) except data(/b/*)
+</literallayout>
+				<para> 
+
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:string: D
+</para>
+					</listitem>
+				</orderedlist>
+			</section>
+			<section id="Arithmetic_Expressions">
+				<title>Arithmetic Expressions</title>
+				<section id="Unary">
+					<title>Unary</title>
+					<para>minus and plus: The unary minus operator changes the sign of a number. For example -1 is minus one, and -1e0 is the double value negative -1. </para>
+				</section>
+				<section id="Multiplication_and_Division:">
+					<title>Multiplication and Division:</title>
+					<para>The operator * multiplies two numbers. If the operands are of different types, XPath 2.0 specifications say that one of them is promoted to the type of the other.&nbsp;<strike></strike> The result is the same type as the operands after promotion. </para>
+					<para>
+						 The operator div divides two numbers. Dividing two integers produces a double; in other cases the result is the same type as the operands. </para>
+					<para>
+						 The operator idiv performs integer division. For example, the result of 10 idiv 3 is 3. </para>
+					<para>
+						 The mod operator returns the modulus (or remainder) after division. </para>
+					<para>
+						 The operators * and div may also be used to multiply or divide a range by a number. </para>
+					<para>For example, 
+						<emphasis role="italic">(1 idiv 1 to 3)</emphasis> returns the result: 
+						<emphasis role="italic">xs:integer: 1, xs:integer: 2, xs:integer: 3</emphasis> 
+					</para>
+				</section>
+				<section id="Addition_and_Subtraction:">
+					<title>Addition and Subtraction:</title>
+					<para>The operators 
+						<emphasis role="bold">+</emphasis> and 
+						<emphasis role="italic">'-'</emphasis> perform addition and subtraction of numbers, in the usual way. Once again, if the operands are of different types, XPath 2.0 specifications say one of them is promoted but numeric type promotion is currently unsupported by PsychoPath. The result is of the same type as the operands. 
+					</para>
+					<para>Examples of above would be: </para>
+					<literallayout>-(5 + 7)
+</literallayout>
+					<para> 
+
+						<emphasis role="bold">result:</emphasis>
+						 
+					</para>
+					<orderedlist>
+						<listitem>
+							<para>xs:integer: -12</para>
+						</listitem>
+					</orderedlist>
+					<literallayout>-xs:float(’1.23’)
+</literallayout>
+					<para> 
+
+						<emphasis role="bold">result:</emphasis>
+
+					</para>
+					<orderedlist>
+						<listitem>
+							<para>xs:float: -1.23 
+</para>
+						</listitem>
+					</orderedlist>
+					<literallayout>-xs:double(’1.23’)
+</literallayout>
+					<para> 
+
+						<emphasis role="bold">result:</emphasis>
+
+					</para>
+					<orderedlist>
+						<listitem>
+							<para>xs:double: -1.23 
+</para>
+						</listitem>
+					</orderedlist>
+					<literallayout>(+5 - +7)
+</literallayout>
+					<para> 
+
+						<emphasis role="bold">result:</emphasis>
+
+					</para>
+					<orderedlist>
+						<listitem>
+							<para>xs:integer: -2 
+</para>
+						</listitem>
+					</orderedlist>
+					<literallayout>(1 to 5 div 0 )
+</literallayout>
+					<para> 
+
+						<emphasis role="bold">result:</emphasis> 
+
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>FAIL (division by zero!) 
+</para>
+						</listitem>
+					</itemizedlist>
+					<literallayout>5*6*10*5*96 div 20 div 3 div 1
+</literallayout>
+					<para> 
+
+						<emphasis role="bold">result:</emphasis>
+
+					</para>
+					<orderedlist>
+						<listitem>
+							<para>xs:decimal: 2400.0 
+</para>
+						</listitem>
+					</orderedlist>
+					<literallayout>31 mod 15
+</literallayout>
+					<para> 
+
+						<emphasis role="bold">result:</emphasis> 
+
+					</para>
+					<orderedlist>
+						<listitem>
+							<para>xs:integer: 1
+</para>
+						</listitem>
+					</orderedlist>
+				</section>
+			</section>
+			<section id="Range_expressions">
+				<title>Range expressions</title>
+				<para>The expression E1 to E2 returns a sequence of integers. For example, 1 to 5 returns the sequence 1, 2, 3, 4, 5. This is useful in for expressions, for example the first five nodes of a node sequence can be processed by writing for $i in 1 to 5 return (//x)
+					<ulink url="$i">$i</ulink>. Another example: 
+				</para>
+				<literallayout>(1+1 to 10)
+</literallayout>
+				<para> 
+
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:integer: 2 </para>
+					</listitem>
+					<listitem>
+						<para>xs:integer: 3 </para>
+					</listitem>
+					<listitem>
+						<para>xs:integer: 4 </para>
+					</listitem>
+					<listitem>
+						<para>xs:integer: 5 </para>
+					</listitem>
+					<listitem>
+						<para>xs:integer: 6 </para>
+					</listitem>
+					<listitem>
+						<para>xs:integer: 7 </para>
+					</listitem>
+					<listitem>
+						<para>xs:integer: 8 </para>
+					</listitem>
+					<listitem>
+						<para>xs:integer: 9 </para>
+					</listitem>
+					<listitem>
+						<para>xs:integer: 10
+</para>
+					</listitem>
+				</orderedlist>
+			</section>
+			<section id="Comparisons">
+				<title>Comparisons</title>
+				<para>The simplest comparison operators are 
+					<emphasis role="bold">eq</emphasis>, 
+					<emphasis role="bold">ne</emphasis>, 
+					<emphasis role="bold">lt</emphasis>, 
+					<emphasis role="bold">le</emphasis>, 
+					<emphasis role="bold">gt</emphasis>, 
+					<emphasis role="bold">ge</emphasis>. These compare two atomic values of the same type, for example two integers, two dates, or two strings. (Collation hasn’t been implemented in current version of PsychoPath). If the operands are not atomic values, an error is raised. 
+				</para>
+				<para>The operators 
+					<emphasis role="bold">=''',&nbsp;</emphasis>!='
+					<emphasis role="italic">, '</emphasis>&lt;='
+					<emphasis role="italic">, '</emphasis>&gt;
+					<emphasis role="bold">, '''&lt;</emphasis>, and 
+					<emphasis role="bold">&gt;=</emphasis> can compare arbitrary sequences. The result is true if any pair of items from the two sequences has the specified relationship, for example 
+					<emphasis role="italic">$A = $B</emphasis> is true if there is an item in 
+					<emphasis role="italic">$A</emphasis> that is equal to some item in 
+					<emphasis role="italic">$B</emphasis>. 
+				</para>
+				<para>The operators 
+					<emphasis role="bold">is</emphasis> and 
+					<emphasis role="bold">isnot</emphasis> test whether the operands represent the same (identical) node. For example, 
+					<emphasis role="italic">title
+						<ulink url="1">1</ulink> is *
+						<ulink url="@note">@note</ulink>
+						<ulink url="1">1</ulink>
+					</emphasis> is true if the first title child is the first child element that has a 
+					<emphasis role="italic">@note</emphasis> attribute. If either operand is an empty sequence the result is an empty sequence (which will usually be treated as false). 
+				</para>
+				<para>The operators 
+					<emphasis role="bold">&lt;&lt;</emphasis> and 
+					<emphasis role="bold">&gt;&gt;</emphasis> test whether one node precedes or follows another in document order. Consider this XML document (XPexample.xml): 
+					&lt;source lang="xml"&gt;
+				</para>
+				<literallayout>&lt;book&gt;
  &lt;title&gt;Being a Dog Is a Full-Time Job&lt;/title&gt;
  &lt;author&gt;Charles M. Schulz&lt;/author&gt;
  &lt;character&gt;
@@ -708,585 +526,501 @@ rs.first()
    &lt;qualification&gt;bold, brash and tomboyish&lt;/qualification&gt;
  &lt;/character&gt;
 &lt;/book&gt;
-</programlisting>
+</literallayout>
+				<para> </para>
+				<para>This file conforms to the following Schema (XPexample.xsd):</para>
+				<para>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</para>
+				<literallayout>&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ elementFormDefault="qualified"&gt;
+</literallayout>
+				<literallayout> &lt;xs:element name="book"&gt;
+   &lt;xs:complexType&gt;
+     &lt;xs:sequence&gt;
+       &lt;xs:element ref="title" /&gt;
+       &lt;xs:element ref="author" /&gt;
+       &lt;xs:element maxOccurs="unbounded" ref="character" /&gt;
+     &lt;/xs:sequence&gt;
+   &lt;/xs:complexType&gt;
+ &lt;/xs:element&gt;
+</literallayout>
+				<literallayout> &lt;xs:element name="title" type="characterName"&gt;&lt;/xs:element&gt;
+</literallayout>
+				<literallayout> &lt;xs:element name="author" type="characterName"&gt;&lt;/xs:element&gt;
+</literallayout>
+				<literallayout> &lt;xs:element name="character"&gt;
+   &lt;xs:complexType&gt;
+     &lt;xs:sequence&gt;
+       &lt;xs:element ref="name" /&gt;
+       &lt;xs:element ref="friend-of" minOccurs="0" /&gt;
+       &lt;xs:element ref="since" /&gt;
+       &lt;xs:element ref="age" /&gt;
+       &lt;xs:element ref="qualification" /&gt;
+     &lt;/xs:sequence&gt;
+   &lt;/xs:complexType&gt;
+ &lt;/xs:element&gt;
+ &lt;xs:element name="name" type="characterName" /&gt;
+ &lt;xs:element name="friend-of" type="characterName" /&gt;
+ &lt;xs:element name="since" type="xs:date" /&gt;
+ &lt;xs:element name="age" type="xs:nonNegativeInteger" /&gt;
+ &lt;xs:element name="qualification" type="xs:string" /&gt;
+</literallayout>
+				<literallayout> &lt;xs:simpleType name="characterName"&gt;
+   &lt;xs:restriction base="xs:normalizedString"&gt;
+     &lt;xs:minLength value="1"/&gt;
+   &lt;/xs:restriction&gt;
+ &lt;/xs:simpleType&gt;
+&lt;/xs:schema&gt;
+</literallayout>
+				<para> </para>
+				<para>
+					<emphasis role="bold">
+						<emphasis role="italic">Examples:</emphasis>
+					</emphasis> 
+				</para>
+				<literallayout>book/character[name="Snoopy"] &amp;lt;&amp;lt; book/character[name="Peppermint Patty"] 
+</literallayout>
+				<para> 
 
-        <para>Example:</para>
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:boolean: true</para>
+					</listitem>
+				</orderedlist>
+				<literallayout>book/character[name="Peppermint Patty"] &amp;lt;&amp;lt; book/character[name="Snoopy"]
+</literallayout>
+				<para> 
 
-        <para><programlisting>book/character name="Snoopy" &lt;&lt; book/character Patty" </programlisting></para>
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:boolean: false</para>
+					</listitem>
+				</orderedlist>
+			</section>
+			<section id="Conditional_Expressions">
+				<title>Conditional Expressions</title>
+				<para>XPath 2.0 allows a conditional expression of the form 
+					<emphasis role="italic">if ( E1 ) then E2 else E3</emphasis>. For example, 
+					<emphasis role="italic">if (@discount) then @discount else 0</emphasis> returns the value of the discount attribute if it is present, or zero otherwise. 
+				</para>
+				<para>
+					 </para>
+			</section>
+			<section id="Quantified_Expressions">
+				<title>Quantified Expressions</title>
+				<para>The expression 
+					<emphasis role="italic">some $x in E1 satisfies E2</emphasis> returns true if there is an item in the sequence E1 for which the effective boolean value of E2 is true. Note that E2 must use the range variable 
+					<emphasis role="italic">$x</emphasis> to refer to the item being tested; it does not become the context item. For example, 
+					<emphasis role="italic">some $x in @* satisfies $x eq ""</emphasis> is true if the context item is an element that has at least one zero-length attribute value. 
+				</para>
+				<para>Similarly, the expression 
+					<emphasis role="italic">every $x in E1 satisfies E2</emphasis> returns true if every item in the sequence given by E1 satisfies the condition. 
+				</para>
+			</section>
+			<section id="And.2C_Or_Expressions">
+				<title>And, Or Expressions</title>
+				<para>The expression 
+					<emphasis role="italic">E1 and E2</emphasis> returns true if the effective boolean values of E1 and E2 are both true. The expression 
+					<emphasis role="italic">E1 or E2</emphasis> returns true if the effective boolean values of either or both of E1 and E2 are true. 
+				</para>
+				<para>
+					<emphasis role="bold">
+						<emphasis role="italic">Example:</emphasis>
+					</emphasis> (for a truth table) 
+				</para>
+				<literallayout>1 and 1
+</literallayout>
+				<para> 
 
-        <para><emphasis role="bold">result:</emphasis></para>
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:boolean: true</para>
+					</listitem>
+				</orderedlist>
+				<para>
+					 </para>
+				<literallayout>1 and 0
+</literallayout>
+				<para> 
 
-        <orderedlist>
-          <listitem>
-            <para>xs:boolean: true</para>
-          </listitem>
-        </orderedlist>
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:boolean: false</para>
+					</listitem>
+				</orderedlist>
+				<para>
+					 </para>
+				<literallayout>1 or 0
+</literallayout>
+				<para> 
 
-        <para>book/character <ulink url="name=&quot;Peppermint">Patty"</ulink>
-        &lt;&lt; book/character <ulink
-        url="name=&quot;Snoopy&quot;">name="Snoopy"</ulink> <emphasis
-        role="bold">result:</emphasis></para>
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:boolean: true</para>
+					</listitem>
+				</orderedlist>
+				<para>
+					 </para>
+				<literallayout>0 or 1
+</literallayout>
+				<para> 
 
-        <orderedlist>
-          <listitem>
-            <para>xs:boolean: false</para>
-          </listitem>
-        </orderedlist>
-      </section>
-
-      <section id="Conditional_Expressions">
-        <title>Conditional Expressions</title>
-
-        <para>XPath 2.0 allows a conditional expression of the form <emphasis
-        role="italic">if ( E1 ) then E2 else E3</emphasis>. For example,
-        <emphasis role="italic">if (@discount) then @discount else
-        0</emphasis> returns the value of the discount attribute if it is
-        present, or zero otherwise.</para>
-      </section>
-
-      <section id="Quantified_Expressions">
-        <title>Quantified Expressions</title>
-
-        <para>The expression <emphasis role="italic">some $x in E1 satisfies
-        E2</emphasis> returns true if there is an item in the sequence E1 for
-        which the effective boolean value of E2 is true. Note that E2 must use
-        the range variable <emphasis role="italic">$x</emphasis> to refer to
-        the item being tested; it does not become the context item. For
-        example, <emphasis role="italic">some $x in @* satisfies $x eq
-        ""</emphasis> is true if the context item is an element that has at
-        least one zero-length attribute value.</para>
-
-        <para>Similarly, the expression <emphasis role="italic">every $x in E1
-        satisfies E2</emphasis> returns true if every item in the sequence
-        given by E1 satisfies the condition.</para>
-      </section>
-
-      <section id="And.2C_Or_Expressions">
-        <title>And, Or Expressions</title>
-
-        <para>The expression <emphasis role="italic">E1 and E2</emphasis>
-        returns true if the effective boolean values of E1 and E2 are both
-        true. The expression <emphasis role="italic">E1 or E2</emphasis>
-        returns true if the effective boolean values of either or both of E1
-        and E2 are true.</para>
-
-        <para><programlisting> (for a truth table) 1 and 1</programlisting></para>
-
-        <para><emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:boolean: true</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>1 and 0</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:boolean: false</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>1 or 0</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:boolean: true</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>0 or 1</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:boolean: true</para>
-          </listitem>
-        </orderedlist>
-
-        <para></para>
-      </section>
-
-      <section id="SequenceType_Matching_Expressions">
-        <title>SequenceType Matching Expressions</title>
-
-        <para>The rules for SequenceType matching compare the actual type of a
-        value with an expected type. These rules are a subset of the formal
-        rules that match a value with an expected type defined in XQuery 1.0
-        and XPath 2.0 Formal Semantics <ulink
-        url="http://www.w3.org/TR/xpath20/#XQueryFormalSemantics">http://www.w3.org/TR/xpath20/#XQueryFormalSemantics</ulink>,
-        because the Formal Semantics must be able to match a value with any
-        XML Schema type, whereas the rules below only match values against
-        those types expressible by the SequenceType syntax.</para>
-
-        <para>Some of the rules for SequenceType matching require determining
-        whether a given type name is the same as or derived from an expected
-        type name. The given type name may be "known" (defined in the in-scope
-        schema definitions), or "unknown" (not defined in the in-scope schema
-        definitions). An unknown type name might be encountered, for example,
-        if a source document has been validated using a schema that was not
-        imported into the static context. In this case, an implementation is
-        allowed (but is not required) to provide an implementation-dependent
-        mechanism for determining whether the unknown type name is derived
-        from the expected type name. For example, an implementation might
-        maintain a data dictionary containing information about type
-        hierarchies. consider the following XML document:</para>
-
-        <programlisting>&lt;sorbo&gt;
- &lt;is&gt;elite&lt;/is&gt;
+					<emphasis role="italic">'result: '</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:boolean: true</para>
+					</listitem>
+				</orderedlist>
+				<para>
+					 </para>
+			</section>
+			<section id="SequenceType_Matching_Expressions">
+				<title>SequenceType Matching Expressions</title>
+				<para>The rules for SequenceType matching compare the actual type of a value with an expected type. These rules are a subset of the formal rules that match a value with an expected type defined in XQuery 1.0 and XPath 2.0 Formal Semantics 
+					<ulink url="http://www.w3.org/TR/xpath20/#XQueryFormalSemantics">http://www.w3.org/TR/xpath20/#XQueryFormalSemantics</ulink>, because the Formal Semantics must be able to match a value with any XML Schema type, whereas the rules below only match values against those types expressible by the SequenceType syntax. 
+				</para>
+				<para>Some of the rules for SequenceType matching require determining whether a given type name is the same as or derived from an expected type name. The given type name may be "known" (defined in the in-scope schema definitions), or "unknown" (not defined in the in-scope schema definitions). An unknown type name might be encountered, for example, if a source document has been validated using a schema that was not imported into the static context. In this case, an implementation is allowed (but is not required) to provide an implementation-dependent mechanism for determining whether the unknown type name is derived from the expected type name. For example, an implementation might maintain a data dictionary containing information about type hierarchies. consider the following XML document: 
+					&lt;source lang="xml"&gt;&lt;sorbo&gt;</para>
+				<literallayout> &lt;is&gt;elite&lt;/is&gt;
  &lt;!-- life sux --&gt;
-&lt;/sorbo&gt;
-</programlisting>
-
-        <para>Then, the following are some example of SequenceType
-        matchings:</para>
-
-        <para><programlisting> element({*})</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>element: sorbo</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>element(elite)</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>Empty results</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>sorbo/comment()</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>comment: life sux</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>data(/sorbo/comment())</programlisting></para>
-
-        <para> <emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>xs:string: life sux</para>
-          </listitem>
-        </orderedlist>
-
-        <para><programlisting>sorbo/node()</programlisting></para>
-
-        <para><emphasis role="bold">result:</emphasis></para>
-
-        <orderedlist>
-          <listitem>
-            <para>text:</para>
-          </listitem>
-
-          <listitem>
-            <para>element: is</para>
-          </listitem>
-
-          <listitem>
-            <para>comment: life sux</para>
-          </listitem>
-
-          <listitem>
-            <para>text:</para>
-          </listitem>
-        </orderedlist>
-
-        <para></para>
-      </section>
-    </section>
-  </chapter>
-
-  <chapter id="How_to_use_XPath_2.0_functions_with_PsychoPath">
-    <title>How to use XPath 2.0 functions with PsychoPath</title>
-
-    <para>The aim of this section is to give the user an overview of the
-    available XPath 2.0 functions that are implemented in PsychoPath. For the
-    formal specifications, see the W3C web-site for XPath 2.0 functions and
-    operators <ulink
-    url="http://www.w3.org/TR/xpath-functions/">http://www.w3.org/TR/xpath-functions/</ulink>.</para>
-
-    <section id="Accessors">
-      <title>Accessors</title>
-
-      <para>In order for PsychoPath to operate on instances of the XPath 2.0
-      data model, the model must expose the properties of the items it
-      contains. It does this by defining a family of accessor functions. These
-      functions are not available to users or applications to call directly.
-      Instead, they are descriptions of the information that an implementation
-      of the model must expose to applications.</para>
-
-      <para>data(‘string’)</para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>String n = ((XSString)rs.first()).stringvalue();
-println(n);</programlisting></para>
-
-      <para>In order to get the result of ‘string’</para>
-    </section>
-
-    <section id="Constructor_Functions">
-      <title>Constructor Functions</title>
-
-      <para><programlisting>xs:dateTime("2002-02-01T10:00:00+06:00")</programlisting></para>
-
-      <para>From within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>String n = ((XSDateTime)rs.first()).stringvalue(); println(n);</programlisting></para>
-
-      <para>in order to get the result of ‘2002-02-01T04:00:00Z’</para>
-    </section>
-
-    <section id="Functions_on_Numeric_Values">
-      <title>Functions on Numeric Values</title>
-
-      <para><programlisting>ceiling(xs:float(‘10.4’))</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>float n = ((XSFloat)rs.first()).floatvalue();
-println(n);</programlisting></para>
-
-      <para>In order to get the result of ‘11.0’</para>
-    </section>
-
-    <section id="Functions_to_Assemble_and_Disassemble_Strings">
-      <title>Functions to Assemble and Disassemble Strings</title>
-
-      <para><programlisting>codepoints-to-string(0111)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>String n = ((XSString)rs.first()).stringvalue();
-println(n);&lt;/source&gt;</programlisting></para>
-
-      <para>In order to get the result of ‘o’</para>
-    </section>
-
-    <section id="Compare_and_Other_Functions_on_String_Values">
-      <title>Compare and Other Functions on String Values</title>
-
-      <para><programlisting>concat(‘un’, ‘grateful’)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>String n = ((XSString)rs.first()).stringvalue();
-println(n);</programlisting></para>
-
-      <para>In order to get the result of ‘ungrateful’</para>
-    </section>
-
-    <section id="Functions_Based_on_Substring_Matching">
-      <title>Functions Based on Substring Matching</title>
-
-      <para><programlisting>contains("abc", "edf")</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>boolean n = ((XSBoolean)rs.first()).value();
-println(n);</programlisting></para>
-
-      <para>In order to get the result of ‘false’</para>
-    </section>
-
-    <section id="String_Functions_that_Use_Pattern_Matching">
-      <title>String Functions that Use Pattern Matching</title>
-
-      <para><programlisting>matches(‘abcd’, ‘abcd’)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>boolean n = ((XSBoolean)rs.first()).value();
-println(n);</programlisting></para>
-
-      <para>In order to get the result of ‘true’</para>
-    </section>
-
-    <section id="Functions_on_Boolean_Values">
-      <title>Functions on Boolean Values</title>
-
-      <para><programlisting>not(true())</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>boolean n = ((XSBoolean)rs.first()).value();
-println(n);</programlisting></para>
-
-      <para>in order to get the result of ‘false’</para>
-    </section>
-
-    <section id="Component_Extraction_Functions_on_Durations.2C_Dates_and_Times">
-      <title>Component Extraction Functions on Durations, Dates and
-      Times</title>
-
-      <para><programlisting>timezone-from-time(xs:time("13:20:00+05:00"))</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>String n = ((XDTDayTimeDuration)rs.first()).stringvalue(); 
-println(n);</programlisting></para>
-
-      <para>in order to get the result of ‘PT5H’</para>
-    </section>
-
-    <section id="Functions_Related_to_QNames">
-      <title>Functions Related to QNames</title>
-
-      <para><programlisting>local-name-from-QName(QName(‘ <ulink
-            url="http://www.example.com/example">http://www.example.com/example</ulink>’, ‘person’))</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>String n = ((XSNCName)rs.first()).stringvalue();
-println(n);</programlisting></para>
-
-      <para>in order to get the result of ‘person’</para>
-    </section>
-
-    <section id="Functions_on_Nodes">
-      <title>Functions on Nodes</title>
-
-      <para></para>
-
-      <section id="General_Functions_on_Sequences">
-        <title>General Functions on Sequences</title>
-
-        <para><programlisting>remove((‘s’,‘o’,‘m’,‘e’,‘t’,‘h’,‘i’,‘n’,‘g’), 6)</programlisting></para>
-
-        <para>from within a Java application, in order to extract the result
-        from the result sequence, one would have to use this code:</para>
-
-        <programlisting>for (Iterator iter = rs.iterator(); iter.hasNext();) {
-  Object item = iter.next(); 
+</literallayout>
+				<para>&lt;/sorbo&gt;
+					 
+					then, the following are some example of SequenceType matchings: </para>
+				<literallayout>element({*})
+</literallayout>
+				<para> 
+
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>element: sorbo</para>
+					</listitem>
+				</orderedlist>
+				<para>
+					 </para>
+				<literallayout>element(elite)
+</literallayout>
+				<para> 
+
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>Empty results</para>
+					</listitem>
+				</orderedlist>
+				<literallayout> sorbo/comment()
+</literallayout>
+				<para> 
+
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>comment: life sux</para>
+					</listitem>
+				</orderedlist>
+				<literallayout> data(/sorbo/comment())
+</literallayout>
+				<para> 
+
+					<emphasis role="bold">result:</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>xs:string: life sux</para>
+					</listitem>
+				</orderedlist>
+				<para>
+					 </para>
+				<literallayout>sorbo/node()
+</literallayout>
+				<para> 
+
+					<emphasis role="italic">'result: '</emphasis> 
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>text: </para>
+					</listitem>
+					<listitem>
+						<para>element: is </para>
+					</listitem>
+					<listitem>
+						<para>comment: life sux </para>
+					</listitem>
+					<listitem>
+						<para>text:</para>
+					</listitem>
+				</orderedlist>
+				<para>
+</para>
+			</section>
+		</section>
+	</chapter>
+	<chapter id="How_to_use_XPath_2.0_functions_with_PsychoPath">
+		<title>How to use XPath 2.0 functions with PsychoPath</title>
+		<para>The aim of this section is to give the user an overview of the available XPath 2.0 functions that are implemented in PsychoPath. For the formal specifications, see the W3C web-site for XPath 2.0 functions and operators 
+			<ulink url="http://www.w3.org/TR/xpath-functions/">http://www.w3.org/TR/xpath-functions/</ulink>.
+			 
+		</para>
+		<section id="Accessors">
+			<title>Accessors</title>
+			<para>In order for PsychoPath to operate on instances of the XPath 2.0 data model, the model must expose the properties of the items it contains. It does this by defining a family of accessor functions. These functions are not available to users or applications to call directly. Instead, they are descriptions of the information that an implementation of the model must expose to applications. </para>
+			<literallayout>data(‘string’)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>String n = ((XSString)rs.first()).stringvalue(); println(n);</para>
+			<para>in order to get the result of ‘string’</para>
+		</section>
+		<section id="Constructor_Functions">
+			<title>Constructor Functions</title>
+			<literallayout>xs:dateTime("2002-02-01T10:00:00+06:00")
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>String n = ((XSDateTime)rs.first()).stringvalue(); println(n);</para>
+			<para>in order to get the result of ‘2002-02-01T04:00:00Z’</para>
+		</section>
+		<section id="Functions_on_Numeric_Values">
+			<title>Functions on Numeric Values</title>
+			<literallayout>ceiling(xs:float(‘10.4’))
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>float n = ((XSFloat)rs.first()).floatvalue(); println(n);</para>
+			<para>in order to get the result of ‘11.0’ </para>
+		</section>
+		<section id="Functions_to_Assemble_and_Disassemble_Strings">
+			<title>Functions to Assemble and Disassemble Strings</title>
+			<literallayout>codepoints-to-string(0111)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>String n = ((XSString)rs.first()).stringvalue(); println(n);</para>
+			<para>in order to get the result of ‘o’</para>
+		</section>
+		<section id="Compare_and_Other_Functions_on_String_Values">
+			<title>Compare and Other Functions on String Values</title>
+			<literallayout>concat(‘un’, ‘grateful’)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>String n = ((XSString)rs.first()).stringvalue(); println(n);</para>
+			<para>in order to get the result of ‘ungrateful’</para>
+		</section>
+		<section id="Functions_Based_on_Substring_Matching">
+			<title>Functions Based on Substring Matching</title>
+			<literallayout>contains("abc", "edf")
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>boolean n = ((XSBoolean)rs.first()).value(); println(n);</para>
+			<para>in order to get the result of ‘false’</para>
+		</section>
+		<section id="String_Functions_that_Use_Pattern_Matching">
+			<title>String Functions that Use Pattern Matching</title>
+			<literallayout>matches(‘abcd’, ‘abcd’)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>boolean n = ((XSBoolean)rs.first()).value(); println(n);</para>
+			<para>in order to get the result of ‘true’</para>
+		</section>
+		<section id="Functions_on_Boolean_Values">
+			<title>Functions on Boolean Values</title>
+			<literallayout>not(true())
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>
+				boolean n = ((XSBoolean)rs.first()).value();
+				println(n);
+				</para>
+			<para>in order to get the result of ‘false’</para>
+		</section>
+		<section id="Component_Extraction_Functions_on_Durations.2C_Dates_and_Times">
+			<title>Component Extraction Functions on Durations, Dates and Times</title>
+			<literallayout>timezone-from-time(xs:time("13:20:00+05:00"))
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>String n = ((XDTDayTimeDuration)rs.first()).stringvalue(); println(n);</para>
+			<para>in order to get the result of ‘PT5H’</para>
+		</section>
+		<section id="Functions_Related_to_QNames">
+			<title>Functions Related to QNames</title>
+			<literallayout>local-name-from-QName(QName(‘http://www.example.com/example’, ‘person’))
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>String n = ((XSNCName)rs.first()).stringvalue(); println(n); </para>
+			<para>in order to get the result of ‘person’</para>
+		</section>
+		<section id="Functions_on_Nodes">
+			<title>Functions on Nodes</title>
+			<section id="General_Functions_on_Sequences">
+				<title>General Functions on Sequences</title>
+				<literallayout>remove((‘s’,‘o’,‘m’,‘e’,‘t’,‘h’,‘i’,‘n’,‘g’), 6)
+</literallayout>
+				<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+				<para>
+					for (Iterator iter = rs.iterator(); iter.hasNext();) {</para>
+				<literallayout>  Object item = iter.next(); 
   String n = ((XSString)item).stringvalue();
   print(n + " ");
-} println("");
-</programlisting>
-
-        <para>in order to get the result of ‘s o m e t i n g’</para>
-      </section>
-
-      <section id="Functions_That_Test_the_Cardinality_of_Sequences">
-        <title>Functions That Test the Cardinality of Sequences</title>
-
-        <para><programlisting>one-or-more((1,2,3,4,5))</programlisting></para>
-
-        <para>from within a Java application, in order to extract the result
-        from the result sequence, one would have to use this code:</para>
-
-        <programlisting>for (Iterator iter = rs.iterator(); iter.hasNext();) {
- Object item = iter.next();
+</literallayout>
+				<para>}
+					println(""); 
+					</para>
+				<para>in order to get the result of ‘s o m e t i n g’</para>
+			</section>
+			<section id="Functions_That_Test_the_Cardinality_of_Sequences">
+				<title>Functions That Test the Cardinality of Sequences</title>
+				<literallayout>one-or-more((1,2,3,4,5))
+</literallayout>
+				<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+				<para>
+					for (Iterator iter = rs.iterator(); iter.hasNext();) {</para>
+				<literallayout> Object item = iter.next();
  int n = ((XSInteger)item).intvalue();
  print(n + " ");
-} println("");
-</programlisting>
-
-        <para>in order to get the result of ‘1 2 3 4 5’</para>
-      </section>
-
-      <section id="Deep-Equal.2C_Aggregate_Functions.2C_and_Functions_that_Generate_Sequences">
-        <title>Deep-Equal, Aggregate Functions, and Functions that Generate
-        Sequences</title>
-
-        <para><programlisting>avg((3,4,5))</programlisting></para>
-
-        <para>from within a Java application, in order to extract the result
-        from the result sequence, one would have to use this code:</para>
-
-        <para><programlisting>double avg = ((XSDouble)rs.first()).doublevalue();
-println(avg);</programlisting></para>
-
-        <para>in order to get the result of ‘4.0’</para>
-      </section>
-
-      <section id="Context_Functions">
-        <title>Context Functions</title>
-
-        <para><programlisting>(10 to 20) = 2</programlisting></para>
-
-        <para>from within a Java application, in order to extract the result
-        from the result sequence, one would have to use this code:</para>
-
-        <para><programlisting>int pos = ((XSInteger)rs.first()).intvalue(); println(pos);</programlisting></para>
-
-        <para>in order to get the result of ‘11’</para>
-      </section>
-    </section>
-  </chapter>
-
-  <chapter id="How_to_use_XPath_2.0_operators_with_PsychoPath">
-    <title>How to use XPath 2.0 operators with PsychoPath</title>
-
-    <para>The aim of this section is to give the user an overview of the
-    available XPath 2.0 operators that are implemented in PsychoPath. For the
-    formal specifications, see the W3C web-site for XPath 2.0 functions and
-    operators <ulink
-    url="http://www.w3.org/TR/xpath-functions/">http://www.w3.org/TR/xpath-functions/</ulink>.</para>
-
-    <para></para>
-
-    <section id="Operators_on_Numeric_Values">
-      <title>Operators on Numeric Values</title>
-
-      <para><programlisting>xs:integer(4) + xs:integer(3)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>Integer n = ((XSInteger)rs.first()).integervalue(); 
-println(n);</programlisting></para>
-
-      <para>in order to get the result of ‘7’</para>
-    </section>
-
-    <section id="Comparison_of_Numeric_Values">
-      <title>Comparison of Numeric Values</title>
-
-      <para><programlisting>xs:decimal(3.3) = xs:decimal(6.6)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>boolean n = ((XSBoolean)rs.first()).value(); println(n);</programlisting></para>
-
-      <para>in order to get the result of ‘false’</para>
-    </section>
-
-    <section id="Operators_on_Boolean_Values">
-      <title>Operators on Boolean Values</title>
-
-      <para><programlisting>xs:boolean(’true’) gt xs:boolean(’false’)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>boolean n = ((XSBoolean)rs.first()).value(); println(n);</programlisting></para>
-
-      <para>in order to get the result of ‘true’</para>
-    </section>
-
-    <section id="Comparisons_of_Duration.2C_Date_and_Time_Values">
-      <title>Comparisons of Duration, Date and Time Values</title>
-
-      <para><programlisting>xs:time("23:00:00+06:00") lt xs:time("12:00:00-06:00")</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>boolean n = ((XSBoolean)rs.first()).value(); 
-println(n);</programlisting></para>
-
-      <para>in order to get the result of ‘true’</para>
-    </section>
-
-    <section id="Arithmetic_Functions_on_Durations">
-      <title>Arithmetic Functions on Durations</title>
-
-      <para><programlisting>multiply-dayTimeDuration(xs:dayTimeDuration("PT2H10M"), 2.1)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>String n = ((XDTDayTimeDuration)rs.first()).stringvalue(); 
-println(n);</programlisting></para>
-
-      <para>which returns a xdt:dayTimeDuration value corresponding to 4 hours
-      and 33 minutes ‘PT4H33M’</para>
-    </section>
-
-    <section id="Arithmetic_Functions_Dates_and_Times">
-      <title>Arithmetic Functions Dates and Times</title>
-
-      <para><programlisting>add-yearMonthDuration-to-dateTime( xs:dateTime("2000-10-30T11:12:00"), xdt:yearMonthDuration("P1Y2M"))</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>String n = ((XSDateTime)rs.first()).stringvalue(); 
-println(n);</programlisting></para>
-
-      <para>which returns an xs:dateTime value corresponding to the lexical
-      representation ‘2001-12-30T11:12:00’</para>
-    </section>
-
-    <section id="Operators_Related_to_QNames_And_Nodes">
-      <title>Operators Related to QNames And Nodes</title>
-
-      <para><programlisting>xs:QName(’ao’) eq xs:QName(’ao’)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>boolean n = ((XSBoolean)rs.first()).value(); 
-println(n);</programlisting></para>
-
-      <para>which returns the result of ‘true’</para>
-    </section>
-
-    <section id="Union.2C_Intersection_and_Except">
-      <title>Union, Intersection and Except</title>
-
-      <para><programlisting>union($seq2, $seq3)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <programlisting>for (Iterator iter = rs.iterator(); iter.hasNext();) {
-  Object item = iter.next();
-  String n = ((XSString)item).stringvalue();
-  print(n + ", ");
-}
-println("");
-</programlisting>
-
-      <para> </para>
-
-      <para>which returns the sequence consisting of $item1, $item2,
-      $item3.</para>
-
-      <para></para>
-    </section>
-
-    <section id="Operators_that_Generate_Sequences">
-      <title>Operators that Generate Sequences</title>
-
-      <para><programlisting>(1 to 3)</programlisting></para>
-
-      <para>from within a Java application, in order to extract the result
-      from the result sequence, one would have to use this code:</para>
-
-      <para><programlisting>int n = (XSInteger)rs.first()).stringvalue(); 
-println(n);</programlisting></para>
-
-      <para>which returns the sequence consisting of 1, 2, 3.</para>
-    </section>
-  </chapter>
+</literallayout>
+				<para>}
+					println(""); 
+					</para>
+				<para>in order to get the result of ‘1 2 3 4 5’</para>
+			</section>
+			<section id="Deep-Equal.2C_Aggregate_Functions.2C_and_Functions_that_Generate_Sequences">
+				<title>Deep-Equal, Aggregate Functions, and Functions that Generate Sequences</title>
+				<literallayout>avg((3,4,5))
+</literallayout>
+				<para> </para>
+				<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+				<para>double avg = ((XSDouble)rs.first()).doublevalue(); println(avg); </para>
+				<para>in order to get the result of ‘4.0’</para>
+			</section>
+			<section id="Context_Functions">
+				<title>Context Functions</title>
+				<literallayout>(10 to 20)[position() = 2]
+</literallayout>
+				<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+				<para>int pos = ((XSInteger)rs.first()).intvalue(); println(pos);</para>
+				<para>in order to get the result of ‘11’</para>
+			</section>
+		</section>
+	</chapter>
+	<chapter id="How_to_use_XPath_2.0_operators_with_PsychoPath">
+		<title>How to use XPath 2.0 operators with PsychoPath</title>
+		<para>The aim of this section is to give the user an overview of the available XPath 2.0 operators that are implemented in PsychoPath. For the formal specifications, see the W3C web-site for XPath 2.0 functions and operators 
+			<ulink url="http://www.w3.org/TR/xpath-functions/">http://www.w3.org/TR/xpath-functions/</ulink>. 
+		</para>
+		<para>
+			 </para>
+		<section id="Operators_on_Numeric_Values">
+			<title>Operators on Numeric Values</title>
+			<literallayout>xs:integer(4) + xs:integer(3)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>Integer n = ((XSInteger)rs.first()).integervalue(); println(n);</para>
+			<para>in order to get the result of ‘7’</para>
+		</section>
+		<section id="Comparison_of_Numeric_Values">
+			<title>Comparison of Numeric Values</title>
+			<literallayout>xs:decimal(3.3) = xs:decimal(6.6)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>boolean n = ((XSBoolean)rs.first()).value(); println(n);</para>
+			<para>in order to get the result of ‘false’</para>
+		</section>
+		<section id="Operators_on_Boolean_Values">
+			<title>Operators on Boolean Values</title>
+			<literallayout>xs:boolean(’true’) gt xs:boolean(’false’)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>boolean n = ((XSBoolean)rs.first()).value(); println(n); </para>
+			<para>in order to get the result of ‘true’</para>
+		</section>
+		<section id="Comparisons_of_Duration.2C_Date_and_Time_Values">
+			<title>Comparisons of Duration, Date and Time Values</title>
+			<literallayout>xs:time("23:00:00+06:00") lt xs:time("12:00:00-06:00")
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>boolean n = ((XSBoolean)rs.first()).value(); println(n);</para>
+			<para>in order to get the result of ‘true’</para>
+		</section>
+		<section id="Arithmetic_Functions_on_Durations">
+			<title>Arithmetic Functions on Durations</title>
+			<literallayout>multiply-dayTimeDuration(xdt:dayTimeDuration("PT2H10M"), 2.1)
+</literallayout>
+			<para> </para>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>String n = ((XDTDayTimeDuration)rs.first()).stringvalue(); println(n);</para>
+			<para>which returns a xdt:dayTimeDuration value corresponding to 4 hours and 33 minutes ‘PT4H33M’</para>
+		</section>
+		<section id="Arithmetic_Functions_Dates_and_Times">
+			<title>Arithmetic Functions Dates and Times</title>
+			<literallayout>add-yearMonthDuration-to-dateTime( xs:dateTime("2000-10-30T11:12:00"), xdt:yearMonthDuration("P1Y2M"))
+</literallayout>
+			<para> </para>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>String n = ((XSDateTime)rs.first()).stringvalue(); println(n);</para>
+			<para>which returns an xs:dateTime value corresponding to the lexical representation ‘2001-12-30T11:12:00’</para>
+		</section>
+		<section id="Operators_Related_to_QNames_And_Nodes">
+			<title>Operators Related to QNames And Nodes</title>
+			<literallayout>xs:QName(’ao’) eq xs:QName(’ao’)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>boolean n = ((XSBoolean)rs.first()).value(); println(n);</para>
+			<para>which returns the result of ‘true’</para>
+		</section>
+		<section id="Union.2C_Intersection_and_Except">
+			<title>Union, Intersection and Except</title>
+			<literallayout>union($seq2, $seq3)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>
+				for (Iterator iter = rs.iterator(); iter.hasNext();) {</para>
+			<literallayout>Object item = iter.next();
+String n = ((XSString)item).stringvalue();
+print(n + ", ");
+</literallayout>
+			<para>}
+				println(""); 
+				</para>
+			<para>which returns the sequence consisting of $item1, $item2, $item3. </para>
+			<para>
+</para>
+		</section>
+		<section id="Operators_that_Generate_Sequences">
+			<title>Operators that Generate Sequences</title>
+			<literallayout>(1 to 3)
+</literallayout>
+			<para>from within a Java application, in order to extract the result from the result sequence, one would have to use this code: </para>
+			<para>int n = (XSInteger)rs.first()).stringvalue(); println(n);</para>
+			<para>which returns the sequence consisting of 1, 2, 3. </para>
+			<itemizedlist>
+				<listitem>
+					<para></para>
+					<itemizedlist>
+						<listitem>
+							<para></para>
+							<itemizedlist>
+								<listitem>
+									<para>-</para>
+								</listitem>
+							</itemizedlist>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+			<para>
+				<ulink url="/wiki/Category:Draft_Documentation">Category:Draft_Documentation</ulink>
+			</para>
+		</section>
+	</chapter>
 </book>

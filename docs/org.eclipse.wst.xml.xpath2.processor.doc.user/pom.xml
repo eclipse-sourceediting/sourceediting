@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>org.eclipse.wst.xml.xpath2.processor.doc.user</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	<name>PsychoPath XPath 2.0 Processor: User Documentation</name>
 </project>

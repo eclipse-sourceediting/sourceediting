@@ -86,6 +86,17 @@ pre,code {
 	font-family: "Courier New", Courier, monospace;
 }
 
+div.literallayout {
+	font-family: "Courier New", Courier, monospace;
+	background-color: silver;
+	border: thin;
+	border-style: dashed;
+	color: black;
+	padding-left: 5;
+}
+div.literallayout p {
+	font-family: "Courier New", Courier, monospace;
+}
 /* end font face declarations */
 @media print {
 	html {
