@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -734,15 +734,12 @@ public class ModelQueryImpl implements ModelQuery
     protected void handleSubstitutionGroup(CMNodeList substitutionGroup)
     {
       int substitutionGroupLength = substitutionGroup.getLength();
-      if (substitutionGroupLength > 1)
+      for (int i = 0; i < substitutionGroupLength; i++)
       {
-        for (int i = 0; i < substitutionGroupLength; i++)
+        CMNode ed = substitutionGroup.item(i);
+        if (!Boolean.TRUE.equals(ed.getProperty("Abstract"))) //$NON-NLS-1$
         {
-          CMNode ed = substitutionGroup.item(i);
-          if (!Boolean.TRUE.equals(ed.getProperty("Abstract"))) //$NON-NLS-1$
-          {
-            addToTable(childNodeTable,ed);
-          }
+          addToTable(childNodeTable,ed);
         }
       }
     }
