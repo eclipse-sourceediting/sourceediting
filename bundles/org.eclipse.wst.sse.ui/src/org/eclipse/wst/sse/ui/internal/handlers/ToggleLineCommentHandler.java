@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -190,6 +190,10 @@ public final class ToggleLineCommentHandler extends AbstractCommentHandler {
 			monitor.beginTask(SSEUIMessages.ToggleComment_progress,
 					this.fSelectionEndLine-this.fSelectionStartLine);
 			try {
+				final CommentingStrategy[] strategies = new CommentingStrategy[fSelectionEndLine - fSelectionStartLine + 1];
+				final int[] regions = new int[fSelectionEndLine - fSelectionStartLine + 1];
+				boolean shouldComment = false;
+				int strategyCount = 0;
 				//toggle each line so long as task not canceled
 				for (int line = this.fSelectionStartLine;
 						line <= this.fSelectionEndLine && !monitor.isCanceled(); ++line) {
@@ -217,12 +221,22 @@ public final class ToggleLineCommentHandler extends AbstractCommentHandler {
 						
 						//toggle the comment on the line
 						if(commentType != null) {
-							if(commentType.alreadyCommenting(this.fDocument, lineTypedRegions)) {
-								commentType.remove(this.fDocument, lineRegion.getOffset(), lineRegion.getLength(), true);
-							} else {
-								commentType.apply(this.fDocument, lineRegion.getOffset(), lineRegion.getLength());
+							strategies[strategyCount] = commentType;
+							regions[strategyCount++] = line;
+							if (!shouldComment && !commentType.alreadyCommenting(this.fDocument, lineTypedRegions)) {
+								shouldComment = true;
 							}
 						}
+					}
+					monitor.worked(1);
+				}
+				for (int i = 0; i < strategyCount; i++) {
+					final IRegion lineRegion = fDocument.getLineInformation( regions[i] );
+					if (shouldComment) {
+						strategies[i].apply(this.fDocument, lineRegion.getOffset(), lineRegion.getLength());
+					}
+					else {
+						strategies[i].remove(this.fDocument, lineRegion.getOffset(), lineRegion.getLength(), true);
 					}
 					monitor.worked(1);
 				}
