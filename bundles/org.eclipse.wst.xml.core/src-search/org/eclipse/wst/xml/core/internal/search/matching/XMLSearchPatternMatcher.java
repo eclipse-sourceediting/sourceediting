@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,19 +68,9 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
             //
 			String actualValue = domElement.hasAttribute(pattern.getAttributeName()) ? domElement.getAttribute(pattern.getAttributeName()) : null;
 			 if(actualValue != null && actualValue.length() > 0){
-					int n = actualValue.indexOf(":"); //$NON-NLS-1$
-					if(n > 0){
-						String prefix = actualValue.substring(0, n);
-						pattern.setSearchName(actualValue.substring(n+1));      
-						
-						String namespace = computeNamespaceForPrefix(domElement, prefix);
-						pattern.setSearchNamespace(namespace);
-					
-					}
-					else {
-						pattern.setSearchName(actualValue);
-						pattern.setSearchNamespace(domElement.getOwnerDocument().getDocumentElement().getAttribute("targetNamespace")); //$NON-NLS-1$
-					}
+				 pattern.setSearchElement(domElement);
+				 pattern.setSearchName(actualValue);
+				 pattern.setSearchNamespace(domElement.getOwnerDocument().getDocumentElement().getAttribute("targetNamespace")); // set a default
 			    }
 		
 	}
@@ -93,17 +83,9 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
         pattern.setParentName(saxElement.getParentName());
 		String actualValue = saxElement.getAttributes().getValue(pattern.getAttributeName());
 		 if(actualValue != null){
-				int n = actualValue.indexOf(":"); //$NON-NLS-1$
-				if(n > 0){
-					String prefix = actualValue.substring(0, n);
-					pattern.setSearchName(actualValue.substring(n+1));
-					pattern.setSearchNamespace((String)saxElement.getNamespaceMap().get(prefix));
-				
-				}
-				else {
-					pattern.setSearchName(actualValue);
-					pattern.setSearchNamespace(saxElement.getTargetNamespace());
-				}
+			 pattern.setSearchElement(saxElement);
+			 pattern.setSearchName(actualValue);
+			 pattern.setSearchNamespace(saxElement.getTargetNamespace()); // set a default
 		    }
 	
 	}
@@ -196,21 +178,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
                 {
                   return false;  
                 }  
-                if(searchPattern.getSearchName() == null)
-                {  
-                  return false;
-                }
-                else if ("*".equals(searchPattern.getSearchName())) //$NON-NLS-1$
-                {
-                  return true;
-                }  
-                else if(searchPattern.getSearchNamespace() == null){
-					return searchPattern.getSearchName().equals(decodedPattern.getSearchName());
-				}
-				else{
-					return searchPattern.getSearchName().equals(decodedPattern.getSearchName()) &&
-					searchPattern.getSearchNamespace().equals(decodedPattern.getSearchNamespace());
-				}
+                return searchPattern.matches(decodedPattern);
 			}
 		}
 		
