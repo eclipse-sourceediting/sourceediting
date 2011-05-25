@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,30 +42,39 @@ final public class StructuredModelManager {
 	public static IModelManager getModelManager() {
 		boolean isReady = false;
 		IModelManager modelManager = null;
-		while (!isReady) {
-			Bundle localBundle = Platform.getBundle(SSECorePlugin.ID);
-			int state = localBundle.getState();
-			if (state == Bundle.ACTIVE) {
-				isReady = true;
-				// getInstance is a synchronized static method.
-				modelManager = ModelManagerImpl.getInstance();
-			}
-			else if (state == Bundle.STARTING) {
-				try {
-					Thread.sleep(100);
+		boolean interrupted = false;
+		try {
+			while (!isReady) {
+				Bundle localBundle = Platform.getBundle(SSECorePlugin.ID);
+				int state = localBundle.getState();
+				if (state == Bundle.ACTIVE) {
+					isReady = true;
+					// getInstance is a synchronized static method.
+					modelManager = ModelManagerImpl.getInstance();
 				}
-				catch (InterruptedException e) {
-					// ignore, just loop again
+				else if (state == Bundle.STARTING) {
+					try {
+						Thread.sleep(100);
+					}
+					catch (InterruptedException e) {
+						// ignore, just loop again
+						interrupted = true;
+					}
+				}
+				else if (state == Bundle.STOPPING || state == Bundle.UNINSTALLED) {
+					isReady = true;
+					modelManager = null;
+				}
+				else {
+					// not sure about other states, 'resolved', 'installed'
+					isReady = true;
+					modelManager = null;
 				}
 			}
-			else if (state == Bundle.STOPPING || state == Bundle.UNINSTALLED) {
-				isReady = true;
-				modelManager = null;
-			}
-			else {
-				// not sure about other states, 'resolved', 'installed'
-				isReady = true;
-				modelManager = null;
+		}
+		finally {
+			if (interrupted) {
+				Thread.currentThread().interrupt();
 			}
 		}
 		return modelManager;
