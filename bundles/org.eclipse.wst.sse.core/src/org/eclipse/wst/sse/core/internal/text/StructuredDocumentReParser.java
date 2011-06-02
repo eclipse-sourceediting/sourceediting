@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -599,22 +599,19 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		return result;
 	}
 
-	//  For simplicity, if either text to be deleted, or text to be inserted
-	// contains at least
-	//  one quote, we'll search for previous quote in document, if any, and use
-	// that flatnode as
-	//  a dirty start, and we'll use end of document as dirty end. We need to
-	// assume either \" or
-	//  \' is an exceptable quote. (NOTE: this is, loosely, an XML assumption
-	// --
-	// other languages
-	//  would differ, but we'll "hard code" for XML for now.
-	// future_TODO: this is a really bad heuristic ... we should be looking
-	// for
-	// odd number of quotes
-	// within a structuredDocumentRegion (or something!) This causes way too
-	// much reparsing on
-	// simple cases, like deleting a tag with a quoted attribute!
+	/*
+	 * For simplicity, if either text to be deleted, or text to be inserted
+	 * contains at least one quote, we'll search for previous quote in
+	 * document, if any, and use that document region as a dirty start, and we'll use
+	 * end of document as dirty end. We need to assume either \" or \' is an
+	 * acceptable quote. (NOTE: this is, loosely, an XML assumption -- other
+	 * languages would differ, but we'll "hard code" for XML for now.
+	 * 
+	 * future_TODO: this is a really bad heuristic ... we should be looking
+	 * for odd number of quotes within a structuredDocumentRegion (or
+	 * something!) This causes way too much reparsing on simple cases, like
+	 * deleting a tag with a quoted attribute!
+	 */
 	private StructuredDocumentEvent checkForQuotes() {
 		// routine is supported with null or empty string meaning the same
 		// thing: deletion
