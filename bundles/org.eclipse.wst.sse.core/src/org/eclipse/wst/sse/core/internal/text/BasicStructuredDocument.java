@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -2549,7 +2549,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		else {
 			if (Logger.DEBUG_DOCUMENT)
 				Logger.log(Logger.INFO, "Attempt to set linedelimiter to non-legal delimiter"); //$NON-NLS-1$ //$NON-NLS-2$
-			fInitialLineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, System.getProperty("line.separator"), new IScopeContext[] { new InstanceScope() });//$NON-NLS-1$
+			fInitialLineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, System.getProperty("line.separator"), new IScopeContext[] { InstanceScope.INSTANCE });//$NON-NLS-1$
 		}
 	}
 
