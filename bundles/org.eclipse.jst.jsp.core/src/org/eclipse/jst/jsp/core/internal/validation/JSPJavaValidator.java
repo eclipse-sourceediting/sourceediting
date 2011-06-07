@@ -239,6 +239,11 @@ public class JSPJavaValidator extends JSPValidator {
 			return null;
 		}
 
+		final boolean isIndirect = translation.isIndirect(problem.getSourceStart());
+		if (isIndirect && !FragmentValidationTools.shouldValidateFragment(f)) {
+			return null;
+		}
+
 		// line number for marker starts @ 1
 		// line number from document starts @ 0
 		int lineNo = structuredDoc.getLineOfOffset(sourceStart) + 1;
@@ -252,7 +257,7 @@ public class JSPJavaValidator extends JSPValidator {
 		// need additional adjustment for problems from
 		// indirect (included) files
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=119633
-		if (translation.isIndirect(problem.getSourceStart())) {
+		if (isIndirect) {
 			adjustIndirectPosition(m, translation);
 		}
 
