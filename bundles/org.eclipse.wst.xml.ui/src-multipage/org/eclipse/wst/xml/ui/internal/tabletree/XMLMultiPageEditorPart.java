@@ -53,6 +53,8 @@ import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.INavigationLocation;
+import org.eclipse.ui.INavigationLocationProvider;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IPropertyListener;
@@ -70,6 +72,8 @@ import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.TextSelectionNavigationLocation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -88,7 +92,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XMLMultiPageEditorPart extends MultiPageEditorPart {
+public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavigationLocationProvider {
 
 	/**
 	 * Internal part activation listener, copied from AbstractTextEditor
@@ -1124,5 +1128,37 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 				statusLineManager.setMessage(image, text);
 			}
 		}
+	}
+
+	public INavigationLocation createEmptyNavigationLocation() {
+		if (getActivePage() == fDesignPageIndex) {
+			return new DesignPageNavigationLocation(this, fDesignViewer, false);
+		}
+		// Makes sure that the text editor is returned
+		return new TextSelectionNavigationLocation(fTextEditor, false) {
+			protected IEditorPart getEditorPart() {
+				IEditorPart part = super.getEditorPart();
+				if (part != null) {
+					part = (ITextEditor) part.getAdapter(ITextEditor.class);
+				}
+				return part;
+			}
+		};
+	}
+
+	public INavigationLocation createNavigationLocation() {
+		if (getActivePage() == fDesignPageIndex) {
+			return new DesignPageNavigationLocation(this, fDesignViewer, true);
+		}
+		// Makes sure that the text editor is returned
+		return new TextSelectionNavigationLocation(fTextEditor, true) {
+			protected IEditorPart getEditorPart() {
+				IEditorPart part = super.getEditorPart();
+				if (part != null) {
+					part = (ITextEditor) part.getAdapter(ITextEditor.class);
+				}
+				return part;
+			}
+		};
 	}
 }
