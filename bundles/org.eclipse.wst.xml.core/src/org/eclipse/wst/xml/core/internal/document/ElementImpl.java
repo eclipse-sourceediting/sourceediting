@@ -226,12 +226,16 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 *            boolean
 	 */
 	public Node cloneNode(boolean deep) {
-		ElementImpl cloned = new ElementImpl(this);
+		ElementImpl cloned = newInstance();
 		if (deep)
 			cloneChildNodes(cloned, deep);
 		
 		notifyUserDataHandlers(UserDataHandler.NODE_CLONED, cloned);
 		return cloned;
+	}
+
+	protected ElementImpl newInstance() {
+		return new ElementImpl(this);
 	}
 
 	/**
