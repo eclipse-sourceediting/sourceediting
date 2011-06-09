@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 public class ElementImplForJSP extends ElementStyleImpl {
 	/**
@@ -60,10 +59,8 @@ public class ElementImplForJSP extends ElementStyleImpl {
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
-	public Node cloneNode(boolean deep) {
-		ElementImpl cloned = new ElementImplForJSP(this);
-		if (deep)
-			cloneChildNodes(cloned, deep);
-		return cloned;
+
+	protected ElementImpl newInstance() {
+		return new ElementImplForJSP(this);
 	}
 }
