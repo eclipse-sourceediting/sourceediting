@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -152,6 +152,8 @@ public class DocumentProvider {
 		DocumentBuilder builder = null;
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DOMImplementation impl = builder.getDOMImplementation();
+			return impl;
 		}
 		catch (ParserConfigurationException e1) {
 			Logger.logException(e1);
@@ -159,8 +161,7 @@ public class DocumentProvider {
 		catch (FactoryConfigurationError e1) {
 			Logger.logException(e1);
 		}
-		DOMImplementation impl = builder.getDOMImplementation();
-		return impl;
+		return null;
 	}
 
 	/*************************************************************************
@@ -267,15 +268,18 @@ public class DocumentProvider {
 	private Document getNewDocument() {
 		Document result = null;
 		try {
-			result = getDomImplementation().createDocument("http://www.w3.org/XML/1998/namespace", getRootElementName(), null); //$NON-NLS-1$
-			NodeList children = result.getChildNodes();
-			for (int i = 0; i < children.getLength(); i++) {
-				result.removeChild(children.item(i));
+			DOMImplementation domImplementation = getDomImplementation();
+			if (domImplementation != null) {
+				result = domImplementation.createDocument("http://www.w3.org/XML/1998/namespace", getRootElementName(), null); //$NON-NLS-1$
+				NodeList children = result.getChildNodes();
+				for (int i = 0; i < children.getLength(); i++) {
+					result.removeChild(children.item(i));
+				}
+				// we're going through this effort to avoid a NS element
+				Element settings = result.createElementNS("http://www.w3.org/XML/1998/namespace", getRootElementName()); //$NON-NLS-1$
+				result.appendChild(settings);
+				return result;
 			}
-			// we're going through this effort to avoid a NS element
-			Element settings = result.createElementNS("http://www.w3.org/XML/1998/namespace", getRootElementName()); //$NON-NLS-1$
-			result.appendChild(settings);
-			return result;
 		}
 		catch (DOMException e) {
 			Logger.logException(e);

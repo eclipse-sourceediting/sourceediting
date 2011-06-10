@@ -854,12 +854,12 @@ class ProjectDescription {
 								 */
 								info.uri = uri;
 								jarRecord.info = info;
-							}
-							try {
-								contents.close();
-							}
-							catch (IOException e) {
-								Logger.log(Logger.ERROR_DEBUG, null, e);
+								try {
+									contents.close();
+								}
+								catch (IOException e) {
+									Logger.log(Logger.ERROR_DEBUG, null, e);
+								}
 							}
 						}
 					}

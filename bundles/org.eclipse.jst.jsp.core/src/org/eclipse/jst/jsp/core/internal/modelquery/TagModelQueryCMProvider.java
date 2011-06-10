@@ -53,7 +53,7 @@ public class TagModelQueryCMProvider implements ModelQueryCMProvider {
 
 		CMDocument result = null;
 		try {
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
+			if (node.getNodeType() == Node.ELEMENT_NODE && tagdoc != null) {
 				String elementName = node.getNodeName();
 
 				// test to see if this node belongs to JSP's CMDocument (case

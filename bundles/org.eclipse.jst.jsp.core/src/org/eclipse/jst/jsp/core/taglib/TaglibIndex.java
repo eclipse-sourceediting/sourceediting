@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -237,16 +237,18 @@ public final class TaglibIndex {
 										}
 									}
 								}
-								for (int i = 0; i < projects.length; i++) {
-									if (_debugIndexCreation) {
-										Logger.log(Logger.INFO, "TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
-									}
-									ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
-									if (description != null) {
+								if (projects != null) {
+									for (int i = 0; i < projects.length; i++) {
 										if (_debugIndexCreation) {
-											Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+											Logger.log(Logger.INFO, "TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
 										}
-										description.clear();
+										ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
+										if (description != null) {
+											if (_debugIndexCreation) {
+												Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+											}
+											description.clear();
+										}
 									}
 								}
 							}
@@ -290,29 +292,31 @@ public final class TaglibIndex {
 										}
 									}
 								}
-								for (int i = 0; i < projects.length; i++) {
-									try {
-										if (deltas[i] != null && deltas[i].getKind() != IResourceDelta.REMOVED && projects[i].isAccessible()) {
-											ProjectDescription description = getDescription(projects[i]);
-											if (description != null && !frameworkIsShuttingDown()) {
-												deltas[i].accept(description.getVisitor());
-											}
-										}
-										if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
-											if (_debugIndexCreation) {
-												Logger.log(Logger.INFO, "TaglibIndex noticed " + projects[i].getName() + " was removed or is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
-											}
-											ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
-											if (description != null) {
-												if (_debugIndexCreation) {
-													Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+								if (projects != null) {
+									for (int i = 0; i < projects.length; i++) {
+										try {
+											if (deltas[i] != null && deltas[i].getKind() != IResourceDelta.REMOVED && projects[i].isAccessible()) {
+												ProjectDescription description = getDescription(projects[i]);
+												if (description != null && !frameworkIsShuttingDown()) {
+													deltas[i].accept(description.getVisitor());
 												}
-												description.clear();
+											}
+											if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
+												if (_debugIndexCreation) {
+													Logger.log(Logger.INFO, "TaglibIndex noticed " + projects[i].getName() + " was removed or is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
+												}
+												ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
+												if (description != null) {
+													if (_debugIndexCreation) {
+														Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+													}
+													description.clear();
+												}
 											}
 										}
-									}
-									catch (CoreException e) {
-										Logger.logException(e);
+										catch (CoreException e) {
+											Logger.logException(e);
+										}
 									}
 								}
 							}

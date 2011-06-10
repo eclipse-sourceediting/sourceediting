@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -450,10 +450,10 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		}
 		ed.setNodeName(shortFilename);
 		ed.setPath(tagFile.getFullPath().toString());
-		if (fileExtension.equals("tag")) {
+		if ("tag".equals(fileExtension)) { //$NON-NLS-1$
 			loadTagFile(ed, tagFile, true);
 		}
-		else if (fileExtension.equals("tagx")) {
+		else if ("tagx".equals(fileExtension)) { //$NON-NLS-1$
 			loadTagXFile(ed, tagFile, true);
 		}
 
