@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,14 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.spelling.ISpellcheckDelegate;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Comment;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 /**
@@ -49,7 +55,20 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 			
 			IndexedRegion region = model.getIndexedRegion(offset);
 			if(region != null) {
-				shouldSpellcheck = (region instanceof Comment || region instanceof Text);
+				shouldSpellcheck = region instanceof Comment;
+				if (!shouldSpellcheck && region instanceof Text) {
+					final Node parent = ((Text) (region)).getParentNode();
+					if (parent != null && parent.getNodeType() == Node.ELEMENT_NODE) {
+						final ModelQuery mq = ModelQueryUtil.getModelQuery(parent.getOwnerDocument());
+						if (mq != null) {
+							final CMElementDeclaration decl = mq.getCMElementDeclaration((Element) parent);
+							if (decl != null) {
+								final CMDataType type= decl.getDataType();
+								shouldSpellcheck = type == null || type.getEnumeratedValues() == null || type.getEnumeratedValues().length == 0;
+							}
+						}
+					}
+				}
 			}
 			
 			return shouldSpellcheck;
