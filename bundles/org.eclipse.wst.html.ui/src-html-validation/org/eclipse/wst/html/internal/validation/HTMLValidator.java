@@ -135,8 +135,11 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 		if (!canHandle(file))
 			return null;
 
-		IStructuredModel model = null;
 		IModelManager manager = StructuredModelManager.getModelManager();
+		if (manager == null)
+			return null;
+
+		IStructuredModel model = null;
 		try {
 			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 		}
