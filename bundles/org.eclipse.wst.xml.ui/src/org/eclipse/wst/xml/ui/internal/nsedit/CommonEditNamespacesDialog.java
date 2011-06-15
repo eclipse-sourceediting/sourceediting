@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,10 +33,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.dialogs.EditNamespaceInfoDialog;
 import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 
@@ -250,8 +248,7 @@ public class CommonEditNamespacesDialog {
 	}
 
 	protected EditNamespaceInfoDialog invokeDialog(String title, NamespaceInfo info) {
-		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		EditNamespaceInfoDialog dialog = new EditNamespaceInfoDialog(shell, info);
+		EditNamespaceInfoDialog dialog = new EditNamespaceInfoDialog(topComposite.getShell(), info);
 		dialog.create();
 		dialog.getShell().setText(title);
 		dialog.setBlockOnOpen(true);
@@ -293,8 +290,7 @@ public class CommonEditNamespacesDialog {
 	}
 
 	public void performNew() {
-		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		CommonAddNamespacesDialog dialog = new CommonAddNamespacesDialog(shell, XMLUIMessages._UI_ADD_NAMESPACE_DECLARATIONS, resourceLocation, namespaceInfoList);
+		CommonAddNamespacesDialog dialog = new CommonAddNamespacesDialog(topComposite.getShell(), XMLUIMessages._UI_ADD_NAMESPACE_DECLARATIONS, resourceLocation, namespaceInfoList);
 		dialog.createAndOpen();
 		if (dialog.getReturnCode() == Window.OK) {
 			namespaceInfoList.addAll(dialog.getNamespaceInfoList());
