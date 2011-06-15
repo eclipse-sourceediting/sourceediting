@@ -20,6 +20,7 @@ import org.eclipse.wst.xml.core.tests.contentmodel.CMValidatorValidationTest;
 import org.eclipse.wst.xml.core.tests.contentmodel.ExternalSchemaTest;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestAttributesOrder;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestCatalogRetrivalAndModelCreation;
+import org.eclipse.wst.xml.core.tests.contentmodel.TestCyclicGroupReferences;
 import org.eclipse.wst.xml.core.tests.document.FileBufferDocumentTester;
 import org.eclipse.wst.xml.core.tests.document.GetDocumentRegionsTest;
 import org.eclipse.wst.xml.core.tests.document.TestStructuredDocument;
@@ -81,5 +82,6 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(RegionChangedAdapterNotificationTests.class));
 		addTest(new TestSuite(GlobalCMDocumentCacheTest.class));
 		addTest(new TestSuite(ExternalSchemaTest.class));
+		addTest(new TestSuite(TestCyclicGroupReferences.class));
 	}
 }
