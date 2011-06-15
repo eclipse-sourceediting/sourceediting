@@ -171,8 +171,20 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 							}
 
 							IResource[] roots = getRoots(project);
+							IIncludePathEntry[] resolvedEntries = jsProject.getResolvedClasspath();
 							for (int root = 0; root < roots.length; ++root) {
 								IPath rootPath = roots[root].getFullPath();
+								
+								// make sure we do not create a source entry that conflicts with an existing library
+								boolean foundMatch = false;
+								for(int k = 0; k <= resolvedEntries.length; k++) {
+									if(resolvedEntries[k].getPath().equals(rootPath)) {
+										foundMatch = true;
+										break;
+									}
+								}
+								if(foundMatch)
+									continue;
 
 								/*
 								 * find matching pre-existing exclusion
