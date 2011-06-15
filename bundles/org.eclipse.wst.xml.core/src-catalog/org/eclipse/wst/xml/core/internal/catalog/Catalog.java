@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2009 IBM Corporation and others.
+ * Copyright (c) 2002, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -137,53 +137,55 @@ public class Catalog implements ICatalog
 		
 		InternalResolver()
 		{
-			for (Iterator i = catalogElements.iterator(); i.hasNext();)
-			{
-				ICatalogElement catalogElement = (ICatalogElement) i.next();
-				if (catalogElement.getType() == ICatalogElement.TYPE_ENTRY)
+			synchronized (catalogElements) {
+				for (Iterator i = catalogElements.iterator(); i.hasNext();)
 				{
-					ICatalogEntry entry = (ICatalogEntry) catalogElement;
-					Map map = getEntryMap(entry.getEntryType());
-					map.put(entry.getKey(), entry);
-				} 
-				else if (catalogElement.getType() == ICatalogElement.TYPE_REWRITE) 
-				{
-					IRewriteEntry entry = (IRewriteEntry) catalogElement;
-					if (entry.getEntryType() == IRewriteEntry.REWRITE_TYPE_SYSTEM) 
+					ICatalogElement catalogElement = (ICatalogElement) i.next();
+					if (catalogElement.getType() == ICatalogElement.TYPE_ENTRY)
 					{
-						rewriteSystemList.add(entry);
+						ICatalogEntry entry = (ICatalogEntry) catalogElement;
+						Map map = getEntryMap(entry.getEntryType());
+						map.put(entry.getKey(), entry);
 					} 
-					else 
+					else if (catalogElement.getType() == ICatalogElement.TYPE_REWRITE) 
 					{
-						rewriteUriList.add(entry);
-					}
-				} 
-				else if (catalogElement.getType() == ICatalogElement.TYPE_SUFFIX) 
-				{
-					ISuffixEntry entry = (ISuffixEntry) catalogElement;
-					if (entry.getEntryType() == ISuffixEntry.SUFFIX_TYPE_SYSTEM) 
-					{
-						suffixSystemList.add(entry);
+						IRewriteEntry entry = (IRewriteEntry) catalogElement;
+						if (entry.getEntryType() == IRewriteEntry.REWRITE_TYPE_SYSTEM) 
+						{
+							rewriteSystemList.add(entry);
+						} 
+						else 
+						{
+							rewriteUriList.add(entry);
+						}
 					} 
-					else 
+					else if (catalogElement.getType() == ICatalogElement.TYPE_SUFFIX) 
 					{
-						suffixUriList.add(entry);
-					}
-				} 
-				else if (catalogElement.getType() == ICatalogElement.TYPE_DELEGATE) 
-				{
-					IDelegateCatalog delegate = (IDelegateCatalog) catalogElement;
-					if (delegate.getEntryType() == IDelegateCatalog.DELEGATE_TYPE_PUBLIC) 
+						ISuffixEntry entry = (ISuffixEntry) catalogElement;
+						if (entry.getEntryType() == ISuffixEntry.SUFFIX_TYPE_SYSTEM) 
+						{
+							suffixSystemList.add(entry);
+						} 
+						else 
+						{
+							suffixUriList.add(entry);
+						}
+					} 
+					else if (catalogElement.getType() == ICatalogElement.TYPE_DELEGATE) 
 					{
-						delegatePublicList.add(delegate);
-					}
-					else if (delegate.getEntryType() == IDelegateCatalog.DELEGATE_TYPE_SYSTEM) 
-					{
-						delegateSystemList.add(delegate);
-					}
-					else 
-					{
-						delegateUriList.add(delegate);
+						IDelegateCatalog delegate = (IDelegateCatalog) catalogElement;
+						if (delegate.getEntryType() == IDelegateCatalog.DELEGATE_TYPE_PUBLIC) 
+						{
+							delegatePublicList.add(delegate);
+						}
+						else if (delegate.getEntryType() == IDelegateCatalog.DELEGATE_TYPE_SYSTEM) 
+						{
+							delegateSystemList.add(delegate);
+						}
+						else 
+						{
+							delegateUriList.add(delegate);
+						}
 					}
 				}
 			}
@@ -486,7 +488,9 @@ public class Catalog implements ICatalog
 
 	public void addCatalogElement(ICatalogElement element)
 	{
-		catalogElements.add(element);
+		synchronized (catalogElements) {
+			catalogElements.add(element);
+		}
 		element.setOwnerCatalog(this);
 		internalResolver = null;
 		notifyAddElement(element);
@@ -524,7 +528,9 @@ public class Catalog implements ICatalog
 
 	public void clear()
 	{
-		catalogElements.clear();
+		synchronized (catalogElements) {
+			catalogElements.clear();
+		}
 		internalResolver = null;
 		notifyChanged();
 	}
@@ -688,7 +694,9 @@ public class Catalog implements ICatalog
 
 	public void removeCatalogElement(ICatalogElement element)
 	{
-		catalogElements.remove(element);
+		synchronized (catalogElements) {
+			catalogElements.remove(element);
+		}
 		internalResolver = null;
 		notifyRemoveElement(element);
 		
