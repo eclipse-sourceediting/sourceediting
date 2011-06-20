@@ -177,7 +177,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 								
 								// make sure we do not create a source entry that conflicts with an existing library
 								boolean foundMatch = false;
-								for(int k = 0; k <= resolvedEntries.length; k++) {
+								for(int k = 0; k < resolvedEntries.length; k++) {
 									if(resolvedEntries[k].getPath().equals(rootPath)) {
 										foundMatch = true;
 										break;
