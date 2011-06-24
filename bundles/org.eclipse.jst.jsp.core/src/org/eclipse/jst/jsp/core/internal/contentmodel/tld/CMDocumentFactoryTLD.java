@@ -29,6 +29,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
@@ -297,7 +301,26 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		 * Preload with information from the tag file--it can be overwritten
 		 * by the values from the TLD
 		 */
-		IPath tagPath = FacetModuleCoreSupport.resolve(new Path(document.getBaseLocation()), path);
+		final IFile reference = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(document.getBaseLocation()));
+		IPath tagPath = null;
+		if (reference != null && reference.isAccessible()) {
+			if (!FacetModuleCoreSupport.isDynamicWebProject(reference.getProject())) {
+				tagPath = getExportedTagPath(reference, path);
+			}
+			else {
+				// Even if it's a DWP, it's possible that it might be exported like a Java project when not within WebContent root
+				final IPath root = FacetModuleCoreSupport.getWebContentRootPath(reference.getProject());
+				if (root != null) {
+					// It's not in the WebContent root path
+					if (root.matchingFirstSegments(reference.getFullPath()) != root.segmentCount()) {
+						tagPath = getExportedTagPath(reference, path);
+					}
+				}
+			}
+		}
+		if (tagPath == null) {
+			tagPath = FacetModuleCoreSupport.resolve(new Path(document.getBaseLocation()), path);
+		}
 		if (tagPath.segmentCount() > 1) {
 			IFile tagFile = ResourcesPlugin.getWorkspace().getRoot().getFile(tagPath);
 			if (tagFile.isAccessible()) {
@@ -369,6 +392,24 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		}
 		
 		return ed;
+	}
+
+	private IPath getExportedTagPath(IFile file, String path) {
+		final IJavaProject javaProject = JavaCore.create(file.getProject());
+		if (javaProject != null) {
+			try {
+				final IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
+				for (int i = 0; i < packageFragmentRoots.length; i++) {
+					if (!packageFragmentRoots[i].isArchive() && !packageFragmentRoots[i].isExternal()) {
+						return packageFragmentRoots[i].getPath().append(new Path(path));
+					}
+				}
+			}
+			catch (JavaModelException e) {
+				Logger.logException(e);
+			}
+		}
+		return null;
 	}
 
 	private boolean isJarFile(String path) {

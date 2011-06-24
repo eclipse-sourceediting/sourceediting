@@ -342,13 +342,13 @@ public class TaglibHelper {
 					 * design-wise, this is the first time we have the
 					 * necessary information to validate the tag class.
 					 */
-					validateTagClass(structuredDoc, customTag, tldElementDecl, problems);
+					boolean tagClassFound = validateTagClass(structuredDoc, customTag, tldElementDecl, problems);
 
 					// 1.2+ taglib style
 					addVariables(results, node, customTag);
 
 					// for 1.1 need more info from taglib tracker
-					if (doc instanceof TaglibTracker) {
+					if (tagClassFound && doc instanceof TaglibTracker) {
 						String uri = ((TaglibTracker) doc).getURI();
 						String prefix = ((TaglibTracker) doc).getPrefix();
 						// only for 1.1 taglibs
@@ -426,6 +426,8 @@ public class TaglibHelper {
 	 *            URI where the tld can be found
 	 */
 	private void addTEIVariables(IStructuredDocument document, ITextRegionCollection customTag, List results, TLDElementDeclaration decl, String prefix, String uri, List problems) {
+		if (TLDElementDeclaration.SOURCE_TAG_FILE.equals(decl.getProperty(TLDElementDeclaration.TAG_SOURCE)) || fJavaProject == null)
+			return;
 		String teiClassname = decl.getTeiclass();
 		if (teiClassname == null || teiClassname.length() == 0 || fJavaProject == null || fNotFoundClasses.contains(teiClassname))
 			return;
@@ -854,10 +856,15 @@ public class TaglibHelper {
 		}
 	}
 
-	private void validateTagClass(IStructuredDocument document, ITextRegionCollection customTag, TLDElementDeclaration decl, List problems) {
+	private boolean isTagFile(TLDElementDeclaration decl) {
+		final String path = decl.getPath(); 
+		return TLDElementDeclaration.SOURCE_TAG_FILE.equals(decl.getProperty(TLDElementDeclaration.TAG_SOURCE)) || (path != null && path.startsWith("/META-INF/tags")); //$NON-NLS-1$
+	}
+
+	private boolean validateTagClass(IStructuredDocument document, ITextRegionCollection customTag, TLDElementDeclaration decl, List problems) {
 		// skip if from a tag file
-		if (TLDElementDeclaration.SOURCE_TAG_FILE.equals(decl.getProperty(TLDElementDeclaration.TAG_SOURCE)) || fJavaProject == null) {
-			return;
+		if (isTagFile(decl) || fJavaProject == null) {
+			return false;
 		}
 
 		String tagClassname = decl.getTagclass();
@@ -876,6 +883,7 @@ public class TaglibHelper {
 				problems.add(createdProblem);
 			}
 		}
+		return tagClass != null;
 	}
 
 	/**
