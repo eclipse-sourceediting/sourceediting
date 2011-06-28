@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ public interface ScriptLanguageKeys {
 
 	public static final String JAVASCRIPT = "javascript"; //$NON-NLS-1$
 	public static final String[] JAVASCRIPT_LANGUAGE_KEYS = {"javascript", //$NON-NLS-1$
+				"ecmascript", //$NON-NLS-1$
 				"javascript1.0", //$NON-NLS-1$
 				"javascript1.1", //$NON-NLS-1$
 				"javascript1.2", //$NON-NLS-1$
@@ -34,6 +35,20 @@ public interface ScriptLanguageKeys {
 				"sashscript"}; //$NON-NLS-1$
 
 	public static final String[] JAVASCRIPT_MIME_TYPE_KEYS = {"text/javascript", //$NON-NLS-1$
+				"application/ecmascript", //$NON-NLS-1$
+				"application/javascript", //$NON-NLS-1$
+				"application/x-ecmascript", //$NON-NLS-1$
+				"application/x-javascript", //$NON-NLS-1$
+				"text/ecmascript", //$NON-NLS-1$
+				"text/javascript1.0", //$NON-NLS-1$
+				"text/javascript1.1", //$NON-NLS-1$
+				"text/javascript1.2", //$NON-NLS-1$
+				"text/javascript1.3", //$NON-NLS-1$
+				"text/javascript1.4", //$NON-NLS-1$
+				"text/javascript1.5", //$NON-NLS-1$
 				"text/jscript", //$NON-NLS-1$
+				"text/livescript", //$NON-NLS-1$
+				"text/x-ecmascript", //$NON-NLS-1$
+				"text/x-javascript", //$NON-NLS-1$
 				"text/sashscript"}; //$NON-NLS-1$
 }
