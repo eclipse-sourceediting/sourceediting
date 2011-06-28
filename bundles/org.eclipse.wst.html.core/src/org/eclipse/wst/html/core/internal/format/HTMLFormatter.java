@@ -481,6 +481,26 @@ public class HTMLFormatter implements IStructuredFormatter {
 	}
 
 	/**
+	 * Checks if the content of an inline node has been formatted in any way
+	 * @param parent the parent node to check for formatting
+	 * @return true if the parent node is inline and also has text formatting
+	 */
+	protected boolean isContentFormatted(Node parent) {
+		final Node first = parent.getFirstChild();
+		if (first != null && first.getNodeType() == Node.TEXT_NODE) {
+			final String content = first.getTextContent();
+			final int length = content.length();
+			for (int i = 0; i < length; i++) {
+				final char c = content.charAt(i);
+				if (c == '\r' || c == '\n') {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 */
 	protected void insertBreakAfter(IDOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
@@ -498,6 +518,9 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 		String spaces = null;
 		if (next == null) { // last spaces
+			// If the parent is inline and its content is not formatted don't insert
+			if (formattingUtil.isInline(parent) && !isContentFormatted(parent))
+				return;
 			// use parent indent for the end tag
 			spaces = getBreakSpaces(parent);
 		}
@@ -767,7 +790,17 @@ public class HTMLFormatter implements IStructuredFormatter {
     public boolean allowsNewlineAfter(boolean theBool, Node theNode, Element theParentElement) {
         boolean result = theBool;
         if ((theNode.getNodeType() == Node.TEXT_NODE) && formattingUtil.isInline(theParentElement)) {
-            result = false;
+        	if (theParentElement.getChildNodes().getLength() == 1) { // Only child is a text node, no newline
+        		result = false;
+        	}
+        	else if (theNode == theParentElement.getLastChild()) { // theNode is the last, does formatting need corrected
+        		if (theParentElement.getFirstChild().getNodeType() == Node.ELEMENT_NODE) {
+        			result = false;
+        		}
+        	}
+        	else {
+        		result = false;
+        	}
         } else if (theNode.getNodeType() == Node.ELEMENT_NODE
                 && formattingUtil.isInline(theNode.getNextSibling())) {
             result = false;
