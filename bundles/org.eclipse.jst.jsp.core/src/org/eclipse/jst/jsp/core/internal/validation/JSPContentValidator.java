@@ -208,10 +208,22 @@ public class JSPContentValidator extends JSPValidator {
 		}
 	}
 
+	private boolean shouldValidate(IResource resource) {
+		do {
+			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
+				return false;
+			}
+			resource = resource.getParent();
+		}
+		while ((resource.getType() & IResource.PROJECT) == 0);
+		return true;
+	}
+
 	public ValidationResult validate(final IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
 		if (resource.getType() != IResource.FILE)
 			return null;
-
+		if (!shouldValidate(resource))
+			return null;
 		ValidationResult result = new ValidationResult();
 		final IReporter reporter = result.getReporter(monitor);
 

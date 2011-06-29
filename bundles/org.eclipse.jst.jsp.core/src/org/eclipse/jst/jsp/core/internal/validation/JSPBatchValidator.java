@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -485,6 +485,8 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 
 	public ValidationResult validate(final IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
 		if (resource.getType() != IResource.FILE)
+			return null;
+		if (!shouldValidate((IFile) resource))
 			return null;
 		final ValidationResult result = new ValidationResult();
 		final IReporter reporter = result.getReporter(monitor);
