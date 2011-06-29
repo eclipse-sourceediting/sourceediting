@@ -32,12 +32,17 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 /**
  * Detects hyper-links in Tag Library Descriptors
@@ -160,6 +165,38 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 		return null;
 	}
 
+	private boolean isJspJavaContent(IDocument document, IRegion region) {
+		JSPTranslation translation = null;
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			IDOMModel xmlModel = null;
+			if (model instanceof IDOMModel) {
+				xmlModel = (IDOMModel) model;
+				if (xmlModel != null) {
+					final IDOMDocument xmlDoc = xmlModel.getDocument();
+					final JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+					if (adapter != null) {
+						translation = adapter.getJSPTranslation();
+						if (translation!=null) {
+							int javaOffset = translation.getJavaOffset(region.getOffset());
+							if (javaOffset > -1) {
+									return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+
+		return false;
+	}
+
 	private IHyperlink createJavaElementHyperlink(IJavaProject javaProject, String elementName, IRegion region) {
 		if (javaProject != null && javaProject.exists()) {
 			try {
@@ -188,6 +225,9 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 			IDocument document = textViewer.getDocument();
 			// find hyperlink range for Java element
 			IRegion hyperlinkRegion = region.getLength() > 0 ? region : selectQualifiedName(document, region.getOffset());
+			if (isJspJavaContent(document, hyperlinkRegion)) { // Handled by JSPJavaHyperlinkDetector
+				return null;
+			}
 			String name = null;
 			try {
 				name = document.get(hyperlinkRegion.getOffset(), hyperlinkRegion.getLength()).trim();

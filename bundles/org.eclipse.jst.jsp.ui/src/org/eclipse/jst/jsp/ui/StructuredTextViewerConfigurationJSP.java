@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -350,7 +351,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		// also add html & xml since there could be html/xml content in jsp
 		// (just hope the hyperlink detectors will do additional checking)
 		targets.put(ContentTypeIdForHTML.ContentTypeID_HTML, null);
-		//targets.put(ContentTypeIdForXML.ContentTypeID_XML, null);
+		targets.put(ContentTypeIdForXML.ContentTypeID_XML, null);
 		return targets;
 	}
 }
