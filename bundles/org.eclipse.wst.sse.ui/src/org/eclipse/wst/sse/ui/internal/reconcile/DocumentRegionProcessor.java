@@ -33,6 +33,11 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
+import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionParser;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -53,6 +58,19 @@ import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	private static final boolean DEBUG_VALIDATORS = Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidators")); //$NON-NLS-1$
 
+	/**
+	 * Marks the entire document dirty when a parser-level change is notified
+	 * that might affect the entire document
+	 */
+	class DirtyRegionParseHandler implements StructuredDocumentRegionHandler {
+		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
+		}
+
+		public void resetNodes() {
+			setEntireDocumentDirty(getDocument());
+		}		
+	}
+	private DirtyRegionParseHandler fResetHandler = new DirtyRegionParseHandler();
 	/**
 	 * A strategy to use the defined default Spelling service.
 	 */
@@ -321,6 +339,13 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
 
 	public void setDocument(IDocument doc) {
+		if (getDocument() instanceof IStructuredDocument) {
+			RegionParser parser = ((IStructuredDocument) getDocument()).getParser();
+			if (parser instanceof StructuredDocumentRegionParser) {
+				((StructuredDocumentRegionParser) parser).removeStructuredDocumentRegionHandler(fResetHandler);
+			}
+		}
+		
 		super.setDocument(doc);
 		
 		IReconcilingStrategy validatorStrategy = getValidatorStrategy();
@@ -336,6 +361,13 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			fFoldingStrategy.uninstall();
 		}
 		fFoldingStrategy = null;
+		
+		if (getDocument() instanceof IStructuredDocument) {
+			RegionParser parser = ((IStructuredDocument) doc).getParser();
+			if (parser instanceof StructuredDocumentRegionParser) {
+				((StructuredDocumentRegionParser) parser).addStructuredDocumentRegionHandler(fResetHandler);
+			}
+		}
 	}
 
 	protected void setEntireDocumentDirty(IDocument document) {
@@ -397,6 +429,13 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			}
 
 			fReconcileListeners = new ISourceReconcilingListener[0];
+
+			if (getDocument() instanceof IStructuredDocument) {
+				RegionParser parser = ((IStructuredDocument) getDocument()).getParser();
+				if (parser instanceof StructuredDocumentRegionParser) {
+					((StructuredDocumentRegionParser) parser).removeStructuredDocumentRegionHandler(fResetHandler);
+				}
+			}
 		}
 		super.uninstall();
 	}
