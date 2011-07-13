@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,9 @@ package org.eclipse.wst.jsdt.web.ui.internal.hyperlink;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.ui.JavaScriptUI;
@@ -49,7 +51,7 @@ class JSDTHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		return ActionMessages.OpenAction_declaration_label;
+		return fElement != null ? NLS.bind(HTMLUIMessages.Open, fElement.getDisplayName()) : ActionMessages.OpenAction_declaration_label;
 	}
 	
 	/*
@@ -58,7 +60,6 @@ class JSDTHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
 	 */
 	public String getTypeLabel() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
