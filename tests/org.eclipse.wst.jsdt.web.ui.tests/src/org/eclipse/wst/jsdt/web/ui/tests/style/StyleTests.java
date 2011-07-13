@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,14 +78,14 @@ public class StyleTests extends TestCase {
 		// create test file
 		IFile file = iProject.getFile(fileName);
 		file.create(new ByteArrayInputStream(contents.getBytes()), true, null);
-		IEditorPart editor = IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file);
+		IEditorPart editor = IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, "org.eclipse.wst.html.core.htmlsource.source");
 		assertNotNull("editor failed to open", editor);
 		Control control = (Control) editor.getAdapter(Control.class);
 		assertNotNull("editor did not return a Control adapter", control);
 		assertTrue("editor Control adapter is not a StyledText widget", control instanceof StyledText);
 		int varIndex = contents.indexOf("var");
 		StyleRange[] styleRanges = ((StyledText) control).getStyleRanges(varIndex, 3);
-		assertTrue("no style range for 'var' keyword", styleRanges.length > 0);
+		assertTrue("no style range for 'var' keyword (this test may fail due to unpredictable timing issues with the test workbench)", styleRanges.length > 0);
 		assertNotNull("no foreground color for 'var' keyword", styleRanges[0].foreground);
 		assertNotSame("foreground color has same RGB as black", PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_BLACK).getRGB(), styleRanges[0].foreground.getRGB());
 	}
