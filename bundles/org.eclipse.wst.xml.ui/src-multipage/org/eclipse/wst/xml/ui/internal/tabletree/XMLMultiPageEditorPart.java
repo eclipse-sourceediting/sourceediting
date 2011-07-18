@@ -1032,6 +1032,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	public boolean isSaveOnCloseNeeded() {
 		// overriding super class since it does a lowly isDirty!
 		if (fTextEditor != null) {
+			if (fDesignViewer instanceof XMLTableTreeViewer) {
+				((XMLTableTreeViewer) fDesignViewer).forceCellEditorDeactivation();
+			}
 			return fTextEditor.isSaveOnCloseNeeded();
 		}
 		return isDirty();
