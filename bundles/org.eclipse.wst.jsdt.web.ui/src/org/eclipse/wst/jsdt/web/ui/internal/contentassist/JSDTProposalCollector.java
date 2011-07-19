@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -84,82 +84,10 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 	 */
 	
 	protected IJavaCompletionProposal createJavaCompletionProposal(CompletionProposal proposal) {
-		JSDTCompletionProposal jspProposal = null;
-		// ignore constructor proposals (they're not relevant for our JSP
-		// proposal list)
-		if (!proposal.isConstructor()) {
-// if (proposal.getKind() == CompletionProposal.TYPE_REF) {
-// String signature = String.valueOf(proposal
-// .getDeclarationSignature());
-// String completion = String.valueOf(proposal.getCompletion());
-// if (completion.indexOf(signature) != -1) {
-// jspProposal = createAutoImportProposal(proposal);
-// }
-// }
-			// default behavior
-// if (jspProposal == null) {
-// for(int i = 0;i<getGeneratedFunctionNames().size();i++){
-// if((new
-// String(proposal.getName())).equalsIgnoreCase((String)getGeneratedFunctionNames().get(i)))
-// return jspProposal;
-// }
-			jspProposal = createJspProposal(proposal);
-			// }
-		}
-		return jspProposal;
+		return createJSDTProposal(proposal);
 	}
 	
-// private JSPCompletionProposal createAutoImportProposal(
-// CompletionProposal proposal) {
-//
-// JSPCompletionProposal jspProposal = null;
-//
-// String signature = new String(proposal.getDeclarationSignature());
-// String completion = new String(proposal.getCompletion());
-//
-// // it's fully qualified so we should
-// // add an import statement
-// // create an autoimport proposal
-// String newCompletion = completion.replaceAll(signature + ".", "");
-// //$NON-NLS-1$ //$NON-NLS-2$
-//
-// // java offset
-// int offset = proposal.getReplaceStart();
-// // replacement length
-// int length = proposal.getReplaceEnd() - offset;
-// // translate offset from Java > JSP
-// offset = fTranslation.getJspOffset(offset);
-// // cursor position after must be calculated
-// int positionAfter = calculatePositionAfter(proposal, newCompletion,
-// offset);
-//
-// // from java proposal
-// IJavaCompletionProposal javaProposal = super
-// .createJavaCompletionProposal(proposal);
-// proposal.getDeclarationSignature();
-// Image image = javaProposal.getImage();
-// String displayString = javaProposal.getDisplayString();
-// displayString = getTranslation().fixupMangledName(displayString);
-// IContextInformation contextInformation = javaProposal
-// .getContextInformation();
-// // don't do this, it's slow
-// // String additionalInfo = javaProposal.getAdditionalProposalInfo();
-// int relevance = javaProposal.getRelevance();
-//
-// boolean updateLengthOnValidate = true;
-//
-// jspProposal = new AutoImportProposal(completion, newCompletion, offset,
-// length, positionAfter, image, displayString,
-// contextInformation, null, relevance, updateLengthOnValidate);
-//
-// // https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
-// // set wrapped java proposal so additional info can be calculated on
-// // demand
-// jspProposal.setJavaCompletionProposal(javaProposal);
-//
-// return jspProposal;
-// }
-	private JSDTCompletionProposal createJspProposal(CompletionProposal proposal) {
+	private JSDTCompletionProposal createJSDTProposal(CompletionProposal proposal) {
 		JSDTCompletionProposal jspProposal;
 		String completion = String.valueOf(proposal.getCompletion());
 		// java offset
@@ -175,9 +103,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		Image image = javaProposal.getImage();
 		String displayString = javaProposal.getDisplayString();
 		displayString = getTranslation().fixupMangledName(displayString);
-// for(int i = 0;i<getGeneratedFunctionNames().size();i++){
-// displayString.replace((String)getGeneratedFunctionNames().get(i), "");
-// }
+
 		IContextInformation contextInformation = javaProposal.getContextInformation();
 		// String additionalInfo = javaProposal.getAdditionalProposalInfo();
 		int relevance = javaProposal.getRelevance();

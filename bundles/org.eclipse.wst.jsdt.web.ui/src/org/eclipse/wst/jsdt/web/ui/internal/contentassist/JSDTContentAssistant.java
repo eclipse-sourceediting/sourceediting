@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Vector;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.wst.jsdt.core.CompletionProposal;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -131,6 +132,8 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor impleme
 		}
 		JSDTProposalCollector theCollector = getProposalCollector(context.getViewer(), context.getInvocationOffset());
 		/* add end script tag if needed */
+		
+		theCollector.setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
 
 		/* --------- Content Assistant --------- */
 		if(theCollector==null) return new ArrayList(0);
