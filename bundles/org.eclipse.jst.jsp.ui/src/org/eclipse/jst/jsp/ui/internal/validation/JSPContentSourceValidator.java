@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -105,28 +105,6 @@ public class JSPContentSourceValidator extends JSPContentValidator implements IS
 
 	public void disconnect(IDocument document) {
 		fDocument = null;
-	}
-
-	protected void validate(IReporter reporter, IFile file, IDOMModel model) {
-		if (file == null || model == null)
-			return; // error
-		IDOMDocument document = model.getDocument();
-		if (document == null)
-			return; // error
-
-		// This validator currently only handles validating HTML content in
-		// JSP
-		if (hasHTMLFeature(document)) {
-			INodeAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();
-			ValidationAdapter adapter = (ValidationAdapter) factory.adapt(document);
-			if (adapter == null)
-				return; // error
-
-			HTMLValidationReporter rep = getReporter(reporter, file, model);
-			rep.clear();
-			adapter.setReporter(rep);
-			adapter.validate(document);
-		}
 	}
 
 	/**

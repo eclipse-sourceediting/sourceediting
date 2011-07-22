@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1291,15 +1291,24 @@ public class XMLModelParser {
 			Node parent = this.context.getParentNode();
 			if(parent != null) {
 				Node next = this.context.getNextNode();
-				ModelParserAdapter parserAdapter = getParserAdapter();
-				if (parserAdapter != null && parserAdapter instanceof ModelParserAdapterExtension) {
-					ModelParserAdapterExtension adapter = (ModelParserAdapterExtension) parserAdapter;
-					// Make sure to check that parent is an Element
-					while (parent.getNodeType() == Node.ELEMENT_NODE && !parserAdapter.canContain( (Element) parent, node) && adapter.isEndTagOmissible((Element) parent)) {
+				// Reset parents which are closed container elements; should not be parents
+				if(parent.getNodeType() == Node.ELEMENT_NODE) {
+					String type = ((ElementImpl)parent).getStartStructuredDocumentRegion().getLastRegion().getType();
+					if(((ElementImpl)parent).isContainer() && type == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 						next = parent.getNextSibling();
 						parent = parent.getParentNode();
 					}
-				}
+					else {
+						ModelParserAdapter parserAdapter = getParserAdapter();
+						if (parserAdapter instanceof ModelParserAdapterExtension) {
+							ModelParserAdapterExtension adapter = (ModelParserAdapterExtension) parserAdapter;
+							while (parent.getNodeType() == Node.ELEMENT_NODE && !parserAdapter.canContain( (Element) parent, node) && adapter.isEndTagOmissible((Element) parent)) {
+								next = parent.getNextSibling();
+								parent = parent.getParentNode();
+							}
+						}
+					}
+				}	
 				insertNode(parent, node, next);
 				next = node.getNextSibling();
 				if (next != null) {

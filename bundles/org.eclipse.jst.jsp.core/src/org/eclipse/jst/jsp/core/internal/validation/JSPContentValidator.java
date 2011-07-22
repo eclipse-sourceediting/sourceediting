@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,12 +28,16 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Element;
 
 /**
  * This validator validates the contents of the content type of the JSP, like
  * the HTML regions in a JSP with content type="text/html"
  */
 public class JSPContentValidator extends JSPValidator {
+	private static final String HTTP_JAVA_SUN_COM_JSP_PAGE = "http://java.sun.com/JSP/Page"; //$NON-NLS-1$
+	private static final String XMLNS = "xmlns"; //$NON-NLS-1$
+	private static final String XMLNS_JSP = "xmlns:jsp"; //$NON-NLS-1$
 	private IContentType fJSPFContentType;
 
 	/*
@@ -44,6 +48,11 @@ public class JSPContentValidator extends JSPValidator {
 		if (adapter == null)
 			return false;
 		return adapter.hasFeature(HTMLDocumentTypeConstants.HTML);
+	}
+
+	private boolean isXMLJSP(IDOMDocument document) {
+		Element root = document.getDocumentElement();
+		return root != null && (root.hasAttribute(XMLNS_JSP) || HTTP_JAVA_SUN_COM_JSP_PAGE.equals(root.getAttribute(XMLNS)));
 	}
 
 	/**
@@ -88,7 +97,7 @@ public class JSPContentValidator extends JSPValidator {
 
 		// This validator currently only handles validating HTML content in
 		// JSP
-		if (hasHTMLFeature(document)) {
+		if (hasHTMLFeature(document) && !isXMLJSP(document)) {
 			INodeAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();
 			ValidationAdapter adapter = (ValidationAdapter) factory.adapt(document);
 			if (adapter == null)
