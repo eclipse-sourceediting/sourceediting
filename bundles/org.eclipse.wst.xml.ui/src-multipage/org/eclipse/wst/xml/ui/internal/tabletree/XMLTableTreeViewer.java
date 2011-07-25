@@ -19,6 +19,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -217,12 +218,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		this.getTree().addPaintListener(fContentPaintListener);
 	}
 
-	void forceCellEditorDeactivation() {
-		if (isCellEditorActive()) {
-			applyEditorValue();
-		}
-	}
-
 	/**
 	 * This creates a context menu for the viewer and adds a listener as well
 	 * registering the menu for extension.
@@ -386,6 +381,42 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	private final static String STRUCTURE_PROPERTY = XMLEditorMessages.XMLTreeExtension_0;
 	private final static String VALUE_PROPERTY = XMLEditorMessages.XMLTreeExtension_1;
 	
+	private class CellListener implements ICellEditorListener {
+
+		private Node node;
+		private CellEditor editor;
+		private String originalValue;
+
+		CellListener(Node data, CellEditor editor) {
+			this.node = data;
+			this.editor = editor;
+			
+			((IDOMNode) node).getModel().aboutToChangeModel();
+			originalValue = treeContentHelper.getNodeValue(node);
+		}
+
+		public void applyEditorValue() {
+			((IDOMNode) node).getModel().changedModel();
+			editor.removeListener(this);
+		}
+
+		public void cancelEditor() {
+			final Object value = editor.getValue();
+			if (value != null && !value.equals(originalValue)) {
+				treeContentHelper.setNodeValue(node, originalValue);
+			}
+			((IDOMNode) node).getModel().changedModel();
+			editor.removeListener(this);
+		}
+
+		public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+			if (newValidState) {
+				treeContentHelper.setNodeValue(node, editor.getValue().toString(), getControl().getShell());
+			}
+		}
+		
+	}
+
 	public class XMLCMCellModifier implements ICellModifier, TreeExtension.ICellEditorProvider {
 		public boolean canModify(Object element, String property) {
 			boolean result = false;
@@ -400,6 +431,9 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 							if (editors[1] != null)
 								editors[1].dispose();
 							editors[1] = getCellEditor(element, 1);
+							if (editors[1] instanceof TextCellEditor) {
+								editors[1].addListener(new CellListener(node, editors[1]));
+							}
 						}
 					}
 					
