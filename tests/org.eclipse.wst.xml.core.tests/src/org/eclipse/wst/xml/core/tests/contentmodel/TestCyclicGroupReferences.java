@@ -84,7 +84,7 @@ public class TestCyclicGroupReferences extends TestCase {
 			cmVisitor.visitCMElementDeclaration(cmElementDeclaration);
 		} 
 		catch (Throwable th) {
-			fail("Test failed :" + th.getClass().getCanonicalName());
+			fail("Test failed :" + th.getClass().getName());
 		}
 		finally {
 			if (model != null) {
