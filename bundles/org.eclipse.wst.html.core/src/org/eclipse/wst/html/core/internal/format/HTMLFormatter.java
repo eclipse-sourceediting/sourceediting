@@ -488,7 +488,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 	protected boolean isContentFormatted(Node parent) {
 		final Node first = parent.getFirstChild();
 		if (first != null && first.getNodeType() == Node.TEXT_NODE) {
-			final String content = first.getTextContent();
+			final String content = first.getNodeValue();
 			final int length = content.length();
 			for (int i = 0; i < length; i++) {
 				final char c = content.charAt(i);
