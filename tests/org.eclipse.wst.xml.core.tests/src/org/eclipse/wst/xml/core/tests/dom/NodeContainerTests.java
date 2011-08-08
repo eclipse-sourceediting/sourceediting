@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,15 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.tests.dom;
 
+import junit.framework.TestCase;
+
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
-
-import junit.framework.TestCase;
+import org.w3c.dom.Node;
 
 /**
  * 
@@ -86,4 +87,20 @@ public class NodeContainerTests extends TestCase {
 		assertTrue("A DOMException with code HIERARCHY_REQUEST_ERR should have been thrown when appending a parent to its own child", threwException);
 	}
 
+	public void testReplaceChild() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		model.getStructuredDocument().set(CONTENT_1);
+
+		IDOMDocument doc = model.getDocument();
+
+		Element a = doc.getElementById("a");
+		assertNotNull("Could not find element with id 'a' in " + CONTENT_1, a);
+
+		Element root = (Element) a.getParentNode();
+
+		assertNotNull("Could not find parent node 'root'", root);
+		Node replaced = root.replaceChild(a, a);
+		assertTrue("Not replaced is not the same as 'a'", a == replaced);
+		assertTrue("Child of root is not 'a'", root.getFirstChild() == a);
+	}
 }
