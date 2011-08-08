@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -372,12 +372,13 @@ class MainTab implements IPreferenceTab {
 		if (_debugPreferences) {
 			System.out.println("Loading defaults in " + getClass().getName()); //$NON-NLS-1$
 		}
-		IEclipsePreferences[] preferences = new IEclipsePreferences[fPreferencesLookupOrder.length];
-		for (int i = 0; i < preferences.length; i++) {
-			preferences[i] = fPreferencesLookupOrder[i].getNode(TaskTagPreferenceKeys.TASK_TAG_NODE);
+		final IEclipsePreferences defaultPreferences = fPreferencesLookupOrder.length > 0 ? fPreferencesLookupOrder[fPreferencesLookupOrder.length - 1].getNode(TaskTagPreferenceKeys.TASK_TAG_NODE) : null;
+		String tags = null;
+		String priorities = null;
+		if (defaultPreferences != null) {
+			tags = defaultPreferences.get(TaskTagPreferenceKeys.TASK_TAG_TAGS, null);
+			priorities = defaultPreferences.get(TaskTagPreferenceKeys.TASK_TAG_PRIORITIES, null);
 		}
-		String tags = fPreferencesService.get(TaskTagPreferenceKeys.TASK_TAG_TAGS, null, preferences);
-		String priorities = fPreferencesService.get(TaskTagPreferenceKeys.TASK_TAG_PRIORITIES, null, preferences);
 		loadTagsAndPrioritiesFrom(tags, priorities);
 		int selection = valueTable.getTable().getSelectionIndex();
 		valueTable.setInput(fTaskTags);
