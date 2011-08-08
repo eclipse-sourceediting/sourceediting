@@ -338,26 +338,22 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 			else if (isJarFile(document.getBaseLocation())) {
 				String jarLocation = document.getBaseLocation();
-				String[] entries = JarUtilities.getEntryNames(jarLocation);
-				boolean tag;
-				for (int jEntry = 0; jEntry < entries.length; jEntry++) {
-					tag = false;
-					if (((tag = entries[jEntry].endsWith(".tag")) || entries[jEntry].endsWith(".tagx")) && entries[jEntry].startsWith("META-INF/tags/")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-							InputStream contents = JarUtilities.getInputStream(jarLocation, entries[jEntry]);
-							if (tag) {//$NON-NLS-1$ 
-								loadTagFile(ed, tagFile, true, contents);
-							}
-							else {
-								loadTagXFile(ed, tagFile, true, contents);
-							}
-							try {
-								contents.close();
-							}
-							catch (IOException e) {
-								Logger.log(Logger.ERROR_DEBUG, null, e);
-							}
-						}
-					}	
+				boolean tag = path.endsWith(".tag"); //$NON-NLS-1$
+				InputStream contents = JarUtilities.getInputStream(jarLocation, path);
+				if (tag) {
+					loadTagFile(ed, tagFile, true, contents);
+				}
+				else {
+					loadTagXFile(ed, tagFile, true, contents);
+				}
+				// set the location string properly for this tag (BUG 353615)
+				ed.setLocationString("jar:file://" + document.getBaseLocation() + "!" + path); //$NON-NLS-1$ //$NON-NLS-2$
+				try {
+					contents.close();
+				}
+				catch (IOException e) {
+					Logger.log(Logger.ERROR_DEBUG, null, e);
+				}
 			}
 		}
 
