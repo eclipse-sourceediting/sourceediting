@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -479,7 +479,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, DOMMessages.NO_MODIFICATION_ALLOWED_ERR);
 		}
 
-		if (oldChild == null)
+		if (oldChild == null || oldChild == newChild)
 			return newChild;
 		if (newChild != null)
 			insertBefore(newChild, oldChild);
