@@ -285,8 +285,7 @@ public class JSPTaglibCompletionProposalComputer extends
 							Map prefixMap = new HashMap();
 							for (int taglibrecordNumber = 0; taglibrecordNumber < availableTaglibRecords.length; taglibrecordNumber++) {
 								ITaglibDescriptor descriptor = availableTaglibRecords[taglibrecordNumber].getDescriptor();
-								if (descriptor != null && descriptor.getURI() != null &&
-										descriptor.getURI().toLowerCase(Locale.US).equals(uri.toLowerCase(Locale.US))) {
+								if (isTaglibForURI(uri, basePath, availableTaglibRecords[taglibrecordNumber])) {
 									String shortName = descriptor.getShortName().trim();
 									if (shortName.length() > 0) {
 										boolean valid = true;
@@ -350,6 +349,20 @@ public class JSPTaglibCompletionProposalComputer extends
 		}
 	}
 	
+	private boolean isTaglibForURI(String uri, IPath basePath, ITaglibRecord record) {
+		final ITaglibDescriptor descriptor = record.getDescriptor();
+		boolean matches = false;
+		if (descriptor != null) {
+			if (record.getRecordType() == ITaglibRecord.TLD && (descriptor.getURI() == null || "".equals(descriptor.getURI().trim()))) {
+				matches = ((ITLDRecord) record).getPath().equals(FacetModuleCoreSupport.resolve(basePath, uri));
+			}
+			else {
+				matches = descriptor.getURI().toLowerCase(Locale.US).equals(uri.toLowerCase(Locale.US));
+			}
+		}
+		return matches;
+	}
+
 	private String getSmallImageURL(ITaglibRecord taglibRecord) {
 		String url = null;
 		switch (taglibRecord.getRecordType()) {
