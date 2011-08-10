@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
@@ -169,10 +170,11 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 		IAdaptable adaptable = getElement();
 		if (adaptable instanceof IResource) {
 			resource = (IResource) adaptable;
-		} else if (adaptable != null) {
+		}
+		else if (adaptable != null) {
 			Object o = adaptable.getAdapter(IResource.class);
 			if (o instanceof IResource) {
-				resource = (IResource)o;
+				resource = (IResource) o;
 			}
 		}
 		return resource;
@@ -338,6 +340,7 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 				// maybe in future, let user know there was a problem saving
 				// file
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				return false;
 			}
 		}
 		return true;
@@ -373,14 +376,36 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 				// maybe in future, let user know there was a problem saving
 				// file
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				return false;
 			}
 		}
 		return true;
 	}
 
 	public boolean performOk() {
-		performDoctypeOk();
-		performCSSProfileOk();
+		if (performDoctypeOk() || performCSSProfileOk()) {
+			// touch to mark for build-driven revalidation
+			IResource resource = getResource();
+			if (resource != null) {
+				try {
+					resource.accept(new IResourceVisitor() {
+
+						public boolean visit(IResource resource) throws CoreException {
+							try {
+								resource.touch(null);
+							}
+							catch (CoreException e) {
+								return false;
+							}
+							return true;
+						}
+					}, IResource.DEPTH_INFINITE, false);
+				}
+				catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
+		}
 
 		return super.performOk();
 	}
