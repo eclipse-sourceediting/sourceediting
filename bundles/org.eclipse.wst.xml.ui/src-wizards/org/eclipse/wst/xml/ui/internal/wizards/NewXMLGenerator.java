@@ -121,7 +121,7 @@ public class NewXMLGenerator {
 	
 	private String applyLineDelimiter(IFile file, String text) {
 		String systemLineSeparator = System.getProperty("line.separator");
-		String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, systemLineSeparator, new IScopeContext[] {new ProjectScope(file.getProject()), new InstanceScope() });//$NON-NLS-1$
+		String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, systemLineSeparator, new IScopeContext[] {new ProjectScope(file.getProject()), InstanceScope.INSTANCE});//$NON-NLS-1$
 		if(!systemLineSeparator.equals(lineDelimiter)) {
 			String convertedText = StringUtils.replace(text, "\r\n", "\n");
 			convertedText = StringUtils.replace(convertedText, "\r", "\n");
