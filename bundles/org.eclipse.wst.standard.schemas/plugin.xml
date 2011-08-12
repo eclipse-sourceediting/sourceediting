@@ -125,6 +125,12 @@
             <uri
                 name="urn:oasis:names:tc:entity:xmlns:xml:catalog"
                 uri="xsd/xmlcatalog11.xsd" />
+            <uri
+                name="http://www.w3.org/TR/html4/loose.dtd"
+                uri="dtds/loose.dtd"/>
+            <uri
+                name="http://www.w3.org/TR/html4/strict.dtd"
+                uri="dtds/strict.dtd"/>
 
 
             <!-- these are removed from the catalog, since they are -not- 
