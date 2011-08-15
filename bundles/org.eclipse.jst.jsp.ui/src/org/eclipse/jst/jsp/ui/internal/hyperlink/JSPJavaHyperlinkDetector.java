@@ -80,7 +80,7 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 						// link to local variable definitions
 						if (element instanceof ILocalVariable) {
 							range = ((ILocalVariable) element).getNameRange();
-							Object cu = ((ILocalVariable) element).getDeclaringMember().getCompilationUnit();
+							Object cu = ((ILocalVariable) element).getAncestor(IJavaElement.COMPILATION_UNIT);
 							if (cu != null && cu.equals(jspTranslation.getCompilationUnit()))
 								isInTranslationCU = true;
 						}
