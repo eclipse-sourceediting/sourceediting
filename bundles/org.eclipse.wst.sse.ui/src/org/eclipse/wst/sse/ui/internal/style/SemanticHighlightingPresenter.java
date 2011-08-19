@@ -98,14 +98,19 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 					int length= position.getLength();
 					int end= offset + length;
 
-					if (offset > eventEnd || (offset == eventOffset && i > 0 && positions[i - 1].overlapsWith(offset, length)))
+					if (offset > eventEnd)
 						updateWithPrecedingEvent(position, event);
 					else if (end < eventOffset) {
 						// do nothing
 						// updateWithSucceedingEvent(position, event);
 					}
-					else if (offset <= eventOffset && end >= eventEnd)
-						updateWithIncludedEvent(position, event);
+					else if (offset <= eventOffset && end >= eventEnd) {
+						 // Previous region updated to overlap the beginning of this one; just bump the start.
+						if (i > 0 && positions[i - 1].offset + positions[i - 1].length > offset)
+							updateWithPrecedingEvent(position, event);
+						else
+							updateWithIncludedEvent(position, event);
+					}
 					else if (offset <= eventOffset)
 						updateWithOverEndEvent(position, event);
 					else if (end >= eventEnd)
