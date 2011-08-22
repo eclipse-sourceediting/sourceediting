@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.wst.xml.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.wst.xml.core" id="modelQueryExtensions" name="Model Query Extension"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element internal="true" />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -39,9 +39,9 @@
                <documentation>
                   an optional name of the extension instance
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -59,15 +59,15 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension:"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="contentType" type="string" use="required">
             <annotation>
                <documentation>
-                  Content Types for which to use this extension
+                  A comma-separated list of content types for which to use this extension.
                </documentation>
             </annotation>
          </attribute>
@@ -75,9 +75,9 @@
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
       </documentation>
@@ -87,9 +87,9 @@
 
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="copyright"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Copyright (c) 2000, 2005 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 

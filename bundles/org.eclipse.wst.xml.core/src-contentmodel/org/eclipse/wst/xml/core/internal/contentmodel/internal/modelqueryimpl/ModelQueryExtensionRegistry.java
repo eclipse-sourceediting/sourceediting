@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 
@@ -35,19 +36,23 @@ public class ModelQueryExtensionRegistry
       for (Iterator i = descriptors.iterator(); i.hasNext();)
       {
         ModelQueryExtensionDescriptor descriptor = (ModelQueryExtensionDescriptor) i.next();
-        if (contentTypeId.equals(descriptor.getContentTypeId()))
-        {
-          if (descriptor.getNamespace() == null ||  descriptor.getNamespace().equals(namespace))
-          {  
-            try
-            {
-              ModelQueryExtension extension = descriptor.createModelQueryExtension();
-              list.add(extension);
-            }
-            catch (CoreException e) {
-            	Logger.logException("problem creating model query extension", e); //$NON-NLS-1$
-            }
-          }  
+        final String[] contentTypeIds = StringUtils.unpack(descriptor.getContentTypeId());
+        for (int j = 0; j < contentTypeIds.length; j++) {
+	        if (contentTypeId.equals(contentTypeIds[j]))
+	        {
+	          if (descriptor.getNamespace() == null ||  descriptor.getNamespace().equals(namespace))
+	          {  
+	            try
+	            {
+	              ModelQueryExtension extension = descriptor.createModelQueryExtension();
+	              list.add(extension);
+	            }
+	            catch (CoreException e) {
+	            	Logger.logException("problem creating model query extension", e); //$NON-NLS-1$
+	            }
+	          }
+	          break;
+	        }
         }
       }
     }

@@ -364,27 +364,14 @@
 	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
 		<modelQueryExtension
 			class="org.eclipse.jst.jsp.core.internal.modelquery.JSPModelQueryExtension"
-			contentType="org.eclipse.jst.jsp.core.jspsource">
+			contentType="org.eclipse.jst.jsp.core.jspsource,org.eclipse.jst.jsp.core.jspfragmentsource,org.eclipse.jst.jsp.core.tagsource">
 		</modelQueryExtension>
 	</extension>
 	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
 		<modelQueryExtension
 			class="org.eclipse.jst.jsp.core.internal.modelquery.TaglibModelQueryExtension"
-			contentType="org.eclipse.jst.jsp.core.jspsource">
+			contentType="org.eclipse.jst.jsp.core.jspsource,org.eclipse.jst.jsp.core.jspfragmentsource,org.eclipse.jst.jsp.core.tagsource">
 		</modelQueryExtension>
 	</extension>
-	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
-		<modelQueryExtension
-			class="org.eclipse.jst.jsp.core.internal.modelquery.JSPModelQueryExtension"
-			contentType="org.eclipse.jst.jsp.core.tagsource">
-		</modelQueryExtension>
-	</extension>
-	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
-		<modelQueryExtension
-			class="org.eclipse.jst.jsp.core.internal.modelquery.TaglibModelQueryExtension"
-			contentType="org.eclipse.jst.jsp.core.tagsource">
-		</modelQueryExtension>
-	</extension>	
-	
 
 </plugin>
