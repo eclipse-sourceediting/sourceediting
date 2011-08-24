@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -395,5 +395,15 @@ public class TestPartitionFormatterXML extends TestCase {
 	
 	public void testNestedEndTag() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/xml/nested-endtag.xml", "testfiles/xml/nested-endtag-fmt.xml");
+	}
+
+	/**
+	 * Tests the scenario where two regions are capable of formatting the same whitespace. See
+	 * https://bugs.eclipse.org/353451
+	 */
+	public void testBug353451() throws UnsupportedEncodingException, IOException, CoreException {
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setClearAllBlankLines(true);
+		formatAndAssertEquals("testfiles/xml/bug353451.xml", "testfiles/xml/bug353451-fmt.xml", prefs);
 	}
 }
