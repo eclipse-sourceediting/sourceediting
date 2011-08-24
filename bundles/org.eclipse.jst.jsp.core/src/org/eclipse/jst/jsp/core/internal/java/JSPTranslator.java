@@ -1455,7 +1455,7 @@ public class JSPTranslator implements Externalizable {
 	}
 
 	private boolean isELType(String type) {
-		return DOMJSPRegionContexts.JSP_EL_CONTENT.equals(type) || DOMJSPRegionContexts.JSP_EL_DQUOTE.equals(type) || DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT.equals(type) || DOMJSPRegionContexts.JSP_EL_SQUOTE.equals(type);
+		return DOMJSPRegionContexts.JSP_EL_CONTENT.equals(type) || DOMJSPRegionContexts.JSP_VBL_CONTENT.equals(type) || DOMJSPRegionContexts.JSP_EL_DQUOTE.equals(type) || DOMJSPRegionContexts.JSP_VBL_DQUOTE.equals(type) || DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT.equals(type) || DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT.equals(type) || DOMJSPRegionContexts.JSP_EL_SQUOTE.equals(type) || DOMJSPRegionContexts.JSP_VBL_SQUOTE.equals(type);
 	}
 
 	/**
