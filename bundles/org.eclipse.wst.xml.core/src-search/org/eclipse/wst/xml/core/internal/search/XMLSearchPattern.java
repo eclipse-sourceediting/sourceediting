@@ -106,7 +106,10 @@ public class XMLSearchPattern extends SearchPattern{
 	public boolean matches(XMLSearchPattern pattern) {
 		if (pattern.searchName == null)
 			return false;
-		
+		if ("*".equals(searchName) && "*".equals(searchNamespace)) { //$NON-NLS-1$ //$NON-NLS-2$
+			return true;
+		}
+
 		final StringTokenizer tokenizer = new StringTokenizer(pattern.searchName);
 		 while (tokenizer.hasMoreTokens()) {
 			 final String token = tokenizer.nextToken();
@@ -118,14 +121,13 @@ public class XMLSearchPattern extends SearchPattern{
 				 name = token.substring(n+1);
 				 namespace = pattern.element != null ? (String)pattern.element.getNamespaceMap().get(prefix) : computeNamespaceForPrefix(pattern.domElement, prefix);
 			 }
-			 if ("*".equals(name))
-				 return true;
+
 			 if (namespace == null) {
-				 if (name.equals(searchName))
+				 if (name.equals(searchName) || "*".equals(searchName))
 					 return true;
 			 }
 			 else {
-				 if (name.equals(searchName) && namespace.equals(searchNamespace))
+				 if ((namespace.equals(searchNamespace) || "*".equals(searchNamespace)) && name.equals(searchName))
 					 return true;
 			 }
 		 }
