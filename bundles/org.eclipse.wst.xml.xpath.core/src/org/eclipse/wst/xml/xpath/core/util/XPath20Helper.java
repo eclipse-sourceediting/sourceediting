@@ -8,10 +8,12 @@
  * Contributors:
  *     David Carver (STAR) - bug 226245 - initial API and implementation
  *     Jesper Steen Moller - bug 343804 - Updated API information
+ *     Jesper Steen Moller - bug 348737 - Hook up default namespace from context
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath.core.util;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -53,6 +55,9 @@ public class XPath20Helper {
 			public NamespaceContext getNamespaceContext() {
 				return namespaceContext;
 			}
+			public String getDefaultNamespace() {
+				return namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX);
+			};
 		};
 		private XPath2Expression xPathExpression;
 
