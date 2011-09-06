@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -28,6 +29,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class CommonXML {
 
@@ -35,6 +39,7 @@ public class CommonXML {
 		DocumentBuilder result = null;
 		try {
 			result = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			result.setEntityResolver(getEntityResolver());
 		}
 		catch (ParserConfigurationException e) {
 			Logger.logException(e);
@@ -50,6 +55,8 @@ public class CommonXML {
 			instance.setExpandEntityReferences(false);
 			instance.setCoalescing(true);
 			result = instance.newDocumentBuilder();
+			if (!validating)
+				result.setEntityResolver(getEntityResolver());
 		}
 		catch (ParserConfigurationException e) {
 			Logger.logException(e);
@@ -80,5 +87,21 @@ public class CommonXML {
 		catch (TransformerException e) {
 			throw new IOException(e.getMessage());
 		}
+	}
+
+	/**
+	 * Returns an EntityResolver that won't try to load and resolve ANY
+	 * entities
+	 */
+	private static EntityResolver getEntityResolver() {
+		EntityResolver resolver = new EntityResolver() {
+			public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
+				InputSource 					result = new InputSource(new ByteArrayInputStream(new byte[0]));
+				result.setPublicId(publicID);
+				result.setSystemId(systemID != null ? systemID : "/_" + getClass().getName()); //$NON-NLS-1$
+				return result;
+			}
+		};
+		return resolver;
 	}
 }
