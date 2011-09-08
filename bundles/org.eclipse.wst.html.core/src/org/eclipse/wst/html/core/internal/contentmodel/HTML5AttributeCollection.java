@@ -881,6 +881,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_FOR, attr);
 		
+			getAttrs(attributes);
 		}
 		/*
 		 *  %attrs;
