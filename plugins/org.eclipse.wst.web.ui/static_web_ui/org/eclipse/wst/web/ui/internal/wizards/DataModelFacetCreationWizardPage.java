@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,6 +79,8 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	protected Combo primaryVersionCombo = null;
 	
 	protected WorkingSetGroup workingSetGroup;
+	
+	private List<IFacetedProjectListener> facetedProjectListeners = new ArrayList<IFacetedProjectListener>();
 	
 	protected Set<IProjectFacetVersion> getFacetConfiguration( final IProjectFacetVersion primaryFacetVersion )
 	{
@@ -194,7 +196,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
             }
         );
         
-        fpjwc.addListener(new IFacetedProjectListener() {
+        IFacetedProjectListener fpjwcListenerForPrimaryFacetCombo = new IFacetedProjectListener() {
 			public void handleEvent(IFacetedProjectEvent event) {
 				if(event.getType() == IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED){
 					//this block is to update the combo when the underlying facet version changes
@@ -234,7 +236,9 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 				}
 			}
         	
-        }, IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED, IFacetedProjectEvent.Type.PRIMARY_RUNTIME_CHANGED);
+        };
+        this.facetedProjectListeners.add(fpjwcListenerForPrimaryFacetCombo);
+        fpjwc.addListener(fpjwcListenerForPrimaryFacetCombo, IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED, IFacetedProjectEvent.Type.PRIMARY_RUNTIME_CHANGED);
 	}
 	
 	protected IProjectFacet getPrimaryFacet()
@@ -335,17 +339,15 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		final IFilter<IPreset> filter = new AbstractFilter<IPreset>()
 		{
 		    {
-		        fpjwc.addListener
-		        (
-		            new IFacetedProjectListener()
-		            {
-                        public void handleEvent( final IFacetedProjectEvent event )
-                        {
-                            handleProjectFacetsChangedEvent( (IProjectFacetsChangedEvent) event );
-                        }
-		            }, 
-		            IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED 
-		        );
+		    	IFacetedProjectListener fpjwcListenerForPreset = new IFacetedProjectListener()
+	            {
+                    public void handleEvent( final IFacetedProjectEvent event )
+                    {
+                        handleProjectFacetsChangedEvent( (IProjectFacetsChangedEvent) event );
+                    }
+	            };
+	            facetedProjectListeners.add(fpjwcListenerForPreset);
+		        fpjwc.addListener(fpjwcListenerForPreset, IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED );
 		    }
 		    
             public boolean check( final IPreset preset )
@@ -548,6 +550,11 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 			projectNameGroup.dispose();
 		
 		this.fpjwc.removeListener( this.fpjwcListener );
+		for (IFacetedProjectListener listener:this.facetedProjectListeners){
+			fpjwc.removeListener(listener);
+		}	
+		model = null;
+		
 	}
 
 	@Override
