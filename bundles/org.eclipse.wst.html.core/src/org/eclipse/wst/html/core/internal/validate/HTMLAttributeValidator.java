@@ -33,6 +33,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Attr;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
@@ -142,8 +143,12 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			}
 			
 			if (adec == null) {
-				if (attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length())
-					continue;
+				if (attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length()) {
+					DocumentType doctype = target.getOwnerDocument().getDoctype();
+					// HTML 5 determines "data-" named attributes to not be unknown 
+					if (doctype.getSystemId() == null && doctype.getPublicId() == null)
+						continue;
+				}
 				// No attr declaration was found. That is, the attr name is
 				// undefined.
 				// but not regard it as undefined name if it includes nested
