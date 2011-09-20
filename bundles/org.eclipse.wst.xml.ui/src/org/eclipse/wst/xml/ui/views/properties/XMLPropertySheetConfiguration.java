@@ -77,10 +77,10 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 	
 	private static class SpecifiedSorter extends PropertySheetSorter {
 		public int compareCategories(String categoryA, String categoryB) {
-			if (categoryA == XMLUIMessages.XMLPropertySourceAdapter_1)
-				return -1;
-			if (categoryB == XMLUIMessages.XMLPropertySourceAdapter_1)
+			if (categoryA == XMLUIMessages.XMLPropertySourceAdapter_0)
 				return 1;
+			if (categoryB == XMLUIMessages.XMLPropertySourceAdapter_0)
+				return -1;
 			return super.compareCategories(categoryA, categoryB);
 		}
 	}

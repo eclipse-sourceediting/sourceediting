@@ -59,12 +59,6 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	 */
 	private static final boolean fSetExpertFilter = false;
 
-	/**
-	 * Controls whether to derive categories from CMDataTypes; disabled by
-	 * default until display strings can be planned
-	 */
-	private boolean fShouldDeriveCategories = false;
-
 	private final static boolean fSortEnumeratedValues = true;
 
 	/**
@@ -86,7 +80,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 
 	public XMLPropertySource(Node target, boolean useCategories) {
 		this(initNode(target));
-		fShouldDeriveCategories = useCategories;
+//		fShouldDeriveCategories = useCategories;
 	}
 
 	/** Separate method just to isolate error processing */
@@ -243,7 +237,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrName, attrName, _getValidStrings(attrDecl, valuesHelper));
 		descriptor.setCategory(getCategory(attrDecl, attr));
-		String info = getDescription(attrDecl);
+		String info = getDescription(attrDecl, attr);
 		descriptor.setDescription(info != null && info.trim().length() > 0 ? info : DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
@@ -264,7 +258,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrName, attrName, _getValidFixedStrings(attrDecl, helper));
 		descriptor.setCategory(getCategory(attrDecl, attr));
-		String info = getDescription(attrDecl);
+		String info = getDescription(attrDecl, attr);
 		descriptor.setDescription(info != null && info.trim().length() > 0 ? info : DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		return descriptor;
 	}
@@ -412,7 +406,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attrName, attrName);
 		descriptor.setCategory(getCategory(attrDecl, attr));
-		String info = getDescription(attrDecl);
+		String info = getDescription(attrDecl, attr);
 		descriptor.setDescription(info != null && info.trim().length() > 0 ? info : DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
@@ -421,24 +415,6 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	private String getCategory(CMAttributeDeclaration attrDecl, Attr attr) {
-		String category = null;
-		if (attr != null) {
-			String namespaceURI = attr.getNamespaceURI();
-			if (namespaceURI == null)
-				namespaceURI = attr.getOwnerElement().getNamespaceURI();
-			category = namespaceURI;
-		}
-		if (attrDecl != null) {
-			if (category == null && attrDecl.supports("category")) { //$NON-NLS-1$
-				category = (String) attrDecl.getProperty("category"); //$NON-NLS-1$
-			}
-			if (fShouldDeriveCategories && category == null && (attrDecl.getAttrType() != null) && (attrDecl.getAttrType().getDataTypeName() != null) && (attrDecl.getAttrType().getDataTypeName().length() > 0)) {
-				category = attrDecl.getAttrType().getDataTypeName();
-			}
-		}
-		if (category != null) {
-			return attr != null && attr.getSpecified() ? NLS.bind(XMLUIMessages.XMLPropertySourceAdapter_3, category) : NLS.bind(XMLUIMessages.XMLPropertySourceAdapter_2, category);
-		}
 		return attr != null && attr.getSpecified() ? XMLUIMessages.XMLPropertySourceAdapter_1 : XMLUIMessages.XMLPropertySourceAdapter_0;
 	}
 
@@ -453,16 +429,22 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		return null;
 	}
 	
-	private String getDescription(CMAttributeDeclaration decl) {
+	private String getDescription(CMAttributeDeclaration decl, Attr attr) {
 		if (decl.supports("description"))
 			return (String) decl.getProperty("description");
 		if (decl.supports("tagInfo"))
 			return (String) decl.getProperty("tagInfo");
+		if (attr != null) {
+			String namespaceURI = attr.getNamespaceURI();
+			if (namespaceURI == null)
+				namespaceURI = attr.getOwnerElement().getNamespaceURI();
+			if (namespaceURI != null)
+				return namespaceURI;
+		}
 		return decl.getAttrType() != null ? NLS.bind(XMLUIMessages.XMLPropertySourceAdapter_4, decl.getAttrType().getDataTypeName()) : null;
 	}
 
 	private Display getDisplay() {
-
 		return PlatformUI.getWorkbench().getDisplay();
 	}
 

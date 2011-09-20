@@ -155,7 +155,7 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 			if (((PageBookView) part).getCurrentPage() == this)
 				return;
 		}
-		if (getControl() != null && getControl().isVisible()) {
+		if (getControl() != null && !getControl().isDisposed() && getControl().isVisible()) {
 			ISelection preferredSelection = getConfiguration().getInputSelection(part, selection);
 			/*
 			 * Do some minor caching of the selection.
@@ -197,6 +197,7 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 
 		if (fConfiguration != null) {
 			setPropertySourceProvider(fConfiguration.getPropertySourceProvider(this));
+			setSorter(fConfiguration.getSorter(this));
 			fConfiguration.addContributions(fMenuManager, fToolBarManager, fStatusLineManager);
 		}
 	}
