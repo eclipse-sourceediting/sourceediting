@@ -151,7 +151,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			}
 			
 			if (adec == null) {
-				if ((attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length()) || (attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH)) {
+				if ((attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA_LENGTH) || (attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH)) {
 					DocumentTypeAdapter documentTypeAdapter = (DocumentTypeAdapter) ((INodeNotifier) target.getOwnerDocument()).getAdapterFor(DocumentTypeAdapter.class);
 					if (documentTypeAdapter != null && documentTypeAdapter.hasFeature(HTMLDocumentTypeConstants.HTML5))
 						continue;
