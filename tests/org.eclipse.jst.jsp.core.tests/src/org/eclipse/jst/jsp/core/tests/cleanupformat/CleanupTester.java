@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
+import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;
@@ -199,73 +200,73 @@ public class CleanupTester extends TestCase {
 		structuredModel.releaseFromRead();
 	}
 
-	// public void testCleanupJSPEmptyTags1() throws
-	// UnsupportedEncodingException, IOException {
-	// // get model
-	// IStructuredModel structuredModel = getModel("login.jsp");
-	//
-	// // init CleanupPreferences
-	// IStructuredCleanupPreferences cleanupPreferences =
-	// fHTMLCleanupProcessor.getCleanupPreferences();
-	// cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.UPPER);
-	// cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.LOWER);
-	// cleanupPreferences.setCompressEmptyElementTags(false);
-	// cleanupPreferences.setInsertRequiredAttrs(false);
-	// cleanupPreferences.setInsertMissingTags(true);
-	// cleanupPreferences.setQuoteAttrValues(true);
-	// cleanupPreferences.setFormatSource(true);
-	// cleanupPreferences.setConvertEOLCodes(false);
-	//
-	// // cleanup
-	// ((AbstractStructuredCleanupProcessor)
-	// fHTMLCleanupProcessor).refreshCleanupPreferences = false;
-	// fHTMLCleanupProcessor.cleanupModel(structuredModel);
-	// ((AbstractStructuredCleanupProcessor)
-	// fHTMLCleanupProcessor).refreshCleanupPreferences = true;
-	//
-	// // compare
-	// String cleaned = structuredModel.getStructuredDocument().get();
-	// String expectedFileName = "login.afterCleanup.jsp";
-	// String expected = getFile(expectedFileName);
-	// compare(expectedFileName, expected, cleaned);
-	//
-	// // release model
-	// structuredModel.releaseFromRead();
-	// }
-	//
-	// public void testCleanupJSPEmptyTags2() throws
-	// UnsupportedEncodingException, IOException {
-	// // get model
-	// IStructuredModel structuredModel = getModel("subscription.jsp");
-	//
-	// // init CleanupPreferences
-	// IStructuredCleanupPreferences cleanupPreferences =
-	// fHTMLCleanupProcessor.getCleanupPreferences();
-	// cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.UPPER);
-	// cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.LOWER);
-	// cleanupPreferences.setCompressEmptyElementTags(false);
-	// cleanupPreferences.setInsertRequiredAttrs(false);
-	// cleanupPreferences.setInsertMissingTags(true);
-	// cleanupPreferences.setQuoteAttrValues(true);
-	// cleanupPreferences.setFormatSource(true);
-	// cleanupPreferences.setConvertEOLCodes(false);
-	//
-	// // cleanup
-	// ((AbstractStructuredCleanupProcessor)
-	// fHTMLCleanupProcessor).refreshCleanupPreferences = false;
-	// fHTMLCleanupProcessor.cleanupModel(structuredModel);
-	// ((AbstractStructuredCleanupProcessor)
-	// fHTMLCleanupProcessor).refreshCleanupPreferences = true;
-	//
-	// // compare
-	// String cleaned = structuredModel.getStructuredDocument().get();
-	// String expectedFileName = "subscription.afterCleanup.jsp";
-	// String expected = getFile(expectedFileName);
-	// compare(expectedFileName, expected, cleaned);
-	//
-	// // release model
-	// structuredModel.releaseFromRead();
-	// }
+	 public void testCleanupJSPEmptyTags1() throws
+		 UnsupportedEncodingException, IOException {
+		 // get model
+		 IStructuredModel structuredModel = getModel("login.jsp");
+		
+		 // init CleanupPreferences
+		 IStructuredCleanupPreferences cleanupPreferences =
+		 fHTMLCleanupProcessor.getCleanupPreferences();
+		 cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.UPPER);
+		 cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.LOWER);
+		 cleanupPreferences.setCompressEmptyElementTags(false);
+		 cleanupPreferences.setInsertRequiredAttrs(false);
+		 cleanupPreferences.setInsertMissingTags(true);
+		 cleanupPreferences.setQuoteAttrValues(true);
+		 cleanupPreferences.setFormatSource(true);
+		 cleanupPreferences.setConvertEOLCodes(false);
+		
+		 // cleanup
+		 ((AbstractStructuredCleanupProcessor)
+		 fHTMLCleanupProcessor).refreshCleanupPreferences = false;
+		 fHTMLCleanupProcessor.cleanupModel(structuredModel);
+		 ((AbstractStructuredCleanupProcessor)
+		 fHTMLCleanupProcessor).refreshCleanupPreferences = true;
+		
+		 // compare
+		 String cleaned = structuredModel.getStructuredDocument().get();
+		 String expectedFileName = "login.afterCleanup.jsp";
+		 String expected = getFile(expectedFileName);
+		 compare(expectedFileName, expected, cleaned);
+		
+		 // release model
+		 structuredModel.releaseFromRead();
+	 }
+	
+	 public void testCleanupJSPEmptyTags2() throws
+		 UnsupportedEncodingException, IOException {
+		 // get model
+		 IStructuredModel structuredModel = getModel("subscription.jsp");
+		
+		 // init CleanupPreferences
+		 IStructuredCleanupPreferences cleanupPreferences =
+		 fHTMLCleanupProcessor.getCleanupPreferences();
+		 cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.UPPER);
+		 cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.LOWER);
+		 cleanupPreferences.setCompressEmptyElementTags(false);
+		 cleanupPreferences.setInsertRequiredAttrs(false);
+		 cleanupPreferences.setInsertMissingTags(true);
+		 cleanupPreferences.setQuoteAttrValues(true);
+		 cleanupPreferences.setFormatSource(true);
+		 cleanupPreferences.setConvertEOLCodes(false);
+		
+		 // cleanup
+		 ((AbstractStructuredCleanupProcessor)
+		 fHTMLCleanupProcessor).refreshCleanupPreferences = false;
+		 fHTMLCleanupProcessor.cleanupModel(structuredModel);
+		 ((AbstractStructuredCleanupProcessor)
+		 fHTMLCleanupProcessor).refreshCleanupPreferences = true;
+		
+		 // compare
+		 String cleaned = structuredModel.getStructuredDocument().get();
+		 String expectedFileName = "subscription.afterCleanup.jsp";
+		 String expected = getFile(expectedFileName);
+		 compare(expectedFileName, expected, cleaned);
+		
+		 // release model
+		 structuredModel.releaseFromRead();
+	 }
 
 	protected String readFile(String fileName) throws IOException {
 		String inputString = null;
