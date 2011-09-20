@@ -17,6 +17,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -28,12 +30,12 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Attr;
-import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
@@ -147,9 +149,8 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			
 			if (adec == null) {
 				if ((attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length()) || (attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH)) {
-					DocumentType doctype = target.getOwnerDocument().getDoctype();
-					// HTML 5 determines "data-" and "x-" attributes to not be unknown 
-					if (doctype.getSystemId() == null && doctype.getPublicId() == null)
+					DocumentTypeAdapter documentTypeAdapter = (DocumentTypeAdapter) ((INodeNotifier) target.getOwnerDocument()).getAdapterFor(DocumentTypeAdapter.class);
+					if (documentTypeAdapter != null && documentTypeAdapter.hasFeature(HTMLDocumentTypeConstants.HTML5))
 						continue;
 				}
 				// No attr declaration was found. That is, the attr name is
