@@ -14,6 +14,7 @@ package org.eclipse.jst.jsp.core.internal.validation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,6 +60,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.text.IRegionComparible;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
@@ -66,6 +68,7 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 import com.ibm.icu.text.Collator;
 
@@ -135,7 +138,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		fPrefixValueRegionToDocumentRegionMap.clear();
 	}
 
-	private void collectTaglibPrefix(IStructuredDocumentRegion documentRegion, ITextRegion valueRegion, String taglibPrefix) {
+	private void collectTaglibPrefix(ITextRegionCollection documentRegion, ITextRegion valueRegion, String taglibPrefix) {
 		fPrefixValueRegionToDocumentRegionMap.put(valueRegion, documentRegion);
 
 		Object o = fTaglibPrefixesInUse.get(taglibPrefix);
@@ -236,6 +239,16 @@ public class JSPDirectiveValidator extends JSPValidator {
 			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				processDirective(reporter, f, sDoc, region);
 			}
+			//To check directives inside script tag.
+			else if (region.getType() == DOMRegionContext.BLOCK_TEXT) {
+				Iterator it = region.getRegions().iterator();
+				while (it.hasNext()) {
+					Object blockRegion = it.next();
+					if (blockRegion instanceof ITextRegionCollection) {
+						processDirective(reporter, f, sDoc, (ITextRegionCollection)blockRegion);
+					}
+				}
+			}
 			// requires tag name, attribute, equals, and value
 			else if (comparer != null && region.getNumberOfRegions() > 4) {
 				ITextRegion nameRegion = region.getRegions().get(1);
@@ -261,7 +274,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		unloadPreferences();
 	}
 
-	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
+	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection documentRegion) {
 		String directiveName = getDirectiveName(documentRegion);
 
 		if (directiveName.endsWith("taglib")) { //$NON-NLS-1$
@@ -278,7 +291,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		}
 	}
 
-	private void processInclude(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion, String attrName) {
+	private void processInclude(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection documentRegion, String attrName) {
 		ITextRegion fileValueRegion = getAttributeValueRegion(documentRegion, attrName);
 		// There is a file and it isn't a nested region which could contain a JSP expression
 		if (fileValueRegion != null && !hasNestedRegion(fileValueRegion)) {
@@ -343,7 +356,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 	 * @param doc
 	 * @param documentRegion
 	 */
-	private void processPageDirective(IReporter reporter, IFile file, IStructuredDocument doc, IStructuredDocumentRegion documentRegion) {
+	private void processPageDirective(IReporter reporter, IFile file, IStructuredDocument doc, ITextRegionCollection documentRegion) {
 		ITextRegion superclassValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_EXTENDS);
 		if (superclassValueRegion != null) {
 			// file specified
@@ -376,7 +389,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		}
 	}
 
-	private void processTaglibDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
+	private void processTaglibDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection documentRegion) {
 		ITextRegion prefixValueRegion = null;
 		ITextRegion uriValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
 		ITextRegion tagdirValueRegion = getAttributeValueRegion(documentRegion, JSP20Namespace.ATTR_NAME_TAGDIR);
@@ -615,7 +628,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				List valueRegions = (List) o;
 				String uri = null;
 				for (int regionNumber = 0; regionNumber < valueRegions.size(); regionNumber++) {
-					IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) fPrefixValueRegionToDocumentRegionMap.get(valueRegions.get(regionNumber));
+					ITextRegionCollection documentRegion = (ITextRegionCollection) fPrefixValueRegionToDocumentRegionMap.get(valueRegions.get(regionNumber));
 					ITextRegion uriValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
 					if (uriValueRegion == null) {
 						uriValueRegion = getAttributeValueRegion(documentRegion, JSP20Namespace.ATTR_NAME_TAGDIR);
@@ -640,7 +653,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					for (int regionNumber = 0; regionNumber < valueRegions.size(); regionNumber++) {
 
 						ITextRegion valueRegion = (ITextRegion) valueRegions.get(regionNumber);
-						IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) fPrefixValueRegionToDocumentRegionMap.get(valueRegion);
+						ITextRegionCollection documentRegion = (ITextRegionCollection) fPrefixValueRegionToDocumentRegionMap.get(valueRegion);
 						LocalizedMessage message = (file == null ? new LocalizedMessage(severity, msgText) : new LocalizedMessage(severity, msgText, file));
 
 						// if there's a message, there was an error found
