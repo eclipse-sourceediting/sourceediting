@@ -46,6 +46,9 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	private static final char DOUBLE_QUOTE = '\"';
 
 	private static final String ATTR_NAME_DATA = "data-"; //$NON-NLS-1$
+	//WHATWG x-vendor-feature attributes
+	private static final String ATTR_NAME_USER_AGENT_FEATURE = "x-"; //$NON-NLS-1$
+	private static final int ATTR_NAME_USER_AGENT_FEATURE_LENGTH = ATTR_NAME_USER_AGENT_FEATURE.length();
 
 	// D210422
 	/**
@@ -143,9 +146,9 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			}
 			
 			if (adec == null) {
-				if (attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length()) {
+				if ((attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA.length()) || (attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH)) {
 					DocumentType doctype = target.getOwnerDocument().getDoctype();
-					// HTML 5 determines "data-" named attributes to not be unknown 
+					// HTML 5 determines "data-" and "x-" attributes to not be unknown 
 					if (doctype.getSystemId() == null && doctype.getPublicId() == null)
 						continue;
 				}
