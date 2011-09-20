@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
@@ -91,25 +90,20 @@ public class SelectXMLCatalogIdPanel extends Composite {
 				}
 				else {
 					result = new Vector();
-					INextCatalog[] nextCatalogs = fXmlCatalog.getNextCatalogs();
-					for (int i = 0; i < nextCatalogs.length; i++) {
-						INextCatalog catalog = nextCatalogs[i];
-						ICatalog referencedCatalog = catalog.getReferencedCatalog();
-						if (referencedCatalog != null) {
-							if (XMLCorePlugin.SYSTEM_CATALOG_ID.equals(referencedCatalog.getId())) {
-								ICatalog systemCatalog = referencedCatalog;
-								addXMLCatalogEntries(result, systemCatalog.getCatalogEntries());
-
-							}
-							else if (XMLCorePlugin.USER_CATALOG_ID.equals(referencedCatalog.getId())) {
-								ICatalog userCatalog = referencedCatalog;
-								addXMLCatalogEntries(result, userCatalog.getCatalogEntries());
-
-							}
-						}
-					}
+					processCatalog(result, fXmlCatalog);
 				}
 				return result;
+			}
+			
+			private void processCatalog(List result, ICatalog catalog) {
+                addXMLCatalogEntries(result, catalog.getCatalogEntries());
+                INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
+                for (int i = 0; i < nextCatalogs.length; i++) {
+                    ICatalog nextCatalog = nextCatalogs[i].getReferencedCatalog();
+                    if (nextCatalog != null) {
+                        processCatalog(result, nextCatalog);
+                    }
+                }
 			}
 		};
 		return theTableViewer;
