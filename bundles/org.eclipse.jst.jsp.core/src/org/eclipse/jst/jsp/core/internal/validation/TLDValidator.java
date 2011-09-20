@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -211,7 +211,7 @@ public class TLDValidator extends AbstractValidator {
 		if (file.isAccessible()) {
 			// TAGX
 			if (fTagXexts.contains(file.getFileExtension()) || fTagXnames.contains(file.getName())) {
-				monitor.beginTask("", 3);
+				monitor.beginTask("", 4);
 				org.eclipse.wst.xml.core.internal.validation.eclipse.Validator xmlValidator = new org.eclipse.wst.xml.core.internal.validation.eclipse.Validator();
 				ValidationResult result3 = new MarkupValidator().validate(resource, kind, state, new SubProgressMonitor(monitor, 1));
 				if(monitor.isCanceled()) return result;
@@ -221,6 +221,7 @@ public class TLDValidator extends AbstractValidator {
 				List messages = new ArrayList(result1.getReporter(new NullProgressMonitor()).getMessages());
 				messages.addAll(result2.getReporter(new NullProgressMonitor()).getMessages());
 				messages.addAll(result3.getReporter(new NullProgressMonitor()).getMessages());
+				messages.addAll(new JSPDirectiveValidator().validate(resource, kind, state, new SubProgressMonitor(monitor, 1)).getReporter(new NullProgressMonitor()).getMessages());
 				for (int i = 0; i < messages.size(); i++) {
 					IMessage message = (IMessage) messages.get(i);
 					if (message.getText() != null && message.getText().length() > 0) {

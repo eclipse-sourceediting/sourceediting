@@ -55,9 +55,9 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 	private static final int[] SEVERITIES = {ValidationMessage.ERROR, ValidationMessage.WARNING, ValidationMessage.IGNORE};
 
 	// Should equal org.eclipse.jdt.internal.ui.preferences.ProblemSeveritiesPreferencePage.PREF_ID
-	public static final String JAVA_SEVERITY_PREFERENCE_PAGE = "org.eclipse.jdt.ui.preferences.ProblemSeveritiesPreferencePage";
+	public static final String JAVA_SEVERITY_PREFERENCE_PAGE = "org.eclipse.jdt.ui.preferences.ProblemSeveritiesPreferencePage"; //$NON-NLS-1$
 	// Should equal org.eclipse.jdt.internal.ui.preferences.ProblemSeveritiesPreferencePage.PROP_ID
-	public static final String JAVA_SEVERITY_PROPERTY_PAGE = "org.eclipse.jdt.ui.propertyPages.ProblemSeveritiesPreferencePage";
+	public static final String JAVA_SEVERITY_PROPERTY_PAGE = "org.eclipse.jdt.ui.propertyPages.ProblemSeveritiesPreferencePage"; //$NON-NLS-1$
 	// Should equal org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage.DATA_NO_LINK
 	public static final String DATA_NO_LINK= "PropertyAndPreferencePage.nolink"; //$NON-NLS-1$
 
@@ -153,6 +153,7 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_TAGLIB_MISSING_URI_OR_TAGDIR, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_TAGLIB_MISSING_URI_OR_TAGDIR, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_INCLUDE_NO_FILE_SPECIFIED, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_INCLUDE_NO_FILE_SPECIFIED, SEVERITIES, errorWarningIgnoreLabels, 0);
+		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_ATTRIBUTE_DUPLICATE_NAME, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_ATTRIBUTE_DUPLICATE_NAME, SEVERITIES, errorWarningIgnoreLabels, 0);
 //		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabels, 0);
 		// end directives section
 

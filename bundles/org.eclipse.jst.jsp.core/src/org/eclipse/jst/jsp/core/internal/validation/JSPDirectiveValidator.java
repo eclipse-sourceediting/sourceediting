@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -97,6 +98,8 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private int fSeverityTagdirUnresolvableURI = -1;
 	private int fSeverityTaglibDuplicatePrefixWithDifferentURIs = -1;
 
+	private int fSeverityDuplicateAttributeName = -1;
+
 	private int fSeverityTaglibDuplicatePrefixWithSameURIs = -1;
 	private int fSeverityTaglibMissingPrefix = -1;
 
@@ -106,6 +109,8 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private int fSeverityTaglibUnresolvableURI = -1;
 
 	private HashMap fTaglibPrefixesInUse = new HashMap();
+
+	private Map fAttributeNamesInUse = new HashMap(0);
 
 	public JSPDirectiveValidator() {
 		initReservedPrefixes();
@@ -133,6 +138,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		super.cleanup(reporter);
 		fTaglibPrefixesInUse.clear();
 		fPrefixValueRegionToDocumentRegionMap.clear();
+		fAttributeNamesInUse.clear();
 	}
 
 	private void collectTaglibPrefix(IStructuredDocumentRegion documentRegion, ITextRegion valueRegion, String taglibPrefix) {
@@ -210,7 +216,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		fSeverityTaglibUnresolvableURI = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_TAGLIB_UNRESOLVABLE_URI_OR_TAGDIR);
 		fSeverityTagdirUnresolvableURI = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_TAGLIB_UNRESOLVABLE_URI_OR_TAGDIR);
 		fSeveritySuperClassNotFound = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND);
-
+		fSeverityDuplicateAttributeName = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_ATTRIBUTE_DUPLICATE_NAME);
 	}
 	
 	protected void performValidation(IFile f, IReporter reporter, IStructuredDocument sDoc) {
@@ -224,6 +230,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		 */
 		fPrefixValueRegionToDocumentRegionMap.clear();
 		fTaglibPrefixesInUse.clear();
+		fAttributeNamesInUse.clear();
 
 		IRegionComparible comparer = null;
 		if (sDoc instanceof IRegionComparible)
@@ -257,6 +264,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 		fPrefixValueRegionToDocumentRegionMap.clear();
 		fTaglibPrefixesInUse.clear();
+		fAttributeNamesInUse.clear();
 		setProject(null);
 		unloadPreferences();
 	}
@@ -276,6 +284,55 @@ public class JSPDirectiveValidator extends JSPValidator {
 		else if (directiveName.endsWith("page")) { //$NON-NLS-1$
 			processPageDirective(reporter, file, sDoc, documentRegion);
 		}
+		else if (directiveName.endsWith("attribute")) { //$NON-NLS-1$
+			processAttribute(reporter, file, sDoc, documentRegion);
+		}
+	}
+
+	/**
+	 * Associates an ITextRegion with an IStructuredDocumentRegion 
+	 */
+	private static class RegionPair {
+		IStructuredDocumentRegion region;
+		ITextRegion textRegion;
+
+		RegionPair(IStructuredDocumentRegion region, ITextRegion textRegion) {
+			this.region = region;
+			this.textRegion = textRegion;
+		}
+	}
+
+	private void processAttribute(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
+		final ITextRegion nameValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_NAME);
+		if (nameValueRegion != null && !hasNestedRegion(nameValueRegion)) {
+			final String nameValue = StringUtils.stripQuotes(documentRegion.getText(nameValueRegion));
+			if (nameValue.length() > 0 && fSeverityDuplicateAttributeName != ValidationMessage.IGNORE) {
+				if (!fAttributeNamesInUse.containsKey(nameValue)) {
+					// First occurrence of an attribute declaration with this name; map the regions to it
+					fAttributeNamesInUse.put(nameValue, new RegionPair(documentRegion, nameValueRegion));
+				}
+				else {
+					final RegionPair pair = (RegionPair) fAttributeNamesInUse.get(nameValue);
+					if (pair != null) {
+						// If a pair is associated with the name, add a message for the first occurrence
+						reportUsedAttributeName(reporter, nameValue, file, pair.region, pair.textRegion, sDoc);
+						fAttributeNamesInUse.put(nameValue, null); // Remove the pair since the message has been generated
+					}
+					reportUsedAttributeName(reporter, nameValue, file, documentRegion, nameValueRegion, sDoc);
+				}
+			}
+		}
+	}
+
+	private void reportUsedAttributeName(IReporter reporter, String name, IFile file, IStructuredDocumentRegion documentRegion, ITextRegion nameValueRegion, IStructuredDocument sDoc) {
+		final String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_12, name);
+		final LocalizedMessage message = new LocalizedMessage(fSeverityDuplicateAttributeName, msgText, file);
+		final int start = documentRegion.getStartOffset(nameValueRegion);
+		message.setLineNo(sDoc.getLineOfOffset(start) + 1);
+		message.setOffset(start);
+		message.setLength(nameValueRegion.getTextLength());
+
+		reporter.addMessage(fMessageOriginator, message);
 	}
 
 	private void processInclude(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion, String attrName) {
@@ -427,7 +484,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 							case (ITaglibRecord.URL) : {
 								IURLRecord record = (IURLRecord) reference;
 								String baseLocation = record.getBaseLocation();
-								if (baseLocation != null && baseLocation.indexOf("://") < 0) {
+								if (baseLocation != null && baseLocation.indexOf("://") < 0) { //$NON-NLS-1$
 									IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(baseLocation, false);
 									if (found != null) {
 										try {

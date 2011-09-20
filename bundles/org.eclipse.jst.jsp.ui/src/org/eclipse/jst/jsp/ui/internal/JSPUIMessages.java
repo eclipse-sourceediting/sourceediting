@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,6 +144,7 @@ public class JSPUIMessages extends NLS {
 	public static String Validation_Ignore;
 
 	public static String VALIDATION_HEADER_DIRECTIVE;
+	public static String VALIDATION_DIRECTIVE_ATTRIBUTE_DUPLICATE_NAME;
 	public static String VALIDATION_DIRECTIVE_TAGLIB_DUPLICATE_PREFIXES_DIFFERENT_URIS;
 	public static String VALIDATION_DIRECTIVE_TAGLIB_DUPLICATE_PREFIXES_SAME_URIS;
 	public static String VALIDATION_DIRECTIVE_TAGLIB_MISSING_PREFIX;

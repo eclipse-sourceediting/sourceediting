@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,7 +57,7 @@ public class JSPCorePreferenceNames {
 	public static final String VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND="validation.directive-page-superclass-not-found";//$NON-NLS-1$
 	public static final String VALIDATION_DIRECTIVE_INCLUDE_NO_FILE_SPECIFIED="validation.directive-include-fragment-file-not-specified";//$NON-NLS-1$
 	public static final String VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND="validation.directive-include-fragment-file-not-found";//$NON-NLS-1$
-	
+	public static final String VALIDATION_DIRECTIVE_ATTRIBUTE_DUPLICATE_NAME="validation.directive-attribute-duplicate";//$NON-NLS-1$
 	public static final String VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED ="validation.java-local-variable-is-never-used";
 	public static final String VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED  ="validation.java-";
 	public static final String VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE  ="validation.java-null-local-variable-reference";

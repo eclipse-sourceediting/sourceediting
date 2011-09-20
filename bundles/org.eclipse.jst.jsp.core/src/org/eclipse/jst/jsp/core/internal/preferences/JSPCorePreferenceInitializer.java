@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ public class JSPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putInt(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND, ValidationMessage.ERROR);
 		node.putInt(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_INCLUDE_NO_FILE_SPECIFIED, ValidationMessage.ERROR);
 		node.putInt(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND, ValidationMessage.ERROR);
+		node.putInt(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_ATTRIBUTE_DUPLICATE_NAME, ValidationMessage.ERROR);
 
 		node.putInt(JSPCorePreferenceNames.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED, ValidationMessage.IGNORE);
 		node.putInt(JSPCorePreferenceNames.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED, ValidationMessage.IGNORE);
