@@ -166,6 +166,10 @@ public class XMLUIMessages extends NLS {
 	public static String QuickFixProcessorXML_14;
 	public static String QuickFixProcessorXML_15;
 	public static String XMLPropertySourceAdapter_0;
+	public static String XMLPropertySourceAdapter_1;
+	public static String XMLPropertySourceAdapter_2;
+	public static String XMLPropertySourceAdapter_3;
+	public static String XMLPropertySourceAdapter_4;
 	public static String WorkbenchDefaultEncodingSettings_0;
 	public static String refreshoutline_0;
 	public static String Creating_files_encoding;

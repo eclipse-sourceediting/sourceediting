@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -51,7 +52,7 @@ import org.w3c.dom.Node;
  * properties of DOM nodes.
  */
 public class XMLPropertySource implements IPropertySource, IPropertySourceExtension, IPropertySource2 {
-	protected final static String CATEGORY_ATTRIBUTES = XMLUIMessages.XMLPropertySourceAdapter_0;
+	protected final static String CATEGORY_ATTRIBUTES = XMLUIMessages.XMLPropertySourceAdapter_2;
 
 	/**
 	 * Controls whether optional attributes are marked as for "experts"
@@ -84,10 +85,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	public XMLPropertySource(Node target, boolean useCategories) {
-		super();
-		initNode(target);
-		fNode = target;
-		fCaseSensitive = initCaseSensitive(fNode);
+		this(initNode(target));
 		fShouldDeriveCategories = useCategories;
 	}
 
@@ -245,7 +243,8 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrName, attrName, _getValidStrings(attrDecl, valuesHelper));
 		descriptor.setCategory(getCategory(attrDecl, attr));
-		descriptor.setDescription(attrName);
+		String info = getDescription(attrDecl);
+		descriptor.setDescription(info != null && info.trim().length() > 0 ? info : DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
 		}
@@ -265,7 +264,8 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrName, attrName, _getValidFixedStrings(attrDecl, helper));
 		descriptor.setCategory(getCategory(attrDecl, attr));
-		descriptor.setDescription(DOMNamespaceHelper.computeName(attrDecl, fNode, null));
+		String info = getDescription(attrDecl);
+		descriptor.setDescription(info != null && info.trim().length() > 0 ? info : DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		return descriptor;
 	}
 
@@ -412,7 +412,8 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attrName, attrName);
 		descriptor.setCategory(getCategory(attrDecl, attr));
-		descriptor.setDescription(attrName);
+		String info = getDescription(attrDecl);
+		descriptor.setDescription(info != null && info.trim().length() > 0 ? info : DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
 		}
@@ -420,22 +421,25 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	private String getCategory(CMAttributeDeclaration attrDecl, Attr attr) {
+		String category = null;
 		if (attr != null) {
 			String namespaceURI = attr.getNamespaceURI();
 			if (namespaceURI == null)
 				namespaceURI = attr.getOwnerElement().getNamespaceURI();
-			if (namespaceURI != null)
-				return namespaceURI;
+			category = namespaceURI;
 		}
 		if (attrDecl != null) {
-			if (attrDecl.supports("category")) { //$NON-NLS-1$
-				return (String) attrDecl.getProperty("category"); //$NON-NLS-1$
+			if (category == null && attrDecl.supports("category")) { //$NON-NLS-1$
+				category = (String) attrDecl.getProperty("category"); //$NON-NLS-1$
 			}
-			if (fShouldDeriveCategories && (attrDecl.getAttrType() != null) && (attrDecl.getAttrType().getDataTypeName() != null) && (attrDecl.getAttrType().getDataTypeName().length() > 0)) {
-				return attrDecl.getAttrType().getDataTypeName();
+			if (fShouldDeriveCategories && category == null && (attrDecl.getAttrType() != null) && (attrDecl.getAttrType().getDataTypeName() != null) && (attrDecl.getAttrType().getDataTypeName().length() > 0)) {
+				category = attrDecl.getAttrType().getDataTypeName();
 			}
 		}
-		return CATEGORY_ATTRIBUTES;
+		if (category != null) {
+			return attr != null && attr.getSpecified() ? NLS.bind(XMLUIMessages.XMLPropertySourceAdapter_3, category) : NLS.bind(XMLUIMessages.XMLPropertySourceAdapter_2, category);
+		}
+		return attr != null && attr.getSpecified() ? XMLUIMessages.XMLPropertySourceAdapter_1 : XMLUIMessages.XMLPropertySourceAdapter_0;
 	}
 
 	private CMElementDeclaration getDeclaration() {
@@ -448,6 +452,14 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		}
 		return null;
 	}
+	
+	private String getDescription(CMAttributeDeclaration decl) {
+		if (decl.supports("description"))
+			return (String) decl.getProperty("description");
+		if (decl.supports("tagInfo"))
+			return (String) decl.getProperty("tagInfo");
+		return decl.getAttrType() != null ? NLS.bind(XMLUIMessages.XMLPropertySourceAdapter_4, decl.getAttrType().getDataTypeName()) : null;
+	}
 
 	private Display getDisplay() {
 
@@ -455,9 +467,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	/**
-	 * Returns a value for this Node that can be editted in a property sheet.
+	 * Returns a value for this Node that can be edited in a property sheet.
 	 * 
-	 * @return a value that can be editted
+	 * @return a value that can be edited
 	 */
 	public Object getEditableValue() {
 		return null;
@@ -640,11 +652,12 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			if (attrMap != null) {
 				Attr attr = (Attr) attrMap.getNamedItem(name);
 				if (attr != null && attr.getSpecified()) {
-					// EXISTING VALUE
-					// potential out of control loop if updating the value
-					// triggers a viewer update, forcing the
-					// active cell editor to save its value and causing the
-					// loop to continue
+					/*
+					 * EXISTING VALUE - potential out of control loop if
+					 * updating the value triggers a viewer update, forcing
+					 * the active cell editor to save its value and causing
+					 * the loop to continue
+					 */
 					if ((attr.getValue() == null) || !attr.getValue().equals(valueString)) {
 						if (attr instanceof IDOMNode) {
 							((IDOMNode) attr).setValueSource(valueString);
