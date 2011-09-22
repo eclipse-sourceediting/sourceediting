@@ -272,6 +272,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (implied != null) {
 			Attr createdAttribute = getOwnerDocument().createAttribute(name);
 			createdAttribute.setNodeValue(implied);
+			((AttrImpl) createdAttribute).setOwnerElement(this);
 			return createdAttribute;
 		}
 		
