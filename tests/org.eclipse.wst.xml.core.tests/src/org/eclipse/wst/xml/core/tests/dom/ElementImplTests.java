@@ -37,6 +37,7 @@ import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdFo
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
+import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -238,6 +239,26 @@ public class ElementImplTests extends TestCase {
 				assertEquals("12", element.getAttribute("hour"));
 				element.removeAttribute("hour"); // value should be reset to default/0
 				assertEquals("0", element.getAttribute("hour")); 
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+	}
+
+	public void testOwnerElementWithImpliedDefaultAttribute() {
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) getModelForRead("testfiles/time.xml");
+			if (model != null) {
+				IDOMDocument document = model.getDocument();
+				Element element = document.getDocumentElement();
+				assertNotNull(element);
+				Attr attr = element.getAttributeNode("hour");
+				assertNotNull(attr);
+				assertEquals("Attribute should be owned by its element.", element, attr.getOwnerElement());
 			}
 		}
 		finally {
