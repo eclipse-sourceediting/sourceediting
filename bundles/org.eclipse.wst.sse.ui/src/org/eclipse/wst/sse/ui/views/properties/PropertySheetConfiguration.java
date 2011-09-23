@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.ui.views.properties.PropertySheetSorter;
 
 
 /**
@@ -80,10 +79,6 @@ public abstract class PropertySheetConfiguration {
 	 * @return the IPropertySourceProvider for the given page
 	 */
 	public abstract IPropertySourceProvider getPropertySourceProvider(IPropertySheetPage page);
-	
-	public PropertySheetSorter getSorter(IPropertySheetPage page) {
-		return null;
-	}
 
 	/**
 	 * Removes contribution menu items from the given menuManager,

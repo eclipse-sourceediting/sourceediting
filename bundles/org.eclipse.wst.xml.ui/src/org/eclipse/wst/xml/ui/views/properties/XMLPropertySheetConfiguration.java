@@ -28,7 +28,6 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.ui.views.properties.PropertySheetSorter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
@@ -72,16 +71,6 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 		private void refreshPages() {
 			getPropertiesRefreshJob().addPropertySheetPage(fPropertySheetPage);
 			getPropertiesRefreshJob().schedule(PropertiesRefreshJob.UPDATE_DELAY);
-		}
-	}
-	
-	private static class SpecifiedSorter extends PropertySheetSorter {
-		public int compareCategories(String categoryA, String categoryB) {
-			if (categoryA == XMLUIMessages.XMLPropertySourceAdapter_0)
-				return 1;
-			if (categoryB == XMLUIMessages.XMLPropertySourceAdapter_0)
-				return -1;
-			return super.compareCategories(categoryA, categoryB);
 		}
 	}
 
@@ -282,9 +271,6 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 		return fPropertySourceProvider;
 	}
 
-	public PropertySheetSorter getSorter(IPropertySheetPage page) {
-		return new SpecifiedSorter();
-	}
 
 	public void unconfigure() {
 		super.unconfigure();

@@ -197,7 +197,6 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 
 		if (fConfiguration != null) {
 			setPropertySourceProvider(fConfiguration.getPropertySourceProvider(this));
-			setSorter(fConfiguration.getSorter(this));
 			fConfiguration.addContributions(fMenuManager, fToolBarManager, fStatusLineManager);
 		}
 	}
