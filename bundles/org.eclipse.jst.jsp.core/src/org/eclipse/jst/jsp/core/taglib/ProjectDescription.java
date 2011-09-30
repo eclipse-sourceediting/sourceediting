@@ -425,7 +425,7 @@ class ProjectDescription {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof TLDRecord))
 				return false;
-			return ((TLDRecord) obj).path.equals(path) && ((TLDRecord) obj).getURI().equals(getURI()) && ((TLDRecord) obj).info.equals(info);
+			return ((TLDRecord) obj).path.equals(path) && ((TLDRecord) obj).getURI().equals(getURI()) && ((((TLDRecord) obj).info == null && info == null) || ((TLDRecord) obj).info.equals(info));
 		}
 
 		public ITaglibDescriptor getDescriptor() {
@@ -2571,7 +2571,9 @@ class ProjectDescription {
 						TLDRecord tldRecord = createTLDRecord(resource);
 						record = tldRecord;
 						// the stored URI should reflect the web.xml's value
-						tldRecord.info.uri = taglibUri;
+						if (tldRecord.info != null) {
+							tldRecord.info.uri = taglibUri;
+						}
 						if (_debugIndexCreation)
 							Logger.log(Logger.INFO, "created web.xml record for " + taglibUri + "@" + tldRecord.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
