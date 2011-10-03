@@ -446,7 +446,7 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 }
 
 <ST_SELECTOR_ATTRIBUTE_OPERATOR> {
-	"="|"~="|"|=" { yybegin(ST_SELECTOR_ATTRIBUTE_VALUE); return CSS_SELECTOR_ATTRIBUTE_OPERATOR; }
+	"="|"~="|"|="|"*="|"$="|"^=" { yybegin(ST_SELECTOR_ATTRIBUTE_VALUE); return CSS_SELECTOR_ATTRIBUTE_OPERATOR; }
 	"]" { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_ATTRIBUTE_END; }
 }
 
