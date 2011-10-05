@@ -77,12 +77,57 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 			for (int i = 0; i < blockTagList.size(); i++) {
 				org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker blockTag = (org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker) blockTagList.get(i);
 				String tagName = blockTag.getTagName();
-				result = checkForCriticalName("<" + tagName); //$NON-NLS-1$
+				final String tagStart = "<" + tagName; //$NON-NLS-1$
+				result = checkForCriticalName(tagStart); //$NON-NLS-1$
 				if (result != null)
 					break;
 				result = checkForCriticalName("</" + tagName); //$NON-NLS-1$
 				if (result != null)
 					break;
+				result = checkForSelfClosing(tagStart);
+				if (result != null)
+					break;
+				result = checkForTransitionToOpen(tagStart);
+				if (result != null)
+					break;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Checks if the start region has become self-closing. e.g., &lt;style&gt; -&gt; &lt;style/&gt;
+	 */
+	private StructuredDocumentEvent checkForSelfClosing(String tagName) {
+		StructuredDocumentEvent result = null;
+		if (dirtyStart.getText().toLowerCase().indexOf(tagName.toLowerCase()) >= 0) { // within a start-tag
+			final int documentLength = fStructuredDocument.getLength();
+			int end = fStart + fLengthToReplace + fChanges.length() + 1;
+			if (end > documentLength)
+				end = documentLength - 1;
+			final String oldText = fStructuredDocument.get(fStart, 1);
+			final String peek = StringUtils.paste(oldText, fChanges, 0, fLengthToReplace);
+			if ("/>".equals(peek)) { // Reparse afterwards if the tag became self-closing
+				result = reparse(dirtyStart.getStart(), documentLength - 1);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Checks if the start region has become self-closing. e.g., &lt;style/&gt; -&gt; &lt;style&gt;
+	 */
+	private StructuredDocumentEvent checkForTransitionToOpen(String tagName) {
+		StructuredDocumentEvent result = null;
+		if (dirtyStart.getText().toLowerCase().indexOf(tagName.toLowerCase()) >= 0) { // within a start-tag
+			final int documentLength = fStructuredDocument.getLength();
+			int end = fStart + fLengthToReplace + fChanges.length() + 1;
+			if (end > documentLength)
+				end = documentLength - 1;
+			final String oldText = fStructuredDocument.get(fStart, 2);
+			final String peek = StringUtils.paste(oldText, fChanges, 0, fLengthToReplace);
+			if ("/>".equals(oldText) && ">".equals(peek)) { // Reparse afterwards if the block tag went from self-closing to open
+				result = reparse(dirtyStart.getStart(), documentLength - 1);
 			}
 		}
 		return result;
