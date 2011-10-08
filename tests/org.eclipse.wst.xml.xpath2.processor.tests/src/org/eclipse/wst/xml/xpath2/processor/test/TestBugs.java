@@ -85,16 +85,12 @@ import org.eclipse.wst.xml.xpath2.api.StaticVariableResolver;
 import org.eclipse.wst.xml.xpath2.api.typesystem.ItemType;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition;
 import org.eclipse.wst.xml.xpath2.api.typesystem.TypeModel;
-import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.Engine;
-import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.StaticError;
 import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
-import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
@@ -2592,6 +2588,28 @@ public class TestBugs extends AbstractPsychoPathTest {
 		rs = eval.evaluate(path);
 		result = (XSBoolean) rs.first();
 		actual = result.string_value();
+		assertEquals("true", actual);
+	} */
+	
+	/* "added for future use"
+	 * 
+	public void testResolveQName_1() throws Exception {
+		// Bug 360306
+		URL fileURL = bundle.getEntry("/bugTestFiles/resQName.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// test (a)
+		String xpath = "resolve-QName(/messages/message[1]/@kind, /messages) = xs:QName('xs:int')";
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+		XSBoolean result = (XSBoolean) rs.first();
+		String actual = result.string_value();
 		assertEquals("true", actual);
 	} */
 	
