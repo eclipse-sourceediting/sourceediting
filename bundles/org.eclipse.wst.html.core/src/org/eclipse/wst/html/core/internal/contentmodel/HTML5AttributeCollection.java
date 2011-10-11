@@ -69,6 +69,13 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_FORM, atype, CMAttributeDeclaration.OPTIONAL);
 		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_NOVALIDATE)) {
+			// (novalidate (novalidate) #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] values = {ATTR_NAME_NOVALIDATE};
+			atype.setEnumValues(values);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_NOVALIDATE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_KEYTYPE)) {
 			// (keytype CDATA; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
@@ -684,6 +691,19 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_NAME, attr);
 	
+		}
+		else if (elementName.equals(HTML40Namespace.ElementName.FORM)) {
+			super.createAttributeDeclarations(elementName, attributes);
+
+			// (type %autocomeplete; ) ... should be defined locally.
+			// NOTE: %autocomeplete is ENUM;
+			// (on | off)
+			HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] autoCompleteValues = {ATTR_VALUE_ON, ATTR_VALUE_OFF};
+			atype.setEnumValues(autoCompleteValues);
+			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_AUTOCOMPLETE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_AUTOCOMPLETE, attr);
+			attributes.putNamedItem(ATTR_NAME_NOVALIDATE, create(ATTR_NAME_NOVALIDATE));
 		}
 		/*
 		 * (shape %Shape; rect)

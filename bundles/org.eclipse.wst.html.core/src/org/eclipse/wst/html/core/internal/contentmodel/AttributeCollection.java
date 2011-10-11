@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1389,6 +1389,10 @@ class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Namespace 
 			String[] names = {ATTR_NAME_CHARSET, ATTR_NAME_TYPE, ATTR_NAME_NAME, ATTR_NAME_HREF, ATTR_NAME_HREFLANG, ATTR_NAME_TARGET, ATTR_NAME_REL, ATTR_NAME_REV, ATTR_NAME_ACCESSKEY, ATTR_NAME_DIRECTKEY, ATTR_NAME_SHAPE, ATTR_NAME_COORDS, ATTR_NAME_TABINDEX, ATTR_NAME_ONFOCUS, ATTR_NAME_ONBLUR};
 			getDeclarations(attributes, Arrays.asList(names).iterator());
 		
+		}
+		else if (elementName.equals(HTML40Namespace.ElementName.FORM)) {
+			String[] names = {HTML40Namespace.ATTR_NAME_ACTION, HTML40Namespace.ATTR_NAME_METHOD, HTML40Namespace.ATTR_NAME_ENCTYPE, HTML40Namespace.ATTR_NAME_ACCEPT, HTML40Namespace.ATTR_NAME_NAME, HTML40Namespace.ATTR_NAME_ONSUBMIT, HTML40Namespace.ATTR_NAME_ONRESET, HTML40Namespace.ATTR_NAME_TARGET, HTML40Namespace.ATTR_NAME_ACCEPT_CHARSET};
+			getDeclarations(attributes, Arrays.asList(names).iterator());
 		}
 		/*
 		 * (shape %Shape; rect)
