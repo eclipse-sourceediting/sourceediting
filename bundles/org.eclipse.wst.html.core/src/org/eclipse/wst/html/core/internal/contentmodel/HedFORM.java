@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,6 @@
 package org.eclipse.wst.html.core.internal.contentmodel;
 
 
-
-import java.util.Arrays;
 
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
@@ -55,8 +53,7 @@ final class HedFORM extends HedFlowContainer {
 		// %attrs;
 		attributeCollection.getAttrs(attributes);
 
-		String[] names = {HTML40Namespace.ATTR_NAME_ACTION, HTML40Namespace.ATTR_NAME_METHOD, HTML40Namespace.ATTR_NAME_ENCTYPE, HTML40Namespace.ATTR_NAME_ACCEPT, HTML40Namespace.ATTR_NAME_NAME, HTML40Namespace.ATTR_NAME_ONSUBMIT, HTML40Namespace.ATTR_NAME_ONRESET, HTML40Namespace.ATTR_NAME_TARGET, HTML40Namespace.ATTR_NAME_ACCEPT_CHARSET};
-		attributeCollection.getDeclarations(attributes, Arrays.asList(names).iterator());
+		attributeCollection.createAttributeDeclarations(HTML40Namespace.ElementName.FORM, attributes);
 	}
 
 	/**
