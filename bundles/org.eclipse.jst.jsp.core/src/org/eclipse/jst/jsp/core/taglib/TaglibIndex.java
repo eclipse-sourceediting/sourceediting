@@ -740,7 +740,7 @@ public final class TaglibIndex {
 		return fCurrentTopLevelDelta;
 	}
 
-	void fireCurrentDelta(Object trigger) {
+	synchronized void fireCurrentDelta(Object trigger) {
 		if (fCurrentTopLevelDelta != null) {
 			fCurrentTopLevelDelta.trigger = trigger;
 			ITaglibIndexDelta delta = fCurrentTopLevelDelta;
