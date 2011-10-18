@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1199,34 +1199,38 @@ public class ModelManagerImpl implements IModelManager {
 
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		IStructuredModel result = null;
-		boolean doRelease = true;
 		// let's see if we already have it in our cache
+		SharedObject sharedObject = null;
+		SYNC.acquire();
 		try {
+			 sharedObject = (SharedObject) fManagedObjects.get(id);
+		} finally {
+			SYNC.release();
+		}
+		// if not, then we'll simply return null
+		if (sharedObject != null) {
+			// if shared object is in our cache, then simply increment its ref
+			// count, and return the object.
+			
+			synchronized(sharedObject) {
+				if (sharedObject.doWait) {
+					sharedObject.waitForLoadAttempt();
+				}
+			}
+
 			SYNC.acquire();
-			SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-			// if not, then we'll simply return null
-			if (sharedObject != null) {
-				// if shared object is in our cache, then simply increment its ref
-				// count,
-				// and return the object.
-				SYNC.release();
-				doRelease=false;
+			try {
 				synchronized(sharedObject) {
-					if (sharedObject.doWait) {
-						sharedObject.waitForLoadAttempt();
-					}
 					if (sharedObject.theSharedModel!=null) {
 						_incrCount(sharedObject, EDIT);
 					}
-					result = sharedObject.theSharedModel;
 				}
-				trace("got existing model for Edit: ", id); //$NON-NLS-1$
-				trace("   incremented referenceCountForEdit ", id, sharedObject.referenceCountForEdit); //$NON-NLS-1$
-			}
-		} finally {
-			if (doRelease) {
+			} finally {
 				SYNC.release();
 			}
+			result = sharedObject.theSharedModel;
+			trace("got existing model for Edit: ", id); //$NON-NLS-1$
+			trace("   incremented referenceCountForEdit ", id, sharedObject.referenceCountForEdit); //$NON-NLS-1$
 		}
 		
 		return result;
@@ -1281,32 +1285,36 @@ public class ModelManagerImpl implements IModelManager {
 	public  IStructuredModel getExistingModelForRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		IStructuredModel result = null;
-		boolean doRelease = true;
+		SharedObject sharedObject = null;
 		// let's see if we already have it in our cache
+		SYNC.acquire();
 		try {
-			SYNC.acquire();
-			SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-			// if not, then we'll simply return null
-			if (sharedObject != null) {
-				// if shared object is in our cache, then simply increment its ref
-				// count,
-				// and return the object.
-				SYNC.release();
-				doRelease=false;
+			sharedObject = (SharedObject) fManagedObjects.get(id);
+		} finally {
+			SYNC.release();
+		}
+		// if not, then we'll simply return null
+		if (sharedObject != null) {
+			// if shared object is in our cache, then simply increment its ref
+			// count, and return the object.
 
+			synchronized(sharedObject) {
+				if (sharedObject.doWait) {
+					sharedObject.waitForLoadAttempt();
+				}
+			}
+			
+			SYNC.acquire();
+			try {
 				synchronized(sharedObject) {
-					if (sharedObject.doWait) {
-						sharedObject.waitForLoadAttempt();
-					}
 					if (sharedObject.theSharedModel!=null) {
 						_incrCount(sharedObject, READ);
 					}
-					result = sharedObject.theSharedModel;
 				}
-			}
-		} finally {
-			if (doRelease)
+			} finally {
 				SYNC.release();
+			}
+			result = sharedObject.theSharedModel;
 		}
 		return result;
 	}
