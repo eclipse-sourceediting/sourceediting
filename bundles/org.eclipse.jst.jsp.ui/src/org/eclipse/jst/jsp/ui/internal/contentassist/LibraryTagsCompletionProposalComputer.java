@@ -327,11 +327,14 @@ public class LibraryTagsCompletionProposalComputer extends
 						image = this.getGenericTagImage();
 					}
 					String proposedText = getRequiredText(document, ed);
-					final IStructuredDocumentRegion region = contentAssistRequest.getDocumentRegion();
-					if (region != null && region.getFirstRegion() != null && region.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN) && proposedText.length() > 0) {
+					final IDOMNode targetNode = (IDOMNode) contentAssistRequest.getNode();
+					if (targetNode != null) {
+						final IStructuredDocumentRegion region = targetNode.getFirstStructuredDocumentRegion();
+						if (region != null && region.getFirstRegion() != null && region.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN) && proposedText.length() > 0) {
 							//in order to differentiate between content assist on 
 							//completely empty document and the one with xml open tag
 							proposedText = proposedText.substring(1);
+						}
 					}
 					if (!beginsWith(proposedText, contentAssistRequest.getMatchString())) {
 						return;
