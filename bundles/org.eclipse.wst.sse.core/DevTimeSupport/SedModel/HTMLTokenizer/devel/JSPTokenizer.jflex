@@ -2307,6 +2307,19 @@ jspDirectiveStart        = {jspScriptletStart}@
 	yybegin(YYINITIAL);
 	return PROXY_CONTEXT;
 }
+// XML attribute name EL
+<ST_XML_ATTRIBUTE_NAME> \x24\x7b[^\x7d]*/\x7d {
+	yybegin(ST_JSP_EL);
+	if(yylength() > 2)
+		yypushback(yylength() - 2);
+	fELlevel++;
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+	assembleEmbeddedContainer(JSP_EL_OPEN, JSP_EL_CLOSE);
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	yybegin(ST_XML_ATTRIBUTE_NAME);
+	return PROXY_CONTEXT;
+}
 <ST_JSP_EL> \x24\x7b {
 	fELlevel++;
 	if(fELlevel == 1) {
@@ -2331,6 +2344,19 @@ jspDirectiveStart        = {jspScriptletStart}@
 	if(fELlevel == 1) {
 		return JSP_VBL_OPEN;
 	}
+}
+// XML attribute name VBL
+<ST_XML_ATTRIBUTE_NAME> \x23\x7b[^\x7d]*/\x7d {
+	yybegin(ST_JSP_VBL);
+	if(yylength() > 2)
+		yypushback(yylength() - 2);
+	fELlevel++;
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+	assembleEmbeddedContainer(JSP_VBL_OPEN, JSP_VBL_CLOSE);
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	yybegin(ST_XML_ATTRIBUTE_NAME);
+	return PROXY_CONTEXT;
 }
 // return anything not starting quotes or ending the VBL as content
 <ST_JSP_VBL> [^\x7d\x22\x27]* {

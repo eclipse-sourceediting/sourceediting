@@ -129,7 +129,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			boolean isXMLAttr = a instanceof IDOMAttr;
 			if (isXMLAttr) {
 				IDOMAttr xmlattr = (IDOMAttr) a;
-				if (!xmlattr.isGlobalAttr())
+				if (!xmlattr.isGlobalAttr() || xmlattr.getNameRegion() instanceof ITextRegionContainer)
 					continue; // skip futher validation and begin next loop.
 			}
 
