@@ -600,6 +600,29 @@ public class ScannerUnitTests extends TestCase {
 		verifyLengths(0, nodes.item(0), text);
 	}
 
+	public void testELinTag() {
+		String text = "<input type=\"button\" ${disabled? 'disabled=\"disabled\"':''}/>";
+		IStructuredDocumentRegionList nodes = setUpJSP(text);
+		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{7});
+		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
+		sizeCheck = checkSimpleRegionCount(((ITextRegionContainer) nodes.item(0).getRegions().get(5)), 9);
+		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
+		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{DOMRegionContext.XML_TAG_OPEN, DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS, DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_EMPTY_TAG_CLOSE});
+		assertTrue("region context type check", typeCheck);
+		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(5)).getRegions(), new String[]{
+					DOMJSPRegionContexts.JSP_EL_OPEN, 
+					DOMJSPRegionContexts.JSP_EL_CONTENT, 
+					DOMJSPRegionContexts.JSP_EL_SQUOTE, 
+					DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT, 
+					DOMJSPRegionContexts.JSP_EL_SQUOTE, 
+					DOMJSPRegionContexts.JSP_EL_CONTENT, 
+					DOMJSPRegionContexts.JSP_EL_SQUOTE, 
+					DOMJSPRegionContexts.JSP_EL_SQUOTE, 
+					DOMJSPRegionContexts.JSP_EL_CLOSE});
+		assertTrue("region context type check", typeCheck);
+		verifyLengths(0, nodes.item(0), text);
+	}
+
 
 	public void testELtolerance_transparency_Dquote() {
 		IStructuredDocumentRegionList nodes = setUpJSP("<a type=\"${out.foo}\"/>");
