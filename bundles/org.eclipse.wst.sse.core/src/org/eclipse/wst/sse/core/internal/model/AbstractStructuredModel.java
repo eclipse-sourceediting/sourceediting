@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.ILockable;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
@@ -305,32 +304,12 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 	/**
 	 * This lock to lock the small bits of data and operations in the models
-	 * themselfes. this lock is "shared" with document, so, eventually,
-	 * changes can be made safefly from either side.
+	 * themselves. this lock is "shared" with document, so, eventually,
+	 * changes can be made safely from either side.
+	 * 
+	 * @deprecated
 	 */
 	protected final void beginLock() {
-
-		// if we get a different lock object
-		// than we had before, besure to release
-		// old one first before losing it.
-		// ISSUE: this smells like an error condition,
-		// when would this happen? better to check in set document?
-		ILock documentLock = getLockObjectFromDocument();
-
-		if (fLockObject != null && fLockObject != documentLock) {
-			fLockObject.release();
-			if (Logger.DEBUG_MODELSTATE) {
-				Logger.log(Logger.INFO, "Model lock released early" + fLockObject + " apparently document switched?"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-		}
-		fLockObject = documentLock;
-		if (fLockObject != null) {
-			fLockObject.acquire();
-			if (Logger.DEBUG_MODELSTATE) {
-				Logger.log(Logger.INFO, "Model lock acquired: " + fLockObject); //$NON-NLS-1$
-			}
-		}
 	}
 
 	public void beginRecording(Object requester) {
@@ -474,15 +453,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * call it to end the lock after updates have been made, but before
 	 * notifications are sent
 	 * 
+	 * @deprecated
 	 */
 	protected final void endLock() {
-		if (fLockObject != null) {
-			fLockObject.release();
-			if (Logger.DEBUG_MODELSTATE) {
-				Logger.log(Logger.INFO, "Model lock released: " + fLockObject); //$NON-NLS-1$
-			}
-
-		}
 	}
 
 	public void endRecording(Object requester) {
@@ -699,26 +672,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	public abstract IndexedRegion getIndexedRegion(int offset);
 
 	/**
-	 * @return
-	 */
-	private ILock getLockObjectFromDocument() {
-
-		// we always "get afresh" the lock object from our document,
-		// just in case the instance of the document changes.
-		ILock result = null;
-		IStructuredDocument doc = fStructuredDocument;
-		if (doc != null) {
-			if (doc instanceof ILockable) {
-				// remember, more than one client can get the
-				// lock object, its during the aquire that the
-				// lock on the thread is obtained.
-				result = ((ILockable) doc).getLockObject();
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Gets the contentTypeDescription.
 	 * 
 	 * @return Returns a ContentTypeDescription
@@ -822,11 +775,19 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		fId = id;
 	}
 
+	private final Object STATE_LOCK = new Object();
+
 	final protected void internalAboutToBeChanged() {
+		int state = 0;
+		// we always increment counter, for every request (so *must* receive
+		// corresponding number of 'changedModel' requests)
+		synchronized (STATE_LOCK) {
+			state = fModelStateChanging++;
+		}
 
 		// notice we only fire this event if we are not
 		// already in a model state changing sequence
-		if (fModelStateChanging == 0) {
+		if (state == 0) {
 
 			if (Logger.DEBUG_MODELSTATE) {
 				Logger.log(Logger.INFO, "IModelStateListener event for " + getId() + " : modelAboutToBeChanged"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -838,16 +799,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			catch (Exception e) {
 				Logger.logException("Exception while notifying model state listers of about to change", e); //$NON-NLS-1$
 			}
-			finally {
-				// begin lock after listeners notified, otherwise
-				// deadlock could occur if they call us back.
-				beginLock();
-			}
 
 		}
-		// we always increment counter, for every request (so *must* receive
-		// corresponding number of 'changedModel' requests)
-		fModelStateChanging++;
+		
 	}
 
 	/**
@@ -856,19 +810,18 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * since it keeps track of counts.
 	 */
 	final protected void internalModelChanged() {
-
+		int state = 0;
 		// always decrement
-		fModelStateChanging--;
-
+		synchronized (STATE_LOCK) {
+			state = --fModelStateChanging;
+		}
 
 		// Check integrity
 		// to be less than zero is a programming error,
 		// but we'll reset to zero
 		// and try to continue
-		if (fModelStateChanging < 0) {
-			fModelStateChanging = 0;
-			// should not be locked, but just in case
-			endLock();
+		if (state < 0) {
+			state = 0;
 			throw new IllegalStateException("Program Error: modelStateChanging was less than zero"); //$NON-NLS-1$
 		}
 
@@ -876,14 +829,11 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// We only fire this event if all pending requests are done.
 		// That is, if we've received the same number of modelChanged as
 		// we have aboutToChangeModel.
-		if (fModelStateChanging == 0) {
+		if (state == 0) {
 			if (Logger.DEBUG_MODELSTATE) {
 				Logger.log(Logger.INFO, "IModelStateListener event for " + getId() + " : modelChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			endLock();
-			// notifify listeners outside of locked state (or deadlock
-			// can occur if one of them calls us back.
 			fireModelChanged();
 		}
 	}
