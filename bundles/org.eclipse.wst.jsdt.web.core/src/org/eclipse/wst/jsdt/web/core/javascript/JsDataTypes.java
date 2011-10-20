@@ -31,7 +31,7 @@ public interface JsDataTypes extends HTML40Namespace {
 			HTML40Namespace.ATTR_NAME_ONMOUSEUP, HTML40Namespace.ATTR_NAME_ONMOUSEOVER, HTML40Namespace.ATTR_NAME_ONMOUSEMOVE,
 			HTML40Namespace.ATTR_NAME_ONMOUSEOUT, HTML40Namespace.ATTR_NAME_ONKEYPRESS, HTML40Namespace.ATTR_NAME_ONKEYDOWN, HTML40Namespace.ATTR_NAME_ONKEYUP,
 			HTML40Namespace.ATTR_NAME_ONHELP };
-	public static final String[] HTMLATREVENTS = { "onload ", "onunload", "onclick", "onmousedown", "onmouseup", "onmouseover", "onmousemove", "onmouseout", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+	public static final String[] HTMLATREVENTS = { "onload", "onunload", "onclick", "onmousedown", "onmouseup", "onmouseover", "onmousemove", "onmouseout", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			"onfocus", "onblur", "onkeypress", "onkeydown", "onkeyup", "onsubmit", "onreset", "onselect", "onchange", }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	public static final String[] JSVALIDDATATYPES = { "JAVASCRIPT", "TEXT/JAVASCRIPT" }; //$NON-NLS-1$ //$NON-NLS-2$
 	public static String[] KEYWORDS = { "abstract", "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete", "do", "else", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$

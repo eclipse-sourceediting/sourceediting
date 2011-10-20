@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -141,11 +142,14 @@ public class JsTranslation implements IJsTranslation {
 	private void setBaseLocation() {
 		IDOMModel xmlModel = null;
 		try {
-			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fHtmlDocument);
+			IModelManager modelManager = StructuredModelManager.getModelManager();
+			xmlModel = (IDOMModel) modelManager.getExistingModelForRead(fHtmlDocument);
 			if (xmlModel == null) {
-				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(fHtmlDocument);
+				xmlModel = (IDOMModel) modelManager.getModelForRead(fHtmlDocument);
 			}
-			fModelBaseLocation = xmlModel.getBaseLocation();
+			if(xmlModel != null) {
+				fModelBaseLocation = xmlModel.getBaseLocation();
+			}
 		}
 		finally {
 			if (xmlModel != null)

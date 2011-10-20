@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,6 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 	 */
 	public void format() {
 		super.format();
-
 		final IDocument document = (IDocument) fDocuments.removeFirst();
 		final TypedPosition partition = (TypedPosition) fPartitions.removeFirst();
 
@@ -62,7 +61,12 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 				ICompilationUnit cu = translationUtil.getCompilationUnit();
 				if (cu != null) {
 					String cuSource = cu.getSource();
-					TextEdit textEdit = formatString(CodeFormatter.K_COMPILATION_UNIT, cuSource, 0, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
+					/*
+					 * Format the entire compilation unit, but only create
+					 * edits for the requested JSP partition's range in the
+					 * Java source
+					 */
+					TextEdit textEdit = formatString(CodeFormatter.K_COMPILATION_UNIT, cuSource, translationUtil.getTranslation().getJavaOffset(partition.getOffset()), partition.getLength(), TextUtilities.getDefaultLineDelimiter(document), getPreferences());
 
 					TextEdit jspEdit = translationUtil.getTranslation().getJspEdit(textEdit);
 					if (jspEdit != null && jspEdit.hasChildren())
@@ -82,6 +86,10 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 				Logger.logException(exception);
 			}
 		}
+	}
+
+	private TextEdit formatString(int kind, String cuSource, int javaOffset, int length, String defaultLineDelimiter, Map preferences) {
+		return ToolFactory.createCodeFormatter(preferences).format(kind, cuSource, javaOffset, length, 0, defaultLineDelimiter);
 	}
 
 	/*
