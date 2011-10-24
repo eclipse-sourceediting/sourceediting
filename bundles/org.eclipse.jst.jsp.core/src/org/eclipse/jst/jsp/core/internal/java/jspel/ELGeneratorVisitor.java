@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 BEA Systems and others.
+ * Copyright (c) 2005, 2011 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,10 +17,12 @@ package org.eclipse.jst.jsp.core.internal.java.jspel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
@@ -94,8 +96,11 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	private static final String fJspImplicitMaps[] = { 	"param", "paramValues", "header", "headerValues", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 														"cookie", "initParam", "pageScope", "requestScope", "sessionScope",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 														"applicationScope" }; //$NON-NLS-1$
+
+	private static final String fHttpServletRequestBooleanMethodNames[] = {"requestedSessionIdFromCookie", "requestedSessionIdFromUrl", "requestedSessionIdFromURL", "requestedSessionIdValid", "userInRole", "secure"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 	
 	private static final HashMap fJSPImplicitObjectMap = new HashMap(fJspImplicitObjects.length);
+	private static final Set fHttpServletRequestBooleanMethods = new HashSet(fHttpServletRequestBooleanMethodNames.length);
 	static {
 		for(int i = 0; i < fJspImplicitObjects.length; i++) {
 			fJSPImplicitObjectMap.put(fJspImplicitObjects[i], new Boolean(true));
@@ -104,8 +109,13 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		for(int i = 0; i < fJspImplicitMaps.length; i++) {
 			fJSPImplicitObjectMap.put(fJspImplicitMaps[i], new Boolean(false));
 		}
+
+		for (int i = 0; i < fHttpServletRequestBooleanMethodNames.length; i++) {
+			fHttpServletRequestBooleanMethods.add(fHttpServletRequestBooleanMethodNames[i]);
+		}
 	}
-	
+	private static final byte[] HTTP_REQUEST = new byte[0];
+
 	private static final String fFooter = " );" + ENDL + "}" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private StringBuffer fResult;
@@ -459,6 +469,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 				//content assist can cause a null pointer here without the extra null check
 				if(prefix.firstToken.image.equals("pageContext") && suffix.getPropertyNameToken() != null && suffix.getPropertyNameToken().image.equals("request")) {
 					append("((HttpServletRequest)");
+					data = HTTP_REQUEST;
 				}
 			}
 		}
@@ -509,10 +520,15 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 			// This is a special case.  Note that the type system, no matter how much type information
 			// we would have wouldn't give us the correct result.  We're looking for "pageContext.request" 
 			// here and will add a downcast to (HTTPServletRequest)
-			
+			String prefix = "get"; //$NON-NLS-1$
 			append(node.firstToken);
-			append("get" + ucaseName + "()", suffix); //$NON-NLS-1$ //$NON-NLS-2$
-			
+			if (data == HTTP_REQUEST && !"request".equals(suffix.image)) { //$NON-NLS-1$
+				if (fHttpServletRequestBooleanMethods.contains(suffix.image)) {
+					prefix = "is"; //$NON-NLS-1$
+				}
+			}
+			append(prefix + ucaseName + "()", suffix); //$NON-NLS-1$
+
 			SimpleNode parent = (SimpleNode) node.jjtGetParent();
 			if(suffix.image.equals("request") && parent instanceof ASTValue && //$NON-NLS-1$
 					parent.jjtGetParent() instanceof ASTUnaryExpression && parent.firstToken.image.equals("pageContext")) { //$NON-NLS-1$
