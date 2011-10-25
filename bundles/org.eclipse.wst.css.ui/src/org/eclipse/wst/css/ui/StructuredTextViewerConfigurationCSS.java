@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.css.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
@@ -23,6 +24,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.format.FormatProcessorCSS;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
+import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSStructuredContentAssistProcessor;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForCSS;
@@ -159,5 +161,11 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 			fLineStyleProviderForCSS = new LineStyleProviderForCSS();
 		}
 		return fLineStyleProviderForCSS;
+	}
+
+	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
+		targets.put(ContentTypeIdForCSS.ContentTypeID_CSS, null);
+		return targets;
 	}
 }
