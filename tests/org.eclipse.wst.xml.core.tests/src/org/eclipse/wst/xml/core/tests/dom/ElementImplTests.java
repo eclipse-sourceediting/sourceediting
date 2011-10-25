@@ -257,8 +257,7 @@ public class ElementImplTests extends TestCase {
 				Element element = document.getDocumentElement();
 				assertNotNull(element);
 				Attr attr = element.getAttributeNode("hour");
-				assertNotNull(attr);
-				assertEquals("Attribute should be owned by its element.", element, attr.getOwnerElement());
+				assertNull(attr);
 			}
 		}
 		finally {
