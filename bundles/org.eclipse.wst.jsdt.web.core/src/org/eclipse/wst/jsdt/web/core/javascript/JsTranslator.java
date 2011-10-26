@@ -399,7 +399,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							// Position inScript = new Position(scriptOffset,
 							// rawText.length());
 							/* Quoted text starts +1 and ends -1 char */
-							if(ADD_SEMICOLON_AT_INLINE && rawText.charAt(rawText.length()-1) != ';') rawText = rawText + ";"; //$NON-NLS-1$
+							if(ADD_SEMICOLON_AT_INLINE) rawText = rawText + ";"; //$NON-NLS-1$
 							Position inHtml = new Position(valStartOffset, rawText.length());
 							scriptLocationInHtml.add(inHtml);
 							/* need to pad the script text with spaces */
