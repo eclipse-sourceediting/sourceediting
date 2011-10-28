@@ -19,6 +19,9 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
+import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
@@ -381,7 +384,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	private final static String STRUCTURE_PROPERTY = XMLEditorMessages.XMLTreeExtension_0;
 	private final static String VALUE_PROPERTY = XMLEditorMessages.XMLTreeExtension_1;
 	
-	private class CellListener implements ICellEditorListener {
+	private class CellListener extends ColumnViewerEditorActivationListener implements ICellEditorListener {
 
 		private Node node;
 		private CellEditor editor;
@@ -391,12 +394,11 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			this.node = data;
 			this.editor = editor;
 			
-			((IDOMNode) node).getModel().aboutToChangeModel();
 			originalValue = treeContentHelper.getNodeValue(node);
+			((IDOMNode) node).getModel().aboutToChangeModel();
 		}
 
 		public void applyEditorValue() {
-			((IDOMNode) node).getModel().changedModel();
 			editor.removeListener(this);
 		}
 
@@ -405,7 +407,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			if (value != null && !value.equals(originalValue)) {
 				treeContentHelper.setNodeValue(node, originalValue);
 			}
-			((IDOMNode) node).getModel().changedModel();
 			editor.removeListener(this);
 		}
 
@@ -413,6 +414,20 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			if (newValidState) {
 				treeContentHelper.setNodeValue(node, editor.getValue().toString(), getControl().getShell());
 			}
+		}
+
+		public void beforeEditorActivated(ColumnViewerEditorActivationEvent event) {
+		}
+
+		public void afterEditorActivated(ColumnViewerEditorActivationEvent event) {
+		}
+
+		public void beforeEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
+		}
+
+		public void afterEditorDeactivated(ColumnViewerEditorDeactivationEvent event) {
+			((IDOMNode) node).getModel().changedModel();
+			getColumnViewerEditor().removeEditorActivationListener(this);
 		}
 		
 	}
@@ -432,7 +447,9 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 								editors[1].dispose();
 							editors[1] = getCellEditor(element, 1);
 							if (editors[1] instanceof TextCellEditor) {
-								editors[1].addListener(new CellListener(node, editors[1]));
+								final CellListener listener = new CellListener(node, editors[1]);
+								getColumnViewerEditor().addEditorActivationListener(listener);
+								editors[1].addListener(listener);
 							}
 						}
 					}
