@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -53,6 +56,8 @@ public final class CommonCharsetNames {
 	private static ArrayList encodings = null;
 
 	private static Hashtable supportedEncodingDisplayNames = null;
+
+	private static Map prefNames = null;
 
 	/**
 	 * Returns list of commonly available encoding names. Suitable for
@@ -124,6 +129,17 @@ public final class CommonCharsetNames {
 		return result;
 	}
 
+	public static String getPreferenceName(String charsetName) {
+		if (charsetName == null)
+			return null;
+
+		String result = (String) getPreferenceNames().get(charsetName);
+		if (result == null) {
+			return charsetName;
+		}
+
+		return result;
+	}
 	/**
 	 * @return Returns the javaEncodings.
 	 */
@@ -191,11 +207,19 @@ public final class CommonCharsetNames {
 		return supportedEncodingDisplayNames;
 	}
 
+	private static Map getPreferenceNames() {
+		if (prefNames == null) {
+			initHashTables();
+		}
+		return prefNames;
+	}
+
 	private static void initHashTables() {
 		if (supportedEncodingDisplayNames == null) {
 			// Initialize hash table for encoding table
 			supportedEncodingDisplayNames = new Hashtable();
 			encodings = new ArrayList();
+			prefNames = new HashMap();
 
 			ResourceBundle bundle = null;
 			InputStream bundleStream = null;
@@ -220,9 +244,17 @@ public final class CommonCharsetNames {
 				for (int i = 0; i < totalNum; i++) {
 					String iana = bundle.getString("codeset." + i + ".iana");//$NON-NLS-2$//$NON-NLS-1$
 					String displayName = bundle.getString("codeset." + i + ".label");//$NON-NLS-2$//$NON-NLS-1$
+					String prefName = null;
+					try {
+						prefName = bundle.getString("codeset." + i + ".prefName"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					catch (MissingResourceException e) {
+					}
 
 					encodings.add(iana);
 					supportedEncodingDisplayNames.put(iana, displayName);
+					if (prefName != null)
+						prefNames.put(prefName, iana);
 				}
 			}
 			catch (IOException e) {
