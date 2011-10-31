@@ -297,15 +297,14 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
    protected void setVariable(String name, AnyType value) {
 	   if (useNewApi) {
-		   String ns = staticContextBuilder.getDefaultNamespace();
 		   if (value != null) {
-				staticContextBuilder.withVariable(new javax.xml.namespace.QName(ns, 
+				staticContextBuilder.withVariable(new javax.xml.namespace.QName(
 						name), new SimpleAtomicItemTypeImpl(value.getTypeDefinition(), ItemType.OCCURRENCE_ONE));
 		   } else {		
-				staticContextBuilder.withVariable(new javax.xml.namespace.QName(ns, 
+				staticContextBuilder.withVariable(new javax.xml.namespace.QName( 
 						name), new SimpleAtomicItemTypeImpl(BuiltinTypeLibrary.XS_UNTYPEDATOMIC, ItemType.OCCURRENCE_OPTIONAL));
 		   }
-		   dynamicContextBuilder.withVariable(new javax.xml.namespace.QName(ns, name), value);
+		   dynamicContextBuilder.withVariable(new javax.xml.namespace.QName(name), value);
 	   } else {
 		   dynamicContext.set_variable(new QName(name), value);
 	   }
