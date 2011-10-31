@@ -227,7 +227,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	}
 
 	private boolean expandVarQName(QName name) {
-		return expandQName(name, _sc.getDefaultNamespace(), false);
+		return expandQName(name, null, false);
 	}
 
 	/**
