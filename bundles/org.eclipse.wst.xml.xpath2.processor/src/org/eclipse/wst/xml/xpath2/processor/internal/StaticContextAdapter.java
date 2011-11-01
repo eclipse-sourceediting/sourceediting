@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Jesper Moller and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Jesper Moller - initial API and implementation
+ *     Lukasz Wycisk - bug 361804 - StaticContextAdapter returns mock function
+ *******************************************************************************/
+
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import java.net.URI;
@@ -138,45 +150,12 @@ public class StaticContextAdapter implements
 
 	public Function resolveFunction(javax.xml.namespace.QName name, int arity) {
 		if (sc.function_exists(new QName(name), arity)) {
-			if (sc instanceof DefaultDynamicContext) {
-				DefaultDynamicContext dc = (DefaultDynamicContext)sc;
+			if (sc instanceof DefaultStaticContext) {
+				DefaultStaticContext dc = (DefaultStaticContext)sc;
 				return dc.function(new QName(name), arity);
 			}
-			return new Function() {
-				public String getName() {
-					return null;
-				}
-				public int getMinArity() {
-					return 0;
-				}
-				public int getMaxArity() {
-					return 0;
-				}
-				public boolean isVariableArgument() {
-					return false;
-				}
-				public boolean canMatchArity(int actualArity) {
-					return false;
-				}
-				public TypeDefinition getResultType() {
-					return null;
-				}
-				public TypeDefinition getArgumentType(int index) {
-					return null;
-				}
-				public String getArgumentNameHint(int index) {
-					return null;
-				}
-				public ResultSequence evaluate(Collection args, EvaluationContext evaluationContext) {
-					return null;
-				}
-				public TypeDefinition computeReturnType(Collection args, StaticContext sc) {
-					return null;
-				} 
-			};
-		} else {
-			return null;
 		}
+		throw new IllegalArgumentException("Function not found "+name);
 	}
 
 	public TypeDefinition getCollectionType(String collectionName) {
