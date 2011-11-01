@@ -238,9 +238,13 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		domDoc = null;
-		domDoc2 = null;
-		dynamicContext = null;
+		this.domDoc = null;
+		this.domDoc2 = null;
+		this.dynamicContext = null;
+		this.dynamicContextBuilder = null;
+		this.newXPath = null;
+		this.oldXPath = null;
+		this.staticContextBuilder = null;
 	}
 
 	protected XSModel getGrammar() {

@@ -34,6 +34,8 @@ public class AllPsychoPathTests {
 		suite.addTestSuite(XPathDecimalFormatTest.class);
 		suite.addTestSuite(LiteralUtilsTest.class);
 		suite.addTestSuite(KindTestSITest.class);
+		
+		suite.addTestSuite(StaticContextAdapterTest.class);
 		//$JUnit-END$
 		return suite;
 	}
