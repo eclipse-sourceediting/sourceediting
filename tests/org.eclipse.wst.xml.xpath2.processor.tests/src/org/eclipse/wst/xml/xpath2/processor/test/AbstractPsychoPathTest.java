@@ -17,6 +17,7 @@
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *     Mukul Gandhi         - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.
  *     Jesper Steen Moller  - bug 340933 - Migrate tests to new XPath2 API
+ *     Lukasz Wycisk - bug 361802 - Default variable namespace Ð no namespace
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
