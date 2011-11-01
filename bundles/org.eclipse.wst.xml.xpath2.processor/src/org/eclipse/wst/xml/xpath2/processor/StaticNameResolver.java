@@ -9,7 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *     Jesper Steen Moller - bug 343804 - Updated API information
- *     Jesper Steen Moller - bug 343804 - Updated API information
+ *     Lukasz Wycisk - bug 361802 - Default variable namespace Ð no namespace
+ *     
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
