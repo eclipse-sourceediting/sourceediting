@@ -1898,7 +1898,8 @@ public class JSPTranslator implements Externalizable {
 		ITextRegion content = null;
 		String type = null;
 		String quotetype = null;
-		for (int i = 0; i < embeddedRegions.size(); i++) {
+		final int length = embeddedRegions.size();
+		for (int i = 0; i < length; i++) {
 
 			// possible delimiter, check later
 			delim = embeddedRegions.get(i);
@@ -1950,9 +1951,18 @@ public class JSPTranslator implements Externalizable {
 					// fCurrentNode, contentStart, content.getLength());
 					translateDeclarationString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
 				}
-				else if (type == DOMJSPRegionContexts.JSP_EL_OPEN) {
+				else if (type == DOMJSPRegionContexts.JSP_EL_OPEN || type == DOMJSPRegionContexts.JSP_VBL_OPEN) {
 					fLastJSPType = EXPRESSION;
-					translateEL(embeddedContainer.getText(content), embeddedContainer.getText(delim), fCurrentNode, contentStart, content.getLength());
+					ITextRegion region = null;
+					
+					int start = delim.getEnd();
+					while (++i < length) {
+						region = embeddedRegions.get(i);
+						if (region == null || !isELType(region.getType()))
+							break;
+					}
+					final String elText = embeddedContainer.getFullText().substring(start, (region != null ? region.getStart() : embeddedContainer.getLength() - 1));
+					translateEL(elText, embeddedContainer.getText(delim), fCurrentNode, embeddedContainer.getEndOffset(delim), elText.length());
 				}
 
 				// calculate relative offset in buffer
