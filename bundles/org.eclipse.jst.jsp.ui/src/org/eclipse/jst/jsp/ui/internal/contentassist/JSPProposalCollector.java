@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,11 +19,11 @@ import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IImportContainer;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jdt.internal.ui.text.java.ProposalContextInformation;
 import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.jdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
@@ -187,10 +187,8 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		/* the context information is calculated with respect to the java document
 		 * thus it needs to be updated in respect of the JSP document.
 		 */
-		if(contextInformation instanceof ProposalContextInformation) {
-			ProposalContextInformation proposalInfo = (ProposalContextInformation)contextInformation;
-			int contextInfoJSPOffset = fTranslation.getJspOffset(proposalInfo.getContextInformationPosition());
-			proposalInfo.setContextInformationPosition(contextInfoJSPOffset);
+		if(contextInformation instanceof IContextInformationExtension) {
+			contextInformation = new JavaContextInformationWrapper(contextInformation);
 		}
 		
 		int relevance = javaProposal.getRelevance();
@@ -204,6 +202,31 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		jspProposal.setJavaCompletionProposal(javaProposal);
 		
 		return jspProposal;
+	}
+
+	private class JavaContextInformationWrapper implements IContextInformation, IContextInformationExtension {
+		private IContextInformation contextInformation;
+
+		public JavaContextInformationWrapper(IContextInformation contextInformation) {
+			this.contextInformation = contextInformation;
+		}
+
+		public String getContextDisplayString() {
+			return contextInformation.getContextDisplayString();
+		}
+
+		public Image getImage() {
+			return contextInformation.getImage();
+		}
+
+		public String getInformationDisplayString() {
+			return contextInformation.getInformationDisplayString();
+		}
+
+		public int getContextInformationPosition() {
+			return fTranslation.getJspOffset(((IContextInformationExtension) contextInformation).getContextInformationPosition());
+		}
+		
 	}
 
 	private JSPCompletionProposal createMethodProposal(CompletionProposal proposal) {
@@ -231,10 +254,8 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		/* the context information is calculated with respect to the java document
 		 * thus it needs to be updated in respect of the JSP document.
 		 */
-		if(contextInformation instanceof ProposalContextInformation) {
-			ProposalContextInformation proposalInfo = (ProposalContextInformation)contextInformation;
-			int contextInfoJSPOffset = fTranslation.getJspOffset(proposalInfo.getContextInformationPosition());
-			proposalInfo.setContextInformationPosition(contextInfoJSPOffset);
+		if(contextInformation instanceof IContextInformationExtension) {
+			contextInformation = new JavaContextInformationWrapper(contextInformation);
 		}
 		
 		int relevance = javaProposal.getRelevance();
