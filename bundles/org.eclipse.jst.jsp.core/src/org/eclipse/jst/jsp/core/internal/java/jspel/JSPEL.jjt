@@ -249,7 +249,7 @@ void Value() : {}
 
 void ValuePrefix() : {}
 {
-    Literal() | (<LPAREN> (Expression())? <RPAREN>) | LOOKAHEAD(3) FunctionInvocation() | <IDENTIFIER> 
+    Literal() | (<LPAREN> (Expression())? <RPAREN>) | LOOKAHEAD(4) FunctionInvocation() | <IDENTIFIER> 
 }
 
 void ValueSuffix() : 
@@ -267,13 +267,13 @@ void FunctionInvocation() :
 }
 {
     (prefix = <IDENTIFIER> <COLON>) { jjtThis.setFullFunctionName(prefix.image + ":"); }
-        (name = <IDENTIFIER>)? {
+        (name = <IDENTIFIER>) {
             if(null != prefix && null != name)
                     jjtThis.setFullFunctionName(prefix.image + ":" + (null == name ? "" : name.image));
             else if(null != name)
                     jjtThis.setFullFunctionName(name.image);
         }
-        (<LPAREN> (Expression())? (<COMMA> Expression())* try  { (<RPAREN>) } catch (Exception e) {} )?
+        (<LPAREN> (Expression())? (<COMMA> Expression())* try  { (<RPAREN>) } catch (Exception e) {} )
 }
 
 void Literal() : {}
