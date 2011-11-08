@@ -546,7 +546,7 @@ void ValuePrefix() : {/*@bgen(jjtree) ValuePrefix */
 {/*@bgen(jjtree) ValuePrefix */
     try {
 /*@egen*/
-    Literal() | (<LPAREN> (Expression())? <RPAREN>) | LOOKAHEAD(3) FunctionInvocation() | <IDENTIFIER>/*@bgen(jjtree)*/
+    Literal() | (<LPAREN> (Expression())? <RPAREN>) | LOOKAHEAD(4) FunctionInvocation() | <IDENTIFIER>/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -626,13 +626,13 @@ void FunctionInvocation() :
     try {
 /*@egen*/
     (prefix = <IDENTIFIER> <COLON>) { jjtn000.setFullFunctionName(prefix.image + ":"); }
-        (name = <IDENTIFIER>)? {
+        (name = <IDENTIFIER>) {
             if(null != prefix && null != name)
                     jjtn000.setFullFunctionName(prefix.image + ":" + (null == name ? "" : name.image));
             else if(null != name)
                     jjtn000.setFullFunctionName(name.image);
         }
-        (<LPAREN> (Expression())? (<COMMA> Expression())* try  { (<RPAREN>) } catch (Exception e) {} )?/*@bgen(jjtree)*/
+        (<LPAREN> (Expression())? (<COMMA> Expression())* try  { (<RPAREN>) } catch (Exception e) {} )/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
