@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import junit.framework.TestSuite;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.wst.html.internal.validation.HTMLValidator;
+import org.eclipse.wst.html.core.internal.validation.HTMLValidator;
 import org.eclipse.wst.html.ui.tests.ProjectUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -35,7 +35,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 /**
  * Test for the HTMLValidator
  * 
- * @see org.eclipse.wst.html.internal.validation.HTMLValidator
+ * @see org.eclipse.wst.html.core.internal.validation.HTMLValidator
  */
 public class TestHTMLValidator extends TestCase {
 
