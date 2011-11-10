@@ -22,7 +22,7 @@ import java.net.URL;
  */
 public class LazyURLInputStream extends InputStream
 {  
-  private static int debugTotalOpenStreamCount = 0; 
+  static int debugTotalOpenStreamCount = 0; 
   protected InputStream inner;
   protected String url;
   protected boolean error;
