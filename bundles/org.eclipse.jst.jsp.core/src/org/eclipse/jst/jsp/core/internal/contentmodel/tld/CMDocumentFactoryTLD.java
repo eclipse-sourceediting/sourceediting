@@ -781,8 +781,10 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	}
 	
 	void loadTagXFile(final CMElementDeclarationImpl ed, IFile tagxFile, boolean allowIncludes, InputStream inputStream) {
-		ed.setPath(tagxFile.getFullPath().toString());
-		ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
+		if (allowIncludes) {
+			ed.setPath(tagxFile.getFullPath().toString());
+			ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
+		}
 		try {
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 			InputSource inputSource = new InputSource(tagxFile.getFullPath().toString());
@@ -895,9 +897,11 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	
 	private void loadTagFile(CMElementDeclarationImpl ed, IFile tagFile, boolean allowIncludes, InputStream inputStream) {
 		try {
-			ed.setPath(tagFile.getFullPath().toString());
-			ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
-			ed.setLocationString(tagFile.getFullPath().toString());
+			if (allowIncludes) {
+				ed.setPath(tagFile.getFullPath().toString());
+				ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
+				ed.setLocationString(tagFile.getFullPath().toString());
+			}
 			IStructuredDocument document = null;
 			if(inputStream != null) {
 				document = (IStructuredDocument)new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile.getName(), inputStream);
