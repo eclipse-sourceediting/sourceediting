@@ -1037,15 +1037,12 @@ public class ModelManagerImpl implements IModelManager {
 	 * transformation is done.
 	 */
 	public  IStructuredDocument createStructuredDocumentFor(String filename, String content, URIResolver resolver) throws IOException {
-		// TODO: avoid all these String instances
-		StringBuffer contentBuffer = new StringBuffer(content);
 		IDocumentLoader loader = null;
 		IModelHandler handler = calculateType(filename, null);
 		loader = handler.getDocumentLoader();
 		IStructuredDocument result = (IStructuredDocument) loader.createNewStructuredDocument();
-		StringBuffer convertedContent = loader.handleLineDelimiter(contentBuffer, result);
 		result.setEncodingMemento(new NullMemento());
-		result.setText(this, convertedContent.toString());
+		result.setText(this, content);
 		return result;
 	}
 
