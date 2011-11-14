@@ -540,7 +540,6 @@ public class JSPTranslation implements IJSPTranslation {
 		if (cu != null) {
 			try {
 				synchronized(cu) {
-					cu.makeConsistent(getProgressMonitor());
 					cu.reconcile(ICompilationUnit.NO_AST, false, getWorkingCopyOwner(), getProgressMonitor());
 				}
 			}
