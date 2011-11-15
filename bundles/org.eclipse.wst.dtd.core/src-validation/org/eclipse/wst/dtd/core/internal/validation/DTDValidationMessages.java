@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class DTDValidationMessages extends NLS {
 	public static String _ERROR_REF_ELEMENT_UNDEFINED;
+	public static String _ERROR_DUPLICATE_ELEMENT_DECLARATION;
 
 	private static final String BUNDLE_NAME = "org.eclipse.wst.dtd.core.internal.validation.DTDValidationResources";//$NON-NLS-1$
 

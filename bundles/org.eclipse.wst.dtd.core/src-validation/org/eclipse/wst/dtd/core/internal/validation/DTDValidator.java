@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -40,6 +42,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DeclHandler;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * DTD validation.
@@ -179,7 +183,7 @@ public class DTDValidator {
 
 		private static final String MODEL_DELIMITERS = ",()| "; //$NON-NLS-1$
 
-		private List fElemDecls = new ArrayList();
+		private Map fElemDecls = new HashMap();
 
 		private Hashtable fElemRefs = new Hashtable();
 
@@ -222,8 +226,17 @@ public class DTDValidator {
 		 *      java.lang.String)
 		 */
 		public void elementDecl(String name, String model) throws SAXException {
+			// Add each referenced element to the list of referenced elements
+			int line = fLocator.getLineNumber();
+			int column = fLocator.getColumnNumber();
+			String uri = fLocator.getSystemId();			
 			// Add this element to the list of declared elements.
-			fElemDecls.add(name);
+			List locations = (List) fElemDecls.get(name);
+			if (locations == null) {
+				locations = new ArrayList();
+				fElemDecls.put(name, locations);
+			}
+			locations.add(new ElementLocation(column, line, uri));
 
 			// Return if the element model should be ignored. The model should
 			// be
@@ -231,10 +244,6 @@ public class DTDValidator {
 			if (fIgnoreElemModel.contains(model)) {
 				return;
 			}
-			// Add each referenced element to the list of referenced elements
-			int line = fLocator.getLineNumber();
-			int column = fLocator.getColumnNumber();
-			String uri = fLocator.getSystemId();
 
 			StringTokenizer strtok = new StringTokenizer(model, MODEL_DELIMITERS);
 			while (strtok.hasMoreTokens()) {
@@ -300,7 +309,7 @@ public class DTDValidator {
 		 * 
 		 * @return The list of element declarations.
 		 */
-		public List getElementDeclarations() {
+		public Map getElementDeclarations() {
 			return fElemDecls;
 		}
 
@@ -362,7 +371,20 @@ public class DTDValidator {
 		}
 	}
 
-	
+	/**
+	 * Keeps track of element location information
+	 *
+	 */
+	class ElementLocation {
+		int column = -1;
+		int line = -1;
+		String uri;
+		ElementLocation(int column, int line, String uri) {
+			this.column = column;
+			this.line = line;
+			this.uri = uri;
+		}
+	}
 
 	private URIResolver fResolver = null;
 
@@ -403,9 +425,11 @@ public class DTDValidator {
 
 			reader.parse(new InputSource(new StringReader(document)));
 
-			List elemDecls = dtdHandler.getElementDeclarations();
+			Map elemDecls = dtdHandler.getElementDeclarations();
 			Hashtable elemRefs = dtdHandler.getElementReferences();
 			validateElementReferences(elemDecls, elemRefs, valinfo);
+
+			validateDuplicateElementDecls(elemDecls, valinfo);
 		}
 		catch (ParserConfigurationException e) {
 
@@ -417,6 +441,21 @@ public class DTDValidator {
 
 		}
 		return valinfo;
+	}
+
+	private void validateDuplicateElementDecls(Map elemDecls, ValidationInfo valinfo) {
+		final Iterator it = elemDecls.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry elem = (Map.Entry) it.next();
+			List locations = (List) elem.getValue();
+			if (locations.size() > 1) {
+				final Iterator locationIterator = locations.iterator();
+				while (locationIterator.hasNext()) {
+					ElementLocation elemLoc = (ElementLocation) locationIterator.next();
+					valinfo.addError(NLS.bind(DTDValidationMessages._ERROR_DUPLICATE_ELEMENT_DECLARATION, "'" + elem.getKey() + "'"), elemLoc.line, elemLoc.column, elemLoc.uri); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+		}
 	}
 
 	/**
@@ -431,12 +470,12 @@ public class DTDValidator {
 	 * @param valinfo
 	 *            The validation info object to store validation information.
 	 */
-	private void validateElementReferences(List elemDecls, Hashtable elemRefs, ValidationInfo valinfo) {
+	private void validateElementReferences(Map elemDecls, Hashtable elemRefs, ValidationInfo valinfo) {
 		Enumeration keys = elemRefs.keys();
 		while (keys.hasMoreElements()) {
 			String elemRef = (String) keys.nextElement();
 			// If the element hasn't been declared create an error.
-			if (!elemDecls.contains(elemRef)) {
+			if (!elemDecls.containsKey(elemRef)) {
 				ElementRefLocation elemLoc = (ElementRefLocation) elemRefs.get(elemRef);
 				do {
 					valinfo.addError(NLS.bind(DTDValidationMessages._ERROR_REF_ELEMENT_UNDEFINED, "'" + elemRef + "'"), elemLoc.getLine(), elemLoc.getColumn(), elemLoc.getURI()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -446,4 +485,5 @@ public class DTDValidator {
 			}
 		}
 	}
+
 }
