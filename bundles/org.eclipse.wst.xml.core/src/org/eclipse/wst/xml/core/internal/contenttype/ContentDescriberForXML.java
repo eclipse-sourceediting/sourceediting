@@ -25,7 +25,7 @@ import org.eclipse.wst.sse.core.internal.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 
-public final class ContentDescriberForXML implements ITextContentDescriber {
+public class ContentDescriberForXML implements ITextContentDescriber {
 	private final static QualifiedName[] SUPPORTED_OPTIONS = {IContentDescription.CHARSET, IContentDescription.BYTE_ORDER_MARK, IContentDescriptionExtended.DETECTED_CHARSET, IContentDescriptionExtended.UNSUPPORTED_CHARSET, IContentDescriptionExtended.APPROPRIATE_DEFAULT};
 	/**
 	 * <code>restrictedMode</code> is used just for testing/experiments.
@@ -90,7 +90,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 		return SUPPORTED_OPTIONS;
 	}
 
-	private int calculateSupportedOptions(int result, InputStream contents, IContentDescription description) throws IOException {
+	protected int calculateSupportedOptions(int result, InputStream contents, IContentDescription description) throws IOException {
 		int returnResult = result;
 		if (isRelevent(description)) {
 			IResourceCharsetDetector detector = getDetector();
@@ -122,7 +122,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 * @param description
 	 * @throws IOException
 	 */
-	private int calculateSupportedOptions(int result, Reader contents, IContentDescription description) throws IOException {
+	protected int calculateSupportedOptions(int result, Reader contents, IContentDescription description) throws IOException {
 		int returnResult = result;
 		if (isRelevent(description)) {
 			IResourceCharsetDetector detector = getDetector();
