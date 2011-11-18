@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,25 @@ final class FacetModuleCoreSupport {
 				e.printStackTrace();
 		}
 		return path;
+	}
+
+	/**
+	 * @param project
+	 * @return the IPaths to acceptable "roots" in a project
+	 */
+	public static IPath[] getAcceptableRootPaths(IProject project) {
+		if (project == null)
+			return null;
+		IPath[] paths = null;
+		try {
+			paths = FacetModuleCoreSupportDelegate.getAcceptableRootPaths(project);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+			return new IPath[]{project.getFullPath()};
+		}
+		return paths;
 	}
 
 	/**

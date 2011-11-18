@@ -70,23 +70,25 @@ class NewHTMLFileWizardPage extends WizardNewFileCreationPage {
 	}
 	
 	/**
-	 * This method is overriden to set the selected folder to web contents 
+	 * This method is overridden to set the selected folder to web contents 
 	 * folder if the current selection is outside the web contents folder. 
 	 */
 	protected void initialPopulateContainerNameField() {
 		super.initialPopulateContainerNameField();
-		
+
 		IPath fullPath = getContainerFullPath();
 		IProject project = getProjectFromPath(fullPath);
-		IPath webContentPath = getWebContentPath(project);
-		
-		if (webContentPath != null && !webContentPath.isPrefixOf(fullPath)) {
-			setContainerFullPath(webContentPath);
+		IPath[] webContentPaths = FacetModuleCoreSupport.getAcceptableRootPaths(project);
+		for (int i = 0; webContentPaths != null && i < webContentPaths.length; i++) {
+			if (!webContentPaths[i].isPrefixOf(fullPath)) {
+				setContainerFullPath(webContentPaths[i]);
+				break;
+			}
 		}
 	}
-	
+
 	/**
-	 * This method is overriden to set additional validation specific to 
+	 * This method is overridden to set additional validation specific to 
 	 * html files. 
 	 */
 	protected boolean validatePage() {
@@ -130,8 +132,12 @@ class NewHTMLFileWizardPage extends WizardNewFileCreationPage {
 			// if inside web project, check if inside webContent folder
 			if (project != null && isWebProject(project)) {
 				// check that the path is inside the webContent folder
-				IPath webContentPath = getWebContentPath(project);
-				if (!webContentPath.isPrefixOf(fullPath)) {
+				IPath[] webContentPaths = FacetModuleCoreSupport.getAcceptableRootPaths(project);
+				boolean isPrefix = false;
+				for (int i = 0; !isPrefix && i < webContentPaths.length; i++) {
+					isPrefix |= webContentPaths[i].isPrefixOf(fullPath);
+				}
+				if (!isPrefix) {
 					setMessage(HTMLUIMessages._WARNING_FOLDER_MUST_BE_INSIDE_WEB_CONTENT, WARNING);
 				}
 			}
@@ -238,15 +244,5 @@ class NewHTMLFileWizardPage extends WizardNewFileCreationPage {
 	 */
 	private boolean isWebProject(IProject project) {
 		return FacetModuleCoreSupport.isWebProject(project);
-	}
-	
-	/**
-	 * Returns the web contents folder of the specified project
-	 * 
-	 * @param project the project which web contents path is needed
-	 * @return IPath of the web contents folder
-	 */
-	private IPath getWebContentPath(IProject project) {
-		return FacetModuleCoreSupport.getWebContentRootPath(project);
 	}
 }

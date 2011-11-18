@@ -101,6 +101,25 @@ public final class FacetModuleCoreSupport {
 	}
 
 	/**
+	 * @param project
+	 * @return the IPaths to acceptable "roots" in a project
+	 */
+	public static IPath[] getAcceptableRootPaths(IProject project) {
+		if (project == null)
+			return null;
+		IPath[] paths = null;
+		try {
+			paths = FacetModuleCoreSupportDelegate.getAcceptableRootPaths(project);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+			return new IPath[]{project.getFullPath()};
+		}
+		return paths;
+	}
+
+	/**
 	 * @param path
 	 *            - the full path to a resource within the workspace
 	 * @return - the runtime path of the resource if one exists, an
