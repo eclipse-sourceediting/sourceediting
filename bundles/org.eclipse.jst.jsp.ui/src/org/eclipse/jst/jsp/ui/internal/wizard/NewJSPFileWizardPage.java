@@ -35,6 +35,7 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 
 class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 
@@ -71,19 +72,22 @@ class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 		}
 		return fileName;
 	}
+
 	/**
-	 * This method is overriden to set the selected folder to web contents
-	 * folder if the current selection is outside the web contents folder.
+	 * This method is overridden to set the selected folder to web contents 
+	 * folder if the current selection is outside the web contents folder. 
 	 */
 	protected void initialPopulateContainerNameField() {
 		super.initialPopulateContainerNameField();
 
 		IPath fullPath = getContainerFullPath();
 		IProject project = getProjectFromPath(fullPath);
-		IPath webContentPath = getWebContentPath(project);
-
-		if (webContentPath != null && !webContentPath.isPrefixOf(fullPath)) {
-			setContainerFullPath(webContentPath);
+		IPath[] webContentPaths = FacetModuleCoreSupport.getAcceptableRootPaths(project);
+		for (int i = 0; webContentPaths != null && i < webContentPaths.length; i++) {
+			if (!webContentPaths[i].isPrefixOf(fullPath)) {
+				setContainerFullPath(webContentPaths[i]);
+				break;
+			}
 		}
 	}
 
@@ -129,16 +133,20 @@ class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 
 			// get the IProject for the selection path
 			IProject project = getProjectFromPath(fullPath);
+			// if inside web project, check if inside webContent folder
 			if (project != null) {
 				if (!isJavaProject(project)) {
 					setMessage(JSPUIMessages._WARNING_FILE_MUST_BE_INSIDE_JAVA_PROJECT, WARNING);
 				}
-				// if inside web project, check if inside webContent folder
 				if (isDynamicWebProject(project)) {
 					// check that the path is inside the webContent folder
-					IPath webContentPath = getWebContentPath(project);
-					if (!webContentPath.isPrefixOf(fullPath)) {
-						setMessage(JSPUIMessages._WARNING_FOLDER_MUST_BE_INSIDE_WEB_CONTENT, WARNING);
+					IPath[] webContentPaths = FacetModuleCoreSupport.getAcceptableRootPaths(project);
+					boolean isPrefix = false;
+					for (int i = 0; !isPrefix && i < webContentPaths.length; i++) {
+						isPrefix |= webContentPaths[i].isPrefixOf(fullPath);
+					}
+					if (!isPrefix) {
+						setMessage(HTMLUIMessages._WARNING_FOLDER_MUST_BE_INSIDE_WEB_CONTENT, WARNING);
 					}
 				}
 			}
@@ -268,17 +276,5 @@ class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 		}
 
 		return isJava;
-	}
-
-	/**
-	 * Returns the web contents folder of the specified project
-	 * 
-	 * @param project
-	 *            the project which web contents path is needed
-	 * @return IPath of the web contents folder
-	 */
-	private IPath getWebContentPath(IProject project) {
-		IPath path = FacetModuleCoreSupport.getWebContentRootPath(project);
-		return path;
 	}
 }

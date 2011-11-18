@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.wizard;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
+import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
@@ -80,5 +83,25 @@ final class FacetModuleCoreSupportDelegate {
 			Logger.logException(e);
 		}
 		return is;
+	}
+
+	static IPath[] getAcceptableRootPaths(IProject project) {
+		if (!ModuleCoreNature.isFlexibleProject(project)) {
+			return new IPath[]{project.getFullPath()};
+		}
+
+		IPath[] paths = null;
+		IVirtualFolder componentFolder = ComponentCore.createFolder(project, Path.ROOT);
+		if (componentFolder != null && componentFolder.exists()) {
+			IContainer[] workspaceFolders = componentFolder.getUnderlyingFolders();
+			paths = new IPath[workspaceFolders.length];
+			for (int i = 0; i < workspaceFolders.length; i++) {
+				paths[i] = workspaceFolders[i].getFullPath();
+			}
+		}
+		else {
+			paths = new IPath[]{project.getFullPath()};
+		}
+		return paths;
 	}
 }

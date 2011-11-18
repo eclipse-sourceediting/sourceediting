@@ -204,4 +204,24 @@ final class FacetModuleCoreSupportDelegate {
 		}
 		return null;
 	}
+
+	static IPath[] getAcceptableRootPaths(IProject project) {
+		if (!ModuleCoreNature.isFlexibleProject(project)) {
+			return new IPath[]{project.getFullPath()};
+		}
+
+		IPath[] paths = null;
+		IVirtualFolder componentFolder = ComponentCore.createFolder(project, Path.ROOT);
+		if (componentFolder != null && componentFolder.exists()) {
+			IContainer[] workspaceFolders = componentFolder.getUnderlyingFolders();
+			paths = new IPath[workspaceFolders.length];
+			for (int i = 0; i < workspaceFolders.length; i++) {
+				paths[i] = workspaceFolders[i].getFullPath();
+			}
+		}
+		else {
+			paths = new IPath[]{project.getFullPath()};
+		}
+		return paths;
+	}
 }
