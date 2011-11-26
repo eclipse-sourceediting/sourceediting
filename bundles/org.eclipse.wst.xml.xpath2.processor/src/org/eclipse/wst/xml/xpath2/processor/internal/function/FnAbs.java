@@ -121,6 +121,7 @@ public class FnAbs extends Function {
 		if (size == 0)
 			return null;
 
+		arg = FnData.atomize( arg );
 		AnyType at = (AnyType) arg.item(0);
 
 		if (!(at instanceof NumericType))
