@@ -1829,6 +1829,30 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
+	public void testFunctionAtomization() throws Exception {
+		// Bug 318313
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug318313.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug318313.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		setupDynamicContext(schema);
+
+		String xpath = "abs(X)";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
+
+          XSInteger result = (XSInteger) rs.first();
+
+		String actual = result.getStringValue();
+
+		assertEquals("100", actual);
+	}
+	
 	public void testTypedValueEnhancement_Bug323900_1() throws Exception {
 		// Bug 323900
 		URL fileURL = bundle.getEntry("/bugTestFiles/bug323900_1.xml");
