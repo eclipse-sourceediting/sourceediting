@@ -30,6 +30,9 @@
 		<propertySheetConfiguration
 			class="org.eclipse.wst.css.ui.views.properties.CSSPropertySheetConfiguration"
 			target="org.eclipse.wst.css.core.csssource" />
+		<documentationTextHover
+        	class="org.eclipse.wst.css.ui.internal.text.hover.CSSColorHover"
+        	target="org.eclipse.wst.css.STYLE" />
 		<provisionalConfiguration
 			type="characterpairmatcher"
 			class="org.eclipse.wst.css.ui.internal.text.CSSDocumentRegionEdgeMatcher"

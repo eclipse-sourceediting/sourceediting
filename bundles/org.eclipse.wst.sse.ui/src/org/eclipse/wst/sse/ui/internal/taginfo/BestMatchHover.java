@@ -20,6 +20,7 @@ import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextHoverExtension;
+import org.eclipse.jface.text.ITextHoverExtension2;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -29,7 +30,7 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  * processors) Priority of hover help processors is: ProblemHoverProcessor,
  * TagInfoProcessor, AnnotationHoverProcessor
  */
-public class BestMatchHover implements ITextHover, ITextHoverExtension {
+public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHoverExtension2 {
 	/** Current best match text hover */
 	private ITextHover fBestMatchHover;
 	/**
@@ -117,6 +118,35 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension {
 			}
 		}
 		return displayText;
+	}
+
+	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
+		Object information = null;
+
+		// already have a best match hover picked out from getHoverRegion call
+		if (fBestMatchHover instanceof ITextHoverExtension2) {
+			information = ((ITextHoverExtension2 ) fBestMatchHover).getHoverInfo2(textViewer, hoverRegion);
+		}
+		else if (fBestMatchHover != null) {
+			information = fBestMatchHover.getHoverInfo(textViewer, hoverRegion);
+		}
+		// either had no best match hover or best match hover returned null
+		if (information == null) {
+			// go through list of text hovers and return first display string
+			Iterator i = getTextHovers().iterator();
+			while ((i.hasNext()) && (information == null)) {
+				ITextHover hover = (ITextHover) i.next();
+				if (hover == fBestMatchHover)
+					continue;
+				if (hover instanceof ITextHoverExtension2) {
+					information = ((ITextHoverExtension2) hover).getHoverInfo2(textViewer, hoverRegion);
+				}
+				else {
+					information = hover.getHoverInfo(textViewer, hoverRegion);
+				}
+			}
+		}
+		return information;
 	}
 
 	/*
