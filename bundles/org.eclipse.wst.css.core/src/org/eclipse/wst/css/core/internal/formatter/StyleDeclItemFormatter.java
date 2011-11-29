@@ -291,7 +291,7 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 				source.append(" ");//$NON-NLS-1$
 			source.append(":");//$NON-NLS-1$
 		}
-		if (!isCleanup() || getCleanupStrategy(node).isFormatSource()) {
+		if (node.getFirstChild() != null && (!isCleanup() || getCleanupStrategy(node).isFormatSource())) {
 			appendAfterColonSpace(node, source);
 		}
 	}
