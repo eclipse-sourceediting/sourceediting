@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS;
+import org.eclipse.wst.css.ui.internal.text.hover.CSSColorHover;
 import org.eclipse.wst.css.ui.views.contentoutline.CSSContentOutlineConfiguration;
 import org.eclipse.wst.css.ui.views.properties.CSSPropertySheetConfiguration;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
@@ -49,6 +50,6 @@ public class TestEditorConfigurationCSS extends TestCase {
 	
 	public void testGetDocumentationTextHover() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, ICSSPartitions.STYLE);
-		assertNull("unexpected documentation text hover for " + ICSSPartitions.STYLE, o);
+		assertEquals("unexpected documentation text hover for " + ICSSPartitions.STYLE, o.getClass(), CSSColorHover.class);
 	}
 }
