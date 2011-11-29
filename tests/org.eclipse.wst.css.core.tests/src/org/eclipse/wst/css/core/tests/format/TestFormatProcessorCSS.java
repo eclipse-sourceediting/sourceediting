@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -182,5 +182,12 @@ public class TestFormatProcessorCSS extends TestCase {
 	 */
 	public void testCollapseWhitespaceBetweenComments() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/comments.css", "testfiles/comments-fmt.css");
+	}
+
+	/**
+	 * Test case with two comments separated by whitespace. Make sure that the comments do not run together onto one line.
+	 */
+	public void testInlineComment() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/inline-comment.css", "testfiles/inline-comment-fmt.css");
 	}
 }
