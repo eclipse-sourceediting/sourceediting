@@ -106,29 +106,19 @@ public class CSSColorHover implements ITextHover, ITextHoverExtension, ITextHove
 	 * rgb value is invalid 
 	 */
 	private RGB getRGBFromHex(String hex) {
-		if (hex.length() > 1) {
-			hex = hex.substring(1);
-			if (hex.length() < 7) {
-				if (hex.length() == 3) { // convert 3-digit notation
-					final StringBuffer hexBuffer = new StringBuffer(hex);
-					for (int i = 2; i >= 0; i--) {
-						hexBuffer.insert(i, hex.charAt(i));
-					}
-					hex = hexBuffer.toString();
-				}
-				if (hex.length() == 6) {
-					try {
-						final int[] rgb = new int[3];
-						for (int i = 0; i < 3; i++) {
-							rgb[i] = Integer.parseInt(hex.substring(2*i, 2*i + 2), 16);
-						}
-						return new RGB(rgb[0], rgb[1], rgb[2]);
-					}
-					catch (NumberFormatException e) { // Invalid hexcode used.
-					}
-				}
+		try {
+			final int length = hex.length();
+			if (length == 4) { // convert 3-digit notation
+				final int r = Integer.parseInt(hex.substring(1, 2), 16);
+				final int g = Integer.parseInt(hex.substring(2, 3), 16);
+				final int b = Integer.parseInt(hex.substring(3, 4), 16);
+				return new RGB((r << 4) | r, (g << 4) | g, (b << 4) | b);
+			}
+			else if (length == 7) { // convert 6-digit notation
+				return new RGB(Integer.parseInt(hex.substring(1, 3), 16), Integer.parseInt(hex.substring(3, 5), 16), Integer.parseInt(hex.substring(5, 7), 16));
 			}
 		}
+		catch (NumberFormatException e) {} // Invalid hexcode used
 		return null;
 	}
 
