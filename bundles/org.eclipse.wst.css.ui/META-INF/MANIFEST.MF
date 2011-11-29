@@ -26,6 +26,7 @@ Export-Package: org.eclipse.wst.css.ui,
  org.eclipse.wst.css.ui.internal.style;x-internal:=true,
  org.eclipse.wst.css.ui.internal.templates;x-internal:=true,
  org.eclipse.wst.css.ui.internal.text;x-internal:=true,
+ org.eclipse.wst.css.ui.internal.text.hover;x-internal:=true,
  org.eclipse.wst.css.ui.internal.wizard;x-internal:=true,
  org.eclipse.wst.css.ui.views.contentoutline,
  org.eclipse.wst.css.ui.views.properties
