@@ -1267,9 +1267,10 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attributes.putNamedItem(ATTR_NAME_WIDTH, attr);
 			
 			// (border %Pixels; #IMPLIED)
-			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.PIXELS);
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_BORDER, atype, CMAttributeDeclaration.OPTIONAL);
-			attr.obsolete(true);
+			atype.setEnumValues(new String[] {"", "1"});
+			//attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_BORDER, attr);
 			
 			// (frame %TFrame; #IMPLIED)
