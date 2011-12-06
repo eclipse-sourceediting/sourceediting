@@ -346,7 +346,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			}
 			
 			//if is a JSP custom tag but not a JSP_EL region
-			if (fEnableJSPActionPartitions && !isELRegion(containedChildRegion) && isAction(sdRegion, offset) && !(containedChildRegion instanceof ITextRegionContainer) ) {
+			if (fEnableJSPActionPartitions && !isELRegion(containedChildRegion) && !isScriptletRegion(containedChildRegion) && isAction(sdRegion, offset) && !(containedChildRegion instanceof ITextRegionContainer) ) {
 				setInternalPartition(offset, containedChildRegion.getLength(), IJSPPartitions.JSP_DIRECTIVE);
 				return true;
 			}
@@ -438,6 +438,11 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			type == DOMJSPRegionContexts.JSP_VBL_OPEN ||
 			type == DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT ||
 			type == DOMJSPRegionContexts.JSP_VBL_SQUOTE;
+	}
+
+	private boolean isScriptletRegion(ITextRegion region) {
+		final String type = region.getType();
+		return type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_CLOSE || type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_CONTENT;
 	}
 
 	/* (non-Javadoc)

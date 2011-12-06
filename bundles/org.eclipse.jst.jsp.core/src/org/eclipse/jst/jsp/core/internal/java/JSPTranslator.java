@@ -2359,7 +2359,7 @@ public class JSPTranslator implements Externalizable {
 				//-- Escaped value. Add the run, then unescape
 				int runLength = i-runStart;
 				if (runLength > 0) {
-					appendToBuffer(newText.substring(runStart, i), fUserCode, true, embeddedContainer, jspPositionStart, runLength, true, true);
+					appendToBuffer(newText.substring(runStart, i), fUserCode, true, embeddedContainer, jspPositionStart, runLength, false, true);
 					jspPositionStart += runLength + 1;
 					jspPositionLength -= runLength + 1;
 				}
@@ -2374,7 +2374,7 @@ public class JSPTranslator implements Externalizable {
 		//-- Copy last-run
 		int runLength = i - runStart;
 		if (runLength > 0)
-			appendToBuffer(newText.substring(runStart, i), fUserCode, true, embeddedContainer, jspPositionStart, runLength, true, false);
+			appendToBuffer(newText.substring(runStart, i), fUserCode, true, embeddedContainer, jspPositionStart, runLength, false, false);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, embeddedContainer);
 	}
 
