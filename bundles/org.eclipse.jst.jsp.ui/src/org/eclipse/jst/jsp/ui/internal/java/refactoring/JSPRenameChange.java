@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -227,15 +227,17 @@ public class JSPRenameChange extends DocumentChange {
 				for (int j = 0; j < references.length; j++) {
 
 					editor = references[j].getEditor(false);
-					// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3764
-					// use adapter to get ITextEditor (for things like
-					// page designer)
-					o = editor.getAdapter(ITextEditor.class);
-					if (o != null && o instanceof ITextEditor) {
-
-						doc = ((ITextEditor) o).getDocumentProvider().getDocument(editor.getEditorInput());
-						if (doc != null && doc.equals(jspDoc)) {
-							return (ITextEditor) o;
+					if (editor != null) { // editor might not be instantiated
+						// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3764
+						// use adapter to get ITextEditor (for things like
+						// page designer)
+						o = editor.getAdapter(ITextEditor.class);
+						if (o != null && o instanceof ITextEditor) {
+	
+							doc = ((ITextEditor) o).getDocumentProvider().getDocument(editor.getEditorInput());
+							if (doc != null && doc.equals(jspDoc)) {
+								return (ITextEditor) o;
+							}
 						}
 					}
 				}
