@@ -216,7 +216,11 @@ public class HTML5ContentModelTest extends TestCase {
 	public void testAttributesOnHTML5SVG() {
 		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.SVG, getGlobalList());
 	}
-	
+
+	public void testAttributesOnHTML5Table() {
+		checkAttrValues(CMDocType.HTML5_DOC_TYPE, HTML40Namespace.ElementName.TABLE, HTML40Namespace.ATTR_NAME_BORDER, new String[] { "", "1"} );
+	}
+
 	public void testAttributesOnHTML5Time() {
 		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.TIME, getMergedlist(getGlobalList(), 
 				new String[]{HTML40Namespace.ATTR_NAME_DATETIME, HTML50Namespace.ATTR_NAME_PUBDATE}));
