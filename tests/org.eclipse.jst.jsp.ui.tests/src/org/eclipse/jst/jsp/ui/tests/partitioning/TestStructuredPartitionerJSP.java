@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,6 +100,14 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
 		checkSeams();
 		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IXMLPartitions.XML_CDATA, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DIRECTIVE, IJSPPartitions.JSP_CONTENT_JAVA, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_JAVA, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_DIRECTIVE});
+	}
+
+	public void testBug365346() throws IOException, BadLocationException {
+		int expectedPartitions = 5;
+		int nPartitions = doComputePartitioningTest("testfiles/jsp/bug365346.jsp");
+		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
+		checkSeams();
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testPerfJSP() throws IOException, BadLocationException {
