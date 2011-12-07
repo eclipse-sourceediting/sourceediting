@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,10 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMAttributeDeclarationImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentFactoryTLD;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMElementDeclarationImpl;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
@@ -217,5 +219,34 @@ public class TestTaglibCMTests extends TestCase {
 		CMNode node = elements.getNamedItem("bar");
 		assertTrue("Node must be a CMElementDeclarationImpl", node instanceof CMElementDeclarationImpl);
 		assertEquals("Dynamic attributes must be set to 'true'", "true", ((CMElementDeclarationImpl) node).getDynamicAttributes());
+	}
+
+	public void testTagRuntimeExpressionValues() throws Exception {
+		final String testName = "testLoadTagFiles";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		if (!project.exists()) {
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace(TESTFILES_PATHSTRING + testName, "/" + testName);
+		}
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+		CMDocumentFactoryTLD factory = new CMDocumentFactoryTLD();
+		ITaglibRecord[] records = TaglibIndex.getAvailableTaglibRecords(new Path("/"+ testName + "/"));
+		assertEquals("There should only be one taglib record", 1, records.length);
+		CMDocument document = factory.createCMDocument(records[0]);
+		CMNamedNodeMap elements = document.getElements();
+		assertNotNull("No elements for the CM Document", elements);
+		CMNode node = elements.getNamedItem("test");
+		assertTrue("Node must be a CMElementDeclarationImpl", node instanceof CMElementDeclarationImpl);
+		CMNamedNodeMap attributes = ((CMElementDeclaration) node).getAttributes();
+		assertNotNull("No attributes", attributes);
+
+		node = attributes.getNamedItem("myAttr");
+		assertTrue("Node must be a CMAttributeDeclarationImpl", node instanceof CMAttributeDeclarationImpl);
+		assertEquals("Default rtexprvalue for tags should be true", JSP11Namespace.ATTR_VALUE_TRUE, ((CMAttributeDeclarationImpl) node).getRtexprvalue());
+
+		node = attributes.getNamedItem("noRuntimeAttr");
+		assertTrue("Node must be a CMAttributeDeclarationImpl", node instanceof CMAttributeDeclarationImpl);
+		assertEquals("rtexprvalue for should be false since explicitly set", JSP11Namespace.ATTR_VALUE_FALSE, ((CMAttributeDeclarationImpl) node).getRtexprvalue());
 	}
 }
