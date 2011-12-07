@@ -824,7 +824,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 							ed.setIsELIgnored(attributes.getValue(JSP20TLDNames.IS_EL_IGNORED));
 					}
 					else if (qName.equals(JSP20Namespace.ElementName.DIRECTIVE_ATTRIBUTE)) {
-						CMAttributeDeclarationImpl attribute = new CMAttributeDeclarationImpl(ed.getOwnerDocument());
+						CMAttributeDeclarationImpl attribute = new CMAttributeDeclarationImpl(ed.getOwnerDocument(), JSP11Namespace.ATTR_VALUE_TRUE);
 						String nameValue = attributes.getValue(JSP12TLDNames.NAME);
 						attribute.setNodeName(nameValue);
 						if (attributes.getIndex(JSP20TLDNames.FRAGMENT) >= 0)
@@ -966,7 +966,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 							}
 						}
 						else if (JSP12TLDNames.ATTRIBUTE.equals(directiveName)) {
-							CMAttributeDeclarationImpl attribute = new CMAttributeDeclarationImpl(ed.getOwnerDocument());
+							CMAttributeDeclarationImpl attribute = new CMAttributeDeclarationImpl(ed.getOwnerDocument(), JSP11Namespace.ATTR_VALUE_TRUE);
 							// 8.5.2
 							String attrName = null;
 							for (int i = 2; i < documentRegion.getNumberOfRegions(); i++) {
