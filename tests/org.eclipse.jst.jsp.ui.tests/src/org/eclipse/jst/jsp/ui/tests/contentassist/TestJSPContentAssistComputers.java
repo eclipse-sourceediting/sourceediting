@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -433,12 +432,12 @@ public class TestJSPContentAssistComputers extends TestCase {
 			Iterator iter = fFileToEditorMap.values().iterator();
 			while(iter.hasNext()) {
 				StructuredTextEditor editor = (StructuredTextEditor)iter.next();
-				editor.doSave(null);
-				editor.close(false);
+				editor.getSite().getPage().saveEditor(editor, false);
+				editor.getSite().getPage().closeEditor(editor, false);
 			}
 			
 			//remove project
-			fProject.delete(true, new NullProgressMonitor());
+			//fProject.delete(true, new NullProgressMonitor());
 			
 			//restore properties
 			if (previousWTPAutoTestNonInteractivePropValue != null) {

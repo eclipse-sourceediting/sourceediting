@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -92,11 +92,6 @@ public class JSPELContentAssistTest extends TestCase {
 			System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonINteractivePropValue);
 		}
 		
-		try {
-			this.project.delete(true, null);
-		} catch (Exception e ) {
-			//ignore, this is not part of the test, just useful cleanup
-		}
 	}
 	
 	/**
@@ -153,8 +148,7 @@ public class JSPELContentAssistTest extends TestCase {
 		assertEquals(
 			"The completed proposal " + inserted + " does not match the expected completion " + TEST_1_EXPECTED_PROPS[0],
 			TEST_1_EXPECTED_PROPS[0], inserted);
-		
-		editor.doSave(null);
+		editor.getSite().getPage().saveEditor(editor, false);
 	}
 	
 	/**
