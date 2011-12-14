@@ -156,6 +156,13 @@ public class FnIndexOf extends AbstractCollationEqualFunction {
 					rb.add(new XSInteger(BigInteger.valueOf(index)));
 				}
 			} else
+				
+			if (at instanceof QName && cmptype instanceof QName ) {
+				QName qname = (QName)at;
+				if (qname.eq(cmptype, dc)) {
+					rb.add(new XSInteger(BigInteger.valueOf(index)));
+				}
+			} else 
 			
 			if (needsStringComparison(cmptype, at)) {
 				XSString xstr1 = new XSString(cmptype.getStringValue());

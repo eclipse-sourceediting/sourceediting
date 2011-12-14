@@ -46,9 +46,9 @@ public class QName extends CtrType implements CmpEq {
 	 */
 	public QName(String prefix, String local_part, String ns) {
 		this(prefix, local_part);
-		if (ns != null) {
+	//	if (ns != null) {
 			set_namespace(ns);
-		}
+	//	}
 	}
 
 	/**
