@@ -783,12 +783,16 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 	 * @param highlighting The highlighting
 	 */
 	public void highlightingStyleChanged(HighlightingStyle highlighting) {
-		for (int i= 0, n= fPositions.size(); i < n; i++) {
-			HighlightedPosition position= (HighlightedPosition) fPositions.get(i);
-			if (position.getHighlighting() == highlighting && fSourceViewer instanceof ITextViewerExtension2)
-				((ITextViewerExtension2) fSourceViewer).invalidateTextPresentation(position.getOffset(), position.getLength());
-			else
-				fSourceViewer.invalidateTextPresentation();
+		if (fSourceViewer instanceof ITextViewerExtension2) {
+			final ITextViewerExtension2  viewer = (ITextViewerExtension2) fSourceViewer;
+			for (int i = 0, n = fPositions.size(); i < n; i++) {
+				HighlightedPosition position = (HighlightedPosition) fPositions.get(i);
+				if (position.getHighlighting() == highlighting)
+					viewer.invalidateTextPresentation(position.getOffset(),	position.getLength());
+			}
+		}
+		else {
+			fSourceViewer.invalidateTextPresentation();
 		}
 	}
 
@@ -797,9 +801,10 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 	 */
 	private void invalidateTextPresentation() {
 		if (fSourceViewer instanceof ITextViewerExtension2) {
+			final ITextViewerExtension2  viewer = (ITextViewerExtension2) fSourceViewer;
 			for (int i = 0, n = fPositions.size(); i < n; i++) {
 				Position position = (Position) fPositions.get(i);
-				((ITextViewerExtension2) fSourceViewer).invalidateTextPresentation(position.getOffset(), position.getLength());
+				viewer.invalidateTextPresentation(position.getOffset(), position.getLength());
 			}
 		}
 		else {
