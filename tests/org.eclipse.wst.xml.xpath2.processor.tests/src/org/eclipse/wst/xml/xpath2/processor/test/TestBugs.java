@@ -2375,6 +2375,48 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
+	public void testFnIndexOf_onQName() throws Exception {
+		// bug 338999
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug338999.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug338999.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		setupDynamicContext(schema);
+		
+		String xpath = "fn:index-of( for $e in X/* return fn:node-name($e), fn:node-name(X/b) )";
+		compileXPath(xpath);
+		ResultSequence rs = evaluate(domDoc);
+		
+		assertTrue( rs.size()>0 );
+		String actual = ((XSInteger) rs.first()).getStringValue();
+		assertEquals("2", actual);
+	}
+	
+	public void testFnIndexOf_onQName2() throws Exception {
+		// bug 338999
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug338999.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug338999.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		setupDynamicContext(schema);
+		
+		String xpath = "fn:index-of( for $e in X/* return fn:node-name($e), fn:QName('','b') )";
+		compileXPath(xpath);
+		ResultSequence rs = evaluate(domDoc);
+		
+		assertTrue( rs.size()>0 );
+		String actual = ((XSInteger) rs.first()).getStringValue();
+		assertEquals("2", actual);
+	}
+	
 	public void testBug339025_distinctValuesOnNodeSequence() throws Exception {
 		// bug 339025
 		URL fileURL = bundle.getEntry("/bugTestFiles/bug339025.xml");
