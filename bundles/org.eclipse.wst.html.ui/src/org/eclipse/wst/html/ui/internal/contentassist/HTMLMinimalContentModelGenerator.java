@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentassist;
+
+import java.util.Locale;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
@@ -79,12 +81,12 @@ public class HTMLMinimalContentModelGenerator extends XMLContentModelGenerator {
 			switch (caseVal) {
 				case HTMLCorePreferenceNames.LOWER :
 					{
-						name = name.toLowerCase();
+						name = name.toLowerCase(Locale.US);
 					}
 					break;
 				case HTMLCorePreferenceNames.UPPER :
 					{
-						name = name.toUpperCase();
+						name = name.toUpperCase(Locale.US);
 					}
 					break;
 			}
