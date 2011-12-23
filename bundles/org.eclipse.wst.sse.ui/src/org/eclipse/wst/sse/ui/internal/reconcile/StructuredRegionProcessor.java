@@ -61,20 +61,12 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 		 * @see org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent)
 		 */
 		public void processPreModelEvent(ModelLifecycleEvent event) {
-			if(fCurrentDoc != null) {
-				IStructuredModel model = null;
-				try {
-					model = getStructuredModelForRead(fCurrentDoc);
-					if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED && event.getModel() == model) {
-						changing = event.getModel();
-						flushDirtyRegionQueue();
-						// note: old annotations are removed via the strategies on
-						// AbstractStructuredTextReconcilingStrategy#setDocument(...)
-					}
-				} finally {
-					if(model != null) {
-						model.releaseFromRead();
-					}
+			if(fCurrentDoc != null && fCurrentModel != null) {
+				if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED && event.getModel() == fCurrentModel) {
+					changing = event.getModel();
+					flushDirtyRegionQueue();
+					// note: old annotations are removed via the strategies on
+					// AbstractStructuredTextReconcilingStrategy#setDocument(...)
 				}
 			}
 		}
