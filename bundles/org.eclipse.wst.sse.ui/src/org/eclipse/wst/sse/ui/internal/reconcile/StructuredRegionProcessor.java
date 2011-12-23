@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,20 +61,15 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 		 * @see org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent)
 		 */
 		public void processPreModelEvent(ModelLifecycleEvent event) {
-			if(fCurrentDoc != null) {
-				IStructuredModel model = null;
-				try {
-					model = getStructuredModelForRead(fCurrentDoc);
-					if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED && event.getModel() == model) {
-						changing = event.getModel();
-						flushDirtyRegionQueue();
-						// note: old annotations are removed via the strategies on
-						// AbstractStructuredTextReconcilingStrategy#setDocument(...)
-					}
-				} finally {
-					if(model != null) {
-						model.releaseFromRead();
-					}
+			if(fCurrentDoc != null && fCurrentModel != null) {
+				if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED && event.getModel() == fCurrentModel) {
+					changing = event.getModel();
+					flushDirtyRegionQueue();
+					/*
+					 * note: old annotations are removed via the strategies on
+					 * AbstractStructuredTextReconcilingStrategy
+					 * #setDocument(...)
+					 */
 				}
 			}
 		}
@@ -88,7 +83,12 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	/** Used to get the current model on demand so a model does not need to be held by permanently */
 	private IDocument fCurrentDoc = null;
 	
-	/** Only to be used for content type and IModelLifecycleListener registration.  All other uses should "get" the model. */
+	/**
+	 * Only to be used for content type and IModelLifecycleListener
+	 * registration. All other uses should "get" the model --getting the model
+	 * during these specific options can cause lock interruption by
+	 * org.eclipse.core.internal.jobs.DeadlockDetector.
+	 */
 	private IStructuredModel fCurrentModel = null;
 
 	/*
