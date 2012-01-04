@@ -31,7 +31,8 @@ Export-Package: org.eclipse.wst.html.internal.validation;x-internal:=true,
  org.eclipse.wst.html.ui.views.contentoutline
 Import-Package: com.ibm.icu.util; version="3.8",
  com.ibm.icu.text; version="3.8"
-Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.5.0,4.0.0)",
+Require-Bundle:  org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
+ org.eclipse.ui.ide;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.jface.text;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.ui.workbench.texteditor;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.ui.forms;bundle-version="[3.4.0,4.0.0)",
