@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2011 IBM Corporation and others.
+ * Copyright (c) 2008, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -174,8 +174,7 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		addComboBox(inner, label, HTMLCorePreferenceNames.ATTRIBUTE_VALUE_EQUALS_MISSING, SEVERITIES, errorWarningIgnoreLabel, 0);
 		
 		label = HTMLUIMessages.HTMLValidationPreferencePage_35;
-		// TODO: validate resources?
-		// addComboBox(inner, label, HTMLCorePreferenceNames.ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabel, 0);
+		 addComboBox(inner, label, HTMLCorePreferenceNames.ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabel, 0);
 
 		// End Attribute section
 		
