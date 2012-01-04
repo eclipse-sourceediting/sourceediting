@@ -23,6 +23,8 @@ public class HTMLValidationAdapterFactory extends AbstractAdapterFactory {
 
 	private static HTMLValidationAdapterFactory instance = null;
 
+	public static final String DEPENDENCIES = "org.eclipse.wst.html.validator.dependencies"; //$NON-NLS-1$
+
 	/**
 	 * HTMLValidationAdapterFactory constructor comment.
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.wst.html.internal.validation;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -448,7 +450,7 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 				if (resource instanceof IFile) {
 					Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, resource.getFullPath().toString().substring(1));
 					reporter.displaySubtask(this, message);
-					validateFile(helper, reporter, (IFile) resource);
+					validateFile(helper, reporter, (IFile) resource, null);
 				}
 				else if (resource instanceof IContainer) {
 					validateContainer(helper, reporter, (IContainer) resource);
@@ -476,13 +478,13 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 			IResource resource = getResource(delta);
 			if (resource == null || !(resource instanceof IFile))
 				continue;
-			validateFile(helper, reporter, (IFile) resource);
+			validateFile(helper, reporter, (IFile) resource, null);
 		}
 	}
 
 	/**
 	 */
-	private void validateFile(IValidationContext helper, IReporter reporter, IFile file) {
+	private void validateFile(IValidationContext helper, IReporter reporter, IFile file, ValidationResult result) {
 		if ((reporter != null) && (reporter.isCancelled() == true)) {
 			throw new OperationCanceledException();
 		}
@@ -494,7 +496,16 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 			return;
 
 		try {
+			Collection dependencies = null;
+			if (result != null) {
+				dependencies = new HashSet();
+				model.getDocument().setUserData(HTMLValidationAdapterFactory.DEPENDENCIES, dependencies, null);
+			}
 			validate(reporter, file, model);
+			if (result != null) {
+				model.getDocument().setUserData(HTMLValidationAdapterFactory.DEPENDENCIES, null, null);
+				result.setDependsOn((IResource[]) dependencies.toArray(new IResource[dependencies.size()]));
+			}
 		}
 		finally {
 			releaseModel(model);
@@ -562,7 +573,7 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 			return null;
 		ValidationResult result = new ValidationResult();
 		IReporter reporter = result.getReporter(monitor);
-		validateFile(null, reporter, (IFile) resource);
+		validateFile(null, reporter, (IFile) resource, result);
 		return result;
 	}
 }
