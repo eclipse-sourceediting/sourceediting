@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -107,6 +107,10 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 							String prevText = region.getText(prevTextRegion);
 							inUnclosedAttValueRegion = (prevText.startsWith("'") && ((prevText.length() == 1) || !prevText.endsWith("'"))) ||
 								(prevText.startsWith("\"") && ((prevText.length() == 1) || !prevText.endsWith("\"")));
+							if (!inUnclosedAttValueRegion) {
+								// Check if action is taking place within the paired quotes. This means quotes are actually mismatched and attribute is not properly closed
+								inUnclosedAttValueRegion = prevTextRegion == region.getRegionAtCharacterOffset(command.offset);
+							}
 						} 
 						//if command offset is in an unclosed attribute value region then done remove the end tag
 						if(!inUnclosedAttValueRegion) {
