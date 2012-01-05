@@ -217,7 +217,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 							// roundabout start tag check
 							if (start != null && start.getFirstRegion().getTextLength() == 1) {
 								// only check when we have a way to set dependencies
-								Collection dependencies = (Collection) ((IDOMNode) node).getOwnerDocument().getUserData(HTMLValidationAdapterFactory.DEPENDENCIES);
+								Collection dependencies = (Collection) ((IDOMNode) ((IDOMNode) node).getOwnerDocument()).getUserData(HTMLValidationAdapterFactory.DEPENDENCIES);
 								if (dependencies != null) {
 									IPath basePath = new Path(((IDOMNode) node).getModel().getBaseLocation());
 									if (basePath.segmentCount() > 1) {
