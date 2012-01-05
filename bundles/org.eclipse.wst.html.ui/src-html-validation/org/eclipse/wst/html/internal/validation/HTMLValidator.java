@@ -68,6 +68,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
+import org.eclipse.wst.xml.core.internal.document.NodeImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Text;
@@ -497,13 +498,17 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 
 		try {
 			Collection dependencies = null;
+			NodeImpl document = null;
+			if (model.getDocument() instanceof NodeImpl) {
+				document = (NodeImpl) model.getDocument();
+			}
 			if (result != null) {
 				dependencies = new HashSet();
-				model.getDocument().setUserData(HTMLValidationAdapterFactory.DEPENDENCIES, dependencies, null);
+				document.setUserData(HTMLValidationAdapterFactory.DEPENDENCIES, dependencies, null);
 			}
 			validate(reporter, file, model);
 			if (result != null) {
-				model.getDocument().setUserData(HTMLValidationAdapterFactory.DEPENDENCIES, null, null);
+				document.setUserData(HTMLValidationAdapterFactory.DEPENDENCIES, null, null);
 				result.setDependsOn((IResource[]) dependencies.toArray(new IResource[dependencies.size()]));
 			}
 		}
