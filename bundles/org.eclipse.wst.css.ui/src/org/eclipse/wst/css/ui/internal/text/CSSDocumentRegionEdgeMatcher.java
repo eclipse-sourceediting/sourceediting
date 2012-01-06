@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,8 +63,7 @@ public class CSSDocumentRegionEdgeMatcher implements ICharacterPairMatcher {
 					r = r.getPrevious();
 				}
 				if (r.getType().equals(CSSRegionContexts.CSS_RBRACE)) {
-					while (r != null && (braceCount != 0)) {
-						r = r.getPrevious();
+					while ((r = r.getPrevious()) != null && (braceCount != 0)) {
 						if (r.getType().equals(CSSRegionContexts.CSS_RBRACE)) {
 						       braceCount++;
 							}
@@ -76,8 +75,7 @@ public class CSSDocumentRegionEdgeMatcher implements ICharacterPairMatcher {
 						return new Region(r.getStartOffset(), 1);
 					}
 				} else if (r.getType().equals(CSSRegionContexts.CSS_LBRACE)) {
-					while (r != null && (braceCount != 0)) {
-						r = r.getNext();
+					while ((r = r.getNext()) != null && (braceCount != 0)) {
 						if (r.getType().equals(CSSRegionContexts.CSS_LBRACE)) {
 					       braceCount++;
 						}
