@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,11 +63,13 @@ public class FormatProcessorCSS extends AbstractStructuredFormatProcessor {
 					structuredModel.getStructuredDocument().getRegionAtCharacterOffset(start);
 				IStructuredDocumentRegion endRegion = 
 					structuredModel.getStructuredDocument().getRegionAtCharacterOffset(start + length);
-				start = startRegion.getStart();
-				CSSSourceFormatter formatter = CSSSourceFormatterFactory.getInstance().getSourceFormatter((INodeNotifier) doc);
-				StringBuffer buf = formatter.format(doc, new Region(start, (endRegion.getEnd() - start)));
-				if (buf != null) {
-					formatUtil.replaceSource(doc.getModel(), start, endRegion.getEnd() - start, buf.toString());
+				if (startRegion != null && endRegion != null) {
+					start = startRegion.getStart();
+					CSSSourceFormatter formatter = CSSSourceFormatterFactory.getInstance().getSourceFormatter((INodeNotifier) doc);
+					StringBuffer buf = formatter.format(doc, new Region(start, (endRegion.getEnd() - start)));
+					if (buf != null) {
+						formatUtil.replaceSource(doc.getModel(), start, endRegion.getEnd() - start, buf.toString());
+					}
 				}
 			}
 			finally {
