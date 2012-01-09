@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -3236,11 +3236,14 @@ public class StructuredTextEditor extends TextEditor {
 		SourceViewerConfiguration configuration = getSourceViewerConfiguration();
 		String[] types = configuration.getConfiguredContentTypes(getSourceViewer());
 
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer == null)
+			return;
+
 		for (int i = 0; i < types.length; i++) {
 
 			String t = types[i];
 
-			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer instanceof ITextViewerExtension2) {
 				// Remove existing hovers
 				((ITextViewerExtension2) sourceViewer).removeTextHovers(t);
