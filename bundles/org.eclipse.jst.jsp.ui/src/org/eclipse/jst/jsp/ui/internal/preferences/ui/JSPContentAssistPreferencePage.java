@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CompletionProposoalCatigori
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.sse.ui.preferences.CodeAssistCyclingConfigurationBlock;
 import org.eclipse.wst.sse.ui.preferences.ICompletionProposalCategoriesConfigurationWriter;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * <p>Defines the preference page for allowing the user to change the content
@@ -40,6 +41,8 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	
 	/** configuration block for changing preference having to do with the content assist categories */
 	private CodeAssistCyclingConfigurationBlock fConfigurationBlock;
+
+	private Button fInsertSingleProposals;
 	
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
@@ -104,7 +107,8 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 		fAutoImport = createCheckBox(group, JSPUIMessages.JSPCodeAssist_Auto_Import);
 		((GridData) fAutoImport.getLayoutData()).horizontalSpan = 2;
 		
-	
+		fInsertSingleProposals = createCheckBox(group, XMLUIMessages.Insert_single_proposals);
+		((GridData) fInsertSingleProposals.getLayoutData()).horizontalSpan = 2;
 	}
 	
 	/**
@@ -130,6 +134,7 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	 */
 	private void storeValuesForAutoInsertionGroup() {
 		getPreferenceStore().setValue(JSPUIPreferenceNames.AUTO_IMPORT_INSERT, (fAutoImport != null) ? fAutoImport.getSelection() : false);
+		getPreferenceStore().setValue(JSPUIPreferenceNames.INSERT_SINGLE_SUGGESTION, (fInsertSingleProposals != null) ? fInsertSingleProposals.getSelection() : false);
 	}
 	
 	/**
@@ -146,6 +151,7 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	 */
 	private void initializeValuesForAutoInsertionGroup() {
 		initCheckbox(fAutoImport, JSPUIPreferenceNames.AUTO_IMPORT_INSERT);
+		initCheckbox(fInsertSingleProposals, JSPUIPreferenceNames.INSERT_SINGLE_SUGGESTION);
 	}
 	
 	/**
@@ -162,6 +168,7 @@ public class JSPContentAssistPreferencePage extends AbstractPreferencePage imple
 	 */
 	private void performDefaultsForAutoInsertionGroup() {
 		defaultCheckbox(fAutoImport, JSPUIPreferenceNames.AUTO_IMPORT_INSERT);
+		defaultCheckbox(fInsertSingleProposals, JSPUIPreferenceNames.INSERT_SINGLE_SUGGESTION);
 	}
 	
 	/**

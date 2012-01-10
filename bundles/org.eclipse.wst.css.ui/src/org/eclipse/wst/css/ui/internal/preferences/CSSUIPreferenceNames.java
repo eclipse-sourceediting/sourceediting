@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,4 +76,12 @@ public class CSSUIPreferenceNames {
 	 * character (<tt>\0</tt>) in the desired sort order.</p>
 	 */
 	public static final String CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER= "css_content_assist_default_page_sort_order"; //$NON-NLS-1$
+
+	/**
+	 * <p>preference key to store the option for auto insertion of single suggestions</p>
+	 * <p>
+	 * Value is of type <code>boolean</code>
+	 * </p>
+	 */
+	public static final String INSERT_SINGLE_SUGGESTION = "insertSingleSuggestion"; //$NON-NLS-1$
 }

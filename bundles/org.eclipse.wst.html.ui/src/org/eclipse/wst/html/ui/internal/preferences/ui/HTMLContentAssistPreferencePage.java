@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,13 +50,16 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 	
 	/** configuration block for changing preference having to do with the content assist categories */
 	private CodeAssistCyclingConfigurationBlock fConfigurationBlock;
+
+	private Button fInsertSingleProposals;
 	
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite parent) {
 		final Composite composite = super.createComposite(parent, 1);
-		
+
+		createContentsForInsertionGroup(composite);
 		createContentsForAutoActivationGroup(composite);
 		createContentsForCyclingGroup(composite);
 		
@@ -66,12 +69,22 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 		return composite;
 	}
 	
+	private void createContentsForInsertionGroup(Composite composite) {
+		Group group = createGroup(composite, 2);
+		
+		group.setText(XMLUIMessages.Group_label_Insertion);
+		
+		fInsertSingleProposals = createCheckBox(group, "Insert single proposals automatically");
+		((GridData) fInsertSingleProposals.getLayoutData()).horizontalSpan = 2;
+	}
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#performDefaults()
 	 */
 	protected void performDefaults() {
 		performDefaultsForAutoActivationGroup();
 		performDefaultsForCyclingGroup();
+		performDefaultsForInsertionGroup();
 
 		validateValues();
 		enableValues();
@@ -79,12 +92,21 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 		super.performDefaults();
 	}
 	
+	private void performDefaultsForInsertionGroup() {
+		defaultCheckbox(fInsertSingleProposals, HTMLUIPreferenceNames.INSERT_SINGLE_SUGGESTION);
+	}
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#initializeValues()
 	 */
 	protected void initializeValues() {
 		initializeValuesForAutoActivationGroup();
 		initializeValuesForCyclingGroup();
+		initializeValuesForInsertionGroup();
+	}
+
+	private void initializeValuesForInsertionGroup() {
+		initCheckbox(fInsertSingleProposals, HTMLUIPreferenceNames.INSERT_SINGLE_SUGGESTION);
 	}
 
 	/**
@@ -93,8 +115,13 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 	protected void storeValues() {
 		storeValuesForAutoActivationGroup();
 		storeValuesForCyclingGroup();
+		storeValuesForInsertionGroup();
 	}
 	
+	private void storeValuesForInsertionGroup() {
+		getPreferenceStore().setValue(HTMLUIPreferenceNames.INSERT_SINGLE_SUGGESTION, (fInsertSingleProposals != null) ? fInsertSingleProposals.getSelection() : false);
+	}
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#enableValues()
 	 */

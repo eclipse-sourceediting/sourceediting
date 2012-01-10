@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,9 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -26,7 +28,9 @@ import org.eclipse.wst.css.core.internal.format.FormatProcessorCSS;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSStructuredContentAssistProcessor;
+import org.eclipse.wst.css.ui.internal.preferences.CSSUIPreferenceNames;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForCSS;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -79,7 +83,15 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		}
 		return fConfiguredContentTypes;
 	}
-	
+
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		final IContentAssistant assistant = super.getContentAssistant(sourceViewer);
+		if (assistant instanceof ContentAssistant) {
+			((ContentAssistant) assistant).enableAutoInsert(CSSUIPlugin.getDefault().getPreferenceStore().getBoolean(CSSUIPreferenceNames.INSERT_SINGLE_SUGGESTION));
+		}
+		return assistant;
+	}
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getContentAssistProcessors(
 	 * 	org.eclipse.jface.text.source.ISourceViewer, java.lang.String)

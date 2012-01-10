@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,9 @@ import java.util.Vector;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -34,9 +36,11 @@ import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdFo
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.internal.XMLFormattingStrategy;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLStructuredContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
@@ -100,6 +104,14 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		return fConfiguredContentTypes;
 	}
 	
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		final IContentAssistant assistant = super.getContentAssistant(sourceViewer);
+		if (assistant instanceof ContentAssistant) {
+			((ContentAssistant) assistant).enableAutoInsert(XMLUIPlugin.getInstance().getPreferenceStore().getBoolean(XMLUIPreferenceNames.INSERT_SINGLE_SUGGESTION));
+		}
+		return assistant;
+	}
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getContentAssistProcessors(
 	 * 	org.eclipse.jface.text.source.ISourceViewer, java.lang.String)

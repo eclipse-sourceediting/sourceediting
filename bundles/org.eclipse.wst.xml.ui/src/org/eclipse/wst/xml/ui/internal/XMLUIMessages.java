@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2012 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -204,6 +204,7 @@ public class XMLUIMessages extends NLS {
 	public static String Compress_empty_element_tags_UI_;
 	public static String Insert_required_attributes_UI_;
 	public static String Insert_missing_tags_UI_;
+	public static String Insert_single_proposals;
 	public static String Quote_attribute_values_UI_;
 	public static String Format_source_UI_;
 	public static String Convert_EOL_codes_UI_;
@@ -244,6 +245,7 @@ public class XMLUIMessages extends NLS {
 	public static String Format_comments;
 	public static String Format_comments_join_lines;
 	public static String Grammar_Constraints;
+	public static String Group_label_Insertion;
 	public static String Use_inferred_grammar_in_absence_of;
 	public static String Suggestion_Strategy;
 	public static String Suggestion_Strategy_Lax;

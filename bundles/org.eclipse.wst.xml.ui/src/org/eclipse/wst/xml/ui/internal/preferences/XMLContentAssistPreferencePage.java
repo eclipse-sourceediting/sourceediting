@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,13 +54,16 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 	
 	/** configuration block for changing preference having to do with the content assist categories */
 	private CodeAssistCyclingConfigurationBlock fConfigurationBlock;
-	
+
+	private Button fInsertSingleProposals;
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite parent) {
 		final Composite composite = super.createComposite(parent, 1);
 		
+		createContentsForInsertionGroup(composite);
 		createContentsForAutoActivationGroup(composite);
 		createContentsForCyclingGroup(composite);
 		
@@ -76,6 +79,7 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 	protected void performDefaults() {
 		performDefaultsForAutoActivationGroup();
 		performDefaultsForCyclingGroup();
+		performDefaultsForInsertionGroup();
 
 		validateValues();
 		enableValues();
@@ -89,6 +93,7 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 	protected void initializeValues() {
 		initializeValuesForAutoActivationGroup();
 		initializeValuesForCyclingGroup();
+		initializeValuesForInsertionGroup();
 	}
 	
 	/**
@@ -97,6 +102,7 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 	protected void storeValues() {
 		storeValuesForAutoActivationGroup();
 		storeValuesForCyclingGroup();
+		storeValuesForInsertionGroup();
 	}
 	
 	/**
@@ -187,6 +193,15 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 		}
 	}
 	
+	private void createContentsForInsertionGroup(Composite composite) {
+		Group group = createGroup(composite, 2);
+		
+		group.setText(XMLUIMessages.Group_label_Insertion);
+		
+		fInsertSingleProposals = createCheckBox(group, XMLUIMessages.Insert_single_proposals);
+		((GridData) fInsertSingleProposals.getLayoutData()).horizontalSpan = 2;
+	}
+
 	/**
 	 * <p>Create the contents for the content assist cycling preference group</p>
 	 * @param parent {@link Composite} parent of the group
@@ -222,7 +237,11 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 			fConfigurationBlock.storeValues();
 		}
 	}
-	
+
+	private void storeValuesForInsertionGroup() {
+		getPreferenceStore().setValue(XMLUIPreferenceNames.INSERT_SINGLE_SUGGESTION, (fInsertSingleProposals != null) ? fInsertSingleProposals.getSelection() : false);
+	}
+
 	/**
 	 * <p>Initialize the values for the auto activation group</p>
 	 */
@@ -247,7 +266,11 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 			fConfigurationBlock.initializeValues();
 		}
 	}
-	
+
+	private void initializeValuesForInsertionGroup() {
+		initCheckbox(fInsertSingleProposals, XMLUIPreferenceNames.INSERT_SINGLE_SUGGESTION);
+	}
+
 	/**
 	 * <p>Load the defaults for the auto activation group</p>
 	 */
@@ -272,7 +295,11 @@ public class XMLContentAssistPreferencePage extends AbstractPreferencePage imple
 			fConfigurationBlock.performDefaults();
 		}
 	}
-	
+
+	private void performDefaultsForInsertionGroup() {
+		defaultCheckbox(fInsertSingleProposals, XMLUIPreferenceNames.INSERT_SINGLE_SUGGESTION);
+	}
+
 	/**
 	 * Return the currently selected suggestion strategy preference
 	 * 

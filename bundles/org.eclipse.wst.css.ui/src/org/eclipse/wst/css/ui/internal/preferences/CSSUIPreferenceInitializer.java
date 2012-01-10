@@ -93,6 +93,8 @@ public class CSSUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(CSSUIPreferenceNames.CONTENT_ASSIST_OWN_PAGE_SORT_ORDER,
 				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates\0"+ 
 				"org.eclipse.wst.css.ui.proposalCategory.css");
+
+		store.setDefault(CSSUIPreferenceNames.INSERT_SINGLE_SUGGESTION, true);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateProposal;
@@ -25,7 +26,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposa
  * 
  * @plannedfor 1.0
  */
-class CustomTemplateProposal extends TemplateProposal implements IRelevanceCompletionProposal {
+class CustomTemplateProposal extends TemplateProposal implements IRelevanceCompletionProposal, ICompletionProposalExtension4 {
 	// copies of this class exist in:
 	// org.eclipse.jst.jsp.ui.internal.contentassist
 	// org.eclipse.wst.html.ui.internal.contentassist
@@ -38,5 +39,9 @@ class CustomTemplateProposal extends TemplateProposal implements IRelevanceCompl
 	public String getAdditionalProposalInfo() {
 		String additionalInfo = super.getAdditionalProposalInfo();
 		return StringUtils.convertToHTMLContent(additionalInfo);
+	}
+
+	public boolean isAutoInsertable() {
+		return false;
 	}
 }
