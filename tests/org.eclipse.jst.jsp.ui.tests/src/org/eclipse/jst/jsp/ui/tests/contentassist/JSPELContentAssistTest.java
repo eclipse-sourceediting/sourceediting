@@ -91,7 +91,6 @@ public class JSPELContentAssistTest extends TestCase {
 		if (previousWTPAutoTestNonINteractivePropValue != null) {
 			System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonINteractivePropValue);
 		}
-		
 	}
 	
 	/**
@@ -104,19 +103,21 @@ public class JSPELContentAssistTest extends TestCase {
 		// root of workspace directory
 		Location platformLocation = Platform.getInstanceLocation();
 		// platform location may be null -- depends on "mode" of platform
-		if (platformLocation != null && project == null) {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		this.project = root.getProject(TEST_PROJECT_NAME);
+		
+		if (platformLocation != null && (project == null || !project.isAccessible())) {
 			File zipFile = FileUtil.makeFileFor(
 				ProjectUnzipUtility.PROJECT_ZIPS_FOLDER,
 				TEST_PROJECT_NAME + ProjectUnzipUtility.ZIP_EXTENSION,
 				ProjectUnzipUtility.PROJECT_ZIPS_FOLDER);
 			fProjUtil.unzipAndImport(zipFile, platformLocation.getURL().getPath());
 			fProjUtil.initJavaProject(TEST_PROJECT_NAME);
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
 			this.project = root.getProject(TEST_PROJECT_NAME);
-			
-			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			this.page = workbenchWindow.getActivePage();
 		}
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		this.page = workbenchWindow.getActivePage();
 	}
 	
 	public void testELProposals_0() throws Exception {		
