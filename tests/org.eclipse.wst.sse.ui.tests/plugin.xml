@@ -5,12 +5,13 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%editor.name.0"
-			extensions="project, classpath, websettings, serverPreference"
+			extensions="project, classpath, websettings, serverPreference, html"
 			icon="$nl$/icons/sourceEditor.gif"
 			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			contributorClass="org.eclipse.wst.sse.ui.internal.actions.ActionContributor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+			
 		</editor>
 	</extension>
 	
@@ -69,6 +70,16 @@
 				menubarPath="additions"
 				id="org.eclipse.wst.sse.ui.tests.test.2" />
 		</viewerContribution>
+	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution id="markerConversion" objectClass="org.eclipse.core.resources.IFile">
+            	<action
+       id="markerConvertor" enablesFor="1" class="org.eclipse.wst.sse.ui.tests.markers.XMLWriter" label="Convert to XML">
+       <selection class="org.eclipse.core.resources.IFile"  name=".markers">
+       </selection>
+	</action>
+          		
+		</objectContribution>
 	</extension>
 
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
