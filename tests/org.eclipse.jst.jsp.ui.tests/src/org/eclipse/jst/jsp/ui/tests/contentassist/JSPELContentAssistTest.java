@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,7 +104,7 @@ public class JSPELContentAssistTest extends TestCase {
 		// root of workspace directory
 		Location platformLocation = Platform.getInstanceLocation();
 		// platform location may be null -- depends on "mode" of platform
-		if (platformLocation != null) {
+		if (platformLocation != null && project == null) {
 			File zipFile = FileUtil.makeFileFor(
 				ProjectUnzipUtility.PROJECT_ZIPS_FOLDER,
 				TEST_PROJECT_NAME + ProjectUnzipUtility.ZIP_EXTENSION,
