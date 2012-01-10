@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.modelquery.JSPModelQueryExtension;
+import org.eclipse.jst.jsp.core.internal.modelquery.TaglibModelQueryExtension;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
@@ -51,6 +53,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractXMLModelQueryCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
+import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentModelGenerator;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
@@ -343,7 +346,7 @@ public class LibraryTagsCompletionProposalComputer extends
 					// account for the &lt; and &gt;
 					int markupAdjustment = getCursorPositionForProposedText(proposedText);
 					String proposedInfo = getAdditionalInfo(null, ed);
-					CustomCompletionProposal proposal = new CustomCompletionProposal(
+					MarkupCompletionProposal proposal = new MarkupCompletionProposal(
 							proposedText, contentAssistRequest.getReplacementBeginPosition(),
 							contentAssistRequest.getReplacementLength(), markupAdjustment, image,
 							tagname, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);

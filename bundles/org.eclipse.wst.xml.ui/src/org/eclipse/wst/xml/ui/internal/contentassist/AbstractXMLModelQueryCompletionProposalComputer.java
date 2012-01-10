@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -198,7 +198,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 							if (attrAtLocationHasValue) {
 								// only propose the name
 								proposedText = getRequiredName(node, attrDecl);
-								proposal = new CustomCompletionProposal(
+								proposal = new MarkupCompletionProposal(
 										proposedText, contentAssistRequest.getReplacementBeginPosition(),
 										contentAssistRequest.getReplacementLength(), proposedText.length(),
 										attrImage, proposedText, null, proposedInfo,
@@ -227,7 +227,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 								}
 								if (proposalNeedsSpace)
 									proposedText += " "; //$NON-NLS-1$
-								proposal = new CustomCompletionProposal(proposedText,
+								proposal = new MarkupCompletionProposal(proposedText,
 										contentAssistRequest.getReplacementBeginPosition(),
 										contentAssistRequest.getReplacementLength(),
 										cursorPosition, attrImage,
@@ -367,7 +367,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 							if ((matchString.length() == 0) || possibleValue.startsWith(matchString)) {
 								String rString = "\"" + possibleValue + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 								alternateMatch = "\"" + alternateMatch; //$NON-NLS-1$
-								CustomCompletionProposal proposal = new CustomCompletionProposal(
+								CustomCompletionProposal proposal = new MarkupCompletionProposal(
 										rString, rOffset, rLength, possibleValue.length() + 1,
 										XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ENUM),
 										rString, alternateMatch, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE, true);
@@ -377,7 +377,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 					}
 					if(defaultValue != null && ((matchString.length() == 0) || defaultValue.startsWith(matchString))) {
 						String rString = "\"" + defaultValue + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-						CustomCompletionProposal proposal = new CustomCompletionProposal(
+						CustomCompletionProposal proposal = new MarkupCompletionProposal(
 								rString, rOffset, rLength, defaultValue.length() + 1,
 								XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_DEFAULT),
 								rString, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
@@ -392,7 +392,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 					String value = attrDecl.getAttrType().getImpliedValue();
 					if ((value != null) && (value.length() > 0)) {
 						String rValue = "\"" + value + "\"";//$NON-NLS-2$//$NON-NLS-1$
-						CustomCompletionProposal proposal = new CustomCompletionProposal(
+						CustomCompletionProposal proposal = new MarkupCompletionProposal(
 								rValue, contentAssistRequest.getReplacementBeginPosition(),
 								contentAssistRequest.getReplacementLength(), rValue.length() + 1,
 								image, rValue, null, proposedInfo,
@@ -400,7 +400,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						contentAssistRequest.addProposal(proposal);
 						if ((currentValue.length() > 0) && !value.equals(currentValue)) {
 							rValue = "\"" + currentValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
-							proposal = new CustomCompletionProposal(rValue, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), rValue.length() + 1, image, rValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+							proposal = new MarkupCompletionProposal(rValue, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), rValue.length() + 1, image, rValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 							contentAssistRequest.addProposal(proposal);
 						}
 					}
@@ -412,7 +412,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 				CustomCompletionProposal proposal = null;
 				if ((currentValue != null) && (currentValue.length() > 0)) {
 					String rValue = "\"" + currentValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
-					proposal = new CustomCompletionProposal(rValue,
+					proposal = new MarkupCompletionProposal(rValue,
 							contentAssistRequest.getReplacementBeginPosition(),
 							contentAssistRequest.getReplacementLength(), 1, image,
 							rValue, null, proposedInfo,
@@ -447,7 +447,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 			CompletionProposalInvocationContext context) {
 
 		if (contentAssistRequest.getStartOffset() + contentAssistRequest.getRegion().getTextLength() < contentAssistRequest.getReplacementBeginPosition()) {
-			CustomCompletionProposal proposal = new CustomCompletionProposal(">", //$NON-NLS-1$
+			CustomCompletionProposal proposal = new MarkupCompletionProposal(">", //$NON-NLS-1$
 						contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), NLS.bind(XMLUIMessages.Close_with__, (new Object[]{" '>'"})), //$NON-NLS-1$
 						null, null, XMLRelevanceConstants.R_END_TAG_NAME);
 			contentAssistRequest.addProposal(proposal);
@@ -479,14 +479,14 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 								image = this.getGenericTagImage();
 							}
 							if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_NAME) {
-								proposal = new CustomCompletionProposal(
+								proposal = new MarkupCompletionProposal(
 										replacementText, contentAssistRequest.getStartOffset(),
 										contentAssistRequest.getRegion().getTextLength(),
 										replacementText.length(), image, displayText, null,
 										proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							}
 							else {
-								proposal = new CustomCompletionProposal(
+								proposal = new MarkupCompletionProposal(
 										replacementText,
 										contentAssistRequest.getReplacementBeginPosition(),
 										contentAssistRequest.getReplacementLength(),
@@ -631,7 +631,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 			setErrorMessage(XMLUIMessages.Content_Assist_not_availab_UI_);
 		}
 		if (addProposal == true) {
-			CustomCompletionProposal proposal = new CustomCompletionProposal(replaceText, replaceBegin, replaceLength, cursorOffset, image, displayString, null, proposedInfo, XMLRelevanceConstants.R_END_TAG);
+			CustomCompletionProposal proposal = new MarkupCompletionProposal(replaceText, replaceBegin, replaceLength, cursorOffset, image, displayString, null, proposedInfo, XMLRelevanceConstants.R_END_TAG);
 			contentAssistRequest.addProposal(proposal);
 		}
 	}
@@ -749,7 +749,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 					// prompt with a self-closing end character if needed
 					// this is one of the few times to ignore the length -- always insert
 					// contentAssistRequest.getReplacementLength()
-					CustomCompletionProposal proposal = new CustomCompletionProposal(
+					CustomCompletionProposal proposal = new MarkupCompletionProposal(
 							getContentGenerator().getStartTagClose(node, elementDecl),
 							contentAssistRequest.getReplacementBeginPosition(), 0,
 							getContentGenerator().getStartTagClose(node, elementDecl).length(), image,
@@ -759,7 +759,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 				}
 				else {
 					// prompt with a close for the start tag
-					CustomCompletionProposal proposal = new CustomCompletionProposal(">", //$NON-NLS-1$
+					CustomCompletionProposal proposal = new MarkupCompletionProposal(">", //$NON-NLS-1$
 								contentAssistRequest.getReplacementBeginPosition(),
 								// this is one of the few times to ignore the
 								// length -- always insert
@@ -775,7 +775,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						IStructuredDocumentRegion sdr = contentAssistRequest.getDocumentRegion();
 						String openingTagText = (sdr != null) ? sdr.getFullText() : ""; //$NON-NLS-1$
 						if ((openingTagText != null) && (openingTagText.indexOf(node.getNodeName()) != -1)) {
-							proposal = new CustomCompletionProposal("></" + node.getNodeName() + ">", //$NON-NLS-2$//$NON-NLS-1$
+							proposal = new MarkupCompletionProposal("></" + node.getNodeName() + ">", //$NON-NLS-2$//$NON-NLS-1$
 										contentAssistRequest.getReplacementBeginPosition(),
 										// this is one of the few times to
 										// ignore the length -- always insert
@@ -786,7 +786,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 					}
 					// prompt with slash bracket "/>" incase if it's a self ending tag
 					if (endWithSlashBracket) {
-						proposal = new CustomCompletionProposal("/>", //$NON-NLS-1$
+						proposal = new MarkupCompletionProposal("/>", //$NON-NLS-1$
 									contentAssistRequest.getReplacementBeginPosition(),
 									// this is one of the few times to ignore
 									// the length -- always insert
@@ -801,7 +801,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 			else if ((contentAssistRequest.getDocumentRegion() == node.getLastStructuredDocumentRegion()) && !node.getLastStructuredDocumentRegion().isEnded()) {
 				setErrorMessage(null);
 				// prompt with a closing end character for the end tag
-				CustomCompletionProposal proposal = new CustomCompletionProposal(">", //$NON-NLS-1$
+				CustomCompletionProposal proposal = new MarkupCompletionProposal(">", //$NON-NLS-1$
 							contentAssistRequest.getReplacementBeginPosition(),
 							// this is one of the few times to ignore the length -- always insert
 							// contentAssistRequest.getReplacementLength(),
@@ -865,7 +865,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						String proposedInfo = getAdditionalInfo(parentDecl, childType);
 						for (int i = 0; i < childStrings.length; i++) {
 							if(!childStrings[i].equals(defaultValue)) {
-								CustomCompletionProposal textProposal = new CustomCompletionProposal(
+								CustomCompletionProposal textProposal = new MarkupCompletionProposal(
 										childStrings[i],begin, length, childStrings[i].length(),
 										XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ENUM),
 										childStrings[i], null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
@@ -873,7 +873,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 							}
 						}
 						if(defaultValue != null) {
-							CustomCompletionProposal textProposal = new CustomCompletionProposal(
+							CustomCompletionProposal textProposal = new MarkupCompletionProposal(
 									defaultValue, begin, length, defaultValue.length(),
 									XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_DEFAULT),
 									defaultValue, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
@@ -940,7 +940,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 
 							String proposedInfo = getAdditionalInfo(parentDecl, elementDecl);
 							int relevance = isStrictCMNodeSuggestion ? XMLRelevanceConstants.R_STRICTLY_VALID_TAG_INSERTION : XMLRelevanceConstants.R_TAG_INSERTION;
-							CustomCompletionProposal proposal = new CustomCompletionProposal(
+							CustomCompletionProposal proposal = new MarkupCompletionProposal(
 									proposedText, contentAssistRequest.getReplacementBeginPosition(),
 									contentAssistRequest.getReplacementLength(), markupAdjustment,
 									image, tagname, null, proposedInfo, relevance);
@@ -1000,7 +1000,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						// account for the &lt; and &gt;
 						int markupAdjustment = getContentGenerator().getMinimalStartTagLength(parent, ed);
 						String proposedInfo = getAdditionalInfo(null, ed);
-						CustomCompletionProposal proposal = new CustomCompletionProposal(
+						CustomCompletionProposal proposal = new MarkupCompletionProposal(
 								proposedText, contentAssistRequest.getReplacementBeginPosition(),
 								contentAssistRequest.getReplacementLength(), markupAdjustment, image,
 								tagname, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
@@ -1088,7 +1088,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						}
 						int relevance = isStrictCMNodeSuggestion ? XMLRelevanceConstants.R_STRICTLY_VALID_TAG_NAME : XMLRelevanceConstants.R_TAG_NAME;
 						String proposedInfo = getAdditionalInfo(getCMElementDeclaration(parent), elementDecl);
-						CustomCompletionProposal proposal = new CustomCompletionProposal(
+						CustomCompletionProposal proposal = new MarkupCompletionProposal(
 								proposedText, contentAssistRequest.getReplacementBeginPosition(),
 								contentAssistRequest.getReplacementLength(), cursorAdjustment, image,
 								getRequiredName(parent, elementDecl), null, proposedInfo,
@@ -1144,7 +1144,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 					if (image == null) {
 						image = this.getGenericTagImage();
 					}
-					CustomCompletionProposal proposal = new CustomCompletionProposal(
+					CustomCompletionProposal proposal = new MarkupCompletionProposal(
 							proposedText, contentAssistRequest.getReplacementBeginPosition(),
 							contentAssistRequest.getReplacementLength(), cursorAdjustment, image,
 							getRequiredName(parent, ed), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
