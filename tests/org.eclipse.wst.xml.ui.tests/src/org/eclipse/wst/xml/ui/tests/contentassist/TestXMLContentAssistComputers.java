@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension2;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -120,7 +121,30 @@ public class TestXMLContentAssistComputers extends TestCase {
 		int[] expectedProposalCounts = new int[] {6, 4, 2, 6};
 		runProposalTest("test2.xml", 3, 0, expectedProposalCounts);
 	}
-	
+
+	public void testXMLLinkedPositions() throws Exception {
+		IFile file = getFile("test1.xml");
+		StructuredTextEditor editor  = getEditor(file);
+		StructuredTextViewer viewer = editor.getTextViewer();
+		int offset = viewer.getDocument().getLineOffset(24) + 6;
+
+		ICompletionProposal[][] pages = getProposals(viewer, offset, 4);
+		assertNotNull("No proposals returned.", pages);
+		assertTrue("Not enough pages.", pages.length > 0);
+		assertTrue("Not enough proposals.", pages[0].length > 0);
+		assertTrue("Proposal not of the proper type", pages[0][0] instanceof ICompletionProposalExtension2);
+		((ICompletionProposalExtension2) pages[0][0]).apply(viewer, (char) 0, 0, offset);
+		String[] categories = viewer.getDocument().getPositionCategories();
+		String category = null;
+		for (int i = 0; i < categories.length; i++) {
+			if (categories[i].startsWith("org.eclipse.jface.text.link.LinkedModeModel")) {
+				category = categories[i];
+			}
+		}
+		assertNotNull("Could not find the linked model position category.", category);
+		assertTrue("No linked positions were generated.", viewer.getDocument().getPositions(category).length > 0);
+	}
+
 	/**
 	 * <p>Run a proposal test by opening the given file and invoking content assist for
 	 * each expected proposal count at the given line number and line character
