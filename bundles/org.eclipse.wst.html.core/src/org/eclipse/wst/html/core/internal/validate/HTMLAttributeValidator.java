@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +42,7 @@ import org.w3c.dom.NamedNodeMap;
 
 public class HTMLAttributeValidator extends PrimeValidator {
 
+	private static final String JAVASCRIPT_PREFIX = "javascript:"; //$NON-NLS-1$
 	private static final int REGION_NAME = 1;
 	private static final int REGION_VALUE = 2;
 	// <<D210422
@@ -200,17 +202,24 @@ public class HTMLAttributeValidator extends PrimeValidator {
 						}
 					}
 					else if (CMDataType.URI.equals(attrType.getDataTypeName())) {
-						// TODO: URI validation?
-						if (false && actualValue.indexOf('#') < 0 && actualValue.indexOf(":/") == -1 && CMUtil.isHTML(edec)) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (actualValue.indexOf('#') < 0 && actualValue.indexOf(":/") < 0 && !actualValue.toLowerCase(Locale.ENGLISH).startsWith(JAVASCRIPT_PREFIX) && CMUtil.isHTML(edec)) { //$NON-NLS-1$ //$NON-NLS-2$
 							IStructuredDocumentRegion start = ((IDOMNode) node).getStartStructuredDocumentRegion();
+							// roundabout start tag check
 							if (start != null && start.getFirstRegion().getTextLength() == 1) {
-								IPath basePath = new Path(((IDOMNode) node).getModel().getBaseLocation());
-								if (basePath.segmentCount() > 1) {
-									IPath path = ModuleCoreSupport.resolve(basePath, actualValue);
-									IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-									if (found == null || !found.isAccessible()) {
-										rgnType = REGION_VALUE;
-										state = ErrorState.RESOURCE_NOT_FOUND;
+								// only check when we have a way to set dependencies
+								Collection dependencies = (Collection) ((IDOMNode) ((IDOMNode) node).getOwnerDocument()).getUserData(HTMLValidationAdapterFactory.DEPENDENCIES);
+								if (dependencies != null) {
+									IPath basePath = new Path(((IDOMNode) node).getModel().getBaseLocation());
+									if (basePath.segmentCount() > 1) {
+										IPath path = ModuleCoreSupport.resolve(basePath, actualValue);
+										IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+										if (found == null) {
+											rgnType = REGION_VALUE;
+											state = ErrorState.RESOURCE_NOT_FOUND;
+										}
+										else {
+											dependencies.add(found);
+										}
 									}
 								}
 							}
