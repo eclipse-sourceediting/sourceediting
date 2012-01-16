@@ -18,7 +18,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.wst.web_ui.feature" version="3.2.5.v201008100100-7O7CFbKEMf84nUlEJyX7-SPQjhYZ" patch="true"/>
+      <import feature="org.eclipse.wst.web_ui.feature" version="3.2.5.v201106202200-7O7CFbkEMh85uQwIFv83KZ5f9rXw6jU_CvbVrOjx" patch="true"/>
    </requires>
 
    <plugin
