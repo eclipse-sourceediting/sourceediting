@@ -18,7 +18,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.wst.web_core.feature" version="3.2.5.v201008100100-7E7AFHwAJrn5PM15pUYBwJLkSG8j" patch="true"/>
+      <import feature="org.eclipse.wst.web_core.feature" version="3.2.5.v201106202200-7E7AFIFAJtn6XO92wNRGibSR_jHDTn" patch="true"/>
    </requires>
 
    <plugin
