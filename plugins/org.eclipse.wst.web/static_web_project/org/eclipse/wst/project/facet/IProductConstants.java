@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,8 @@ public interface IProductConstants {
 	public static final String SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE = "showJavaEEModuleDependencyPage"; //$NON-NLS-1$
 	public static final String DYNAMIC_WEB_GENERATE_DD = "dynamic_web_generate_dd"; //$NON-NLS-1$
 	public static final String EE6_CONNECTOR_GENERATE_DD = "ee6_connector_generate_dd"; //$NON-NLS-1$
+	public static final String EJB_BUSINESS_INTERFACE_ANNOTATION_IN_BEAN = "ejb_business_interaface_annotation_in_bean"; //$NON-NLS-1$
+	public static final String EJB_BUSINESS_INTERFACE_ANNOTATION_IN_INTERFACE = "ejb_business_interaface_annotation_in_interface"; //$NON-NLS-1$
 	
 	/**
 	 * @deprecated Do not use. The ALLOW_CLASSPATH_DEP preference has been deprecated and its ability to disable dynamic manifest updates will soon be removed.
