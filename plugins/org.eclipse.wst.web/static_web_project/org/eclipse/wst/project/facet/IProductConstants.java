@@ -40,6 +40,8 @@ public interface IProductConstants {
 	public static final String EE6_CONNECTOR_GENERATE_DD = "ee6_connector_generate_dd"; //$NON-NLS-1$
 	public static final String EJB_BUSINESS_INTERFACE_ANNOTATION_IN_BEAN = "ejb_business_interaface_annotation_in_bean"; //$NON-NLS-1$
 	public static final String EJB_BUSINESS_INTERFACE_ANNOTATION_IN_INTERFACE = "ejb_business_interaface_annotation_in_interface"; //$NON-NLS-1$
+	public static final String EJB_INTERFACE_PACKAGE_SUFFIX = "ejb_interface_package_suffix"; //$NON-NLS-1$
+
 	
 	/**
 	 * @deprecated Do not use. The ALLOW_CLASSPATH_DEP preference has been deprecated and its ability to disable dynamic manifest updates will soon be removed.
