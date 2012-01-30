@@ -11,10 +11,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.tests.contentassist;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import junit.extensions.TestSetup;
 import junit.framework.Assert;
@@ -37,7 +40,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.contentassist.StructuredContentAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.contentassist.CompoundContentAssistProcessor;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.eclipse.wst.xml.ui.tests.ProjectUtil;
@@ -51,7 +56,7 @@ public class TestXMLContentAssistComputers extends TestCase {
 	
 	/** The project that all of the tests use */
 	private static IProject fProject;
-	
+	private static List categoriesPerTest;
 	/**
 	 * Used to keep track of the already open editors so that the tests don't go through
 	 * the trouble of opening the same editors over and over again
@@ -198,6 +203,19 @@ public class TestXMLContentAssistComputers extends TestCase {
 		privateFireSessionBeginEventMethod.setAccessible(true);
 		privateFireSessionBeginEventMethod.invoke(contentAssistant, new Object[] {Boolean.TRUE});
 
+		Field field = CompoundContentAssistProcessor.class.getDeclaredField("fProcessors");
+		field.setAccessible(true);
+		Set processors = (Set) field.get(processor);
+		if (processors != null) {
+			Iterator it = processors.iterator();
+			while (it.hasNext()) {
+				StructuredContentAssistProcessor scap = (StructuredContentAssistProcessor) it.next();
+				Field categoryIteration = StructuredContentAssistProcessor.class.getDeclaredField("fCategoryIteration");
+				categoryIteration.setAccessible(true);
+				categoriesPerTest = (List) categoryIteration.get(scap);
+			}
+			
+		}
 		//get content assist suggestions
 		ICompletionProposal[][] pages = new ICompletionProposal[pageCount][];
 		for(int p = 0; p < pageCount; ++p) {
@@ -231,6 +249,9 @@ public class TestXMLContentAssistComputers extends TestCase {
 		
 		//if errors report them
 		if(error.length() > 0) {
+			if (categoriesPerTest != null) {
+				error.insert(0, categoriesPerTest + "---");
+			}
 			Assert.fail(error.toString());
 		}
 	}
