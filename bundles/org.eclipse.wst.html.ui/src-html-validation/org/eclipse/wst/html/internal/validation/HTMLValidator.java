@@ -502,12 +502,12 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 			if (model.getDocument() instanceof NodeImpl) {
 				document = (NodeImpl) model.getDocument();
 			}
-			if (result != null) {
+			if (result != null && document != null) {
 				dependencies = new HashSet();
 				document.setUserData(HTMLValidationAdapterFactory.DEPENDENCIES, dependencies, null);
 			}
 			validate(reporter, file, model);
-			if (result != null) {
+			if (result != null && document != null) {
 				document.setUserData(HTMLValidationAdapterFactory.DEPENDENCIES, null, null);
 				result.setDependsOn((IResource[]) dependencies.toArray(new IResource[dependencies.size()]));
 			}

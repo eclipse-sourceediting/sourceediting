@@ -223,11 +223,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 									if (basePath.segmentCount() > 1) {
 										IPath path = ModuleCoreSupport.resolve(basePath, actualValue);
 										IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-										if (found == null) {
-											rgnType = REGION_VALUE;
-											state = ErrorState.RESOURCE_NOT_FOUND;
-										}
-										else {
+										if (found != null) {
 											dependencies.add(found);
 										}
 									}
