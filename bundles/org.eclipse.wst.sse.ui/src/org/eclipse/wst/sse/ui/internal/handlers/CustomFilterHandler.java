@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,9 +22,9 @@ public class CustomFilterHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
-		ConfigurableContentOutlinePage page = (ConfigurableContentOutlinePage) editor.getAdapter(IContentOutlinePage.class);
-		if (page != null) {
-			page.getOutlineFilterProcessor().openDialog();
+		Object page = editor.getAdapter(IContentOutlinePage.class);
+		if (page instanceof ConfigurableContentOutlinePage) {
+			((ConfigurableContentOutlinePage) page).getOutlineFilterProcessor().openDialog();
 		}
 		return null;
 	}
