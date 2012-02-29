@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1026,6 +1027,42 @@ class ProjectDescription {
 		return record;
 	}
 
+	/**
+	 * Creates a TLDRecord from a File.
+	 * 
+	 * @param tld the tld File
+	 * @return
+	 */
+	private TLDRecord createTLDRecord(File tld) {
+		TLDRecord record = new TLDRecord();
+		record.path = new Path(tld.getAbsolutePath());
+		InputStream contents = null;
+		try {
+			if (tld.exists()) {
+				contents = new FileInputStream(tld);
+				String basePath = tld.getAbsolutePath();
+				TaglibInfo info = extractInfo(basePath, contents);
+				if (info != null) {
+					record.info = info;
+				}
+			}
+		}
+		catch (FileNotFoundException e) {
+		}
+		finally {
+			try {
+				if (contents != null) {
+					contents.close();
+				}
+			}
+			catch (IOException e) {
+				// ignore
+				Logger.log(Logger.ERROR_DEBUG, null, e);
+			}
+		}
+		return record;
+	}
+
 	private void ensureUpTodate() {
 		IClasspathEntry[] entries = null;
 			try {
@@ -1487,6 +1524,27 @@ class ProjectDescription {
 	}
 
 	/**
+	 * Index a directory looking for TLDs. 
+	 * @param file
+	 * @param isExported
+	 */
+	private void indexDirectory(File file, boolean isExported) {
+		if (file.exists()) {
+			if (file.isDirectory()) {
+				final File[] files = file.listFiles();
+				for (int i = 0; i < files.length; i++) {
+					indexDirectory(files[i], isExported);
+				}
+			}
+			else {
+				if (file.getName().endsWith(".tld")) { //$NON-NLS-1$
+					updateTLD(file.getAbsolutePath(), createTLDRecord(file), ITaglibIndexDelta.ADDED);
+				}
+			}
+		}
+	}
+
+	/**
 	 * @param entry
 	 */
 	private void indexClasspath(IClasspathEntry entry) {
@@ -1505,8 +1563,14 @@ class ProjectDescription {
 				 */
 				IPath libPath = entry.getPath();
 				if (!fClasspathJars.containsKey(libPath.toString())) {
-					if (libPath.toFile().exists()) {
-						updateClasspathLibrary(libPath.toString(), ITaglibIndexDelta.ADDED, entry.isExported());
+					final File file = libPath.toFile();
+					if (file.exists()) {
+						if (file.isDirectory()) {
+							indexDirectory(file, entry.isExported());
+						}
+						else {
+							updateClasspathLibrary(libPath.toString(), ITaglibIndexDelta.ADDED, entry.isExported());
+						}
 					}
 					else {
 						/*
@@ -2464,20 +2528,23 @@ class ProjectDescription {
 		}
 	}
 
+	void updateTLD(String fullpath, TLDRecord record, int deltaKind) {
+		if (_debugIndexCreation)
+			Logger.log(Logger.INFO, "creating record for " + fullpath); //$NON-NLS-1$
+		fTLDReferences.put(fullpath, record);
+		if (record.getURI() != null && record.getURI().length() > 0) {
+			getImplicitReferences(fullpath).put(record.getURI(), record);
+		}
+		TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, deltaKind));
+	}
+
 	/**
 	 * 
 	 * @param tld
 	 * @param deltaKind
 	 */
 	void updateTLD(IResource tld, int deltaKind) {
-		if (_debugIndexCreation)
-			Logger.log(Logger.INFO, "creating record for " + tld.getFullPath()); //$NON-NLS-1$
-		TLDRecord record = createTLDRecord(tld);
-		fTLDReferences.put(tld.getFullPath().toString(), record);
-		if (record.getURI() != null && record.getURI().length() > 0) {
-			getImplicitReferences(tld.getFullPath().toString()).put(record.getURI(), record);
-		}
-		TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, deltaKind));
+		updateTLD(tld.getFullPath().toString(), createTLDRecord(tld), deltaKind);
 	}
 
 	void updateWebXML(IResource webxml, int deltaKind) {
