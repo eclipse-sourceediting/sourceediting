@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -154,7 +154,7 @@ public class JSPTranslator implements Externalizable {
 	private static final String FOOTER = "}}"; //$NON-NLS-1$
 	
 	/** exception declaration */
-	private static final String EXCEPTION = "Throwable exception = null;"; //$NON-NLS-1$
+	private static final String EXCEPTION = "Throwable exception = new Throwable();"; //$NON-NLS-1$
 	
 	/** expression prefix */
 	public static final String EXPRESSION_PREFIX = "out.print("; //$NON-NLS-1$
