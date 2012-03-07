@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -116,7 +116,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 			// CS ensure that the physical URI is considered where streams are required
 			// and the logicalURI is used as the DTD's baseLocation
 			String physicalURI = URIResolverPlugin.createResolver().resolvePhysicalLocation("", "", logicalURI); //$NON-NLS-1$ //$NON-NLS-2$
-			boolean isReadable = URIHelper.isReadableURI(physicalURI, true);
+			boolean isReadable = URIHelper.isReadableURI(physicalURI, false);
 			if (!isReadable) {
 				throw new Exception("DTD parse error. Can not read the specified URI : " + logicalURI); //$NON-NLS-1$
 			}			

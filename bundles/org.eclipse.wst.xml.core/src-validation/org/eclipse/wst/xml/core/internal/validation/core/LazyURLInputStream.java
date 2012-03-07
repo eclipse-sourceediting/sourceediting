@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,8 @@
 package org.eclipse.wst.xml.core.internal.validation.core;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+
+import org.eclipse.wst.common.uriresolver.URIHelper;
 
 
 /**
@@ -28,7 +29,6 @@ public class LazyURLInputStream extends InputStream
   protected boolean error;
   boolean hasMarks;
   boolean pretendFileIsStillOpen;
-
   public LazyURLInputStream(String url)
   {
     this.url = url;
@@ -44,7 +44,7 @@ public class LazyURLInputStream extends InputStream
     
       try
       {
-        inner = new URL(url).openStream();
+    	inner = URIHelper.getInputStream(url, 0);
 		pretendFileIsStillOpen = false;
 		hasMarks = false;
       }
