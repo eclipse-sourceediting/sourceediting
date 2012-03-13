@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2012 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -687,10 +687,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 			toolbarContainer.setLayout(layout);
 			toolbarContainer.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
 
-			ToolBar tb = new ToolBar(toolbarContainer, SWT.FLAT | SWT.NO_BACKGROUND);
+			ToolBar tb = new ToolBar(toolbarContainer, SWT.FLAT);
 			fToolbarManager = new ToolBarManager(tb);
 			tb.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
-			tb = new ToolBar(toolbarContainer, SWT.FLAT | SWT.NO_BACKGROUND);
+			tb = new ToolBar(toolbarContainer, SWT.FLAT);
 			fEditorManager = new ToolBarManager(tb);
 			tb.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
 			fDesignContainer = container;
