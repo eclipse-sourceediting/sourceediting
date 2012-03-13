@@ -19,21 +19,12 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.wst.jsdt.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.common_core.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.xml_core.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.server_core.feature"
-         version="0.0.0"/>
+   <requires>
+      <import feature="org.eclipse.wst.jsdt.feature" version="1.4.0"/>
+      <import feature="org.eclipse.wst.common_core.feature" version="3.4.0"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="3.3.100"/>
+      <import feature="org.eclipse.wst.xml_core.feature" version="3.4.0"/>
+   </requires>
 
    <plugin
          id="org.eclipse.wst.css.core"
