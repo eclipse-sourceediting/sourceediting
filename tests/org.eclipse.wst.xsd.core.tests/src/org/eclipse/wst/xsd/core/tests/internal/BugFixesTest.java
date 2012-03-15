@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -105,73 +105,73 @@ public class BugFixesTest extends BaseTestCase
     assertTrue(foundDesiredElement); // if we didn't even find the binding element, then something terrible went wrong
   }
   
-  @SuppressWarnings("unchecked")
-  public void testStackOverflow()
-  {
-    String namespaceURI = "http://www.w3.org/TR/voicexml20/vxml.xsd";
-	String vxmlSchemaURI = locateFileUsingCatalog(namespaceURI);
-    
-    // See bug 206138
-    
-    // Two ways to test this.
-    // First way. Call findTypesDerivedFrom from XSDImpl.
-    
-    assertNotNull("unable to locate file for " + namespaceURI, vxmlSchemaURI);
-    assertTrue("unable to locate file for " + namespaceURI, vxmlSchemaURI.length() > 0);
-    XSDSchema xsdSchema = XSDImpl.buildXSDModel(vxmlSchemaURI);
-    assertNotNull("failed to build model for " + vxmlSchemaURI,xsdSchema);
-    boolean foundDesiredType = false;
-    for (Iterator<XSDTypeDefinition> types = xsdSchema.getTypeDefinitions().iterator(); types.hasNext(); )
-    {
-      XSDTypeDefinition type = types.next();
-      if (type instanceof XSDComplexTypeDefinition)
-      {
-        XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) type;
-        if ("basic.event.handler".equals(complexType.getName()))
-        {
-          foundDesiredType = true;
-          List<XSDTypeDefinition> list = XSDImpl.findTypesDerivedFrom(complexType);
-          int size = list.size();
-          // assertTrue(size == 1);  // if we got something back, then great, there was no out of stack error
-          assertTrue("no types found in XSD", size >= 0);
-          // Because of bug 203048, there is a change in behaviour to redefined types.  
-          // The complex type named speaker is no longer circular.   In terms of this junit, the value returned is not relevant
-          // since we just want some length back (i.e. there was no crash from a stack overflow).
-          break;
-        }
-      }
-    }
-    assertTrue("type \"basic.event.handler\" not found in XSD", foundDesiredType);  // if we didn't even find the complex type, then something terrible went wrong
-    
-    // Second way to test via content model
-    
-    CMDocumentFactoryXSD factory = new CMDocumentFactoryXSD();
-    assertNotNull("Assert factory is not null", factory);
-    
-    CMDocument cmDocument = factory.createCMDocument(vxmlSchemaURI);
-    assertNotNull("Assert CMDocument is not null", cmDocument);
-        
-    CMNamedNodeMap elements = cmDocument.getElements();
-    
-    boolean foundDesiredElement = false;
-    for (Iterator<CMElementDeclaration> i = elements.iterator(); i.hasNext(); )
-    {
-      CMElementDeclaration element = i.next();
-      if ("noinput".equals(element.getElementName()))
-      {
-        CMNamedNodeMap attributes = element.getAttributes();
-        assertNotNull(attributes);
-        // assertTrue(attributes.getLength() == 3);  // if we got something back, then great, there was no out of stack error
-        // Because of bug 203048, there is a change in behaviour to redefined types.  
-        // The complex type named speaker is no longer circular.   In terms of this junit, the value returned is not relevant
-        // since we just want some length back (i.e. there was no crash from a stack overflow).
-        assertTrue(attributes.getLength() >= 0);
-        foundDesiredElement = true;
-        break;
-      }
-    }
-    assertTrue("element \"noinput\"r not found in XSD", foundDesiredElement);  // if we didn't even find the noinput element, then something terrible went wrong
-  }
+//  @SuppressWarnings("unchecked")
+//  public void testStackOverflow()
+//  {
+//    String namespaceURI = "http://www.w3.org/TR/voicexml20/vxml.xsd";
+//	String vxmlSchemaURI = locateFileUsingCatalog(namespaceURI);
+//    
+//    // See bug 206138
+//    
+//    // Two ways to test this.
+//    // First way. Call findTypesDerivedFrom from XSDImpl.
+//    
+//    assertNotNull("unable to locate file for " + namespaceURI, vxmlSchemaURI);
+//    assertTrue("unable to locate file for " + namespaceURI, vxmlSchemaURI.length() > 0);
+//    XSDSchema xsdSchema = XSDImpl.buildXSDModel(vxmlSchemaURI);
+//    assertNotNull("failed to build model for " + vxmlSchemaURI,xsdSchema);
+//    boolean foundDesiredType = false;
+//    for (Iterator<XSDTypeDefinition> types = xsdSchema.getTypeDefinitions().iterator(); types.hasNext(); )
+//    {
+//      XSDTypeDefinition type = types.next();
+//      if (type instanceof XSDComplexTypeDefinition)
+//      {
+//        XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) type;
+//        if ("basic.event.handler".equals(complexType.getName()))
+//        {
+//          foundDesiredType = true;
+//          List<XSDTypeDefinition> list = XSDImpl.findTypesDerivedFrom(complexType);
+//          int size = list.size();
+//          // assertTrue(size == 1);  // if we got something back, then great, there was no out of stack error
+//          assertTrue("no types found in XSD", size >= 0);
+//          // Because of bug 203048, there is a change in behaviour to redefined types.  
+//          // The complex type named speaker is no longer circular.   In terms of this junit, the value returned is not relevant
+//          // since we just want some length back (i.e. there was no crash from a stack overflow).
+//          break;
+//        }
+//      }
+//    }
+//    assertTrue("type \"basic.event.handler\" not found in XSD", foundDesiredType);  // if we didn't even find the complex type, then something terrible went wrong
+//    
+//    // Second way to test via content model
+//    
+//    CMDocumentFactoryXSD factory = new CMDocumentFactoryXSD();
+//    assertNotNull("Assert factory is not null", factory);
+//    
+//    CMDocument cmDocument = factory.createCMDocument(vxmlSchemaURI);
+//    assertNotNull("Assert CMDocument is not null", cmDocument);
+//        
+//    CMNamedNodeMap elements = cmDocument.getElements();
+//    
+//    boolean foundDesiredElement = false;
+//    for (Iterator<CMElementDeclaration> i = elements.iterator(); i.hasNext(); )
+//    {
+//      CMElementDeclaration element = i.next();
+//      if ("noinput".equals(element.getElementName()))
+//      {
+//        CMNamedNodeMap attributes = element.getAttributes();
+//        assertNotNull(attributes);
+//        // assertTrue(attributes.getLength() == 3);  // if we got something back, then great, there was no out of stack error
+//        // Because of bug 203048, there is a change in behaviour to redefined types.  
+//        // The complex type named speaker is no longer circular.   In terms of this junit, the value returned is not relevant
+//        // since we just want some length back (i.e. there was no crash from a stack overflow).
+//        assertTrue(attributes.getLength() >= 0);
+//        foundDesiredElement = true;
+//        break;
+//      }
+//    }
+//    assertTrue("element \"noinput\"r not found in XSD", foundDesiredElement);  // if we didn't even find the noinput element, then something terrible went wrong
+//  }
   
   public void testXSDTypeWhitespaceFacets() {
 	  // Bug [194698] - Test that the correct whitespace facets are applied to the types
