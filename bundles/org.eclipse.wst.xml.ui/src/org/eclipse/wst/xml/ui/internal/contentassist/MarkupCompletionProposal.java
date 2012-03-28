@@ -60,7 +60,7 @@ public class MarkupCompletionProposal extends CustomCompletionProposal {
 		final String replacement = getReplacementString();
 		final IDocument document = viewer.getDocument();
 		final int length = replacement.length();
-		boolean inAttribute = false, hasGroup = false, inEndTag = false;
+		boolean inAttribute = false, hasGroup = false;
 		int offset = 0;
 		char attType = 0;
 		int exitPosition = -1;
@@ -88,25 +88,9 @@ public class MarkupCompletionProposal extends CustomCompletionProposal {
 							}
 						}
 						break;
-					case '/':
-							if (!inAttribute) {
-								inEndTag = i > 0 && replacement.charAt(i - 1) == '<';
-							}
-						break;
 					case '>':
-						if (!inAttribute) {
-							if (i == length - 1) {
-								exitPosition = getReplacementOffset() + i + 1;
-								if (!inEndTag) { // Don't add a position within the end-tag
-									addPosition(model, document, getReplacementOffset() + i, 0); // position within start tag
-									hasGroup = true;
-								}
-							}
-							else {
-								addPosition(model, document, getReplacementOffset() + i, 0); // position within start tag
-								addPosition(model, document, getReplacementOffset() + i + 1, 0); // position after start tag
-								hasGroup = true;
-							}
+						if (!inAttribute && exitPosition == -1) {
+							exitPosition = getReplacementOffset() + i + 1;
 						}
 						break;
 				}
