@@ -125,14 +125,23 @@ public class TestXMLContentAssistComputers extends TestCase {
 		IFile file = getFile("test1.xml");
 		StructuredTextEditor editor  = getEditor(file);
 		StructuredTextViewer viewer = editor.getTextViewer();
-		int offset = viewer.getDocument().getLineOffset(24) + 6;
+		int offset = viewer.getDocument().getLineOffset(13);
 
 		ICompletionProposal[][] pages = getProposals(viewer, offset, 4);
 		assertNotNull("No proposals returned.", pages);
 		assertTrue("Not enough pages.", pages.length > 0);
 		assertTrue("Not enough proposals.", pages[0].length > 0);
-		assertTrue("Proposal not of the proper type", pages[0][0] instanceof ICompletionProposalExtension2);
-		((ICompletionProposalExtension2) pages[0][0]).apply(viewer, (char) 0, 0, offset);
+		ICompletionProposalExtension2 proposal = null;
+		// Check for the member proposal
+		for (int i = 0; i < pages[0].length; i++) {
+			if ("Member".equals(pages[0][i].getDisplayString())) {
+				assertTrue("Proposal not of the proper type", pages[0][i] instanceof ICompletionProposalExtension2);
+				proposal = (ICompletionProposalExtension2) pages[0][i];
+				break;
+			}
+		}
+		assertNotNull("No appropriate proposal found.", proposal);
+		proposal.apply(viewer, (char) 0, 0, offset);
 		String[] categories = viewer.getDocument().getPositionCategories();
 		String category = null;
 		for (int i = 0; i < categories.length; i++) {

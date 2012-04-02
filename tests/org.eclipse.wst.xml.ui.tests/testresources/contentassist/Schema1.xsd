@@ -16,7 +16,7 @@
                 </annotation>
               </element>
             </choice>
-            <attribute name="handicap" type="nonNegativeInteger"></attribute>
+            <attribute name="handicap" type="nonNegativeInteger" use="required"></attribute>
           </complexType>
         </element>
         <element name="Employee" type="tns:EmployeeType" maxOccurs="unbounded" minOccurs="1"></element>
