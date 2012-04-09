@@ -332,7 +332,7 @@ public class LibraryTagsCompletionProposalComputer extends
 					String proposedText = getRequiredText(document, ed);
 					final IDOMNode targetNode = (IDOMNode) contentAssistRequest.getNode();
 					if (targetNode != null) {
-						final IStructuredDocumentRegion region = targetNode.getFirstStructuredDocumentRegion();
+						final IStructuredDocumentRegion region = targetNode.getLastStructuredDocumentRegion();
 						if (region != null && region.getFirstRegion() != null && region.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN) && proposedText.length() > 0) {
 							//in order to differentiate between content assist on 
 							//completely empty document and the one with xml open tag
