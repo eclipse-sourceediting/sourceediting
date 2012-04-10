@@ -8,7 +8,6 @@
 			icon="$nl$/icons/full/xslt_file.gif"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.SourcePageActionContributor"
 			class="org.eclipse.wst.xsl.ui.internal.editor.XSLEditor"
-			default="true"
 			extensions="xsl,xslt"
 			id="org.eclipse.wst.xsl.ui.XSLEditor">
 			<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xslsource" />
