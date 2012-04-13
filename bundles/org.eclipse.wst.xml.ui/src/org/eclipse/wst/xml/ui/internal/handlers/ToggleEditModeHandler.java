@@ -126,12 +126,10 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 	public void setAppearanceForEditMode(int editMode, UIElement element) {
 		if (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) {
 			element.setTooltip(XMLEditorMessages.XMLTableTreeActionBarContributor_3);
-//			element.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_3);
 			element.setIcon(onImage);
 		}
 		else {
 			element.setTooltip(XMLEditorMessages.XMLTableTreeActionBarContributor_5);
-//			element.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_5);
 			element.setIcon(offImage);
 		}
 	}
