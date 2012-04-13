@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2012 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     David Carver - initial API and implementation, bug 212330
- *     
+ *     IBM Corporation - http://bugs.eclipse.org/373701
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.handlers;
 
@@ -126,12 +126,12 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 	public void setAppearanceForEditMode(int editMode, UIElement element) {
 		if (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) {
 			element.setTooltip(XMLEditorMessages.XMLTableTreeActionBarContributor_3);
-			element.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_3);
+//			element.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_3);
 			element.setIcon(onImage);
 		}
 		else {
 			element.setTooltip(XMLEditorMessages.XMLTableTreeActionBarContributor_5);
-			element.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_5);
+//			element.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_5);
 			element.setIcon(offImage);
 		}
 	}
