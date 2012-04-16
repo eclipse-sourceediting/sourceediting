@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -130,6 +131,7 @@ public class XSDImpl
    */
   public static final String PROPERTY_XSITYPES = "XSITypes";
   public static final String PROPERTY_DERIVED_ELEMENT_DECLARATION = "DerivedElementDeclaration";
+  public static final String PROPERTY_EXTERNALLY_DERIVED_ELEMENT_DECLARATION = "ExternallyDerivedElementDeclaration";
   public static final String PROPERTY_SUBSTITUTION_GROUP = "SubstitutionGroup";
   public static final String PROPERTY_SUBSTITUTION_GROUP_VALUE = "SubstitutionGroupValue";
   public static final String PROPERTY_ABSTRACT = "Abstract";
@@ -1648,7 +1650,7 @@ public class XSDImpl
     public boolean supports(String propertyName)
     {
       return propertyName.equals(PROPERTY_XSITYPES) || propertyName.equals(PROPERTY_DERIVED_ELEMENT_DECLARATION) || propertyName.equals(PROPERTY_SUBSTITUTION_GROUP)
-          || propertyName.equals(PROPERTY_ABSTRACT) || super.supports(propertyName);
+          || propertyName.equals(PROPERTY_ABSTRACT) || propertyName.equals(PROPERTY_EXTERNALLY_DERIVED_ELEMENT_DECLARATION) || super.supports(propertyName);
     }
 
     /**
@@ -1874,6 +1876,15 @@ public class XSDImpl
           result = getDerivedElementDeclaration(uriQualifiedTypeName);
         }
       }
+      else if (propertyName.startsWith(PROPERTY_EXTERNALLY_DERIVED_ELEMENT_DECLARATION))
+      {
+          int index = propertyName.indexOf("=");
+          if (index != -1)
+          {
+            String reference = propertyName.substring(index + 1);
+            result = getExternallyDerivedElementDeclaration(reference);
+          }
+      }
       else if (propertyName.equals(PROPERTY_SUBSTITUTION_GROUP))
       {
         return getSubstitutionGroup();
@@ -1997,6 +2008,12 @@ public class XSDImpl
      * @return corresponding element declaration.
      */
     protected abstract CMElementDeclaration getDerivedElementDeclaration(String uriQualifiedTypeName);
+    
+    
+    protected CMElementDeclaration getExternallyDerivedElementDeclaration(String reference)
+    {
+    	return null;
+    }
 
     /**
      * Returns a list of documentation elements.
@@ -2199,6 +2216,7 @@ public class XSDImpl
   public static class XSDElementDeclarationAdapter extends ElementDeclarationBaseImpl
   {
     protected List derivedElementDeclarations = null;
+    protected Map externallyDerivedElementDeclarationsMap = new HashMap();
     protected List xsiTypes = null;
     protected XSDElementDeclaration xsdElementDeclaration;
     protected CMNodeListImpl substitutionGroup;
@@ -2387,6 +2405,72 @@ public class XSDImpl
       }
       return result;
     }
+    
+    protected CMElementDeclaration getExternallyDerivedElementDeclaration(String reference) {
+    	Object declaration = externallyDerivedElementDeclarationsMap.get(reference);
+    	if(declaration instanceof CMElementDeclaration)
+    	{
+    		return (CMElementDeclaration)declaration;
+    	}
+    	String schemaLocation = null;
+    	String xsiType = null;
+    	if(reference != null)
+    	{
+    		int index = reference.indexOf("]"); //$NON-NLS-1$
+    		if(index != -1)
+    		{
+    			schemaLocation = reference.substring(1, index);
+    			xsiType = reference.substring(index + 1);
+    		}
+    	}
+    	if(schemaLocation != null && xsiType != null)
+    	{
+    		XSDResourceImpl resource = null;
+    		try
+    		{       
+    			XSDTypeDefinition baseType = getXSDType();
+    			String baseTypeNamespace = getXSDElementDeclaration().getSchema().getTargetNamespace();
+    			ResourceSet resourceSet = new ResourceSetImpl();
+    			resourceSet.getAdapterFactories().add(new XSDSchemaLocatorAdapterFactory());
+    			InputStream inputStream = resourceSet.getURIConverter().createInputStream(URI.createURI(schemaLocation));
+    			resource = (XSDResourceImpl)resourceSet.createResource(URI.createURI("*.xsd")); //$NON-NLS-1$
+    			resource.setURI(createURI(schemaLocation));
+    			resource.load(inputStream, null);         
+    			XSDSchema xsdSchema = resource.getSchema();
+    			if(xsdSchema != null && baseType != null && xsiType != null)
+    			{
+    				String typeName = baseType.getName();
+    				List typeDefinitions = xsdSchema.getTypeDefinitions();
+    				Iterator iterator = typeDefinitions.iterator();
+    				while(iterator.hasNext())
+    				{
+    					Object object = iterator.next();
+    					if(object instanceof XSDComplexTypeDefinition)
+    					{
+    						XSDComplexTypeDefinition xsdComplexTypeDefinition = (XSDComplexTypeDefinition)object;	        			 
+    						if(xsiType.equals(xsdComplexTypeDefinition.getName()) && isTypeDerivedFrom(xsdComplexTypeDefinition, baseTypeNamespace, typeName))
+    						{
+    							DerivedElementDeclarationImpl derivedElementDeclaration = new DerivedElementDeclarationImpl(this, xsdComplexTypeDefinition, reference);
+    							externallyDerivedElementDeclarationsMap.put(reference, derivedElementDeclaration);
+    							return derivedElementDeclaration;
+    						}
+    					}
+    				}
+    			}
+    		} catch(Exception exception)
+    		{
+    			// Do nothing
+    		}
+    		finally
+    		{
+    			if(resource != null && resource.isLoaded())
+    			{
+    				resource.unload();
+    			}
+    		}
+    	}
+    	return null;
+    }
 
     /**
      * Returns the substitution group for this element. The group consists of:
@@ -2496,6 +2580,11 @@ public class XSDImpl
     protected CMElementDeclaration getDerivedElementDeclaration(String uriQualifiedTypeName)
     {
       return owner.getDerivedElementDeclaration(uriQualifiedTypeName);
+    }
+    
+    protected CMElementDeclaration getExternallyDerivedElementDeclaration(String reference)
+    {
+    	return owner.getDerivedElementDeclaration(reference);
     }
 
     /**
