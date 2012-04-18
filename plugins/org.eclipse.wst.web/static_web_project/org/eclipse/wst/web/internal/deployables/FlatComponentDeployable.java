@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.internal.flat.FlatVirtualComponent;
 import org.eclipse.wst.common.componentcore.internal.flat.FlatVirtualComponent.FlatComponentTaskModel;
+import org.eclipse.wst.common.componentcore.internal.flat.FlattenParticipantModel;
 import org.eclipse.wst.common.componentcore.internal.flat.IChildModuleReference;
 import org.eclipse.wst.common.componentcore.internal.flat.IFlatFile;
 import org.eclipse.wst.common.componentcore.internal.flat.IFlatFolder;
@@ -46,8 +47,11 @@ import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ModuleFile;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
-public abstract class FlatComponentDeployable extends ProjectModule {
+public abstract class FlatComponentDeployable extends ProjectModule implements IFlatDeployable {
 
+	public static final String FLATTEN_PARTICIPANTS = "org.eclipse.wst.web.deployables.flatten.participants"; //$NON-NLS-1$
+	private static final String FLATTEN_PARTICIPANTS_DELIM = ","; //$NON-NLS-1$
+	
 	/*
 	 * Register an adapt IModule to IVirtualComponent 
 	 */
@@ -65,7 +69,7 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 						IVirtualComponent virtualComponent = deployable.getComponent();
 						return virtualComponent;
 					}
-				}
+ 				}
 				return null;
 			}
 		}, IModule.class);
@@ -129,9 +133,85 @@ public abstract class FlatComponentDeployable extends ProjectModule {
 	 * 
 	 * @return
 	 */
-	protected IFlattenParticipant[] getParticipants() {
-		return new IFlattenParticipant[]{
-		};
+	public IFlattenParticipant[] getParticipants() {
+		String[] ids = getParticipantIds();
+		return getFlattenParticipants(ids);
+	}
+
+	public String[] getParticipantIds() {
+		// If file exists, load from file
+		String participants = component.getMetaProperties().getProperty(FLATTEN_PARTICIPANTS);
+		// else, get the default ones
+		String[] split = participants == null ? getDefaultFlattenParticipantIDs() : participants.split(FLATTEN_PARTICIPANTS_DELIM); 
+		for( int i = 0; i < split.length; i++ ) {
+			split[i] = split[i].trim();
+		}
+		return split;
+	}
+
+	protected IFlattenParticipant[] getFlattenParticipants(String[] ids) {
+		ArrayList<IFlattenParticipant> participants = new ArrayList<IFlattenParticipant>();
+		IFlattenParticipant tmp;
+		for( int i = 0; i < ids.length; i++ ) {
+			tmp = FlattenParticipantModel.getDefault().getParticipant(ids[i]);
+			if( tmp != null )
+				participants.add(tmp);
+			else {
+				// Log? This is an error somehow
+			}
+		}
+		return participants.toArray(new IFlattenParticipant[participants.size()]);
+	}
+	
+	
+	public void addFlattenParticipant(String id, int position) {
+		String participants = component.getMetaProperties().getProperty(FLATTEN_PARTICIPANTS);
+		String[] split = participants == null ? getDefaultFlattenParticipantIDs() : participants.split(","); //$NON-NLS-1$
+		ArrayList<String> asList = new ArrayList<String>();
+		asList.addAll(Arrays.asList(split));
+		if( !asList.contains(id)) {
+			if( position < asList.size())
+				asList.add(position, id);
+			else
+				asList.add(id);
+		}
+		String asString = implode(asList.toArray(new String[asList.size()]), FLATTEN_PARTICIPANTS_DELIM);
+		component.setMetaProperty(FLATTEN_PARTICIPANTS, asString);
+	}
+
+	private String implode(String[] array, String delim) {
+		String retval;
+		if (array.length==0) {
+			retval = ""; //$NON-NLS-1$
+		} else {
+			StringBuffer sb = new StringBuffer();
+			sb.append(array[0]);
+			for (int i=1;i<array.length;i++) {
+				sb.append(delim);
+				sb.append(array[i]);
+			}
+			retval = sb.toString();
+		}
+		return retval;
+	}
+	
+	public void removeFlattenParticipant(String id) {
+		String participants = component.getMetaProperties().getProperty(FLATTEN_PARTICIPANTS);
+		String[] split = participants == null ? getDefaultFlattenParticipantIDs() : participants.split(","); //$NON-NLS-1$
+		ArrayList<String> asList = new ArrayList<String>();
+		asList.addAll(Arrays.asList(split));
+		asList.remove(id);
+		String asString = implode(asList.toArray(new String[asList.size()]), FLATTEN_PARTICIPANTS_DELIM);
+		component.setMetaProperty(FLATTEN_PARTICIPANTS, asString);
+	}
+
+	
+	/**
+	 * Get a list of participant keys that are default for this project type
+	 * @return
+	 */
+	public String[] getDefaultFlattenParticipantIDs() {
+		return new String[0];
 	}
 	
 	public boolean isBinary() {
