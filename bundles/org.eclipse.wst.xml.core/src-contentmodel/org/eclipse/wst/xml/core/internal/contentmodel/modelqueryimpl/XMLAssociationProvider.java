@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2011 IBM Corporation and others.
+ * Copyright (c) 2002, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -390,6 +390,23 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
           uriQualifiedTypeName = "[" +  typeURI + "]" + typeName; //$NON-NLS-1$ //$NON-NLS-2$
         }
         result = (CMElementDeclaration)ed.getProperty("DerivedElementDeclaration=" + uriQualifiedTypeName);   //$NON-NLS-1$
+        if(result == null)
+        {
+        	String reference = null;
+        	NamespaceInfo namespaceInfo = namespaceTable.getNamespaceInfoForPrefix(typePrefix);
+        	if(namespaceInfo != null)
+        	{
+        		String locationHint = resolveGrammarURI(element.getOwnerDocument(), namespaceInfo.uri, namespaceInfo.locationHint);
+        		if(locationHint != null)
+        		{
+        			reference = "[" + locationHint + "]" + typeName; //$NON-NLS-1$ //$NON-NLS-2$
+        		}
+        	}
+        	if(reference != null)
+        	{
+        		result = (CMElementDeclaration)ed.getProperty("ExternallyDerivedElementDeclaration=" + reference);   //$NON-NLS-1$
+        	}
+        }
       }
     }                                                                                                    
     return result;
