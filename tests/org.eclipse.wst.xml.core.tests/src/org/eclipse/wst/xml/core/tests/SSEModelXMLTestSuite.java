@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.wst.xml.core.tests.contentmodel.ExternalSchemaTest;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestAttributesOrder;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestCatalogRetrivalAndModelCreation;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestCyclicGroupReferences;
+import org.eclipse.wst.xml.core.tests.contentmodel.XSITypeTest;
 import org.eclipse.wst.xml.core.tests.document.FileBufferDocumentTester;
 import org.eclipse.wst.xml.core.tests.document.GetDocumentRegionsTest;
 import org.eclipse.wst.xml.core.tests.document.TestStructuredDocument;
@@ -69,6 +70,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(TestRangeCompare.class));
 		addTest(new TestSuite(XMLCorePreferencesTest.class));
 		addTest(new TestSuite(TestCatalogRetrivalAndModelCreation.class));
+		addTest(new TestSuite(XSITypeTest.class));
 		
 		addTest(new TestSuite(GetDocumentRegionsTest.class));
 		addTest(new TestSuite(NodeImplTestCase.class));
