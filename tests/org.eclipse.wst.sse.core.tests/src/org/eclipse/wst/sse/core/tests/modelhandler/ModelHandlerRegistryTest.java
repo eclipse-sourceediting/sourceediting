@@ -36,7 +36,14 @@ public class ModelHandlerRegistryTest extends TestCase {
 
 	void tearDown(String name) throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT + name);
-		project.delete(true, true, null);
+		// clean up if we got to the end
+		try {
+			project.delete(true, true, null);
+		}
+		catch (Exception e) {
+			// not a failure condition
+		}
+
 	}
 
 	/**

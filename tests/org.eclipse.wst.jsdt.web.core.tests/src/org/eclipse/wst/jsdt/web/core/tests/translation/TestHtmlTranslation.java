@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,10 +16,13 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.core.tests.Activator;
@@ -359,13 +362,12 @@ public class TestHtmlTranslation extends TestCase {
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
 		assertEquals("translated contents not as expected", "              \nvar text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
-		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
 		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
 		assertTrue("server-side script block included", translated.indexOf("%>") < 0);
-		assertTrue("var dropped", translated.indexOf("var text = ") > -1);
-		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+		assertTrue("var declaration not found ", translated.indexOf("var text = ") > -1);
+		assertTrue("Problems found in translation ", translation.getProblems().isEmpty());
 
 		// release model
 		structuredModel.releaseFromRead();
@@ -382,9 +384,8 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected",
-				"                                                                                                              ",translated);
-		assertTrue("translation empty", translated.length() > 5);
+		assertEquals("script with leading comment but no new line should be blank",
+					"                                                                                                              ",translated);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
 		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
@@ -451,10 +452,9 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("translation too short", translated.length() > 0);
 		assertTrue("server-side script block included\n" + translated, translated.indexOf("<") < 0);
-		assertTrue("server-side script block included\n" + translated, translated.indexOf("/") < 0);
-		assertTrue("server-side script block included\n" + translated, translated.indexOf(">") < 0);
+		assertTrue("server-side script block included\n" + translated, translated.indexOf("/>") < 0);
 		assertTrue("content not included\n" + translated, translated.length() != 0); 
 
 		// release model
@@ -501,7 +501,7 @@ public class TestHtmlTranslation extends TestCase {
 	public void testLeadingXMLComment() {
 		// get model
 		String fileName = getName() + ".html";
-		IStructuredModel structuredModel = getSharedModel(fileName, " <script> <!--  </script> ");
+		IStructuredModel structuredModel = getSharedModel(fileName, "0<script> <!--12</script>3");
 		assertNotNull("missing test model", structuredModel);
 		
 		// do translation
@@ -509,8 +509,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("                ", translated);
-
+		assertEquals("script with leading comment but no new line should be empty", "                ", translated);
 		// release model
 		structuredModel.releaseFromRead();
 	}
@@ -525,7 +524,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("         if(a) <!-- --> ", translated);
+		assertEquals("translated content differs", "         if(a) <!-- --> ", translated);
 
 		// release model
 		structuredModel.releaseFromRead();
@@ -546,6 +545,106 @@ public class TestHtmlTranslation extends TestCase {
 		assertTrue("CDATA start found", translated.indexOf("[") < 0);
 		assertTrue("CDATA end found", translated.indexOf("]") < 0);
 		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+
+	public void testEmptyEventHandlerValueCausesStringIndexOutOfBounds() throws Exception {
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<html><body><span onclick=\"\"></body></html>");
+		assertNotNull("missing test model", structuredModel);
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		try {
+			// do translation
+			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+			IJsTranslation translation = translationAdapter.getJsTranslation(false);
+			String translated = translation.getJsText();
+		}
+		catch (StringIndexOutOfBoundsException e) {
+			fail(e.getMessage());
+		}
+		finally {
+			if (structuredModel != null) {
+				structuredModel.releaseFromRead();
+			}
+		}
+	}
+	public void testFunctionReturnInEventHandler() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<div dojoType=\"dijit.form.ComboButton\" onClick=\"return myMethod();\">");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertEquals("translated content differs", "                                    (function(){return myMethod();;})();", translated);
+		StringBuffer problems = new StringBuffer();
+		translation.reconcileCompilationUnit();
+		List problemList = translation.getProblems();
+		for (int i = 0; i < problemList.size(); i++) {
+			problems.append(((IProblem)problemList.get(i)).getMessage());
+			problems.append('\n');
+		}
+		assertEquals("problems were found", "", problems.toString());
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	
+	public void testTwoFunctionReturnsInEventHandlers() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<div dojoType=\"dijit.form.ComboButton\" onClick=\"return myMethod();\"  onblur=\"return myMethod2();\">\n<script >\ndojo.xhr(\"x\"); \n</script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertEquals("dojo.xhr() invocation moved but not properly mapped", structuredModel.getStructuredDocument().get().indexOf("dojo.xhr(\"x\");"), ((JsTranslation)translation).getWebPageOffset(translated.indexOf("dojo.xhr(\"x\");")));
+		assertEquals("translated content differs", "                                    (function(){return myMethod();;})();(function(){return myMethod2();;})(); \n         \ndojo.xhr(\"x\"); \n", translated);
+		StringBuffer problems = new StringBuffer();
+		translation.reconcileCompilationUnit();
+		List problemList = translation.getProblems();
+		for (int i = 0; i < problemList.size(); i++) {
+			problems.append(((IProblem)problemList.get(i)).getMessage());
+			problems.append('\n');
+		}
+		assertEquals("problems were found", "", problems.toString());
+		assertEquals("offsets didn't match", structuredModel.getStructuredDocument().get().indexOf("dojo. \n"), translated.indexOf("dojo. \n"));
+		// release model
+		structuredModel.releaseFromRead();
+	}
+
+	public void testScriptLocationsWereRecorded() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<div dojoType=\"dijit.form.ComboButton\" onClick=\"return myMethod();\"  onblur=\"return myMethod2();\">\n<script >\ndojo.xhr(\"x\"); \n</script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertEquals("dojo.xhr() invocation moved but not properly mapped", structuredModel.getStructuredDocument().get().indexOf("dojo.xhr(\"x\");"), ((JsTranslation)translation).getWebPageOffset(translated.indexOf("dojo.xhr(\"x\");")));
+		assertEquals("translated content differs", "                                    (function(){return myMethod();;})();(function(){return myMethod2();;})(); \n         \ndojo.xhr(\"x\"); \n", translated);
+		StringBuffer problems = new StringBuffer();
+		translation.reconcileCompilationUnit();
+		List problemList = translation.getProblems();
+		for (int i = 0; i < problemList.size(); i++) {
+			problems.append(((IProblem)problemList.get(i)).getMessage());
+			problems.append('\n');
+		}
+		assertEquals("problems were found", "", problems.toString());
+		assertEquals("offsets didn't match", structuredModel.getStructuredDocument().get().indexOf("dojo. \n"), translated.indexOf("dojo. \n"));
+		assertNotSame("script locations not returned by translation", null, translation.getScriptPositions());
+		int expectedOffset = structuredModel.getStructuredDocument().get().indexOf("\ndojo");
+		assertEquals("script locations not returned by translation", expectedOffset, translation.getScriptPositions()[0].getOffset());
 
 		// release model
 		structuredModel.releaseFromRead();

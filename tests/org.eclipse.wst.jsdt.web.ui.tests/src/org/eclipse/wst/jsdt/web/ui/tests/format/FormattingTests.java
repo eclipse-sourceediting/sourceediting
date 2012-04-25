@@ -172,6 +172,7 @@ public class FormattingTests extends TestCase {
 	 */
 	private void formatAndAssertEquals(String beforePath, String afterPath, SourceViewerConfiguration configuration) throws UnsupportedEncodingException, IOException, CoreException {
 		IStructuredModel beforeModel = null, afterModel = null;
+		ISourceViewer viewer = null;
 		try {
 			beforeModel = getModelForEdit(beforePath);
 			assertNotNull("could not retrieve structured model for : " + beforePath, beforeModel);
@@ -187,7 +188,7 @@ public class FormattingTests extends TestCase {
 			normalizedContents = StringUtils.replace(normalizedContents, "\r", "\n");
 			document.set(normalizedContents);
 			
-			ISourceViewer viewer = getConfiguredViewer(document, configuration);
+			viewer = getConfiguredViewer(document, configuration);
 			assertNotNull("Could not get viewer to run test", viewer);
 			
 			//do the format
@@ -208,9 +209,7 @@ public class FormattingTests extends TestCase {
 			actualContents = StringUtils.replace(actualContents, "\r\n", "\n");
 			actualContents = StringUtils.replace(actualContents, "\r", "\n");
 			
-			assertTrue("Formatted document differs from the expected.\nExpected Contents:\n"
-					+ expectedContents + "\nActual Contents:\n" + actualContents,
-					StringUtils.equalsIgnoreLineSeperator(expectedContents, actualContents));
+			assertEquals("Formatted document differs from the expected.", expectedContents, actualContents);
 		}
 		finally {
 			if (beforeModel != null) {
@@ -227,6 +226,7 @@ public class FormattingTests extends TestCase {
 					//ignore
 				}
 			}
+			viewer.getTextWidget().getShell().dispose();
 		}
 	}
 	

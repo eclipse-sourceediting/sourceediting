@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.jst.jsp.ui.tests.format;
 
 import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -31,19 +32,22 @@ import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.tests.util.ProjectUtil;
-import org.eclipse.jst.jsp.ui.tests.util.StringCompareUtil;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 public class TestContentFormatter extends TestCase {
 	String wtp_autotest_noninteractive = null;
 	private static final String PROJECT_NAME = "jspformatting";
 	private static final String UTF_8 = "UTF-8";
 
-	private StringCompareUtil fStringCompareUtil;
 	private IFormattingContext fContext;
 
 	protected void setUp() throws Exception {
@@ -62,8 +66,6 @@ public class TestContentFormatter extends TestCase {
 
 		fContext = new FormattingContext();
 		fContext.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.valueOf(true));
-
-		fStringCompareUtil = new StringCompareUtil();
 	}
 
 	private void formatAndAssertEquals(String beforePath, String afterPath, boolean resetPreferences) throws UnsupportedEncodingException, IOException, CoreException {
@@ -95,14 +97,35 @@ public class TestContentFormatter extends TestCase {
 			afterModel.save(afterBytes);
 
 			String expectedContents = new String(afterBytes.toByteArray(), UTF_8);
+			expectedContents = StringUtils.replace(expectedContents, "\r\n", "\r");
+			expectedContents = StringUtils.replace(expectedContents, "\r", "\n");
+
 			String actualContents = new String(formattedBytes.toByteArray(), UTF_8);
-			assertTrue("Formatted document differs from the expected.\nExpected Contents:\n" + expectedContents + "\nActual Contents:\n" + actualContents, fStringCompareUtil.equalsIgnoreLineSeperator(expectedContents, actualContents));
+			actualContents = StringUtils.replace(actualContents, "\r\n", "\r");
+			actualContents = StringUtils.replace(actualContents, "\r", "\n");
+			
+			assertTrue(onlyWhiteSpaceDiffers(expectedContents, actualContents));
+			assertEquals("Formatted document differs from the expected.", expectedContents, actualContents);
 		}
 		finally {
 			if (beforeModel != null)
 				beforeModel.releaseFromEdit();
 			if (afterModel != null)
 				afterModel.releaseFromEdit();
+		}
+	}
+
+	private void formatAndAssertSignificantEquals(String beforePath, boolean resetPreferences) throws UnsupportedEncodingException, IOException, CoreException {
+		StructuredTextEditor editor = (StructuredTextEditor) IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(beforePath)), "org.eclipse.jst.jsp.core.jspsource.source", true);
+		try {
+			String before = editor.getDocumentProvider().getDocument(editor.getEditorInput()).get();
+			editor.getTextViewer().doOperation(StructuredTextViewer.FORMAT_DOCUMENT);
+
+			String after = editor.getDocumentProvider().getDocument(editor.getEditorInput()).get();
+			assertTrue(onlyWhiteSpaceDiffers(before, after));
+		}
+		finally {
+			editor.close(false);
 		}
 	}
 
@@ -130,6 +153,36 @@ public class TestContentFormatter extends TestCase {
 		return model;
 	}
 
+	/**
+	 * Useful for making sure all significant content was retained.
+	 * 
+	 * @param expectedContents
+	 * @param actualContents
+	 * @return
+	 */
+	private boolean onlyWhiteSpaceDiffers(String expectedContents, String actualContents) {
+		CharArrayWriter writer1 = new CharArrayWriter();
+		char[] expected = expectedContents.toCharArray();
+		for (int i = 0; i < expected.length; i++) {
+			if (!Character.isWhitespace(expected[i]))
+				writer1.write(expected[i]);
+		}
+
+		CharArrayWriter writer2 = new CharArrayWriter();
+		char[] actual = actualContents.toCharArray();
+		for (int i = 0; i < actual.length; i++) {
+			if (!Character.isWhitespace(actual[i]))
+				writer2.write(actual[i]);
+		}
+		writer1.close();
+		writer2.close();
+
+		char[] expectedCompacted = writer1.toCharArray();
+		char[] actualCompacted = writer2.toCharArray();
+		assertEquals("significant character differs", new String(expectedCompacted), new String(actualCompacted));
+
+		return true;
+	}
 	private void resetPreferencesToDefault() {
 		Preferences preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
 		preferences.setToDefault(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS);
@@ -167,5 +220,13 @@ public class TestContentFormatter extends TestCase {
 		String beforePath = "/" + PROJECT_NAME + "/WebContent/formatbug102495_4.jsp";
 		String afterPath = "/" + PROJECT_NAME + "/WebContent/formatbug102495_4-fmt.jsp";
 		formatAndAssertEquals(beforePath, afterPath, true);
+	}
+
+	public void testFormatBug358545a() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertSignificantEquals("/" + PROJECT_NAME + "/WebContent/formatbug358545.jsp", true);
+	}
+	
+	public void testFormatBug358545b() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertSignificantEquals("/" + PROJECT_NAME + "/WebContent/formatbug358545b.jsp", true);
 	}
 }

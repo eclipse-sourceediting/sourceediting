@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,12 +34,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.tests.ProjectUtil;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class TestHTMLContentAssistComputers extends TestCase {
 	/** The name of the project that all of these tests will use */
@@ -288,14 +288,14 @@ public class TestHTMLContentAssistComputers extends TestCase {
 			try {
 				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				IWorkbenchPage page = workbenchWindow.getActivePage();
-				IEditorPart editorPart = IDE.openEditor(page, file, true, true);
-				if(editorPart instanceof XMLMultiPageEditorPart) {
-					XMLMultiPageEditorPart xmlEditorPart = (XMLMultiPageEditorPart)editorPart;
-					editor = (StructuredTextEditor)xmlEditorPart.getAdapter(StructuredTextEditor.class);
+				IEditorPart editorPart = IDE.openEditor(page, file, "org.eclipse.wst.html.core.htmlsource.source", true);
+				if(editorPart instanceof MultiPageEditorPart) {
+					MultiPageEditorPart mpEditorPart = (MultiPageEditorPart)editorPart;
+					editor = (StructuredTextEditor)mpEditorPart.getAdapter(StructuredTextEditor.class);
 				} else if(editorPart instanceof StructuredTextEditor) {
 					editor = ((StructuredTextEditor)editorPart);
 				} else {
-					fail("Unable to open structured text editor");
+					fail("Unable to open structured text editor: " + editorPart.getClass().getName());
 				}
 				
 				if(editor != null) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,18 +94,36 @@ public class IncludePathTests extends TestCase {
 	public void testConvertSimpleProject() throws CoreException {
 		IProject p = createSimpleProject(getName(), null, null);
 		assertConvertedIncludePath(p, "/testConvertSimpleProject[CPE_SOURCE][K_SOURCE][isExported:false][attributes:provider=org.eclipse.wst.jsdt.web.core.internal.project.ModuleSourcePathProvider]\norg.eclipse.wst.jsdt.launching.JRE_CONTAINER[CPE_CONTAINER][K_SOURCE][isExported:false]\norg.eclipse.wst.jsdt.launching.baseBrowserLibrary[CPE_CONTAINER][K_SOURCE][isExported:false]\n");
-		p.delete(true, true, null);
+		// clean up if we got to the end
+		try {
+			p.delete(true, true, null);
+		}
+		catch (Exception e) {
+			// not a failure condition
+		}
 	}
 
 	public void testConvertDefaultJSProject() throws CoreException {
 		IProject p = createSimpleProject(getName(), null, new String[]{JavaScriptCore.NATURE_ID});
 		assertConvertedIncludePath(p, "org.eclipse.wst.jsdt.launching.JRE_CONTAINER[CPE_CONTAINER][K_SOURCE][isExported:false]\norg.eclipse.wst.jsdt.launching.baseBrowserLibrary[CPE_CONTAINER][K_SOURCE][isExported:false]\n/testConvertDefaultJSProject[CPE_SOURCE][K_SOURCE][isExported:false]\n");
-		p.delete(true, true, null);
+		// clean up if we got to the end
+		try {
+			p.delete(true, true, null);
+		}
+		catch (Exception e) {
+			// not a failure condition
+		}
 	}
 
 	public void testVerifyDefaultIncludePath() throws CoreException {
 		IProject p = createSimpleProject(getName(), null, new String[]{JavaScriptCore.NATURE_ID});
 		assertIncludePath(p, "org.eclipse.wst.jsdt.launching.JRE_CONTAINER[CPE_CONTAINER][K_SOURCE][isExported:false]\norg.eclipse.wst.jsdt.launching.baseBrowserLibrary[CPE_CONTAINER][K_SOURCE][isExported:false]\n/testVerifyDefaultIncludePath[CPE_SOURCE][K_SOURCE][isExported:false]\n");
-		p.delete(true, true, null);
+		// clean up if we got to the end
+		try {
+			p.delete(true, true, null);
+		}
+		catch (Exception e) {
+			// not a failure condition
+		}
 	}
 }

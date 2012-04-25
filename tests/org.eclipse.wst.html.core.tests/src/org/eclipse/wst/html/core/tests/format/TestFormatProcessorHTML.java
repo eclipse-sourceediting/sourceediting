@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Eclipse Foundation
+ * Copyright (c) 2006, 2012 Eclipse Foundation
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,13 +22,13 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
-import org.eclipse.wst.html.core.tests.utils.StringCompareUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPreferencesXML;
 
 public class TestFormatProcessorHTML extends TestCase {
@@ -43,7 +43,6 @@ public class TestFormatProcessorHTML extends TestCase {
 
 	private static final String UTF_8 = "UTF-8";
 
-	private StringCompareUtil fStringCompareUtil;
 
 	public TestFormatProcessorHTML(String name) {
 		super(name);
@@ -53,7 +52,6 @@ public class TestFormatProcessorHTML extends TestCase {
 
 	protected void setUp() throws Exception {
 		formatProcessor = new HTMLFormatProcessorImpl();
-		fStringCompareUtil = new StringCompareUtil();
 	}
 
 	/**
@@ -159,7 +157,11 @@ public class TestFormatProcessorHTML extends TestCase {
 
 			String expectedContents = new String(afterBytes.toByteArray(), UTF_8);
 			String actualContents = new String(formattedBytes.toByteArray(), UTF_8);
-			assertTrue("Formatted document differs from the expected.\nExpected Contents:\n" + expectedContents + "\nActual Contents:\n" + actualContents, fStringCompareUtil.equalsIgnoreLineSeperator(expectedContents, actualContents));
+			String expected2 = StringUtils.replace(expectedContents, "\r\n", "\r");
+			expected2 = StringUtils.replace(expected2, "\r", "\n");
+			String actualContents2 = StringUtils.replace(actualContents, "\r\n", "\r");
+			actualContents2 = StringUtils.replace(actualContents2, "\r", "\n");
+			assertEquals("Cleaned up document differs from the expected.", expected2, actualContents2);
 		}
 		finally {
 			if (beforeModel != null)

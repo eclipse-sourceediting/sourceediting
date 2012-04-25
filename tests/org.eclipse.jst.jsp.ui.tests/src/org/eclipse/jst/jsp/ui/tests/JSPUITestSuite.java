@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.jst.jsp.ui.tests.contentassist.JSPTranslationTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.TestJSPContentAssistComputers;
 import org.eclipse.jst.jsp.ui.tests.contentdescription.TestContentDescription;
 import org.eclipse.jst.jsp.ui.tests.document.FileBufferDocumentTester;
+import org.eclipse.jst.jsp.ui.tests.format.TestContentFormatter;
 import org.eclipse.jst.jsp.ui.tests.model.TestModelsFromFiles;
 import org.eclipse.jst.jsp.ui.tests.modelquery.ModelQueryTester;
 import org.eclipse.jst.jsp.ui.tests.other.ScannerUnitTests;
@@ -47,6 +48,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(ScannerUnitTests.class, "ScannerUnitTests"));
 		addTest(new TestSuite(UnitTests.class, "UnitTests"));
 		addTest(new TestSuite(TestStructuredPartitionerJSP.class, "TestStructuredPartioner"));
+		addTest(new TestSuite(TestContentFormatter.class, "Content Formatter Tests"));
 		addTest(new TestSuite(ModelQueryTester.class, "ModelQueryTester"));
 		addTest(new TestSuite(JSPJavaTranslatorTest.class, "Mixed JavaScript Translator Tests"));
 		addTest(new TestSuite(TestEmailNotice.class, "TestEmailNotice"));

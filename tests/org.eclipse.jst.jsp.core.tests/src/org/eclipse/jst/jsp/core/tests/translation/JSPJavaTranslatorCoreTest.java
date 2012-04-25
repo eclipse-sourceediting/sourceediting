@@ -360,7 +360,12 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 //		assertEquals("wrong number of syntax errors reported\n" + markerText, 3, numberOfSyntaxErrors);
 
 		// clean up if we got to the end
-		project.delete(true, true, null);
+		try {
+			project.delete(true, true, null);
+		}
+		catch (Exception e) {
+			// not a failure condition
+		}
 	}
 	
 	public void test_150794() throws Exception {
@@ -382,7 +387,12 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertTrue("Unexpected problems found", reporter.getMessages().size() == 0);
 
 		// clean up if we got to the end
-		project.delete(true, true, null);
+		try {
+			project.delete(true, true, null);
+		}
+		catch (Exception e) {
+			// not a failure condition
+		}
 	}
 
 	public void test_preludes() throws Exception {
@@ -675,7 +685,12 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertNoProblemMarkers(project.getFile("/WebContent/index.jspx"));
 
 		// clean up if we got to the end
-		project.delete(true, true, null);
+		try {
+			project.delete(true, true, null);
+		}
+		catch (Exception e) {
+			// not a failure condition
+		}
 	}
 
 	private void assertNoProblemMarkers(IFile file) throws CoreException {
