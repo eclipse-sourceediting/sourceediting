@@ -48,6 +48,8 @@ public class PrefixHandler extends AbstractHandler implements IHandler {
 		XPathUIPlugin plugin = XPathUIPlugin.getDefault();
 		
 		IEditorPart activeEditor = HandlerUtil.getActiveEditor(event);
+		// suppress an NPE in the log (shouldn't happen with the enabledWhen rule)
+		if (activeEditor == null) return null;
 		IFile file = (IFile) activeEditor.getEditorInput().getAdapter(
 				IFile.class);
 		IModelManager modelManager = StructuredModelManager.getModelManager();

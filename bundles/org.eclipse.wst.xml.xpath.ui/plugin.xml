@@ -100,6 +100,16 @@
 				<equals value="org.eclipse.wst.xml.views.XPathView"/>
 			</with>
 		</activeWhen>
+		<enabledWhen>
+			<with variable="activeEditorId">
+     			<or>
+             		<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"/>
+             		<equals value="org.eclipse.wst.xsl.ui.XSLEditor"/>
+             		<equals value="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor"/>
+				</or>         		
+     		</with>
+		</enabledWhen>
+		
     </handler>
 </extension>
 
