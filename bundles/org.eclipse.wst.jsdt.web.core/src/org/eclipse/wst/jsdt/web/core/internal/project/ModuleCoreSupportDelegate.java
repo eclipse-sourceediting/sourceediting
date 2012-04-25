@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -24,6 +25,7 @@ import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
+import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
 
 /**
@@ -134,6 +136,18 @@ final class ModuleCoreSupportDelegate {
 								resolved = underlyingFiles[j].getFullPath();
 							}
 
+						}
+					}
+					else {
+						// http://bugs.eclipse.org/338751 
+						IVirtualFolder virtualFolder = ComponentCore.createFolder(project, referenceRuntimePath);
+						if (virtualFolder != null && virtualFolder.exists()) {
+							IContainer[] underlyingFolders = virtualFolder.getUnderlyingFolders();
+							for (int j = 0; j < underlyingFolders.length; j++) {
+								if (underlyingFolders[j].getProject().equals(project) && underlyingFolders[j].isAccessible()) {
+									return underlyingFolders[j].getFullPath();
+								}
+							}
 						}
 					}
 				}

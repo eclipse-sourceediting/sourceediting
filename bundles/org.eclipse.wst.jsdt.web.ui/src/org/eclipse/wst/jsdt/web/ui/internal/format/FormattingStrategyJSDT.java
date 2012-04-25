@@ -43,6 +43,7 @@ import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslator;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -242,6 +243,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		try {
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			IDOMDocument xmlDoc = xmlModel.getDocument();
+			JsTranslationAdapterFactory.setupAdapterFactory(xmlModel);
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			if (translationAdapter != null) {
 				tran = translationAdapter.getJsTranslation(true);

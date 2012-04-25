@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.wst.jsdt.web.core" version="2">
+    <resource path="META-INF/MANIFEST.MF">
+        <filter id="924844039">
+            <message_arguments>
+                <message_argument value="1.0.500"/>
+                <message_argument value="1.0.401"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/javascript/JsTranslation.java" type="org.eclipse.wst.jsdt.web.core.javascript.JsTranslation">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getJavaScriptOffset(int)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="getWebPageOffset(int)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

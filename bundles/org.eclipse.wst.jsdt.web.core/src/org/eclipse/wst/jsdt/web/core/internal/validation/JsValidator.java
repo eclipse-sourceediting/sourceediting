@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
@@ -36,6 +37,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -63,6 +65,7 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 	private Set fValidFileExts = new HashSet();
 	
 	private static final String[] METADATA_FILES = new String[]{".settings/.jsdtscope",".settings/org.eclipse.wst.jsdt.ui.superType.container",".settings/org.eclipse.wst.jsdt.ui.superType.name"};
+	private static final String JAVASCRIPT_TASK_MARKER_TYPE = "org.eclipse.wst.jsdt.core.task"; //$NON-NLS-1$
 	
 //	private static String [] jsdtValidator = {"org.eclipse.wst.jsdt.web.core.internal.validation.JsBatchValidator"}; //$NON-NLS-1$
 
@@ -132,7 +135,8 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 		if (sourceStart == -1) {
 			return null;
 		}
-		
+		sourceStart = ((JsTranslation)translation).getWebPageOffset(sourceStart);
+		sourceEnd = ((JsTranslation)translation).getWebPageOffset(sourceEnd);
 		/*
 		 * Bug 241794 - Validation shows errors when using JSP Expressions
 		 * inside JavaScript code
@@ -168,7 +172,7 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 	void performValidation(IFile f, IReporter reporter, IStructuredModel model, boolean inBatch) {
 		if (model instanceof IDOMModel) {
 			IDOMModel domModel = (IDOMModel) model;
-			setupAdapterFactory(domModel);
+			JsTranslationAdapterFactory.setupAdapterFactory(domModel);
 			IDOMDocument xmlDoc = domModel.getDocument();
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			//translationAdapter.resourceChanged();
@@ -177,12 +181,63 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();
 				List problems = translation.getProblems();
+				// only update task markers if the model is the same as what's on disk
+				boolean updateTasks = !domModel.isDirty() && f != null && f.isAccessible();
+				if (updateTasks) {
+					// remove old JavaScript task markers
+					try {
+						IMarker[] foundMarkers = f.findMarkers(JAVASCRIPT_TASK_MARKER_TYPE, true, IResource.DEPTH_ONE);
+						for (int i = 0; i < foundMarkers.length; i++) {
+							foundMarkers[i].delete();
+						}
+					}
+					catch (CoreException e) {
+						Logger.logException(e);
+					}
+				}
+
 //				if(!inBatch) reporter.removeAllMessages(this, f);
 				// add new messages
 				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
-					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, domModel.getStructuredDocument());
+					IProblem problem = (IProblem) problems.get(i);
+					IMessage m = createMessageFromProblem(problem, f, translation, domModel.getStructuredDocument());
 					if (m != null) {
-						reporter.addMessage(fMessageOriginator, m);
+						if (problem.getID() == IProblem.Task) {
+							if (updateTasks) {
+								// add new JavaScript task marker
+								try {
+									IMarker task = f.createMarker(JAVASCRIPT_TASK_MARKER_TYPE);
+									task.setAttribute(IMarker.LINE_NUMBER, new Integer(m.getLineNumber()));
+									task.setAttribute(IMarker.CHAR_START, new Integer(m.getOffset()));
+									task.setAttribute(IMarker.CHAR_END, new Integer(m.getOffset() + m.getLength()));
+									task.setAttribute(IMarker.MESSAGE, m.getText());
+									task.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
+
+									switch (m.getSeverity()) {
+										case IMessage.HIGH_SEVERITY: {
+											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_HIGH));
+											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
+										}
+											break;
+										case IMessage.LOW_SEVERITY : {
+											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_LOW));
+											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_INFO));
+										}
+											break;
+										default : {
+											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_NORMAL));
+											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_WARNING));
+										}
+									}
+								}
+								catch (CoreException e) {
+									Logger.logException(e);
+								}
+							}
+						}
+						else {
+							reporter.addMessage(fMessageOriginator, m);
+						}
 					}
 				}
 			}
@@ -202,18 +257,6 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 					fValidFileExts.add(fileext);
 				}
 			}
-		}
-	}
-	
-	/**
-	 * Ensures that our translation adapter is present before we try to use it
-	 * 
-	 * @param sm
-	 */
-	private void setupAdapterFactory(IStructuredModel sm) {
-		if (sm.getFactoryRegistry().getFactoryFor(IJsTranslation.class) == null) {
-			JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory();
-			sm.getFactoryRegistry().addFactory(factory);
 		}
 	}
 	

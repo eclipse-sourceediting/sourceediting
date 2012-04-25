@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
-import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
+import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
@@ -33,7 +33,7 @@ public class ModuleSourcePathProvider extends DefaultSourcePathProvider {
 
 	public IIncludePathEntry[] getDefaultSourcePaths(IProject p) {
 		if (ModuleCoreNature.isFlexibleProject(p)) {
-			IVirtualFile root = ComponentCore.createFile(p, Path.ROOT);
+			IVirtualFolder root = ComponentCore.createFolder(p, Path.ROOT);
 			IResource[] underlyingResources = root.getUnderlyingResources();
 			if (underlyingResources == null || underlyingResources.length == 0) {
 				underlyingResources = new IResource[]{root.getUnderlyingResource()};

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,18 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     bug:244839 - eugene@genuitec.com
- *     
- * Provisional API: This class/interface is part of an interim API that is still under development and expected to 
- * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
- * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
- * (repeatedly) as the API evolves.
- *     
- *     
  *******************************************************************************/
 
-
 package org.eclipse.wst.jsdt.web.core.javascript;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -51,8 +42,10 @@ import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+
 
 /**
 *
@@ -141,11 +134,14 @@ public class JsTranslation implements IJsTranslation {
 	private void setBaseLocation() {
 		IDOMModel xmlModel = null;
 		try {
-			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fHtmlDocument);
+			IModelManager modelManager = StructuredModelManager.getModelManager();
+			xmlModel = (IDOMModel) modelManager.getExistingModelForRead(fHtmlDocument);
 			if (xmlModel == null) {
-				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(fHtmlDocument);
+				xmlModel = (IDOMModel) modelManager.getModelForRead(fHtmlDocument);
 			}
-			fModelBaseLocation = xmlModel.getBaseLocation();
+			if(xmlModel != null) {
+				fModelBaseLocation = xmlModel.getBaseLocation();
+			}
 		}
 		finally {
 			if (xmlModel != null)
@@ -173,13 +169,21 @@ public class JsTranslation implements IJsTranslation {
 		return getTranslator().getMissingEndTagRegionStart();
 	}
 
-	private IPath getWebRoot() {
-		return WebRootFinder.getWebContentFolder(fJavaProject.getProject());
+	 public int getJavaScriptOffset(int indexOf) {
+		 return ((JsTranslator)getTranslator()).getJavaScriptOffset(indexOf);
+	 }
+	 
+	 public int getWebPageOffset(int indexOf) {
+		 return ((JsTranslator)getTranslator()).getWebOffset(indexOf);
+	 }
+	 
+	 private String getWebRoot() {
+		return WebRootFinder.getWebContentFolder(fJavaProject.getProject()).toString();
 	}
 
 
 	public String getDirectoryUnderRoot() {
-		IPath webRoot = getWebRoot();
+		String webRoot = getWebRoot();
 		IPath projectWebRootPath = getJavaProject().getPath().append(webRoot);
 		IPath filePath = new Path(fModelBaseLocation).removeLastSegments(1);
 		return filePath.removeFirstSegments(projectWebRootPath.matchingFirstSegments(filePath)).toString();

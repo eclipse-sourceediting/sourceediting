@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
-import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
+import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
@@ -137,7 +137,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 			 * if a JS project with Module Core nature, check if include path
 			 * needs to be updated
 			 */
-			if (project.hasNature(JavaScriptCore.NATURE_ID) && ModuleCoreNature.isFlexibleProject(project)) {
+			if (project.isAccessible() && project.hasNature(JavaScriptCore.NATURE_ID) && ModuleCoreNature.isFlexibleProject(project)) {
 				JavaProject jsProject = (JavaProject) JavaScriptCore.create(project);
 
 				IIncludePathEntry[] oldEntries = jsProject.getRawIncludepath();
@@ -246,7 +246,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 	 * @return the module core roots for the given {@link IProject
 	 */
 	private static IResource[] getRoots(IProject project) {
-		IVirtualFile root = ComponentCore.createFile(project, Path.ROOT);
+		IVirtualFolder root = ComponentCore.createFolder(project, Path.ROOT);
 		IResource[] underlyingResources = root.getUnderlyingResources();
 		if (underlyingResources == null || underlyingResources.length == 0) {
 			underlyingResources = new IResource[]{root.getUnderlyingResource()};

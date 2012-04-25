@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2011 IBM Corporation and others.
+ * Copyright (c) 2008, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,6 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
- * Provisional API: This class/interface is part of an interim API that is still under development and expected to 
- * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
- * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
- * (repeatedly) as the API evolves.
- *     
  *******************************************************************************/
 
 
@@ -20,7 +14,10 @@ package org.eclipse.wst.jsdt.web.core.javascript;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +70,10 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	private static final String CDATA_END = "]]>"; //$NON-NLS-1$
 	private static final String CDATA_END_PAD = new String(Util.getPad(CDATA_END.length()));
 	
+	private static final String EVENT_HANDLER_PRE  = "(function(){"; //$NON-NLS-1$
+	private static final int EVENT_HANDLER_PRE_LENGTH = EVENT_HANDLER_PRE.length();
+	private static final String EVENT_HANDLER_POST = "})();"; //$NON-NLS-1$
+	private static final int EVENT_HANDLER_POST_LENGTH = EVENT_HANDLER_POST.length();
 	
 	//TODO: should be an inclusive rule rather than exclusive
 	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<%?)!>]+/?>"); //$NON-NLS-1$
@@ -106,7 +107,12 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	/* use java script by default */
 	protected boolean fIsGlobalJs = true;
 	protected ArrayList rawImports = new ArrayList(); // translated
+	/**
+	 * deprecated
+	 */
 	protected ArrayList scriptLocationInHtml = new ArrayList();
+	// order matters in this map
+	private Map fPositionMap = new LinkedHashMap();
 	protected int scriptOffset = 0;
 	
 	protected byte[] fLock = new byte[0];
@@ -179,8 +185,10 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			/* if mid re-write session doc changes have been ignored,
 			 * but if jsText is specifically request we should re-translate
 			 * to pick up any changes thus far
+			 * 
+			 * Same goes for if the job has been scheduled to run but has not yet run
 			 */
-			if(this.fIsInRewriteSession) {
+			if(this.fIsInRewriteSession || this.getState() != Job.NONE) {
 				this.reset();
 			}
 			
@@ -202,7 +210,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	public void setBuffer(IBuffer buffer) {
 		fCompUnitBuff = buffer;
 		synchronized(finished) {
-			fCompUnitBuff.setContents(fScriptText.toString());
+			fCompUnitBuff.setContents(getJsText());
 		}
 	}
 
@@ -265,6 +273,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				fCurrentNode = fStructuredDocument.getFirstStructuredDocumentRegion();
 				rawImports.clear();
 				importLocationsInHtml.clear();
+				fPositionMap.clear();
 				scriptLocationInHtml.clear();
 				missingEndTagRegionStart = -1;
 				cancelParse = false;
@@ -337,7 +346,14 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		}
 	}
 	
-	protected void finishedTranslation() {}
+	protected void finishedTranslation() {
+	}
+	
+	void appendAndTrack(String javaScript, int scriptStart, int scriptTextLength) {
+		Position inHtml = new Position(scriptStart, scriptTextLength);
+		fPositionMap.put(inHtml, new Position(fScriptText.length(), javaScript.length()));
+		fScriptText.append(javaScript);
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateInlineJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
@@ -359,7 +375,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 					int start = r.getStart();
 					int offset = r.getTextEnd();
-					String tagAttrname = container.getText().substring(start, offset).trim();
+					String tagAttrname = container.getText(r);
 					/*
 					 * Attribute values aren't case sensative, also make sure next
 					 * region is attrib value
@@ -374,9 +390,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 							int valStartOffset = container.getStartOffset(r);
 							// int valEndOffset = r.getTextEnd();
-							String rawText = container.getText().substring(r.getStart(), r.getTextEnd());
+							String rawText = container.getText(r);
 							if (rawText == null || rawText.length() == 0) {
-								return;
+								continue;
 							}
 							/* Strip quotes */
 							switch (rawText.charAt(0)) {
@@ -386,7 +402,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 									valStartOffset++;
 							}
 							if (rawText == null || rawText.length() == 0) {
-								return;
+								continue;
 							}
 							switch (rawText.charAt(rawText.length() - 1)) {
 								case '\'':
@@ -396,14 +412,32 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							// Position inScript = new Position(scriptOffset,
 							// rawText.length());
 							/* Quoted text starts +1 and ends -1 char */
-							if(ADD_SEMICOLON_AT_INLINE) rawText = rawText + ";"; //$NON-NLS-1$
 							Position inHtml = new Position(valStartOffset, rawText.length());
-							scriptLocationInHtml.add(inHtml);
 							/* need to pad the script text with spaces */
-							char[] spaces = Util.getPad(valStartOffset - scriptOffset);
+							char[] spaces = Util.getPad(Math.max(0, valStartOffset - scriptOffset - EVENT_HANDLER_PRE_LENGTH));
+							for (int i = 0; i < spaces.length; i++) {
+								try {
+									char c = fStructuredDocument.getChar(scriptOffset + i);
+									if (c == '\n')
+										spaces[i] = '\n';
+									else if (c == '\r')
+										spaces[i] = '\r';
+									else if (c == '\t')
+										spaces[i] = '\t';
+								}
+								catch (BadLocationException e) {
+								}
+							}
 							fScriptText.append(spaces);
-							fScriptText.append(rawText);
-							scriptOffset = fScriptText.length();
+							fScriptText.append(EVENT_HANDLER_PRE);
+							appendAndTrack(rawText, valStartOffset, rawText.length());
+							if(ADD_SEMICOLON_AT_INLINE) fScriptText.append(";"); //$NON-NLS-1$
+							if(r.getLength() > rawText.length()) {
+								fScriptText.append(EVENT_HANDLER_POST);
+								spaces = Util.getPad(Math.max(0, r.getLength() - rawText.length() - EVENT_HANDLER_POST_LENGTH));
+								fScriptText.append(spaces);
+							}
+							scriptOffset = container.getEndOffset(r);
 						}
 					}
 				}
@@ -415,13 +449,27 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
 	 */
 	public void translateJSNode(IStructuredDocumentRegion container) {
+		if(container==null) return;
+		
 		ITextRegionCollection containerRegion = container;
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
 		
-		if(container==null) return;
-		
 		char[] spaces = Util.getPad(container.getStartOffset() - scriptOffset);
+		for (int i = 0; i < spaces.length; i++) {
+			try {
+				char c = fStructuredDocument.getChar(scriptOffset + i);
+				if (c == '\n')
+					spaces[i] = '\n';
+				else if (c == '\r')
+					spaces[i] = '\r';
+				else if (c == '\t')
+					spaces[i] = '\t';
+			}
+			catch (BadLocationException e) {
+				Logger.logException(e);
+			}
+		}
 		fScriptText.append(spaces);
 		scriptOffset = container.getStartOffset();
 	
@@ -439,14 +487,14 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			boolean isContainerRegion = region instanceof ITextRegionContainer;
 			/* make sure its not a sub container region, probably JSP */
 			if (type == DOMRegionContext.BLOCK_TEXT ) {
-				int scriptStart = container.getStartOffset();
+				int scriptStartOffset = container.getStartOffset();
 				int scriptTextLength = container.getLength();
 				String regionText = container.getFullText(region);
 				regionText = StringUtils.replace(regionText, CDATA_START, CDATA_START_PAD);
 				regionText = StringUtils.replace(regionText, CDATA_END, CDATA_END_PAD);
 				int regionLength = region.getLength();
 				
-				spaces = Util.getPad(scriptStart - scriptOffset);
+				spaces = Util.getPad(scriptStartOffset - scriptOffset);
 				fScriptText.append(spaces); 	
 				// skip over XML/HTML comment starts
 				if (regionText.indexOf(XML_COMMENT_START) >= 0) {
@@ -466,14 +514,18 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						int end;
 						int length;
 						try {
-							line = container.getParentDocument().getLineInformationOfOffset(index + scriptStart);
-							end = line.getOffset() + line.getLength() - scriptStart;
+							/*
+							 * try to find where the line with the comment
+							 * ends (it is the end of what we'll replace)
+							 */
+							line = container.getParentDocument().getLineInformationOfOffset(index + scriptStartOffset);
+							end = line.getOffset() + line.getLength() - scriptStartOffset;
 							if(end > regionText.length()) {
-								end = regionText.length()-1;
+								end = regionText.length();
 							}
 							length = end - index;
 						} catch (BadLocationException e) {
-							Logger.logException("Could not get HTML style comment line information", e); //$NON-NLS-1$
+							Logger.logException("Could not get HTML comment line information", e); //$NON-NLS-1$
 							
 							end = index + XML_COMMENT_START.length();
 							length = XML_COMMENT_START.length();
@@ -629,13 +681,15 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						contents.append(regionText.substring(validJSstart));
 					}
 					if (contents.length() != 0) {
-						fScriptText.append(contents.toString());
+						appendAndTrack(contents.toString(), scriptStartOffset+validJSstart, contents.length());
+						Position inHtml = new Position(scriptStartOffset, contents.length());
+						scriptLocationInHtml.add(inHtml);
 					}
 					else {
-						fScriptText.append(regionText);
+						appendAndTrack(regionText, scriptStartOffset, regionText.length());
+						Position inHtml = new Position(scriptStartOffset, regionText.length());
+						scriptLocationInHtml.add(inHtml);
 					}
-					Position inHtml = new Position(scriptStart, scriptTextLength);
-					scriptLocationInHtml.add(inHtml);
 //				}
 								
 				scriptOffset = fScriptText.length();
@@ -709,6 +763,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#release()
 	 */
 	public void release() {
+		cancel();
 		fStructuredDocument.removeDocumentListener(this);
 		if (fStructuredDocument instanceof IDocumentExtension4) {
 			((IDocumentExtension4) fStructuredDocument).removeDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
@@ -720,5 +775,35 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 */
 	public Region[] getGeneratedRanges() {
 		return (Region[]) fGeneratedRanges.toArray(new Region[fGeneratedRanges.size()]);
+	}
+
+	/**
+	 * @param offset web page offset
+	 * @return JavaScript offset
+	 */
+	int getJavaScriptOffset(int offset) {
+		Iterator entries = fPositionMap.entrySet().iterator();
+		while (entries.hasNext()) {
+			Entry entry = (Entry) entries.next();
+			if (((Position) entry.getKey()).includes(offset)) {
+				return offset - ((Position) entry.getKey()).getOffset() + ((Position) entry.getValue()).getOffset();
+			}
+		}
+		return offset;
+	}
+
+	/**
+	 * @param offset JavaScript offset
+	 * @return web page offset
+	 */
+	int getWebOffset(int offset) {
+		Iterator entries = fPositionMap.entrySet().iterator();
+		while (entries.hasNext()) {
+			Entry entry = (Entry) entries.next();
+			if (((Position) entry.getValue()).includes(offset)) {
+				return offset - ((Position) entry.getValue()).getOffset() + ((Position) entry.getKey()).getOffset();
+			}
+		}
+		return offset;
 	}
 }
