@@ -236,7 +236,6 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  * 
  * @since 1.0
  */
-
 public class StructuredTextEditor extends TextEditor {
 	private class GotoMatchingBracketHandler extends AbstractHandler {
 		public Object execute(ExecutionEvent arg0) throws ExecutionException {
@@ -990,9 +989,16 @@ public class StructuredTextEditor extends TextEditor {
 
 		public void partActivated(IWorkbenchPart part) {
 			if (part.getAdapter(ITextEditor.class) == fEditor) {
-				IReconciler reconciler = getSourceViewerConfiguration().getReconciler(getSourceViewer());
-				if (reconciler instanceof DocumentRegionProcessor) {
-					((DocumentRegionProcessor) reconciler).forceReconciling();
+				SourceViewerConfiguration sourceViewerConfiguration = getSourceViewerConfiguration();
+				/*
+				 * Guard against possible tight timing between part creation
+				 * and viewer configuration
+				 */
+				if (sourceViewerConfiguration != null) {
+					IReconciler reconciler = sourceViewerConfiguration.getReconciler(getSourceViewer());
+					if (reconciler instanceof DocumentRegionProcessor) {
+						((DocumentRegionProcessor) reconciler).forceReconciling();
+					}
 				}
 			}
 		}
