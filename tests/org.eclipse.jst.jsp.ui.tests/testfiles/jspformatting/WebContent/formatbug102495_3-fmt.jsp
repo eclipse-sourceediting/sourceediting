@@ -7,8 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%-- jsp expression should be treated like any other attribute --%>
-<table <%="align='left'"%>>
-</table>
+	<%-- jsp expression should be treated like any other attribute --%>
+	<table <%="align='left'"%>>
+	</table>
 </body>
 </html>

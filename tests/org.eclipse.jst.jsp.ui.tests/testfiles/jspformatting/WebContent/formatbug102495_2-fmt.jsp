@@ -9,9 +9,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%-- jsp expression must be followed directly by ! because no whitespace exists between --%>
-Welcome to WTP,
-<%=message%>!
-<p>Welcome to WTP, <%=pal%>!</p>
+	<%-- jsp expression must be followed directly by ! because no whitespace exists between --%>
+	Welcome to WTP,
+	<%=message%>!
+	<p>
+		Welcome to WTP,
+		<%=pal%>!
+	</p>
 </body>
 </html>
