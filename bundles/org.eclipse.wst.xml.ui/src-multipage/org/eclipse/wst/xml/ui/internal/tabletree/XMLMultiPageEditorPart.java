@@ -53,10 +53,12 @@ import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.INavigationLocation;
 import org.eclipse.ui.INavigationLocationProvider;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPartService;
+import org.eclipse.ui.IPersistableEditor;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -92,7 +94,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavigationLocationProvider {
+public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavigationLocationProvider, IPersistableEditor {
 
 	/**
 	 * Internal part activation listener, copied from AbstractTextEditor
@@ -826,9 +828,6 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	 * Creates the source page of the multi-page editor.
 	 */
 	protected void createSourcePage() throws PartInitException {
-		fTextEditor = createTextEditor();
-		fTextEditor.setEditorPart(this);
-
 		/*
 		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=134301 - XML editor
 		 * does not remember font settings
@@ -1006,6 +1005,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		try {
 			super.init(site, input);
+			fTextEditor = createTextEditor();
+			fTextEditor.setEditorPart(this);
 			// we want to listen for our own activation
 			fActivationListener = new ActivationListener(site.getWorkbenchWindow().getPartService());
 		}
@@ -1160,5 +1161,17 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 				return part;
 			}
 		};
+	}
+
+	public void saveState(IMemento memento) {
+		if (fTextEditor != null) {
+			fTextEditor.saveState(memento);
+		}
+	}
+
+	public void restoreState(IMemento memento) {
+		if (fTextEditor != null) {
+			fTextEditor.restoreState(memento);
+		}
 	}
 }
