@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,8 @@
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
  *     Mukul Gandhi - bug 323900 - improving computing the typed value of element &
  *                                 attribute nodes, where the schema type of nodes
- *                                 are simple, with varieties 'list' and 'union'. 
+ *                                 are simple, with varieties 'list' and 'union'.
+ *     Lukasz Wycisk - bug 361659 - ElemntType typed value in case of nil=’true’                              
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
