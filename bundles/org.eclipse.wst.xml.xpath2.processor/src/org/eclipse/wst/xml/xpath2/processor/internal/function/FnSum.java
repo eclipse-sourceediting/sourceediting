@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *     Jesper Moller - bug 281028 - fix promotion rules for fn:sum
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *    Lukasz Wycisk - bug 361060 - Aggregations with nil=’true’ throw exceptions.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -96,6 +97,10 @@ public class FnSum extends Function {
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyAtomicType conv = tp.promote((AnyType) i.next());
 			
+			if(conv == null){
+				conv = zero;
+			}
+			
 			if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
 				return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
 			}
@@ -105,6 +110,7 @@ public class FnSum extends Function {
 				total = (MathPlus)total.plus(ResultSequenceFactory.create_new(conv)).first();
 			}
 		}
+		
 		return ResultSequenceFactory.create_new((AnyType) total);
 	}
 }

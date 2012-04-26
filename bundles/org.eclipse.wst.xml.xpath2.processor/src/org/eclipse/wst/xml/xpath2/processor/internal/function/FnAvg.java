@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@
  *                               - fix fn:avg casting issues and divide by zero issues.
  *     Jesper Moller - bug 281028 - fix promotion rules for fn:avg
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *    Lukasz Wycisk - bug 361060 - Aggregations with nil=’true’ throw exceptions.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -86,14 +87,16 @@ public class FnAvg extends Function {
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			++elems;
 			AnyAtomicType conv = tp.promote((AnyType) i.next());
-			
-			if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
-				return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
-			}
-			if (total == null) {
-				total = (MathPlus)conv; 
-			} else {
-				total = (MathPlus)total.plus(ResultSequenceFactory.create_new(conv)).first();
+			if( conv != null ){
+				
+				if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
+					return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
+				}
+				if (total == null) {
+					total = (MathPlus)conv; 
+				} else {
+					total = (MathPlus)total.plus(ResultSequenceFactory.create_new(conv)).first();
+				}
 			}
 		}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 Jesper Steen Moller, and others
+ * Copyright (c) 2009, 2012 Jesper Steen Moller, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Jesper Steen Moller - initial API and implementation
  *     Jesper Steen Moller - bug 281028 - avg/min/max/sum work
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *    Lukasz Wycisk - bug 361060 - Aggregations with nil=’true’ throw exceptions.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.utils;
@@ -35,7 +36,12 @@ public abstract class TypePromoter {
 		// This is a short cut, really
 		if (value.getClass() == getTargetType()) return (AnyAtomicType)value;
 
-		return doPromote(atomize(value));
+		AnyAtomicType atomized = atomize(value);
+		if( atomized == null )
+		{// empty sequence
+			return null;
+		}
+		return doPromote(atomized);
 	}
 
 	/**
@@ -85,7 +91,11 @@ public abstract class TypePromoter {
 
 	public AnyAtomicType atomize(Item at) {
 		if (at instanceof NodeType) {
-			return (AnyAtomicType)((NodeType)at).typed_value().first();
+			ResultSequence nodeValues = ((NodeType)at).typed_value();
+			if(nodeValues.empty()){
+				return null;
+			}
+			return (AnyAtomicType)nodeValues.first();
 		}
 		else {
 			return (AnyAtomicType)at;
@@ -93,7 +103,11 @@ public abstract class TypePromoter {
 	}
 	
 	public void considerValue(Item at) throws DynamicError {
-		considerType(atomize(at).getClass());
+		final AnyAtomicType atomize = this.atomize(at);
+		if( atomize != null )
+		{// we known that it is not empty sequence
+			this.considerType(atomize.getClass());
+		}
 	}
 
 

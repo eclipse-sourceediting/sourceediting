@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     David Carver (STAR) - bug 262765 - fixed promotion issue
  *     Jesper Moller - bug 281028 - fix promotion rules for fn:max
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *    Lukasz Wycisk - bug 361060 - Aggregations with nil=’true’ throw exceptions.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -83,11 +84,14 @@ public class FnMax extends Function {
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyAtomicType conv = tp.promote((AnyType) i.next());
 			
-			if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
-				return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
-			}
-			if (max == null || ((CmpGt)conv).gt((AnyType)max, dynamicContext)) {
-				max = (CmpGt)conv;
+			if( conv != null ){
+				
+				if (conv instanceof XSDouble && ((XSDouble)conv).nan() || conv instanceof XSFloat && ((XSFloat)conv).nan()) {
+					return ResultSequenceFactory.create_new(tp.promote(new XSFloat(Float.NaN)));
+				}
+				if (max == null || ((CmpGt)conv).gt((AnyType)max, dynamicContext)) {
+					max = (CmpGt)conv;
+				}
 			}
 		}
 		return ResultSequenceFactory.create_new((AnyType) max);
