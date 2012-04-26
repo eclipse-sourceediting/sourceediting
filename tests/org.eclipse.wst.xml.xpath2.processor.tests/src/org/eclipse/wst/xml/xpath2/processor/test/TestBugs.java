@@ -57,7 +57,9 @@
  *  Mukul Gandhi    - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.
  *  Mukul Gandhi    - bug 341862 - improvements to computation of typed value of xs:boolean nodes.                                 
  *  Jesper Steen Moller  - bug 340933 - Migrate tests to new XPath2 API
- *******************************************************************************/
+ *  Lukasz Wycisk   - bug 361060 - Aggregations with nil=ÕtrueÕ throw exceptions.
+ ******************************************************************************/
+
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 import java.math.BigInteger;
@@ -2415,6 +2417,77 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertTrue( rs.size()>0 );
 		String actual = ((XSInteger) rs.first()).getStringValue();
 		assertEquals("2", actual);
+	}
+	
+	public void testNumberAggregationWithNill() throws Exception {
+
+		URL fileURL = bundle.getEntry("/bugTestFiles/bugNilled.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bugNilled.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		setupDynamicContext(schema);
+		
+		String xpath = null;
+		ResultSequence rs = null;
+		String actual = null;
+		
+		//a
+		xpath = "fn:count(( /root/element1, /root/element2, /root/element3 ))";
+		compileXPath(xpath);
+		rs = evaluate(domDoc);
+		
+		assertTrue( rs.size()>0 );
+		actual = ((XSDecimal) rs.first()).getStringValue();
+		assertEquals("3", actual);
+		
+		//b
+		xpath = "fn:sum(( /root/element1, /root/element2, /root/element3 ))";
+		compileXPath(xpath);
+		rs = evaluate(domDoc);
+		
+		assertTrue( rs.size()>0 );
+		actual = ((XSDecimal) rs.first()).getStringValue();
+		assertEquals("43", actual);
+		
+		//b2
+		xpath = "fn:sum(( /root/element1, /root/element2, /root/element3 ), 100)";
+		compileXPath(xpath);
+		rs = evaluate(domDoc);
+		
+		assertTrue( rs.size()>0 );
+		actual = ((XSDecimal) rs.first()).getStringValue();
+		assertEquals("143", actual);
+		
+		//c
+		xpath = "fn:avg(( /root/element1, /root/element2, /root/element3, 1 ))";
+		compileXPath(xpath);
+		rs = evaluate(domDoc);
+		
+		assertTrue( rs.size()>0 );
+		actual = ((XSDecimal) rs.first()).getStringValue();
+		assertEquals("11", actual);
+		
+		//d
+		xpath = "fn:max(( /root/element1, /root/element2, /root/element3 ))";
+		compileXPath(xpath);
+		rs = evaluate(domDoc);
+		
+		assertTrue( rs.size()>0 );
+		actual = ((XSDecimal) rs.first()).getStringValue();
+		assertEquals("42", actual);
+		
+		//e
+		xpath = "fn:min(( /root/element1, /root/element2, /root/element3 ))";
+		compileXPath(xpath);
+		rs = evaluate(domDoc);
+		
+		assertTrue( rs.size()>0 );
+		actual = ((XSDecimal) rs.first()).getStringValue();
+		assertEquals("1", actual);
 	}
 	
 	public void testBug339025_distinctValuesOnNodeSequence() throws Exception {
