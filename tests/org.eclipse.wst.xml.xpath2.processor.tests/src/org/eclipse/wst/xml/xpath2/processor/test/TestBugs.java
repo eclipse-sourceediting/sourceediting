@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2012 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,6 +58,7 @@
  *  Mukul Gandhi    - bug 341862 - improvements to computation of typed value of xs:boolean nodes.                                 
  *  Jesper Steen Moller  - bug 340933 - Migrate tests to new XPath2 API
  *  Lukasz Wycisk   - bug 361060 - Aggregations with nil=’true’ throw exceptions.
+ *  Lukasz Wycisk   - bug 261059 - FnRoundHalfToEven is wrong in case of 2 arguments
  ******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.test;
@@ -1165,6 +1166,79 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("Don't try this at \"home\", she said", resultValue);
 	}
+	
+	public void testNumericFunctionOnEmptySequence() throws Exception {
+
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		setupDynamicContext(schema);
+		
+		String xpath = null;
+		ResultSequence rs = null;
+				
+		//a)
+		xpath = "fn:abs(())";
+          compileXPath(xpath);
+          rs = evaluate(domDoc);
+		assertEquals(0,rs.size());
+		
+		//b)
+		xpath = "fn:ceiling(())";
+          compileXPath(xpath);
+          rs = evaluate(domDoc);
+		assertEquals(0,rs.size());
+
+		//c)
+		xpath = "fn:floor(())";
+          compileXPath(xpath);
+          rs = evaluate(domDoc);
+		assertEquals(0,rs.size());
+		
+		//d)
+		xpath = "fn:round(())";
+          compileXPath(xpath);
+          rs = evaluate(domDoc);
+		assertEquals(0,rs.size());
+		
+		//e)
+		xpath = "fn:round-half-to-even(())";
+          compileXPath(xpath);
+          rs = evaluate(domDoc);
+		assertEquals(0,rs.size());
+		
+		//f)
+		xpath = "fn:round-half-to-even((),1)";
+          compileXPath(xpath);
+          rs = evaluate(domDoc);
+		assertEquals(0,rs.size());
+	}
+	
+	public void testSequenceAggregationOnEmpty() throws Exception {
+
+		bundle = Platform.getBundle("org.w3c.xqts.testsuite");
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		setupDynamicContext(schema);
+		
+		String xpath = null;
+		ResultSequence rs = null;
+				
+		//a)
+		xpath = "fn:sum((1,2,3,() ))";
+          compileXPath(xpath);
+          rs = evaluate(domDoc);
+          XSDecimal val = (XSDecimal)rs.first();
+		assertEquals("6",val.string_value());
+	}
 
 	public void testBug280555_collations() throws Exception {
 		// Setup context
@@ -1849,6 +1923,30 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 
           XSInteger result = (XSInteger) rs.first();
+
+		String actual = result.getStringValue();
+
+		assertEquals("100", actual);
+	}
+	
+	public void testFunctionAtomization2() throws Exception {
+		// Bug 318313
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug318313.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/bug318313.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		setupDynamicContext(schema);
+
+		String xpath = "fn:round-half-to-even(X,1)";
+          compileXPath(xpath);
+          ResultSequence rs = evaluate(domDoc);
+
+
+          XSDecimal result = (XSDecimal) rs.first();
 
 		String actual = result.getStringValue();
 
