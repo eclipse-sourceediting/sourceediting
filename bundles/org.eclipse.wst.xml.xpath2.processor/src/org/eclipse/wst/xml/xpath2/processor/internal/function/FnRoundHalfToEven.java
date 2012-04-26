@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *     Lukasz Wycisk - bug 261059 - FnRoundHalfToEven is wrong in case of 2 arguments
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -90,7 +91,12 @@ public class FnRoundHalfToEven extends Function {
 		ResultSequence rsArg1 =  (ResultSequence) argIt.next();
 		ResultSequence rsPrecision = (ResultSequence) argIt.next();
 		
-		NumericType nt = (NumericType) rsArg1.first();
+		NumericType nt = FnAbs.get_single_numeric_arg(rsArg1);
+
+		// empty arg
+		if (nt == null)
+			return ResultBuffer.EMPTY;
+		
 		NumericType ntPrecision = (NumericType) rsPrecision.first();
 		
 		return nt.round_half_to_even(Integer.parseInt(ntPrecision.getStringValue()));
