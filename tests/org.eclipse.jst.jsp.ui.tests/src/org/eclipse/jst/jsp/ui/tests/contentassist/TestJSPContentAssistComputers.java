@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,10 +42,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class TestJSPContentAssistComputers extends TestCase {
 	/** The name of the project that all of these tests will use */
@@ -333,13 +333,13 @@ public class TestJSPContentAssistComputers extends TestCase {
 				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				IWorkbenchPage page = workbenchWindow.getActivePage();
 				IEditorPart editorPart = IDE.openEditor(page, file, true, true);
-				if(editorPart instanceof XMLMultiPageEditorPart) {
-					XMLMultiPageEditorPart xmlEditorPart = (XMLMultiPageEditorPart)editorPart;
+				if(editorPart instanceof MultiPageEditorPart) {
+					MultiPageEditorPart xmlEditorPart = (MultiPageEditorPart)editorPart;
 					editor = (StructuredTextEditor)xmlEditorPart.getAdapter(StructuredTextEditor.class);
 				} else if(editorPart instanceof StructuredTextEditor) {
 					editor = ((StructuredTextEditor)editorPart);
 				} else {
-					fail("Unable to open structured text editor");
+					fail("Unable to open structured text editor: " + editorPart.getClass().getName());
 				}
 				
 				if(editor != null) {
