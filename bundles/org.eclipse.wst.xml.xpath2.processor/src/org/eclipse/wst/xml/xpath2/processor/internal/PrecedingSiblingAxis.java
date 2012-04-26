@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Lukasz Wycisk - bug 361803 - NodeType:dom_to_xpath and null value
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -40,7 +41,10 @@ public class PrecedingSiblingAxis extends ReverseAxis {
 		do {
 			iterNode = iterNode.getPreviousSibling();
 			if (iterNode != null) {
-				copyInto.addAt(pos, NodeType.dom_to_xpath(iterNode, node.getTypeModel()));
+				NodeType nodeType = NodeType.dom_to_xpath(iterNode, node.getTypeModel());
+				if(nodeType != null) {
+					copyInto.addAt(pos, nodeType);
+				}
 			}
 		} while (iterNode != null);
 	}

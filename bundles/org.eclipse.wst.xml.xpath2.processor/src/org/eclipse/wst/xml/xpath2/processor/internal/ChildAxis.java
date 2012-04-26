@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 262765 - Was not handling xml loaded dynamically in variables. 
  *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
+ *     Lukasz Wycisk - bug 361803 - NodeType:dom_to_xpath and null value
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -50,9 +51,12 @@ public class ChildAxis extends ForwardAxis {
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node dnode = nl.item(i);
 				NodeType n = NodeType.dom_to_xpath(dnode, node.getTypeModel());
-				copyInto.add(n);
 				
-				if (recurse) addChildren(n, copyInto, recurse);
+				if(n != null) {
+					copyInto.add(n);
+					
+					if (recurse) addChildren(n, copyInto, recurse);
+				}
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@
  *                                 attribute nodes, where the schema type of nodes
  *                                 are simple, with varieties 'list' and 'union'.                                 
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
+ *     Lukasz Wycisk - bug 361803 - NodeType:dom_to_xpath and null value
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -131,13 +132,9 @@ public abstract class NodeType extends AnyType {
 		case Node.PROCESSING_INSTRUCTION_NODE:
 			return new PIType((ProcessingInstruction) node, tm);
 
-			// XXX
-		default:
-			assert false;
-
 		}
 
-		// unreach... hopefully
+		// for unknown unsupported implementations
 		return null;
 	}
 
