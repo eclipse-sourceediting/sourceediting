@@ -475,6 +475,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		scriptOffset = container.getStartOffset();
 	
 		if(container.getType()!=DOMRegionContext.BLOCK_TEXT && container.getType()!= DOMRegionContext.XML_CDATA_TEXT) {
+			// add place holder in position map (for formatting)
+			appendAndTrack("", scriptOffset);
 			return;
 		}
 		
