@@ -338,7 +338,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag________________________$tag___ _$tag________________________$tag____$tag___ _$tag________________________$tag____$tag____$tag________________________$tag________________________$tag____$tag____$tag________________________$tag___ ",translated);
 		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
@@ -361,7 +361,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "              \nvar text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected", "              \nvar text = _$tag_______________________; _$tag________________________$tag___ _$tag________________________$tag____$tag___ _$tag________________________$tag____$tag____$tag________________________$tag________________________$tag____$tag____$tag________________________$tag___ ",translated);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
 		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
@@ -406,7 +406,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________ _$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag________________________$tag___ _$tag________________________$tag____$tag___ _$tag________________________$tag____$tag____$tag________ _$tag________________________$tag____$tag____$tag_________$tag________________________$tag________________________$tag____$tag____$tag_________$tag________________________$tag___ ",translated);
 		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
@@ -429,7 +429,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________ _$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________ _$tag_________$tag________________________$tag___ ",translated);
 		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
@@ -573,7 +573,7 @@ public class TestHtmlTranslation extends TestCase {
 	public void testFunctionReturnInEventHandler() {
 		// get model
 		String fileName = getName() + ".html";
-		IStructuredModel structuredModel = getSharedModel(fileName, "<div dojoType=\"dijit.form.ComboButton\" onClick=\"return myMethod();\">");
+		IStructuredModel structuredModel = getSharedModel(fileName, "<div                                     onClick=\"return myMethod();\">");
 		assertNotNull("missing test model", structuredModel);
 		
 		// do translation
@@ -581,7 +581,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated content differs", "                                    (function(){return myMethod();;})();", translated);
+		assertEquals("translated content differs", "                                      (function(){return myMethod();;})();", translated);
 		StringBuffer problems = new StringBuffer();
 		translation.reconcileCompilationUnit();
 		List problemList = translation.getProblems();
@@ -597,7 +597,7 @@ public class TestHtmlTranslation extends TestCase {
 	public void testTwoFunctionReturnsInEventHandlers() {
 		// get model
 		String fileName = getName() + ".html";
-		IStructuredModel structuredModel = getSharedModel(fileName, "<div dojoType=\"dijit.form.ComboButton\" onClick=\"return myMethod();\"  onblur=\"return myMethod2();\">\n<script >\ndojo.xhr(\"x\"); \n</script>");
+		IStructuredModel structuredModel = getSharedModel(fileName, "<div                                     onClick=\"return myMethod();\"  onblur=\"return myMethod2();\">\n<script >\ndojo.xhr(\"x\"); \n</script>");
 		assertNotNull("missing test model", structuredModel);
 		
 		// do translation
@@ -606,7 +606,7 @@ public class TestHtmlTranslation extends TestCase {
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
 		assertEquals("dojo.xhr() invocation moved but not properly mapped", structuredModel.getStructuredDocument().get().indexOf("dojo.xhr(\"x\");"), ((JsTranslation)translation).getWebPageOffset(translated.indexOf("dojo.xhr(\"x\");")));
-		assertEquals("translated content differs", "                                    (function(){return myMethod();;})();(function(){return myMethod2();;})(); \n         \ndojo.xhr(\"x\"); \n", translated);
+		assertEquals("translated content differs", "                                      (function(){return myMethod();;})();(function(){return myMethod2();;})(); \n         \ndojo.xhr(\"x\"); \n", translated);
 		StringBuffer problems = new StringBuffer();
 		translation.reconcileCompilationUnit();
 		List problemList = translation.getProblems();
@@ -623,7 +623,8 @@ public class TestHtmlTranslation extends TestCase {
 	public void testScriptLocationsWereRecorded() {
 		// get model
 		String fileName = getName() + ".html";
-		IStructuredModel structuredModel = getSharedModel(fileName, "<div dojoType=\"dijit.form.ComboButton\" onClick=\"return myMethod();\"  onblur=\"return myMethod2();\">\n<script >\ndojo.xhr(\"x\"); \n</script>");
+		String dojoCall = "\ndojo.xhr(\"x\"); \n";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<div                                   onClick=\"return myMethod();\"  onblur=\"return myMethod2();\">\n<script >"+dojoCall+"</script>");
 		assertNotNull("missing test model", structuredModel);
 		
 		// do translation
@@ -643,8 +644,9 @@ public class TestHtmlTranslation extends TestCase {
 		assertEquals("problems were found", "", problems.toString());
 		assertEquals("offsets didn't match", structuredModel.getStructuredDocument().get().indexOf("dojo. \n"), translated.indexOf("dojo. \n"));
 		assertNotSame("script locations not returned by translation", null, translation.getScriptPositions());
-		int expectedOffset = structuredModel.getStructuredDocument().get().indexOf("\ndojo");
-		assertEquals("script locations not returned by translation", expectedOffset, translation.getScriptPositions()[0].getOffset());
+		int expectedOffset = structuredModel.getStructuredDocument().get().indexOf(dojoCall);
+		assertEquals("script location not returned by translation", expectedOffset, translation.getScriptPositions()[0].getOffset());
+		assertEquals("script location length incorrect in translation", dojoCall.length(), translation.getScriptPositions()[0].getLength());
 
 		// release model
 		structuredModel.releaseFromRead();

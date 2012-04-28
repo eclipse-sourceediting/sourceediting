@@ -20,6 +20,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
@@ -64,7 +65,9 @@ public class FormattingTests extends TestCase {
 	/**
 	 * The project that all of the tests use
 	 */
-	private static IProject fProject;
+	static IProject fProject;
+	static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";
+	static String previousWTPAutoTestNonInteractivePropValue = null;
 	
 	/**
 	 * <p>Default constructor<p>
@@ -159,6 +162,9 @@ public class FormattingTests extends TestCase {
 	
 	public void testFormatHTMLScriptRegion_AllOnOneLine_LeadingComment() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("test14.html", "test14-fmt.html", new StructuredTextViewerConfigurationJSDT());
+	}
+	public void testFormatHTMLScriptRegion_AfterEventHander() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("test15.html", "test15-fmt.html", new StructuredTextViewerConfigurationJSDT());
 	}
 	
 	/**
@@ -272,6 +278,29 @@ public class FormattingTests extends TestCase {
 		return model;
 	}
 	
+	protected void setUp() throws Exception {
+		super.setUp();
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
+		if (!project.isAccessible()) {
+			_createProject();
+		}
+	}
+	
+	static void _createProject() {
+		//init testing resources
+		fProject = ProjectUtil.createProject(PROJECT_NAME, null, new String[] {JavaScriptCore.NATURE_ID});
+		ProjectUtil.copyBundleEntriesIntoWorkspace(PROJECT_FILES, PROJECT_NAME);
+		
+		//set non-interactive
+		String noninteractive = System.getProperty(WTP_AUTOTEST_NONINTERACTIVE);
+		if (noninteractive != null) {
+			previousWTPAutoTestNonInteractivePropValue = noninteractive;
+		} else {
+			previousWTPAutoTestNonInteractivePropValue = "false";
+		}
+		System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, "true");
+	}
+	
 	/**
 	 * @param document {@link IDocument} to display in the dummy viewer
 	 * @param configuration {@link SourceViewerConfiguration} to configure the dummy viewer with
@@ -302,8 +331,6 @@ public class FormattingTests extends TestCase {
 	 * after (respectively) all tests in the inclosing class have run.</p>
 	 */
 	private static class FormattingTestsSetup extends TestSetup {
-		private static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";
-		private static String previousWTPAutoTestNonInteractivePropValue = null;
 		
 		/**
 		 * Default constructor
@@ -320,18 +347,7 @@ public class FormattingTests extends TestCase {
 		 * @see junit.extensions.TestSetup#setUp()
 		 */
 		public void setUp() throws Exception {
-			//init testing resources
-			fProject = ProjectUtil.createProject(PROJECT_NAME, null, new String[] {JavaScriptCore.NATURE_ID});
-			ProjectUtil.copyBundleEntriesIntoWorkspace(PROJECT_FILES, PROJECT_NAME);
-			
-			//set non-interactive
-			String noninteractive = System.getProperty(WTP_AUTOTEST_NONINTERACTIVE);
-			if (noninteractive != null) {
-				previousWTPAutoTestNonInteractivePropValue = noninteractive;
-			} else {
-				previousWTPAutoTestNonInteractivePropValue = "false";
-			}
-			System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, "true");
+			_createProject();
 		}
 
 		/**
