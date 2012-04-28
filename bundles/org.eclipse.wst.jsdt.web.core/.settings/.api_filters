@@ -20,4 +20,11 @@
             </message_arguments>
         </filter>
     </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/javascript/JsTranslator.java" type="org.eclipse.wst.jsdt.web.core.javascript.JsTranslator">
+        <filter id="1143996420">
+            <message_arguments>
+                <message_argument value="appendAndTrack(String, int)"/>
+            </message_arguments>
+        </filter>
+    </resource>
 </component>

@@ -125,58 +125,74 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 				String preText = "";
 				String postText = lineDelim + scriptRegionIndent;
 
-				//find start comment tag
+				// find and remove start comment tag if it's there
 				Pattern startPattern = Pattern.compile("(\\A(\\s*<!--.*(" + lineDelim + ")?))"); //$NON-NLS-1$
 				Matcher matcher = startPattern.matcher(jsTextNotTranslated);
-				if(matcher.find()) {
-					jsTextNotTranslated = matcher.replaceFirst(""); //$NON-NLS-1$
+				if (matcher.find()) {
 					preText = lineDelim + scriptRegionIndent + matcher.group().trim();
+					jsTextNotTranslated = matcher.replaceFirst(""); //$NON-NLS-1$
 				}
 				
-				//find end tag
+				// find and remove end comment tag if it's there
 				matcher = END_PATTERN.matcher(jsTextNotTranslated);
-				if(matcher.find()) {
+				if (matcher.find()) {
 					jsTextNotTranslated = matcher.replaceFirst(""); //$NON-NLS-1$
 					postText = lineDelim + scriptRegionIndent + matcher.group().trim() + postText;
 				}
 				
-				//replace the text in the document with the none-translated JS text but without HTML leading and trailing comments
+				//replace the text in the document with the non-translated JS text but without HTML leading and trailing comments
+				int scriptLength = jsTextNotTranslated.length();
 				TextEdit replaceEdit = new ReplaceEdit(partition.getOffset(), partition.getLength(), jsTextNotTranslated);
 				replaceEdit.apply(document);
-				int jsRegionLength = jsTextNotTranslated.length();
 				
-				//translate the updated document
+				// translate the web page without the script "wrapping"
 				IJsTranslation translation = getTranslation(document);
 				String jsTextTranslated = translation.getJsText();
 				
-				//format the text translated text
-				TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_JAVASCRIPT_UNIT, jsTextTranslated, partition.getOffset(), jsRegionLength, startIndentLevel, lineDelim, getPreferences());
-				IDocument jsDoc = new Document(jsTextTranslated);
-				
-				//Undo the text replacements done by the translator so that it could build a CU for the JS region
-				if(translation instanceof JsTranslation) {
-					IJsTranslator translator = ((JsTranslation)translation).getTranslator();
+				// set a default replace text that is the original contents
+				String replaceText = lineDelim + getIndentationString(getPreferences(), startIndentLevel) + jsTextNotTranslated;
+
+				int javaScriptOffset = ((JsTranslation) translation).getJavaScriptOffset(partition.getOffset());
+
+				// known range, proceed
+				if (javaScriptOffset >= 0) {
+					// format the translated text
+					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_JAVASCRIPT_UNIT, jsTextTranslated, javaScriptOffset, scriptLength, startIndentLevel, lineDelim, getPreferences());
+					IDocument jsDoc = new Document(jsTextTranslated);
 					
-					if(translator instanceof JsTranslator) {
-						Region[] regions = ((JsTranslator)translator).getGeneratedRanges();
-						//for each generated range, replace it with the original text
-						for(int r = 0; r < regions.length; ++r) {
-							jsDoc.replace(regions[r].getOffset(), regions[r].getLength(),
-									document.get(regions[r].getOffset(), regions[r].getLength()));
+					/*
+					 * Put the original (possibly not JS) text back into the doc
+					 * to which we're applying the edit
+					 */
+					if (translation instanceof JsTranslation) {
+						IJsTranslator translator = ((JsTranslation) translation).getTranslator();
+	
+						if (translator instanceof JsTranslator) {
+							Region[] regions = ((JsTranslator) translator).getGeneratedRanges();
+							/*
+							 * for each generated range, replace it with the
+							 * original web page text
+							 */
+							for (int r = 0; r < regions.length; ++r) {
+								int webPageOffset = ((JsTranslation) translation).getWebPageOffset(regions[r].getOffset());
+								if (webPageOffset > 0) {
+									jsDoc.replace(regions[r].getOffset(), regions[r].getLength(), document.get(webPageOffset, regions[r].getLength()));
+								}
+							}
 						}
 					}
+	
+					if (edit != null) {
+						edit.apply(jsDoc);
+						replaceText = lineDelim + getIndentationString(getPreferences(), startIndentLevel) + (jsDoc.get(edit.getOffset(), edit.getLength())).trim();
+					}
 				}
-				
-				/* error formating the code so abort */
-				if(edit==null) return;
-				edit.apply(jsDoc);
-				String replaceText = lineDelim + getIndentationString(getPreferences(), startIndentLevel) + (jsDoc.get(edit.getOffset(), edit.getLength())).trim();
-				
 				//apply edit to html doc using the formated translated text and the possible leading and trailing html comments
 				replaceText = preText + replaceText + postText;
-				replaceEdit = new ReplaceEdit(partition.getOffset(), jsRegionLength, replaceText);
+				replaceEdit = new ReplaceEdit(partition.getOffset(), scriptLength, replaceText);
 				replaceEdit.apply(document);
 			} catch (BadLocationException e) {
+				Logger.logException(e);
 			}
 		}
 	}

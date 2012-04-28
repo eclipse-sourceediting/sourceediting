@@ -349,9 +349,10 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	protected void finishedTranslation() {
 	}
 	
-	void appendAndTrack(String javaScript, int scriptStart, int scriptTextLength) {
-		Position inHtml = new Position(scriptStart, scriptTextLength);
-		fPositionMap.put(inHtml, new Position(fScriptText.length(), javaScript.length()));
+	protected void appendAndTrack(String javaScript, int webPageScriptStart) {
+		int length = javaScript.length();
+		Position inHtml = new Position(webPageScriptStart, length);
+		fPositionMap.put(inHtml, new Position(fScriptText.length(), length));
 		fScriptText.append(javaScript);
 	}
 	
@@ -430,7 +431,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							}
 							fScriptText.append(spaces);
 							fScriptText.append(EVENT_HANDLER_PRE);
-							appendAndTrack(rawText, valStartOffset, rawText.length());
+							appendAndTrack(rawText, valStartOffset);
 							if(ADD_SEMICOLON_AT_INLINE) fScriptText.append(";"); //$NON-NLS-1$
 							if(r.getLength() > rawText.length()) {
 								fScriptText.append(EVENT_HANDLER_POST);
@@ -487,7 +488,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			boolean isContainerRegion = region instanceof ITextRegionContainer;
 			/* make sure its not a sub container region, probably JSP */
 			if (type == DOMRegionContext.BLOCK_TEXT ) {
-				int scriptStartOffset = container.getStartOffset();
+				int scriptStartOffset = container.getStartOffset(region);
 				int scriptTextLength = container.getLength();
 				String regionText = container.getFullText(region);
 				regionText = StringUtils.replace(regionText, CDATA_START, CDATA_START_PAD);
@@ -495,6 +496,20 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				int regionLength = region.getLength();
 				
 				spaces = Util.getPad(scriptStartOffset - scriptOffset);
+				for (int i = 0; i < spaces.length; i++) {
+					try {
+						char c = fStructuredDocument.getChar(scriptOffset + i);
+						if (c == '\n')
+							spaces[i] = '\n';
+						else if (c == '\r')
+							spaces[i] = '\r';
+						else if (c == '\t')
+							spaces[i] = '\t';
+					}
+					catch (BadLocationException e) {
+						Logger.logException(e);
+					}
+				}
 				fScriptText.append(spaces); 	
 				// skip over XML/HTML comment starts
 				if (regionText.indexOf(XML_COMMENT_START) >= 0) {
@@ -533,164 +548,175 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						
 						StringBuffer newRegionText = new StringBuffer(regionText.substring(0, index));
 						spaces = Util.getPad(length);
+						for (int i = 0; i < spaces.length; i++) {
+							try {
+								char c = fStructuredDocument.getChar(scriptStartOffset + i);
+								if (c == '\n')
+									spaces[i] = '\n';
+								else if (c == '\r')
+									spaces[i] = '\r';
+								else if (c == '\t')
+									spaces[i] = '\t';
+							}
+							catch (BadLocationException e) {
+								Logger.logException(e);
+							}
+						}
 						newRegionText.append(spaces);
 						newRegionText.append(regionText.substring(end));
 						regionText = newRegionText.toString();
 					}
 				}
-				// server-side code
-//				else {
-					/*
-					 * Fix for
-					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
-					 * end of last valid JS source, start of next content to
-					 * skip
-					 */
-					// last offset of valid JS source, after which there's server-side stuff
-					int validJSend = 0;
-					// start of next valid JS source, last offset of content that was skipped
-					int validJSstart = 0;
+				/*
+				 * Fix for
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
+				 * end of last valid JS source, start of next content to
+				 * skip
+				 */
+				// last offset of valid JS source, after which there's server-side stuff
+				int validJSend = 0;
+				// start of next valid JS source, last offset of content that was skipped
+				int validJSstart = 0;
 
-					Matcher matcher = fClientSideTagPattern.matcher(regionText);
-					// note the start of a HTML tag if one's present
-					int clientMatchStart = matcher.find() ? matcher.start() : -1;
+				Matcher matcher = fClientSideTagPattern.matcher(regionText);
+				// note the start of a HTML tag if one's present
+				int clientMatchStart = matcher.find() ? matcher.start() : -1;
 
-					StringBuffer contents = new StringBuffer();
-					
-					int serverSideStart = -1;
-					int serverSideDelimiter = 0;
+				StringBuffer generatedContent = new StringBuffer();
+				
+				int serverSideStart = -1;
+				int serverSideDelimiter = 0;
 
-					// find any instance of server code blocks in the region text
-					for (int i = 0; i < fServerSideDelimiters.length; i++) {
-						int index = regionText.indexOf(fServerSideDelimiters[i][0]);
-						if (serverSideStart < 0) {
-							serverSideStart = index;
+				// find any instance of server code blocks in the region text
+				for (int i = 0; i < fServerSideDelimiters.length; i++) {
+					int index = regionText.indexOf(fServerSideDelimiters[i][0]);
+					if (serverSideStart < 0) {
+						serverSideStart = index;
+						serverSideDelimiter = i;
+					}
+					else if (index >= 0) {
+						serverSideStart = Math.min(serverSideStart, index);
+						if (serverSideStart == index) {
 							serverSideDelimiter = i;
 						}
-						else if (index >= 0) {
-							serverSideStart = Math.min(serverSideStart, index);
-							if (serverSideStart == index) {
+					}
+				}
+				// contains something other than pure JavaScript
+				while (serverSideStart > -1 || clientMatchStart > -1) { //$NON-NLS-1$
+					validJSend = validJSstart;
+					boolean biasClient = false;
+					boolean biasServer = false;
+					// update the start of content to skip
+					if (clientMatchStart > -1 && serverSideStart > -1) {
+						validJSend = Math.min(clientMatchStart, serverSideStart);
+						biasClient = validJSend == clientMatchStart;
+						biasServer = validJSend == serverSideStart;
+					}
+					else if (clientMatchStart > -1 && serverSideStart < 0) {
+						validJSend = clientMatchStart;
+						biasClient = true;
+					}
+					else if (clientMatchStart < 0 && serverSideStart > -1) {
+						validJSend = serverSideStart;
+						biasServer = true;
+					}
+					
+					// append if there's something we want to include
+					if (-1 < validJSstart && -1 < validJSend) {
+						// append what we want to include
+						appendAndTrack(regionText.substring(validJSstart, validJSend), scriptStartOffset + validJSstart);
+						
+						// change the skipped content to a valid variable name and append it as a placeholder
+						int startOffset = scriptStartOffset + validJSend;
+
+						String serverEnd = fServerSideDelimiters[serverSideDelimiter][1];
+						int serverSideEnd = (regionLength > validJSend + serverEnd.length()) ? regionText.indexOf(serverEnd, validJSend + fServerSideDelimiters[serverSideDelimiter][1].length()) : -1;
+						if (serverSideEnd > -1)
+							serverSideEnd += serverEnd.length();
+						int clientMatchEnd = matcher.find(validJSend) ? matcher.end() : -1;
+						// update end of what we skipped
+						validJSstart = -1;
+						if (clientMatchEnd > validJSend && serverSideEnd > validJSend) {
+							if (biasClient)
+								validJSstart = clientMatchEnd;
+							else if (biasServer)
+								validJSstart = serverSideEnd;
+							else
+								validJSstart = Math.min(clientMatchEnd, serverSideEnd);
+						}
+						if (clientMatchEnd >= validJSend && serverSideEnd < 0)
+							validJSstart = matcher.end();
+						if (clientMatchEnd < 0 && serverSideEnd >= validJSend)
+							validJSstart = serverSideEnd;
+
+						// substituted text length much match original length exactly, find text of the right length
+						int start = validJSend + scriptStartOffset;
+						int end = scriptStartOffset + validJSstart;
+						generatedContent.append('_');
+						for (int i = validJSend + 1; i < validJSstart; i++) {
+							switch (i - validJSend) {
+								case 1 :
+									generatedContent.append('$');
+									break;
+								case 2 :
+									generatedContent.append('t');
+									break;
+								case 3 :
+									generatedContent.append('a');
+									break;
+								case 4 :
+									generatedContent.append('g');
+									break;
+								default :
+									generatedContent.append('_');
+							}
+						}
+						/*
+						 * Remember this source range, it may be needed to
+						 * find the original contents for which we're
+						 * placeholding
+						 */
+						fGeneratedRanges.add(new Region(start, end - start));
+						appendAndTrack(generatedContent.toString(), start);
+					}
+					// set up to end while if no end for valid
+					if (validJSstart > 0) {
+						int serverSideStartGuess = -1;
+						for (int i = 0; i < fServerSideDelimiters.length; i++) {
+							int index = regionText.indexOf(fServerSideDelimiters[i][0], validJSstart);
+							if (serverSideStartGuess < 0) {
+								serverSideStartGuess = index;
 								serverSideDelimiter = i;
 							}
-						}
-					}
-					// contains something other than pure JavaScript
-					while (serverSideStart > -1 || clientMatchStart > -1) { //$NON-NLS-1$
-						validJSend = validJSstart;
-						boolean biasClient = false;
-						boolean biasServer = false;
-						// update the start of content to skip
-						if (clientMatchStart > -1 && serverSideStart > -1) {
-							validJSend = Math.min(clientMatchStart, serverSideStart);
-							biasClient = validJSend == clientMatchStart;
-							biasServer = validJSend == serverSideStart;
-						}
-						else if (clientMatchStart > -1 && serverSideStart < 0) {
-							validJSend = clientMatchStart;
-							biasClient = true;
-						}
-						else if (clientMatchStart < 0 && serverSideStart > -1) {
-							validJSend = serverSideStart;
-							biasServer = true;
-						}
-						
-						// append if there's something we want to include
-						if (-1 < validJSstart && -1 < validJSend) {
-							// append what we want to include
-							contents.append(regionText.substring(validJSstart, validJSend));
-							
-							// change the skipped content to a valid variable name and append it as a placeholder
-							int startOffset = container.getStartOffset(region) + validJSend;
-
-							String serverEnd = fServerSideDelimiters[serverSideDelimiter][1];
-							int serverSideEnd = (regionLength > validJSend + serverEnd.length()) ? regionText.indexOf(serverEnd, validJSend + fServerSideDelimiters[serverSideDelimiter][1].length()) : -1;
-							if (serverSideEnd > -1)
-								serverSideEnd += serverEnd.length();
-							int clientMatchEnd = matcher.find(validJSend) ? matcher.end() : -1;
-							// update end of what we skipped
-							validJSstart = -1;
-							if (clientMatchEnd > validJSend && serverSideEnd > validJSend) {
-								if (biasClient)
-									validJSstart = clientMatchEnd;
-								else if (biasServer)
-									validJSstart = serverSideEnd;
-								else
-									validJSstart = Math.min(clientMatchEnd, serverSideEnd);
-							}
-							if (clientMatchEnd >= validJSend && serverSideEnd < 0)
-								validJSstart = matcher.end();
-							if (clientMatchEnd < 0 && serverSideEnd >= validJSend)
-								validJSstart = serverSideEnd;
-							int line = container.getParentDocument().getLineOfOffset(startOffset);
-							int column;
-							try {
-								column = startOffset - container.getParentDocument().getLineOffset(line);
-							}
-							catch (BadLocationException e) {
-								column = -1;
-							}
-							// substituted text length much match original length exactly, find text of the right length
-							int start = validJSend + container.getStartOffset(region);
-							contents.append('_');
-							for (int i = validJSend + 1; i < validJSstart; i++) {
-								switch (i - validJSend) {
-									case 1 :
-										contents.append('$');
-										break;
-									case 2 :
-										contents.append('t');
-										break;
-									case 3 :
-										contents.append('a');
-										break;
-									case 4 :
-										contents.append('g');
-										break;
-									default :
-										contents.append('_');
-								}
-							}
-							int end = validJSstart + container.getStartOffset(region);
-							// remember that this source range w
-							fGeneratedRanges.add(new Region(start, end - start));
-						}
-						// set up to end while if no end for valid
-						if (validJSstart > 0) {
-							int serverSideStartGuess = -1;
-							for (int i = 0; i < fServerSideDelimiters.length; i++) {
-								int index = regionText.indexOf(fServerSideDelimiters[i][0], validJSstart);
-								if (serverSideStartGuess < 0) {
-									serverSideStartGuess = index;
+							else if (index >= 0) {
+								serverSideStartGuess = Math.min(serverSideStartGuess, index);
+								if (serverSideStartGuess == index) {
 									serverSideDelimiter = i;
 								}
-								else if (index >= 0) {
-									serverSideStartGuess = Math.min(serverSideStartGuess, index);
-									if (serverSideStartGuess == index) {
-										serverSideDelimiter = i;
-									}
-								}
 							}
-							serverSideStart = validJSstart < regionLength - fShortestServerSideDelimiterPairLength ? serverSideStartGuess : -1;
-							clientMatchStart = validJSstart < regionLength ? (matcher.find(validJSstart) ? matcher.start() : -1) : -1;
 						}
-						else {
-							serverSideStart = clientMatchStart = -1;
-						}
-					}
-					if (validJSstart >= 0) {
-						contents.append(regionText.substring(validJSstart));
-					}
-					if (contents.length() != 0) {
-						appendAndTrack(contents.toString(), scriptStartOffset+validJSstart, contents.length());
-						Position inHtml = new Position(scriptStartOffset, contents.length());
-						scriptLocationInHtml.add(inHtml);
+						serverSideStart = validJSstart < regionLength - fShortestServerSideDelimiterPairLength ? serverSideStartGuess : -1;
+						clientMatchStart = validJSstart < regionLength ? (matcher.find(validJSstart) ? matcher.start() : -1) : -1;
 					}
 					else {
-						appendAndTrack(regionText, scriptStartOffset, regionText.length());
-						Position inHtml = new Position(scriptStartOffset, regionText.length());
-						scriptLocationInHtml.add(inHtml);
+						serverSideStart = clientMatchStart = -1;
 					}
+				}
+				if (validJSstart >= 0) {
+					appendAndTrack(regionText.substring(validJSstart), scriptStartOffset + validJSstart);
+					Position inHtml = new Position(scriptStartOffset + validJSstart, regionText.length() - validJSstart);
+					scriptLocationInHtml.add(inHtml);
+				}
+//				if (generatedContent.length() != 0) {
+//					fScriptText.append(generatedContent.toString());
+//					Position inHtml = new Position(scriptStartOffset, generatedContent.length());
+//					scriptLocationInHtml.add(inHtml);
 //				}
+				else {
+					appendAndTrack(regionText, scriptStartOffset);
+					Position inHtml = new Position(scriptStartOffset, regionText.length());
+					scriptLocationInHtml.add(inHtml);
+				}
 								
 				scriptOffset = fScriptText.length();
 			}
@@ -778,32 +804,43 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	}
 
 	/**
-	 * @param offset web page offset
-	 * @return JavaScript offset
+	 * @param offset
+	 *            web page offset
+	 * @return the corresponding JavaScript offset, or -1 if one can not be
+	 *         calculated
 	 */
 	int getJavaScriptOffset(int offset) {
-		Iterator entries = fPositionMap.entrySet().iterator();
-		while (entries.hasNext()) {
-			Entry entry = (Entry) entries.next();
-			if (((Position) entry.getKey()).includes(offset)) {
-				return offset - ((Position) entry.getKey()).getOffset() + ((Position) entry.getValue()).getOffset();
+		synchronized (finished) {
+			Iterator entries = fPositionMap.entrySet().iterator();
+			while (entries.hasNext()) {
+				Entry entry = (Entry) entries.next();
+				Position position = (Position) entry.getKey();
+				if (position.includes(offset) || (offset == position.getOffset())) {
+					return offset - position.getOffset() + ((Position) entry.getValue()).getOffset();
+				}
 			}
+			Logger.logException(new BadLocationException("Translated offset requested but not found for: " + offset));
+			return -1;
 		}
-		return offset;
 	}
 
 	/**
 	 * @param offset JavaScript offset
-	 * @return web page offset
+	 * @return the corresponding web page offset, or -1 if one can not be
+	 *         calculated
 	 */
 	int getWebOffset(int offset) {
-		Iterator entries = fPositionMap.entrySet().iterator();
-		while (entries.hasNext()) {
-			Entry entry = (Entry) entries.next();
-			if (((Position) entry.getValue()).includes(offset)) {
-				return offset - ((Position) entry.getValue()).getOffset() + ((Position) entry.getKey()).getOffset();
+		synchronized (finished) {
+			Iterator entries = fPositionMap.entrySet().iterator();
+			while (entries.hasNext()) {
+				Entry entry = (Entry) entries.next();
+				Position position = (Position) entry.getValue();
+				if (position.includes(offset) || (offset == position.getOffset())) {
+					return offset - position.getOffset() + ((Position) entry.getKey()).getOffset();
+				}
 			}
+			Logger.logException(new BadLocationException("Page offset requested but not found for: " + offset));
+			return -1;
 		}
-		return offset;
 	}
 }
