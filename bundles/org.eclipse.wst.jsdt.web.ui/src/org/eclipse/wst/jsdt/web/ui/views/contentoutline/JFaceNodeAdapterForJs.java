@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,9 +32,10 @@ import org.eclipse.wst.jsdt.internal.core.Member;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
-import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -178,50 +181,44 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	}
 	
 	private Object[] filterChildrenForRange(IJavaScriptElement[] allChildren, Node node) {
-	//	int javaPositionStart = ((NodeImpl) node).getStartOffset();
-	//	int javaPositionEnd   = ((NodeImpl) node).getEndOffset();
-		
-	//	Object[] result =new Object[0];
-		
 		int javaPositionEnd = ((NodeImpl) node).getEndOffset();
 		int javaPositionStart = ((NodeImpl) node).getStartOffset();
+		javaPositionStart = ((JsTranslation)getTranslation(node)).getJavaScriptOffset(((NodeImpl) node).getStartOffset());
+		if (javaPositionStart < 0)
+			javaPositionStart = ((NodeImpl) node).getStartOffset();
+		javaPositionEnd = ((JsTranslation)getTranslation(node)).getJavaScriptOffset(((NodeImpl) node).getEndOffset() - 1);
+		if (javaPositionEnd < 0)
+			javaPositionEnd = ((NodeImpl) node).getEndOffset();
 
-		Vector validChildren = new Vector();
+		List validChildren = new ArrayList();
 		for (int i = 0; i < allChildren.length; i++) {
-			if (allChildren[i] instanceof IJavaScriptElement) {
-				ISourceRange range = null;
-				if (allChildren[i] instanceof Member) {
-					try {
-						range = ((Member) allChildren[i]).getNameRange();
-					} catch (JavaScriptModelException e) {
-											// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else if (allChildren[i]  instanceof SourceRefElement) {
-					try {
-						range = ((SourceRefElement)allChildren[i] ).getSourceRange();
-					} catch (JavaScriptModelException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			ISourceRange range = null;
+			if (allChildren[i] instanceof Member) {
+				try {
+					range = ((Member) allChildren[i]).getNameRange();
+				} catch (JavaScriptModelException e) {
+					Logger.logException("Error getting range of Member child.", e);
 				}
-				if (allChildren[i].getElementType() == IJavaScriptElement.TYPE || (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd))) {
-					
-					
-							int htmllength = range == null ? 0 : range.getLength();
-							int htmloffset = range == null ? 0 : range.getOffset();
-							if (htmllength < 0 || htmloffset < 0) {
-								continue;
-							}
-							Position position = new Position(htmloffset, htmllength);
-							validChildren.add(getJsNode(node.getParentNode(), allChildren[i], position));
-					
+			} else if (allChildren[i]  instanceof SourceRefElement) {
+				try {
+					range = ((SourceRefElement)allChildren[i] ).getSourceRange();
+				} catch (JavaScriptModelException e) {
+					Logger.logException("Error getting range of SourceRefElement child.", e);
+				}
+			}
+			
+			if (range != null && javaPositionStart <= range.getOffset() &&
+						(range.getLength() + range.getOffset()) <= (javaPositionEnd)) {
 				
+				int htmlLength = range.getLength();
+				int htmlOffset = range.getOffset();
+				if (htmlLength >= 0 && htmlOffset >= 0) {
+					Position position = new Position(htmlOffset, htmlLength);
+					validChildren.add(getJsNode(node.getParentNode(), allChildren[i], position));
 				}
 			}
 		}
 		Object[] result = new Object[0];
-
 
 		if (validChildren.size() > 0) {
 			result = validChildren.toArray();

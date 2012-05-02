@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -81,13 +82,14 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		}
 		int startOffset = 0;
 		int endOffset = 0;
-		IJavaScriptElement[] result = null;
+		IJavaScriptElement[] result = new IJavaScriptElement[0];
 		IJsTranslation translation = null;
 		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
-			startOffset = ((NodeImpl) node).getStartOffset();
-			endOffset = ((NodeImpl) node).getEndOffset();
 			translation = getTranslation(node);
-			result = translation.getAllElementsInJsRange(startOffset, endOffset);
+			startOffset = ((JsTranslation)translation).getJavaScriptOffset(((NodeImpl) node).getStartOffset());
+			endOffset = ((JsTranslation)translation).getJavaScriptOffset(((NodeImpl) node).getEndOffset() - 1);
+			if (startOffset >= 0 && endOffset >= 0)
+				result = translation.getAllElementsInJsRange(startOffset, endOffset);
 		}
 		return result;
 //			

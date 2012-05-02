@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -120,6 +120,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 			try {
 				//get the JS text from the document (not translated)
 				String jsTextNotTranslated = document.get(partition.getOffset(), partition.getLength());
+				String originalText = jsTextNotTranslated;
 				
 				//deal with getting the JS text and unwrapping it from any <!-- //--> statements
 				String preText = "";
@@ -140,16 +141,25 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 					postText = lineDelim + scriptRegionIndent + matcher.group().trim() + postText;
 				}
 				
-				//replace the text in the document with the non-translated JS text but without HTML leading and trailing comments
+				/*
+				 * replace the text in the document with the non-translated JS
+				 * text but without HTML leading and trailing comments
+				 */
 				int scriptLength = jsTextNotTranslated.length();
-				TextEdit replaceEdit = new ReplaceEdit(partition.getOffset(), partition.getLength(), jsTextNotTranslated);
-				replaceEdit.apply(document);
+				TextEdit replaceEdit = null;
+				if (scriptLength != originalText.length()) {
+					replaceEdit = new ReplaceEdit(partition.getOffset(), partition.getLength(), jsTextNotTranslated);
+					replaceEdit.apply(document);
+				}
 				
 				// translate the web page without the script "wrapping"
 				IJsTranslation translation = getTranslation(document);
 				String jsTextTranslated = translation.getJsText();
 				
-				// set a default replace text that is the original contents
+				/*
+				 * Set a default replace text that is the original contents
+				 * with a new line and proper indentation in front
+				 */
 				String replaceText = lineDelim + getIndentationString(getPreferences(), startIndentLevel) + jsTextNotTranslated;
 
 				int javaScriptOffset = ((JsTranslation) translation).getJavaScriptOffset(partition.getOffset());
@@ -185,6 +195,15 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 					if (edit != null) {
 						edit.apply(jsDoc);
 						replaceText = lineDelim + getIndentationString(getPreferences(), startIndentLevel) + (jsDoc.get(edit.getOffset(), edit.getLength())).trim();
+					}
+					else {
+						/*
+						 * Revert changes (it may still appear dirty, though,
+						 * because of the above edits having been applied)
+						 */
+						replaceEdit = new ReplaceEdit(partition.getOffset(), scriptLength, originalText);
+						replaceEdit.apply(document);
+						return;
 					}
 				}
 				//apply edit to html doc using the formated translated text and the possible leading and trailing html comments
