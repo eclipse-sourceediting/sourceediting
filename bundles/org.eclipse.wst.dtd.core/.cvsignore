@@ -1,8 +1,0 @@
-bin
-runtime
-dtdcore.jar
-*.zip
-build.xml
-temp.folder
-@dot
-javaCompiler...args
