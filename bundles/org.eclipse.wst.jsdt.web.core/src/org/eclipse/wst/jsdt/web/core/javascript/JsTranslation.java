@@ -312,6 +312,12 @@ public class JsTranslation implements IJsTranslation {
 		}
 		return result;
 	}
+	
+	public IJavaScriptElement[] getElementsFromWebRange(int webPositionStart, int webPositionEnd) {
+		int javaPositionStart = getJavaScriptOffset(webPositionStart);
+		int javaPositionEnd = getJavaScriptOffset(webPositionEnd);
+		return getElementsFromJsRange(javaPositionStart, javaPositionEnd);
+	}
 
 	private String getHtmlPageName() {
 		IPath path = new Path(fModelBaseLocation);

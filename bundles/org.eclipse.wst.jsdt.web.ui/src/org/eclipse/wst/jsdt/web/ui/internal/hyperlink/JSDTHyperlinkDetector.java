@@ -35,6 +35,7 @@ import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -158,7 +159,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 			IDocument document = textViewer.getDocument();
 			IJsTranslation jsTranslation = getJsTranslation(document);
 			if (jsTranslation != null) {
-				IJavaScriptElement[] elements = jsTranslation.getElementsFromJsRange(region.getOffset(), region.getOffset() + region.getLength());
+				IJavaScriptElement[] elements = ((JsTranslation)jsTranslation).getElementsFromWebRange(region.getOffset(), region.getOffset() + region.getLength());
 				if (elements != null && elements.length > 0) {
 					// create a hyperlink for each JavaScript element
 					for (int i = 0; i < elements.length; ++i) {

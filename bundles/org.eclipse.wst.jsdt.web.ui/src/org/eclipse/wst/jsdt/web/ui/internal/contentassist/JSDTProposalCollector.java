@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 
 
 /**
@@ -91,9 +92,9 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		JSDTCompletionProposal jspProposal;
 		String completion = String.valueOf(proposal.getCompletion());
 		// java offset
-		int offset = proposal.getReplaceStart();
+		int offset = ((JsTranslation)fTranslation).getWebPageOffset(proposal.getReplaceStart());
 		// replacement length
-		int length = proposal.getReplaceEnd() - offset;
+		int length = proposal.getReplaceEnd() - proposal.getReplaceStart();
 		// translate offset from Java > JSP
 		// cursor position after must be calculated
 		int positionAfter = calculatePositionAfter(proposal, completion);

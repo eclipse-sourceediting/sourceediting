@@ -20,6 +20,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.ui.JSdocContentAccess;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.taginfo.AbstractHoverProcessor;
@@ -102,7 +103,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
 					IJsTranslation translation = adapter.getJsTranslation(true);
-					IJavaScriptElement[] result = translation.getElementsFromJsRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
+					IJavaScriptElement[] result = ((JsTranslation)translation).getElementsFromWebRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
 // Vector filteredResults = new Vector();
 // List badFunctions = translation.getGeneratedFunctionNames();
 // boolean bad = false;

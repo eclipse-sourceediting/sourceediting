@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -75,7 +76,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 			
 			if (translationAdapter != null) {
 				IJsTranslation translation = translationAdapter.getJsTranslation(true);
-				fJavaPosition = getDocumentPosition();
+				fJavaPosition = ((JsTranslation)translation).getJavaScriptOffset(getDocumentPosition());
 				try {
 					IJavaScriptUnit cu = translation.getCompilationUnit();
 					// can't get java proposals w/out a compilation unit

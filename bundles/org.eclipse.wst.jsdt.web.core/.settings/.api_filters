@@ -11,6 +11,11 @@
     <resource path="src/org/eclipse/wst/jsdt/web/core/javascript/JsTranslation.java" type="org.eclipse.wst.jsdt.web.core.javascript.JsTranslation">
         <filter id="1143996420">
             <message_arguments>
+                <message_argument value="getElementsFromWebRange(int, int)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1143996420">
+            <message_arguments>
                 <message_argument value="getJavaScriptOffset(int)"/>
             </message_arguments>
         </filter>

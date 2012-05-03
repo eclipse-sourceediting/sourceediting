@@ -17,6 +17,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.text.IJsPartitions;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -57,7 +58,7 @@ public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
 				if (adapter != null) {
 					IJsTranslation translation = adapter.getJsTranslation(false);
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102211
-					elements = translation.getElementsFromJsRange(selection.getOffset(), selection.getOffset() + selection.getLength());
+					elements = ((JsTranslation)translation).getElementsFromWebRange(selection.getOffset(), selection.getOffset() + selection.getLength());
 				}
 			}
 		} finally {
