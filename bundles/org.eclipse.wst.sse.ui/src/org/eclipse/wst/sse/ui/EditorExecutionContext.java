@@ -56,7 +56,7 @@ class EditorExecutionContext implements IExecutionDelegate {
 			/*
 			 * Try to use the progress service so the workbench can give more
 			 * feedback to the user (although editors seem to make less use of
-			 * the service than views -
+			 * the service than views) -
 			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=86221 .
 			 */
 			if (workbenchWindow != null && jobService != null) {
@@ -81,8 +81,8 @@ class EditorExecutionContext implements IExecutionDelegate {
 				 * activities to best accommodate (for example, there is a
 				 * "timed delay" before the editor itself leaves
 				 * background-update mode). NOTE: this execute method itself
-				 * is always called from inside of an ILock block, so another
-				 * block is not not needed here for all these sycnExec's.
+				 * is always called from inside of an ILock lock, so another
+				 * lock is not needed here for all these syncExec's.
 				 */
 				IWorkbench workbench = SSEUIPlugin.getInstance().getWorkbench();
 				final Display display = workbench.getDisplay();
