@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,6 +80,7 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyE
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Assert;
+import org.eclipse.wst.sse.core.internal.util.URIResolverExtension;
 import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
@@ -895,6 +896,9 @@ public class ModelManagerImpl implements IModelManager {
 			((AbstractStructuredModel) newModel).setContentTypeIdentifier(oldModel.getContentTypeIdentifier());
 		}
 		URIResolver oldResolver = oldModel.getResolver();
+		if (oldResolver instanceof URIResolverExtension) {
+			oldResolver = ((URIResolverExtension) oldResolver).newInstance();
+		}
 		newModel.setResolver(oldResolver);
 		try {
 			newModel.setId(DUPLICATED_MODEL);
