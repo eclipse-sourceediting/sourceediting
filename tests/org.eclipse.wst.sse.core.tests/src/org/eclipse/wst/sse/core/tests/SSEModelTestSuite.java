@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.wst.sse.core.tests.events.TestNoChangeEvent;
 import org.eclipse.wst.sse.core.tests.events.TestRegionChangedEvent;
 import org.eclipse.wst.sse.core.tests.events.TestRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.tests.events.TestStructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.tests.model.ModelTest;
 import org.eclipse.wst.sse.core.tests.modelhandler.ModelHandlerRegistryTest;
 import org.eclipse.wst.sse.core.tests.util.TestJarUtilities;
 
@@ -48,7 +49,7 @@ public class SSEModelTestSuite extends TestSuite {
 	// TestDocumentReader.class, TestCharSequenceReader.class,
 	// TestRegionMatches.class};
 
-	private static Class[] classes = new Class[]{ExistenceTest.class, TestObjects.class, TestNewDocumentContentEvent.class, TestAboutToBeChangedEvent.class, TestNewDocumentEvent.class, TestNoChangeEvent.class, TestRegionChangedEvent.class,TestRegionsReplacedEvent.class,TestStructuredDocumentRegionsReplacedEvent.class, TestJarUtilities.class, TestUnsupportedContentType.class, ModelHandlerRegistryTest.class, TestRegionList.class};
+	private static Class[] classes = new Class[]{ExistenceTest.class, TestObjects.class, TestNewDocumentContentEvent.class, TestAboutToBeChangedEvent.class, TestNewDocumentEvent.class, TestNoChangeEvent.class, TestRegionChangedEvent.class,TestRegionsReplacedEvent.class,TestStructuredDocumentRegionsReplacedEvent.class, TestJarUtilities.class, TestUnsupportedContentType.class, ModelHandlerRegistryTest.class, TestRegionList.class, ModelTest.class};
 
 	public SSEModelTestSuite() {
 		super("SSE Model Basic Test Suite");
