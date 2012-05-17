@@ -765,6 +765,12 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 				return basicGetAttributeTypeReferencedEntity();
 			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
 				return getDTDElement();
+			case EcorePackage.ETYPED_ELEMENT__ORDERED:
+				return isOrdered() ? Boolean.TRUE : Boolean.FALSE;
+			case EcorePackage.EATTRIBUTE__DERIVED:
+				return isDerived() ? Boolean.TRUE : Boolean.FALSE;
+			case EcorePackage.ETYPED_ELEMENT__EGENERIC_TYPE:
+				return getEGenericType();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -953,6 +959,10 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 				return attributeTypeReferencedEntity != null;
 			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
 				return getDTDElement() != null;
+			case EcorePackage.ETYPED_ELEMENT__ORDERED:
+				return isOrdered();
+			case EcorePackage.EATTRIBUTE__DERIVED:
+				return isDerived();
 		}
 		return eDynamicIsSet(eFeature);
 	}

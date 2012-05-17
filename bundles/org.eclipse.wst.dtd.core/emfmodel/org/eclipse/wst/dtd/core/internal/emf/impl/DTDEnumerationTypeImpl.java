@@ -244,6 +244,8 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 				return getKind();
 			case DTDPackage.DTD_ENUMERATION_TYPE__DTD_FILE :
 				return getDTDFile();
+			case EcorePackage.ECLASS__ETYPE_PARAMETERS:
+				return getETypeParameters();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -273,6 +275,8 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 				return kind != KIND_EDEFAULT;
 			case DTDPackage.DTD_ENUMERATION_TYPE__DTD_FILE :
 				return getDTDFile() != null;
+			case EcorePackage.ECLASSIFIER__INSTANCE_TYPE_NAME:
+				return instanceTypeName != null;
 		}
 		return eDynamicIsSet(eFeature);
 	}
