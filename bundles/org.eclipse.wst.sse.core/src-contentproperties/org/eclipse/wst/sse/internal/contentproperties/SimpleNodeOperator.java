@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,6 @@
  *     David Carver (Intalio) - bug 300434 - Make inner classes static where possible
  *******************************************************************************/
 package org.eclipse.wst.sse.internal.contentproperties;
-
-
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +41,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.SAXException;
 
 /**
@@ -284,22 +281,6 @@ class SimpleNodeOperator {
 		}
 		return null;
 	}
-
-	public void printTree(NodeIterator iter) {
-		Node n;
-		while ((n = iter.nextNode()) != null) {
-			System.out.println(n.getNodeName() + ":");//$NON-NLS-1$
-			NamedNodeMap m = n.getAttributes();
-			if (m == null)
-				continue;
-			for (int i = 0; i < m.getLength(); i++) {
-				String attName = m.item(i).getNodeName();
-				System.out.print(" " + attName + "=" + m.item(i).getNodeValue());//$NON-NLS-1$ //$NON-NLS-2$
-			}
-			System.out.println("");//$NON-NLS-1$
-		}
-	}
-
 
 	// remove attribute(attName) at ele.
 	protected Attr removeAttributeAt(Element ele, String attName) {
