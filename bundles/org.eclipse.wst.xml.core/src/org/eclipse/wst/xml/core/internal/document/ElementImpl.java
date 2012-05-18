@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -264,19 +264,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (this.attrNodes == null)
 			return null; // no attribute
 
-		final Attr attr = findAttributeNode(name);
-		if (attr != null)
-			return attr;
-
-		String implied = getDefaultValue(name, null);
-		if (implied != null) {
-			Attr createdAttribute = getOwnerDocument().createAttribute(name);
-			createdAttribute.setNodeValue(implied);
-			((AttrImpl) createdAttribute).setOwnerElement(this);
-			return createdAttribute;
-		}
-		
-		return null; // not found
+		return findAttributeNode(name);
 	}
 
 	/**
