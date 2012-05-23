@@ -113,4 +113,29 @@ public class ModelTest extends TestCase {
 		}
 		
 	}
+
+	public void testOKtoReleaseUnmanagedRead() {
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor("org.eclipse.core.runtime.xml");
+			model.getStructuredDocument().set(getName());
+		}
+		finally {
+			if (model != null)
+				model.releaseFromRead();
+		}
+	}
+
+	public void testOKtoReleaseUnmanagedEdit() {
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor("org.eclipse.core.runtime.xml");
+			model.getStructuredDocument().set(getName());
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
+}
+	
 }
