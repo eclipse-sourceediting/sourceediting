@@ -21,7 +21,7 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/repository/juno"/>
+      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/repository/indigo"/>
    </url>
 
    <includes

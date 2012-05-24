@@ -38,7 +38,7 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
  * counts, so until that count has been decremented to zero, the model will
  * continue to exist in memory. When managed, models can be looked up using
  * their IDs or their IStructuredDocuments, which can be advantageous when
- * building on APIs that were not specifically designed for SSE (such as those
+ * building on APIs that aren't specifically designed for SSE (such as those
  * revolving around IDocuments). Unmanaged models offer no such features, and
  * are largely used for tasks where their contents are ephemeral, such as for
  * populating a source viewer with syntax-colored content.
@@ -194,13 +194,9 @@ public interface IModelManager {
 	IStructuredDocument createStructuredDocumentFor(String filename, String content, URIResolver resolver) throws IOException;
 
 	/**
-	 * <p>Creates and returns an unmanaged model populated with the given IFile's
-	 * contents.</p>
-	 * <p>
-	 * {@link IStructuredModel#releaseFromRead()} or
-	 * {@link IStructuredModel#releaseFromEdit()} should still be called directly
-	 * on returned instances to properly dispose of them.
-	 * </p>
+	 * Creates and returns an unmanaged model populated with the given IFile's
+	 * contents
+	 * 
 	 * @param iFile
 	 * @return a structured model, or null if one could not be created
 	 * @throws CoreException if the file's contents or description can not be read
@@ -209,13 +205,9 @@ public interface IModelManager {
 	IStructuredModel createUnManagedStructuredModelFor(IFile iFile) throws IOException, CoreException;
 
 	/**
-	 * <p>Convenience method. It depends on the loader's newModel method to return
-	 * an appropriate StrucuturedModel appropriately initialized.</p>
-	 * <p>
-	 * {@link IStructuredModel#releaseFromRead()} or
-	 * {@link IStructuredModel#releaseFromEdit()} should still be called directly
-	 * on returned instances to properly dispose of them.
-	 * </p>
+	 * Convenience method. It depends on the loader's newModel method to return
+	 * an appropriate StrucuturedModel appropriately initialized.
+	 * 
 	 * @param contentTypeId
 	 * @return a structured model for the given content type, or null if one could not be created or the content type is unsupported
 	 */

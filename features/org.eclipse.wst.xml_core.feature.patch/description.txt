@@ -1,4 +1,0 @@
-This head trunk is deliberatly empty. 
-
-Please load the appropriate maintenance branch. 
-
