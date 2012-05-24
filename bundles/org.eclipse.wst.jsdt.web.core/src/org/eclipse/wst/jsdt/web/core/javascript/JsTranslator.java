@@ -821,7 +821,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 					return offset - position.getOffset() + ((Position) entry.getValue()).getOffset();
 				}
 			}
-			Logger.logException(new BadLocationException("Translated offset requested but not found for: " + offset));
+//			Logger.logException(new BadLocationException("Translated offset requested but not found for: " + offset));
 			return -1;
 		}
 	}
@@ -841,7 +841,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 					return offset - position.getOffset() + ((Position) entry.getKey()).getOffset();
 				}
 			}
-			Logger.logException(new BadLocationException("Page offset requested but not found for: " + offset));
+//			Logger.logException(new BadLocationException("Page offset requested but not found for: " + offset));
 			return -1;
 		}
 	}
