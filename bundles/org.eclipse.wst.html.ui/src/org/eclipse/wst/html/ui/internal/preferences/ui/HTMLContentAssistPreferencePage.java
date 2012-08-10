@@ -74,7 +74,7 @@ public class HTMLContentAssistPreferencePage extends AbstractPreferencePage impl
 		
 		group.setText(XMLUIMessages.Group_label_Insertion);
 		
-		fInsertSingleProposals = createCheckBox(group, "Insert single proposals automatically");
+		fInsertSingleProposals = createCheckBox(group, XMLUIMessages.Insert_single_proposals);
 		((GridData) fInsertSingleProposals.getLayoutData()).horizontalSpan = 2;
 	}
 
