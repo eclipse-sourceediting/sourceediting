@@ -377,6 +377,14 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 					}
 					if(defaultValue != null && ((matchString.length() == 0) || defaultValue.startsWith(matchString))) {
 						String rString = "\"" + defaultValue + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+						final String regionText = contentAssistRequest.getDocumentRegion().getText(contentAssistRequest.getRegion());
+						final int matchStringLength = contentAssistRequest.getMatchString().length();
+						if (matchString.length() > 0 && matchStringLength < regionText.length()) {
+							final String remaining = regionText.substring(matchStringLength).trim();
+							if (remaining.charAt(0) != '\'' && remaining.charAt(0) != '"') {
+								rLength = matchStringLength;
+							}
+						}
 						CustomCompletionProposal proposal = new MarkupCompletionProposal(
 								rString, rOffset, rLength, defaultValue.length() + 1,
 								XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_DEFAULT),
