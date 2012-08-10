@@ -180,12 +180,12 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		// begin Java severity override section
 		section = createStyleSectionWithContentComposite(composite, JSPUIMessages.VALIDATION_HEADER_JAVA, nColumns);
 		if (getProject() == null) {
-			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PREFERENCE_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
+			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI, JAVA_SEVERITY_PREFERENCE_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
 		}
 		else {
 			final Map data = new HashMap();
 			data.put(DATA_NO_LINK, Boolean.TRUE);
-			Link link= new Link(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT);
+			Link link= new Link(section, SWT.WRAP | SWT.MULTI);
 			link.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
 			link.setText(JSPUIMessages.VALIDATION_JAVA_NOTICE);
 			link.addSelectionListener(new SelectionAdapter() {
