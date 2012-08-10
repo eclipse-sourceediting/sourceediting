@@ -383,7 +383,9 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 	}
 
 	public boolean performOk() {
-		if (performDoctypeOk() || performCSSProfileOk()) {
+		boolean doctype = performDoctypeOk();
+		boolean cssprofile = performCSSProfileOk();
+		if (doctype || cssprofile) {
 			// touch to mark for build-driven revalidation
 			IResource resource = getResource();
 			if (resource != null) {
