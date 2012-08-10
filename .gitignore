@@ -1,11 +1,11 @@
 # copied from eclipse.platform.debug/.gitignore
-*/bin/ 
-*~ 
-*.rej 
-*.bak 
-javacore.* 
-heapdump.* 
-core.* 
+bin/
+*~
+*.rej
+*.bak
+javacore.*
+heapdump.*
+core.*
 Snap.*
 
 # suggested by github
@@ -30,27 +30,3 @@ temp.folder
 src.zip
 .fbwarnings
 javaCompiler...args
-
-/tests/org.eclipse.jst.jsp.core.tests/bin/
-/tests/org.eclipse.jst.jsp.tests.encoding/bin/
-/tests/org.eclipse.jst.jsp.ui.tests/bin/
-/tests/org.eclipse.wst.css.core.tests/bin/
-/tests/org.eclipse.wst.css.tests.encoding/bin/
-/tests/org.eclipse.wst.css.ui.tests/bin/
-/tests/org.eclipse.wst.dtd.core.tests/bin/
-/tests/org.eclipse.wst.dtd.ui.tests/bin/
-/tests/org.eclipse.wst.html.core.tests/bin/
-/tests/org.eclipse.wst.html.tests.encoding/bin/
-/tests/org.eclipse.wst.html.ui.tests/bin/
-/tests/org.eclipse.wst.jsdt.web.core.tests/bin/
-/tests/org.eclipse.wst.jsdt.web.ui.tests/bin/
-/tests/org.eclipse.wst.sse.core.tests/bin/
-/tests/org.eclipse.wst.sse.ui.tests/bin/
-/tests/org.eclipse.wst.xml.catalog.tests/bin/
-/tests/org.eclipse.wst.xml.core.tests/bin/
-/tests/org.eclipse.wst.xml.tests.encoding/bin/
-/tests/org.eclipse.wst.xml.ui.tests/bin/
-/tests/org.eclipse.wst.xml.validation.tests/bin/
-/tests/org.eclipse.wst.xsd.core.tests/bin/
-/tests/org.eclipse.wst.xsd.ui.tests/bin/
-/tests/org.eclipse.wst.xsd.validation.tests/bin/
