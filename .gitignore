@@ -1,11 +1,11 @@
 # copied from eclipse.platform.debug/.gitignore
-/*/bin/ 
-*~ 
-*.rej 
-*.bak 
-javacore.* 
-heapdump.* 
-core.* 
+bin/
+*~
+*.rej
+*.bak
+javacore.*
+heapdump.*
+core.*
 Snap.*
 
 # suggested by github
