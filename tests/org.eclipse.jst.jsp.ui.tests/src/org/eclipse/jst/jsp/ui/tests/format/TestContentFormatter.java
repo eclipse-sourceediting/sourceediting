@@ -229,4 +229,10 @@ public class TestContentFormatter extends TestCase {
 	public void testFormatBug358545b() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertSignificantEquals("/" + PROJECT_NAME + "/WebContent/formatbug358545b.jsp", true);
 	}
+	public void testFormatBug384126() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertSignificantEquals("/" + PROJECT_NAME + "/WebContent/formatBug384126.jsp", true);
+	}
+	public void testFormatBug383387() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertSignificantEquals("/" + PROJECT_NAME + "/WebContent/formatBug383387.jsp", true);
+	}
 }
