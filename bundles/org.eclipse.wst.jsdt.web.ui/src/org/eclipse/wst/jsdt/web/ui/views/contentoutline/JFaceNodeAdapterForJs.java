@@ -183,10 +183,11 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	private Object[] filterChildrenForRange(IJavaScriptElement[] allChildren, Node node) {
 		int javaPositionEnd = ((NodeImpl) node).getEndOffset();
 		int javaPositionStart = ((NodeImpl) node).getStartOffset();
-		javaPositionStart = ((JsTranslation)getTranslation(node)).getJavaScriptOffset(((NodeImpl) node).getStartOffset());
+		IJsTranslation translation = getTranslation(node);
+		javaPositionStart = ((JsTranslation)translation).getJavaScriptOffset(((NodeImpl) node).getStartOffset());
 		if (javaPositionStart < 0)
 			javaPositionStart = ((NodeImpl) node).getStartOffset();
-		javaPositionEnd = ((JsTranslation)getTranslation(node)).getJavaScriptOffset(((NodeImpl) node).getEndOffset() - 1);
+		javaPositionEnd = ((JsTranslation)translation).getJavaScriptOffset(((NodeImpl) node).getEndOffset() - 1);
 		if (javaPositionEnd < 0)
 			javaPositionEnd = ((NodeImpl) node).getEndOffset();
 

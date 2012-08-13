@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-
 package org.eclipse.wst.jsdt.web.core.javascript;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,15 +44,13 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 /**
-*
-
-* Provisional API: This class/interface is part of an interim API that is still under development and expected to
-* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
-* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
-* (repeatedly) as the API evolves.
-
- * Translates a web page into its JavaScript pieces. 
+ *
+ * Provisional API: This class/interface is part of an interim API that is still under development and expected to
+ * change significantly before reaching stability. It is being made available at this early stage to solicit feedback
+ * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
+ * (repeatedly) as the API evolves.
  * 
+ * Translates a web page into its JavaScript pieces. 
  */
 public class JsTranslator extends Job implements IJsTranslator, IDocumentListener {
 	
@@ -111,7 +107,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 * deprecated
 	 */
 	protected ArrayList scriptLocationInHtml = new ArrayList();
-	// order matters in this map
+	/**
+	 * Map of web page ranges to translation source rangers.  Order matters.
+	 */
 	private Map fPositionMap = new LinkedHashMap();
 	protected int scriptOffset = 0;
 	
@@ -125,8 +123,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	private IDocumentRewriteSessionListener fDocumentRewriteSessionListener = new DocumentRewriteSessionListener();
 
 	/*
-	 * org.eclipse.jface.text.Regions that contain purely generated code, for
-	 * which no validation messages should be reported to the user
+	 * org.eclipse.jface.text.Regions of the web page that contain purely
+	 * generated code, for which no validation messages should be reported to
+	 * the user.
 	 */
 	private List fGeneratedRanges = new ArrayList();
 	
@@ -349,6 +348,13 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	protected void finishedTranslation() {
 	}
 	
+	/**
+	 * @deprecated
+	 */
+	protected void appendAndTrack(String javaScript, int scriptStart, int scriptTextLength) {
+		appendAndTrack(javaScript, scriptStart);
+	}
+	
 	protected void appendAndTrack(String javaScript, int webPageScriptStart) {
 		int length = javaScript.length();
 		Position inHtml = new Position(webPageScriptStart, length);
@@ -419,14 +425,11 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							for (int i = 0; i < spaces.length; i++) {
 								try {
 									char c = fStructuredDocument.getChar(scriptOffset + i);
-									if (c == '\n')
-										spaces[i] = '\n';
-									else if (c == '\r')
-										spaces[i] = '\r';
-									else if (c == '\t')
-										spaces[i] = '\t';
+									if (c == '\n' || c == '\r' || c == '\t')
+										spaces[i] = c;
 								}
 								catch (BadLocationException e) {
+									Logger.logException(e);
 								}
 							}
 							fScriptText.append(spaces);
@@ -460,12 +463,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		for (int i = 0; i < spaces.length; i++) {
 			try {
 				char c = fStructuredDocument.getChar(scriptOffset + i);
-				if (c == '\n')
-					spaces[i] = '\n';
-				else if (c == '\r')
-					spaces[i] = '\r';
-				else if (c == '\t')
-					spaces[i] = '\t';
+				if (c == '\n' || c == '\r' || c == '\t')
+					spaces[i] = c;
 			}
 			catch (BadLocationException e) {
 				Logger.logException(e);
@@ -501,12 +500,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				for (int i = 0; i < spaces.length; i++) {
 					try {
 						char c = fStructuredDocument.getChar(scriptOffset + i);
-						if (c == '\n')
-							spaces[i] = '\n';
-						else if (c == '\r')
-							spaces[i] = '\r';
-						else if (c == '\t')
-							spaces[i] = '\t';
+						if (c == '\n' || c == '\r' || c == '\t')
+							spaces[i] = c;
 					}
 					catch (BadLocationException e) {
 						Logger.logException(e);
@@ -542,7 +537,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							}
 							length = end - index;
 						} catch (BadLocationException e) {
-							Logger.logException("Could not get HTML comment line information", e); //$NON-NLS-1$
+							Logger.logException("Could not get web page's comment line information", e); //$NON-NLS-1$
 							
 							end = index + XML_COMMENT_START.length();
 							length = XML_COMMENT_START.length();
@@ -553,12 +548,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						for (int i = 0; i < spaces.length; i++) {
 							try {
 								char c = fStructuredDocument.getChar(scriptStartOffset + i);
-								if (c == '\n')
-									spaces[i] = '\n';
-								else if (c == '\r')
-									spaces[i] = '\r';
-								else if (c == '\t')
-									spaces[i] = '\t';
+								if (c == '\n' || c == '\r' || c == '\t')
+									spaces[i] = c;
 							}
 							catch (BadLocationException e) {
 								Logger.logException(e);
@@ -651,8 +642,11 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						if (clientMatchEnd < 0 && serverSideEnd >= validJSend)
 							validJSstart = serverSideEnd;
 
-						// substituted text length much match original length exactly, find text of the right length
-						int start = validJSend + scriptStartOffset;
+						/*
+						 * the substitution text length much match original
+						 * length exactly, generate text of the right length
+						 */
+						int start = scriptStartOffset + validJSend;
 						int end = scriptStartOffset + validJSstart;
 						generatedContent.append('_');
 						for (int i = validJSend + 1; i < validJSstart; i++) {
@@ -680,6 +674,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						 */
 						fGeneratedRanges.add(new Region(start, end - start));
 						appendAndTrack(generatedContent.toString(), start);
+						// reset now that it's been appended
+						generatedContent.setLength(0);
 					}
 					// set up to end while if no end for valid
 					if (validJSstart > 0) {
@@ -709,11 +705,6 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 					Position inHtml = new Position(scriptStartOffset + validJSstart, regionText.length() - validJSstart);
 					scriptLocationInHtml.add(inHtml);
 				}
-//				if (generatedContent.length() != 0) {
-//					fScriptText.append(generatedContent.toString());
-//					Position inHtml = new Position(scriptStartOffset, generatedContent.length());
-//					scriptLocationInHtml.add(inHtml);
-//				}
 				else {
 					appendAndTrack(regionText, scriptStartOffset);
 					Position inHtml = new Position(scriptStartOffset, regionText.length());
@@ -799,7 +790,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	}
 
 	/**
-	 * @return the fGeneratedRanges
+	 * @return the generated pages, in web page offsets
 	 */
 	public Region[] getGeneratedRanges() {
 		return (Region[]) fGeneratedRanges.toArray(new Region[fGeneratedRanges.size()]);
@@ -813,15 +804,14 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 */
 	int getJavaScriptOffset(int offset) {
 		synchronized (finished) {
-			Iterator entries = fPositionMap.entrySet().iterator();
-			while (entries.hasNext()) {
-				Entry entry = (Entry) entries.next();
-				Position position = (Position) entry.getKey();
+			Map.Entry[] entries = (Map.Entry[]) fPositionMap.entrySet().toArray(new Map.Entry[fPositionMap.size()]);
+			for (int i = entries.length - 1; i >= 0; i--) {
+				Position position = (Position) entries[i].getKey();
 				if (position.includes(offset) || (offset == position.getOffset())) {
-					return offset - position.getOffset() + ((Position) entry.getValue()).getOffset();
+					return offset - position.getOffset() + ((Position) entries[i].getValue()).getOffset();
 				}
 			}
-//			Logger.logException(new BadLocationException("Translated offset requested but not found for: " + offset));
+//			Logger.logException(new BadLocationException("Page offset requested but not found for: " + offset));
 			return -1;
 		}
 	}
@@ -833,12 +823,11 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	 */
 	int getWebOffset(int offset) {
 		synchronized (finished) {
-			Iterator entries = fPositionMap.entrySet().iterator();
-			while (entries.hasNext()) {
-				Entry entry = (Entry) entries.next();
-				Position position = (Position) entry.getValue();
+			Map.Entry[] entries = (Map.Entry[]) fPositionMap.entrySet().toArray(new Map.Entry[fPositionMap.size()]);
+			for (int i = entries.length - 1; i >= 0; i--) {
+				Position position = (Position) entries[i].getValue();
 				if (position.includes(offset) || (offset == position.getOffset())) {
-					return offset - position.getOffset() + ((Position) entry.getKey()).getOffset();
+					return offset - position.getOffset() + ((Position) entries[i].getKey()).getOffset();
 				}
 			}
 //			Logger.logException(new BadLocationException("Page offset requested but not found for: " + offset));
