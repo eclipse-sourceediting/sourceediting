@@ -338,7 +338,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag________________________$tag___ _$tag________________________$tag____$tag___ _$tag________________________$tag____$tag____$tag________________________$tag________________________$tag____$tag____$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
 		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
@@ -361,7 +361,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "              \nvar text = _$tag_______________________; _$tag________________________$tag___ _$tag________________________$tag____$tag___ _$tag________________________$tag____$tag____$tag________________________$tag________________________$tag____$tag____$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected", "              \nvar text = _$tag_______________________; _$tag___ _$tag___ _$tag________________________$tag___ ",translated);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
 		assertTrue("server-side script block included", translated.indexOf("<%") < 0);
@@ -406,7 +406,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag________________________$tag___ _$tag________________________$tag____$tag___ _$tag________________________$tag____$tag____$tag________ _$tag________________________$tag____$tag____$tag_________$tag________________________$tag________________________$tag____$tag____$tag_________$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________ _$tag________________________$tag___ ",translated);
 		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);
@@ -429,7 +429,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________ _$tag_________$tag________________________$tag___ ",translated);
+		assertEquals("translated contents not as expected", "         var text = _$tag_______________________; _$tag___ _$tag___ _$tag________ _$tag________________________$tag___ ",translated);
 		assertTrue("translation empty", translated.length() > 5);
 		assertTrue("server-side script block included", translated.indexOf("<?") < 0);
 		assertTrue("server-side script block included", translated.indexOf("?>") < 0);

@@ -357,7 +357,12 @@ public class FormattingTests extends TestCase {
 		 */
 		public void tearDown() throws Exception {
 			//delete test projects
-			fProject.delete(true, new NullProgressMonitor());
+			try {
+				fProject.delete(true, new NullProgressMonitor());
+			}
+			catch (CoreException e) {
+				// not a reason to fail
+			}
 			
 			//reset non-interactive
 			if (previousWTPAutoTestNonInteractivePropValue != null) {
