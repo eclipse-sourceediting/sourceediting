@@ -30,21 +30,21 @@ public class TestEditorConfigurationXML extends TestCase {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.SOURCEVIEWERCONFIGURATION, ContentTypeIdForXML.ContentTypeID_XML);
 		assertNotNull("no source viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o.getClass(), StructuredTextViewerConfigurationXML.class);
+		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, StructuredTextViewerConfigurationXML.class, o.getClass());
 	}
 
 	public void testGetContentOutlineViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ContentTypeIdForXML.ContentTypeID_XML);
 		assertNotNull("no content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o.getClass(), XMLContentOutlineConfiguration.class);
+		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, XMLContentOutlineConfiguration.class, o.getClass());
 	}
 
 	public void testGetPropertySheetConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.PROPERTYSHEETCONFIGURATION, ContentTypeIdForXML.ContentTypeID_XML);
 		assertNotNull("no property sheet configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o.getClass(), XMLPropertySheetConfiguration.class);
+		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForXML.ContentTypeID_XML, XMLPropertySheetConfiguration.class, o.getClass());
 	}
 	
 	public void testGetDocumentationTextHover() {
@@ -65,6 +65,6 @@ public class TestEditorConfigurationXML extends TestCase {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOUBLECLICKSTRATEGY, IXMLPartitions.XML_DEFAULT);
 		assertNotNull("no doubleclick strategy for " + IXMLPartitions.XML_DEFAULT, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected doubleclick strategy for " + IXMLPartitions.XML_DEFAULT, o.getClass(), XMLDoubleClickStrategy.class);
+		assertEquals("unexpected doubleclick strategy for " + IXMLPartitions.XML_DEFAULT, XMLDoubleClickStrategy.class, o.getClass());
 	}
 }
