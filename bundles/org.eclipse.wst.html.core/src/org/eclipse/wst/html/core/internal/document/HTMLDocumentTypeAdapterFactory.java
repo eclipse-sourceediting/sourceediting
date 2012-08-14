@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,8 @@ package org.eclipse.wst.html.core.internal.document;
 
 
 
-import java.util.HashMap;
-
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -25,25 +24,22 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 
 /**
  */
-public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Preferences.IPropertyChangeListener {
+public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory {
 
-	private int tagNameCase = DocumentTypeAdapter.LOWER_CASE;
-	private int attrNameCase = DocumentTypeAdapter.LOWER_CASE;
-	private Preferences preferences = null;
-
-	// for removal later on release()
-	private HashMap fDoc2AdapterMap = new HashMap();
-	
+	private static HTMLDocumentTypeAdapterFactory factory;
+	private static final CasePreferenceListener listener = new CasePreferenceListener();
 	/**
+	 * @deprecated The getInstance() factory method should be used; however, this has
+	 * been left in place for legacy reasons
 	 */
 	public HTMLDocumentTypeAdapterFactory() {
-		super();
-		this.preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
+	}
 
-		if (this.preferences != null) {
-			updateCases(); // initialize
-			this.preferences.addPropertyChangeListener(this);
+	public static synchronized HTMLDocumentTypeAdapterFactory getInstance() {
+		if (factory == null) {
+			factory = new HTMLDocumentTypeAdapterFactory();
 		}
+		return factory;
 	}
 
 	/**
@@ -79,8 +75,6 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 				// to come back to for case preferences.
 				result = new HTMLDocumentTypeAdapter((IDOMDocument) notifier, this);
 				notifier.addAdapter(result);
-				
-				fDoc2AdapterMap.put(notifier, result);
 			}
 		}
 		return result;
@@ -89,13 +83,13 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	/**
 	 */
 	public int getAttrNameCase() {
-		return this.attrNameCase;
+		return listener.getAttrNameCase();
 	}
 
 	/**
 	 */
 	public int getTagNameCase() {
-		return this.tagNameCase;
+		return listener.getTagNameCase();
 	}
 
 	/**
@@ -106,65 +100,72 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 
 	/**
 	 */
-	public void propertyChange(Preferences.PropertyChangeEvent event) {
-		if (event == null)
-			return;
-		String property = event.getProperty();
-		if (property == null)
-			return;
-
-		if (property.equals(HTMLCorePreferenceNames.TAG_NAME_CASE) || property.equals(HTMLCorePreferenceNames.ATTR_NAME_CASE)) {
-			updateCases();
-		}
-	}
-
-	/**
-	 */
-	private void updateCases() {
-		this.tagNameCase = DocumentTypeAdapter.LOWER_CASE;
-		this.attrNameCase = DocumentTypeAdapter.LOWER_CASE;
-
-		if (this.preferences == null)
-			return;
-
-		int tagCase = this.preferences.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE);
-		if (tagCase == HTMLCorePreferenceNames.LOWER)
-			this.tagNameCase = DocumentTypeAdapter.LOWER_CASE;
-		else if (tagCase == HTMLCorePreferenceNames.UPPER)
-			this.tagNameCase = DocumentTypeAdapter.UPPER_CASE;
-		
-		int attCase = this.preferences.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE);
-		if (attCase == HTMLCorePreferenceNames.LOWER)
-			this.attrNameCase = DocumentTypeAdapter.LOWER_CASE;
-		else if (attCase == HTMLCorePreferenceNames.UPPER)
-			this.tagNameCase = DocumentTypeAdapter.UPPER_CASE;
-	}
-
-	/**
-	 */
 	public void release() {
 		
-		if(!fDoc2AdapterMap.isEmpty()) {
-			Object[] docs = fDoc2AdapterMap.keySet().toArray();
-			DocumentTypeAdapter adapter = null;
-			for (int i = 0; i < docs.length; i++) {
-				adapter = (DocumentTypeAdapter)fDoc2AdapterMap.get(docs[i]);
-				adapter.release();
-				((IDOMDocument)docs[i]).removeAdapter(adapter);
-			}
-			fDoc2AdapterMap.clear();
-		}
-		
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=95960
-		if (this.preferences != null) {
-			this.preferences.removePropertyChangeListener(this);
-		}
 	}
 
 	/**
 	 * Overriding copy method
 	 */
 	public INodeAdapterFactory copy() {
-		return new HTMLDocumentTypeAdapterFactory();
+		return getInstance();
+	}
+
+	private static class CasePreferenceListener implements Preferences.IPropertyChangeListener {
+
+		private Preferences preferences;
+
+		private int tagNameCase = DocumentTypeAdapter.LOWER_CASE;
+		private int attrNameCase = DocumentTypeAdapter.LOWER_CASE;
+
+		CasePreferenceListener() {
+			preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
+			if (preferences != null) {
+				updateCases();
+				preferences.addPropertyChangeListener(this);
+			}
+		}
+
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event == null)
+				return;
+			String property = event.getProperty();
+			if (property == null)
+				return;
+
+			if (property.equals(HTMLCorePreferenceNames.TAG_NAME_CASE) || property.equals(HTMLCorePreferenceNames.ATTR_NAME_CASE)) {
+				updateCases();
+			}
+		}
+
+		public int getTagNameCase() {
+			return tagNameCase;
+		}
+
+		public int getAttrNameCase() {
+			return attrNameCase;
+		}
+
+		/**
+		 */
+		private void updateCases() {
+			tagNameCase = DocumentTypeAdapter.LOWER_CASE;
+			attrNameCase = DocumentTypeAdapter.LOWER_CASE;
+
+			if (this.preferences == null)
+				return;
+
+			tagNameCase = getCase(HTMLCorePreferenceNames.TAG_NAME_CASE);
+			attrNameCase = getCase(HTMLCorePreferenceNames.ATTR_NAME_CASE);
+		}
+
+		private int getCase(String property) {
+			int result = DocumentTypeAdapter.LOWER_CASE;
+			if (preferences != null) {
+				if (preferences.getInt(property) == HTMLCorePreferenceNames.UPPER)
+					result = DocumentTypeAdapter.UPPER_CASE;
+			}
+			return result;
+		}
 	}
 }
