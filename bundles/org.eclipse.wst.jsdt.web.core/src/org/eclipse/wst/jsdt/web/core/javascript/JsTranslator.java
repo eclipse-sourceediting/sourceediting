@@ -41,7 +41,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 /**
  *
@@ -492,8 +491,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				int scriptStartOffset = container.getStartOffset(region);
 				int scriptTextLength = container.getLength();
 				String regionText = container.getFullText(region);
-				regionText = StringUtils.replace(regionText, CDATA_START, CDATA_START_PAD);
-				regionText = StringUtils.replace(regionText, CDATA_END, CDATA_END_PAD);
+//				regionText = StringUtils.replace(regionText, CDATA_START, CDATA_START_PAD);
+//				regionText = StringUtils.replace(regionText, CDATA_END, CDATA_END_PAD);
 				int regionLength = region.getLength();
 				
 				spaces = Util.getPad(scriptStartOffset - scriptOffset);
@@ -516,9 +515,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 					for (int i = 0; i < index; i++) {
 						/*
 						 * replace the comment start in the translation when
-						 * it's preceded only by white space
+						 * it's preceded only by white space or '/'
 						 */
-						replaceCommentStart = replaceCommentStart && Character.isWhitespace(regionText.charAt(i));
+						replaceCommentStart = replaceCommentStart && (Character.isWhitespace(regionText.charAt(i)) || '/' == regionText.charAt(i));
 					}
 					
 					if (replaceCommentStart) {
@@ -560,6 +559,59 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 						regionText = newRegionText.toString();
 					}
 				}
+				// also skip over CDATA starts
+				if (regionText.indexOf(CDATA_START) >= 0) {
+					int index = regionText.indexOf(CDATA_START);
+					
+					boolean replaceCdataStart = true;
+					for (int i = 0; i < index; i++) {
+						/*
+						 * replace the comment start in the translation when
+						 * it's preceded only by white space or '/'
+						 */
+						replaceCdataStart = replaceCdataStart && (Character.isWhitespace(regionText.charAt(i)) || '/' == regionText.charAt(i));
+					}
+					
+					if (replaceCdataStart) {
+						IRegion line;
+						int end;
+						int length;
+						try {
+							/*
+							 * try to find where the line with the comment
+							 * ends (it is the end of what we'll replace)
+							 */
+							line = container.getParentDocument().getLineInformationOfOffset(index + scriptStartOffset);
+							end = line.getOffset() + line.getLength() - scriptStartOffset;
+							if(end > regionText.length()) {
+								end = regionText.length();
+							}
+							length = end - index;
+						} catch (BadLocationException e) {
+							Logger.logException("Could not get web page's comment line information", e); //$NON-NLS-1$
+							
+							end = index + CDATA_START.length();
+							length = CDATA_START.length();
+						}
+						
+						StringBuffer newRegionText = new StringBuffer(regionText.substring(0, index));
+						spaces = Util.getPad(length);
+						for (int i = 0; i < spaces.length; i++) {
+							try {
+								char c = fStructuredDocument.getChar(scriptStartOffset + i);
+								if (c == '\n' || c == '\r' || c == '\t')
+									spaces[i] = c;
+							}
+							catch (BadLocationException e) {
+								Logger.logException(e);
+							}
+						}
+						newRegionText.append(spaces);
+						newRegionText.append(regionText.substring(end));
+						regionText = newRegionText.toString();
+					}
+				}
+
 				/*
 				 * Fix for
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
