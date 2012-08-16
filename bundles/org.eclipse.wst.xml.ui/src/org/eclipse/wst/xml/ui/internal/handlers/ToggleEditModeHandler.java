@@ -20,6 +20,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -96,7 +99,20 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 	// Handlers that need to interact with the ui that the command came from
 	// need to use implement this method.
 	public void updateElement(UIElement element, Map parameters) {
-		IEditorPart editor = XMLUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		XMLUIPlugin xmluiPlugin = XMLUIPlugin.getDefault();
+		if (xmluiPlugin == null)
+			return; // probably shutting down
+		IWorkbench workbench = xmluiPlugin.getWorkbench();
+		if (workbench == null)
+			return;
+		IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+		if (activeWorkbenchWindow == null)
+			return;
+		IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+		if (activePage == null)
+			return;
+
+		IEditorPart editor = activePage.getActiveEditor();
 		ITextEditor textEditor = null;
 		if (editor instanceof ITextEditor)
 			textEditor = (ITextEditor) editor;
