@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.internal.format;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -25,6 +27,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.TypedPosition;
@@ -180,9 +183,14 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		
 							if (translator instanceof JsTranslator) {
 								Region[] regions = ((JsTranslator) translator).getGeneratedRanges();
+								Arrays.sort(regions, new Comparator() {
+									public int compare(Object o1, Object o2) {
+										return ((IRegion) o1).getOffset() - ((IRegion) o2).getOffset();
+									}
+								});
 								/*
-								 * for each generated range, replace it with the
-								 * original web page text
+								 * for each web page range representing content needing replacements, replace it with the
+								 * original web page's text
 								 */
 								for (int r = 0; r < regions.length; ++r) {
 									int javascriptOffset = ((JsTranslation) translation).getJavaScriptOffset(regions[r].getOffset());

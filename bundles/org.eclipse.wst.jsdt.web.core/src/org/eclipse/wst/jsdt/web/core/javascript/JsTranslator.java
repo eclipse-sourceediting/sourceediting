@@ -71,7 +71,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	private static final int EVENT_HANDLER_POST_LENGTH = EVENT_HANDLER_POST.length();
 	
 	//TODO: should be an inclusive rule rather than exclusive
-	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<%?)!>]+/?>"); //$NON-NLS-1$
+	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^<%?)!>]+/?>|<!--|-->|<\\!\\[CDATA\\[|]]>"); //$NON-NLS-1$
 
 	// FIXME: Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=307401
 	private String[][] fServerSideDelimiters = new String[][]{{"<%","%>"},{"<?","?>"}};
@@ -361,6 +361,7 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		fScriptText.append(javaScript);
 	}
 	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateInlineJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
 	 */
@@ -491,8 +492,6 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				int scriptStartOffset = container.getStartOffset(region);
 				int scriptTextLength = container.getLength();
 				String regionText = container.getFullText(region);
-//				regionText = StringUtils.replace(regionText, CDATA_START, CDATA_START_PAD);
-//				regionText = StringUtils.replace(regionText, CDATA_END, CDATA_END_PAD);
 				int regionLength = region.getLength();
 				
 				spaces = Util.getPad(scriptStartOffset - scriptOffset);
@@ -541,74 +540,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 							end = index + XML_COMMENT_START.length();
 							length = XML_COMMENT_START.length();
 						}
-						
-						StringBuffer newRegionText = new StringBuffer(regionText.substring(0, index));
-						spaces = Util.getPad(length);
-						for (int i = 0; i < spaces.length; i++) {
-							try {
-								char c = fStructuredDocument.getChar(scriptStartOffset + i);
-								if (c == '\n' || c == '\r' || c == '\t')
-									spaces[i] = c;
-							}
-							catch (BadLocationException e) {
-								Logger.logException(e);
-							}
-						}
-						newRegionText.append(spaces);
-						newRegionText.append(regionText.substring(end));
-						regionText = newRegionText.toString();
-					}
-				}
-				// also skip over CDATA starts
-				if (regionText.indexOf(CDATA_START) >= 0) {
-					int index = regionText.indexOf(CDATA_START);
-					
-					boolean replaceCdataStart = true;
-					for (int i = 0; i < index; i++) {
-						/*
-						 * replace the comment start in the translation when
-						 * it's preceded only by white space or '/'
-						 */
-						replaceCdataStart = replaceCdataStart && (Character.isWhitespace(regionText.charAt(i)) || '/' == regionText.charAt(i));
-					}
-					
-					if (replaceCdataStart) {
-						IRegion line;
-						int end;
-						int length;
-						try {
-							/*
-							 * try to find where the line with the comment
-							 * ends (it is the end of what we'll replace)
-							 */
-							line = container.getParentDocument().getLineInformationOfOffset(index + scriptStartOffset);
-							end = line.getOffset() + line.getLength() - scriptStartOffset;
-							if(end > regionText.length()) {
-								end = regionText.length();
-							}
-							length = end - index;
-						} catch (BadLocationException e) {
-							Logger.logException("Could not get web page's comment line information", e); //$NON-NLS-1$
-							
-							end = index + CDATA_START.length();
-							length = CDATA_START.length();
-						}
-						
-						StringBuffer newRegionText = new StringBuffer(regionText.substring(0, index));
-						spaces = Util.getPad(length);
-						for (int i = 0; i < spaces.length; i++) {
-							try {
-								char c = fStructuredDocument.getChar(scriptStartOffset + i);
-								if (c == '\n' || c == '\r' || c == '\t')
-									spaces[i] = c;
-							}
-							catch (BadLocationException e) {
-								Logger.logException(e);
-							}
-						}
-						newRegionText.append(spaces);
-						newRegionText.append(regionText.substring(end));
-						regionText = newRegionText.toString();
+						scriptStartOffset += end;
+						regionText = regionText.substring(end);
+						appendAndTrack(new String(Util.getPad(end)), fScriptText.length());
 					}
 				}
 
