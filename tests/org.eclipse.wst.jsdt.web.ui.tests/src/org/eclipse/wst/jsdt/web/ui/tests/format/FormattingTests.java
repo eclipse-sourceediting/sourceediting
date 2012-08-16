@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.tests.format;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -166,10 +167,25 @@ public class FormattingTests extends TestCase {
 	public void testFormatHTMLScriptRegion_AfterEventHander() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("test15.html", "test15-fmt.html", new StructuredTextViewerConfigurationJSDT());
 	}
+	public void testFormat_NoEdits() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("test16.html", "test16-fmt.html", new StructuredTextViewerConfigurationJSDT());
+	}	
+	
+	public void testBug383387() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("test17.html", "test17-fmt.html", new StructuredTextViewerConfigurationJSDT());
+	}	
+	
+	public void testWI97431() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("test18.html", "test18-fmt.html", new StructuredTextViewerConfigurationJSDT());
+	}	
+	
+	public void testCDATAPreserved() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("test19.html", "test19-fmt.html", new StructuredTextViewerConfigurationJSDT());
+	}	
 	
 	/**
-	 * @param beforePath
-	 * @param afterPath
+	 * @param beforePath - the path of the before file
+	 * @param afterPath - the path of the after file, <b>must not be the same as the before file</b>
 	 * @param configuration
 	 * @throws UnsupportedEncodingException
 	 * @throws IOException
@@ -183,7 +199,7 @@ public class FormattingTests extends TestCase {
 		try {
 			beforeModel = getModelForEdit(beforePath);
 			assertNotNull("could not retrieve structured model for : " + beforePath, beforeModel);
-			beforeModel.getFactoryRegistry().addFactory(new JsTranslationAdapterFactory());
+			JsTranslationAdapterFactory.setupAdapterFactory(beforeModel);
 
 			afterModel = getModelForEdit(afterPath);
 			assertNotNull("could not retrieve structured model for : " + afterPath, afterModel);
@@ -216,6 +232,7 @@ public class FormattingTests extends TestCase {
 			actualContents = StringUtils.replace(actualContents, "\r\n", "\n");
 			actualContents = StringUtils.replace(actualContents, "\r", "\n");
 			
+			onlyWhiteSpaceDiffers(expectedContents, actualContents);
 			assertEquals("Formatted document differs from the expected.", expectedContents, actualContents);
 		}
 		finally {
@@ -240,6 +257,29 @@ public class FormattingTests extends TestCase {
 				}
 			}
 		}
+	}
+	private boolean onlyWhiteSpaceDiffers(String expectedContents, String actualContents) {
+		CharArrayWriter writer1 = new CharArrayWriter();
+		char[] expected = expectedContents.toCharArray();
+		for (int i = 0; i < expected.length; i++) {
+			if (!Character.isWhitespace(expected[i]))
+				writer1.write(expected[i]);
+		}
+
+		CharArrayWriter writer2 = new CharArrayWriter();
+		char[] actual = actualContents.toCharArray();
+		for (int i = 0; i < actual.length; i++) {
+			if (!Character.isWhitespace(actual[i]))
+				writer2.write(actual[i]);
+		}
+		writer1.close();
+		writer2.close();
+
+		char[] expectedCompacted = writer1.toCharArray();
+		char[] actualCompacted = writer2.toCharArray();
+		assertEquals("significant character differs", new String(expectedCompacted), new String(actualCompacted));
+
+		return true;
 	}
 	
 	/**
@@ -357,12 +397,7 @@ public class FormattingTests extends TestCase {
 		 */
 		public void tearDown() throws Exception {
 			//delete test projects
-			try {
-				fProject.delete(true, new NullProgressMonitor());
-			}
-			catch (CoreException e) {
-				// not a reason to fail
-			}
+			fProject.delete(true, new NullProgressMonitor());
 			
 			//reset non-interactive
 			if (previousWTPAutoTestNonInteractivePropValue != null) {

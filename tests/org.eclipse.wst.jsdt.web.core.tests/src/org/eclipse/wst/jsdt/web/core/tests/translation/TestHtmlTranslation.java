@@ -524,7 +524,7 @@ public class TestHtmlTranslation extends TestCase {
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
 		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		String translated = translation.getJsText();
-		assertEquals("translated content differs", "         if(a) <!-- --> ", translated);
+		assertEquals("translated content differs", "         if(a) _$ta _$t ", translated);
 
 		// release model
 		structuredModel.releaseFromRead();
@@ -532,7 +532,7 @@ public class TestHtmlTranslation extends TestCase {
 	public void testCDATAInJS() {
 		// get model
 		String fileName = getName() + ".html";
-		IStructuredModel structuredModel = getSharedModel(fileName, "<script> var text = <![CDATA[ serverObject.getText() ]]> </script>");
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> var text = <![CDATA[ serverObject.getText() ;\n//]]> </script>");
 		assertNotNull("missing test model", structuredModel);
 		
 		// do translation
@@ -651,4 +651,65 @@ public class TestHtmlTranslation extends TestCase {
 		// release model
 		structuredModel.releaseFromRead();
 	}
+	public void testCDATAAroundJS1() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script> <![CDATA[ var text =  serverObject.getText() ]]> </script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("CDATA start found", translated.indexOf("CDATA") < 0);
+		assertTrue("CDATA start found", translated.indexOf("[") < 0);
+		assertTrue("CDATA end found", translated.indexOf("]") < 0);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testCDATAAroundJS2() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script><![CDATA[ var text =  serverObject.getText() ]]></script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("CDATA start found", translated.indexOf("CDATA") < 0);
+		assertTrue("CDATA start found", translated.indexOf("[") < 0);
+		assertTrue("CDATA end found", translated.indexOf("]") < 0);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+	public void testCDATAAroundJS3() {
+		// get model
+		String fileName = getName() + ".html";
+		IStructuredModel structuredModel = getSharedModel(fileName, "<script>//<![CDATA[\n var text =  serverObject.getText(); ]]></script>");
+		assertNotNull("missing test model", structuredModel);
+		
+		// do translation
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
+		String translated = translation.getJsText();
+		assertTrue("translation empty", translated.length() > 5);
+		assertTrue("CDATA start found", translated.indexOf("CDATA") < 0);
+		assertTrue("CDATA start found", translated.indexOf("[") < 0);
+		assertTrue("CDATA end found", translated.indexOf("]") < 0);
+		assertTrue("problems found in translation ", translation.getProblems().isEmpty());
+
+		// release model
+		structuredModel.releaseFromRead();
+	}
+
 }
