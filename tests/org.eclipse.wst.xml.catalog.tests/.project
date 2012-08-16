@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.eclipse.wst.xml.core</name>
+	<name>org.eclipse.wst.xml.catalog.tests</name>
 	<comment></comment>
 	<projects></projects>
 	<buildSpec>
