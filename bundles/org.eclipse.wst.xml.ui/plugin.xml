@@ -1311,11 +1311,11 @@
 			</colorOverride>
 			<colorOverride
 				id="commentBorder"
-				value="COLOR_WIDGET_NORMAL_SHADOW">
+				value="COLOR_LIST_FOREGROUND">
 			</colorOverride>
 			<colorOverride
 				id="commentText"
-				value="COLOR_WIDGET_NORMAL_SHADOW">
+				value="COLOR_LIST_FOREGROUND">
 			</colorOverride>
 			<colorOverride
 				id="declBoder"
