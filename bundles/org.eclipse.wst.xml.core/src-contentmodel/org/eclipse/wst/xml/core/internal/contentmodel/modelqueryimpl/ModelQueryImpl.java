@@ -737,7 +737,9 @@ public class ModelQueryImpl implements ModelQuery
       for (int i = 0; i < substitutionGroupLength; i++)
       {
         CMNode ed = substitutionGroup.item(i);
-        if (!Boolean.TRUE.equals(ed.getProperty("Abstract"))) //$NON-NLS-1$
+        String substitutionGroupValue = (String)ed.getProperty("SubstitutionGroupValue");
+        boolean hasSubstitutionGroupValue = (substitutionGroupValue != null && substitutionGroupValue.length() > 0);
+        if (!Boolean.TRUE.equals(ed.getProperty("Abstract")) && hasSubstitutionGroupValue )
         {
           addToTable(childNodeTable,ed);
         }
