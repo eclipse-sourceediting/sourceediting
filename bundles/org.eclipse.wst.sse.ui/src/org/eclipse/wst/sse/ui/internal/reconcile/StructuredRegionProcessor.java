@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  */
 public class StructuredRegionProcessor extends DocumentRegionProcessor {
-
 	class ModelLifecycleListener implements IModelLifecycleListener {
 		IStructuredModel changing = null;
 		/**
@@ -62,20 +61,15 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 		 * @see org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent)
 		 */
 		public void processPreModelEvent(ModelLifecycleEvent event) {
-			if(fCurrentDoc != null) {
-				IStructuredModel model = null;
-				try {
-					model = getStructuredModelForRead(fCurrentDoc);
-					if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED && event.getModel() == model) {
-						changing = event.getModel();
-						flushDirtyRegionQueue();
-						// note: old annotations are removed via the strategies on
-						// AbstractStructuredTextReconcilingStrategy#setDocument(...)
-					}
-				} finally {
-					if(model != null) {
-						model.releaseFromRead();
-					}
+			if(fCurrentDoc != null && fCurrentModel != null) {
+				if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED && event.getModel() == fCurrentModel) {
+					changing = event.getModel();
+					flushDirtyRegionQueue();
+					/*
+					 * note: old annotations are removed via the strategies on
+					 * AbstractStructuredTextReconcilingStrategy
+					 * #setDocument(...)
+					 */
 				}
 			}
 		}
@@ -88,6 +82,14 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	private IModelLifecycleListener fLifeCycleListener = new ModelLifecycleListener();
 	/** Used to get the current model on demand so a model does not need to be held by permanently */
 	private IDocument fCurrentDoc = null;
+	
+	/**
+	 * Only to be used for content type and IModelLifecycleListener
+	 * registration. All other uses should "get" the model --getting the model
+	 * during these specific options can cause lock interruption by
+	 * org.eclipse.core.internal.jobs.DeadlockDetector.
+	 */
+	private IStructuredModel fCurrentModel = null;
 
 	/*
 	 * (non-Javadoc)
@@ -194,6 +196,14 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	 * use that.
 	 */
 	protected String getContentType(IDocument doc) {
+		if (fCurrentModel != null && doc == fCurrentModel.getStructuredDocument()) {
+			/*
+			 * Avoid "get"ting a model if we can, it may require lock
+			 * acquisition
+			 */
+			return fCurrentModel.getContentTypeIdentifier();
+		}
+
 		String contentTypeId = null;
 		IStructuredModel sModel = null;
 		try {
@@ -269,36 +279,30 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	}
 
 	public void setDocument(IDocument newDocument) {
-		// unhook old lifecycle listener
-		if(fCurrentDoc != null) {
-			IStructuredModel oldModel = null;
-			try {
-				oldModel = getStructuredModelForRead(fCurrentDoc);
-				if(oldModel != null) {
-					oldModel.removeModelLifecycleListener(fLifeCycleListener);
-				}
-			} finally {
-				if(oldModel != null) {
-					oldModel.releaseFromRead();
-				}
-			}
+		/*
+		 * unhook old lifecycle listener; it is important not to re-get the
+		 * model at this point as we may be shutting down
+		 */
+		if (fCurrentModel != null) {
+			fCurrentModel.removeModelLifecycleListener(fLifeCycleListener);
+			fCurrentModel = null;
 		}
-		
-		//set the new document
+
+		// set the new document
 		super.setDocument(newDocument);
 		fCurrentDoc = newDocument;
-		
+
 		// add new lifecycle listener
-		if (newDocument != null) {
-			IStructuredModel newModel = null;
+		if (fCurrentDoc != null) {
 			try {
-				newModel = getStructuredModelForRead(newDocument);
-				if(newModel != null) {
-					newModel.addModelLifecycleListener(fLifeCycleListener);
+				fCurrentModel = getStructuredModelForRead(fCurrentDoc);
+				if (fCurrentModel != null) {
+					fCurrentModel.addModelLifecycleListener(fLifeCycleListener);
 				}
-			} finally {
-				if(newModel != null) {
-					newModel.releaseFromRead();
+			}
+			finally {
+				if (fCurrentModel != null) {
+					fCurrentModel.releaseFromRead();
 				}
 			}
 		}
