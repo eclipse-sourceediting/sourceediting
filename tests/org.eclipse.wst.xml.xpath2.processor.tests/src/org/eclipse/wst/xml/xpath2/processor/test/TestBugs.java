@@ -59,7 +59,7 @@
  *  Jesper Steen Moller  - bug 340933 - Migrate tests to new XPath2 API
  *  Lukasz Wycisk   - bug 361060 - Aggregations with nil=’true’ throw exceptions.
  *  Lukasz Wycisk   - bug 361059 - FnRoundHalfToEven is wrong in case of 2 arguments
- *  Lukasz Wycisk   - bug 361659 - ElemntType typed value in case of nil=’true’                              
+ *  Jesper Moller   - bug 388504 - XPath scanner does not detect non-ASCII names                              
  ******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.test;
@@ -196,6 +196,20 @@ public class TestBugs extends AbstractPsychoPathTest {
 			}
 			
 		});
+	}
+	
+	public void testNamesInUnicode() throws Exception {
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug388504.xml");
+		loadDOMDocument(fileURL);
+
+		setupDynamicContext(null);
+
+		compileXPath("count(//Schlüssel)");
+		ResultSequence rs = evaluate(domDoc);
+
+		String actual = rs.first().getStringValue();
+
+		assertEquals("1", actual);
 	}
 	
 	public void testNamesWhichAreKeywords() throws Exception {
