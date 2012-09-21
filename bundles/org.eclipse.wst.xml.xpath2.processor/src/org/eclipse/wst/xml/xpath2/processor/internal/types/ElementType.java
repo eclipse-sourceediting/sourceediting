@@ -110,18 +110,13 @@ public class ElementType extends NodeType {
 		
 		TypeDefinition typeDef = getType();
 
-		if (typeDef != null) {
-			if (!isNilled(_value)) {
-				if (typeDef != null) {
-					return getXDMTypedValue(typeDef, typeDef.getSimpleTypes(_value));
-				}
-				else {
-					return new XSUntypedAtomic(getStringValue());
-				}
+		if (!isNilled(_value)) {
+			if (typeDef != null) {
+				return getXDMTypedValue(typeDef, typeDef.getSimpleTypes(_value));
 			}
-		}
-		else {
-			return new XSUntypedAtomic(getStringValue());
+			else {
+				return new XSUntypedAtomic(getStringValue());
+			}
 		}
 		return ResultBuffer.EMPTY;
 	}
