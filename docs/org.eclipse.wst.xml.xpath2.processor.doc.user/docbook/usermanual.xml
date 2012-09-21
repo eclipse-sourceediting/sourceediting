@@ -319,7 +319,7 @@ Which will return the type of the n'th item in the result sequence.
 				</section>
 				<section id="Multiplication_and_Division:">
 					<title>Multiplication and Division:</title>
-					<para>The operator * multiplies two numbers. If the operands are of different types, XPath 2.0 specifications say that one of them is promoted to the type of the other.&nbsp;<strike></strike> The result is the same type as the operands after promotion. </para>
+					<para>The operator * multiplies two numbers. If the operands are of different types, XPath 2.0 specifications say that one of them is promoted to the type of the other.&nbsp; The result is the same type as the operands after promotion. </para>
 					<para>
 						 The operator div divides two numbers. Dividing two integers produces a double; in other cases the result is the same type as the operands. </para>
 					<para>
