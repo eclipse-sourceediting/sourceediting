@@ -1,0 +1,6 @@
+Reading "CSSHeadTokenizer.jflex"
+Constructing NFA : 458 states in NFA
+Converting NFA to DFA : 
+........................................................................................
+102 states before minimization, 64 states in minimized DFA
+Writing code to "CSSHeadTokenizer.java"

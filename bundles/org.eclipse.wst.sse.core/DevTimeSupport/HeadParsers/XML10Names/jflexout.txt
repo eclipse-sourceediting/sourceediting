@@ -1,0 +1,6 @@
+Reading "XML10Names.jflex"
+Constructing NFA : 84 states in NFA
+Converting NFA to DFA : 
+............
+14 states before minimization, 4 states in minimized DFA
+Writing code to "XML10Names.java"
