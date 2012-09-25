@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests.translation;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -32,12 +35,15 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.taglib.CustomTag;
@@ -702,5 +708,32 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			markerText.append("\nL" + markers[i].getAttribute(IMarker.LINE_NUMBER) + "/o" + markers[i].getAttribute(IMarker.CHAR_START) + "-"  + markers[i].getAttribute(IMarker.CHAR_END) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
 		}
 		assertEquals("Problem markers reported found \n" + markerText, 0, markers.length);
+	}
+
+	public void test_389174() throws CoreException, IOException {
+		IProject j = BundleResourceUtil.createSimpleProject(getName(), null, new String[]{JavaCore.NATURE_ID});
+		assertTrue(j.exists());
+
+		String typeName = "List<List<Boolean>>";
+		InputStream source = new ByteArrayInputStream(("<jsp:useBean id=\"x\" type=\"" + typeName + "\" />").getBytes());
+		IFile file = j.getFile(getName() + "_test.jsp");
+		file.create(source, IResource.FORCE, null);
+		JSPTranslator translator = new JSPTranslator();
+		IDOMModel structuredModel = null;
+		try {
+			structuredModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file);
+			translator.reset(structuredModel.getDocument(), new NullProgressMonitor());
+			translator.translate();
+
+			assertTrue("specified type did not survive translation", translator.getTranslation().indexOf(typeName) >= 0);
+			IJSPProblem[] translationProblems = (IJSPProblem[]) translator.getTranslationProblems().toArray(new IJSPProblem[0]);
+			for (int i = 0; i < translationProblems.length; i++) {
+				assertTrue(translationProblems[i].getID() != IProblem.UndefinedType);
+			}
+		}
+		finally {
+			if (structuredModel != null)
+				structuredModel.releaseFromRead();
+		}
 	}
 }
