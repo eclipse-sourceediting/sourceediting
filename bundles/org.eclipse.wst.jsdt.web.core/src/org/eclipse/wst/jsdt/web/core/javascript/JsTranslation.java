@@ -314,9 +314,13 @@ public class JsTranslation implements IJsTranslation {
 	}
 	
 	public IJavaScriptElement[] getElementsFromWebRange(int webPositionStart, int webPositionEnd) {
-		int javaPositionStart = getJavaScriptOffset(webPositionStart);
-		int javaPositionEnd = getJavaScriptOffset(webPositionEnd);
-		return getElementsFromJsRange(javaPositionStart, javaPositionEnd);
+		int javaScriptPositionStart = getJavaScriptOffset(webPositionStart);
+		int javaScriptPositionEnd = getJavaScriptOffset(webPositionEnd);
+		
+		if (javaScriptPositionStart < 0 || javaScriptPositionEnd < 0)
+			return new IJavaScriptElement[0];
+
+		return getElementsFromJsRange(javaScriptPositionStart, javaScriptPositionEnd);
 	}
 
 	private String getHtmlPageName() {

@@ -64,11 +64,12 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
    */
   public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor){
 	  ValidationResult result = new ValidationResult();  
-	  IReporter reporter = result.getReporter(monitor);
 		IFile file = null;
 		if (resource instanceof IFile)file = (IFile)resource;
 		if (file != null && shouldValidate(file))
 		{
+		  IReporter reporter = result.getReporter(monitor);
+
 		  NestedValidatorContext nestedcontext = getNestedContext(state, false);
 	      boolean teardownRequired = false;
 	      if (nestedcontext == null)

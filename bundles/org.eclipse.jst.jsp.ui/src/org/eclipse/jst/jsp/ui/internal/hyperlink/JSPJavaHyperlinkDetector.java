@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -44,6 +45,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * Detects hyperlinks in JSP Java content
  */
 public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
+	private static final String SUPPORTED_PARTITION_TYPE= "org.eclipse.jst.jsp.SCRIPT.JAVA"; //$NON-NLS-1$
 
 	private IHyperlink createHyperlink(IJavaElement element, IRegion region, IDocument document) {
 		IHyperlink link = null;
@@ -131,28 +133,41 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		if (region != null && textViewer != null) {
 			IDocument document = textViewer.getDocument();
-
-			// check and make sure this is a valid Java type
-			JSPTranslation jspTranslation = getJSPTranslation(document);
-			if (jspTranslation != null) {
-				// check if we are in JSP Java content
-				int javaOffset = jspTranslation.getJavaOffset(region.getOffset());
-				if (javaOffset > -1) {
-					// check that we are not in indirect Java content (like
-					// included files)
-					if (!jspTranslation.isIndirect(javaOffset)) {
-						// get Java elements
-						IJavaElement[] elements = jspTranslation.getElementsFromJspRange(region.getOffset(), region.getOffset() + region.getLength());
-						if (elements != null && elements.length > 0) {
-							// create a JSPJavaHyperlink for each Java element
-							for (int i = 0; i < elements.length; ++i) {
-								IJavaElement element = elements[i];
-
-								// find hyperlink range for Java element
-								IRegion hyperlinkRegion = selectWord(document, region.getOffset());
-								IHyperlink link = createHyperlink(element, hyperlinkRegion, document);
-								if (link != null) {
-									hyperlinks.add(link);
+			boolean proceed = false;
+			try {
+				ITypedRegion[] partitions = document.computePartitioning(region.getOffset(), region.getLength());
+				for (int i = 0; i < partitions.length; i++) {
+					if (SUPPORTED_PARTITION_TYPE.equals(partitions[i].getType())) {
+						proceed = true;
+						break;
+					}
+				}
+			}
+			catch (BadLocationException e) {
+				proceed = true;
+			}
+			if (proceed) {
+				JSPTranslation jspTranslation = getJSPTranslation(document);
+				if (jspTranslation != null) {
+					// check if we are in JSP Java content
+					int javaOffset = jspTranslation.getJavaOffset(region.getOffset());
+					if (javaOffset > -1) {
+						// check that we are not in indirect Java content (like
+						// included files)
+						if (!jspTranslation.isIndirect(javaOffset)) {
+							// get Java elements
+							IJavaElement[] elements = jspTranslation.getElementsFromJspRange(region.getOffset(), region.getOffset() + region.getLength());
+							if (elements != null && elements.length > 0) {
+								// create a JSPJavaHyperlink for each Java element
+								for (int i = 0; i < elements.length; ++i) {
+									IJavaElement element = elements[i];
+	
+									// find hyperlink range for Java element
+									IRegion hyperlinkRegion = selectWord(document, region.getOffset());
+									IHyperlink link = createHyperlink(element, hyperlinkRegion, document);
+									if (link != null) {
+										hyperlinks.add(link);
+									}
 								}
 							}
 						}
