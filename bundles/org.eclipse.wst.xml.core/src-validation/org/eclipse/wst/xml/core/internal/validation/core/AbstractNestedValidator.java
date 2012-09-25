@@ -67,7 +67,7 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 	  IReporter reporter = result.getReporter(monitor);
 		IFile file = null;
 		if (resource instanceof IFile)file = (IFile)resource;
-		if (file != null)
+		if (file != null && shouldValidate(file))
 		{
 		  NestedValidatorContext nestedcontext = getNestedContext(state, false);
 	      boolean teardownRequired = false;

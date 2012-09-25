@@ -903,7 +903,7 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 		}
 		else {
 			// The offset is NOT at the beginning of the region
-			if (offset > sdRegion.getStartOffset(region) + region.getTextLength()) {
+			if ((region.getType() != DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) &&(offset > sdRegion.getStartOffset(region) + region.getTextLength())) { //attached XML_TAG_ATTRIBUTE_EQUALS filter due to #bug219992
 				// Is the offset within the whitespace after the text in this
 				// region?
 				// If so, use the next region

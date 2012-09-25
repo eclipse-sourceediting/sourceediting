@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="breakpointAdapter" name="%extension-point.name" schema="schema/breakpointAdapter.exsd"/>
 
  	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
  		<contentOutlineConfiguration
@@ -788,4 +789,15 @@
       </markerTypeCategory>
    </extension>
 
+   <extension
+         point="org.eclipse.wst.sse.ui.breakpoint">
+      <breakpointContribution
+            id="org.eclipse.wst.jsdt.web.ui.breakpointContribution">
+         <provider
+               class="org.eclipse.wst.jsdt.web.ui.internal.debug.JSBreakpointProvider"
+               contentTypes="org.eclipse.wst.html.core.htmlsource,org.eclipse.jst.jsp.core.jspsource"
+               id="org.eclipse.wst.jsdt.web.ui.breakpoint.provider">
+         </provider>
+      </breakpointContribution>
+   </extension>
 </plugin>

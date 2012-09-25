@@ -33,6 +33,12 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ReplaceNameTemplateContext;
 
 /**
@@ -66,6 +72,24 @@ class JSPTemplateCompletionProcessor extends TemplateCompletionProcessor {
 
 		String prefix = extractPrefix(viewer, offset);
 		Region region = new Region(offset - prefix.length(), prefix.length());
+		//If there's no prefix, check if we're in a tag open region
+		if (prefix.trim().length() == 0) {
+			IndexedRegion treeNode = ContentAssistUtils.getNodeAt(viewer, offset);
+			if (treeNode instanceof IDOMText) {
+				IDOMNode node = (IDOMNode) treeNode;
+				// Check each region in the node, if the offset is after a tag region, replace it with the template
+				IStructuredDocumentRegion cursor = node.getFirstStructuredDocumentRegion();
+				IStructuredDocumentRegion end = node.getLastStructuredDocumentRegion();
+				do {
+					if (cursor != null && DOMRegionContext.XML_TAG_OPEN.equals(cursor.getType()) && cursor.getStartOffset() == offset - 1) {
+						// We have a tag to replace
+						offset = cursor.getStartOffset();
+						region = new Region(cursor.getStartOffset(), cursor.getLength());
+						break;
+					}
+				} while (cursor != end && (cursor = cursor.getNext()) != null);
+			}
+		}
 		TemplateContext context = createContext(viewer, region, offset);
 		if (context == null)
 			return new ICompletionProposal[0];
