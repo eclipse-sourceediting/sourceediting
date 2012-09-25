@@ -44,6 +44,10 @@
 			type="spellingregions"
 			value="org.eclipse.wst.dtd.core.internal.util.parser.DTDRegionTypes.COMMENT_CONTENT"
 			target="org.eclipse.wst.dtd.core.dtdsource" />
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.wst.sse.hideFormat"
+        	target="org.eclipse.wst.dtd.core.dtdsource" />
 	</extension>
 
 	<extension point="org.eclipse.ui.editorActions">
