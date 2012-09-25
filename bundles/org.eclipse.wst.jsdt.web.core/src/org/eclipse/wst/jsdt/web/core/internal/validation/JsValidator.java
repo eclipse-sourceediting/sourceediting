@@ -132,10 +132,12 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 	private IMessage createMessageFromProblem(IProblem problem, IFile f, IJsTranslation translation, IDocument textDoc) {
 		int sourceStart = problem.getSourceStart();
 		int sourceEnd = problem.getSourceEnd();
-		if (sourceStart == -1) {
+		if (sourceStart < 0) {
 			return null;
 		}
 		sourceStart = ((JsTranslation)translation).getWebPageOffset(sourceStart);
+		if (sourceStart < 0)
+			return null;
 		sourceEnd = ((JsTranslation)translation).getWebPageOffset(sourceEnd);
 		/*
 		 * Bug 241794 - Validation shows errors when using JSP Expressions

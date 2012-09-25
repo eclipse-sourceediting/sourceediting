@@ -3073,45 +3073,44 @@ public class JSPTranslator implements Externalizable {
 	 */
 	private boolean isTypeFound(String rawTypeValue, List errorTypeNames) {
 		IFile file = getFile();
-		if(file == null)
+		if (file == null)
 			return true;
-		
+
 		IProject project = file.getProject();
 		IJavaProject p = JavaCore.create(project);
 		if (p.exists()) {
-			String types[] = new String[3];
+			List types = new ArrayList();
 			if (rawTypeValue.indexOf('<') > 0) {
 				// JSR 14 : Generics are being used, parse them out
 				try {
 					StringTokenizer toker = new StringTokenizer(rawTypeValue);
-					// generic
-					types[0] = toker.nextToken("<"); //$NON-NLS-1$
-					// type 1 or key
-					types[1] = toker.nextToken(",>"); //$NON-NLS-1$
-					// type 2 or value
-					types[2] = toker.nextToken(",>"); //$NON-NLS-1$
+					String token = toker.nextToken("<,>/\""); //$NON-NLS-1$
+					while (token != null) {
+						types.add(token);
+						token = toker.nextToken("<,>/\""); //$NON-NLS-1$
+					}
 				}
 				catch (NoSuchElementException e) {
 					// StringTokenizer failure with unsupported syntax
+					return true;
 				}
 			}
 			else {
-				types[0] = rawTypeValue;
+				types.add(rawTypeValue);
 			}
 
-			for (int i = 0; i < types.length; i++) {
-				if (types[i] != null) {
-					// remove any array suffixes 
-					if (types[i].indexOf('[') > 0) {
-						types[i] = types[i].substring(0, types[i].indexOf('['));
-					}
-					// remove any "extends" prefixes (JSR 14)
-					if (types[i].indexOf("extends") > 0) { //$NON-NLS-1$
-						types[i] = StringUtils.strip(types[i].substring(types[i].indexOf("extends"))); //$NON-NLS-1$
-					}
-
-					addNameToListIfTypeNotFound(p, types[i], errorTypeNames);
+			for (int i = 0; i < types.size(); i++) {
+				String typeName = types.get(i).toString();
+				// remove any array suffixes
+				if (typeName.indexOf('[') > 0 && typeName.indexOf(']') > typeName.indexOf('[')) {
+					typeName = typeName.substring(0, typeName.indexOf('['));
 				}
+				// remove any "extends" prefixes (JSR 14)
+				if (typeName.indexOf("extends") > 0) { //$NON-NLS-1$
+					typeName = StringUtils.strip(typeName.substring(typeName.indexOf("extends"))); //$NON-NLS-1$
+				}
+
+				addNameToListIfTypeNotFound(p, typeName, errorTypeNames);
 			}
 		}
 		return errorTypeNames.isEmpty();
