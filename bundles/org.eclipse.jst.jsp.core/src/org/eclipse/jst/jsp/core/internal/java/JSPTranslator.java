@@ -932,7 +932,7 @@ public class JSPTranslator implements Externalizable {
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer(decl, fUserCode, false, customTag);
+					appendToBuffer(decl, fUserCode, true, customTag);
 				}
 			}
 		}
@@ -963,7 +963,7 @@ public class JSPTranslator implements Externalizable {
 		for (int i = 0; i < taglibVars.length; i++) {
 			if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
 				decl = taglibVars[i].getDeclarationString();
-				appendToBuffer(decl, fUserCode, false, customTag);
+				appendToBuffer(decl, fUserCode, true, customTag);
 			}
 		}
 		boolean isEmptyTag = false;
@@ -991,7 +991,7 @@ public class JSPTranslator implements Externalizable {
 		for (int i = 0; i < taglibVars.length; i++) {
 			if (taglibVars[i].getScope() == VariableInfo.NESTED) {
 				decl = taglibVars[i].getDeclarationString();
-				appendToBuffer(decl, fUserCode, false, customTag);
+				appendToBuffer(decl, fUserCode, true, customTag);
 			}
 		}
 		/*
