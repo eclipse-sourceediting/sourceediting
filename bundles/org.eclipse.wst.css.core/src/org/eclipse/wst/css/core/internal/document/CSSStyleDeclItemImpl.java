@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
-import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
 import org.eclipse.wst.css.core.internal.formatter.StyleDeclItemFormatter;
@@ -21,9 +20,7 @@ import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
-import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
@@ -234,33 +231,25 @@ class CSSStyleDeclItemImpl extends CSSStructuredDocumentRegionContainer implemen
 	}
 
 	private void setCssValueTextCore(String value) throws DOMException {
-		// use temporary document
-		synchronized (CSSStyleDeclarationImpl.class) {
-			if (sharedStructuredDocument == null) {
-				IDocumentLoader loader = new CSSDocumentLoader();
-				sharedStructuredDocument = (IStructuredDocument) loader.createNewStructuredDocument();
-				((CSSSourceParser) sharedStructuredDocument.getParser()).setParserMode(CSSSourceParser.MODE_DECLARATION_VALUE);
+		CSSSourceParser parser = new CSSSourceParser();
+		parser.setParserMode(CSSSourceParser.MODE_DECLARATION_VALUE);
+		parser.reset(value);
+		
+		IStructuredDocumentRegion node = parser.getDocumentRegions();
 
-			}
-			sharedStructuredDocument.set(value);
-			IStructuredDocumentRegion node = sharedStructuredDocument.getFirstStructuredDocumentRegion();
-
-			if (node == null) {
-				return;
-			}
-			if (node.getNext() != null) {
-				throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$
-			}
-
-			CSSDeclarationItemParser itemParser = new CSSDeclarationItemParser(getOwnerDocument());
-			itemParser.setStructuredDocumentTemporary(true);
-			// make a copy of nodelist because setupValues will destroy list
-			ITextRegionList nodeList = new TextRegionListImpl(node.getRegions());
-			itemParser.setupValues(this, node, nodeList);
+		if (node == null) {
+			return;
 		}
-	}
+		if (node.getNext() != null) {
+			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$
+		}
 
-	private static IStructuredDocument sharedStructuredDocument;
+		CSSDeclarationItemParser itemParser = new CSSDeclarationItemParser(getOwnerDocument());
+		itemParser.setStructuredDocumentTemporary(true);
+		// make a copy of nodelist because setupValues will destroy list
+		ITextRegionList nodeList = new TextRegionListImpl(node.getRegions());
+		itemParser.setupValues(this, node, nodeList, value);
+	}
 
 	/**
 	 * @param newPriority

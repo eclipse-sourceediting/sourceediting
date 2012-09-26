@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -317,13 +317,13 @@ class CSSDeclarationItemParser {
 	/**
 	 * 
 	 */
-	private CSSPrimitiveValueImpl createPrimitiveValue(ITextRegion region) {
+	private CSSPrimitiveValueImpl createPrimitiveValue(ITextRegion region, String propertyValue) {
 		if (region == null) {
 			return null;
 		}
 		CSSPrimitiveValueImpl value = null;
 		String type = region.getType();
-		String text = getText(region);
+		String text = propertyValue != null ? propertyValue : getText(region);
 		if (isBlank(type)) {
 			value = null;
 		}
@@ -954,19 +954,19 @@ class CSSDeclarationItemParser {
 
 		CSSUtil.stripSurroundingSpace(nodeRegions);
 		// Now, nodeRegions just has regions for value.
-		setupValues(newItem, nodeRegions);
+		setupValues(newItem, nodeRegions, null);
 		return newItem;
 	}
 
-	void setupValues(ICSSStyleDeclItem item, IStructuredDocumentRegion parentRegion, ITextRegionList nodeRegions) {
+	void setupValues(ICSSStyleDeclItem item, IStructuredDocumentRegion parentRegion, ITextRegionList nodeRegions, String value) {
 		fParentRegion = parentRegion;
-		setupValues(item, nodeRegions);
+		setupValues(item, nodeRegions, value);
 	}
 
 	/**
 	 * nodeRegions must be broken. If you need after, make copy of them.
 	 */
-	private void setupValues(ICSSStyleDeclItem item, ITextRegionList nodeRegions) {
+	private void setupValues(ICSSStyleDeclItem item, ITextRegionList nodeRegions, String propertyValue) {
 		if (item == null) {
 			return;
 		}
@@ -996,11 +996,11 @@ class CSSDeclarationItemParser {
 						status = S_FUNCTION;
 					}
 					else if (bFont && type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR && fParentRegion.getText(region).equals("/")) { //$NON-NLS-1$
-						value = createPrimitiveValue(region);
+						value = createPrimitiveValue(region, propertyValue);
 						status = S_FONT_SLASH;
 					}
 					else if (!isBlank(type)) {
-						value = createPrimitiveValue(region);
+						value = createPrimitiveValue(region, propertyValue);
 					}
 					break;
 				case S_FUNCTION :
@@ -1016,11 +1016,11 @@ class CSSDeclarationItemParser {
 					break;
 				case S_FONT_SLASH :
 					if (type == CSSRegionContexts.CSS_DECLARATION_VALUE_DIMENSION) {
-						value = createPrimitiveValue(region);
+						value = createPrimitiveValue(region, propertyValue);
 						status = S_COMMA_SEPARATION;
 					}
 					else if (!isBlank(type)) {
-						value = createPrimitiveValue(region);
+						value = createPrimitiveValue(region, propertyValue);
 					}
 					break;
 				case S_COMMA_SEPARATION :
@@ -1032,7 +1032,7 @@ class CSSDeclarationItemParser {
 								item.appendValue(value);
 							}
 						}
-						value = createPrimitiveValue(region);
+						value = createPrimitiveValue(region, propertyValue);
 					}
 					else {
 						regionBuf.add(region);
