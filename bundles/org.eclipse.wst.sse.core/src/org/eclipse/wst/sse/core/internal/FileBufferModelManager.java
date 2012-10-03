@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,6 +53,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.util.URIResolverExtension;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 
 /**
@@ -102,7 +103,7 @@ public class FileBufferModelManager {
 	/**
 	 * A URIResolver instance of models built on java.io.Files
 	 */
-	static class ExternalURIResolver implements URIResolver {
+	static class ExternalURIResolver implements URIResolver, URIResolverExtension {
 		IPath fLocation;
 
 		ExternalURIResolver(IPath location) {
@@ -164,13 +165,17 @@ public class FileBufferModelManager {
 
 		public void setProject(IProject newProject) {
 		}
+
+		public URIResolver newInstance() {
+			return new ExternalURIResolver(fLocation != null ? (IPath) fLocation.clone() : null);
+		}
 	}
 
 	/**
 	 * A URIResolver instance of models built on the extensible WST URI
 	 * resolver
 	 */
-	static class CommonURIResolver implements URIResolver {
+	static class CommonURIResolver implements URIResolver, URIResolverExtension {
 		String fLocation;
 		IPath fPath;
 		private IProject fProject;
@@ -180,6 +185,9 @@ public class FileBufferModelManager {
 		CommonURIResolver(IFile workspaceFile) {
 			fPath = workspaceFile.getFullPath();
 			fProject = workspaceFile.getProject();
+		}
+
+		private CommonURIResolver() {
 		}
 
 		public String getFileBaseLocation() {
@@ -244,6 +252,14 @@ public class FileBufferModelManager {
 
 		public void setProject(IProject newProject) {
 			fProject = newProject;
+		}
+
+		public URIResolver newInstance() {
+			CommonURIResolver resolver = new CommonURIResolver();
+			resolver.fLocation = fLocation;
+			resolver.fPath = (IPath) fPath.clone();
+			resolver.fProject = fProject;
+			return resolver;
 		}
 	}
 
