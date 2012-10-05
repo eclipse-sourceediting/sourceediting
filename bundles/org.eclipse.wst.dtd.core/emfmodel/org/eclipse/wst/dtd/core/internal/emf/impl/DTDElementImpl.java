@@ -405,14 +405,6 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 				return getContent();
 			case DTDPackage.DTD_ELEMENT__DTD_ATTRIBUTE :
 				return getDTDAttribute();
-			case EcorePackage.ECLASS__EALL_GENERIC_SUPER_TYPES:
-				return getEAllGenericSuperTypes();
-			case EcorePackage.ECLASS__ETYPE_PARAMETERS:
-				return getETypeParameters();
-			case EcorePackage.ECLASS__ESTRUCTURAL_FEATURES:
-				return getEStructuralFeatures();
-			case EcorePackage.ECLASS__EGENERIC_SUPER_TYPES:
-				return getEGenericSuperTypes();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -468,8 +460,6 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 				return content != null;
 			case DTDPackage.DTD_ELEMENT__DTD_ATTRIBUTE :
 				return dtdAttribute != null && !getDTDAttribute().isEmpty();
-			case EcorePackage.ECLASSIFIER__INSTANCE_TYPE_NAME:
-				return instanceTypeName != null;
 		}
 		return eDynamicIsSet(eFeature);
 	}
