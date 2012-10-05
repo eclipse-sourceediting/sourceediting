@@ -14,7 +14,6 @@ package org.eclipse.wst.dtd.core.internal.emf.impl;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -36,11 +35,10 @@ public abstract class DTDEntityContentImpl extends EObjectImpl implements DTDEnt
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return DTDPackage.eINSTANCE.getDTDEntityContent();
+		return DTDPackage.Literals.DTD_ENTITY_CONTENT;
 	}
 
 	public String getPathname() {
@@ -55,132 +53,132 @@ public abstract class DTDEntityContentImpl extends EObjectImpl implements DTDEnt
 	 * @generated This field/method will be replaced during code generation
 	 */
 	public DTDEntity getDTDEntity() {
-		if (eContainerFeatureID() != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY)
-			return null;
-		return (DTDEntity) eContainer;
+		if (eContainerFeatureID() != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY) return null;
+		return (DTDEntity)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDTDEntity(DTDEntity newDTDEntity, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newDTDEntity, DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY, msgs);
+		return msgs;
 	}
 
 	/**
 	 * @generated This field/method will be replaced during code generation.
 	 */
 	public void setDTDEntity(DTDEntity newDTDEntity) {
-		if (newDTDEntity != eContainer || (eContainerFeatureID() != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY && newDTDEntity != null)) {
+		if (newDTDEntity != eInternalContainer() || (eContainerFeatureID() != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY && newDTDEntity != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDEntity))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
-			if (eContainer != null)
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newDTDEntity != null)
-				msgs = ((InternalEObject) newDTDEntity).eInverseAdd(this, DTDPackage.DTD_ENTITY__CONTENT, DTDEntity.class, msgs);
-			msgs = eBasicSetContainer((InternalEObject) newDTDEntity, DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY, msgs);
-			if (msgs != null)
-				msgs.dispatch();
+				msgs = ((InternalEObject)newDTDEntity).eInverseAdd(this, DTDPackage.DTD_ENTITY__CONTENT, DTDEntity.class, msgs);
+			msgs = basicSetDTDEntity(newDTDEntity, msgs);
+			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY, newDTDEntity, newDTDEntity));
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY :
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY, msgs);
-				default :
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetDTDEntity((DTDEntity)otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (baseClass == null ? featureID : eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY :
-					return eBasicSetContainer(null, DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY, msgs);
-				default :
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY:
+				return basicSetDTDEntity(null, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID() >= 0) {
-			switch (eContainerFeatureID()) {
-				case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY :
-					return eContainer.eInverseRemove(this, DTDPackage.DTD_ENTITY__CONTENT, DTDEntity.class, msgs);
-				default :
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY:
+				return eInternalContainer().eInverseRemove(this, DTDPackage.DTD_ENTITY__CONTENT, DTDEntity.class, msgs);
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY :
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY:
 				return getDTDEntity();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * @generated This field/method will be replaced during code generation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY :
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY:
+				setDTDEntity((DTDEntity)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY:
+				setDTDEntity((DTDEntity)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY:
 				return getDTDEntity() != null;
 		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * @generated This field/method will be replaced during code generation.
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY :
-				setDTDEntity((DTDEntity) newValue);
-				return;
-		}
-		eDynamicSet(eFeature, newValue);
-	}
-
-	/**
-	 * @generated This field/method will be replaced during code generation.
-	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY :
-				setDTDEntity((DTDEntity) null);
-				return;
-		}
-		eDynamicUnset(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/*

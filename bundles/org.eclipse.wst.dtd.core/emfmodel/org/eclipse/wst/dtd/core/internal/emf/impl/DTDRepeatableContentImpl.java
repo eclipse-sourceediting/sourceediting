@@ -12,14 +12,9 @@
 package org.eclipse.wst.dtd.core.internal.emf.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.wst.dtd.core.internal.emf.DTDElement;
 import org.eclipse.wst.dtd.core.internal.emf.DTDEntityReferenceContent;
-import org.eclipse.wst.dtd.core.internal.emf.DTDGroupContent;
 import org.eclipse.wst.dtd.core.internal.emf.DTDOccurrenceType;
 import org.eclipse.wst.dtd.core.internal.emf.DTDPackage;
 import org.eclipse.wst.dtd.core.internal.emf.DTDRepeatableContent;
@@ -29,9 +24,8 @@ import org.eclipse.wst.dtd.core.internal.emf.DTDRepeatableContent;
  */
 public abstract class DTDRepeatableContentImpl extends DTDElementContentImpl implements DTDRepeatableContent {
 	/**
-	 * The default value of the '{@link #getOccurrence() <em>Occurrence</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getOccurrence() <em>Occurrence</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getOccurrence()
 	 * @generated
 	 * @ordered
@@ -52,11 +46,10 @@ public abstract class DTDRepeatableContentImpl extends DTDElementContentImpl imp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return DTDPackage.eINSTANCE.getDTDRepeatableContent();
+		return DTDPackage.Literals.DTD_REPEATABLE_CONTENT;
 	}
 
 	public String unparse() {
@@ -93,7 +86,6 @@ public abstract class DTDRepeatableContentImpl extends DTDElementContentImpl imp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setOccurrence(DTDOccurrenceType newOccurrence) {
@@ -104,145 +96,67 @@ public abstract class DTDRepeatableContentImpl extends DTDElementContentImpl imp
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_REPEATABLE_CONTENT__GROUP :
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DTDPackage.DTD_REPEATABLE_CONTENT__GROUP, msgs);
-				case DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT :
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT, msgs);
-				default :
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (baseClass == null ? featureID : eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_REPEATABLE_CONTENT__GROUP :
-					return eBasicSetContainer(null, DTDPackage.DTD_REPEATABLE_CONTENT__GROUP, msgs);
-				case DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT :
-					return eBasicSetContainer(null, DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT, msgs);
-				default :
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID() >= 0) {
-			switch (eContainerFeatureID()) {
-				case DTDPackage.DTD_REPEATABLE_CONTENT__GROUP :
-					return eContainer.eInverseRemove(this, DTDPackage.DTD_GROUP_CONTENT__CONTENT, DTDGroupContent.class, msgs);
-				case DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT :
-					return eContainer.eInverseRemove(this, DTDPackage.DTD_ELEMENT__CONTENT, DTDElement.class, msgs);
-				default :
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
-		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_REPEATABLE_CONTENT__GROUP :
-				return getGroup();
-			case DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT :
-				return getElement();
-			case DTDPackage.DTD_REPEATABLE_CONTENT__OCCURRENCE :
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DTDPackage.DTD_REPEATABLE_CONTENT__OCCURRENCE:
 				return getOccurrence();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * @generated This field/method will be replaced during code generation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_REPEATABLE_CONTENT__GROUP :
-				return getGroup() != null;
-			case DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT :
-				return getElement() != null;
-			case DTDPackage.DTD_REPEATABLE_CONTENT__OCCURRENCE :
-				return occurrence != OCCURRENCE_EDEFAULT;
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * @generated This field/method will be replaced during code generation.
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_REPEATABLE_CONTENT__GROUP :
-				setGroup((DTDGroupContent) newValue);
-				return;
-			case DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT :
-				setElement((DTDElement) newValue);
-				return;
-			case DTDPackage.DTD_REPEATABLE_CONTENT__OCCURRENCE :
-				setOccurrence((DTDOccurrenceType) newValue);
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DTDPackage.DTD_REPEATABLE_CONTENT__OCCURRENCE:
+				setOccurrence((DTDOccurrenceType)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * @generated This field/method will be replaced during code generation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_REPEATABLE_CONTENT__GROUP :
-				setGroup((DTDGroupContent) null);
-				return;
-			case DTDPackage.DTD_REPEATABLE_CONTENT__ELEMENT :
-				setElement((DTDElement) null);
-				return;
-			case DTDPackage.DTD_REPEATABLE_CONTENT__OCCURRENCE :
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_REPEATABLE_CONTENT__OCCURRENCE:
 				setOccurrence(OCCURRENCE_EDEFAULT);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_REPEATABLE_CONTENT__OCCURRENCE:
+				return occurrence != OCCURRENCE_EDEFAULT;
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * @generated This field/method will be replaced during code generation.
 	 */
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (occurrence: "); //$NON-NLS-1$
+		result.append(" (occurrence: ");
 		result.append(occurrence);
 		result.append(')');
 		return result.toString();

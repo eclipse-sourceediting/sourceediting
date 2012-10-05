@@ -61,12 +61,12 @@
 	    (object Class_Category "ecore"
 		is_unit    	TRUE
 		is_loaded  	FALSE
-		file_name  	"$VABASE_PLUGINS_PATH\\org.eclipse.emf.ecore\\src\\model\\org.eclipse.emf.ECore.cat"
+		file_name  	"$VABASE_PLUGINS_PATH\\org.eclipse.emf.ecore\\model\\org.eclipse.emf.ECore.cat"
 		quid       	"39A5ED04004E")
-	    (object Class_Category "dtd"
+	    (object Class_Category "core.internal.emf"
 		is_unit    	TRUE
 		is_loaded  	FALSE
-		file_name  	"$VABASE_PLUGINS_PATH\\org.eclipse.wst.dtd\\src\\rose\\DTD.cat"
+		file_name  	"$VABASE_PLUGINS_PATH\\org.eclipse.wst.dtd.core\\emfmodel\\rose\\DTD.cat"
 		quid       	"3857B1C00293"))
 	logical_presentations 	(list unit_reference_list
 	    (object ClassDiagram "Main"
@@ -358,7 +358,7 @@
 		    (object Attribute
 			tool       	"IDL"
 			name       	"CmIdentification"
-			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd, wtpM1, 20041122"))
+			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd.core/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd.core, wtpM1, 20041122"))
 		    (object Attribute
 			tool       	"IDL"
 			name       	"CopyrightNotice"
@@ -390,7 +390,7 @@
 		    (object Attribute
 			tool       	"IDL"
 			name       	"CmIdentification"
-			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd, wtpM1, 20041122"))
+			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd.core/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd.core, wtpM1, 20041122"))
 		    (object Attribute
 			tool       	"IDL"
 			name       	"CopyrightNotice"
@@ -2478,7 +2478,7 @@
 		    (object Attribute
 			tool       	"CORBA"
 			name       	"CmIdentification"
-			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd, wtpM1, 20041122"))
+			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd.core/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd.core, wtpM1, 20041122"))
 		    (object Attribute
 			tool       	"CORBA"
 			name       	"CopyrightNotice"
@@ -2498,7 +2498,7 @@
 		    (object Attribute
 			tool       	"CORBA"
 			name       	"CmIdentification"
-			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd, wtpM1, 20041122"))
+			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd.core/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd.core, wtpM1, 20041122"))
 		    (object Attribute
 			tool       	"CORBA"
 			name       	"CopyrightNotice"
@@ -5174,7 +5174,7 @@
 		    (object Attribute
 			tool       	"cg"
 			name       	"CmIdentification"
-			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd, wtpM1, 20041122"))
+			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd.core/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd.core, wtpM1, 20041122"))
 		    (object Attribute
 			tool       	"cg"
 			name       	"CopyrightNotice"
@@ -5274,7 +5274,7 @@
 		    (object Attribute
 			tool       	"cg"
 			name       	"CmIdentification"
-			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd, wtpM1, 20041122"))
+			value      	(value Text "  %X%  @(#) plugins/org.eclipse.wst.dtd.core/src/rose/dtdmodel.mdl, org.eclipse.wst.dtd.core, wtpM1, 20041122"))
 		    (object Attribute
 			tool       	"cg"
 			name       	"CopyrightNotice"

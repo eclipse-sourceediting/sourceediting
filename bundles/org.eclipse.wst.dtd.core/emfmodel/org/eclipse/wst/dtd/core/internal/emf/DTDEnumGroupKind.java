@@ -19,7 +19,9 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Enum Group Kind</b></em>',
  * and utility methods for working with them. <!-- end-user-doc -->
- * 
+ * <!-- begin-model-doc -->
+ * NAME_TOKEN_GROUP=1 NOTATION_GROUP=2
+ * <!-- end-model-doc -->
  * @see org.eclipse.wst.dtd.core.internal.emf.DTDPackage#getDTDEnumGroupKind()
  * @model
  * @generated
@@ -61,7 +63,7 @@ public final class DTDEnumGroupKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDEnumGroupKind NAME_TOKEN_GROUP_LITERAL = new DTDEnumGroupKind(NAME_TOKEN_GROUP, "NAME_TOKEN_GROUP"); //$NON-NLS-1$
+	public static final DTDEnumGroupKind NAME_TOKEN_GROUP_LITERAL = new DTDEnumGroupKind(NAME_TOKEN_GROUP, "NAME_TOKEN_GROUP", "NAME_TOKEN_GROUP"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>NOTATION GROUP</b></em>' literal object. <!--
@@ -76,34 +78,34 @@ public final class DTDEnumGroupKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDEnumGroupKind NOTATION_GROUP_LITERAL = new DTDEnumGroupKind(NOTATION_GROUP, "NOTATION_GROUP"); //$NON-NLS-1$
+	public static final DTDEnumGroupKind NOTATION_GROUP_LITERAL = new DTDEnumGroupKind(NOTATION_GROUP, "NOTATION_GROUP", "NOTATION_GROUP"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>Enum Group Kind</b></em>' enumerators.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	private static final DTDEnumGroupKind[] VALUES_ARRAY = new DTDEnumGroupKind[]{NAME_TOKEN_GROUP_LITERAL, NOTATION_GROUP_LITERAL,};
+	private static final DTDEnumGroupKind[] VALUES_ARRAY = new DTDEnumGroupKind[] {
+			NAME_TOKEN_GROUP_LITERAL,
+			NOTATION_GROUP_LITERAL,
+		};
 
 	/**
-	 * A public read-only list of all the '<em><b>Enum Group Kind</b></em>'
-	 * enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * A public read-only list of all the '<em><b>Enum Group Kind</b></em>' enumerators.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Enum Group Kind</b></em>' literal with the
-	 * specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Enum Group Kind</b></em>' literal with the specified literal value.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static DTDEnumGroupKind get(String name) {
+	public static DTDEnumGroupKind get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			DTDEnumGroupKind result = VALUES_ARRAY[i];
-			if (result.toString().equals(name)) {
+			if (result.toString().equals(literal)) {
 				return result;
 			}
 		}
@@ -111,29 +113,42 @@ public final class DTDEnumGroupKind extends AbstractEnumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Enum Group Kind</b></em>' literal with the
-	 * specified value. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Enum Group Kind</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static DTDEnumGroupKind get(int value) {
-		switch (value) {
-			case NAME_TOKEN_GROUP :
-				return NAME_TOKEN_GROUP_LITERAL;
-			case NOTATION_GROUP :
-				return NOTATION_GROUP_LITERAL;
+	public static DTDEnumGroupKind getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			DTDEnumGroupKind result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
 		}
 		return null;
 	}
 
 	/**
-	 * Only this class can construct instances. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Enum Group Kind</b></em>' literal with the specified integer value.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	private DTDEnumGroupKind(int value, String name) {
-		super(value, name);
+	public static DTDEnumGroupKind get(int value) {
+		switch (value) {
+			case NAME_TOKEN_GROUP: return NAME_TOKEN_GROUP_LITERAL;
+			case NOTATION_GROUP: return NOTATION_GROUP_LITERAL;
+		}
+		return null;
+	}
+
+	/**
+	 * Only this class can construct instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private DTDEnumGroupKind(int value, String name, String literal) {
+		super(value, name, literal);
 	}
 
 } // DTDEnumGroupKind

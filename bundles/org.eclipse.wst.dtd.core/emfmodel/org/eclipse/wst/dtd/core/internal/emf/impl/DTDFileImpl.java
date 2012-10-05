@@ -21,7 +21,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.ENamedElement;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENamedElementImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -47,13 +46,13 @@ import org.eclipse.wst.dtd.core.internal.emf.util.DTDPrinter;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDFileImpl#getComment <em>Comment</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDFileImpl#isParseError <em>Parse Error</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDFileImpl#getDTDContent <em>DTD Content</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDFileImpl#getDTDEnumerationType <em>DTD Enumeration Type</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDFileImpl#getComment <em>Comment</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDFileImpl#isParseError <em>Parse Error</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDFileImpl#getDTDContent <em>DTD Content</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDFileImpl#getDTDEnumerationType <em>DTD Enumeration Type</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedElement {
@@ -195,9 +194,8 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 
 
 	/**
-	 * The default value of the '{@link #getComment() <em>Comment</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getComment() <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getComment()
 	 * @generated
 	 * @ordered
@@ -205,9 +203,8 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 	protected static final String COMMENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getComment() <em>Comment</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getComment() <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getComment()
 	 * @generated
 	 * @ordered
@@ -215,9 +212,8 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 	protected String comment = COMMENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isParseError() <em>Parse Error</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #isParseError() <em>Parse Error</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #isParseError()
 	 * @generated
 	 * @ordered
@@ -225,9 +221,8 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 	protected static final boolean PARSE_ERROR_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isParseError() <em>Parse Error</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #isParseError() <em>Parse Error</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #isParseError()
 	 * @generated
 	 * @ordered
@@ -243,7 +238,7 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 	 * @generated
 	 * @ordered
 	 */
-	protected EList dtdContent = null;
+	protected EList dtdContent;
 
 	/**
 	 * The cached value of the '{@link #getDTDEnumerationType() <em>DTD Enumeration Type</em>}'
@@ -254,11 +249,10 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 	 * @generated
 	 * @ordered
 	 */
-	protected EList dtdEnumerationType = null;
+	protected EList dtdEnumerationType;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected DTDFileImpl() {
@@ -267,16 +261,14 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return DTDPackage.eINSTANCE.getDTDFile();
+		return DTDPackage.Literals.DTD_FILE;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getComment() {
@@ -285,7 +277,6 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setComment(String newComment) {
@@ -297,7 +288,6 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public boolean isParseError() {
@@ -306,7 +296,6 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setParseError(boolean newParseError) {
@@ -318,7 +307,6 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList getDTDContent() {
@@ -330,7 +318,6 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList getDTDEnumerationType() {
@@ -341,144 +328,138 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_FILE__DTD_CONTENT :
-					return ((InternalEList) getDTDContent()).basicAdd(otherEnd, msgs);
-				case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE :
-					return ((InternalEList) getDTDEnumerationType()).basicAdd(otherEnd, msgs);
-				default :
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_FILE__DTD_CONTENT:
+				return ((InternalEList)getDTDContent()).basicAdd(otherEnd, msgs);
+			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE:
+				return ((InternalEList)getDTDEnumerationType()).basicAdd(otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (baseClass == null ? featureID : eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_FILE__DTD_CONTENT :
-					return ((InternalEList) getDTDContent()).basicRemove(otherEnd, msgs);
-				case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE :
-					return ((InternalEList) getDTDEnumerationType()).basicRemove(otherEnd, msgs);
-				default :
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_FILE__COMMENT :
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_FILE__DTD_CONTENT:
+				return ((InternalEList)getDTDContent()).basicRemove(otherEnd, msgs);
+			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE:
+				return ((InternalEList)getDTDEnumerationType()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DTDPackage.DTD_FILE__COMMENT:
 				return getComment();
-			case DTDPackage.DTD_FILE__PARSE_ERROR :
+			case DTDPackage.DTD_FILE__PARSE_ERROR:
 				return isParseError() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_FILE__DTD_CONTENT :
+			case DTDPackage.DTD_FILE__DTD_CONTENT:
 				return getDTDContent();
-			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE :
+			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE:
 				return getDTDEnumerationType();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_FILE__COMMENT :
-				setComment((String) newValue);
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DTDPackage.DTD_FILE__COMMENT:
+				setComment((String)newValue);
 				return;
-			case DTDPackage.DTD_FILE__PARSE_ERROR :
-				setParseError(((Boolean) newValue).booleanValue());
+			case DTDPackage.DTD_FILE__PARSE_ERROR:
+				setParseError(((Boolean)newValue).booleanValue());
 				return;
-			case DTDPackage.DTD_FILE__DTD_CONTENT :
+			case DTDPackage.DTD_FILE__DTD_CONTENT:
 				getDTDContent().clear();
-				getDTDContent().addAll((Collection) newValue);
+				getDTDContent().addAll((Collection)newValue);
 				return;
-			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE :
+			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE:
 				getDTDEnumerationType().clear();
-				getDTDEnumerationType().addAll((Collection) newValue);
+				getDTDEnumerationType().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_FILE__COMMENT :
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_FILE__COMMENT:
 				setComment(COMMENT_EDEFAULT);
 				return;
-			case DTDPackage.DTD_FILE__PARSE_ERROR :
+			case DTDPackage.DTD_FILE__PARSE_ERROR:
 				setParseError(PARSE_ERROR_EDEFAULT);
 				return;
-			case DTDPackage.DTD_FILE__DTD_CONTENT :
+			case DTDPackage.DTD_FILE__DTD_CONTENT:
 				getDTDContent().clear();
 				return;
-			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE :
+			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE:
 				getDTDEnumerationType().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_FILE__COMMENT :
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_FILE__COMMENT:
 				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
-			case DTDPackage.DTD_FILE__PARSE_ERROR :
+			case DTDPackage.DTD_FILE__PARSE_ERROR:
 				return parseError != PARSE_ERROR_EDEFAULT;
-			case DTDPackage.DTD_FILE__DTD_CONTENT :
-				return dtdContent != null && !getDTDContent().isEmpty();
-			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE :
-				return dtdEnumerationType != null && !getDTDEnumerationType().isEmpty();
+			case DTDPackage.DTD_FILE__DTD_CONTENT:
+				return dtdContent != null && !dtdContent.isEmpty();
+			case DTDPackage.DTD_FILE__DTD_ENUMERATION_TYPE:
+				return dtdEnumerationType != null && !dtdEnumerationType.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
+
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comment: "); //$NON-NLS-1$
+		result.append(" (comment: ");
 		result.append(comment);
-		result.append(", parseError: "); //$NON-NLS-1$
+		result.append(", parseError: ");
 		result.append(parseError);
 		result.append(')');
 		return result.toString();

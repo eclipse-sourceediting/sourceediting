@@ -75,7 +75,7 @@ public class DTDAdapterFactory extends AdapterFactoryImpl {
 			return true;
 		}
 		if (object instanceof EObject) {
-			return ((EObject) object).eClass().getEPackage() == modelPackage;
+			return ((EObject)object).eClass().getEPackage() == modelPackage;
 		}
 		return false;
 	}
@@ -87,132 +87,103 @@ public class DTDAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	protected DTDSwitch modelSwitch = new DTDSwitch() {
-		public Object caseDTDElementContent(DTDElementContent object) {
-			return createDTDElementContentAdapter();
-		}
-
-		public Object caseDTDGroupContent(DTDGroupContent object) {
-			return createDTDGroupContentAdapter();
-		}
-
-		public Object caseDTDAttribute(DTDAttribute object) {
-			return createDTDAttributeAdapter();
-		}
-
-		public Object caseDTDElement(DTDElement object) {
-			return createDTDElementAdapter();
-		}
-
-		public Object caseDTDEmptyContent(DTDEmptyContent object) {
-			return createDTDEmptyContentAdapter();
-		}
-
-		public Object caseDTDAnyContent(DTDAnyContent object) {
-			return createDTDAnyContentAdapter();
-		}
-
-		public Object caseDTDPCDataContent(DTDPCDataContent object) {
-			return createDTDPCDataContentAdapter();
-		}
-
-		public Object caseDTDElementReferenceContent(DTDElementReferenceContent object) {
-			return createDTDElementReferenceContentAdapter();
-		}
-
-		public Object caseDTDRepeatableContent(DTDRepeatableContent object) {
-			return createDTDRepeatableContentAdapter();
-		}
-
-		public Object caseDTDFile(DTDFile object) {
-			return createDTDFileAdapter();
-		}
-
-		public Object caseDTDBasicType(DTDBasicType object) {
-			return createDTDBasicTypeAdapter();
-		}
-
-		public Object caseDTDEnumerationType(DTDEnumerationType object) {
-			return createDTDEnumerationTypeAdapter();
-		}
-
-		public Object caseDTDNotation(DTDNotation object) {
-			return createDTDNotationAdapter();
-		}
-
-		public Object caseDTDEntity(DTDEntity object) {
-			return createDTDEntityAdapter();
-		}
-
-		public Object caseDTDEntityContent(DTDEntityContent object) {
-			return createDTDEntityContentAdapter();
-		}
-
-		public Object caseDTDExternalEntity(DTDExternalEntity object) {
-			return createDTDExternalEntityAdapter();
-		}
-
-		public Object caseDTDInternalEntity(DTDInternalEntity object) {
-			return createDTDInternalEntityAdapter();
-		}
-
-		public Object caseDTDParameterEntityReference(DTDParameterEntityReference object) {
-			return createDTDParameterEntityReferenceAdapter();
-		}
-
-		public Object caseDTDEntityReferenceContent(DTDEntityReferenceContent object) {
-			return createDTDEntityReferenceContentAdapter();
-		}
-
-		public Object caseDTDContent(DTDContent object) {
-			return createDTDContentAdapter();
-		}
-
-		public Object caseEModelElement(EModelElement object) {
-			return createEModelElementAdapter();
-		}
-
-		public Object caseENamedElement(ENamedElement object) {
-			return createENamedElementAdapter();
-		}
-
-		public Object caseETypedElement(ETypedElement object) {
-			return createETypedElementAdapter();
-		}
-
-		public Object caseEStructuralFeature(EStructuralFeature object) {
-			return createEStructuralFeatureAdapter();
-		}
-
-		public Object caseEAttribute(EAttribute object) {
-			return createEAttributeAdapter();
-		}
-
-		public Object caseEClassifier(EClassifier object) {
-			return createEClassifierAdapter();
-		}
-
-		public Object caseEClass(EClass object) {
-			return createEClassAdapter();
-		}
-
-		public Object caseEDataType(EDataType object) {
-			return createEDataTypeAdapter();
-		}
-
-		public Object caseEEnum(EEnum object) {
-			return createEEnumAdapter();
-		}
-
-		public Object defaultCase(EObject object) {
-			return createEObjectAdapter();
-		}
-	};
+			public Object caseDTDElementContent(DTDElementContent object) {
+				return createDTDElementContentAdapter();
+			}
+			public Object caseDTDGroupContent(DTDGroupContent object) {
+				return createDTDGroupContentAdapter();
+			}
+			public Object caseDTDAttribute(DTDAttribute object) {
+				return createDTDAttributeAdapter();
+			}
+			public Object caseDTDElement(DTDElement object) {
+				return createDTDElementAdapter();
+			}
+			public Object caseDTDEmptyContent(DTDEmptyContent object) {
+				return createDTDEmptyContentAdapter();
+			}
+			public Object caseDTDAnyContent(DTDAnyContent object) {
+				return createDTDAnyContentAdapter();
+			}
+			public Object caseDTDPCDataContent(DTDPCDataContent object) {
+				return createDTDPCDataContentAdapter();
+			}
+			public Object caseDTDElementReferenceContent(DTDElementReferenceContent object) {
+				return createDTDElementReferenceContentAdapter();
+			}
+			public Object caseDTDRepeatableContent(DTDRepeatableContent object) {
+				return createDTDRepeatableContentAdapter();
+			}
+			public Object caseDTDFile(DTDFile object) {
+				return createDTDFileAdapter();
+			}
+			public Object caseDTDBasicType(DTDBasicType object) {
+				return createDTDBasicTypeAdapter();
+			}
+			public Object caseDTDEnumerationType(DTDEnumerationType object) {
+				return createDTDEnumerationTypeAdapter();
+			}
+			public Object caseDTDNotation(DTDNotation object) {
+				return createDTDNotationAdapter();
+			}
+			public Object caseDTDEntity(DTDEntity object) {
+				return createDTDEntityAdapter();
+			}
+			public Object caseDTDEntityContent(DTDEntityContent object) {
+				return createDTDEntityContentAdapter();
+			}
+			public Object caseDTDExternalEntity(DTDExternalEntity object) {
+				return createDTDExternalEntityAdapter();
+			}
+			public Object caseDTDInternalEntity(DTDInternalEntity object) {
+				return createDTDInternalEntityAdapter();
+			}
+			public Object caseDTDParameterEntityReference(DTDParameterEntityReference object) {
+				return createDTDParameterEntityReferenceAdapter();
+			}
+			public Object caseDTDEntityReferenceContent(DTDEntityReferenceContent object) {
+				return createDTDEntityReferenceContentAdapter();
+			}
+			public Object caseDTDContent(DTDContent object) {
+				return createDTDContentAdapter();
+			}
+			public Object caseEModelElement(EModelElement object) {
+				return createEModelElementAdapter();
+			}
+			public Object caseENamedElement(ENamedElement object) {
+				return createENamedElementAdapter();
+			}
+			public Object caseETypedElement(ETypedElement object) {
+				return createETypedElementAdapter();
+			}
+			public Object caseEStructuralFeature(EStructuralFeature object) {
+				return createEStructuralFeatureAdapter();
+			}
+			public Object caseEAttribute(EAttribute object) {
+				return createEAttributeAdapter();
+			}
+			public Object caseEClassifier(EClassifier object) {
+				return createEClassifierAdapter();
+			}
+			public Object caseEClass(EClass object) {
+				return createEClassAdapter();
+			}
+			public Object caseEDataType(EDataType object) {
+				return createEDataTypeAdapter();
+			}
+			public Object caseEEnum(EEnum object) {
+				return createEEnumAdapter();
+			}
+			public Object defaultCase(EObject object) {
+				return createEObjectAdapter();
+			}
+		};
 
 	/**
 	 * @generated This field/method will be replaced during code generation.
 	 */
 	public Adapter createAdapter(Notifier target) {
-		return (Adapter) modelSwitch.doSwitch((EObject) target);
+		return (Adapter)modelSwitch.doSwitch((EObject)target);
 	}
 
 

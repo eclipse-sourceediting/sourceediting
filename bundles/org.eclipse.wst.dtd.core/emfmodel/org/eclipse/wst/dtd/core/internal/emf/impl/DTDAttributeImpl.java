@@ -16,19 +16,16 @@ import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.notify.impl.NotificationChainImpl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EAttributeImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.wst.dtd.core.internal.emf.DTDAttribute;
 import org.eclipse.wst.dtd.core.internal.emf.DTDBasicType;
 import org.eclipse.wst.dtd.core.internal.emf.DTDBasicTypeKind;
@@ -49,15 +46,15 @@ import org.eclipse.wst.dtd.core.internal.emf.DTDType;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDAttributeImpl#getComment <em>Comment</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDAttributeImpl#getDefaultKind <em>Default Kind</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDAttributeImpl#getDefaultValueString <em>Default Value String</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDAttributeImpl#getAttributeNameReferencedEntity <em>Attribute Name Referenced Entity</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDAttributeImpl#getAttributeTypeReferencedEntity <em>Attribute Type Referenced Entity</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDAttributeImpl#getDTDElement <em>DTD Element</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDAttributeImpl#getComment <em>Comment</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDAttributeImpl#getDefaultKind <em>Default Kind</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDAttributeImpl#getDefaultValueString <em>Default Value String</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDAttributeImpl#getAttributeNameReferencedEntity <em>Attribute Name Referenced Entity</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDAttributeImpl#getAttributeTypeReferencedEntity <em>Attribute Type Referenced Entity</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDAttributeImpl#getDTDElement <em>DTD Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
@@ -325,9 +322,8 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 
 	/**
-	 * The default value of the '{@link #getComment() <em>Comment</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getComment() <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getComment()
 	 * @generated
 	 * @ordered
@@ -335,9 +331,8 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 	protected static final String COMMENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getComment() <em>Comment</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getComment() <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getComment()
 	 * @generated
 	 * @ordered
@@ -345,9 +340,8 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 	protected String comment = COMMENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDefaultKind() <em>Default Kind</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getDefaultKind() <em>Default Kind</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getDefaultKind()
 	 * @generated
 	 * @ordered
@@ -355,9 +349,8 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 	protected static final DTDDefaultKind DEFAULT_KIND_EDEFAULT = DTDDefaultKind.IMPLIED_LITERAL;
 
 	/**
-	 * The cached value of the '{@link #getDefaultKind() <em>Default Kind</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getDefaultKind() <em>Default Kind</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getDefaultKind()
 	 * @generated
 	 * @ordered
@@ -365,9 +358,8 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 	protected DTDDefaultKind defaultKind = DEFAULT_KIND_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDefaultValueString() <em>Default Value String</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getDefaultValueString() <em>Default Value String</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getDefaultValueString()
 	 * @generated
 	 * @ordered
@@ -375,9 +367,8 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 	protected static final String DEFAULT_VALUE_STRING_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDefaultValueString() <em>Default Value String</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getDefaultValueString() <em>Default Value String</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getDefaultValueString()
 	 * @generated
 	 * @ordered
@@ -385,37 +376,33 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 	protected String defaultValueString = DEFAULT_VALUE_STRING_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getAttributeNameReferencedEntity() <em>Attribute Name Referenced Entity</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getAttributeNameReferencedEntity() <em>Attribute Name Referenced Entity</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getAttributeNameReferencedEntity()
 	 * @generated
 	 * @ordered
 	 */
-	protected DTDEntity attributeNameReferencedEntity = null;
+	protected DTDEntity attributeNameReferencedEntity;
 
 	/**
-	 * The cached value of the '{@link #getAttributeTypeReferencedEntity() <em>Attribute Type Referenced Entity</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getAttributeTypeReferencedEntity() <em>Attribute Type Referenced Entity</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getAttributeTypeReferencedEntity()
 	 * @generated
 	 * @ordered
 	 */
-	protected DTDEntity attributeTypeReferencedEntity = null;
+	protected DTDEntity attributeTypeReferencedEntity;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return DTDPackage.eINSTANCE.getDTDAttribute();
+		return DTDPackage.Literals.DTD_ATTRIBUTE;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getComment() {
@@ -424,7 +411,6 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setComment(String newComment) {
@@ -436,7 +422,6 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DTDDefaultKind getDefaultKind() {
@@ -445,7 +430,6 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setDefaultKind(DTDDefaultKind newDefaultKind) {
@@ -457,7 +441,6 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getDefaultValueString() {
@@ -466,7 +449,6 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setDefaultValueString(String newDefaultValueString) {
@@ -478,13 +460,12 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DTDEntity getAttributeNameReferencedEntity() {
 		if (attributeNameReferencedEntity != null && attributeNameReferencedEntity.eIsProxy()) {
-			DTDEntity oldAttributeNameReferencedEntity = attributeNameReferencedEntity;
-			attributeNameReferencedEntity = (DTDEntity) EcoreUtil.resolve(attributeNameReferencedEntity, this);
+			InternalEObject oldAttributeNameReferencedEntity = (InternalEObject)attributeNameReferencedEntity;
+			attributeNameReferencedEntity = (DTDEntity)eResolveProxy(oldAttributeNameReferencedEntity);
 			if (attributeNameReferencedEntity != oldAttributeNameReferencedEntity) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY, oldAttributeNameReferencedEntity, attributeNameReferencedEntity));
@@ -495,7 +476,6 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DTDEntity basicGetAttributeNameReferencedEntity() {
@@ -504,35 +484,31 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetAttributeNameReferencedEntity(DTDEntity newAttributeNameReferencedEntity, NotificationChain msgs) {
 		DTDEntity oldAttributeNameReferencedEntity = attributeNameReferencedEntity;
 		attributeNameReferencedEntity = newAttributeNameReferencedEntity;
 		if (eNotificationRequired()) {
-			if (msgs == null)
-				msgs = new NotificationChainImpl(4);
-			msgs.add(new ENotificationImpl(this, Notification.SET, DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY, oldAttributeNameReferencedEntity, newAttributeNameReferencedEntity));
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY, oldAttributeNameReferencedEntity, newAttributeNameReferencedEntity);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setAttributeNameReferencedEntity(DTDEntity newAttributeNameReferencedEntity) {
 		if (newAttributeNameReferencedEntity != attributeNameReferencedEntity) {
 			NotificationChain msgs = null;
 			if (attributeNameReferencedEntity != null)
-				msgs = ((InternalEObject) attributeNameReferencedEntity).eInverseRemove(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_NAME_REFERENCE, DTDEntity.class, msgs);
+				msgs = ((InternalEObject)attributeNameReferencedEntity).eInverseRemove(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_NAME_REFERENCE, DTDEntity.class, msgs);
 			if (newAttributeNameReferencedEntity != null)
-				msgs = ((InternalEObject) newAttributeNameReferencedEntity).eInverseAdd(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_NAME_REFERENCE, DTDEntity.class, msgs);
+				msgs = ((InternalEObject)newAttributeNameReferencedEntity).eInverseAdd(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_NAME_REFERENCE, DTDEntity.class, msgs);
 			msgs = basicSetAttributeNameReferencedEntity(newAttributeNameReferencedEntity, msgs);
-			if (msgs != null)
-				msgs.dispatch();
+			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY, newAttributeNameReferencedEntity, newAttributeNameReferencedEntity));
@@ -540,13 +516,12 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DTDEntity getAttributeTypeReferencedEntity() {
 		if (attributeTypeReferencedEntity != null && attributeTypeReferencedEntity.eIsProxy()) {
-			DTDEntity oldAttributeTypeReferencedEntity = attributeTypeReferencedEntity;
-			attributeTypeReferencedEntity = (DTDEntity) EcoreUtil.resolve(attributeTypeReferencedEntity, this);
+			InternalEObject oldAttributeTypeReferencedEntity = (InternalEObject)attributeTypeReferencedEntity;
+			attributeTypeReferencedEntity = (DTDEntity)eResolveProxy(oldAttributeTypeReferencedEntity);
 			if (attributeTypeReferencedEntity != oldAttributeTypeReferencedEntity) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY, oldAttributeTypeReferencedEntity, attributeTypeReferencedEntity));
@@ -557,7 +532,6 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DTDEntity basicGetAttributeTypeReferencedEntity() {
@@ -566,35 +540,31 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetAttributeTypeReferencedEntity(DTDEntity newAttributeTypeReferencedEntity, NotificationChain msgs) {
 		DTDEntity oldAttributeTypeReferencedEntity = attributeTypeReferencedEntity;
 		attributeTypeReferencedEntity = newAttributeTypeReferencedEntity;
 		if (eNotificationRequired()) {
-			if (msgs == null)
-				msgs = new NotificationChainImpl(4);
-			msgs.add(new ENotificationImpl(this, Notification.SET, DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY, oldAttributeTypeReferencedEntity, newAttributeTypeReferencedEntity));
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY, oldAttributeTypeReferencedEntity, newAttributeTypeReferencedEntity);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setAttributeTypeReferencedEntity(DTDEntity newAttributeTypeReferencedEntity) {
 		if (newAttributeTypeReferencedEntity != attributeTypeReferencedEntity) {
 			NotificationChain msgs = null;
 			if (attributeTypeReferencedEntity != null)
-				msgs = ((InternalEObject) attributeTypeReferencedEntity).eInverseRemove(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_TYPE_REFERENCE, DTDEntity.class, msgs);
+				msgs = ((InternalEObject)attributeTypeReferencedEntity).eInverseRemove(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_TYPE_REFERENCE, DTDEntity.class, msgs);
 			if (newAttributeTypeReferencedEntity != null)
-				msgs = ((InternalEObject) newAttributeTypeReferencedEntity).eInverseAdd(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_TYPE_REFERENCE, DTDEntity.class, msgs);
+				msgs = ((InternalEObject)newAttributeTypeReferencedEntity).eInverseAdd(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_TYPE_REFERENCE, DTDEntity.class, msgs);
 			msgs = basicSetAttributeTypeReferencedEntity(newAttributeTypeReferencedEntity, msgs);
-			if (msgs != null)
-				msgs.dispatch();
+			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY, newAttributeTypeReferencedEntity, newAttributeTypeReferencedEntity));
@@ -602,376 +572,215 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DTDElement getDTDElement() {
-		if (eContainerFeatureID() != DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT)
-			return null;
-		return (DTDElement) eContainer;
+		if (eContainerFeatureID() != DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT) return null;
+		return (DTDElement)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDTDElement(DTDElement newDTDElement, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newDTDElement, DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT, msgs);
+		return msgs;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setDTDElement(DTDElement newDTDElement) {
-		if (newDTDElement != eContainer || (eContainerFeatureID() != DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT && newDTDElement != null)) {
+		if (newDTDElement != eInternalContainer() || (eContainerFeatureID() != DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT && newDTDElement != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDElement))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
-			if (eContainer != null)
+			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
 			if (newDTDElement != null)
-				msgs = ((InternalEObject) newDTDElement).eInverseAdd(this, DTDPackage.DTD_ELEMENT__DTD_ATTRIBUTE, DTDElement.class, msgs);
-			msgs = eBasicSetContainer((InternalEObject) newDTDElement, DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT, msgs);
-			if (msgs != null)
-				msgs.dispatch();
+				msgs = ((InternalEObject)newDTDElement).eInverseAdd(this, DTDPackage.DTD_ELEMENT__DTD_ATTRIBUTE, DTDElement.class, msgs);
+			msgs = basicSetDTDElement(newDTDElement, msgs);
+			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT, newDTDElement, newDTDElement));
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_ATTRIBUTE__EANNOTATIONS :
-					return ((InternalEList) getEAnnotations()).basicAdd(otherEnd, msgs);
-				case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY :
-					if (attributeNameReferencedEntity != null)
-						msgs = ((InternalEObject) attributeNameReferencedEntity).eInverseRemove(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_NAME_REFERENCE, DTDEntity.class, msgs);
-					return basicSetAttributeNameReferencedEntity((DTDEntity) otherEnd, msgs);
-				case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY :
-					if (attributeTypeReferencedEntity != null)
-						msgs = ((InternalEObject) attributeTypeReferencedEntity).eInverseRemove(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_TYPE_REFERENCE, DTDEntity.class, msgs);
-					return basicSetAttributeTypeReferencedEntity((DTDEntity) otherEnd, msgs);
-				case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT, msgs);
-				default :
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY:
+				if (attributeNameReferencedEntity != null)
+					msgs = ((InternalEObject)attributeNameReferencedEntity).eInverseRemove(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_NAME_REFERENCE, DTDEntity.class, msgs);
+				return basicSetAttributeNameReferencedEntity((DTDEntity)otherEnd, msgs);
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY:
+				if (attributeTypeReferencedEntity != null)
+					msgs = ((InternalEObject)attributeTypeReferencedEntity).eInverseRemove(this, DTDPackage.DTD_ENTITY__ATTRIBUTE_TYPE_REFERENCE, DTDEntity.class, msgs);
+				return basicSetAttributeTypeReferencedEntity((DTDEntity)otherEnd, msgs);
+			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetDTDElement((DTDElement)otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (baseClass == null ? featureID : eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_ATTRIBUTE__EANNOTATIONS :
-					return ((InternalEList) getEAnnotations()).basicRemove(otherEnd, msgs);
-				case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY :
-					return basicSetAttributeNameReferencedEntity(null, msgs);
-				case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY :
-					return basicSetAttributeTypeReferencedEntity(null, msgs);
-				case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
-					return eBasicSetContainer(null, DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT, msgs);
-				default :
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY:
+				return basicSetAttributeNameReferencedEntity(null, msgs);
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY:
+				return basicSetAttributeTypeReferencedEntity(null, msgs);
+			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT:
+				return basicSetDTDElement(null, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID() >= 0) {
-			switch (eContainerFeatureID()) {
-				case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
-					return eContainer.eInverseRemove(this, DTDPackage.DTD_ELEMENT__DTD_ATTRIBUTE, DTDElement.class, msgs);
-				default :
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT:
+				return eInternalContainer().eInverseRemove(this, DTDPackage.DTD_ELEMENT__DTD_ATTRIBUTE, DTDElement.class, msgs);
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_ATTRIBUTE__EANNOTATIONS :
-				return getEAnnotations();
-			case DTDPackage.DTD_ATTRIBUTE__NAME :
-				return getName();
-			case DTDPackage.DTD_ATTRIBUTE__ETYPE :
-				if (resolve)
-					return getEType();
-				return basicGetEType();
-			case DTDPackage.DTD_ATTRIBUTE__CHANGEABLE :
-				return isChangeable() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_ATTRIBUTE__VOLATILE :
-				return isVolatile() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_ATTRIBUTE__TRANSIENT :
-				return isTransient() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_ATTRIBUTE__UNIQUE :
-				return isUnique() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_LITERAL :
-				return getDefaultValueLiteral();
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE :
-				return getDefaultValue();
-			case DTDPackage.DTD_ATTRIBUTE__LOWER_BOUND :
-				return new Integer(getLowerBound());
-			case DTDPackage.DTD_ATTRIBUTE__UPPER_BOUND :
-				return new Integer(getUpperBound());
-			case DTDPackage.DTD_ATTRIBUTE__MANY :
-				return isMany() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_ATTRIBUTE__REQUIRED :
-				return isRequired() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_ATTRIBUTE__ECONTAINING_CLASS :
-				return getEContainingClass();
-			case DTDPackage.DTD_ATTRIBUTE__UNSETTABLE :
-				return isUnsettable() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_ATTRIBUTE__ID :
-				return isID() ? Boolean.TRUE : Boolean.FALSE;
-			case DTDPackage.DTD_ATTRIBUTE__EATTRIBUTE_TYPE :
-				if (resolve)
-					return getEAttributeType();
-				return basicGetEAttributeType();
-			case DTDPackage.DTD_ATTRIBUTE__COMMENT :
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DTDPackage.DTD_ATTRIBUTE__COMMENT:
 				return getComment();
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_KIND :
+			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_KIND:
 				return getDefaultKind();
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_STRING :
+			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_STRING:
 				return getDefaultValueString();
-			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY :
-				if (resolve)
-					return getAttributeNameReferencedEntity();
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY:
+				if (resolve) return getAttributeNameReferencedEntity();
 				return basicGetAttributeNameReferencedEntity();
-			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY :
-				if (resolve)
-					return getAttributeTypeReferencedEntity();
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY:
+				if (resolve) return getAttributeTypeReferencedEntity();
 				return basicGetAttributeTypeReferencedEntity();
-			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
+			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT:
 				return getDTDElement();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_ATTRIBUTE__EANNOTATIONS :
-				getEAnnotations().clear();
-				getEAnnotations().addAll((Collection) newValue);
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DTDPackage.DTD_ATTRIBUTE__COMMENT:
+				setComment((String)newValue);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__NAME :
-				setName((String) newValue);
+			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_KIND:
+				setDefaultKind((DTDDefaultKind)newValue);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__ETYPE :
-				setEType((EClassifier) newValue);
+			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_STRING:
+				setDefaultValueString((String)newValue);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__CHANGEABLE :
-				setChangeable(((Boolean) newValue).booleanValue());
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY:
+				setAttributeNameReferencedEntity((DTDEntity)newValue);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__VOLATILE :
-				setVolatile(((Boolean) newValue).booleanValue());
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY:
+				setAttributeTypeReferencedEntity((DTDEntity)newValue);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__TRANSIENT :
-				setTransient(((Boolean) newValue).booleanValue());
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__UNIQUE :
-				setUnique(((Boolean) newValue).booleanValue());
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_LITERAL :
-				setDefaultValueLiteral((String) newValue);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__LOWER_BOUND :
-				setLowerBound(((Integer) newValue).intValue());
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__UPPER_BOUND :
-				setUpperBound(((Integer) newValue).intValue());
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__UNSETTABLE :
-				setUnsettable(((Boolean) newValue).booleanValue());
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__ID :
-				setID(((Boolean) newValue).booleanValue());
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__COMMENT :
-				setComment((String) newValue);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_KIND :
-				setDefaultKind((DTDDefaultKind) newValue);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_STRING :
-				setDefaultValueString((String) newValue);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY :
-				setAttributeNameReferencedEntity((DTDEntity) newValue);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY :
-				setAttributeTypeReferencedEntity((DTDEntity) newValue);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
-				setDTDElement((DTDElement) newValue);
+			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT:
+				setDTDElement((DTDElement)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_ATTRIBUTE__EANNOTATIONS :
-				getEAnnotations().clear();
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__NAME :
-				setName(NAME_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__ETYPE :
-				setEType((EClassifier) null);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__CHANGEABLE :
-				setChangeable(CHANGEABLE_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__VOLATILE :
-				setVolatile(VOLATILE_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__TRANSIENT :
-				setTransient(TRANSIENT_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__UNIQUE :
-				setUnique(UNIQUE_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_LITERAL :
-				setDefaultValueLiteral(DEFAULT_VALUE_LITERAL_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__LOWER_BOUND :
-				setLowerBound(LOWER_BOUND_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__UPPER_BOUND :
-				setUpperBound(UPPER_BOUND_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__UNSETTABLE :
-				setUnsettable(UNSETTABLE_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__ID :
-				setID(ID_EDEFAULT);
-				return;
-			case DTDPackage.DTD_ATTRIBUTE__COMMENT :
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_ATTRIBUTE__COMMENT:
 				setComment(COMMENT_EDEFAULT);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_KIND :
+			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_KIND:
 				setDefaultKind(DEFAULT_KIND_EDEFAULT);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_STRING :
+			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_STRING:
 				setDefaultValueString(DEFAULT_VALUE_STRING_EDEFAULT);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY :
-				setAttributeNameReferencedEntity((DTDEntity) null);
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY:
+				setAttributeNameReferencedEntity((DTDEntity)null);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY :
-				setAttributeTypeReferencedEntity((DTDEntity) null);
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY:
+				setAttributeTypeReferencedEntity((DTDEntity)null);
 				return;
-			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
-				setDTDElement((DTDElement) null);
+			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT:
+				setDTDElement((DTDElement)null);
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_ATTRIBUTE__EANNOTATIONS :
-				return eAnnotations != null && !getEAnnotations().isEmpty();
-			case DTDPackage.DTD_ATTRIBUTE__NAME :
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case DTDPackage.DTD_ATTRIBUTE__ETYPE :
-				return eType != null;
-			case DTDPackage.DTD_ATTRIBUTE__CHANGEABLE :
-				return ((eFlags & CHANGEABLE_EFLAG) != 0) != CHANGEABLE_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__VOLATILE :
-				return ((eFlags & VOLATILE_EFLAG) != 0) != VOLATILE_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__TRANSIENT :
-				return ((eFlags & TRANSIENT_EFLAG) != 0) != TRANSIENT_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__UNIQUE :
-				return ((eFlags & UNIQUE_EFLAG) != 0) != UNIQUE_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_LITERAL :
-				return DEFAULT_VALUE_LITERAL_EDEFAULT == null ? defaultValueLiteral != null : !DEFAULT_VALUE_LITERAL_EDEFAULT.equals(defaultValueLiteral);
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE :
-				return getDefaultValue() != null;
-			case DTDPackage.DTD_ATTRIBUTE__LOWER_BOUND :
-				return lowerBound != LOWER_BOUND_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__UPPER_BOUND :
-				return upperBound != UPPER_BOUND_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__MANY :
-				return isMany() != false;
-			case DTDPackage.DTD_ATTRIBUTE__REQUIRED :
-				return isRequired() != false;
-			case DTDPackage.DTD_ATTRIBUTE__ECONTAINING_CLASS :
-				return getEContainingClass() != null;
-			case DTDPackage.DTD_ATTRIBUTE__UNSETTABLE :
-				return ((eFlags & UNSETTABLE_EFLAG) != 0) != UNSETTABLE_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__ID :
-				return ((eFlags & ID_EFLAG) != 0) != ID_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__EATTRIBUTE_TYPE :
-				return basicGetEAttributeType() != null;
-			case DTDPackage.DTD_ATTRIBUTE__COMMENT :
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_ATTRIBUTE__COMMENT:
 				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_KIND :
+			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_KIND:
 				return defaultKind != DEFAULT_KIND_EDEFAULT;
-			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_STRING :
+			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_STRING:
 				return DEFAULT_VALUE_STRING_EDEFAULT == null ? defaultValueString != null : !DEFAULT_VALUE_STRING_EDEFAULT.equals(defaultValueString);
-			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY :
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_NAME_REFERENCED_ENTITY:
 				return attributeNameReferencedEntity != null;
-			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY :
+			case DTDPackage.DTD_ATTRIBUTE__ATTRIBUTE_TYPE_REFERENCED_ENTITY:
 				return attributeTypeReferencedEntity != null;
-			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT :
+			case DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT:
 				return getDTDElement() != null;
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comment: "); //$NON-NLS-1$
+		result.append(" (comment: ");
 		result.append(comment);
-		result.append(", defaultKind: "); //$NON-NLS-1$
+		result.append(", defaultKind: ");
 		result.append(defaultKind);
-		result.append(", defaultValueString: "); //$NON-NLS-1$
+		result.append(", defaultValueString: ");
 		result.append(defaultValueString);
 		result.append(')');
 		return result.toString();

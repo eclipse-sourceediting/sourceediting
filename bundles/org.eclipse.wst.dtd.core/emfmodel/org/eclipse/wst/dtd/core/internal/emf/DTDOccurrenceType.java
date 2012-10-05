@@ -19,16 +19,19 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Occurrence Type</b></em>',
  * and utility methods for working with them. <!-- end-user-doc -->
- * 
+ * <!-- begin-model-doc -->
+ * ONE=49 
+ * OPTIONAL=63 ONE_OR_MORE=43 ZERO_OR_MORE=42
+ * <!-- end-model-doc -->
  * @see org.eclipse.wst.dtd.core.internal.emf.DTDPackage#getDTDOccurrenceType()
  * @model
  * @generated
  */
 public final class DTDOccurrenceType extends AbstractEnumerator {
 	/**
-	 * The '<em><b>ONE</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>ONE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #ONE_LITERAL
 	 * @model
 	 * @generated
@@ -37,9 +40,9 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	public static final int ONE = 49;
 
 	/**
-	 * The '<em><b>OPTIONAL</b></em>' literal value. <!-- begin-user-doc
+	 * The '<em><b>OPTIONAL</b></em>' literal value.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #OPTIONAL_LITERAL
 	 * @model
 	 * @generated
@@ -70,33 +73,33 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	public static final int ZERO_OR_MORE = 42;
 
 	/**
-	 * The '<em><b>ONE</b></em>' literal object. <!-- begin-user-doc -->
+	 * The '<em><b>ONE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>ONE</b></em>' literal object isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #ONE
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDOccurrenceType ONE_LITERAL = new DTDOccurrenceType(ONE, "ONE"); //$NON-NLS-1$
+	public static final DTDOccurrenceType ONE_LITERAL = new DTDOccurrenceType(ONE, "ONE", "ONE"); //$NON-NLS-1$
 
 	/**
-	 * The '<em><b>OPTIONAL</b></em>' literal object. <!-- begin-user-doc
+	 * The '<em><b>OPTIONAL</b></em>' literal object.
+	 * <!-- begin-user-doc
 	 * -->
 	 * <p>
 	 * If the meaning of '<em><b>OPTIONAL</b></em>' literal object isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #OPTIONAL
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDOccurrenceType OPTIONAL_LITERAL = new DTDOccurrenceType(OPTIONAL, "OPTIONAL"); //$NON-NLS-1$
+	public static final DTDOccurrenceType OPTIONAL_LITERAL = new DTDOccurrenceType(OPTIONAL, "OPTIONAL", "OPTIONAL"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>ONE OR MORE</b></em>' literal object. <!--
@@ -111,7 +114,7 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDOccurrenceType ONE_OR_MORE_LITERAL = new DTDOccurrenceType(ONE_OR_MORE, "ONE_OR_MORE"); //$NON-NLS-1$
+	public static final DTDOccurrenceType ONE_OR_MORE_LITERAL = new DTDOccurrenceType(ONE_OR_MORE, "ONE_OR_MORE", "ONE_OR_MORE"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>ZERO OR MORE</b></em>' literal object. <!--
@@ -126,34 +129,36 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDOccurrenceType ZERO_OR_MORE_LITERAL = new DTDOccurrenceType(ZERO_OR_MORE, "ZERO_OR_MORE"); //$NON-NLS-1$
+	public static final DTDOccurrenceType ZERO_OR_MORE_LITERAL = new DTDOccurrenceType(ZERO_OR_MORE, "ZERO_OR_MORE", "ZERO_OR_MORE"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>Occurrence Type</b></em>' enumerators.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	private static final DTDOccurrenceType[] VALUES_ARRAY = new DTDOccurrenceType[]{ONE_LITERAL, OPTIONAL_LITERAL, ONE_OR_MORE_LITERAL, ZERO_OR_MORE_LITERAL,};
+	private static final DTDOccurrenceType[] VALUES_ARRAY = new DTDOccurrenceType[] {
+			ONE_LITERAL,
+			OPTIONAL_LITERAL,
+			ONE_OR_MORE_LITERAL,
+			ZERO_OR_MORE_LITERAL,
+		};
 
 	/**
-	 * A public read-only list of all the '<em><b>Occurrence Type</b></em>'
-	 * enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * A public read-only list of all the '<em><b>Occurrence Type</b></em>' enumerators.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Occurrence Type</b></em>' literal with the
-	 * specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Occurrence Type</b></em>' literal with the specified literal value.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static DTDOccurrenceType get(String name) {
+	public static DTDOccurrenceType get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			DTDOccurrenceType result = VALUES_ARRAY[i];
-			if (result.toString().equals(name)) {
+			if (result.toString().equals(literal)) {
 				return result;
 			}
 		}
@@ -161,33 +166,44 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Occurrence Type</b></em>' literal with the
-	 * specified value. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Occurrence Type</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static DTDOccurrenceType get(int value) {
-		switch (value) {
-			case ONE :
-				return ONE_LITERAL;
-			case OPTIONAL :
-				return OPTIONAL_LITERAL;
-			case ONE_OR_MORE :
-				return ONE_OR_MORE_LITERAL;
-			case ZERO_OR_MORE :
-				return ZERO_OR_MORE_LITERAL;
+	public static DTDOccurrenceType getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			DTDOccurrenceType result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
 		}
 		return null;
 	}
 
 	/**
-	 * Only this class can construct instances. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Occurrence Type</b></em>' literal with the specified integer value.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	private DTDOccurrenceType(int value, String name) {
-		super(value, name);
+	public static DTDOccurrenceType get(int value) {
+		switch (value) {
+			case ONE: return ONE_LITERAL;
+			case OPTIONAL: return OPTIONAL_LITERAL;
+			case ONE_OR_MORE: return ONE_OR_MORE_LITERAL;
+			case ZERO_OR_MORE: return ZERO_OR_MORE_LITERAL;
+		}
+		return null;
+	}
+
+	/**
+	 * Only this class can construct instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private DTDOccurrenceType(int value, String name, String literal) {
+		super(value, name, literal);
 	}
 
 } // DTDOccurrenceType

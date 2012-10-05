@@ -17,16 +17,13 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.wst.dtd.core.internal.emf.DTDElement;
 import org.eclipse.wst.dtd.core.internal.emf.DTDElementContent;
 import org.eclipse.wst.dtd.core.internal.emf.DTDGroupContent;
 import org.eclipse.wst.dtd.core.internal.emf.DTDGroupKind;
-import org.eclipse.wst.dtd.core.internal.emf.DTDOccurrenceType;
 import org.eclipse.wst.dtd.core.internal.emf.DTDPackage;
 import org.eclipse.wst.dtd.core.internal.emf.util.DTDPrinter;
 
@@ -36,9 +33,8 @@ import org.eclipse.wst.dtd.core.internal.emf.util.DTDPrinter;
  */
 public class DTDGroupContentImpl extends DTDRepeatableContentImpl implements DTDGroupContent {
 	/**
-	 * The default value of the '{@link #getGroupKind() <em>Group Kind</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getGroupKind() <em>Group Kind</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getGroupKind()
 	 * @generated
 	 * @ordered
@@ -55,7 +51,7 @@ public class DTDGroupContentImpl extends DTDRepeatableContentImpl implements DTD
 	/**
 	 * @generated This field/method will be replaced during code generation.
 	 */
-	protected EList content = null;
+	protected EList content;
 
 	public DTDGroupContentImpl() {
 		super();
@@ -63,11 +59,10 @@ public class DTDGroupContentImpl extends DTDRepeatableContentImpl implements DTD
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return DTDPackage.eINSTANCE.getDTDGroupContent();
+		return DTDPackage.Literals.DTD_GROUP_CONTENT;
 	}
 
 	public int getContentPosition(DTDElementContent content) {
@@ -99,7 +94,6 @@ public class DTDGroupContentImpl extends DTDRepeatableContentImpl implements DTD
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setGroupKind(DTDGroupKind newGroupKind) {
@@ -120,170 +114,104 @@ public class DTDGroupContentImpl extends DTDRepeatableContentImpl implements DTD
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_GROUP_CONTENT__GROUP :
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DTDPackage.DTD_GROUP_CONTENT__GROUP, msgs);
-				case DTDPackage.DTD_GROUP_CONTENT__ELEMENT :
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DTDPackage.DTD_GROUP_CONTENT__ELEMENT, msgs);
-				case DTDPackage.DTD_GROUP_CONTENT__CONTENT :
-					return ((InternalEList) getContent()).basicAdd(otherEnd, msgs);
-				default :
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_GROUP_CONTENT__CONTENT:
+				return ((InternalEList)getContent()).basicAdd(otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (baseClass == null ? featureID : eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_GROUP_CONTENT__GROUP :
-					return eBasicSetContainer(null, DTDPackage.DTD_GROUP_CONTENT__GROUP, msgs);
-				case DTDPackage.DTD_GROUP_CONTENT__ELEMENT :
-					return eBasicSetContainer(null, DTDPackage.DTD_GROUP_CONTENT__ELEMENT, msgs);
-				case DTDPackage.DTD_GROUP_CONTENT__CONTENT :
-					return ((InternalEList) getContent()).basicRemove(otherEnd, msgs);
-				default :
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_GROUP_CONTENT__CONTENT:
+				return ((InternalEList)getContent()).basicRemove(otherEnd, msgs);
 		}
-		return eBasicSetContainer(null, featureID, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID() >= 0) {
-			switch (eContainerFeatureID()) {
-				case DTDPackage.DTD_GROUP_CONTENT__GROUP :
-					return eContainer.eInverseRemove(this, DTDPackage.DTD_GROUP_CONTENT__CONTENT, DTDGroupContent.class, msgs);
-				case DTDPackage.DTD_GROUP_CONTENT__ELEMENT :
-					return eContainer.eInverseRemove(this, DTDPackage.DTD_ELEMENT__CONTENT, DTDElement.class, msgs);
-				default :
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
-		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_GROUP_CONTENT__GROUP :
-				return getGroup();
-			case DTDPackage.DTD_GROUP_CONTENT__ELEMENT :
-				return getElement();
-			case DTDPackage.DTD_GROUP_CONTENT__OCCURRENCE :
-				return getOccurrence();
-			case DTDPackage.DTD_GROUP_CONTENT__GROUP_KIND :
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DTDPackage.DTD_GROUP_CONTENT__GROUP_KIND:
 				return getGroupKind();
-			case DTDPackage.DTD_GROUP_CONTENT__CONTENT :
+			case DTDPackage.DTD_GROUP_CONTENT__CONTENT:
 				return getContent();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * @generated This field/method will be replaced during code generation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_GROUP_CONTENT__GROUP :
-				return getGroup() != null;
-			case DTDPackage.DTD_GROUP_CONTENT__ELEMENT :
-				return getElement() != null;
-			case DTDPackage.DTD_GROUP_CONTENT__OCCURRENCE :
-				return occurrence != OCCURRENCE_EDEFAULT;
-			case DTDPackage.DTD_GROUP_CONTENT__GROUP_KIND :
-				return groupKind != GROUP_KIND_EDEFAULT;
-			case DTDPackage.DTD_GROUP_CONTENT__CONTENT :
-				return content != null && !getContent().isEmpty();
-		}
-		return eDynamicIsSet(eFeature);
-	}
-
-	/**
-	 * @generated This field/method will be replaced during code generation.
-	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_GROUP_CONTENT__GROUP :
-				setGroup((DTDGroupContent) newValue);
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DTDPackage.DTD_GROUP_CONTENT__GROUP_KIND:
+				setGroupKind((DTDGroupKind)newValue);
 				return;
-			case DTDPackage.DTD_GROUP_CONTENT__ELEMENT :
-				setElement((DTDElement) newValue);
-				return;
-			case DTDPackage.DTD_GROUP_CONTENT__OCCURRENCE :
-				setOccurrence((DTDOccurrenceType) newValue);
-				return;
-			case DTDPackage.DTD_GROUP_CONTENT__GROUP_KIND :
-				setGroupKind((DTDGroupKind) newValue);
-				return;
-			case DTDPackage.DTD_GROUP_CONTENT__CONTENT :
+			case DTDPackage.DTD_GROUP_CONTENT__CONTENT:
 				getContent().clear();
-				getContent().addAll((Collection) newValue);
+				getContent().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * @generated This field/method will be replaced during code generation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_GROUP_CONTENT__GROUP :
-				setGroup((DTDGroupContent) null);
-				return;
-			case DTDPackage.DTD_GROUP_CONTENT__ELEMENT :
-				setElement((DTDElement) null);
-				return;
-			case DTDPackage.DTD_GROUP_CONTENT__OCCURRENCE :
-				setOccurrence(OCCURRENCE_EDEFAULT);
-				return;
-			case DTDPackage.DTD_GROUP_CONTENT__GROUP_KIND :
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_GROUP_CONTENT__GROUP_KIND:
 				setGroupKind(GROUP_KIND_EDEFAULT);
 				return;
-			case DTDPackage.DTD_GROUP_CONTENT__CONTENT :
+			case DTDPackage.DTD_GROUP_CONTENT__CONTENT:
 				getContent().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_GROUP_CONTENT__GROUP_KIND:
+				return groupKind != GROUP_KIND_EDEFAULT;
+			case DTDPackage.DTD_GROUP_CONTENT__CONTENT:
+				return content != null && !content.isEmpty();
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * @generated This field/method will be replaced during code generation.
 	 */
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (groupKind: "); //$NON-NLS-1$
+		result.append(" (groupKind: ");
 		result.append(groupKind);
 		result.append(')');
 		return result.toString();

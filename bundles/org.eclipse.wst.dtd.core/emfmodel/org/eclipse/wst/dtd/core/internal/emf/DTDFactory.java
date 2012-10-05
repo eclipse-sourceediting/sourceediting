@@ -28,7 +28,7 @@ public interface DTDFactory extends EFactory {
 	 * 
 	 * @generated
 	 */
-	DTDFactory eINSTANCE = new org.eclipse.wst.dtd.core.internal.emf.impl.DTDFactoryImpl();
+	DTDFactory eINSTANCE = org.eclipse.wst.dtd.core.internal.emf.impl.DTDFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Group Content</em>'. <!--

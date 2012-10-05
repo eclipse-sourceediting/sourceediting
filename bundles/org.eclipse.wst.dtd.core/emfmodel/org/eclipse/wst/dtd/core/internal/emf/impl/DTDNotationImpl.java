@@ -17,14 +17,12 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.wst.dtd.core.internal.emf.DTDContent;
 import org.eclipse.wst.dtd.core.internal.emf.DTDExternalEntity;
-import org.eclipse.wst.dtd.core.internal.emf.DTDFile;
 import org.eclipse.wst.dtd.core.internal.emf.DTDLexicalInfo;
 import org.eclipse.wst.dtd.core.internal.emf.DTDNotation;
 import org.eclipse.wst.dtd.core.internal.emf.DTDObject;
@@ -38,13 +36,13 @@ import org.eclipse.wst.dtd.core.internal.emf.util.DTDPathnameUtil;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDNotationImpl#getComment <em>Comment</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDNotationImpl#getSystemID <em>System ID</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDNotationImpl#getPublicID <em>Public ID</em>}</li>
- * <li>{@link org.eclipse.wst.dtd.core.internal.emf.internal.impl.DTDNotationImpl#getEntity <em>Entity</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDNotationImpl#getComment <em>Comment</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDNotationImpl#getSystemID <em>System ID</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDNotationImpl#getPublicID <em>Public ID</em>}</li>
+ *   <li>{@link org.eclipse.wst.dtd.core.internal.emf.impl.DTDNotationImpl#getEntity <em>Entity</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDContent {
@@ -103,9 +101,8 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 	}
 
 	/**
-	 * The default value of the '{@link #getComment() <em>Comment</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getComment() <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getComment()
 	 * @generated
 	 * @ordered
@@ -113,9 +110,8 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 	protected static final String COMMENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getComment() <em>Comment</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getComment() <em>Comment</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getComment()
 	 * @generated
 	 * @ordered
@@ -123,9 +119,8 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 	protected String comment = COMMENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getSystemID() <em>System ID</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getSystemID() <em>System ID</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getSystemID()
 	 * @generated
 	 * @ordered
@@ -133,9 +128,8 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 	protected static final String SYSTEM_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSystemID() <em>System ID</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getSystemID() <em>System ID</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getSystemID()
 	 * @generated
 	 * @ordered
@@ -143,9 +137,8 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 	protected String systemID = SYSTEM_ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getPublicID() <em>Public ID</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getPublicID() <em>Public ID</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getPublicID()
 	 * @generated
 	 * @ordered
@@ -153,9 +146,8 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 	protected static final String PUBLIC_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPublicID() <em>Public ID</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getPublicID() <em>Public ID</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getPublicID()
 	 * @generated
 	 * @ordered
@@ -163,18 +155,16 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 	protected String publicID = PUBLIC_ID_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getEntity() <em>Entity</em>}'
-	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getEntity() <em>Entity</em>}' reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getEntity()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList entity = null;
+	protected EList entity;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected DTDNotationImpl() {
@@ -183,16 +173,14 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return DTDPackage.eINSTANCE.getDTDNotation();
+		return DTDPackage.Literals.DTD_NOTATION;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getComment() {
@@ -201,7 +189,6 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setComment(String newComment) {
@@ -213,7 +200,6 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getSystemID() {
@@ -222,7 +208,6 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setSystemID(String newSystemID) {
@@ -234,7 +219,6 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getPublicID() {
@@ -243,7 +227,6 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setPublicID(String newPublicID) {
@@ -255,7 +238,6 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList getEntity() {
@@ -266,174 +248,135 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_NOTATION__DTD_FILE :
-					if (eContainer != null)
-						msgs = eBasicRemoveFromContainer(msgs);
-					return eBasicSetContainer(otherEnd, DTDPackage.DTD_NOTATION__DTD_FILE, msgs);
-				case DTDPackage.DTD_NOTATION__ENTITY :
-					return ((InternalEList) getEntity()).basicAdd(otherEnd, msgs);
-				default :
-					return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
-			}
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_NOTATION__ENTITY:
+				return ((InternalEList)getEntity()).basicAdd(otherEnd, msgs);
 		}
-		if (eContainer != null)
-			msgs = eBasicRemoveFromContainer(msgs);
-		return eBasicSetContainer(otherEnd, featureID, msgs);
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (baseClass == null ? featureID : eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case DTDPackage.DTD_NOTATION__DTD_FILE :
-					return eBasicSetContainer(null, DTDPackage.DTD_NOTATION__DTD_FILE, msgs);
-				case DTDPackage.DTD_NOTATION__ENTITY :
-					return ((InternalEList) getEntity()).basicRemove(otherEnd, msgs);
-				default :
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID() >= 0) {
-			switch (eContainerFeatureID()) {
-				case DTDPackage.DTD_NOTATION__DTD_FILE :
-					return eContainer.eInverseRemove(this, DTDPackage.DTD_FILE__DTD_CONTENT, DTDFile.class, msgs);
-				default :
-					return eDynamicBasicRemoveFromContainer(msgs);
-			}
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DTDPackage.DTD_NOTATION__ENTITY:
+				return ((InternalEList)getEntity()).basicRemove(otherEnd, msgs);
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_NOTATION__DTD_FILE :
-				return getDTDFile();
-			case DTDPackage.DTD_NOTATION__COMMENT :
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DTDPackage.DTD_NOTATION__COMMENT:
 				return getComment();
-			case DTDPackage.DTD_NOTATION__SYSTEM_ID :
+			case DTDPackage.DTD_NOTATION__SYSTEM_ID:
 				return getSystemID();
-			case DTDPackage.DTD_NOTATION__PUBLIC_ID :
+			case DTDPackage.DTD_NOTATION__PUBLIC_ID:
 				return getPublicID();
-			case DTDPackage.DTD_NOTATION__ENTITY :
+			case DTDPackage.DTD_NOTATION__ENTITY:
 				return getEntity();
 		}
-		return eDynamicGet(eFeature, resolve);
+		return super.eGet(featureID, resolve, coreType);
 	}
 
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_NOTATION__DTD_FILE :
-				setDTDFile((DTDFile) newValue);
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DTDPackage.DTD_NOTATION__COMMENT:
+				setComment((String)newValue);
 				return;
-			case DTDPackage.DTD_NOTATION__COMMENT :
-				setComment((String) newValue);
+			case DTDPackage.DTD_NOTATION__SYSTEM_ID:
+				setSystemID((String)newValue);
 				return;
-			case DTDPackage.DTD_NOTATION__SYSTEM_ID :
-				setSystemID((String) newValue);
+			case DTDPackage.DTD_NOTATION__PUBLIC_ID:
+				setPublicID((String)newValue);
 				return;
-			case DTDPackage.DTD_NOTATION__PUBLIC_ID :
-				setPublicID((String) newValue);
-				return;
-			case DTDPackage.DTD_NOTATION__ENTITY :
+			case DTDPackage.DTD_NOTATION__ENTITY:
 				getEntity().clear();
-				getEntity().addAll((Collection) newValue);
+				getEntity().addAll((Collection)newValue);
 				return;
 		}
-		eDynamicSet(eFeature, newValue);
+		super.eSet(featureID, newValue);
 	}
 
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_NOTATION__DTD_FILE :
-				setDTDFile((DTDFile) null);
-				return;
-			case DTDPackage.DTD_NOTATION__COMMENT :
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_NOTATION__COMMENT:
 				setComment(COMMENT_EDEFAULT);
 				return;
-			case DTDPackage.DTD_NOTATION__SYSTEM_ID :
+			case DTDPackage.DTD_NOTATION__SYSTEM_ID:
 				setSystemID(SYSTEM_ID_EDEFAULT);
 				return;
-			case DTDPackage.DTD_NOTATION__PUBLIC_ID :
+			case DTDPackage.DTD_NOTATION__PUBLIC_ID:
 				setPublicID(PUBLIC_ID_EDEFAULT);
 				return;
-			case DTDPackage.DTD_NOTATION__ENTITY :
+			case DTDPackage.DTD_NOTATION__ENTITY:
 				getEntity().clear();
 				return;
 		}
-		eDynamicUnset(eFeature);
+		super.eUnset(featureID);
 	}
 
+
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature.getFeatureID(), eFeature.getContainerClass())) {
-			case DTDPackage.DTD_NOTATION__DTD_FILE :
-				return getDTDFile() != null;
-			case DTDPackage.DTD_NOTATION__COMMENT :
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DTDPackage.DTD_NOTATION__COMMENT:
 				return COMMENT_EDEFAULT == null ? comment != null : !COMMENT_EDEFAULT.equals(comment);
-			case DTDPackage.DTD_NOTATION__SYSTEM_ID :
+			case DTDPackage.DTD_NOTATION__SYSTEM_ID:
 				return SYSTEM_ID_EDEFAULT == null ? systemID != null : !SYSTEM_ID_EDEFAULT.equals(systemID);
-			case DTDPackage.DTD_NOTATION__PUBLIC_ID :
+			case DTDPackage.DTD_NOTATION__PUBLIC_ID:
 				return PUBLIC_ID_EDEFAULT == null ? publicID != null : !PUBLIC_ID_EDEFAULT.equals(publicID);
-			case DTDPackage.DTD_NOTATION__ENTITY :
-				return entity != null && !getEntity().isEmpty();
+			case DTDPackage.DTD_NOTATION__ENTITY:
+				return entity != null && !entity.isEmpty();
 		}
-		return eDynamicIsSet(eFeature);
+		return super.eIsSet(featureID);
 	}
+
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comment: "); //$NON-NLS-1$
+		result.append(" (comment: ");
 		result.append(comment);
-		result.append(", systemID: "); //$NON-NLS-1$
+		result.append(", systemID: ");
 		result.append(systemID);
-		result.append(", publicID: "); //$NON-NLS-1$
+		result.append(", publicID: ");
 		result.append(publicID);
 		result.append(')');
 		return result.toString();

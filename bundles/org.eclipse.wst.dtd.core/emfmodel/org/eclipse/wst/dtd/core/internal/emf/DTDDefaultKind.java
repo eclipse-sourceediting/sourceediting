@@ -19,16 +19,18 @@ import org.eclipse.emf.common.util.AbstractEnumerator;
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Default Kind</b></em>',
  * and utility methods for working with them. <!-- end-user-doc -->
- * 
+ * <!-- begin-model-doc -->
+ * IMPLIED=1 REQUIRED=2 FIXED=3 NOFIXED=4
+ * <!-- end-model-doc -->
  * @see org.eclipse.wst.dtd.core.internal.emf.DTDPackage#getDTDDefaultKind()
  * @model
  * @generated
  */
 public final class DTDDefaultKind extends AbstractEnumerator {
 	/**
-	 * The '<em><b>IMPLIED</b></em>' literal value. <!-- begin-user-doc
+	 * The '<em><b>IMPLIED</b></em>' literal value.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #IMPLIED_LITERAL
 	 * @model
 	 * @generated
@@ -37,9 +39,9 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	public static final int IMPLIED = 1;
 
 	/**
-	 * The '<em><b>REQUIRED</b></em>' literal value. <!-- begin-user-doc
+	 * The '<em><b>REQUIRED</b></em>' literal value.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #REQUIRED_LITERAL
 	 * @model
 	 * @generated
@@ -48,9 +50,9 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	public static final int REQUIRED = 2;
 
 	/**
-	 * The '<em><b>FIXED</b></em>' literal value. <!-- begin-user-doc -->
+	 * The '<em><b>FIXED</b></em>' literal value.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #FIXED_LITERAL
 	 * @model
 	 * @generated
@@ -59,9 +61,9 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	public static final int FIXED = 3;
 
 	/**
-	 * The '<em><b>NOFIXED</b></em>' literal value. <!-- begin-user-doc
+	 * The '<em><b>NOFIXED</b></em>' literal value.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #NOFIXED_LITERAL
 	 * @model
 	 * @generated
@@ -70,91 +72,93 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	public static final int NOFIXED = 4;
 
 	/**
-	 * The '<em><b>IMPLIED</b></em>' literal object. <!-- begin-user-doc
+	 * The '<em><b>IMPLIED</b></em>' literal object.
+	 * <!-- begin-user-doc
 	 * -->
 	 * <p>
 	 * If the meaning of '<em><b>IMPLIED</b></em>' literal object isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #IMPLIED
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDDefaultKind IMPLIED_LITERAL = new DTDDefaultKind(IMPLIED, "IMPLIED"); //$NON-NLS-1$
+	public static final DTDDefaultKind IMPLIED_LITERAL = new DTDDefaultKind(IMPLIED, "IMPLIED", "IMPLIED"); //$NON-NLS-1$
 
 	/**
-	 * The '<em><b>REQUIRED</b></em>' literal object. <!-- begin-user-doc
+	 * The '<em><b>REQUIRED</b></em>' literal object.
+	 * <!-- begin-user-doc
 	 * -->
 	 * <p>
 	 * If the meaning of '<em><b>REQUIRED</b></em>' literal object isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #REQUIRED
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDDefaultKind REQUIRED_LITERAL = new DTDDefaultKind(REQUIRED, "REQUIRED"); //$NON-NLS-1$
+	public static final DTDDefaultKind REQUIRED_LITERAL = new DTDDefaultKind(REQUIRED, "REQUIRED", "REQUIRED"); //$NON-NLS-1$
 
 	/**
-	 * The '<em><b>FIXED</b></em>' literal object. <!-- begin-user-doc
+	 * The '<em><b>FIXED</b></em>' literal object.
+	 * <!-- begin-user-doc
 	 * -->
 	 * <p>
 	 * If the meaning of '<em><b>FIXED</b></em>' literal object isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #FIXED
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDDefaultKind FIXED_LITERAL = new DTDDefaultKind(FIXED, "FIXED"); //$NON-NLS-1$
+	public static final DTDDefaultKind FIXED_LITERAL = new DTDDefaultKind(FIXED, "FIXED", "FIXED"); //$NON-NLS-1$
 
 	/**
-	 * The '<em><b>NOFIXED</b></em>' literal object. <!-- begin-user-doc
+	 * The '<em><b>NOFIXED</b></em>' literal object.
+	 * <!-- begin-user-doc
 	 * -->
 	 * <p>
 	 * If the meaning of '<em><b>NOFIXED</b></em>' literal object isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #NOFIXED
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDDefaultKind NOFIXED_LITERAL = new DTDDefaultKind(NOFIXED, "NOFIXED"); //$NON-NLS-1$
+	public static final DTDDefaultKind NOFIXED_LITERAL = new DTDDefaultKind(NOFIXED, "NOFIXED", "NOFIXED"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>Default Kind</b></em>' enumerators.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	private static final DTDDefaultKind[] VALUES_ARRAY = new DTDDefaultKind[]{IMPLIED_LITERAL, REQUIRED_LITERAL, FIXED_LITERAL, NOFIXED_LITERAL,};
+	private static final DTDDefaultKind[] VALUES_ARRAY = new DTDDefaultKind[] {
+			IMPLIED_LITERAL,
+			REQUIRED_LITERAL,
+			FIXED_LITERAL,
+			NOFIXED_LITERAL,
+		};
 
 	/**
-	 * A public read-only list of all the '<em><b>Default Kind</b></em>'
-	 * enumerators. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * A public read-only list of all the '<em><b>Default Kind</b></em>' enumerators.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static final List VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Default Kind</b></em>' literal with the
-	 * specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Default Kind</b></em>' literal with the specified literal value.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static DTDDefaultKind get(String name) {
+	public static DTDDefaultKind get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
 			DTDDefaultKind result = VALUES_ARRAY[i];
-			if (result.toString().equals(name)) {
+			if (result.toString().equals(literal)) {
 				return result;
 			}
 		}
@@ -162,33 +166,44 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Default Kind</b></em>' literal with the
-	 * specified value. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Default Kind</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static DTDDefaultKind get(int value) {
-		switch (value) {
-			case IMPLIED :
-				return IMPLIED_LITERAL;
-			case REQUIRED :
-				return REQUIRED_LITERAL;
-			case FIXED :
-				return FIXED_LITERAL;
-			case NOFIXED :
-				return NOFIXED_LITERAL;
+	public static DTDDefaultKind getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			DTDDefaultKind result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
 		}
 		return null;
 	}
 
 	/**
-	 * Only this class can construct instances. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
+	 * Returns the '<em><b>Default Kind</b></em>' literal with the specified integer value.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	private DTDDefaultKind(int value, String name) {
-		super(value, name);
+	public static DTDDefaultKind get(int value) {
+		switch (value) {
+			case IMPLIED: return IMPLIED_LITERAL;
+			case REQUIRED: return REQUIRED_LITERAL;
+			case FIXED: return FIXED_LITERAL;
+			case NOFIXED: return NOFIXED_LITERAL;
+		}
+		return null;
+	}
+
+	/**
+	 * Only this class can construct instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private DTDDefaultKind(int value, String name, String literal) {
+		super(value, name, literal);
 	}
 
 } // DTDDefaultKind

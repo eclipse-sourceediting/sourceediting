@@ -19,7 +19,7 @@
 	(object Attribute
 	    tool       	"Ecore"
 	    name       	"basePackage"
-	    value      	(value Text "org.eclipse.wst.dtd"))
+	    value      	(value Text "org.eclipse.wst.dtd.core"))
 	(object Attribute
 	    tool       	"Ecore"
 	    name       	"prefix"
