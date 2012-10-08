@@ -132,6 +132,10 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 		if (fInternalProvider != null) {
 			fInternalProvider.release();
 		}
+		if (fInternalModel != null) {
+			fInternalModel.releaseFromRead();
+			fInternalModel = null;
+		}
 	}
 
 	private void updateStyleRanges(IStructuredDocument document, String contents) {
