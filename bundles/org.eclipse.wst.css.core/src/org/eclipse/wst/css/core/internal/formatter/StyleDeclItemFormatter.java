@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -181,7 +181,7 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 				if (region != null && CSSRegionContexts.CSS_UNKNOWN.equals(region.getType()))
 					append = false;
 			}
-			if (toAppend != null && !toAppend.equals(",") && !toAppend.equals("/") && append) {//$NON-NLS-1$ //$NON-NLS-2$
+			if (toAppend != null && !toAppend.equals(",") && !toAppend.equals("/") && !toAppend.equals(")") && append) {//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				appendSpaceBefore(node, toAppend, source);
 			}
 		}
