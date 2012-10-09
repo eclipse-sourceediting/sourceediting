@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -729,7 +729,6 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_NOHREF, atype, CMAttributeDeclaration.OPTIONAL);
 			attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_NOHREF, attr);
-		
 		}
 		/*
 		 *  %globalattrs;
@@ -831,6 +830,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 		 * (wrap ENUM; #IMPLIED)
 		 *  //discouraged
 		 * (istyle CDATA #IMPLIED)
+		 * (required)
 		 */
 		else if (elementName.equals(HTML40Namespace.ElementName.TEXTAREA)){
 			String[] names = {ATTR_NAME_MAXLENGTH, ATTR_NAME_FORM, ATTR_NAME_AUTOFOCUS, ATTR_NAME_NAME, ATTR_NAME_ROWS, ATTR_NAME_COLS, ATTR_NAME_DISABLED, ATTR_NAME_READONLY};
@@ -853,6 +853,14 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ISTYLE, atype, CMAttributeDeclaration.OPTIONAL);
 			attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_ISTYLE, attr);
+
+			// (required  #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			// boolean attribute must have the same value as its name.
+			String[] requiredValues = {ATTR_NAME_REQUIRED};
+			atype.setEnumValues(requiredValues);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_REQUIRED, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_REQUIRED, attr);
 		}
 		/*
 		 * (charset %Charset; #IMPLIED)
