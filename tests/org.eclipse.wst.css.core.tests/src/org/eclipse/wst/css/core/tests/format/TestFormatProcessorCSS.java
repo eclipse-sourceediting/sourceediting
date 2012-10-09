@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -190,4 +190,20 @@ public class TestFormatProcessorCSS extends TestCase {
 	public void testInlineComment() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/inline-comment.css", "testfiles/inline-comment-fmt.css");
 	}
+	
+	/**
+	 * should not add an extra space before closing parenthesis
+	 */
+	
+	public void testSpaceBeforeClosingParenthesis_bug390903() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/bug390903_SpaceBeforeClosingParenthesis.css", "testfiles/bug390903_SpaceBeforeClosingParenthesis-fmt.css");
+	} 
+	
+	/**
+	 * should keep comments in the same line
+	 */
+	public void testKeepCommentInSameLine_bug390904() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/bug390904_KeepCommentInSameLine.css", "testfiles/bug390904_KeepCommentInSameLine-fmt.css");
+	} 
+	
 }
