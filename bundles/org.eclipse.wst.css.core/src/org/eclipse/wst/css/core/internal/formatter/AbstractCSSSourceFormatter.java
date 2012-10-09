@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,7 +175,13 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			RegionIterator it = new RegionIterator(toAppend.getDocumentRegion(), toAppend.getTextRegion());
 			it.prev();
 			ITextRegion prev = it.prev();
-			if (prev.getType() == CSSRegionContexts.CSS_S && TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0)[0] >= 0) {
+			//bug390904
+			if (prev.getType() == CSSRegionContexts.CSS_LBRACE && TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getFullText(prev), 0)[0] > 0){
+					source.append(delim);
+					source.append(getIndent(node));
+					source.append(getIndentString());
+			}
+			else if (prev.getType() == CSSRegionContexts.CSS_S && TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0)[0] >= 0) {
 				source.append(delim);
 				source.append(getIndent(node));
 				if (needIndent)
