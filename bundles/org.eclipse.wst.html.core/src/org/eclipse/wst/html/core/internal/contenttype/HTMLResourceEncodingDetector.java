@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -178,7 +178,7 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 		}
 		//Content type is XHTML and no encoding found(since we did't hit return statement), use UTF-8
 		//https://bugs.eclipse.org/bugs/show_bug.cgi?id=318768
-		if (isXHTML) {
+		if (fEncodingMemento == null && isXHTML) {
 			createEncodingMemento("UTF-8", EncodingMemento.DEFAULTS_ASSUMED_FOR_EMPTY_INPUT); //$NON-NLS-1$		
 		}
 	}
