@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.html.core.tests.cleanup.TestHTMLCleanupProcessor;
+import org.eclipse.wst.html.core.tests.contenttype.TestHTMLResourceEncodingDetector;
 import org.eclipse.wst.html.core.tests.format.TestFormatProcessorHTML;
 import org.eclipse.wst.html.core.tests.format.TestFormatUtility;
 import org.eclipse.wst.html.core.tests.html5.model.HTML5ContentModelTest;
@@ -55,6 +56,6 @@ public class HTMLCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestCatalogContentModels.class));
 		addTest(TestHTMLCleanupProcessor.suite());
 		addTest(new TestSuite(HTML5ContentModelTest.class));
-		
+		addTest(new TestSuite(TestHTMLResourceEncodingDetector.class));
 	}
 }
