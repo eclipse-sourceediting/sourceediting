@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
@@ -103,5 +103,30 @@ final class FacetModuleCoreSupportDelegate {
 			paths = new IPath[]{project.getFullPath()};
 		}
 		return paths;
+	}
+
+	static IPath getDefaultRoot(IProject project) {
+		if (ModuleCoreNature.isFlexibleProject(project)) {
+			IVirtualFolder componentFolder = ComponentCore.createFolder(project, Path.ROOT);
+			if (componentFolder != null && componentFolder.exists()) {
+				return componentFolder.getWorkspaceRelativePath();
+			}
+		}
+		return null;
+	}
+
+	static IPath getRootContainerForPath(IProject project, IPath path) {
+		if (ModuleCoreNature.isFlexibleProject(project)) {
+			IVirtualFolder componentFolder = ComponentCore.createFolder(project, Path.ROOT);
+			if (componentFolder != null && componentFolder.exists()) {
+				IContainer[] workspaceFolders = componentFolder.getUnderlyingFolders();
+				for (int i = 0; i < workspaceFolders.length; i++) {
+					if (workspaceFolders[i].getFullPath().isPrefixOf(path)) {
+						return workspaceFolders[i].getFullPath();
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

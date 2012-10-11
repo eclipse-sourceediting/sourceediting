@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,10 +77,14 @@ class NewCSSFileWizardPage extends WizardNewFileCreationPage {
 		
 		IPath fullPath = getContainerFullPath();
 		IProject project = getProjectFromPath(fullPath);
-		IPath webContentPath = getWebContentPath(project);
-		
-		if (webContentPath != null && !webContentPath.isPrefixOf(fullPath)) {
-			setContainerFullPath(webContentPath);
+		IPath root = FacetModuleCoreSupport.getRootContainerForPath(project, fullPath);
+		if (root != null) {
+			return;
+		}
+		root = FacetModuleCoreSupport.getDefaultRootContainer(project);
+		if (root != null) {
+			setContainerFullPath(root);
+			return;
 		}
 	}
 	
@@ -129,8 +133,12 @@ class NewCSSFileWizardPage extends WizardNewFileCreationPage {
 			// if inside web project, check if inside webContent folder
 			if (project != null && isWebProject(project)) {
 				// check that the path is inside the webContent folder
-				IPath webContentPath = getWebContentPath(project);
-				if (!webContentPath.isPrefixOf(fullPath)) {
+				IPath[] webContentPaths = FacetModuleCoreSupport.getAcceptableRootPaths(project);
+				boolean isPrefix = false;
+				for (int i = 0; !isPrefix && i < webContentPaths.length; i++) {
+					isPrefix |= webContentPaths[i].isPrefixOf(fullPath);
+				}
+				if (!isPrefix) {
 					setMessage(CSSUIMessages._WARNING_FOLDER_MUST_BE_INSIDE_WEB_CONTENT, WARNING);
 				}
 			}
@@ -237,16 +245,6 @@ class NewCSSFileWizardPage extends WizardNewFileCreationPage {
 	 */
 	private boolean isWebProject(IProject project) {
 		return FacetModuleCoreSupport.isWebProject(project);
-	}
-	
-	/**
-	 * Returns the web contents folder of the specified project
-	 * 
-	 * @param project the project which web contents path is needed
-	 * @return IPath of the web contents folder
-	 */
-	private IPath getWebContentPath(IProject project) {
-		return FacetModuleCoreSupport.getWebContentRootPath(project);
 	}
 
 }

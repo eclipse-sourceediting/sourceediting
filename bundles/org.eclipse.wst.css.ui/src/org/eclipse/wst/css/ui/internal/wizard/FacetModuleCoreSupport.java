@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,5 +63,63 @@ final class FacetModuleCoreSupport {
 		return true;
 	}
 
+	/**
+	 * @param project
+	 * @return the IPaths to acceptable "roots" in a project
+	 */
+	public static IPath[] getAcceptableRootPaths(IProject project) {
+		if (project == null)
+			return null;
+		IPath[] paths = null;
+		try {
+			paths = FacetModuleCoreSupportDelegate.getAcceptableRootPaths(project);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+			return new IPath[]{project.getFullPath()};
+		}
+		return paths;
+	}
 
+	/**
+	 * Gets the root container for the path in the project
+	 * @param project
+	 * @param path
+	 * @return
+	 */
+	public static IPath getRootContainerForPath(IProject project, IPath path) {
+		if (project == null)
+			return null;
+		IPath root = null;
+		try {
+			root = FacetModuleCoreSupportDelegate.getRootContainerForPath(project, path);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+			return null;
+		}
+		return root;
+	}
+
+	/**
+	 * Gets the default root container for the project
+	 * @param project
+	 * @return
+	 */
+	public static IPath getDefaultRootContainer(IProject project) {
+		if (project == null)
+			return null;
+		IPath root = null;
+		try {
+			root = FacetModuleCoreSupportDelegate.getDefaultRoot(project);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+			return null;
+		}
+		return root;
+	}
 }
