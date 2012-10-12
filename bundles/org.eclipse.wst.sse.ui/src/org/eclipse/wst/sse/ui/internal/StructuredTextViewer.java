@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -160,6 +160,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			case FORMAT_ACTIVE_ELEMENTS : {
 				// if formatter not set yet, contentformatter can be null
 				return ((fContentFormatter != null || !fFormatterSet) && isEditable());
+			}
+			case CUT:
+			case PASTE: {
+				final IDocument doc = getDocument();
+				if (doc instanceof IStructuredDocument && ((IStructuredDocument) doc).containsReadOnly(getSelectedRange().x, 0)) {
+					// Do not allow cutting from or pasting into a read-only region
+					return false;
+				}
 			}
 		}
 		return super.canDoOperation(operation);
