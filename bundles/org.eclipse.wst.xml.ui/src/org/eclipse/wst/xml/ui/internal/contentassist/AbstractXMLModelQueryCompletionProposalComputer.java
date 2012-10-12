@@ -1060,11 +1060,11 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						strictCMNodeSuggestions != null ? strictCMNodeSuggestions.contains(elementDecl) : false;
 
 					// do a check to see if partial attributes of partial tag names are in list
-					if (((node != null) && (node.getAttributes() != null) &&
+					if ((contentAssistRequest.documentRegion.getStartOffset() < context.getInvocationOffset()) && (((node != null) && (node.getAttributes() != null) &&
 							(node.getAttributes().getLength() > 0) &&
 							attributeInList(node, parent, elementDecl)) ||
 							((node.getNodeType() != Node.TEXT_NODE) &&
-									node.getFirstStructuredDocumentRegion().isEnded())) {
+									node.getFirstStructuredDocumentRegion().isEnded()))) {
 
 						proposedText = getRequiredName(parent, elementDecl);
 						cursorAdjustment = proposedText.length();
