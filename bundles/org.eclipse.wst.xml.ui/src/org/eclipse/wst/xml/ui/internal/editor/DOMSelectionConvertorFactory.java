@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.ui.internal.editor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -32,7 +35,40 @@ public class DOMSelectionConvertorFactory implements IAdapterFactory {
 		 * @see org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor#getElements(org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int, int)
 		 */
 		public Object[] getElements(IStructuredModel model, int start, int end) {
-			Object[] objects = super.getElements(model, start, end);
+			Object[] localSelectedStructures = null;
+			if (model != null) {
+				IDOMNode region = (IDOMNode)model.getIndexedRegion(start);
+				if (region != null) {
+					if (end <= region.getEndOffset()) {
+						// single selection
+						localSelectedStructures = new Object[1];
+						localSelectedStructures[0] = region;
+					} else {
+						List structures = new ArrayList(2);
+
+						IDOMNode node = region;
+						while(node != null) {
+							structures.add(node);
+							IDOMNode next = (IDOMNode)node.getNextSibling();
+							if(next == null) {
+								next = (IDOMNode)node.getParentNode();
+							}
+							if(next != null) {
+								if(next.getEndOffset() > end) {
+									break;
+								}
+							}
+							node = next;
+						}
+						localSelectedStructures = structures.toArray();
+					}
+				}
+			}
+			if (localSelectedStructures == null) {
+				localSelectedStructures = new Object[0];
+			}
+
+			Object[] objects = localSelectedStructures;
 			// narrow single selected Elements into Attrs if possible
 			if (objects.length == 1) {
 				if (objects[0] instanceof IDOMNode) {
