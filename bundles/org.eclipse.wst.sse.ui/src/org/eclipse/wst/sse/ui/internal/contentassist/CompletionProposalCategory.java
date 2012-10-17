@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,18 +10,16 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.contentassist;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.preferences.ICompletionProposalCategoriesConfigurationReader;
@@ -81,9 +79,7 @@ public final class CompletionProposalCategory {
 		if (icon != null) {
 			Bundle bundle= ContentAssistUtils.getBundle(element);
 			if (bundle != null) {
-				Path path= new Path(icon);
-				URL url= FileLocator.find(bundle, path, null);
-				img= ImageDescriptor.createFromURL(url);
+				img = AbstractUIPlugin.imageDescriptorFromPlugin(bundle.getSymbolicName(), icon);
 			}
 		}
 		fImage= img;
