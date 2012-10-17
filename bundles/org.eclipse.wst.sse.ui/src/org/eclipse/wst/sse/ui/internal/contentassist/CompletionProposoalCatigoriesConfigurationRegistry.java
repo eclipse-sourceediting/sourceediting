@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.ICompletionProposalCategoriesConfigurationReader;
@@ -88,6 +89,16 @@ public final class CompletionProposoalCatigoriesConfigurationRegistry {
 	 */
 	public ICompletionProposalCategoriesConfigurationReader getReadableConfiguration(String contentTypeID) {
 		this.ensureLoaded();
+		IContentType contentType = Platform.getContentTypeManager().getContentType(contentTypeID);
+		// Check if any base types are within the properties map
+		while (contentType != null) {
+			final String id = contentType.getId();
+			if (fPropertiesByContentTypeID.containsKey(id)) {
+				contentTypeID = id;
+				break;
+			}
+			contentType = contentType.getBaseType();
+		}
 		return (ICompletionProposalCategoriesConfigurationReader)this.fPropertiesByContentTypeID.get(contentTypeID);
 	}
 	
