@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,7 +87,7 @@ public class IntStack {
 	 */
 	public int push(int newValue) {
 		if (size == list.length) {
-			throw new StackOverflowError();
+			throw new StackFullException(newValue);
 		}
 		list[size++] = newValue;
 		return newValue;
@@ -96,7 +96,15 @@ public class IntStack {
 	public int size() {
 		return size;
 	}
-	
+
+	public class StackFullException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+
+		public StackFullException(int value) {
+			super("Tried to push " + value + " on to a full stack[" + list.length + "]."); //$NON-NLS-1$
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
