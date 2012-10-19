@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -265,7 +265,21 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 						IncludeHelper includeHelper = new IncludeHelper(anchorStructuredDocumentRegion, getParser());
 						includeHelper.parse(filePath);
-						List references = includeHelper.taglibReferences;
+
+						//bug391852, taglib are nor seen if included indirectly
+						List references = new ArrayList();
+						List trackers = getTaglibTrackers();
+						for (Iterator it = trackers.iterator(); it.hasNext();) {
+							TaglibTracker tracker = (TaglibTracker) it.next();
+							TLDCMDocumentReference reference = new TLDCMDocumentReference();
+							reference.prefix = tracker.getPrefix();
+							reference.uri = tracker.getURI();
+							if (!references.contains(reference)){
+								references.add(reference);
+							}
+						}
+						references.addAll(includeHelper.taglibReferences);
+
 						fTLDCMReferencesMap.put(filePath, references);
 						if (getParser() instanceof JSPCapableParser) {
 							for (int i = 0; references != null && i < references.size(); i++) {
@@ -547,6 +561,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	private class TLDCMDocumentReference {
 		String prefix;
 		String uri;
+
+		public boolean equals(Object obj) {
+			return ((obj instanceof TLDCMDocumentReference) && ((TLDCMDocumentReference)obj).prefix == this.prefix && ((TLDCMDocumentReference)obj).uri == this.uri);
+		}
 	}
 
 	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/manager")); //$NON-NLS-1$ //$NON-NLS-2$
