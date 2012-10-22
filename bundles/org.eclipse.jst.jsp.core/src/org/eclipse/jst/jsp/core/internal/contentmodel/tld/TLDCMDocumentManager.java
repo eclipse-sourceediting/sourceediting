@@ -563,7 +563,18 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		String uri;
 
 		public boolean equals(Object obj) {
-			return ((obj instanceof TLDCMDocumentReference) && ((TLDCMDocumentReference)obj).prefix == this.prefix && ((TLDCMDocumentReference)obj).uri == this.uri);
+			if (obj == this) {
+				return true;
+			}
+			if (!(obj instanceof TLDCMDocumentReference)) {
+				return false;
+			}
+			TLDCMDocumentReference other = (TLDCMDocumentReference) obj;
+			return equalsString(prefix, other.prefix) && equalsString(uri, other.uri);
+		}
+
+		private boolean equalsString(String s1, String s2) {
+			return (s1 == null && s2 == null) || s1 != null && s1.equals(s2);
 		}
 	}
 
