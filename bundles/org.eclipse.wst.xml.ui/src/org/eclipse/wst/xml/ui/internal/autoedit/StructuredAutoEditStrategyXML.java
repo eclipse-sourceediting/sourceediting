@@ -14,18 +14,12 @@ package org.eclipse.wst.xml.ui.internal.autoedit;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
-import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.ui.internal.text.StructuredAutoEditStrategy;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -37,15 +31,14 @@ import org.w3c.dom.Node;
 /**
  * Automatically inserts closing comment tag or end tag when appropriate.
  */
-public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
+public class StructuredAutoEditStrategyXML extends StructuredAutoEditStrategy {
 	/*
 	 * NOTE: copies of this class exists in
 	 * org.eclipse.wst.xml.ui.internal.autoedit
 	 * org.eclipse.wst.html.ui.internal.autoedit
 	 */
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
-		Object textEditor = getActiveTextEditor();
-		if (!((textEditor instanceof ITextEditorExtension3) && (((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))) {
+		if (!supportsSmartInsert(document)) {
 			return;
 		}
 
@@ -279,30 +272,4 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 		return false;
 	}
 
-	/**
-	 * Return the active text editor if possible, otherwise the active editor
-	 * part.
-	 * 
-	 * @return Object
-	 */
-	private Object getActiveTextEditor() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window != null) {
-			IWorkbenchPage page = window.getActivePage();
-			if (page != null) {
-				IEditorPart editor = page.getActiveEditor();
-				if (editor != null) {
-					if (editor instanceof ITextEditor) {
-						return editor;
-					}
-					ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
-					if (textEditor != null) {
-						return textEditor;
-					}
-					return editor;
-				}
-			}
-		}
-		return null;
-	}
 }

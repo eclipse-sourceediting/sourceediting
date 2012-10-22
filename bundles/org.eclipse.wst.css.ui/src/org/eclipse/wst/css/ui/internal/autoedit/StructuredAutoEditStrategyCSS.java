@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,16 +13,9 @@ package org.eclipse.wst.css.ui.internal.autoedit;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
-import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
@@ -31,8 +24,9 @@ import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.ui.internal.text.StructuredAutoEditStrategy;
 
-public class StructuredAutoEditStrategyCSS implements IAutoEditStrategy {
+public class StructuredAutoEditStrategyCSS extends StructuredAutoEditStrategy {
 	protected IStructuredDocument structuredDocument = null;
 
 	class CompoundRegion {
@@ -157,9 +151,9 @@ public class StructuredAutoEditStrategyCSS implements IAutoEditStrategy {
 	/**
 	 */
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
-		Object textEditor = getActiveTextEditor();
-		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
+		if (!supportsSmartInsert(document)) {
 			return;
+		}
 
 		// return;
 		// /*
@@ -548,31 +542,6 @@ public class StructuredAutoEditStrategyCSS implements IAutoEditStrategy {
 			}
 		}
 		return indent.toString();
-	}
-	
-	/**
-	 * Return the active text editor if possible, otherwise the active editor
-	 * part.
-	 * 
-	 * @return
-	 */
-	private Object getActiveTextEditor() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window != null) {
-			IWorkbenchPage page = window.getActivePage();
-			if (page != null) {
-				IEditorPart editor = page.getActiveEditor();
-				if (editor != null) {
-					if (editor instanceof ITextEditor)
-						return editor;
-					ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
-					if (textEditor != null)
-						return textEditor;
-					return editor;
-				}
-			}
-		}
-		return null;
 	}
 	
 	/**
