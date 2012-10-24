@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
  *     
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contenttype;
+
+
 
 /**
  * 
@@ -68,6 +70,8 @@ public class EncodingGuesser {
 	 */
 	private static final int UNKNOWN = -1; // Unknown
 
+	private static final boolean IS_GUESSING_ENABLED = isGuessingEnabled();
+
 	/**
 	 * @return java.lang.String
 	 * @param code
@@ -98,10 +102,18 @@ public class EncodingGuesser {
 	}
 
 	public static boolean canGuess() {
+		if (!IS_GUESSING_ENABLED) {
+			return false;
+		}
 		// Currently, only Japanese is supported.
 		String system_ctype = java.util.Locale.getDefault().getLanguage();
 		String jp_ctype = java.util.Locale.JAPANESE.getLanguage();
 		return system_ctype.compareTo(jp_ctype) == 0;
+	}
+
+	private static boolean isGuessingEnabled() {
+		String value = System.getProperty("org.eclipse.wst.sse.html.encoding.guess");
+		return value == null || Boolean.valueOf(value).booleanValue();
 	}
 
 	/**
@@ -135,8 +147,12 @@ public class EncodingGuesser {
 				case EUC_JP :
 					code = EUC_JP;
 					break;
-				default :
+				case SHIFT_JIS :
+				case SJIS_HALFKANA :
 					code = SHIFT_JIS;
+					break;
+				default :
+					return null;
 			}
 		}
 		return (convertToIANAEncodingName(code));
