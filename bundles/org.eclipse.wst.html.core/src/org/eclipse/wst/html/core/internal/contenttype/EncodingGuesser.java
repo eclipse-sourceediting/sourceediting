@@ -112,7 +112,7 @@ public class EncodingGuesser {
 	}
 
 	private static boolean isGuessingEnabled() {
-		String value = System.getProperty("org.eclipse.wst.sse.html.encoding.guess");
+		String value = System.getProperty("org.eclipse.wst.html.encoding.guess");
 		return value == null || Boolean.valueOf(value).booleanValue();
 	}
 
