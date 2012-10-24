@@ -43,6 +43,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.validation.AbstractValidator;
@@ -51,6 +52,7 @@ import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
+import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
@@ -236,7 +238,23 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 	}
 
 	/**
+	 * @deprecated but remains for compatibility
 	 */
+	protected HTMLValidationResult validate(IDOMModel model, IFile file) {
+		IProject prj = null;
+		if (file != null) {
+			prj = file.getProject();
+		}
+		if ((prj == null) && (model != null)) {
+			URIResolver res = model.getResolver();
+			if (res != null) {
+				prj = res.getProject();
+			}
+		}
+		final WorkbenchReporter reporter = new WorkbenchReporter(prj, new NullProgressMonitor());
+		return validate(reporter, file, model);
+	}
+
 	private HTMLValidationResult validate(IReporter reporter, IFile file, IDOMModel model) {
 		if (file == null || model == null)
 			return null; // error
