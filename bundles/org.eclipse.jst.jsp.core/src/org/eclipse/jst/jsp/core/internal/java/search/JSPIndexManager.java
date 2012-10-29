@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,8 +17,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
@@ -42,11 +40,7 @@ import org.eclipse.wst.sse.core.indexing.AbstractIndexManager;
 public class JSPIndexManager extends AbstractIndexManager {
 	/** the singleton instance of the {@link JSPIndexManager} */
 	private static JSPIndexManager INSTANCE;
-	
-	/** the JSP {@link IContentType} */
-	private static final IContentType JSP_CONTENT_TYPE =
-		Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
-	
+		
 	/** the location to store state */
 	private IPath fWorkingLocation;
 	
@@ -69,10 +63,8 @@ public class JSPIndexManager extends AbstractIndexManager {
 	 */
 	protected boolean isResourceToIndex(int type, IPath path) {
 		String name = path.lastSegment();
-		return 
-			type == IResource.PROJECT || 
-			(type == IResource.FOLDER && !name.equals("bin") && !name.startsWith(".")) || //$NON-NLS-1$ //$NON-NLS-2$
-			JSP_CONTENT_TYPE.isAssociatedWith(path.lastSegment());
+		
+		return type == IResource.PROJECT || (type == IResource.FOLDER && !name.equals("bin") && !name.startsWith(".")) || ContentTypeIdForJSP.indexOfJSPExtension(path.lastSegment()) >= 0;//$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
