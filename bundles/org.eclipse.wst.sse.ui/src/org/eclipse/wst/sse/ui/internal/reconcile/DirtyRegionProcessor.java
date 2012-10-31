@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2001, 2011 IBM Corporation and others.
+  * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,8 +76,7 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 			}
 			else {
 				/*
-				 * Note that creating DirtyRegions *now* means that the wrong
-				 * text may be included
+				 * bug 384776 - no wrong text may be included 
 				 */
 				DirtyRegion dr = null;
 				if (event.getLength() == 0) {
@@ -85,16 +84,16 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 					 * It's an insert-- we use text length though so that the
 					 * new region gets validated...
 					 */
-					dr = createDirtyRegion(event.getOffset(), 0, DirtyRegion.INSERT);
+					dr = createDirtyRegion(event.getOffset(), event.getText().length(), DirtyRegion.INSERT);
 				}
 				else {
 					if ("".equals(event.getText())) { //$NON-NLS-1$
-						// it's a delete
-						dr = createDirtyRegion(event.getOffset(), event.getLength(), DirtyRegion.REMOVE);
+						// it's a delete-- we use text length=0
+						dr = createDirtyRegion(event.getOffset(), 0, DirtyRegion.REMOVE);
 					}
 					else {
-						// it's a replace
-						dr = createDirtyRegion(event.getOffset(), event.getLength(), DirtyRegion.INSERT);
+						// it's a replace-- we use text length though so that the new region gets validated...
+						dr = createDirtyRegion(event.getOffset(), event.getText().length(), DirtyRegion.INSERT);
 					}
 				}
 				if (isInRewriteSession()) {
@@ -123,12 +122,7 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 		 */
 		private boolean partitionsChanged(DocumentEvent event) {
 			boolean changed = false;
-			int length = event.getLength();
-
-			if (event.getLength() == 0 && event.getText().length() > 0) {
-				// it's an insert, we want partitions of the new text
-				length = event.getText().length();
-			}
+			int length = event.getText().length(); // In any case we want partitions of the new text (even if its length is zero)
 
 			ITypedRegion[] newPartitions = getPartitionRegions(event.getOffset(), length);
 			if (fLastPartitions != null) {
@@ -146,8 +140,6 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 			}
 			return changed;
 		}
-
-
 	}
 
 	/**
