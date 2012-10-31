@@ -419,13 +419,16 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 				proposedInfo = getAdditionalInfo(null, elementDecl);
 				CustomCompletionProposal proposal = null;
 				if ((currentValue != null) && (currentValue.length() > 0)) {
-					String rValue = "\"" + currentValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
-					proposal = new MarkupCompletionProposal(rValue,
-							contentAssistRequest.getReplacementBeginPosition(),
-							contentAssistRequest.getReplacementLength(), 1, image,
-							rValue, null, proposedInfo,
-							XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
-					contentAssistRequest.addProposal(proposal);
+					final String regionText = open.getText(contentAssistRequest.getRegion());
+					if (regionText.charAt(0) != '"' && regionText.charAt(0) != '\'') {
+						String rValue = "\"" + currentValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
+						proposal = new MarkupCompletionProposal(rValue,
+								contentAssistRequest.getReplacementBeginPosition(),
+								contentAssistRequest.getReplacementLength(), 1, image,
+								rValue, null, proposedInfo,
+								XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+						contentAssistRequest.addProposal(proposal);
+					}
 				}
 			}
 		}
