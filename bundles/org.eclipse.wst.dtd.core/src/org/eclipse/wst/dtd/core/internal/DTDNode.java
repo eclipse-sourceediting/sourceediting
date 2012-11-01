@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,10 +16,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -28,7 +31,7 @@ import org.eclipse.wst.xml.core.internal.document.NodeContainer;
 import org.w3c.dom.Node;
 
 
-public abstract class DTDNode extends NodeContainer implements IndexedRegion {
+public abstract class DTDNode extends NodeContainer implements IndexedRegion, IAdaptable {
 
 	// these are characteroffsets
 	protected DTDFile dtdFile;
@@ -43,6 +46,11 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	public DTDNode(DTDFile dtdFile, IStructuredDocumentRegion flatNode) {
 		this.dtdFile = dtdFile;
 		this.flatNode = flatNode;
+	}
+
+	public Object getAdapter(Class adapter) {
+		final IStructuredModel model = dtdFile != null ? dtdFile.getDTDModel() : null;
+		return model != null ? Platform.getAdapterManager().getAdapter(model, adapter) : null;
 	}
 
 	public void addRegion(ITextRegion region) {
