@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,8 +26,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -48,7 +51,7 @@ import org.w3c.dom.UserDataHandler;
 /**
  * NodeImpl class
  */
-public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNode {
+public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNode, IAdaptable {
 	// define one empty nodelist, for repeated use
 	private final static NodeList EMPTY_NODE_LIST = new NodeListImpl();
 	// DocumentPosition
@@ -87,6 +90,11 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 		if (that != null) {
 			this.ownerDocument = that.ownerDocument;
 		}
+	}
+
+	public Object getAdapter(Class adapter) {
+		final IStructuredModel model = getModel();
+		return model != null ? Platform.getAdapterManager().getAdapter(model, adapter) : null;
 	}
 
 	/**

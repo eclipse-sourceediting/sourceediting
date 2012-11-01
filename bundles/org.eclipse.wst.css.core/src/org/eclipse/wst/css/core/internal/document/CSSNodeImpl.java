@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,8 @@ package org.eclipse.wst.css.core.internal.document;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
@@ -24,6 +26,7 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNodeList;
 import org.eclipse.wst.css.core.internal.util.ImportRuleCollector;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.w3c.dom.DOMException;
 
@@ -31,7 +34,7 @@ import org.w3c.dom.DOMException;
 /**
  * 
  */
-public abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, IndexedRegion {
+public abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, IndexedRegion, IAdaptable {
 
 	private CSSDocumentImpl fOwnerDocument = null;
 	private CSSNodeImpl fParentNode = null;
@@ -60,6 +63,12 @@ public abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, 
 			}
 		}
 	}
+
+	public Object getAdapter(Class adapter) {
+		final IStructuredModel model = fOwnerDocument != null ? fOwnerDocument.getModel() : null;
+		return model != null ? Platform.getAdapterManager().getAdapter(model, adapter) : null;
+	}
+
 	/**
 	 * currently public but may be made default access protected in future.
 	 */

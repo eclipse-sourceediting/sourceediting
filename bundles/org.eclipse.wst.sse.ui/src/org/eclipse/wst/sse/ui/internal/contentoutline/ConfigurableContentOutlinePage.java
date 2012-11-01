@@ -27,6 +27,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.DelegatingDragAdapter;
 import org.eclipse.jface.util.DelegatingDropAdapter;
 import org.eclipse.jface.util.SafeRunnable;
@@ -79,17 +80,17 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	class AdditionGroupAdder implements IMenuListener {
 		public void menuAboutToShow(IMenuManager manager) {
 			IContributionItem[] items = manager.getItems();
+			// add configuration's menu items
+			IMenuListener listener = getConfiguration().getMenuListener(getTreeViewer());
+			if (listener != null) {
+				listener.menuAboutToShow(manager);
+				manager.add(new Separator());
+			}
 			if (items.length > 0 && items[items.length - 1].getId() != null) {
 				manager.insertAfter(items[items.length - 1].getId(), new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 			}
 			else {
 				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-			}
-
-			// add configuration's menu items
-			IMenuListener listener = getConfiguration().getMenuListener(getTreeViewer());
-			if (listener != null) {
-				listener.menuAboutToShow(manager);
 			}
 		}
 	}

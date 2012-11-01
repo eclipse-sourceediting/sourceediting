@@ -56,4 +56,12 @@
 			type="org.eclipse.core.resources.IFile">
     </propertyTester>
  </extension>
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory
+			adaptableType="org.eclipse.wst.sse.core.internal.provisional.IStructuredModel"
+			class="org.eclipse.wst.sse.core.internal.model.ModelResourceFactory">
+			<adapter
+				type="org.eclipse.core.resources.IResource"/>
+		</factory>
+	</extension>
 </plugin>
