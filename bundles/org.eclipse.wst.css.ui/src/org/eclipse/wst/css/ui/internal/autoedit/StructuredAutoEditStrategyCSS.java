@@ -102,9 +102,6 @@ public class StructuredAutoEditStrategyCSS extends StructuredAutoEditStrategy {
 	 * Copies the indentation of the previous line.
 	 */
 	protected void autoIndentAfterNewLine(DocumentCommand command) {
-		// select nearest white spaces to replace with new-line
-		setRangeForNewLine(command);
-
 		// get position
 		int position = command.offset;
 
@@ -115,6 +112,10 @@ public class StructuredAutoEditStrategyCSS extends StructuredAutoEditStrategy {
 		IStructuredDocumentRegion prev = getPreviousRegion(position);
 		if (prev == null || !CSSRegionContexts.CSS_LBRACE.equals(prev.getType()))
 			return;
+
+		// select nearest white spaces to replace with new-line
+		setRangeForNewLine(command);
+		position = command.offset;
 
 		IStructuredDocumentRegion next = prev.getNext();
 
