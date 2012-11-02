@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,14 +17,18 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
@@ -308,6 +312,28 @@ public class TestStructuredModel extends TestCase {
 				model.releaseFromEdit();
 			}
 		}
+	}
+
+	public void testGetModelResource() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		IResource resource = (IResource) model.getAdapter(IResource.class);
+		assertNotNull("A resource wasn't obtained from the model", resource);
+		assertEquals("The resource doesn't correspond to the model's base location", new Path("/" + fProjectName + "/files/simple.xml"), resource.getFullPath());
+	}
+	
+	public void testUnmanagedModelResource() throws IOException, CoreException {
+		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		IResource resource = (IResource) model.getAdapter(IResource.class);
+		assertNull("A resource was obtained from an unmanaged model", resource);
+	}
+
+	public void testGetNodeResource() throws IOException, CoreException {
+		IStructuredModel model = getTestModel();
+		IndexedRegion region = model.getIndexedRegion(0);
+		assertTrue("The region is not adaptable", region instanceof IAdaptable);
+		IResource resource = (IResource) ((IAdaptable) region).getAdapter(IResource.class);
+		assertNotNull("A resource wasn't obtained from the model", resource);
+		assertEquals("The resource doesn't correspond to the model's base location", new Path("/" + fProjectName + "/files/simple.xml"), resource.getFullPath());
 	}
 
 	/**
