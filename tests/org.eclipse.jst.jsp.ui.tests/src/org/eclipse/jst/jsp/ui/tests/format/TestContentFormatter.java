@@ -31,6 +31,8 @@ import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.jst.jsp.ui.tests.util.ProjectUtil;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -234,5 +236,16 @@ public class TestContentFormatter extends TestCase {
 	}
 	public void testFormatBug383387() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertSignificantEquals("/" + PROJECT_NAME + "/WebContent/formatBug383387.jsp", true);
+	}
+	public void testFormatBug124070() throws UnsupportedEncodingException, IOException, CoreException {
+		try {
+			JSPUIPlugin.getInstance().getPreferenceStore().setValue(JSPUIPreferenceNames.USE_HTML_FORMATTER, false);
+			String beforePath = "/" + PROJECT_NAME + "/WebContent/formatbug124070.jspx";
+			String afterPath = "/" + PROJECT_NAME + "/WebContent/formatbug124070-fmt.jspx";
+			formatAndAssertEquals(beforePath, afterPath, true);
+		}
+		finally {
+			JSPUIPlugin.getInstance().getPreferenceStore().setValue(JSPUIPreferenceNames.USE_HTML_FORMATTER, true);
+		}
 	}
 }
