@@ -112,6 +112,7 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 				"org.eclipse.wst.css.ui.proposalCategory.css");
 		store.setDefault(JSPUIPreferenceNames.AUTO_IMPORT_INSERT, true);
 		store.setDefault(JSPUIPreferenceNames.INSERT_SINGLE_SUGGESTION, true);
+		store.setDefault(JSPUIPreferenceNames.USE_HTML_FORMATTER, true);
 	}
 
 }

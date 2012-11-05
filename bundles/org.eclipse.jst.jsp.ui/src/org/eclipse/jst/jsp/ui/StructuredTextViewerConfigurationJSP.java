@@ -39,17 +39,16 @@ import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPStructuredContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
+import org.eclipse.jst.jsp.ui.internal.format.StructuredFormattingStrategyJSP;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.internal.style.jspel.LineStyleProviderForJSPEL;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
-import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
@@ -212,7 +211,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
 
 		MultiPassContentFormatter multiFormatter = (MultiPassContentFormatter) formatter;
-		multiFormatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
+		multiFormatter.setMasterStrategy(new StructuredFormattingStrategyJSP());
 		multiFormatter.setSlaveStrategy(new FormattingStrategyJSPJava(), IJSPPartitions.JSP_CONTENT_JAVA);
 
 		return formatter;

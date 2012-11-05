@@ -184,4 +184,10 @@ public class JSPUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String INSERT_SINGLE_SUGGESTION = "insertSingleSuggestion"; //$NON-NLS-1$
+
+	/**
+	 * <p>preference key to store the option for using the HTML formatter with XML-syntax JSPs</p>
+	 * <p>Value is of type <code>boolean</code></p>
+	 */
+	public static final String USE_HTML_FORMATTER = "useHTMLFormatter"; //$NON-NLS-1$
 }

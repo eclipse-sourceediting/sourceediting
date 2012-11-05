@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -441,7 +441,7 @@ public class DefaultXMLPartitionFormatter {
 	private DOMRegion formatRegion(TextEdit edit, Position formatRange, XMLFormattingConstraints parentConstraints, DOMRegion domRegion, IStructuredDocumentRegion previousRegion) {
 		IStructuredDocumentRegion currentRegion = domRegion.documentRegion;
 		String regionType = currentRegion.getType();
-		if (DOMRegionContext.XML_TAG_NAME.equals(regionType)) {
+		if (DOMRegionContext.XML_TAG_NAME.equals(regionType) || "JSP_ROOT_TAG_NAME".equals(regionType) || "JSP_DIRECTIVE_NAME".equals(regionType)) {
 			ITextRegion textRegion = currentRegion.getFirstRegion();
 			String textRegionType = textRegion.getType();
 			if (DOMRegionContext.XML_TAG_OPEN.equals(textRegionType)) {

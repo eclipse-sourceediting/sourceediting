@@ -11,11 +11,15 @@
 package org.eclipse.jst.jsp.ui.internal.preferences.ui;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -26,6 +30,8 @@ import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class JSPSourcePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	private Button fFormatterButton;
 
 	public void init(IWorkbench workbench) {
 		// do nothing
@@ -57,6 +63,10 @@ public class JSPSourcePreferencePage extends PreferencePage implements IWorkbenc
 		data = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
 		data.horizontalIndent = 5;
 		contentTypeArea.getControl().setLayoutData(data);
+		fFormatterButton = new Button(composite, SWT.CHECK);
+		fFormatterButton.setText(JSPUIMessages.JSPSourcePreferencePage_format);
+		fFormatterButton.setSelection(getPreferenceStore().getBoolean(JSPUIPreferenceNames.USE_HTML_FORMATTER));
+
 		return composite;
 	}
 
@@ -76,5 +86,23 @@ public class JSPSourcePreferencePage extends PreferencePage implements IWorkbenc
 		composite.setLayoutData(data);
 
 		return composite;
+	}
+
+	protected IPreferenceStore doGetPreferenceStore() {
+		return JSPUIPlugin.getInstance().getPreferenceStore();
+	}
+
+	protected void performDefaults() {
+		if (fFormatterButton != null) {
+			fFormatterButton.setSelection(getPreferenceStore().getDefaultBoolean(JSPUIPreferenceNames.USE_HTML_FORMATTER));
+		}
+		super.performDefaults();
+	}
+
+	public boolean performOk() {
+		if (fFormatterButton != null) {
+			getPreferenceStore().setValue(JSPUIPreferenceNames.USE_HTML_FORMATTER, fFormatterButton.getSelection());
+		}
+		return super.performOk();
 	}
 }
