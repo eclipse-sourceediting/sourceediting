@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,11 +28,14 @@ class TagTranslator extends JSPTranslator {
 		fServiceHeader = "public void doTag() throws JspException, java.io.IOException, IllegalStateException, SkipPageException {" + //$NON-NLS-1$
 					"javax.servlet.http.HttpServletResponse response = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.http.HttpServletRequest request = null;" + ENDL + //$NON-NLS-1$
-					"JspContext jspContext = null;" + ENDL + //$NON-NLS-1$
+					"JspContext jspContext = getJspContext();" + ENDL + //$NON-NLS-1$
 					"javax.servlet.ServletContext application = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
 					"javax.servlet.ServletConfig config = null;" + ENDL; //$NON-NLS-1$ 
 
 		fSuperclass = "javax.servlet.jsp.tagext.SimpleTagSupport"; //$NON-NLS-1$
+
+		fContext = "getJspContext()"; //$NON-NLS-1$
+		fSession = "((PageContext)" + fContext + ").getSession();"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

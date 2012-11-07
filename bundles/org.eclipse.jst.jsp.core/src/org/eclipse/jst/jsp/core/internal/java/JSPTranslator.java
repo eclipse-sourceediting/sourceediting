@@ -147,9 +147,6 @@ public class JSPTranslator implements Externalizable {
 	/** end line characters */
 	public static final String ENDL = "\n"; //$NON-NLS-1$
 	
-	/** session variable declaration */
-	private static final String SESSION_VARIABLE_DECLARATION = "javax.servlet.http.HttpSession session = pageContext.getSession();" + ENDL; //$NON-NLS-1$
-	
 	/** footer text */
 	private static final String FOOTER = "}}"; //$NON-NLS-1$
 	
@@ -170,7 +167,6 @@ public class JSPTranslator implements Externalizable {
 	
 	/** JSP tag name prefix */
 	static final String JSP_PREFIX = "jsp:"; //$NON-NLS-1$
-	
 	
 	// these constants are to keep track of what type of code is currently being translated
 	/** code in question is standard JSP */
@@ -205,6 +201,12 @@ public class JSPTranslator implements Externalizable {
 	/** translated class service header */
 	String fServiceHeader = null;
 	
+	/** The context of the translation */
+	String fContext = null;
+
+	/** The context's session */
+	String fSession = null;
+
 	/** translated user defined imports */
 	private StringBuffer fUserImports = new StringBuffer();
 	
@@ -708,8 +710,9 @@ public class JSPTranslator implements Externalizable {
 		javaOffset += fServiceHeader.length();
 		// session participant
 		if (fIsInASession) {
-			fResult.append(SESSION_VARIABLE_DECLARATION);
-			javaOffset += SESSION_VARIABLE_DECLARATION.length();
+			final String sessionVariableDeclaration = "javax.servlet.http.HttpSession session = "+ fSession + ENDL; //$NON-NLS-1$
+			fResult.append(sessionVariableDeclaration);
+			javaOffset += sessionVariableDeclaration.length();
 		}
 		// error page
 		if (fIsErrorPage) {
@@ -1233,6 +1236,8 @@ public class JSPTranslator implements Externalizable {
 					"javax.servlet.jsp.JspWriter out = pageContext.getOut();" + ENDL + //$NON-NLS-1$
 					"Object page = this;" + ENDL; //$NON-NLS-1$
 		fSuperclass = "javax.servlet.http.HttpServlet"; //$NON-NLS-1$
+		fContext = "pageContext"; //$NON-NLS-1$
+		fSession = fContext+".getSession();"; //$NON-NLS-1$
 	}
 
 	/**
@@ -2099,7 +2104,7 @@ public class JSPTranslator implements Externalizable {
 				// 2.0:JSP.8.5.2
 				varType = "javax.servlet.jsp.tagext.JspFragment"; //$NON-NLS-1$
 			}
-			String declaration = new TaglibVariable(varType, varName, "", description).getDeclarationString(true, TaglibVariable.M_PRIVATE); //$NON-NLS-1$
+			String declaration = new TaglibVariable(varType, varName, "", description).getDeclarationString(true, fContext, TaglibVariable.M_PRIVATE); //$NON-NLS-1$
 			appendToBuffer(declaration, fUserDeclarations, false, fCurrentNode);
 		}
 	}
