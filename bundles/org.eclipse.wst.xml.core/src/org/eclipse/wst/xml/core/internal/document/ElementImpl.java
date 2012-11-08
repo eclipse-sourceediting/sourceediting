@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -117,6 +117,9 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	private char[] fNamespaceURI = null;
 	
 	private Stack fDefaultValueLookups = null;
+
+	/** Lock for controlling access to the default value stack */
+	private Object STACK_LOCK = new byte[0];
 
 	/**
 	 * ElementImpl constructor
@@ -365,22 +368,24 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 *         is found in the content model, <code>unknownDefault</code> otherwise
 	 */
 	private String getDefaultValue(String name, String unknownDefault) {
-		if (fDefaultValueLookups != null && fDefaultValueLookups.contains(name))
-			return null;
-		try {
-			if (fDefaultValueLookups == null)
-				fDefaultValueLookups = new Stack();
-			fDefaultValueLookups.push(name);
-			CMNamedNodeMap map = ((DocumentImpl) getOwnerDocument()).getCMAttributes(this);
-			if (map != null) {
-				CMNode attribute = map.getNamedItem(name);
-				if (attribute instanceof CMAttributeDeclaration)
-					return ((CMAttributeDeclaration) attribute).getAttrType().getImpliedValue();
+		synchronized (STACK_LOCK) {
+			if (fDefaultValueLookups != null && fDefaultValueLookups.contains(name))
+				return null;
+			try {
+				if (fDefaultValueLookups == null)
+					fDefaultValueLookups = new Stack();
+				fDefaultValueLookups.push(name);
+				CMNamedNodeMap map = ((DocumentImpl) getOwnerDocument()).getCMAttributes(this);
+				if (map != null) {
+					CMNode attribute = map.getNamedItem(name);
+					if (attribute instanceof CMAttributeDeclaration)
+						return ((CMAttributeDeclaration) attribute).getAttrType().getImpliedValue();
+				}
+				return unknownDefault;
 			}
-			return unknownDefault;
-		}
-		finally {
-			fDefaultValueLookups.pop();
+			finally {
+				fDefaultValueLookups.pop();
+			}
 		}
 	}
 
