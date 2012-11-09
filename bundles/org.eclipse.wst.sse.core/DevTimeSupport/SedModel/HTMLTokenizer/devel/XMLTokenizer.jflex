@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -503,10 +503,6 @@ private final String scanXMLCommentText() throws IOException {
 %state ST_XML_PI_EQUALS
 %state ST_XML_PI_ATTRIBUTE_VALUE
 %state ST_XML_PI_TAG_CLOSE
-%state ST_DHTML_ATTRIBUTE_NAME
-%state ST_DHTML_EQUALS
-%state ST_DHTML_ATTRIBUTE_VALUE
-%state ST_DHTML_TAG_CLOSE
 
 // normal tag states
 %state ST_XML_TAG_NAME
@@ -911,7 +907,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 
 
 /* white space within a tag */
-<ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_PI, ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID,ST_DHTML_ATTRIBUTE_NAME,ST_DHTML_EQUALS,ST_DHTML_ATTRIBUTE_VALUE,ST_DHTML_TAG_CLOSE> {S}* {
+<ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_PI, ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID> {S}* {
 	if(Debug.debugTokenizer)
 		dump("white space");//$NON-NLS-1$
         return WHITE_SPACE;
@@ -1068,12 +1064,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
         yybegin(ST_XML_PI_ATTRIBUTE_NAME);
         return XML_TAG_NAME;
 }
-<ST_PI> ([iI][mM][pP][oO][rR][tT]{S}*) {
-	if(Debug.debugTokenizer)
-		dump("DHTML processing instruction target");//$NON-NLS-1$
-        yybegin(ST_DHTML_ATTRIBUTE_NAME);
-        return XML_TAG_NAME;
-}
 <ST_PI> xml-stylesheet {
 	if(Debug.debugTokenizer)
 		dump("XSL processing instruction target");//$NON-NLS-1$
@@ -1128,33 +1118,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE> {PIend} {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction end");//$NON-NLS-1$
-        yybegin(YYINITIAL);
-        return XML_PI_CLOSE;
-}
-// DHTML
-<ST_DHTML_ATTRIBUTE_NAME, ST_DHTML_EQUALS> {Name} {
-	if(Debug.debugTokenizer)
-		dump("DHTML processing instruction attribute name");//$NON-NLS-1$
-        yybegin(ST_DHTML_EQUALS);
-        return XML_TAG_ATTRIBUTE_NAME;
-}
-<ST_DHTML_EQUALS> {Eq} {
-	if(Debug.debugTokenizer)
-		dump("DHTML processing instruction '='");//$NON-NLS-1$
-        yybegin(ST_DHTML_ATTRIBUTE_VALUE);
-        return XML_TAG_ATTRIBUTE_EQUALS;
-}
-/* the value was found, look for the next name */
-<ST_DHTML_ATTRIBUTE_VALUE> {AttValue} | ([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
-	if(Debug.debugTokenizer)
-		dump("DHTML processing instruction attribute value");//$NON-NLS-1$
-        yybegin(ST_DHTML_ATTRIBUTE_NAME);
-        return XML_TAG_ATTRIBUTE_VALUE;
-}
-/* The DHTML PI's close was found */
-<ST_DHTML_EQUALS, ST_DHTML_ATTRIBUTE_NAME, ST_DHTML_ATTRIBUTE_VALUE> [/]*> {
-	if(Debug.debugTokenizer)
-		dump("DHTML processing instruction end");//$NON-NLS-1$
         yybegin(YYINITIAL);
         return XML_PI_CLOSE;
 }
