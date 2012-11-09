@@ -25,7 +25,7 @@ import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class StructuredTextPartitionerForXML extends StructuredTextPartitioner implements IStructuredTextPartitioner {
 
-	private final static String[] configuredContentTypes = new String[]{IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_CDATA, IXMLPartitions.XML_PI, IXMLPartitions.XML_DECLARATION, IXMLPartitions.XML_COMMENT, IXMLPartitions.DTD_SUBSET};
+	private final static String[] configuredContentTypes = new String[]{IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_CDATA, IXMLPartitions.XML_PI, IXMLPartitions.XML_DECLARATION, IXMLPartitions.XML_COMMENT, IXMLPartitions.DTD_SUBSET, IXMLPartitions.PROCESSING_INSTRUCTION_PREFIX};
 
 	public StructuredTextPartitionerForXML() {
 		super();

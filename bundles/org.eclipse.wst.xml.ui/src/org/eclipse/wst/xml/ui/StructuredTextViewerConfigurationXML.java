@@ -185,7 +185,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
-		if ((partitionType == IXMLPartitions.XML_DEFAULT) || (partitionType == IXMLPartitions.XML_CDATA) || (partitionType == IXMLPartitions.XML_COMMENT) || (partitionType == IXMLPartitions.XML_DECLARATION) || (partitionType == IXMLPartitions.XML_PI)) {
+		if ((partitionType == IXMLPartitions.XML_DEFAULT) || (partitionType == IXMLPartitions.XML_CDATA) || (partitionType == IXMLPartitions.XML_COMMENT) || (partitionType == IXMLPartitions.XML_DECLARATION) || (partitionType == IXMLPartitions.XML_PI) || (partitionType == IXMLPartitions.PROCESSING_INSTRUCTION_PREFIX)) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForXML()};
 		}
 
