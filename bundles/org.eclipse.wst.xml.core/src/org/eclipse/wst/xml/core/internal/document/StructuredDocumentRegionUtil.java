@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ class StructuredDocumentRegionUtil {
 		char firstChar = value.charAt(0);
 		if (firstChar == '"' || firstChar == '\'') {
 			if (length == 1)
-				return null;
+				return ""; //$NON-NLS-1$
 			if (value.charAt(length - 1) == firstChar)
 				length--;
 			return value.substring(1, length);
