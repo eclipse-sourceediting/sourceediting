@@ -641,6 +641,10 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		if (fDamagers == null)
 			return null;
 
+		final int idx = contentType.indexOf(':');
+		if(idx > 0) {
+			contentType = contentType.substring(0, idx + 1);
+		}
 		return (IPresentationDamager) fDamagers.get(contentType);
 	}
 
@@ -652,6 +656,10 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		if (fRepairers == null)
 			return null;
 
+		final int idx = contentType.indexOf(':');
+		if(idx > 0) {
+			contentType = contentType.substring(0, idx + 1);
+		}
 		return (IPresentationRepairer) fRepairers.get(contentType);
 	}
 
