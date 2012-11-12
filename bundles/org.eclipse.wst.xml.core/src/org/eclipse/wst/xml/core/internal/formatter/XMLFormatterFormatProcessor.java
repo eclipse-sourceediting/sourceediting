@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,7 +67,7 @@ public class XMLFormatterFormatProcessor implements IStructuredFormatProcessor {
 			formatModel(structuredModel);
 
 			// save model if needed
-			if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
+			if (structuredModel != null && !structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
 				structuredModel.save();
 		}
 		finally {
@@ -81,6 +81,8 @@ public class XMLFormatterFormatProcessor implements IStructuredFormatProcessor {
 	}
 
 	public void formatModel(IStructuredModel structuredModel) {
+		if (structuredModel == null)
+			return;
 		int start = 0;
 		int length = structuredModel.getStructuredDocument().getLength();
 
