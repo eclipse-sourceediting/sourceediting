@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ public class XMLValidationConfiguration
   public static final String HONOUR_ALL_SCHEMA_LOCATIONS = "HONOUR_ALL_SCHEMA_LOCATIONS"; //$NON-NLS-1$
 
   private boolean warn_no_grammar_value = false;
+  // 1 = Warning, 2 = Error, 0/-1 = Ignore 
   private int indicate_no_grammar_value = 1;
   private boolean use_xinclude = false;
   private boolean honour_all_schema_locations_value = false;
