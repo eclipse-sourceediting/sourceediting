@@ -22,11 +22,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextPresentationListener;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistantExtension2;
 import org.eclipse.jface.text.contentassist.IContentAssistantExtension4;
@@ -382,6 +384,25 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		
 		if(fPresentationReconciler != null)
 			fPresentationReconciler.install(this);
+	}
+
+	protected ITextHover getTextHover(int offset, int stateMask) {
+		ITextHover hover = super.getTextHover(offset, stateMask);
+		if (hover == null) {
+			final IDocument document = getDocument();
+			if (fConfiguration != null && document != null) {
+				// Check for computed partitions
+				try {
+					final String partition = TextUtilities.getContentType(document, getDocumentPartitioning(), offset, true);
+					final int idx = partition != null ? partition.indexOf(':') : -1;
+					if (idx > -1) {
+						hover = fConfiguration.getTextHover(this, partition.substring(0, idx), stateMask);
+					}
+				}
+				catch (BadLocationException e) {}
+			}
+		}
+		return hover;
 	}
 
 	/**
