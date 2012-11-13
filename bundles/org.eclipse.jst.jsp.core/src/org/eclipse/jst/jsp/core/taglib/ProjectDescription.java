@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1655,7 +1655,7 @@ class ProjectDescription {
 				else if ((delta.getFlags() & IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED) > 0) {
 					fPackageFragmentRootsChanged.put(key, new PackageFragmentRootDelta(path, ITaglibIndexDelta.CHANGED, fragmentisExported));
 				}
-				else if ((delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
+				else if (((delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) && ((delta.getFlags() & IJavaElementDelta.F_REORDER) == 0)) {
 					fPackageFragmentRootsAdded.remove(key);
 					fPackageFragmentRootsChanged.remove(key);
 					fPackageFragmentRootsRemoved.put(key, new PackageFragmentRootDelta(path, ITaglibIndexDelta.REMOVED, fragmentisExported));
