@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,21 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.util.HashMap;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -30,21 +36,20 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.wst.sse.core.internal.util.Debug;
 
 public class FileContentCache {
 	private static class CacheEntry {
 		String contents;
 		long modificationStamp = IResource.NULL_STAMP;
-		IPath path;
+		IPath contentPath;
 
 		CacheEntry(IPath path) {
-			this.path = path;
+			this.contentPath = path;
 			modificationStamp = getModificationStamp(path);
 			contents = readContents(path);
 		}
@@ -60,48 +65,24 @@ public class FileContentCache {
 			if (modificationStamp == IResource.NULL_STAMP) {
 				return true;
 			}
-			long newStamp = getModificationStamp(path);
+			long newStamp = getModificationStamp(contentPath);
 			return newStamp > modificationStamp;
 		}
 
-		private String detectCharset(IFile file) {
-			if (file.getType() == IResource.FILE && file.isAccessible()) {
-				IContentDescription d = null;
-				try {
-					// optimized description lookup, might not succeed
-					d = file.getContentDescription();
-					if (d != null)
-						return d.getCharset();
-				}
-				catch (CoreException e) {
-					// should not be possible given the accessible and file
-					// type
-					// check above
-				}
-				InputStream contents = null;
-				try {
-					contents = file.getContents();
-					IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(contents, file.getName(), new QualifiedName[]{IContentDescription.CHARSET});
-					if (description != null) {
-						return description.getCharset();
-					}
-				}
-				catch (IOException e) {
-					// will try to cleanup in finally
-				}
-				catch (CoreException e) {
-					// out of sync
-				}
-				finally {
-					if (contents != null) {
-						try {
-							contents.close();
-						}
-						catch (Exception e) {
-							// not sure how to recover at this point
-						}
-					}
-				}
+
+		/**
+		 * @param name
+		 * @param contents2
+		 * @return
+		 */
+		private String detectCharset(String name, byte[] contents) throws IOException {
+			IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(new ByteArrayInputStream(contents), name, new QualifiedName[]{IContentDescription.CHARSET});
+			if (description != null) {
+				String charset = description.getCharset();
+				if (charset == null && description.getContentType() != null)
+					charset = description.getContentType().getDefaultCharset();
+				if (charset != null)
+					return charset;
 			}
 			return ResourcesPlugin.getEncoding();
 		}
@@ -117,35 +98,51 @@ public class FileContentCache {
 			return IResource.NULL_STAMP;
 		}
 
+		/**
+		 * Read once and store the contents to determine the encoding and reuse as input
+		 */
 		private String readContents(IPath filePath) {
 			if (DEBUG)
-				System.out.println("readContents:" + filePath);
-			StringBuffer s = new StringBuffer();
+				System.out.println(getClass().getName() + " readContents: " + filePath); //$NON-NLS-1$
+			
 			InputStream is = null;
 			try {
 				IFile f = getFile(filePath);
 				if (f != null && f.isAccessible()) {
-					String charset = detectCharset(f);
-					if (charset == null) {
-						charset = ResourcesPlugin.getEncoding();
-					}
 					is = f.getContents();
-					Reader reader = new InputStreamReader(is, charset);
-					char[] readBuffer = new char[8092];
-					int n = reader.read(readBuffer);
-					while (n > 0) {
-						s.append(readBuffer, 0, n);
-						n = reader.read(readBuffer);
-					}
+				}
+				else {
+					is = new FileInputStream(filePath.toFile());
+				}
+
+				ByteArrayOutputStream store = new ByteArrayOutputStream();
+				byte[] readBuffer = new byte[8092];
+				int n = is.read(readBuffer);
+				while (n > 0) {
+					store.write(readBuffer, 0, n);
+					n = is.read(readBuffer);
+				}
+				
+				byte[] bytes = store.toByteArray();
+				String charset = detectCharset(filePath.lastSegment(), bytes);
+				ByteBuffer buffer = ByteBuffer.wrap(bytes);
+				try {
+					CharBuffer charBuffer = Charset.forName(charset).decode(buffer);
+					return charBuffer.toString();
+				}
+				catch (IllegalCharsetNameException e) {
+					return new String(bytes, charset);
+				}
+				catch (UnsupportedCharsetException e) {
+					return new String(bytes, charset);
 				}
 			}
 			catch (CoreException e) {
+				Logger.logException(e);
 				// out of sync
 			}
 			catch (Exception e) {
-				if (Debug.debugStructuredDocument) {
-					Logger.logException(e);
-				}
+//				Logger.logException(e);
 			}
 			finally {
 				try {
@@ -157,28 +154,7 @@ public class FileContentCache {
 					// nothing to do
 				}
 			}
-			if (is == null) {
-				try {
-					FileBuffers.getTextFileBufferManager().connect(filePath, LocationKind.LOCATION, new NullProgressMonitor());
-					ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(filePath, LocationKind.LOCATION);
-					if (buffer != null) {
-						s.append(buffer.getDocument().get());
-					}
-				}
-				catch (CoreException e) {
-					// nothing to do
-					Logger.logException(e);
-				}
-				finally {
-					try {
-						FileBuffers.getTextFileBufferManager().disconnect(filePath, LocationKind.LOCATION, new NullProgressMonitor());
-					}
-					catch (CoreException e) {
-						Logger.logException(e);
-					}
-				}
-			}
-			return s.toString();
+			return null;
 		}
 
 	}
@@ -191,11 +167,18 @@ public class FileContentCache {
 		return instance;
 	}
 
-	private HashMap fContentMap;
+	static class LimitedHashMap extends LinkedHashMap {
+		private static final long serialVersionUID = 1L;
+
+		protected boolean removeEldestEntry(java.util.Map.Entry eldest) {
+			return size() > 25; //completely arbitrary number
+		}
+	}
+	private LinkedHashMap fContentMap;
 
 	private FileContentCache() {
 		super();
-		fContentMap = new HashMap();
+		fContentMap = new LimitedHashMap();
 	}
 
 	private void cleanup() {
@@ -212,7 +195,28 @@ public class FileContentCache {
 
 	public String getContents(IPath filePath) {
 		if (DEBUG)
-			System.out.println("getContents:" + filePath);
+			System.out.println(getClass().getName() + "#getContents: " + filePath); //$NON-NLS-1$
+
+		/*
+		 * Use an open file buffer if one exists for contents in dirty
+		 * editors. LocationKind.IFILE will only apply to workspace paths, but
+		 * they're far more likely to be open in an editor and modified than
+		 * files outside the workspace (LocationKind.LOCATION). We'll use
+		 * LocationKind.NORMALIZE and let the framework sort things out,
+		 * unless it proves to be a performance problem.
+		 * 
+		 * Do not cause a file buffer to be opened by calling connect()
+		 */
+		ITextFileBuffer existingBuffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(
+				filePath, LocationKind.NORMALIZE);
+		if (existingBuffer != null) {
+			IDocument document = existingBuffer.getDocument();
+			if (document != null) {
+				return document.get();
+			}
+		}
+
+		//check the cache
 		CacheEntry entry = null;
 		Object o = fContentMap.get(filePath);
 		if (o instanceof Reference) {
@@ -220,7 +224,7 @@ public class FileContentCache {
 		}
 		if (entry == null || entry.isStale()) {
 			if (DEBUG && entry != null && entry.isStale())
-				System.out.println("stale contents:" + filePath);
+				System.out.println(getClass().getName() + " stale contents: " + filePath); //$NON-NLS-1$
 			entry = new CacheEntry(filePath);
 			synchronized (fContentMap) {
 				fContentMap.put(filePath, new SoftReference(entry));
@@ -229,6 +233,4 @@ public class FileContentCache {
 		cleanup();
 		return entry.contents;
 	}
-
-
 }
