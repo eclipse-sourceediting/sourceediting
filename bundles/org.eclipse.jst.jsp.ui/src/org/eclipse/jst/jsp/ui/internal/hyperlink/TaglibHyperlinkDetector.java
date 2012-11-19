@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -401,12 +401,16 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 						if (node != null) {
 							link = new TLDFileHyperlink(file, TAG, node.getLocalName(), hyperlinkRegion) {
 								public String getHyperlinkText() {
-									return JSPUIMessages.CustomTagHyperlink_hyperlinkText;
+									return JSPUIMessages.TLDHyperlink_hyperlinkText;
 								}
 							};
 						}
 						else {
-							link = new WorkspaceFileHyperlink(hyperlinkRegion, file);
+							link = new WorkspaceFileHyperlink(hyperlinkRegion, file) {
+								public String getHyperlinkText() {
+									return JSPUIMessages.TLDHyperlink_hyperlinkText;
+								}
+							};
 						}
 					}
 				}
@@ -415,7 +419,11 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 				// this is an ExternalFileHyperlink since file does not exist
 				// in workspace
 				File externalFile = new File(uriString);
-				link = new ExternalFileHyperlink(hyperlinkRegion, externalFile);
+				link = new ExternalFileHyperlink(hyperlinkRegion, externalFile) {
+					public String getHyperlinkText() {
+						return JSPUIMessages.TLDHyperlink_hyperlinkText;
+					}
+				};
 			}
 		}
 
