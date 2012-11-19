@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1114,13 +1114,13 @@ public class ScannerUnitTests extends TestCase {
 	public void testXML_DHTMLimport() {
 		String text = "<a> <?import type=\"foo\">";
 		IStructuredDocumentRegionList nodes = setUpXML(text);
-		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{3, 1, 6});
+		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{3, 1, 3});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{DOMRegionContext.XML_TAG_OPEN, DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_CLOSE});
 		assertTrue("region context type check", typeCheck);
 		typeCheck = checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{DOMRegionContext.XML_CONTENT});
 		assertTrue("region context type check", typeCheck);
-		typeCheck = checkSimpleRegionTypes(nodes.item(2).getRegions(), new String[]{DOMRegionContext.XML_PI_OPEN, DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS, DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMRegionContext.XML_PI_CLOSE});
+		typeCheck = checkSimpleRegionTypes(nodes.item(2).getRegions(), new String[]{DOMRegionContext.XML_PI_OPEN, DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_PI_CONTENT});
 		assertTrue("region context type check", typeCheck);
 		verifyLengths(0, nodes, text);
 	}
