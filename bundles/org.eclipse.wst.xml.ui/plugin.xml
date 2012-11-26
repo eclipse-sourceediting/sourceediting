@@ -851,14 +851,10 @@
 -->		
 	       <separator name="goToSiblingsBegin" visible="true"></separator>
 	       <command commandId="org.eclipse.wst.xml.ui.nextSibling" id="GoToNextSibling" label="%ActionDefinition.nextSibling.name" style="push">
-			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.navigation"></reference>
-				</visibleWhen>
+			   <visibleWhen checkEnabled="true" />
 	       </command>
 	       <command commandId="org.eclipse.wst.xml.ui.previousSibling" id="GoToPreviousSibling" label="%ActionDefinition.previousSibling.name" style="push">
-			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.navigation"></reference>
-				</visibleWhen>
+			   <visibleWhen checkEnabled="true" />
 	       </command>
 	       <separator name="goToSiblingsEnd" visible="false"></separator>
 		</menuContribution>
@@ -1001,24 +997,14 @@
                  id="ToggleGrammarConstraints"
                  style="push"
                  tooltip="%Constraints_name">
-	           <visibleWhen
-	                 checkEnabled="false">
-	              <reference
-	                    definitionId="org.eclipse.wst.xml.ui.grammar">
-	              </reference>
-	           </visibleWhen>
+	           <visibleWhen checkEnabled="true" />
            </command>
            <command
                  commandId="org.eclipse.wst.xml.ui.reload.dependencies"
                  icon="icons/full/etool16/rldgrmr.gif"
                  id="ReloadDependencies"
                  style="push">
-	           <visibleWhen
-	                 checkEnabled="false">
-	              <reference
-	                    definitionId="org.eclipse.wst.xml.ui.dependencies">
-	              </reference>
-	           </visibleWhen>
+	           <visibleWhen checkEnabled="true" />
            </command>
         </toolbar>
      </menuContribution>
@@ -1157,9 +1143,6 @@
           <activeWhen>
 			 <reference definitionId="org.eclipse.wst.xml.ui.cleanup"/>
           </activeWhen>
-          <enabledWhen>
-             <reference definitionId="org.eclipse.wst.xml.ui.cleanup"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectEnclosingXMLHandler"
@@ -1167,9 +1150,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectNextXMLHandler"
@@ -1177,9 +1157,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectPreviousXMLHandler"
@@ -1187,9 +1164,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.sse.ui.internal.handlers.StructuredSelectHistoryHandler"
@@ -1197,9 +1171,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.XMLFindOccurencesHandler"
@@ -1207,9 +1178,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.occurrences"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.occurrences"/>
-          </enabledWhen>
        </handler>
 <!--
        <handler
@@ -1229,9 +1197,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.PreviousSiblingNavigationHandler"
@@ -1239,9 +1204,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.ReloadDependenciesHandler"
@@ -1249,9 +1211,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.dependencies"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.dependencies"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.ToggleEditModeHandler"
@@ -1259,9 +1218,6 @@
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.grammar"/>
           </activeWhen>
-          <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.grammar"/>
-          </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.wizards.NewXMLHandler"
@@ -1487,9 +1443,6 @@
 			<activeWhen>
 				<reference definitionId="org.eclipse.wst.xml.ui.xmlContentType.definition"></reference>
 			</activeWhen>
-			<enabledWhen>
-				<reference definitionId="org.eclipse.wst.xml.ui.xmlContentType.definition"></reference>
-			</enabledWhen>
 		</handler>
 	</extension>
 	
