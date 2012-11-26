@@ -284,9 +284,6 @@
 			<activeWhen>
 				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
 			</activeWhen>
-			<enabledWhen>
-				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
-			</enabledWhen>
 		</handler>
 		<handler
 			class="org.eclipse.wst.css.ui.internal.handlers.StructuredSelectEnclosingHandler"
@@ -294,9 +291,6 @@
 			<activeWhen>
 				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
 			</activeWhen>
-			<enabledWhen>
-				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
-			</enabledWhen>
 		</handler>
 		<handler
 			class="org.eclipse.wst.css.ui.internal.handlers.StructuredSelectNextHandler"
@@ -304,9 +298,6 @@
 			<activeWhen>
 				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
 			</activeWhen>
-			<enabledWhen>
-				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
-			</enabledWhen>
 		</handler>
 		<handler
 			class="org.eclipse.wst.css.ui.internal.handlers.StructuredSelectPreviousHandler"
@@ -314,9 +305,6 @@
 			<activeWhen>
 				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
 			</activeWhen>
-			<enabledWhen>
-				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
-			</enabledWhen>
 		</handler>
 		<!-- TODO Use the handler from SSE or XML's declaration -->
 		<handler
@@ -325,9 +313,6 @@
 			<activeWhen>
 				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
 			</activeWhen>
-			<enabledWhen>
-				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
-			</enabledWhen>
 		</handler>
 	</extension>
 
@@ -600,9 +585,6 @@
 			<activeWhen>
 				<reference definitionId="org.eclipse.wst.css.ui.cssContentType.definition"></reference>
 			</activeWhen>
-			<enabledWhen>
-				<reference definitionId="org.eclipse.wst.css.ui.cssContentType.definition"></reference>
-			</enabledWhen>
 		</handler>
 	</extension>
 	

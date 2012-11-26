@@ -493,11 +493,6 @@
                     definitionId="org.eclipse.wst.html.ui.htmlSourceContributions.definition">
              	</reference>
              </activeWhen>
-             <enabledWhen>
-             	<reference
-                    definitionId="org.eclipse.wst.html.ui.htmlSourceContributions.definition">
-             	</reference>
-             </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.html.ui.internal.handlers.HTMLFindOccurrencesHandler"
@@ -507,11 +502,6 @@
                     definitionId="org.eclipse.wst.html.ui.occurrences">
              	</reference>
              </activeWhen>
-             <enabledWhen>
-             	<reference
-                    definitionId="org.eclipse.wst.html.ui.occurrences">
-             	</reference>
-             </enabledWhen>
        </handler>
        
 	</extension>
@@ -587,9 +577,6 @@
 			<activeWhen>
 				<reference definitionId="org.eclipse.wst.html.ui.htmlContentType.definition"></reference>
 			</activeWhen>
-			<enabledWhen>
-				<reference definitionId="org.eclipse.wst.html.ui.htmlContentType.definition"></reference>
-			</enabledWhen>
 		</handler>
 	</extension>
 
