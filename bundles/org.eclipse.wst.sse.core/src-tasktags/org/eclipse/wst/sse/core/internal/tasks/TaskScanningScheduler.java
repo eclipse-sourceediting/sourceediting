@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,8 +24,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.Logger;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.sse.core.utils.StringUtils;
 
 public class TaskScanningScheduler {
 	class ListenerVisitor implements IResourceChangeListener, IResourceDeltaVisitor {
@@ -65,20 +63,19 @@ public class TaskScanningScheduler {
 	private static TaskScanningScheduler scheduler;
 
 	public static void refresh() {
-		SSECorePlugin.getDefault().getPluginPreferences().setValue(TaskScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED, ""); //$NON-NLS-1$
+		TaskScanningJob.setScannedProjects(new String[0]);
 		scheduler.enqueue(ResourcesPlugin.getWorkspace().getRoot());
 	}
 
 	public static void refresh(IProject project) {
-		String[] projectNames = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TaskScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED)); //$NON-NLS-1$
+		String[] projectNames = TaskScanningJob.getScannedProjects();
 		List freshProjectList = new ArrayList();
 		for (int i = 0; i < projectNames.length; i++) {
 			if (!projectNames[i].equals(project.getName())) {
 				freshProjectList.add(projectNames[i]);
 			}
 		}
-		String freshProjects = StringUtils.pack((String[]) freshProjectList.toArray(new String[freshProjectList.size()]));
-		SSECorePlugin.getDefault().getPluginPreferences().setValue(TaskScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED, freshProjects); //$NON-NLS-1$
+		TaskScanningJob.setScannedProjects((String[]) freshProjectList.toArray(new String[freshProjectList.size()]));
 
 		scheduler.enqueue(project);
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ElementChangedEvent;
@@ -624,6 +625,8 @@ public final class TaglibIndex {
 	/** symbolic name for OSGI framework */
 	private final static String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
 
+	private final static QualifiedName STATE_NAME = new QualifiedName("org.eclipse.jst.jsp.core", TaglibIndex.class.getName());
+	
 	private TaglibIndex() {
 		super();
 	}
@@ -644,7 +647,11 @@ public final class TaglibIndex {
 				 * Only consider a crash if a value exists and is DIRTY (not a
 				 * new workspace)
 				 */
-				if (DIRTY.equalsIgnoreCase(getState())) {
+				String savedState = getState();
+				if (savedState == null) {
+					removeIndexes(false);
+				}
+				else if (DIRTY.equalsIgnoreCase(savedState)) {
 					Logger.log(Logger.ERROR, "A workspace crash was detected. The previous session did not exit normally. Not using saved taglib indexes."); //$NON-NLS-3$
 					removeIndexes(false);
 				}
@@ -773,8 +780,14 @@ public final class TaglibIndex {
 	}
 
 	private String getState() {
-		String state = JSPCorePlugin.getDefault().getPluginPreferences().getString(TaglibIndex.class.getName());
-		return state;
+		try {
+			String state = ResourcesPlugin.getWorkspace().getRoot().getPersistentProperty(STATE_NAME);
+			return state;
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return DIRTY;
 	}
 
 	private IPath getTaglibIndexStateLocation() {
@@ -952,8 +965,12 @@ public final class TaglibIndex {
 
 	private void setState(String state) {
 		if (!state.equals(getState())) {
-			JSPCorePlugin.getDefault().getPluginPreferences().setValue(TaglibIndex.class.getName(), state);
-			JSPCorePlugin.getDefault().savePluginPreferences();
+			try {
+				ResourcesPlugin.getWorkspace().getRoot().setPersistentProperty(STATE_NAME, state);
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
 		}
 	}
 

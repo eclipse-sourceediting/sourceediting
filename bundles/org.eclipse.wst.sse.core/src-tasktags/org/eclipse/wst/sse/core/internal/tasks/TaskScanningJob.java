@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@
 package org.eclipse.wst.sse.core.internal.tasks;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -20,10 +22,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -44,6 +48,7 @@ class TaskScanningJob extends Job {
 	static final int JOB_DELAY_DELTA = 1000;
 	private static final int JOB_DELAY_PROJECT = 5000;
 	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
+	static final QualifiedName QTASK_TAG_PROJECTS_ALREADY_SCANNED = new QualifiedName(SSECorePlugin.ID, TASK_TAG_PROJECTS_ALREADY_SCANNED);
 	private List fQueue = null;
 
 	/** symbolic name for OSGI framework */
@@ -55,14 +60,18 @@ class TaskScanningJob extends Job {
 		setPriority(Job.DECORATE);
 		setSystem(true);
 		setUser(false);
-
-		SSECorePlugin.getDefault().getPluginPreferences().setDefault(TASK_TAG_PROJECTS_ALREADY_SCANNED, ""); //$NON-NLS-1$
 	}
 
 	synchronized void addProjectDelta(IResourceDelta delta) {
 		IResource projectResource = delta.getResource();
 
 		if (projectResource.getType() == IResource.PROJECT) {
+			if (!projectResource.isAccessible()) {
+				String[] projectsPreviouslyScanned = getScannedProjects();
+				HashSet updatedProjects = new HashSet(Arrays.asList(projectsPreviouslyScanned));
+				updatedProjects.remove(projectResource.getName());
+				setScannedProjects((String[]) updatedProjects.toArray(new String[updatedProjects.size()]));
+			}
 			if (isEnabledOnProject((IProject) projectResource)) {
 				fQueue.add(delta);
 				if (Logger.DEBUG_TASKSJOB) {
@@ -126,7 +135,7 @@ class TaskScanningJob extends Job {
 	}
 
 	private boolean projectHasNotBeenFullyScanned(IResource project) {
-		String[] projectsScanned = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TASK_TAG_PROJECTS_ALREADY_SCANNED));
+		String[] projectsScanned = getScannedProjects();
 
 		boolean shouldScan = true;
 		String name = project.getName();
@@ -150,7 +159,7 @@ class TaskScanningJob extends Job {
 		if (frameworkIsShuttingDown())
 			return Status.CANCEL_STATUS;
 
-		cleanupRememberedProjectList(TASK_TAG_PROJECTS_ALREADY_SCANNED);
+		cleanupRememberedProjectList();
 
 		IStatus status = null;
 		List currentQueue = retrieveQueue();
@@ -185,12 +194,17 @@ class TaskScanningJob extends Job {
 				}
 				else if (o instanceof IProject) {
 					WorkspaceTaskScanner.getInstance().scan((IProject) o, scanMonitor);
-					if(!scanMonitor.isCanceled() ) {
-						String[] projectsPreviouslyScanned = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TASK_TAG_PROJECTS_ALREADY_SCANNED));
-						String[] updatedProjects = new String[projectsPreviouslyScanned.length + 1];
-						updatedProjects[projectsPreviouslyScanned.length] = ((IResource) o).getName();
-						System.arraycopy(projectsPreviouslyScanned, 0, updatedProjects, 0, projectsPreviouslyScanned.length);
-						SSECorePlugin.getDefault().getPluginPreferences().setValue(TASK_TAG_PROJECTS_ALREADY_SCANNED, StringUtils.pack(updatedProjects));
+					if (!scanMonitor.isCanceled()) {
+						String[] projectsPreviouslyScanned = getScannedProjects();
+						HashSet updatedProjects = new HashSet(Arrays.asList(projectsPreviouslyScanned));
+						updatedProjects.add(((IProject) o).getName());
+						setScannedProjects((String[]) updatedProjects.toArray(new String[updatedProjects.size()]));
+					}
+					if (!((IProject) o).isAccessible()) {
+						String[] projectsPreviouslyScanned = getScannedProjects();
+						HashSet updatedProjects = new HashSet(Arrays.asList(projectsPreviouslyScanned));
+						updatedProjects.remove(((IProject) o).getName());
+						setScannedProjects((String[]) updatedProjects.toArray(new String[updatedProjects.size()]));
 					}
 				}
 			}
@@ -220,8 +234,8 @@ class TaskScanningJob extends Job {
 		return status;
 	}
 
-	private void cleanupRememberedProjectList(String preferenceName) {
-		String[] rememberedProjectNames = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(preferenceName));
+	private void cleanupRememberedProjectList() {
+		String[] rememberedProjectNames = getScannedProjects();
 		IResource[] workspaceProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		String[] projectNames = new String[workspaceProjects.length];
 		for (int i = 0; i < projectNames.length; i++) {
@@ -240,12 +254,36 @@ class TaskScanningJob extends Job {
 				projectNamesToRemember.add(rememberedProjectNames[i]);
 			}
 			else if (Logger.DEBUG_TASKSJOB) {
-				System.out.println("Removing " + rememberedProjectNames[i] + " removed from " + preferenceName); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.println("Removing " + rememberedProjectNames[i] + " removed from " + TASK_TAG_PROJECTS_ALREADY_SCANNED); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		if (projectNamesToRemember.size() != rememberedProjectNames.length) {
-			SSECorePlugin.getDefault().getPluginPreferences().setValue(preferenceName, StringUtils.pack((String[]) projectNamesToRemember.toArray(new String[projectNamesToRemember.size()])));
+			setScannedProjects((String[]) projectNamesToRemember.toArray(new String[projectNamesToRemember.size()]));
+		}
+	}
+	
+	static String[] getScannedProjects() {
+		String rawValue = null;
+		try {
+			rawValue = ResourcesPlugin.getWorkspace().getRoot().getPersistentProperty(QTASK_TAG_PROJECTS_ALREADY_SCANNED);
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		if (rawValue != null)
+			return StringUtils.unpack(rawValue);
+		return new String[0];
+	}
+
+	static void setScannedProjects(String[] projectNames) {
+		if (Logger.DEBUG_TASKSJOB)
+			System.out.println("Task scanned projects set to " + StringUtils.pack(projectNames)); //$NON-NLS-1$
+		try {
+			ResourcesPlugin.getWorkspace().getRoot().setPersistentProperty(QTASK_TAG_PROJECTS_ALREADY_SCANNED, StringUtils.pack(projectNames));
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
 		}
 	}
 }
