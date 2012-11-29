@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -461,7 +461,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 				// Look for a JSP beginning at current-searchStringLength; if so, backup and switch scanner states to handle it.
 				// Ensure that we've not encountered a complete block (<%%>) that was *shorter* than the closeTagString and
 				// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
-				if(checkJSPs && yy_currentPos > searchStringLength && yy_currentPos - searchStringLength != fLastInternalBlockStart && 
+				if(checkJSPs && yy_currentPos > searchStringLength && yy_currentPos - searchStringLength != fLastInternalBlockStart && yy_currentPos - searchStringLength > yy_startRead &&
 					yy_buffer[yy_currentPos - searchStringLength] == '<' && yy_buffer[yy_currentPos - searchStringLength + 1] == '%') {
 					fLastInternalBlockStart = yy_markedPos = yy_currentPos - searchStringLength;
 					yy_currentPos = yy_markedPos + 1;
