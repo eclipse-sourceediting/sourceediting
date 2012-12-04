@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -299,32 +299,34 @@ public class NewXMLWizard extends NewModelWizard {
 				}
 
 				final IFile newFile = newFilePage.createNewFile();
-				final String xmlFileName = newFile.getLocation().toOSString();
-				final String grammarFileName = fileName;
-
-				if (getContainer().getCurrentPage() == selectRootElementPage) {
-
-					int limit = selectRootElementPage.getOptionalElementDepthLimit();
-					generator.setOptionalElementDepthLimit(limit);
-					setNeedsProgressMonitor(true);
-					getContainer().run(true, false, new IRunnableWithProgress(){
-						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
-							progressMonitor.beginTask(XMLWizardsMessages._UI_WIZARD_GENERATING_XML_DOCUMENT, IProgressMonitor.UNKNOWN);
-							try {
-								generator.createXMLDocument(newFile, xmlFileName);
-							} catch (Exception exception) {
-								Logger.logException("Exception completing New XML wizard " + grammarFileName, exception); //$NON-NLS-1$
+				if (!newFile.isLinked()) {
+					final String xmlFileName = newFile.getLocation().toOSString();
+					final String grammarFileName = fileName;
+	
+					if (getContainer().getCurrentPage() == selectRootElementPage) {
+	
+						int limit = selectRootElementPage.getOptionalElementDepthLimit();
+						generator.setOptionalElementDepthLimit(limit);
+						setNeedsProgressMonitor(true);
+						getContainer().run(true, false, new IRunnableWithProgress(){
+							public void run(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
+								progressMonitor.beginTask(XMLWizardsMessages._UI_WIZARD_GENERATING_XML_DOCUMENT, IProgressMonitor.UNKNOWN);
+								try {
+									generator.createXMLDocument(newFile, xmlFileName);
+								} catch (Exception exception) {
+									Logger.logException("Exception completing New XML wizard " + grammarFileName, exception); //$NON-NLS-1$
+								}
+								progressMonitor.done();
 							}
-							progressMonitor.done();
-						}
-					});
+						});
+					}
+					else {
+						// put template contents into file
+						String templateString = fNewXMLTemplatesWizardPage.getTemplateString();
+						generator.createTemplateXMLDocument(newFile, templateString);
+					}
+					newFile.refreshLocal(IResource.DEPTH_ONE, null);
 				}
-				else {
-					// put template contents into file
-					String templateString = fNewXMLTemplatesWizardPage.getTemplateString();
-					generator.createTemplateXMLDocument(newFile, templateString);
-				}
-				newFile.refreshLocal(IResource.DEPTH_ONE, null);
 				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				BasicNewResourceWizard.selectAndReveal(newFile, workbenchWindow);
 				openEditor(newFile);

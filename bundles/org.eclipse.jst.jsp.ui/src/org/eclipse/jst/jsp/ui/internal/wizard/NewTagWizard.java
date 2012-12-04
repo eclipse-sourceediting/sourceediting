@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,36 +104,37 @@ public class NewTagWizard extends Wizard implements INewWizard {
 		// if there was problem with creating file, it will be null, so make
 		// sure to check
 		if (file != null) {
-			// put template contents into file
-			String templateString = fNewFileTemplatesPage.getTemplateString();
-			if (templateString != null) {
-				templateString = applyLineDelimiter(file, templateString);
-				// determine the encoding for the new file
-				Preferences preference = JSPCorePlugin.getDefault().getPluginPreferences();
-				String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
-
-				try {
-					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-					OutputStreamWriter outputStreamWriter = null;
-					if (charSet == null || charSet.trim().equals("")) { //$NON-NLS-1$
-						// just use default encoding
-						outputStreamWriter = new OutputStreamWriter(outputStream);
+			if (!file.isLinked()) {
+				// put template contents into file
+				String templateString = fNewFileTemplatesPage.getTemplateString();
+				if (templateString != null) {
+					templateString = applyLineDelimiter(file, templateString);
+					// determine the encoding for the new file
+					Preferences preference = JSPCorePlugin.getDefault().getPluginPreferences();
+					String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
+	
+					try {
+						ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+						OutputStreamWriter outputStreamWriter = null;
+						if (charSet == null || charSet.trim().equals("")) { //$NON-NLS-1$
+							// just use default encoding
+							outputStreamWriter = new OutputStreamWriter(outputStream);
+						}
+						else {
+							outputStreamWriter = new OutputStreamWriter(outputStream, charSet);
+						}
+						outputStreamWriter.write(templateString);
+						outputStreamWriter.flush();
+						outputStreamWriter.close();
+						ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+						file.setContents(inputStream, true, false, null);
+						inputStream.close();
 					}
-					else {
-						outputStreamWriter = new OutputStreamWriter(outputStream, charSet);
+					catch (Exception e) {
+						Logger.log(Logger.WARNING_DEBUG, "Could not create contents for new Tag file", e); //$NON-NLS-1$
 					}
-					outputStreamWriter.write(templateString);
-					outputStreamWriter.flush();
-					outputStreamWriter.close();
-					ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-					file.setContents(inputStream, true, false, null);
-					inputStream.close();
-				}
-				catch (Exception e) {
-					Logger.log(Logger.WARNING_DEBUG, "Could not create contents for new Tag file", e); //$NON-NLS-1$
 				}
 			}
-
 			// open the file in editor
 			openEditor(file);
 
