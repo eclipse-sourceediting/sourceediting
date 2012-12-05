@@ -359,7 +359,16 @@ public class XMLValidator
         
         InputSource inputSource = new InputSource(uri);
         inputSource.setCharacterStream(reader2);
-        reader.parse(inputSource);   
+        
+        ClassLoader originalClzLoader = Thread.currentThread().getContextClassLoader();
+    	Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+    	
+    	try{
+    		reader.parse(inputSource);
+    	}finally{
+    		Thread.currentThread().setContextClassLoader(originalClzLoader);
+    	}
+           
         if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) > 0 && 
         		valinfo.isValid() && !isGrammarEncountered)
         {

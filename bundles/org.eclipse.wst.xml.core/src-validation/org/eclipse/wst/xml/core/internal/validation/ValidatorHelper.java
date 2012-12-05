@@ -68,7 +68,15 @@ public class ValidatorHelper
   protected XMLReader createXMLReader(String uri) throws SAXNotRecognizedException, SAXNotSupportedException {     
     XMLReader reader = null;
     
-    reader = new org.apache.xerces.parsers.SAXParser();     
+    ClassLoader originalClzLoader = Thread.currentThread().getContextClassLoader();
+	Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+	
+	try{
+		reader = new org.apache.xerces.parsers.SAXParser();
+	}finally{
+		Thread.currentThread().setContextClassLoader(originalClzLoader);
+	}
+         
     reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false); //$NON-NLS-1$
     reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true); //$NON-NLS-1$
     reader.setFeature("http://xml.org/sax/features/namespaces", false); //$NON-NLS-1$
