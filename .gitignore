@@ -30,3 +30,6 @@ temp.folder
 src.zip
 .fbwarnings
 javaCompiler...args
+bundles/org.eclipse.wst.xml.xpath2.processor/lib/javacup10.jar
+bundles/org.eclipse.wst.xml.xpath2.processor/JavaCUP-dump.txt
+bundles/org.eclipse.wst.xml.xpath2.processor/lib/JFlex.jar
