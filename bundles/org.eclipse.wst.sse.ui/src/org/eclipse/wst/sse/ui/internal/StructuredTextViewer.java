@@ -51,7 +51,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.cleanup.StructuredContentCleanupHandler;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
@@ -497,7 +499,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			case SHIFT_RIGHT :
 				beginRecording(TEXT_SHIFT_RIGHT, TEXT_SHIFT_RIGHT, cursorPosition, selectionLength);
 				updateIndentationPrefixes();
-				super.doOperation(SHIFT_RIGHT);
+				doModelOperation(SHIFT_RIGHT);
 				selection = getTextWidget().getSelection();
 				cursorPosition = selection.x;
 				selectionLength = selection.y - selection.x;
@@ -506,7 +508,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			case SHIFT_LEFT :
 				beginRecording(TEXT_SHIFT_LEFT, TEXT_SHIFT_LEFT, cursorPosition, selectionLength);
 				updateIndentationPrefixes();
-				super.doOperation(SHIFT_LEFT);
+				doModelOperation(SHIFT_LEFT);
 				selection = getTextWidget().getSelection();
 				cursorPosition = selection.x;
 				selectionLength = selection.y - selection.x;
@@ -632,6 +634,21 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				break;
 			default :
 				super.doOperation(operation);
+		}
+	}
+
+	/**
+	 * Perform the operation under a model change event
+	 * @param operation the operation to perform
+	 */
+	private void doModelOperation(int operation) {
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument) getDocument());
+		model.aboutToChangeModel();
+		try {
+			super.doOperation(operation);
+		}
+		finally {
+			model.changedModel();
 		}
 	}
 
