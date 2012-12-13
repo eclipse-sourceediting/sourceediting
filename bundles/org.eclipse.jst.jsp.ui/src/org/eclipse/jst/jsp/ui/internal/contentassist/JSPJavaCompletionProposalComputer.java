@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
@@ -34,6 +34,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
+import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
@@ -64,6 +65,9 @@ import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
  */
 public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionProposalComputer {
 
+	/* Share the jdt preference for content assist timeouts */
+	private static final long JAVA_CODE_ASSIST_TIMEOUT= Long.getLong("org.eclipse.jdt.ui.codeAssistTimeout", 5000).longValue(); // ms //$NON-NLS-1$
+
 	/** The translation adapter used to create the Java proposals */
 	private JSPTranslationAdapter fTranslationAdapter = null;
 	
@@ -71,9 +75,15 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 	private String fModelId = null;
 
 	/**
+	 * timeout monitor for long-running JDT proposals
+	 */
+	private IProgressMonitor fJavaTimeoutMonitor;
+
+	/**
 	 * Create the computer
 	 */
 	public JSPJavaCompletionProposalComputer() {
+		fJavaTimeoutMonitor = createTimeoutProgressMonitor(JAVA_CODE_ASSIST_TIMEOUT);
 	}
 	
 	/**
@@ -223,7 +233,13 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 					
 					collector = getProposalCollector(cu, translation);
 					synchronized (cu) {
-						cu.codeComplete(javaPosition, collector, (WorkingCopyOwner) null);
+						try {
+							cu.codeComplete(javaPosition, collector, null, fJavaTimeoutMonitor);
+						}
+						catch (OperationCanceledException e) {
+							Logger.log(Logger.WARNING, "Computing Java proposals did not complete normally. The operation took too long to return."); //$NON-NLS-1$
+							return new ArrayList(0);
+						}
 					}
 				}
 				catch (CoreException coreEx) {
@@ -536,6 +552,37 @@ public class JSPJavaCompletionProposalComputer extends DefaultXMLCompletionPropo
 		return true;
 	}
 	
+	private IProgressMonitor createTimeoutProgressMonitor(final long timeout) {
+		return new IProgressMonitor() {
+			private long fEndTime;
+
+			public void beginTask(String name, int totalWork) {
+				fEndTime = System.currentTimeMillis() + timeout;
+			}
+
+			public void done() {
+			}
+
+			public void internalWorked(double work) {
+			}
+
+			public boolean isCanceled() {
+				return System.currentTimeMillis() >= fEndTime;
+			}
+
+			public void setCanceled(boolean value) {
+			}
+
+			public void setTaskName(String name) {
+			}
+
+			public void subTask(String name) {
+			}
+
+			public void worked(int work) {
+			}
+		};
+	}
 	/**
 	 * ** TEMP WORKAROUND FOR CMVC 241882 Takes a String and blocks out
 	 * jsp:scriptlet, jsp:expression, and jsp:declaration @param blockText
