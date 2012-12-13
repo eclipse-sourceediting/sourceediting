@@ -25,7 +25,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * 
+ *
  */
 public class XMLQuickScan
 {
@@ -36,7 +36,7 @@ public class XMLQuickScan
 		parseFile(fullFilePath, handler);
 		return handler.getTargetNamespace();
 	}*/
-	
+
 	/*
 	 * Returns information about matches encountered based on the criteria
 	 * provided.
@@ -47,7 +47,7 @@ public class XMLQuickScan
 		parseFile(fullFilePath, handler);
 		return handler.hasMatch();
 	}*/
-	
+
 	public static boolean populateSearchDocument(SearchDocument document, PatternMatcher matcher, SearchPattern pattern)
 	{
 		XMLQuickScanContentHandler handler = new XMLQuickScanContentHandler(document, matcher, pattern);
@@ -60,58 +60,68 @@ public class XMLQuickScan
     {
        if (reader == null)
        {
+
+ 	     ClassLoader originalClzLoader = Thread.currentThread().getContextClassLoader();
+ 	     Thread.currentThread().setContextClassLoader(XMLQuickScan.class.getClassLoader());
          try
          {
           SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-          reader = parser.getXMLReader();  
+          reader = parser.getXMLReader();
           reader.setFeature("http://xml.org/sax/features/namespaces", true); //$NON-NLS-1$
-          reader.setErrorHandler(new InternalErrorHandler());          
+          reader.setErrorHandler(new InternalErrorHandler());
          }
          catch (Exception e)
-         {           
+         {
          }
-       } 
+         finally {
+	      Thread.currentThread().setContextClassLoader(originalClzLoader);
+         }
+       }
        return reader;
     }
-    
+
     static class InternalErrorHandler implements ErrorHandler
     {
       public void error(SAXParseException exception) throws SAXException
-      {          
+      {
       }
-      
+
       public void fatalError(SAXParseException exception) throws SAXException
       {
       }
       public void warning(SAXParseException exception) throws SAXException
-      {        
+      {
       }
     }
-    
+
 	private synchronized static void parseFile(String fullFilePath,
 			XMLQuickScanContentHandler handler)
 	{
 		FileInputStream inputStream = null;
+        ClassLoader originalClzLoader = Thread.currentThread().getContextClassLoader();
+	    Thread.currentThread().setContextClassLoader(XMLQuickScan.class.getClassLoader());
+
 		try
-		{            
+		{
 			inputStream = new FileInputStream(new File(fullFilePath));
 			XMLReader reader = getOrCreateReader();
             reader.setContentHandler(handler);
-			//System.out.println("parseFile" + reader + " (" +  fullFilePath + ")");			
+			//System.out.println("parseFile" + reader + " (" +  fullFilePath + ")");
 			reader.parse(new InputSource(inputStream));
 		} catch (Exception e)
 		{
 			// skip the file
-		} 
+		}
 		finally{
+			Thread.currentThread().setContextClassLoader(originalClzLoader);
 			if(inputStream != null){
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					// can not do much 
+					// can not do much
 				}
 			}
-			
+
 		}
 	}
 }
