@@ -36,14 +36,14 @@ import com.ibm.icu.util.StringTokenizer;
 
 /**
  * A helper class for the XML validator.
- * 
+ *
  * @author Craig Salter, IBM
  * @author Lawrence Mandel, IBM
  */
 public class ValidatorHelper
-{                           
+{
   public List namespaceURIList = new Vector();
-  public boolean isGrammarEncountered = false;    
+  public boolean isGrammarEncountered = false;
   public boolean isDTDEncountered = false;
   public boolean isNamespaceEncountered = false;
   public String schemaLocationString = ""; //$NON-NLS-1$
@@ -57,38 +57,38 @@ public class ValidatorHelper
   public ValidatorHelper()
   {
   }
- 
+
   /**
    * Create an XML Reader.
-   * 
+   *
    * @return An XML Reader if one can be created or null.
-   * @throws SAXNotSupportedException 
-   * @throws SAXNotRecognizedException 
+   * @throws SAXNotSupportedException
+   * @throws SAXNotRecognizedException
    */
-  protected XMLReader createXMLReader(String uri) throws SAXNotRecognizedException, SAXNotSupportedException {     
+  protected XMLReader createXMLReader(String uri) throws SAXNotRecognizedException, SAXNotSupportedException {
     XMLReader reader = null;
-    
+
     ClassLoader originalClzLoader = Thread.currentThread().getContextClassLoader();
 	Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-	
+
 	try{
 		reader = new org.apache.xerces.parsers.SAXParser();
 	}finally{
 		Thread.currentThread().setContextClassLoader(originalClzLoader);
 	}
-         
+
     reader.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false); //$NON-NLS-1$
     reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true); //$NON-NLS-1$
     reader.setFeature("http://xml.org/sax/features/namespaces", false); //$NON-NLS-1$
     reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
     reader.setContentHandler(new MyContentHandler(uri));
-    reader.setErrorHandler(new InternalErrorHandler()); 
+    reader.setErrorHandler(new InternalErrorHandler());
 
     LexicalHandler lexicalHandler = new LexicalHandler()
-    {      
+    {
       public void startDTD (String name, String publicId, String systemId)
       {
-        isGrammarEncountered = true;   
+        isGrammarEncountered = true;
         isDTDEncountered = true;
       }
 
@@ -111,15 +111,15 @@ public class ValidatorHelper
       public void endCDATA() throws SAXException
       {
       }
- 
+
       public void comment (char ch[], int start, int length) throws SAXException
       {
       }
     };
     reader.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler); //$NON-NLS-1$
-    
+
     return reader;
-  }  
+  }
 
   /**
    * An error handler to suppress error and warning information.
@@ -130,7 +130,7 @@ public class ValidatorHelper
 	{
 	  super();
 	}
-	
+
     public void error(SAXParseException exception) throws SAXException
     {
     }
@@ -144,20 +144,30 @@ public class ValidatorHelper
     }
   }
 
- 
+
   /**
    * Figures out the information needed for validation.
-   * 
+   *
    * @param uri The uri of the file to validate.
    * @param uriResolver A helper to resolve locations.
    */
   public void computeValidationInformation(String uri, Reader characterStream, URIResolver uriResolver)
   {
 	  try {
-	      XMLReader reader = createXMLReader(uri);  
+	      XMLReader reader = createXMLReader(uri);
 	      InputSource inputSource = new InputSource(uri);
 	      inputSource.setCharacterStream(characterStream);
-	      reader.parse(inputSource);
+
+	      ClassLoader originalClzLoader = Thread.currentThread().getContextClassLoader();
+	      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+	      try {
+	    	  reader.parse(inputSource);
+	      }
+	      finally {
+	    	  Thread.currentThread().setContextClassLoader(originalClzLoader);
+	      }
+
+
 	  }
 	  catch (SAXException e) {
 		  if (_trace)
@@ -168,25 +178,25 @@ public class ValidatorHelper
 			  Logger.logException(e);
 	  }
   }
-  
- 
+
+
 
   /**
    * Handle the content while parsing the file.
    */
   class MyContentHandler extends org.xml.sax.helpers.DefaultHandler
-  {      
+  {
     /* (non-Javadoc)
      * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
      */
     boolean isRootElement = true;
     String baseURI;
-    
+
     MyContentHandler(String uri)
     {
-      this.baseURI = uri;  
+      this.baseURI = uri;
     }
-    
+
     public void error(SAXParseException e) throws SAXException
     {
     }
@@ -211,8 +221,8 @@ public class ValidatorHelper
         prefix = name.substring(0, index);
       }
       return prefix;
-    }    
-        
+    }
+
     public String getUnprefixedName(String name)
     {
       int index = name.indexOf(":"); //$NON-NLS-1$
@@ -222,68 +232,68 @@ public class ValidatorHelper
       }
       return name;
     }
-    
+
     public String getPrefixedName(String prefix, String localName)
     {
       return prefix != null && prefix.length() > 0 ? prefix + ":" + localName : localName;      //$NON-NLS-1$
     }
 
     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
-    {      
+    {
       //String explicitLocation = null;
       if (isRootElement)
-      {  
+      {
         isDocumentElementEncountered = true;
-        isRootElement = false;  
-        int nAtts = atts.getLength();    
+        isRootElement = false;
+        int nAtts = atts.getLength();
         String schemaInstancePrefix = null;
         for (int i =0; i < nAtts; i++)
-        {              
-          String attributeName = atts.getQName(i);       
+        {
+          String attributeName = atts.getQName(i);
           if (attributeName.equals("xmlns") || attributeName.startsWith("xmlns:")) //$NON-NLS-1$ //$NON-NLS-2$
-          {                                         
-            isNamespaceEncountered = true;    
-            String value = atts.getValue(i);                 
+          {
+            isNamespaceEncountered = true;
+            String value = atts.getValue(i);
             if (value.startsWith("http://www.w3.org/") && value.endsWith("/XMLSchema-instance")) //$NON-NLS-1$ //$NON-NLS-2$
             {
               schemaInstancePrefix = attributeName.equals("xmlns") ? "" : getUnprefixedName(attributeName); //$NON-NLS-1$ //$NON-NLS-2$
-            }                   
-          }                 
+            }
+          }
         }
-        
+
         String prefix = getPrefix(rawName);
         String rootElementNamespaceDeclarationName = (prefix != null && prefix.length() > 0) ? "xmlns:" + prefix : "xmlns"; //$NON-NLS-1$ //$NON-NLS-2$
-        String rootElementNamespace = rootElementNamespaceDeclarationName != null ? atts.getValue(rootElementNamespaceDeclarationName) : null;        
-        
+        String rootElementNamespace = rootElementNamespaceDeclarationName != null ? atts.getValue(rootElementNamespaceDeclarationName) : null;
+
         String location = null;
-        
+
         // first we use any 'xsi:schemaLocation' or 'xsi:noNamespaceSchemaLocation' attribute
         // to determine a location
         if (schemaInstancePrefix != null)
-        {                     
+        {
           location = atts.getValue(getPrefixedName(schemaInstancePrefix, "noNamespaceSchemaLocation")); //$NON-NLS-1$
           if (location == null)
-          {            
+          {
         	String schemaLoc = atts.getValue(getPrefixedName(schemaInstancePrefix, "schemaLocation"));  //$NON-NLS-1$
             location = getSchemaLocationForNamespace(schemaLoc, rootElementNamespace);
-          }  
-        }  
+          }
+        }
         if (rootElementNamespace == null)
         {
           rootElementNamespace = "";
         }
-        
-        location = URIResolverPlugin.createResolver().resolve(baseURI, rootElementNamespace, location);    
+
+        location = URIResolverPlugin.createResolver().resolve(baseURI, rootElementNamespace, location);
         location = URIResolverPlugin.createResolver().resolvePhysicalLocation(baseURI, rootElementNamespace, location);
         if (location != null)
         {
           location = URIHelper.addImpliedFileProtocol(location);
         }
-        
+
         schemaLocationString = location;
-        
+
         if (location != null)
-        {  
+        {
           InputStream is = null;
           try
           {
@@ -309,27 +319,27 @@ public class ValidatorHelper
         	  }
         	}
           }
-        }        
+        }
       }
-    }     
+    }
     /* (non-Javadoc)
      * @see org.xml.sax.ext.DeclHandler#elementDecl(java.lang.String, java.lang.String)
      */
-    public void elementDecl(String name, String model) 
+    public void elementDecl(String name, String model)
     {
       numDTDElements++;
     }
-    
-    // The xsiSchemaLocationValue is a list of namespace/location pairs that are separated by whitespace 
+
+    // The xsiSchemaLocationValue is a list of namespace/location pairs that are separated by whitespace
     // this method walks the list of pairs looking for the specified namespace and returns the associated
     // location.
-    //   
+    //
     protected String getSchemaLocationForNamespace(String xsiSchemaLocationValue, String namespace)
-    {      
+    {
       String result = null;
       if (xsiSchemaLocationValue != null && namespace != null)
       {
-        
+
         StringTokenizer st = new StringTokenizer(xsiSchemaLocationValue);
         while(st.hasMoreTokens())
         {
@@ -350,20 +360,20 @@ public class ValidatorHelper
         }
       }
       return result;
-    }         
-  }   
-       
-  
+    }
+  }
+
+
   /**
    * Replace all instances in the string of the old pattern with the new pattern.
-   * 
+   *
    * @param string The string to replace the patterns in.
    * @param oldPattern The old pattern to replace.
    * @param newPattern The pattern used for replacement.
    * @return The modified string with all occurrances of oldPattern replaced by new Pattern.
    */
   protected static String replace(String string, String oldPattern, String newPattern)
-  {     
+  {
     int index = 0;
     while (index != -1)
     {
