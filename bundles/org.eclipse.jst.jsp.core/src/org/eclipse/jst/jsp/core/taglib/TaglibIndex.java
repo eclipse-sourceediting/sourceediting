@@ -70,36 +70,33 @@ public final class TaglibIndex {
 		public void elementChanged(ElementChangedEvent event) {
 			if (!isIndexAvailable())
 				return;
-			try {
-				LOCK.acquire();
-				if (_debugEvents) {
-					Logger.log(Logger.INFO, "TaglibIndex responding to:" + event); //$NON-NLS-1$
-				}
-				projectsIndexed.clear();
-				elementChanged(event.getDelta(), true);
-				fireCurrentDelta(event);
+			if (_debugEvents) {
+				Logger.log(Logger.INFO, "TaglibIndex responding to:" + event); //$NON-NLS-1$
 			}
-			finally {
-				LOCK.release();
-			}
+			DeltaRunner runner = new DeltaRunner(event);
+			elementChanged(runner, event.getDelta(), true);
 		}
 
-		private void elementChanged(IJavaElementDelta delta, boolean forceUpdate) {
+		private void elementChanged(DeltaRunner runner, final IJavaElementDelta delta, final boolean forceUpdate) {
 			if (frameworkIsShuttingDown())
 				return;
 
-			IJavaElement element = delta.getElement();
+			final IJavaElement element = delta.getElement();
 			if (element.getElementType() == IJavaElement.JAVA_MODEL) {
 				IJavaElementDelta[] changed = delta.getAffectedChildren();
 				for (int i = 0; i < changed.length; i++) {
-					elementChanged(changed[i], forceUpdate);
+					elementChanged(runner, changed[i], forceUpdate);
 				}
 			}
 			// Handle any changes at the project level
 			else if (element.getElementType() == IJavaElement.JAVA_PROJECT) {
 				if ((delta.getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0) {
-					IJavaElement proj = element;
-					handleClasspathChange((IJavaProject) proj, delta, forceUpdate);
+					runner.run(new Runnable() {
+						public void run() {
+							IJavaElement proj = element;
+							handleClasspathChange((IJavaProject) proj, delta, forceUpdate);
+						}
+					});
 				}
 				else {
 					IJavaElementDelta[] deltas = delta.getAffectedChildren();
@@ -109,17 +106,21 @@ public final class TaglibIndex {
 							 * If the project is being deleted or closed, just
 							 * remove the description
 							 */
-							IJavaProject proj = (IJavaProject) element;
-							ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(proj.getProject());
-							if (description != null) {
-								if (_debugIndexCreation) {
-									Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+							runner.run(new Runnable() {
+								public void run() {
+									IJavaProject proj = (IJavaProject) element;
+									ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(proj.getProject());
+									if (description != null) {
+										if (_debugIndexCreation) {
+											Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
+										}
+										// removing the index file ensures that we
+										// don't get stale data if the project is
+										// reopened
+										removeIndexFile(proj.getProject());
+									}
 								}
-								// removing the index file ensures that we
-								// don't get stale data if the project is
-								// reopened
-								removeIndexFile(proj.getProject());
-							}
+							});
 						}
 					}
 					/*
@@ -128,7 +129,7 @@ public final class TaglibIndex {
 					 */
 					else {
 						for (int i = 0; i < deltas.length; i++) {
-							elementChanged(deltas[i], false);
+							elementChanged(runner, deltas[i], false);
 						}
 					}
 				}
@@ -139,24 +140,28 @@ public final class TaglibIndex {
 			 * itself
 			 */
 			else if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) != 0 || (delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) != 0) {
-				IJavaProject affectedProject = element.getJavaProject();
-				if (affectedProject != null) {
-					/*
-					 * If the affected project has an index on-disk, it's
-					 * going to be invalid--we need to create/load the
-					 * description so it will be up to date [loading now and
-					 * updating is usually faster than regenerating the entire
-					 * index]. If there is no index on disk, do nothing more.
-					 */
-					File indexFile = new File(computeIndexLocation(affectedProject.getProject().getFullPath()));
-					if (indexFile.exists()) {
-						ProjectDescription affectedDescription = createDescription(affectedProject.getProject());
-						if (affectedDescription != null) {
-							affectedDescription.handleElementChanged(delta);
+				/*
+				 * If the affected project has an index on-disk, it's
+				 * going to be invalid--we need to create/load the
+				 * description so it will be up to date [loading now and
+				 * updating is usually faster than regenerating the entire
+				 * index]. If there is no index on disk, do nothing more.
+				 */
+				runner.run(new Runnable() {
+					public void run() {
+						IJavaProject affectedProject = element.getJavaProject();
+						if (affectedProject != null) {
+							File indexFile = new File(computeIndexLocation(affectedProject.getProject().getFullPath()));
+							if (indexFile.exists()) {
+								ProjectDescription affectedDescription = createDescription(affectedProject.getProject());
+								if (affectedDescription != null) {
+									affectedDescription.handleElementChanged(delta);
+								}
+							}
+							projectsIndexed.add(affectedProject.getProject());
 						}
 					}
-					projectsIndexed.add(affectedProject.getProject());
-				}
+				});
 			}
 		}
 
@@ -189,6 +194,26 @@ public final class TaglibIndex {
 				Logger.logException(e);
 			}
 		}
+
+		class DeltaRunner {
+			private ElementChangedEvent event;
+			public DeltaRunner(ElementChangedEvent event) {
+				this.event = event;
+			}
+
+			public void run(Runnable runnable) {
+				LOCK.acquire();
+				try {
+					projectsIndexed.clear();
+					runnable.run();
+					fireCurrentDelta(event);
+				}
+				finally {
+					LOCK.release();
+				}
+			}
+		}
+
 	}
 
 	class ResourceChangeListener implements IResourceChangeListener {
