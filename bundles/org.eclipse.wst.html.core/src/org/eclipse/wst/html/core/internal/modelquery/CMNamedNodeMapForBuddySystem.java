@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.Locale;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 
 /**
  */
@@ -57,11 +58,13 @@ abstract class CMNamedNodeMapForBuddySystem implements CMNamedNodeMap {
 	 * @see CMNamedNodeMap#item(int)
 	 */
 	public CMNode item(int index) {
-		Iterator iter = iterator();
-		while (iter.hasNext()) {
-			Object node = iter.next();
-			if (--index < 0)
-				return (CMNode) node;
+		synchronized (map) {
+			Iterator iter = iterator();
+			while (iter.hasNext()) {
+				Object node = iter.next();
+				if (--index < 0)
+					return (CMNode) node;
+			}
 		}
 		return null;
 	}
@@ -93,7 +96,20 @@ abstract class CMNamedNodeMapForBuddySystem implements CMNamedNodeMap {
 	 * to build up its contents.
 	 */
 	protected void makeBuddySystem(CMNamedNodeMap original) {
-		Iterator i = original.iterator();
+		if (original instanceof CMNamedNodeMapImpl) {
+			final Hashtable table = ((CMNamedNodeMapImpl) original).getHashtable();
+			if (table != null) {
+				synchronized (table) {
+					buddy(table.values().iterator());
+				}
+			}
+		}
+		else {
+			buddy(original.iterator());
+		}
+	}
+
+	private void buddy(Iterator i) {
 		if (i == null)
 			return;
 		while (i.hasNext()) {
