@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -419,7 +419,8 @@ public class JSPTranslation implements IJSPTranslation {
 				setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
 				// set name of jsp file
 				String unmangled = JSP2ServletNameUtil.unmangle(cuName);
-				setJspName(unmangled.substring(unmangled.lastIndexOf('/') + 1, unmangled.lastIndexOf('.')));
+				final int endIdx = unmangled.lastIndexOf('.');
+				setJspName(unmangled.substring(unmangled.lastIndexOf('/') + 1, endIdx > 0 ? endIdx : unmangled.length()));
 			}
 		}
 	}
