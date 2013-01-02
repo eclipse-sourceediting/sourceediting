@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ package org.eclipse.wst.html.core.internal.format;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -28,6 +29,8 @@ public class HTMLTextFormatter extends HTMLFormatter {
 	public static int FORMAT_ALL = 0;
 	public static int FORMAT_HEAD = 1;
 	public static int FORMAT_TAIL = 2;
+
+	private IStructuredDocumentRegion textRegion;
 
 	/**
 	 */
@@ -130,7 +133,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 
 		IDOMText text = (IDOMText) node;
 		String source = text.getSource();
-
+		textRegion = text.getFirstStructuredDocumentRegion();
 		if (!canFormatText(text)) {
 			setWidth(contraints, source);
 			return;
@@ -174,7 +177,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 
 		SpaceConverter converter = new SpaceConverter(source, keepBlankLines(contraints));
 
-		int wordLength = converter.nextWord();
+		int wordLength = getNextWord(converter, contraints, text);
 		if (wordLength == 0) { // only spaces
 			if (!converter.hasSpaces())
 				return; // empty
@@ -240,7 +243,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 			addWidth(contraints, wordLength);
 
 			// format middle
-			wordLength = converter.nextWord();
+			wordLength = getNextWord(converter, contraints, text);
 			while (wordLength > 0) {
 				if (mode != FORMAT_ALL) {
 					// keep spaces as is
@@ -257,7 +260,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 					addWidth(contraints, 1);
 				}
 				addWidth(contraints, wordLength);
-				wordLength = converter.nextWord();
+				wordLength = getNextWord(converter, contraints, text);
 			}
 
 			// format tailing spaces
@@ -295,5 +298,30 @@ public class HTMLTextFormatter extends HTMLFormatter {
 			source = converter.getSource();
 			replaceSource(text.getModel(), offset, length, source);
 		}
+	}
+
+	/**
+	 * Gets the next word in the text node, but it will skip over any words that are in a complex
+	 * regions (like EL within text nodes)
+	 * @return the next word
+	 */
+	private int getNextWord(SpaceConverter converter, HTMLFormatContraints contraints, IDOMText text) {
+		int wordLength = converter.nextWord();
+		while (isWordInComplexRegion(converter, text)) {
+			addWidth(contraints, wordLength + converter.getSpaceCount());
+			if (!converter.hasMoreWords()) {
+				return converter.nextWord();
+			}
+			wordLength = converter.nextWord();
+		}
+		return wordLength;
+	}
+
+	private boolean isWordInComplexRegion(SpaceConverter converter, IDOMText text) {
+		final int offset = text.getFirstStructuredDocumentRegion().getStartOffset();
+		while (textRegion != null && (converter.getWordOffset() + offset >= textRegion.getEnd()) && textRegion != text.getLastStructuredDocumentRegion()) {
+			textRegion = textRegion.getNext();
+		}
+		return textRegion != null && textRegion.getFirstRegion() instanceof ITextRegionContainer && ((ITextRegionContainer) textRegion.getFirstRegion()).getRegions() != null;
 	}
 }
