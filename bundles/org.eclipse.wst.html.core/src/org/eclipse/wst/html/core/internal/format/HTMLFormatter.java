@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,7 +175,7 @@ public class HTMLFormatter implements IStructuredFormatter {
                 // causes all closing tags to wrap to a new line
                 boolean allowsText = decl.getContentType() == CMElementDeclaration.MIXED
                         || decl.getContentType() == CMElementDeclaration.PCDATA;
-                if (allowsNewlineAfter(allowsText, node, element))
+                if (allowsNewlineAfter(allowsText, node, element, decl))
                     return true;
 				String tagName = element.getTagName();
 				// special for direct children under BODY
@@ -284,7 +284,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 			CMElementDeclaration decl = getElementDeclaration(element);
 			if (decl != null) {
-			    return allowNewlineBefore(node, element);
+			    return allowNewlineBefore(node, element, decl);
 			}
 		}
 
@@ -788,6 +788,10 @@ public class HTMLFormatter implements IStructuredFormatter {
     }
     
     public boolean allowsNewlineAfter(boolean theBool, Node theNode, Element theParentElement) {
+    	return allowsNewlineAfter(theBool, theNode, theParentElement, null);
+    }
+
+    public boolean allowsNewlineAfter(boolean theBool, Node theNode, Element theParentElement, CMElementDeclaration decl) {
         boolean result = theBool;
         if ((theNode.getNodeType() == Node.TEXT_NODE) && formattingUtil.isInline(theParentElement)) {
         	if (theParentElement.getChildNodes().getLength() == 1) { // Only child is a text node, no newline
@@ -811,6 +815,9 @@ public class HTMLFormatter implements IStructuredFormatter {
         		result = false;
         	}
         }
+        else if (decl != null && decl.getContentType() == CMElementDeclaration.PCDATA) {
+        	result = false;
+        }
         return result;
     }
 
@@ -822,7 +829,11 @@ public class HTMLFormatter implements IStructuredFormatter {
     }
     
     public boolean allowNewlineBefore(Node theNode, Element theParentElement) {
-        boolean result = true;
+        return allowNewlineBefore(theNode, theParentElement, (CMElementDeclaration) null);
+    }
+
+    public boolean allowNewlineBefore(Node theNode, Element theParentElement, CMElementDeclaration decl) {
+    	boolean result = true;
         /* The calling method canInsertBreakBefore is checking if you can 
          * insert a line break after the text node in the parentElement.  We 
          * need to check for the case with inline element because we don't want to 
@@ -834,6 +845,8 @@ public class HTMLFormatter implements IStructuredFormatter {
         } else if (allowNewlineBefore(theNode)) {
             result = false;
         } else if (theNode.getNodeType() == Node.TEXT_NODE && theParentElement.getChildNodes().getLength() <= 1) {
+        	result = false;
+        } else if (decl != null && decl.getContentType() == CMElementDeclaration.PCDATA) {
         	result = false;
         }
         return result;
