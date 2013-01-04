@@ -521,6 +521,9 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 	 */
 	private synchronized DirtyRegion[] getRequests() {
 		synchronized (fDirtyRegionQueue) {
+			if (0 == fDirtyRegionQueue.size()) {
+				return null;
+			}
 			DirtyRegion[] toRefresh = (DirtyRegion[]) fDirtyRegionQueue.toArray(new DirtyRegion[fDirtyRegionQueue.size()]);
 			flushDirtyRegionQueue();
 			return toRefresh;
@@ -678,15 +681,15 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 				boolean processed = false;
 				try {
 					DirtyRegion[] toRefresh = getRequests();
-					if (toRefresh.length > 0) {
+					if (toRefresh != null && toRefresh.length > 0) {
 						processed = true;
 						beginProcessing();
-					}
-	
-					for (int i = 0; i < toRefresh.length && fDocument != null; i++) {
-						if (fIsCanceled)
-							return;
-						process(toRefresh[i]);
+
+						for (int i = 0; i < toRefresh.length && fDocument != null; i++) {
+							if (fIsCanceled)
+								return;
+							process(toRefresh[i]);
+						}
 					}
 				}
 				finally {
