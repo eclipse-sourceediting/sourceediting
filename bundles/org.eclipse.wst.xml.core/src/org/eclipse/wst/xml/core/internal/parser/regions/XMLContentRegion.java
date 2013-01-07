@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,8 +125,8 @@ public class XMLContentRegion implements ITextRegion {
 			// less than or equal to end-start. This might
 			// cause us to miss a few cases we could have handled,
 			// but will prevent us from trying to handle funning cases
-			// involving whitespace.
-			if ((fStart >= getTextEnd()) || (Math.abs(lengthToReplace) >= getTextEnd() - getStart())) {
+			// involving whitespace.			
+			if ((fStart >= getTextEnd()) || (Math.abs(lengthToReplace) >= getTextEnd() - getStart()) || ((parent.getText().startsWith("&")) && (parent.getText().endsWith(";")))) {
 				canHandle = false;
 			} else {
 				canHandle = true;
