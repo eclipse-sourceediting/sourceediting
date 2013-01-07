@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2012 IBM Corporation and others.
+ * Copyright (c) 2008, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -793,11 +793,10 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			Map.Entry[] entries = (Map.Entry[]) fPositionMap.entrySet().toArray(new Map.Entry[fPositionMap.size()]);
 			for (int i = entries.length - 1; i >= 0; i--) {
 				Position position = (Position) entries[i].getKey();
-				if (position.includes(offset) || (offset == position.getOffset())) {
+				if (position.includes(offset) || (offset == position.getOffset() + position.getLength())) {
 					return offset - position.getOffset() + ((Position) entries[i].getValue()).getOffset();
 				}
 			}
-//			Logger.logException(new BadLocationException("Page offset requested but not found for: " + offset));
 			return -1;
 		}
 	}
@@ -812,11 +811,10 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 			Map.Entry[] entries = (Map.Entry[]) fPositionMap.entrySet().toArray(new Map.Entry[fPositionMap.size()]);
 			for (int i = entries.length - 1; i >= 0; i--) {
 				Position position = (Position) entries[i].getValue();
-				if (position.includes(offset) || (offset == position.getOffset())) {
+				if (position.includes(offset) || (offset == position.getOffset() + position.getLength())) {
 					return offset - position.getOffset() + ((Position) entries[i].getKey()).getOffset();
 				}
 			}
-//			Logger.logException(new BadLocationException("Page offset requested but not found for: " + offset));
 			return -1;
 		}
 	}
