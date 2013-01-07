@@ -1249,7 +1249,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 }
 // end DECLARATION handling
 
-<YYINITIAL> [^<&%]*|[&%]{S}+{Name}[^&%<]*|[&%]{Name}([^;&%<]*|{S}+;*) {
+<YYINITIAL> ([^;&%<]*|[&%]){Name}{S}+({Name}|{S})*{Name}([^;&%<]*|;)|[^<&%]*|[&%]{S}+{Name}[^&%<]*|[&%]{Name}([^;&%<]*|{S}+;*) {
 	if(Debug.debugTokenizer)
 		dump("\nXML content");//$NON-NLS-1$
 	return XML_CONTENT;
