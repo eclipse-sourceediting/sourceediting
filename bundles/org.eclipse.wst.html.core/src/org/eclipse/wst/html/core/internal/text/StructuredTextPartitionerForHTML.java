@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,6 +73,13 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 				return super.createPartition(offset, length, stype);
 			}
 		}
+		else if (type == IHTMLPartitions.STYLE) {
+			IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
+			if (node != null) {
+				String stype = getStylePartitionType(node);
+				return super.createPartition(offset, length, stype);
+			}
+		}
 		return super.createPartition(offset, length, type);
 	}
 
@@ -82,6 +89,12 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
 			if (node != null) {
 				localType = getScriptingPartitionType(node);
+			}
+		}
+		else if (type == IHTMLPartitions.STYLE) {
+			IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
+			if (node != null) {
+				localType = getStylePartitionType(node);
 			}
 		}
 		super.setInternalPartition(offset, length, localType);
@@ -136,12 +149,52 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		return result;
 	}
 
+	private String getStylePartitionType(IStructuredDocumentRegion coreNode) {
+		String type = null;
+		String result = IHTMLPartitions.STYLE;
+		IStructuredDocumentRegion node = coreNode;
+		ITextRegion attrNameRegion = null;
+		while (node != null && isValidScriptingRegionType(node.getType())) {
+			node = node.getPrevious();
+		}
+
+		ITextRegionList regions = node.getRegions();
+		if (regions.size() > 4 && regions.get(1).getType() == DOMRegionContext.XML_TAG_NAME) {
+			ITextRegion potentialTypeRegion = regions.get(1);
+			String potentialTypeString = node.getText(potentialTypeRegion);
+			if (potentialTypeString.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
+				for (int i = 0; i < regions.size(); i++) {
+					ITextRegion region = regions.get(i);
+					String regionType = region.getType();
+					if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
+						attrNameRegion = region;
+					else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+						String attrName = node.getText(attrNameRegion);
+						if (attrName.equalsIgnoreCase(HTML40Namespace.ATTR_NAME_TYPE)) {
+							type = StringUtils.strip(node.getText(region));
+							break;
+						}
+						attrNameRegion = null;
+					}
+				}
+			}
+		}
+		result = lookupStyleType(type);
+		return result;
+	}
+
 	private boolean isValidScriptingRegionType(String type) {
 		return type == DOMRegionContext.BLOCK_TEXT || type == DOMRegionContext.XML_CDATA_OPEN || type == DOMRegionContext.XML_CDATA_TEXT || type == DOMRegionContext.XML_CDATA_CLOSE;
 	}
 
 	protected void initLegalContentTypes() {
 		fSupportedTypes = getConfiguredContentTypes();
+	}
+
+	private String lookupStyleType(String type) {
+		if (type == null || type.length() == 0 || "text/css".equalsIgnoreCase(type)) //$NON-NLS-1$
+			return ICSSPartitions.STYLE;
+		return IHTMLPartitions.STYLE;
 	}
 
 	private String lookupScriptType(String type) {
@@ -202,7 +255,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 			//			return ST_SCRIPT;
 			return getScriptingPartitionType(fStructuredDocument.getRegionAtCharacterOffset(previousNode.getStartOffset(previousStartTagNameRegion)));
 		else if (name1.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE) && name2.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE))
-			return ICSSPartitions.STYLE;
+			return getStylePartitionType(fStructuredDocument.getRegionAtCharacterOffset(previousNode.getStartOffset(previousStartTagNameRegion)));
 		return super.getPartitionTypeBetween(previousNode, nextNode);
 	}
 
@@ -218,7 +271,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		else if (tagname.equalsIgnoreCase(HTML40Namespace.ElementName.SCRIPT))
 			result = IHTMLPartitions.SCRIPT;
 		else if (tagname.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE) || isStyleAttributeValue(region,offset))
-			result = ICSSPartitions.STYLE;
+			result = IHTMLPartitions.STYLE;
 		else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && isScriptAttributeValue(region, offset))
 			result = IHTMLPartitions.SCRIPT_EVENTHANDLER;
 		else
