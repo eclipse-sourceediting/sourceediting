@@ -569,7 +569,12 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		String result = "?" + cmnode + "?"; //$NON-NLS-1$ //$NON-NLS-2$
 		if (cmnode != null) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=155800
-			result = cmnode.getNodeName();
+			if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION){
+				result = DOMNamespaceHelper.computeName(cmnode, parent, null);
+			}
+			else{
+				result = cmnode.getNodeName();
+			}				
 			if(result == null) {
 				result = (String) cmnode.getProperty("description"); //$NON-NLS-1$
 			}
@@ -577,9 +582,6 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 				if (cmnode.getNodeType() == CMNode.GROUP) {
 					CMDescriptionBuilder descriptionBuilder = new CMDescriptionBuilder();
 					result = descriptionBuilder.buildDescription(cmnode);
-				}
-				else {
-					result = DOMNamespaceHelper.computeName(cmnode, parent, null);
 				}
 			}
 		}
