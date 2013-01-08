@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.wst.dtd.core.internal.DTDFile;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.Element;
 import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
+import org.w3c.dom.Node;
 
 
 public class DragContentModelCommand extends DefaultDragAndDropCommand {
@@ -43,6 +44,10 @@ public class DragContentModelCommand extends DefaultDragAndDropCommand {
 		while (iter.hasNext()) {
 			Object source = iter.next();
 			if (!(source instanceof CMNode)) {
+				return false;
+			}
+			// Can not drag parent to its children.
+			if(isAncestor((Node)source, (Node)target)) {
 				return false;
 			}
 		}
@@ -109,5 +114,19 @@ public class DragContentModelCommand extends DefaultDragAndDropCommand {
 		}
 
 		return super.getFeedback();
+	}
+
+	/**
+	 * Returns with true if node1 is an ancestor of node2.
+	 */
+	private boolean isAncestor(Node node1, Node node2) {
+		boolean result = false;
+		for (Node parent = node2; parent != null; parent = parent.getParentNode()) {
+			if (parent == node1) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 }
