@@ -147,7 +147,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		fToolbarSeparator = new Separator();
 		fToolbarAdditionsGroupMarker = new GroupMarker(StructuredTextEditorActionConstants.GROUP_NAME_TOOLBAR_ADDITIONS);
 
-		fToggleInsertModeAction = new RetargetTextEditorAction(resourceBundle, "Editor.ToggleInsertMode.", IAction.AS_CHECK_BOX); //$NON-NLS-1$
+		fToggleInsertModeAction = new RetargetTextEditorAction(resourceBundle, "Editor_ToggleInsertMode_", IAction.AS_CHECK_BOX); //$NON-NLS-1$
 		fToggleInsertModeAction.setActionDefinitionId(ITextEditorActionDefinitionIds.TOGGLE_INSERT_MODE);
 
 		if (_showDebugStatus) {
