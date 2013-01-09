@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMVisitor;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 
@@ -35,18 +36,26 @@ public class CMListWorkbenchAdapter extends CMVisitor implements IWorkbenchAdapt
 	private GroupStack fGroupStack;
 	private CMDescriber fRoot;
 
-	public CMListWorkbenchAdapter(CMElementDeclaration decl) {
-		text = getFormattedLabel(decl.getNodeName(), decl.getMinOccur(), decl.getMaxOccur(), decl.getDataType());
-		fDeclaration = decl;
-		image = AbstractUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.ID, XMLEditorPluginImages.IMG_OBJ_ELEMENT);
+	private static final Object[] EMPTY = new Object[0];
 
-		fGroupStack = new GroupStack();
-		fRoot = new CMDescriber(decl);
+	public CMListWorkbenchAdapter(CMElementDeclaration decl) {
+		if (decl != null) {
+			text = getFormattedLabel(decl.getNodeName(), decl.getMinOccur(), decl.getMaxOccur(), decl.getDataType());
+			fDeclaration = decl;
+			image = AbstractUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.ID, XMLEditorPluginImages.IMG_OBJ_ELEMENT);
+
+			fGroupStack = new GroupStack();
+			fRoot = new CMDescriber(decl);
+		}
+		else {
+			text = XMLUIMessages.ContentModel_ElementNotDescribed;
+			image = AbstractUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.ID, XMLEditorPluginImages.IMG_OBJ_WARNING_OBJ);
+		}
 	}
 
 	public Object[] getChildren(Object o) {
 		/* TODO Use the CMElementDeclaration and ModelQuery to get the available children of the root element */
-		return fRoot.getChildren(o);
+		return fRoot != null ? fRoot.getChildren(o) : EMPTY;
 	}
 
 	public ImageDescriptor getImageDescriptor(Object object) {
