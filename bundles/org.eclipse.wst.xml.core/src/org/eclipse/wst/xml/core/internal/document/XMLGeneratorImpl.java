@@ -14,6 +14,8 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
+import java.util.Locale;
+
 import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
@@ -606,7 +608,8 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 						newName = tagName.toUpperCase();
 						break;
 					case DocumentTypeAdapter.LOWER_CASE :
-						newName = tagName.toLowerCase();
+						//https://bugs.eclipse.org/bugs/show_bug.cgi?id=397779#c0
+						newName = tagName.toLowerCase(Locale.ENGLISH);
 						break;
 				}
 				if (newName != tagName) {
