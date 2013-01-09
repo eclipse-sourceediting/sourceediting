@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -111,10 +111,10 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 		if (((IDOMAttr) attr).isGlobalAttr() && CMNodeUtil.getAttributeDeclaration(attr) != null) {
 			switch (getAttrNameCase(attr)) {
 				case DocumentTypeAdapter.UPPER_CASE :
-					attrName = attrName.toUpperCase();
+					attrName = attrName.toUpperCase(Locale.ENGLISH);
 					break;
 				case DocumentTypeAdapter.LOWER_CASE :
-					attrName = attrName.toLowerCase();
+					attrName = attrName.toLowerCase(Locale.ENGLISH);
 					break;
 				default :
 					// ASIS_CASE
