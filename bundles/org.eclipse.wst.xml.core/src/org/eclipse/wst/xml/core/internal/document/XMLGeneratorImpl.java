@@ -605,10 +605,9 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 				String newName = tagName;
 				switch (getTagNameCase(xe)) {
 					case DocumentTypeAdapter.UPPER_CASE :
-						newName = tagName.toUpperCase();
+						newName = tagName.toUpperCase(Locale.ENGLISH);
 						break;
 					case DocumentTypeAdapter.LOWER_CASE :
-						//https://bugs.eclipse.org/bugs/show_bug.cgi?id=397779#c0
 						newName = tagName.toLowerCase(Locale.ENGLISH);
 						break;
 				}
