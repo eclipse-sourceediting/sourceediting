@@ -213,6 +213,10 @@
            <uri
                name="http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
                uri="dtdsAndSchemas/persistence_2_0.xsd" />
+       
+           <uri
+               name="http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd"
+               uri="dtdsAndSchemas/bindingschema_2_0.xsd"/>
                
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
