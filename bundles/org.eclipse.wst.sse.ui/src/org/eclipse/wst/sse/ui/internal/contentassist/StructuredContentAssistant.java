@@ -119,6 +119,7 @@ public class StructuredContentAssistant extends ContentAssistant {
 			}
 		}
 		fProcessorsReleased = true;
+		this.fReleasableProcessors.clear();
 		super.uninstall();
 	}
 }
