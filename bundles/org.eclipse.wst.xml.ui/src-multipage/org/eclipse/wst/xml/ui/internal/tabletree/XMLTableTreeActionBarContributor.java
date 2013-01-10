@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	protected ViewerExpandCollapseAction collapseAction;
 	protected ViewerExpandCollapseAction xmlMenuExpandAction;
 	protected ViewerExpandCollapseAction xmlMenuCollapseAction;
+	private IActionBars actionBars;
 
 	public XMLTableTreeActionBarContributor() {
 	}
@@ -88,6 +89,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	}
 
 	public void init(IActionBars bars) {
+		this.actionBars = bars;
 //		IToolBarManager tbm = bars.getToolBarManager();
 
 /*		IMenuManager xmlMenu = bars.getMenuManager().findMenuUsingPath("org.eclipse.core.runtime.xml.design.xmlmenu"); //$NON-NLS-1$
@@ -184,15 +186,16 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 			xmlMenuCollapseAction.setViewer(tableTreeViewer);
 		}
 */
+		ITextEditor textEditor = null;
 		if (editorPart instanceof XMLMultiPageEditorPart) {
 			IWorkbenchPartSite site = editorPart.getSite();
 			if (site instanceof IEditorSite) {
-				ITextEditor textEditor = ((XMLMultiPageEditorPart) editorPart).getTextEditor();
-				IActionBars actionBars = ((IEditorSite) site).getActionBars();
-				actionBars.setGlobalActionHandler(ITextEditorActionConstants.UNDO, getAction(textEditor, ITextEditorActionConstants.UNDO));
-				actionBars.setGlobalActionHandler(ITextEditorActionConstants.REDO, getAction(textEditor, ITextEditorActionConstants.REDO));
+				textEditor = ((XMLMultiPageEditorPart) editorPart).getTextEditor();
 			}
 		}
+		actionBars.setGlobalActionHandler(ITextEditorActionConstants.UNDO, getAction(textEditor, ITextEditorActionConstants.UNDO));
+		actionBars.setGlobalActionHandler(ITextEditorActionConstants.REDO, getAction(textEditor, ITextEditorActionConstants.REDO));
+		
 
 		// TODO... uncomment this and investigate NPE
 		//
@@ -317,5 +320,6 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	 * @see org.eclipse.ui.IEditorActionBarContributor#dispose()
 	 */
 	public void dispose() {
+		setActiveEditor(null);
 	}
 }

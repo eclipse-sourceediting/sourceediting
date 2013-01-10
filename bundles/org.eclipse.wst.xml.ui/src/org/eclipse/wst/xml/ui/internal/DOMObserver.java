@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal;
 
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -164,6 +167,14 @@ public class DOMObserver {
 		if (fDocument != null) {
 			// here we create and init an adapter that will listen to
 			// changes to the document and contained elements
+			Collection adapters = ((INodeNotifier) fDocument).getAdapters();
+			Iterator iterator = adapters.iterator();
+			while (iterator.hasNext()) {
+				INodeAdapter adapter = (INodeAdapter) iterator.next();
+				if (adapter instanceof MyDocumentAdapter) {
+					return;
+				}
+			}
 			MyDocumentAdapter adapter = new MyDocumentAdapter();
 			adapter.connect(fDocument);
 

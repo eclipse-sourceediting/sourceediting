@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2013 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -74,8 +74,6 @@ import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.ui.texteditor.TextSelectionNavigationLocation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -491,6 +489,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	private MenuManager fMenuManager;
 
 	private boolean fAllocateToolbar = true;
+
+	private TextInputListener fTextInputListener;
 	
 	/**
 	 * StructuredTextMultiPageEditorPart constructor comment.
@@ -520,7 +520,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 		// Changes to the Text Viewer's document instance should also
 		// force an
 		// input refresh
-		fTextEditor.getTextViewer().addTextInputListener(new TextInputListener());
+		fTextInputListener = new TextInputListener();
+		fTextEditor.getTextViewer().addTextInputListener(fTextInputListener);
 	}
 
 	/**
@@ -861,7 +862,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	public void dispose() {
 		Logger.trace("Source Editor", "XMLMultiPageEditorPart::dispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
 
+		if (fTextInputListener != null) {
+			fTextEditor.getTextViewer().removeTextInputListener(fTextInputListener);
+			fTextInputListener = null;
+		}
 		disconnectDesignPage();
+		fDesignViewer = null;
 
 		if (fActivationListener != null) {
 			fActivationListener.dispose();
@@ -874,15 +880,27 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 			fMenuManager = null;
 		}
 
-		if ((fTextEditor != null) && (fPropertyListener != null)) {
+		if (fPropertyListener != null) {
 			fTextEditor.removePropertyListener(fPropertyListener);
+			fPropertyListener = null;
 		}
 		
+		if (fEditorManager != null) {
+			fEditorManager.dispose();
+			fEditorManager = null;
+		}
+		if (fToolbarManager != null) {
+			fToolbarManager.dispose();
+			fToolbarManager = null;
+		}
 		// moved to last when added window ... seems like
 		// we'd be in danger of losing some data, like site,
 		// or something.
 		super.dispose();
 
+		fTextEditor = null;
+		fPageInitializer = null;
+		
 		Logger.trace("Source Editor", "StructuredTextMultiPageEditorPart::dispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
@@ -1136,15 +1154,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 			return new DesignPageNavigationLocation(this, fDesignViewer, false);
 		}
 		// Makes sure that the text editor is returned
-		return new TextSelectionNavigationLocation(fTextEditor, false) {
-			protected IEditorPart getEditorPart() {
-				IEditorPart part = super.getEditorPart();
-				if (part != null) {
-					part = (ITextEditor) part.getAdapter(ITextEditor.class);
-				}
-				return part;
-			}
-		};
+		return fTextEditor.createEmptyNavigationLocation();
 	}
 
 	public INavigationLocation createNavigationLocation() {
@@ -1152,15 +1162,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 			return new DesignPageNavigationLocation(this, fDesignViewer, true);
 		}
 		// Makes sure that the text editor is returned
-		return new TextSelectionNavigationLocation(fTextEditor, true) {
-			protected IEditorPart getEditorPart() {
-				IEditorPart part = super.getEditorPart();
-				if (part != null) {
-					part = (ITextEditor) part.getAdapter(ITextEditor.class);
-				}
-				return part;
-			}
-		};
+		return fTextEditor.createNavigationLocation();
 	}
 
 	public void saveState(IMemento memento) {

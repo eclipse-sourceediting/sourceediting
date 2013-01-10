@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -105,6 +105,8 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -1112,7 +1114,7 @@ public class StructuredTextEditor extends TextEditor {
 	
 	private boolean fSelectionChangedFromGoto = false;
 
-	private final CharacterPairListener fPairInserter = new CharacterPairListener();
+	private CharacterPairListener fPairInserter = new CharacterPairListener();
 
 	/**
 	 * Creates a new Structured Text Editor.
@@ -1759,6 +1761,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		if (fRulerContextMenu != null) {
 			fRulerContextMenu.dispose();
+			fRulerContextMenu = null;
 		}
 		if (fTextContextMenuManager != null) {
 			fTextContextMenuManager.removeMenuListener(getContextMenuListener());
@@ -1802,6 +1805,7 @@ public class StructuredTextEditor extends TextEditor {
 			if (fOutlinePageListener != null) {
 				fOutlinePage.removeSelectionChangedListener(fOutlinePageListener);
 			}
+			fOutlinePage = null;
 		}
 
 		fEditorDisposed = true;
@@ -1817,8 +1821,9 @@ public class StructuredTextEditor extends TextEditor {
 
 		uninstallSemanticHighlighting();
 
-		if (fPairInserter != null)
+		if (fPairInserter != null) {
 			fPairInserter.dispose();
+		}
 
 
 		setPreferenceStore(null);
@@ -1833,6 +1838,10 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (fStructuredSelectionProvider != null) {
 			fStructuredSelectionProvider.dispose();
+		}
+		
+		if (fStatusLineLabelProvider != null) {
+			fStatusLineLabelProvider.dispose();
 		}
 
 		setStatusLineMessage(null);
@@ -2083,7 +2092,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		// content outline page
 		else if (IContentOutlinePage.class.equals(required)) {
-			if (fOutlinePage == null || fOutlinePage.getControl() == null || fOutlinePage.getControl().isDisposed()) {
+			if (fOutlinePage == null) {
 				ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
 				if (cfg != null) {
 					ConfigurableContentOutlinePage outlinePage = new ConfigurableContentOutlinePage();
@@ -2637,6 +2646,14 @@ public class StructuredTextEditor extends TextEditor {
 		fDropAdapter.setTextViewer(textViewer);
 		fDropTarget.setTransfer(fDropAdapter.getTransfers());
 		fDropTarget.addDropListener(fDropAdapter);
+		fDropTarget.addDisposeListener(new DisposeListener() {
+			
+			public void widgetDisposed(DisposeEvent e) {
+				fDropTarget.removeDropListener(fDropAdapter);
+				fDropTarget.removeDisposeListener(this);
+				fDropTarget.dispose();
+			}
+		});
 	}
 
 	/*
