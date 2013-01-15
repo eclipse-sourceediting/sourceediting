@@ -155,6 +155,7 @@ import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -2092,7 +2093,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		// content outline page
 		else if (IContentOutlinePage.class.equals(required)) {
-			if (fOutlinePage == null) {
+			if (fOutlinePage == null && isCalledByOutline()) {
 				ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
 				if (cfg != null) {
 					ConfigurableContentOutlinePage outlinePage = new ConfigurableContentOutlinePage();
@@ -3669,6 +3670,17 @@ public class StructuredTextEditor extends TextEditor {
 		if (fSemanticManager != null) {
 			fSemanticManager.uninstall();
 			fSemanticManager = null;
+		}
+	}
+
+	private static boolean isCalledByOutline() {
+		Class[] elements= new AccessChecker().getClassContext();
+		return elements[4].equals(ContentOutline.class) || elements[5].equals(ContentOutline.class);
+	}
+
+	private static final class AccessChecker extends SecurityManager {
+		public Class[] getClassContext() {
+			return super.getClassContext();
 		}
 	}
 
