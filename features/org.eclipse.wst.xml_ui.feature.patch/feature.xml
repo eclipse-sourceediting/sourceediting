@@ -20,7 +20,7 @@
    <requires>
       <import feature="org.eclipse.wst.xml_ui.feature" version="3.2.5.v201106160200-7H7AFUeDxumQJP58ph_R_6syq38sOANwVz00NyPL" patch="true"/>
    </requires>
-
+   
    <plugin
          id="org.eclipse.wst.sse.ui"
          download-size="0"
