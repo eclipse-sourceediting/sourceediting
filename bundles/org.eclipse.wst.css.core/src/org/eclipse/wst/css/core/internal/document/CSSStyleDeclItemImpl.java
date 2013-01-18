@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,9 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
@@ -22,6 +25,7 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.w3c.dom.DOMException;
@@ -248,7 +252,12 @@ class CSSStyleDeclItemImpl extends CSSStructuredDocumentRegionContainer implemen
 		itemParser.setStructuredDocumentTemporary(true);
 		// make a copy of nodelist because setupValues will destroy list
 		ITextRegionList nodeList = new TextRegionListImpl(node.getRegions());
-		itemParser.setupValues(this, node, nodeList, value);
+		List nodeValuesList = new ArrayList();;
+		for (int i=0;i<nodeList.size();i++){
+			ITextRegion textRegion = nodeList.get(i);
+			nodeValuesList.add(value.substring(textRegion.getStart(), textRegion.getTextEnd()));
+		}
+		itemParser.setupValues(this, node, nodeList, nodeValuesList);
 	}
 
 	/**

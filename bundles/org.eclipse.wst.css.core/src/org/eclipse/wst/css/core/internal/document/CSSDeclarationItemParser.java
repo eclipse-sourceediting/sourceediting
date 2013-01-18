@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.css.core.internal.document;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
@@ -958,15 +959,15 @@ class CSSDeclarationItemParser {
 		return newItem;
 	}
 
-	void setupValues(ICSSStyleDeclItem item, IStructuredDocumentRegion parentRegion, ITextRegionList nodeRegions, String value) {
+	void setupValues(ICSSStyleDeclItem item, IStructuredDocumentRegion parentRegion, ITextRegionList nodeRegions, List valueList) {
 		fParentRegion = parentRegion;
-		setupValues(item, nodeRegions, value);
+		setupValues(item, nodeRegions, valueList);
 	}
 
 	/**
 	 * nodeRegions must be broken. If you need after, make copy of them.
 	 */
-	private void setupValues(ICSSStyleDeclItem item, ITextRegionList nodeRegions, String propertyValue) {
+	private void setupValues(ICSSStyleDeclItem item, ITextRegionList nodeRegions, List propertyValueList) {
 		if (item == null) {
 			return;
 		}
@@ -977,12 +978,16 @@ class CSSDeclarationItemParser {
 		String propertyName = item.getPropertyName().toLowerCase();
 		boolean bFont = (propertyName.equals(PropCMProperty.P_FONT));
 		// (short-hand) font
+		String propertyValue = null;
 		int status = (propertyName.equals(PropCMProperty.P_VOICE_FAMILY) || propertyName.equals(PropCMProperty.P_FONT_FAMILY)) ? S_COMMA_SEPARATION : S_NORMAL;
 		while (!nodeRegions.isEmpty()) {
 			value = null;
 			ITextRegion region = nodeRegions.remove(0);
 			if (region == null) {
 				continue;
+			}
+			if (propertyValueList != null && !propertyValueList.isEmpty()){
+				propertyValue = (String) propertyValueList.remove(0);
 			}
 			String type = region.getType();
 			// if (type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type
