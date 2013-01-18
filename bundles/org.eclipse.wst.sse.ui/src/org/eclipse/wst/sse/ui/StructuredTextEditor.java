@@ -1786,7 +1786,8 @@ public class StructuredTextEditor extends TextEditor {
 		if (fStructuredModel != null) {
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 			//fStructuredModel.setStructuredDocument(null);
-			fStructuredModel = null;
+			/* BUG398460 - Editor is still marked dirty when relaunching editor after closing without saving changes */
+//			fStructuredModel = null;
 		}
 
 		// BUG155335 - if there was no document provider, there was nothing
