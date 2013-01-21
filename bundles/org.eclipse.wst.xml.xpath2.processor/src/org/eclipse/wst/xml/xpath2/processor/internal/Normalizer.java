@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
@@ -47,6 +48,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.InstOfExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntegerLiteral;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntersectExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.ItemType;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.LetExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.MinusExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.ModExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.MulExpr;
@@ -211,6 +213,41 @@ public class Normalizer implements XPathVisitor {
 			fex.truncate_pairs();
 
 		return fex;
+	}
+
+	/**
+	 * 
+	 * @param lex
+	 *            is the Let expression.
+	 * @return lex expression.
+	 */
+	public Object visit(LetExpr lex) {
+		LetExpr last = lex;
+		Expr ret = lex.expr();
+		int depth = 0;
+
+		for (Iterator<VarExprPair> i = lex.iterator(); i.hasNext();) {
+			VarExprPair ve = i.next();
+			
+			// ok we got nested fors...
+			if (depth > 0) {
+				LetExpr fe = new LetExpr(Collections.singletonList(ve), ret);
+				last.set_expr(fe);
+
+				last = fe;
+			}
+
+			depth++;
+		}
+
+		// normalize return value, and set it to the last for expr
+		ret.accept(this);
+
+		// get rid of the pairs in the parent (original) for
+		if (depth > 1)
+			lex.truncatePairs();
+
+		return lex;
 	}
 
 	/**

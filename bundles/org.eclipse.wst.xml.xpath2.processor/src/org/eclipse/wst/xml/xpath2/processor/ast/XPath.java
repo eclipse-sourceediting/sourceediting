@@ -23,6 +23,7 @@ import org.eclipse.wst.xml.xpath2.api.ResultSequence;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.Expr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathNode;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
 
@@ -32,7 +33,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor;
  * @deprecated This is only for internal use, use XPath2Expression instead
  */
 public class XPath extends XPathNode implements XPath2Expression {
-	private Collection _exprs;
+	private Collection<Expr> _exprs;
 	private StaticContext _staticContext;
 	private Collection<QName> _resolvedFunctions;
 	private Collection<String> _axes;
@@ -45,7 +46,7 @@ public class XPath extends XPathNode implements XPath2Expression {
 	 * @param exprs
 	 *            XPath expressions.
 	 */
-	public XPath(Collection exprs) {
+	public XPath(Collection<Expr> exprs) {
 		_exprs = exprs;
 	}
 
@@ -63,7 +64,7 @@ public class XPath extends XPathNode implements XPath2Expression {
 	 * 
 	 * @return Result of Iterator operation.
 	 */
-	public Iterator iterator() {
+	public Iterator<Expr> iterator() {
 		return _exprs.iterator();
 	}
 

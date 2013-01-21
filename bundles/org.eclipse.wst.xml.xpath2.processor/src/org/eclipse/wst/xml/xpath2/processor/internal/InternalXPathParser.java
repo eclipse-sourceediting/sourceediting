@@ -10,29 +10,21 @@
  *     Bug 338494    - prohibiting xpath expressions starting with / or // to be parsed. 
  *******************************************************************************/
 
-package org.eclipse.wst.xml.xpath2.processor;
+package org.eclipse.wst.xml.xpath2.processor.internal;
 
+import java.io.StringReader;
+
+import java_cup.runtime.Symbol;
+
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.InternalXPathParser;
 
 /**
  * JFlexCupParser parses the xpath expression
  */
-public class JFlexCupParser implements XPathParser {
+public class InternalXPathParser {
 
-	/**
-	 * Tries to parse the xpath expression
-	 * 
-	 * @param xpath
-	 *            is the xpath string.
-	 * @throws XPathParserException.
-	 * @return the xpath value.
-	 */
-	public XPath parse(String xpath) throws XPathParserException {
-
-		return new InternalXPathParser().parse(xpath, false);
-	}
-	
 	/**
 	 * Tries to parse the xpath expression
 	 * 
@@ -46,6 +38,24 @@ public class JFlexCupParser implements XPathParser {
 	 */
 	public XPath parse(String xpath, boolean isRootlessAccess) throws XPathParserException {
 
-		return new InternalXPathParser().parse(xpath, isRootlessAccess);
+		XPathFlex lexer = new XPathFlex(new StringReader(xpath));
+
+		XPathCup p = null;
+		if (isRootlessAccess) {
+			p = new XPathCupRestricted(lexer); 
+		}
+		else {
+			p = new XPathCup(lexer); 
+		}
+		try {
+			Symbol res = p.parse();
+			return (XPath) res.value;
+		} catch (JFlexError e) {
+			throw new XPathParserException("JFlex lexer error: " + e.reason());
+		} catch (CupError e) {
+			throw new XPathParserException("CUP parser error: " + e.reason());
+		} catch (Exception e) {
+			throw new XPathParserException(e.getMessage());
+		}
 	}
 }

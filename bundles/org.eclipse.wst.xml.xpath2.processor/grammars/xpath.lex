@@ -99,6 +99,7 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 "::"	{ return symbol(XpathSym.COLONCOLON); }
 "@"	{ return symbol(XpathSym.AT_SYM); }
 "\.\."	{ return symbol(XpathSym.DOTDOT); }
+":="	{ return symbol(XpathSym.COLONEQ); }
 ":"	{ return symbol(XpathSym.COLON); }
 ","	{ return symbol(XpathSym.COMMA); }
 "\$"	{ return symbol(XpathSym.DOLLAR); }
@@ -148,6 +149,7 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 "for"				{ return symbol(XpathSym.FOR); }
 "in"				{ return symbol(XpathSym.IN); }
 "return"			{ return symbol(XpathSym.RETURN); }
+"let"				{ return symbol(XpathSym.LET); }
 "satisfies"			{ return symbol(XpathSym.SATISFIES); }
 "to"				{ return symbol(XpathSym.TO); }
 "some"				{ return symbol(XpathSym.SOME); }
@@ -176,9 +178,9 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 				assert str.length() >= 2;
 				return symbol(XpathSym.STRING, org.eclipse.wst.xml.xpath2.processor.internal.utils.LiteralUtils.unquote(str)); 
 			}
-{Digits}		{ return symbol(XpathSym.INTEGER, new BigInteger(yytext())); }
+{Digits}		{ return symbol(XpathSym.INTEGER, new java.math.BigInteger(yytext())); }
 {DoubleLiteral}		{ return symbol(XpathSym.DOUBLE, new Double(yytext())); }
-{DecimalLiteral}	{ return symbol(XpathSym.DECIMAL, new BigDecimal(yytext())); }
+{DecimalLiteral}	{ return symbol(XpathSym.DECIMAL, new java.math.BigDecimal(yytext())); }
 {NCName}		{ return symbol(XpathSym.NCNAME, yytext()); }
 
 

@@ -12,8 +12,8 @@
 // *     David Carver (STAR) - bug 262765 - Fixed Wildcard and NCName issue. 
 // *     Jesper S Moller - bug 297707 - Missing the empty-sequence() type
 // *     Jesper S Moller - bug 311480 - fix problem with name matching on keywords 
+// *     Jesper S Moller - bug XXXXXX - XPath3 grammar 
 // *******************************************************************************/
-
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
@@ -53,11 +53,11 @@ terminal COLONCOLON, AT_SYM, DOTDOT, COLON, COMMA, DOLLAR, DOT, QUESTIONMARK;
 terminal String CHILD, DESCENDANT, ATTRIBUTE, SELF, DESCENDANT_OR_SELF;
 terminal String FOLLOWING_SIBLING, FOLLOWING, NAMESPACE, PARENT;
 terminal String ANCESTOR, PRECEDING_SIBLING, PRECEDING, ANCESTOR_OR_SELF;
-terminal EQ, NE, LT, LE, GT, GE;
+terminal COLONEQ, EQ, NE, LT, LE, GT, GE, PIPEPIPE;
 terminal String DIV, IDIV, MOD;
 terminal String UNION, INTERSECT, EXCEPT;
 terminal String INSTANCE, OF, TREAT, AS, CASTABLE, CAST, IS;
-terminal String FOR, IN, RETURN, SATISFIES, TO;
+terminal String FOR, IN, RETURN, LET, SATISFIES, TO;
 terminal String SOME, EVERY;
 terminal String IF, THEN, ELSE;
 terminal String AND, OR;
@@ -80,7 +80,7 @@ non terminal QName AtomicType, QName, UnreservedQName, VarName, Wildcard;
 non terminal Integer OccurrenceIndicator, ReverseAxis, ForwardAxis, NodeComp;
 non terminal ItemType ItemType;
 non terminal Collection FunctionCallMiddle, ParenthesizedExpr, Expr;
-non terminal Collection PredicateList, QuantifiedExprMiddle, SimpleForClause;
+non terminal Collection PredicateList, QuantifiedExprMiddle, SimpleForClause, SimpleLetClause;
 non terminal PrimaryExpr PrimaryExpr;
 non terminal NodeTest NodeTest;
 non terminal ReverseStep ReverseStep, AbbrevReverseStep;
@@ -94,7 +94,7 @@ non terminal Expr TreatExpr, CastableExpr, InstanceofExpr, CastExpr;
 non terminal Expr UnionExpr, MultiplicativeExpr, IntersectExceptExpr, ExprSingle;
 non terminal Expr AdditiveExpr;
 non terminal Integer GeneralComp, ValueComp;
-non terminal Expr AndExpr, OrExpr, RangeExpr, ComparisonExpr;
+non terminal Expr AndExpr, OrExpr, ConcatExpr, RangeExpr, ComparisonExpr;
 non terminal NameTest NameTest;
 non terminal KindTest KindTest;
 non terminal Literal Literal;
@@ -116,6 +116,7 @@ non terminal SchemaAttrTest SchemaAttributeTest;
 non terminal SchemaElemTest SchemaElementTest;
 non terminal XPath XPath;
 non terminal ForExpr ForExpr;
+non terminal LetExpr LetExpr;
 non terminal QuantifiedExpr QuantifiedExpr;
 non terminal IfExpr IfExpr;
 non terminal XPathExpr PathExpr, ValueExpr;
@@ -132,7 +133,7 @@ precedence left FOLLOWING_SIBLING, FOLLOWING, NAMESPACE, PARENT;
 precedence left ANCESTOR, PRECEDING_SIBLING, PRECEDING, ANCESTOR_OR_SELF;
 precedence left UNION, INTERSECT, EXCEPT;
 precedence left INSTANCE, OF, TREAT, AS, CASTABLE, CAST, IS;
-precedence left FOR, IN, RETURN, SATISFIES, TO;
+precedence left FOR, IN, RETURN, LET, SATISFIES, TO;
 precedence left SOME, EVERY;
 precedence left IF, THEN, ELSE;
 precedence left AND, OR;
@@ -157,6 +158,7 @@ Expr              ::= ExprSingle:ex
 		    ;
 
 ExprSingle        ::= ForExpr:n {: RESULT = n; :}
+                    | LetExpr:n {: RESULT = n; :}
                     | QuantifiedExpr:n {: RESULT = n; :}
                     | IfExpr:n {: RESULT = n; :}
                     | OrExpr:n {: RESULT = n; :}
@@ -178,6 +180,29 @@ SimpleForClause   ::= FOR DOLLAR VarName:v IN ExprSingle:e
 			:}
 			
                     | SimpleForClause:ps COMMA DOLLAR VarName:v IN ExprSingle:e
+		    	{:
+				VarExprPair p = new VarExprPair(v,e);
+				ps.add(p);
+				RESULT = ps;
+			:}	
+		    ;
+
+LetExpr           ::= SimpleLetClause:pairs RETURN ExprSingle:e 
+			{:
+				LetExpr lexp = new LetExpr(pairs,e);
+				RESULT = lexp;
+			:}	
+		    ;
+
+SimpleLetClause   ::= LET DOLLAR VarName:v COLONEQ ExprSingle:e
+			{:
+				Collection pairs = new ArrayList();
+				VarExprPair p = new VarExprPair(v,e);
+				pairs.add(p);
+				RESULT = pairs;
+			:}
+			
+                    | SimpleLetClause:ps COMMA DOLLAR VarName:v COLONEQ ExprSingle:e
 		    	{:
 				VarExprPair p = new VarExprPair(v,e);
 				ps.add(p);
@@ -693,6 +718,7 @@ NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  FOR:n {: RESULT = new String("for"); :} |
 						  IN:n {: RESULT = new String("in"); :} |
 						  RETURN:n {: RESULT = new String("return"); :} |
+						  LET:n {: RESULT = new String("let"); :} |
 						  SATISFIES:n {: RESULT = new String("satisfies"); :} |
 						  SOME:n {: RESULT = new String("some"); :} |
 						  EVERY:n {: RESULT = new String("every"); :} |

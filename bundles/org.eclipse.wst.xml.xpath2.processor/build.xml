@@ -24,7 +24,13 @@
 
 	<target name="generate_parser">
 		<jflex file="grammars/xpath.lex" destdir="grammars/generated"/>
-	    <java jar="${cupJar}" input="grammars/xpath.cup" output="${basedir}/JavaCUP-dump.txt" fork="true" failonerror="true">
+		<copy tofile="${basedir}/src/org/eclipse/wst/xml/xpath2/processor/internal/XPathFlex.java" file="grammars/generated/org/eclipse/wst/xml/xpath2/processor/internal/XPathFlex.java"/>
+		<replaceregexp file="${basedir}/src/org/eclipse/wst/xml/xpath2/processor/internal/XPathFlex.java"
+		               match="sym.EOF"
+		               replace="XpathSym.EOF"
+		               byline="true"
+		/>
+		<java jar="${cupJar}" input="grammars/xpath.cup" output="${basedir}/JavaCUP-dump.txt" fork="true" failonerror="true">
 	    	<arg value="-parser"/>
 	    	<arg value="XPathCup"/>
 	    	<arg value="-symbols"/>

@@ -14,36 +14,22 @@ package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
 import java.util.*;
 
-// mite wanna do two separate classes at the end
 /**
- * Support for Quantified expressions.
+ * Class for the For expression.
  */
-public class QuantifiedExpr extends Expr {
-	/**
-	 * Set internal value for SOME.
-	 */
-	public static final int SOME = 0;
-	/**
-	 * Set internal value for ALL.
-	 */
-	public static final int ALL = 1;
-
+public class LetExpr extends Expr {
 	private Collection<VarExprPair> _var_expr_pairs;
 	private Expr _return;
-	private int _type;
 
 	/**
-	 * Constructor for QuantifiedExpr.
+	 * Constructor for ForExpr.
 	 * 
-	 * @param type
-	 *            Type (0 for SOME, 1 for ALL).
 	 * @param varexp
 	 *            Expressions.
 	 * @param ret
-	 *            Returned expression.
+	 *            Return expression.
 	 */
-	public QuantifiedExpr(int type, Collection<VarExprPair> varexp, Expr ret) {
-		_type = type;
+	public LetExpr(Collection<VarExprPair> varexp, Expr ret) {
 		_var_expr_pairs = varexp;
 		_return = ret;
 	}
@@ -58,16 +44,7 @@ public class QuantifiedExpr extends Expr {
 	}
 
 	/**
-	 * Support for Integer interface.
-	 * 
-	 * @return Result of Int operation.
-	 */
-	public int type() {
-		return _type;
-	}
-
-	/**
-	 * Support for Iterator inteface.
+	 * Support for Iterator interface.
 	 * 
 	 * @return Result of Iterator operation.
 	 */
@@ -76,7 +53,7 @@ public class QuantifiedExpr extends Expr {
 	}
 
 	/**
-	 * Support for Expression interface.
+	 * Support for Expr interface.
 	 * 
 	 * @return Result of Expr operation.
 	 */
@@ -85,7 +62,7 @@ public class QuantifiedExpr extends Expr {
 	}
 
 	/**
-	 * Set next expression.
+	 * Set Expression.
 	 * 
 	 * @param e
 	 *            Expression.
@@ -99,7 +76,7 @@ public class QuantifiedExpr extends Expr {
 	/**
 	 * Normalization of expression pairs.
 	 */
-	public void truncate_pairs() {
+	public void truncatePairs() {
 		boolean first = true;
 
 		for (Iterator<VarExprPair> i = _var_expr_pairs.iterator(); i.hasNext();) {
@@ -116,7 +93,7 @@ public class QuantifiedExpr extends Expr {
 	 * 
 	 * @return Expression pairs.
 	 */
-	public Collection<VarExprPair> ve_pairs() {
+	public Collection ve_pairs() {
 		return _var_expr_pairs;
 	}
 }
