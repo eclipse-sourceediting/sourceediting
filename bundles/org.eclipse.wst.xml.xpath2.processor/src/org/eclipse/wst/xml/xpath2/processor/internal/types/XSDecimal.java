@@ -509,7 +509,7 @@ public class XSDecimal extends NumericType {
 	}
 
 	@Override
-	public Object getNativeValue() {
+	public Number getNativeValue() {
 		return _value;
 	}
 

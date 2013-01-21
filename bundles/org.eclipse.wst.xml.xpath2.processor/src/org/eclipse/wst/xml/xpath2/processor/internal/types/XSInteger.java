@@ -95,6 +95,11 @@ public class XSInteger extends XSDecimal {
 		return _value.toString();
 	}
 
+	@Override
+	public Number getNativeValue() {
+		return _value;
+	}
+	
 	/**
 	 * Check whether the integer represented is 0
 	 * 

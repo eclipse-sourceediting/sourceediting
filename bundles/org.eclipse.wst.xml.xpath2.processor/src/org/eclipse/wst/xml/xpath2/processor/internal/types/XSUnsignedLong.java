@@ -104,8 +104,4 @@ public class XSUnsignedLong extends XSNonNegativeInteger {
 		return BuiltinTypeLibrary.XS_UNSIGNEDLONG;
 	}
 
-	public Object getNativeValue() {
-		return getValue();
-	}
-
 }

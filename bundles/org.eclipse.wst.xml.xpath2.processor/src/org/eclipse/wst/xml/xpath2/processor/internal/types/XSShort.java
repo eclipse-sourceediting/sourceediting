@@ -100,7 +100,7 @@ public class XSShort extends XSInt {
 		return BuiltinTypeLibrary.XS_SHORT;
 	}
 
-	public Object getNativeValue() {
+	public Short getNativeValue() {
 		return getValue().shortValue();
 	}
 

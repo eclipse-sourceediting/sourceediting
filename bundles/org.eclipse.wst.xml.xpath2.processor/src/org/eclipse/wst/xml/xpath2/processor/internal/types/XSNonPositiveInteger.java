@@ -103,8 +103,4 @@ public class XSNonPositiveInteger extends XSInteger {
 		return BuiltinTypeLibrary.XS_NONPOSITIVEINTEGER;
 	}
 
-	public Object getNativeValue() {
-		return getValue().longValue();
-	}
-
 }

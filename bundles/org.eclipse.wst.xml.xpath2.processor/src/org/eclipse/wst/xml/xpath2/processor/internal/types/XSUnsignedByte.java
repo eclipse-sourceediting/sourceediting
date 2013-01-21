@@ -104,7 +104,7 @@ public class XSUnsignedByte extends XSUnsignedShort {
 		return BuiltinTypeLibrary.XS_UNSIGNEDBYTE;
 	}
 
-	public Object getNativeValue() {
+	public Number getNativeValue() {
 		return getValue().shortValue();
 	}
 
