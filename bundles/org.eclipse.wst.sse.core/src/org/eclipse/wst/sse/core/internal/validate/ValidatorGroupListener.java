@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.wst.validation.ValidationState;
 public class ValidatorGroupListener implements IValidatorGroupListener {
 
 	Map fDiagnosticMap = new HashMap();
+	private static final Object LOCK = new Object();
 	private static final boolean _debug = false;
 
 	public ValidatorGroupListener() {
@@ -52,9 +53,18 @@ public class ValidatorGroupListener implements IValidatorGroupListener {
 		if (resource.getType() != IResource.FILE)
 			return;
 
-		IStructuredModel model = (IStructuredModel) fDiagnosticMap.remove(resource.getFullPath());
-		if (model != null) {
-			model.releaseFromRead();
+		synchronized (LOCK) {
+			final IPath path = resource.getFullPath();
+			final ValidationModelReference ref = (ValidationModelReference) fDiagnosticMap.get(path);
+			if (ref != null) {
+				if (--ref.count == 0) {
+					// The model is no longer being tracked
+					fDiagnosticMap.remove(path);
+					if (ref.model != null) {
+						ref.model.releaseFromRead();
+					}
+				}
+			}
 		}
 	}
 
@@ -66,18 +76,38 @@ public class ValidatorGroupListener implements IValidatorGroupListener {
 				if (resource.getType() != IResource.FILE)
 					return;
 
-				IModelManager modelManager = StructuredModelManager.getModelManager();
-				// possible when shutting down
-				if (modelManager != null) {
-					IStructuredModel model = modelManager.getModelForRead((IFile) resource);
-					if (model != null) {
-						fDiagnosticMap.put(resource.getFullPath(), model);
+				synchronized (LOCK) {
+					final IPath path = resource.getFullPath();
+					final ValidationModelReference ref = (ValidationModelReference) fDiagnosticMap.get(path);
+					if (ref != null) {
+						// The model is already being tracked
+						++ref.count;
+					}
+					else {
+						// The model has not been obtained as part of the validation group yet
+						IModelManager modelManager = StructuredModelManager.getModelManager();
+						// possible when shutting down
+						if (modelManager != null) {
+							IStructuredModel model = modelManager.getModelForRead((IFile) resource);
+							if (model != null) {
+								fDiagnosticMap.put(resource.getFullPath(), new ValidationModelReference(model));
+							}
+						}
 					}
 				}
 			}
 		}
 		catch (Exception e) {
 			Logger.logException(e);
+		}
+	}
+
+	private class ValidationModelReference {
+		IStructuredModel model;
+		int count;
+		public ValidationModelReference(IStructuredModel model) {
+			this.model = model;
+			count = 1;
 		}
 	}
 }
