@@ -11,9 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.test.newapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
@@ -28,6 +25,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import junit.framework.TestCase;
+
 import org.eclipse.wst.xml.xpath2.api.DynamicContext;
 import org.eclipse.wst.xml.xpath2.api.StaticContext;
 import org.eclipse.wst.xml.xpath2.api.XPath2Expression;
@@ -41,13 +40,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class FilteringPerformanceTest {
+public class FilteringPerformanceTest extends TestCase {
 
 	private Document document;
 
-	@Before
 	public void setUp() throws Exception {
 		document = buildBigDocument(6, -1, 5);
+		super.setUp();
 	}
 	
 	private Document buildBigDocument(int width, int deltaWidth, int depth)
@@ -87,13 +86,12 @@ public class FilteringPerformanceTest {
 		return nodesCreated;
 	}
 
-	@After
 	public void tearDown() throws Exception {
 		document = null;
+		super.tearDown();
 	}
 
-	@Test
-	public void countAllOperation1() throws ParserConfigurationException, XPathExpressionException {
+	public void testCountAllOperation1() throws ParserConfigurationException, XPathExpressionException {
 		Document bigDoc = buildBigDocument(2, 1, 6);
 		System.out.println(bigDoc.getDocumentElement().getAttribute("nodeCount"));
 		String control = evalXPath1("count(//node())", bigDoc);
@@ -101,8 +99,7 @@ public class FilteringPerformanceTest {
 		assertEquals(control, evaluated);
 	}
 	
-	@Test
-	public void countAllOperationWithFilter() throws ParserConfigurationException, XPathExpressionException {
+	public void testCountAllOperationWithFilter() throws ParserConfigurationException, XPathExpressionException {
 		Document bigDoc = buildBigDocument(2, 1, 5);
 		System.out.println(bigDoc.getDocumentElement().getAttribute("nodeCount"));
 		String control = evalXPath1("count(//node()[count(ancestor-or-self::*)>4])", bigDoc);
@@ -110,8 +107,7 @@ public class FilteringPerformanceTest {
 		assertEquals(control, evaluated);
 	}
 	
-	@Test
-	public void countAllOperationBig() throws ParserConfigurationException, XPathExpressionException {
+	public void testCountAllOperationBig() throws ParserConfigurationException, XPathExpressionException {
 		Document bigDoc = buildBigDocument(2, 1, 7);
 		System.out.println(bigDoc.getDocumentElement().getAttribute("nodeCount"));
 		String control = evalXPath1("count(//node())", bigDoc);
@@ -119,7 +115,7 @@ public class FilteringPerformanceTest {
 		assertEquals(control, evaluated);
 	}
 	
-	protected <R> R evalXPath2(String xpath, Node doc, Class<R> resultClass) {
+	protected Object evalXPath2(String xpath, Node doc, Class resultClass) {
 		StaticContext sc = new StaticContextBuilder();
 		XPath2Expression path = new Engine().parseExpression(xpath, sc);
 		DynamicContext dynamicContext = new DynamicContextBuilder(sc);
