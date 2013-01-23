@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.wst.common.componentcore.ModuleCoreNature;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
+import org.eclipse.wst.common.componentcore.resources.IVirtualReference;
 import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
@@ -37,7 +38,8 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
  * 
  */
 final class FacetModuleCoreSupportDelegate {
-	private static final String SLASH = "/";
+	private static final String META_INF_RESOURCES = "META-INF/resources/"; //$NON-NLS-1$
+	private static final String SLASH = "/"; //$NON-NLS-1$
 
 	/**
 	 * Copied to avoid unneeded extra dependency (plus it's unclear why the
@@ -140,6 +142,23 @@ final class FacetModuleCoreSupportDelegate {
 		return false;
 	}
 
+	private static IPath resolveInReferenced(IProject project, IPath runtimeReference) {
+		IVirtualReference[] references = ComponentCore.createComponent(project).getReferences();
+		for (int i = 0; i < references.length; i++) {
+			IVirtualComponent referencedComponent = references[i].getReferencedComponent().getComponent();
+			IPath referencedPathRoot = referencedComponent.getRootFolder().getWorkspaceRelativePath();
+			/*
+			 * See Servlet 3.0, section 4.6 ; this is the only referenced
+			 * module/component type we support
+			 */
+			IPath resolved = referencedPathRoot.append(META_INF_RESOURCES).append(runtimeReference);
+			if (resolved != null && referencedComponent.getProject().findMember(resolved.removeFirstSegments(1)) != null) {
+				return resolved;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * @param basePath -
 	 *            the full path to a resource within the workspace
@@ -175,10 +194,12 @@ final class FacetModuleCoreSupportDelegate {
 					if (virtualFile != null && virtualFile.exists()) {
 						IFile[] underlyingFiles = virtualFile.getUnderlyingFiles();
 						for (int j = 0; j < underlyingFiles.length; j++) {
-							if (underlyingFiles[j].getProject().equals(project) && underlyingFiles[j].isAccessible()) {
+							if (underlyingFiles[j].isAccessible()) {
 								return underlyingFiles[j].getFullPath();
 							}
-
+						}
+						if (underlyingFiles.length > 0) {
+							return underlyingFiles[0].getFullPath();
 						}
 					}
 					else {
@@ -187,10 +208,17 @@ final class FacetModuleCoreSupportDelegate {
 						if (virtualFolder != null && virtualFolder.exists()) {
 							IContainer[] underlyingFolders = virtualFolder.getUnderlyingFolders();
 							for (int j = 0; j < underlyingFolders.length; j++) {
-								if (underlyingFolders[j].getProject().equals(project) && underlyingFolders[j].isAccessible()) {
+								if (underlyingFolders[j].isAccessible()) {
 									return underlyingFolders[j].getFullPath();
 								}
 							}
+							if (underlyingFolders.length > 0) {
+								return underlyingFolders[0].getFullPath();
+							}
+						}
+						else {
+							// check assembled projects
+							return resolveInReferenced(project, referenceRuntimePath);
 						}
 					}
 				}

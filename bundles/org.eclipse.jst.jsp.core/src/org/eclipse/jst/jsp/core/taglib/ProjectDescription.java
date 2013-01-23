@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -99,7 +99,7 @@ import com.ibm.icu.util.StringTokenizer;
 /**
  * Contains the tag library information for a single project.
  * 
- *  * <p>
+ * <p>
  * This class is neither intended to be instantiated nor accessed by clients.
  * </p>
  *
@@ -216,7 +216,16 @@ class ProjectDescription {
 					updateTLD(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}
 				else if (proxy.getName().endsWith(".jar")) { //$NON-NLS-1$
-					updateJAR(proxy.requestResource(), ITaglibIndexDelta.ADDED);
+					try {
+						updateJAR(proxy.requestResource(), ITaglibIndexDelta.ADDED);
+					}
+					catch (Exception e) {
+						/*
+						 * generally a bad idea to try and catch, but we need
+						 * to continue processing files even if something goes
+						 * wrong here
+						 */
+					}
 				}
 				else if (proxy.getName().endsWith(".tag") || proxy.getName().endsWith(".tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
 					updateTagDir(proxy.requestResource().getParent(), ITaglibIndexDelta.ADDED);
@@ -653,11 +662,11 @@ class ProjectDescription {
 	 */
 	Set fClasspathProjects = null;
 
-	// holds references by URI to JARs
+	/** Holds references by URI to JARs */
 	Hashtable fClasspathReferences;
 
-	/*
-	 * this table is special in that it holds tables of references according
+	/**
+	 * This table is special in that it holds tables of references according
 	 * to local roots
 	 */
 	Hashtable fImplicitReferences;
