@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -147,9 +147,11 @@ public class BundleResourceUtil {
 							IPath path = fullTargetPath.append(nextEntry.getName());
 
 							if (nextEntry.isDirectory()) {
-								IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
-								if (!folder.exists()) {
-									folder.create(true, true, null);
+								if (path.segmentCount() > 1) {
+									IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
+									if (!folder.exists()) {
+										folder.create(true, true, null);
+									}
 								}
 							}
 							else {

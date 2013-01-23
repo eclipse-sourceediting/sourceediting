@@ -29,6 +29,7 @@ import org.eclipse.jst.jsp.core.tests.translation.JSPELTranslationTest;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCoreTest;
 import org.eclipse.jst.jsp.core.tests.translation.JSPJavaTranslatorCustomTagTest;
 import org.eclipse.jst.jsp.core.tests.translation.JSPTranslatorPersistenceTest;
+import org.eclipse.jst.jsp.core.tests.util.FMCSTests;
 import org.eclipse.jst.jsp.core.tests.validation.JSPActionValidatorTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPBatchValidatorTest;
 import org.eclipse.jst.jsp.core.tests.validation.JSPDirectiveValidatorTest;
@@ -71,6 +72,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(JSPJavaValidatorTest.class, "Java Validator Tests"));
 		addTest(new TestSuite(TestImportedNodes.class, "Imported Nodes Tests"));
 		addTest(new TestSuite(TestFixedCMDocuments.class, "Fixed CMDocument Creation Tests"));
+		addTest(new TestSuite(FMCSTests.class, "Facet and Module Core support Tests"));
 		addTest(new TestSuite(TestTaglibCMTests.class, "Custom Tag Library Content Model Tests"));
 		addTest(new TestSuite(JSPActionValidatorTest.class, "Action Validator Tests"));
 		addTest(new TestSuite(JSPBatchValidatorTest.class, "Batch Validator Tests"));
