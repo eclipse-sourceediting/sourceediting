@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,7 @@ public class XSDTypeUtil
     defaultValue.put("ENTITIES", "entities");
     defaultValue.put("float", "0.0");
     defaultValue.put("gDay", "---01");
-    defaultValue.put("gMonth", "--01--");
+    defaultValue.put("gMonth", "--01");
     defaultValue.put("gMonthDay", "--01-01");
     defaultValue.put("gYear", "2001");
     defaultValue.put("gYearMonth", "2001-01");
