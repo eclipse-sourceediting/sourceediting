@@ -144,16 +144,22 @@ final class FacetModuleCoreSupportDelegate {
 
 	private static IPath resolveInReferenced(IProject project, IPath runtimeReference) {
 		IVirtualReference[] references = ComponentCore.createComponent(project).getReferences();
-		for (int i = 0; i < references.length; i++) {
-			IVirtualComponent referencedComponent = references[i].getReferencedComponent().getComponent();
-			IPath referencedPathRoot = referencedComponent.getRootFolder().getWorkspaceRelativePath();
-			/*
-			 * See Servlet 3.0, section 4.6 ; this is the only referenced
-			 * module/component type we support
-			 */
-			IPath resolved = referencedPathRoot.append(META_INF_RESOURCES).append(runtimeReference);
-			if (resolved != null && referencedComponent.getProject().findMember(resolved.removeFirstSegments(1)) != null) {
-				return resolved;
+		if (references != null) {
+			for (int i = 0; i < references.length; i++) {
+				IVirtualComponent referencedComponent = references[i].getReferencedComponent();
+				if (referencedComponent == null)
+					continue;
+				IVirtualComponent component = referencedComponent.getComponent();
+				if (component == null)
+					continue;
+				IPath referencedPathRoot = component.getRootFolder().getWorkspaceRelativePath();
+				/*
+				 * See Servlet 3.0, section 4.6 ; this is the only referenced
+				 * module/component type we support
+				 */
+				IPath resolved = referencedPathRoot.append(META_INF_RESOURCES).append(runtimeReference);
+				if (resolved != null && component.getProject().findMember(resolved.removeFirstSegments(1)) != null)
+					return resolved;
 			}
 		}
 		return null;
