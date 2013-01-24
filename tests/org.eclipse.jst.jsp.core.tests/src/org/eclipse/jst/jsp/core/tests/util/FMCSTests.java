@@ -12,7 +12,6 @@ package org.eclipse.jst.jsp.core.tests.util;
 
 import java.io.IOException;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
@@ -24,19 +23,6 @@ import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 
 public class FMCSTests extends TestCase {
-
-	public FMCSTests(String name) {
-		super(name);
-	}
-
-	public FMCSTests() {
-		super();
-	}
-
-	public static Test suite() {
-		return new FMCSTests();
-	}
-
 	private IProject createProject(String name) throws CoreException {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		if (!project.exists())
@@ -56,5 +42,23 @@ public class FMCSTests extends TestCase {
 		bd2.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 		assertEquals("/BugDemo2/src/META-INF/resources/referenced.jsp", "" + FacetModuleCoreSupport.resolve(new Path("BugDemo1/WebContent/index.jsp"), "referenced.jsp"));
+	}
+	public void testFacetModuleAbstractionWithoutWebFragment() throws Exception {
+		IProject bd1 = createProject("BugDemo1");
+		IProject bd2 = createProject("BugDemo2");
+		BundleResourceUtil.copyBundleZippedEntriesIntoWorkspace("/testfiles/jsp_include_false_error.zip", Path.ROOT);
+
+		bd1.refreshLocal(IResource.DEPTH_INFINITE, null);
+		bd2.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+		assertEquals("/BugDemo2/WEB-INF/web.xml", "" + FacetModuleCoreSupport.resolve(new Path("/BugDemo2/src/META-INF/resources/referenced.jsp"), "/WEB-INF/web.xml"));
+	}
+	public void testFacetModuleAbstractionInDynamicWebProject() throws Exception {
+		IProject bd1 = createProject("bug_399017");
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_399017", bd1.getFullPath().toString());
+
+		bd1.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+		assertEquals("/bug_399017/WebContent/header.jspf", "" + FacetModuleCoreSupport.resolve(new Path("/bug_399017/WebContent/main.jsp"), "header.jspf"));
 	}
 }
