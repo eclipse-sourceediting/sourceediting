@@ -152,7 +152,10 @@ final class FacetModuleCoreSupportDelegate {
 				IVirtualComponent component = referencedComponent.getComponent();
 				if (component == null)
 					continue;
-				IPath referencedPathRoot = component.getRootFolder().getWorkspaceRelativePath();
+				IVirtualFolder rootFolder = component.getRootFolder();
+				if (rootFolder == null)
+					continue;
+				IPath referencedPathRoot = rootFolder.getWorkspaceRelativePath();
 				/*
 				 * See Servlet 3.0, section 4.6 ; this is the only referenced
 				 * module/component type we support
