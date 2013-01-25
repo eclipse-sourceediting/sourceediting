@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -223,7 +223,11 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 			CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(start, end - start), stgy);
 			for (int i = 0; i < regions.length; i++) {
 				appendSpaceBefore(node, regions[i], source);
-				source.append(decoratedIdentRegion(regions[i], stgy));
+				String decorateIndetRegion=decoratedIdentRegion(regions[i], stgy);
+				if (decorateIndetRegion.trim().length()== 0)
+					decorateIndetRegion = " "; //$NON-NLS-1$
+				if (!source.toString().endsWith(decorateIndetRegion))
+					source.append(decorateIndetRegion);
 			}
 		} else { // generate source
 			// append "!important"
