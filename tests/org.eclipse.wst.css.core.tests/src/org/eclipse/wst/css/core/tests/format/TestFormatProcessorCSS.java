@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,17 +100,18 @@ public class TestFormatProcessorCSS extends TestCase {
 			afterModel = getModelForEdit(afterPath);
 			assertNotNull("could not retrieve structured model for : " + afterPath, afterModel);
 
-			formatProcessor.formatModel(beforeModel);
-
-			ByteArrayOutputStream formattedBytes = new ByteArrayOutputStream();
-			beforeModel.save(formattedBytes); // "beforeModel" should now be
-			// after the formatter
-
+			//Expected results
 			ByteArrayOutputStream afterBytes = new ByteArrayOutputStream();
 			afterModel.save(afterBytes);
+			String expectedContents = new String(afterBytes.toByteArray(), UTF_8);
+			
+			formatProcessor.formatModel(beforeModel);
 
-			String formattedContents = new String(afterBytes.toByteArray(), UTF_8);
-			String expectedContents = new String(formattedBytes.toByteArray(), UTF_8);
+			//Formatted results
+			ByteArrayOutputStream formattedBytes = new ByteArrayOutputStream();
+			beforeModel.save(formattedBytes); 			
+			String formattedContents = new String(formattedBytes.toByteArray(), UTF_8);
+			
 			assertTrue("Formatted document differs from the expected", fStringCompareUtil.equalsIgnoreLineSeperator(formattedContents, expectedContents));
 		}
 		finally {
@@ -168,6 +169,13 @@ public class TestFormatProcessorCSS extends TestCase {
 	public void testBUG163315SlashBeforePrimative1() throws UnsupportedEncodingException, IOException, CoreException {
 		//
 		formatAndAssertEquals("testfiles/bug163315-slash_before_primative_1.css", "testfiles/bug163315-slash_before_primative_1.css");
+	}
+	
+	/**
+	 * file should not change after format
+	 */
+	public void testbug367579MultiSpaceAddition() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/bug367579-MultiSpaceAdittion.css", "testfiles/bug367579-MultiSpaceAdittion.css");
 	}
 	
 	/**
