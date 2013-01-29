@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,12 +14,22 @@ package org.eclipse.jst.jsp.core.internal.taglib;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 
 /**
  * Manages creation and caching (ordered MRU) of TaglibHelpers.
@@ -97,8 +107,32 @@ public class TaglibHelperManager implements IElementChangedListener {
      */
     private void handleClasspathChange(IJavaElementDelta[] changed, int i, IJavaElement proj) {
         if (proj.getElementType() == IJavaElement.JAVA_PROJECT) {
-			String projectName = ((IJavaProject) proj).getProject().getName();
+			final IProject project = ((IJavaProject) proj).getProject();
+			String projectName = project.getName();
 			fCache.removeHelper(projectName);
+			Job toucher = new Job(JSPCoreMessages.Processing_BuildPath_Changes) {
+				protected IStatus run(IProgressMonitor monitor) {
+					//touch JSPs
+					try {
+						project.accept(new IResourceProxyVisitor() {
+							public boolean visit(IResourceProxy proxy) throws CoreException {
+								if (!proxy.isDerived() && ContentTypeIdForJSP.indexOfJSPExtension(proxy.getName()) >= 0) {
+									proxy.requestResource().touch(null);
+								}
+								return !proxy.isDerived();
+							}
+						}, IResource.DEPTH_INFINITE);
+					}
+					catch (CoreException e) {
+						// ignore
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			toucher.setPriority(Job.BUILD);
+			toucher.setUser(false);
+			toucher.setSystem(false);
+			toucher.schedule();
 		}
     }
 }
