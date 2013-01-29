@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,8 @@ public final class FacetModuleCoreSupport {
 	static final boolean _dump_NCDFE = false;
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
+	static final String META_INF_RESOURCES = "META-INF/resources/"; //$NON-NLS-1$
+	static final IPath META_INF_RESOURCES_PATH = new Path(META_INF_RESOURCES);
 
 	static final float DEFAULT_SERVLET_VERSION = 3f;
 
@@ -161,6 +163,25 @@ public final class FacetModuleCoreSupport {
 	}
 
 	/**
+	 * @param project
+	 * @return whether this project has the jst.webfragment facet installed on it
+	 * @throws CoreException
+	 */
+	public static boolean isWebFragmentProject(IProject project) {
+		if (project == null)
+			return false;
+		
+		try {
+			return FacetModuleCoreSupportDelegate.isWebFragmentProject(project);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+		}
+		return true;
+	}
+
+	/**
 	 * @param basePath -
 	 *            the full path to a resource within the workspace
 	 * @param reference -
@@ -241,7 +262,8 @@ public final class FacetModuleCoreSupport {
 			// getFolder on a workspace root must use a full path, skip
 			if (folder != null && (folder.getType() & IResource.ROOT) == 0) {
 				IFolder webinf = folder.getFolder(WEB_INF_PATH);
-				if (webinf != null && webinf.exists()) {
+				IFolder metaResources = folder.getFolder(META_INF_RESOURCES_PATH);
+				if ((webinf != null && webinf.exists()) || (metaResources != null && metaResources.exists())) {
 					return folder.getFullPath();
 				}
 			}
@@ -249,6 +271,27 @@ public final class FacetModuleCoreSupport {
 		}
 
 		return basePath.uptoSegment(1);
+	}
+
+	/**
+	 * @param project
+	 * @return the projects referenced by this project for deployment, but not
+	 *         necessarily on its Java Build path, e.g. web gfragments, or
+	 *         <code>null</code>
+	 */
+	public static IProject[] getReferenced(IProject project) {
+		if (project == null)
+			return null;
+		IProject[] projects = null;
+		try {
+			projects = FacetModuleCoreSupportDelegate.getReferenced(project);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+			return null;
+		}
+		return projects;
 	}
 
 	/**

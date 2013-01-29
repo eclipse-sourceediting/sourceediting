@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -140,8 +140,8 @@ class NewJSPFileWizardPage extends WizardNewFileCreationPage {
 				if (!isJavaProject(project)) {
 					setMessage(JSPUIMessages._WARNING_FILE_MUST_BE_INSIDE_JAVA_PROJECT, WARNING);
 				}
-				if (isDynamicWebProject(project)) {
-					// check that the path is inside the webContent folder
+				if (isDynamicWebProject(project) || FacetModuleCoreSupport.isWebFragmentProject(project)) {
+					// check that the path is inside a deployed folder
 					IPath[] webContentPaths = FacetModuleCoreSupport.getAcceptableRootPaths(project);
 					boolean isPrefix = false;
 					for (int i = 0; !isPrefix && i < webContentPaths.length; i++) {

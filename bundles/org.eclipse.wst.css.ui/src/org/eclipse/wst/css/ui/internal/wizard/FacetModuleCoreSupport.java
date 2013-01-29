@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.css.ui.internal.wizard;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * This class encapsulates any used Module Core and Facets APIs along with
@@ -24,6 +25,8 @@ import org.eclipse.core.runtime.IPath;
  */
 final class FacetModuleCoreSupport {
 	static final boolean _dump_NCDFE = false;
+	static final String META_INF_RESOURCES = "META-INF/resources/"; //$NON-NLS-1$
+	static final IPath META_INF_RESOURCES_PATH = new Path(META_INF_RESOURCES);
 
 	/**
 	 * @param project

@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,16 +41,19 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
  * 
  */
 final class FacetModuleCoreSupportDelegate {
-	private static final String META_INF_RESOURCES = "META-INF/resources/"; //$NON-NLS-1$
 	private static final String SLASH = "/"; //$NON-NLS-1$
 
 	/**
 	 * Copied to avoid unneeded extra dependency (plus it's unclear why the
-	 * value is in that plug-in).
+	 * valuse are in that plug-in).
 	 * 
 	 * @see org.eclipse.wst.common.componentcore.internal.util.IModuleConstants.JST_WEB_MODULE
 	 */
 	private final static String JST_WEB_MODULE = "jst.web"; //$NON-NLS-1$
+	/**
+	 * @see org.eclipse.wst.common.componentcore.internal.util.IModuleConstants.JST_WEBFRAGMENT_MODULE
+	 */
+	private final static String JST_WEBFRAGMENT_MODULE = "jst.webfragment"; //$NON-NLS-1$
 	/**
 	 * @param project
 	 * @return the version of the JST Web facet, a default otherwise
@@ -112,8 +118,11 @@ final class FacetModuleCoreSupportDelegate {
 
 		IPath path = null;
 		IVirtualComponent component = ComponentCore.createComponent(project);
-		if (component != null && component.exists()) {
+		if (component != null && component.exists() && component.getRootFolder() != null) {
 			path = component.getRootFolder().getWorkspaceRelativePath();
+			if (component.getRootFolder().getFolder(FacetModuleCoreSupport.META_INF_RESOURCES_PATH).getUnderlyingFolder().isAccessible()) {
+				path = path.append(FacetModuleCoreSupport.META_INF_RESOURCES_PATH);
+			}
 		}
 		return path;
 	}
@@ -131,6 +140,30 @@ final class FacetModuleCoreSupportDelegate {
 			if (ProjectFacetsManager.isProjectFacetDefined(JST_WEB_MODULE)) {
 				IFacetedProject faceted = ProjectFacetsManager.create(project);
 				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_MODULE);
+				if (faceted != null && faceted.hasProjectFacet(webModuleFacet)) {
+					return true;
+				}
+			}
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return false;
+	}
+
+	/**
+	 * @param project
+	 * @return
+	 * @throws CoreException
+	 */
+	static boolean isWebFragmentProject(IProject project) {
+		if (project == null)
+			return false;
+		
+		try {
+			if (ProjectFacetsManager.isProjectFacetDefined(JST_WEBFRAGMENT_MODULE)) {
+				IFacetedProject faceted = ProjectFacetsManager.create(project);
+				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEBFRAGMENT_MODULE);
 				if (faceted != null && faceted.hasProjectFacet(webModuleFacet)) {
 					return true;
 				}
@@ -160,7 +193,7 @@ final class FacetModuleCoreSupportDelegate {
 				 * See Servlet 3.0, section 4.6 ; this is the only referenced
 				 * module/component type we support
 				 */
-				IPath resolved = referencedPathRoot.append(META_INF_RESOURCES).append(runtimeReference);
+				IPath resolved = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES).append(runtimeReference);
 				if (resolved != null && component.getProject().findMember(resolved.removeFirstSegments(1)) != null)
 					return resolved;
 			}
@@ -247,19 +280,45 @@ final class FacetModuleCoreSupportDelegate {
 			return new IPath[]{project.getFullPath()};
 		}
 
-		IPath[] paths = null;
+		List paths = new ArrayList();
 		IVirtualFolder componentFolder = ComponentCore.createFolder(project, Path.ROOT);
 		if (componentFolder != null && componentFolder.exists()) {
 			IContainer[] workspaceFolders = componentFolder.getUnderlyingFolders();
-			paths = new IPath[workspaceFolders.length];
 			for (int i = 0; i < workspaceFolders.length; i++) {
-				paths[i] = workspaceFolders[i].getFullPath();
+				if (workspaceFolders[i].getFolder(FacetModuleCoreSupport.META_INF_RESOURCES_PATH).isAccessible())
+					paths.add(workspaceFolders[i].getFullPath().append(FacetModuleCoreSupport.META_INF_RESOURCES_PATH));
+				else
+					paths.add(workspaceFolders[i].getFullPath());
 			}
+			
+			IVirtualReference[] references = ComponentCore.createComponent(project).getReferences();
+			if (references != null) {
+				for (int i = 0; i < references.length; i++) {
+					IVirtualComponent referencedComponent = references[i].getReferencedComponent();
+					if (referencedComponent == null)
+						continue;
+					IVirtualComponent component = referencedComponent.getComponent();
+					if (component == null)
+						continue;
+					IVirtualFolder rootFolder = component.getRootFolder();
+					if (rootFolder == null)
+						continue;
+					IPath referencedPathRoot = rootFolder.getWorkspaceRelativePath();
+					/*
+					 * See Servlet 3.0, section 4.6 ; this is the only
+					 * referenced module/component type we support
+					 */
+					IPath resources = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES);
+					if (resources != null && component.getProject().findMember(resources.removeFirstSegments(1)) != null)
+						paths.add(resources);
+				}
+			}
+
 		}
 		else {
-			paths = new IPath[]{project.getFullPath()};
+			paths.add(new IPath[]{project.getFullPath()});
 		}
-		return paths;
+		return (IPath[]) paths.toArray(new IPath[paths.size()]);
 	}
 
 	static IPath getDefaultRoot(IProject project) {
@@ -270,6 +329,26 @@ final class FacetModuleCoreSupportDelegate {
 			}
 		}
 		return null;
+	}
+
+	static IProject[] getReferenced(IProject current) {
+		if (!ModuleCoreNature.isFlexibleProject(current))
+			return new IProject[0];
+		
+		List projects = new ArrayList();
+		IVirtualReference[] references = ComponentCore.createComponent(current).getReferences();
+		if (references != null) {
+			for (int i = 0; i < references.length; i++) {
+				IVirtualComponent referencedComponent = references[i].getReferencedComponent();
+				if (referencedComponent == null)
+					continue;
+				IProject project = referencedComponent.getProject();
+				if (project == null)
+					continue;
+				projects.add(project);
+			}
+		}
+		return (IProject[]) projects.toArray(new IProject[projects.size()]);
 	}
 
 	static IPath getRootContainerForPath(IProject project, IPath path) {

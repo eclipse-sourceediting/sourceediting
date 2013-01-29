@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
+import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.wst.sse.core.internal.util.AbstractMemoryListener;
 import org.osgi.framework.Bundle;
 import org.osgi.service.event.Event;
@@ -846,22 +847,16 @@ public final class TaglibIndex {
 				ProjectDescription description = createDescription(project);
 				List availableRecords = description.getAvailableTaglibRecords(path);
 
-				// ICatalog catalog =
-				// XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-				// while (catalog != null) {
-				// ICatalogEntry[] entries = catalog.getCatalogEntries();
-				// for (int i = 0; i < entries.length; i++) {
-				// // System.out.println(entries[i].getURI());
-				// }
-				// INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
-				// for (int i = 0; i < nextCatalogs.length; i++) {
-				// ICatalogEntry[] entries2 =
-				// nextCatalogs[i].getReferencedCatalog().getCatalogEntries();
-				// for (int j = 0; j < entries2.length; j++) {
-				// // System.out.println(entries2[j].getURI());
-				// }
-				// }
-				// }
+				// check web fragments, if there are any
+				IProject[] projects = FacetModuleCoreSupport.getReferenced(project);
+				if (projects != null) {
+					for (int i = 0; i < projects.length; i++) {
+						if (projects[i].isAccessible()) {
+							ProjectDescription required = createDescription(projects[i]);
+							availableRecords.addAll(required.getAvailableTaglibRecords(FacetModuleCoreSupport.getDefaultRootContainer(projects[i])));
+						}
+					}
+				}
 
 				records = (ITaglibRecord[]) availableRecords.toArray(records);
 			}
@@ -936,6 +931,19 @@ public final class TaglibIndex {
 			if (project.isAccessible()) {
 				ProjectDescription description = createDescription(project);
 				resolved = description.resolve(basePath, reference);
+			}
+
+			// check web fragments, if there are any
+			if (resolved == null) {
+				IProject[] projects = FacetModuleCoreSupport.getReferenced(project);
+				if (projects != null) {
+					for (int i = 0; i < projects.length && resolved == null; i++) {
+						if (projects[i].isAccessible()) {
+							ProjectDescription description = createDescription(projects[i]);
+							resolved = description.resolve(basePath, reference);
+						}
+					}
+				}
 			}
 		}
 
