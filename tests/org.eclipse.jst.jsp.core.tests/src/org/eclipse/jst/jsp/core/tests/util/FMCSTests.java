@@ -51,7 +51,7 @@ public class FMCSTests extends TestCase {
 		bd1.refreshLocal(IResource.DEPTH_INFINITE, null);
 		bd2.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-		assertEquals("/BugDemo2/WEB-INF/web.xml", "" + FacetModuleCoreSupport.resolve(new Path("/BugDemo2/src/META-INF/resources/referenced.jsp"), "/WEB-INF/web.xml"));
+		assertEquals("/BugDemo2/src/WEB-INF/web.xml", "" + FacetModuleCoreSupport.resolve(new Path("/BugDemo2/src/META-INF/resources/referenced.jsp"), "/WEB-INF/web.xml"));
 	}
 	public void testFacetModuleAbstractionInDynamicWebProject() throws Exception {
 		IProject bd1 = createProject("bug_399017");
