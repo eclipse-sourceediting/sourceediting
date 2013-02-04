@@ -84,7 +84,9 @@
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/"
                 uri="dtdsAndSchemas/j2ee_1_4.xsd" />
-
+            <uri
+                name="http://java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd"
+                uri="dtdsAndSchemas/j2ee_1_4.xsd" />
 
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/j2ee_jaxrpc_mapping_1_1.xsd"
