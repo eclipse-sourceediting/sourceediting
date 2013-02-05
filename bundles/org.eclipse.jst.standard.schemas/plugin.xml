@@ -134,10 +134,10 @@
                 name="http://java.sun.com/xml/ns/j2ee/jsp_2_0.xsd"
                 uri="dtdsAndSchemas/jsp_2_0.xsd" />
             <uri
-                name="http://java.sun.com/xml/ns/j2ee/jsp_2_1.xsd"
+                name="http://java.sun.com/xml/ns/javaee/jsp_2_1.xsd"
                 uri="dtdsAndSchemas/jsp_2_1.xsd" />
             <uri
-                name="http://java.sun.com/xml/ns/j2ee/jsp_2_2.xsd"
+                name="http://java.sun.com/xml/ns/javaee/jsp_2_2.xsd"
                 uri="dtdsAndSchemas/jsp_2_2.xsd" />
 
 
