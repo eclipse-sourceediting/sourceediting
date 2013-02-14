@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.html.core.internal.cleanup.HTMLCleanupProcessorImpl;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -60,8 +62,14 @@ public class CleanupDocumentHandler extends AbstractHandler implements IHandler 
 							IStructuredModel model = null;
 							try {
 								model = StructuredModelManager.getModelManager().getExistingModelForEdit(editor.getDocumentProvider().getDocument(editor.getEditorInput()));
-								if (model != null)
-									cleanupProcessor.cleanupModel(model);
+								if (model != null) {
+									if ((cleanupProcessor instanceof AbstractStructuredCleanupProcessor) && (editor instanceof StructuredTextEditor)) {
+										((AbstractStructuredCleanupProcessor) cleanupProcessor).cleanupModel(model, ((StructuredTextEditor) editor).getTextViewer());
+									}
+									else {
+										cleanupProcessor.cleanupModel(model);
+									}
+								}
 							}
 							finally {
 								if (model != null)

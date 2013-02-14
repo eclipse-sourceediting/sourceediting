@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -34,6 +35,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.core.internal.format.IFormattingDelegate;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.w3c.dom.Attr;
@@ -42,6 +45,7 @@ import org.w3c.dom.Node;
 
 public abstract class AbstractStructuredCleanupProcessor implements IStructuredCleanupProcessor {
 	public boolean refreshCleanupPreferences = true; // special flag for JUnit
+	private static IFormattingDelegate delegate;
 
 	// tests to skip refresh
 	// of cleanup preferences
@@ -236,13 +240,20 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 	}
 
 	public void cleanupModel(IStructuredModel structuredModel) {
-
-		int start = 0;
-		int length = structuredModel.getStructuredDocument().getLength();
-		cleanupModel(structuredModel, start, length);
+		cleanupModel(structuredModel, null);
 	}
 
 	public void cleanupModel(IStructuredModel structuredModel, int start, int length) {
+		cleanupModel(structuredModel, start, length, null);
+	}
+
+	public void cleanupModel(IStructuredModel structuredModel, Object context) {
+		int start = 0;
+		int length = structuredModel.getStructuredDocument().getLength();
+		cleanupModel(structuredModel, start, length, context);
+	}
+
+	public void cleanupModel(IStructuredModel structuredModel, int start, int length, Object context) {
 
 		if (structuredModel != null) {
 			if ((start >= 0) && (length <= structuredModel.getStructuredDocument().getLength())) {
@@ -298,8 +309,14 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 						// format source
 						if (getFormatSourcePreference(structuredModel)) {
 							// format the document
-							IStructuredFormatProcessor formatProcessor = getFormatProcessor();
-							formatProcessor.formatModel(structuredModel);
+							IFormattingDelegate delegate = getFormattingDelegate();
+							if (context != null && delegate != null) {
+								delegate.format(context);
+							}
+							else {
+								IStructuredFormatProcessor formatProcessor = getFormatProcessor();
+								formatProcessor.formatModel(structuredModel);
+							}
 						}
 					}
 					finally {
@@ -461,4 +478,21 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 	}
 
 	abstract protected void refreshCleanupPreferences();
+
+	private synchronized IFormattingDelegate getFormattingDelegate() {
+		if (delegate == null) {
+			IConfigurationElement[] element = Platform.getExtensionRegistry().getConfigurationElementsFor(SSECorePlugin.ID, "formattingDelegate"); //$NON-NLS-1$
+			if (element.length > 0) {
+				try {
+					Object d = element[0].createExecutableExtension("class");
+					if (d instanceof IFormattingDelegate) {
+						delegate = (IFormattingDelegate) d;
+					}
+				} catch (CoreException e) {
+					Logger.logException("Exception while creating the formatting delegate.", e);
+				}
+			}
+		}
+		return delegate;
+	}
 }
