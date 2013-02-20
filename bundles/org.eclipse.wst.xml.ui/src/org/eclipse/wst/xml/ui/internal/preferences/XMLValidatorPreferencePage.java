@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
 
 package org.eclipse.wst.xml.ui.internal.preferences;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -105,16 +106,20 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 		}
 
 		IScopeContext[] contexts = createPreferenceScopes();
-		fOriginalUseXIncludeButtonSelected = contexts[0].getNode(getPreferenceNodeQualifier()).getBoolean(XMLCorePreferenceNames.USE_XINCLUDE, true);
+		fOriginalUseXIncludeButtonSelected = getBooleanPreference(XMLCorePreferenceNames.USE_XINCLUDE, false, contexts);
 
 		if (fUseXinclude != null) {
 			fUseXinclude.setSelection(fOriginalUseXIncludeButtonSelected);
 		}
-		fOriginalUseHonourAllButtonSelected = contexts[0].getNode(getPreferenceNodeQualifier()).getBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
+		fOriginalUseHonourAllButtonSelected = getBooleanPreference(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true, contexts);
 		if (fHonourAllSchemaLocations != null) {
 			fHonourAllSchemaLocations.setSelection(fOriginalUseHonourAllButtonSelected);
 		}
 
+	}
+
+	private boolean getBooleanPreference(String key, boolean defaultValue, IScopeContext[] contexts) {
+		return Platform.getPreferencesService().getBoolean(getPreferenceNodeQualifier(), key, defaultValue, contexts);
 	}
 
 	private void handleMarkupSeveritySelection(boolean selection) {
@@ -133,7 +138,7 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 
 		IScopeContext[] contexts = createPreferenceScopes();
 
-		fOriginalUseExtendedMarkupValidation = contexts[0].getNode(getPreferenceNodeQualifier()).getBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION, false);
+		fOriginalUseExtendedMarkupValidation = getBooleanPreference(XMLCorePreferenceNames.MARKUP_VALIDATION, false, contexts);
 		fExtendedMarkupValidation = createCheckBox(parent, XMLUIMessages.MarkupValidation_files);
 
 		((GridData) fExtendedMarkupValidation.getLayoutData()).horizontalSpan = 2;
@@ -180,7 +185,7 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 
 	protected void performDefaultsForValidatingGroup() {
 		IEclipsePreferences modelPreferences = new DefaultScope().getNode(getPreferenceNodeQualifier());
-		boolean useXIncludeButtonSelected = modelPreferences.getBoolean(XMLCorePreferenceNames.USE_XINCLUDE, true);
+		boolean useXIncludeButtonSelected = modelPreferences.getBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
 
 		if (fUseXinclude != null) {
 			fUseXinclude.setSelection(useXIncludeButtonSelected);
