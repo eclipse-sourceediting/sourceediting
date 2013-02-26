@@ -12,7 +12,9 @@ package org.eclipse.wst.sse.ui.internal.propertytester;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 
 public class CustomFilterPropertyTester extends PropertyTester {
@@ -23,9 +25,12 @@ public class CustomFilterPropertyTester extends PropertyTester {
 	 *      java.lang.String, java.lang.Object[], java.lang.Object)
 	 */
 	public boolean test(Object receiver, String property, Object[] args,	Object expectedValue) {
-		if (receiver instanceof IEditorPart){
-			IContentOutlinePage outlinePage  = (IContentOutlinePage) ((IEditorPart) receiver).getAdapter(IContentOutlinePage.class);
-			return (outlinePage instanceof ConfigurableContentOutlinePage && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed());
+		if (receiver instanceof IEditorPart) {
+			Object textEditor = ((IEditorPart) receiver).getAdapter(ITextEditor.class);
+			if (textEditor instanceof StructuredTextEditor) {
+				IContentOutlinePage outlinePage  = (IContentOutlinePage) ((IEditorPart) receiver).getAdapter(IContentOutlinePage.class);
+				return (outlinePage instanceof ConfigurableContentOutlinePage && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed());
+			}
 		}
 		return false;
 	}
