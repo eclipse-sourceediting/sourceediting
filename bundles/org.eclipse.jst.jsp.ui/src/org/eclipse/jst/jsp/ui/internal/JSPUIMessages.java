@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -92,6 +92,8 @@ public class JSPUIMessages extends NLS {
 	public static String AddBlockComment_label; // resource bundle
 	public static String AddBlockComment_tooltip; // resource bundle
 	public static String AddBlockComment_description; // resource bundle
+	public static String AddImportHandler_label;
+	public static String AddImportHandler_title;
 	public static String RemoveBlockComment_label; // resource bundle
 	public static String RemoveBlockComment_tooltip; // resource bundle
 	public static String RemoveBlockComment_description; // resource bundle

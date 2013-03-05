@@ -501,6 +501,11 @@
 			description="%command.jsp.refactor.move.description"
 			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.jst.jsp.ui.refactor.move" />
+		<command
+			name="%command.jsp.add.imports.name"
+			description="%command.jsp.add.imports.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.jst.jsp.ui.add.imports" />
 	</extension>
 	
 	<!-- Keybinding scope for jsp source editor -->
@@ -537,6 +542,11 @@
 			commandId="org.eclipse.jst.jsp.ui.refactor.move"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
+		<key
+			sequence="M1+M2+M"
+			contextId="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope"
+			commandId="org.eclipse.jst.jsp.ui.add.imports"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
 
 	<!--======================================================================================-->
@@ -869,6 +879,15 @@
              	</reference>
              </activeWhen>
        </handler>
+       <handler
+             commandId="org.eclipse.jst.jsp.ui.add.imports"
+             class="org.eclipse.jst.jsp.ui.internal.handlers.AddImportHandler">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+       </handler>
 	</extension>
 	
 	<extension point="org.eclipse.ui.perspectiveExtensions">
@@ -1042,6 +1061,24 @@
 				<visibleWhen checkEnabled="true" />
 			</command>
 			<separator name="jspRefactorBegin" visible="false"></separator>
+		</menuContribution>
+		<menuContribution locationURI="menu:sourceMenuId?before=sourceEnd">
+			<separator name="jspImportsBegin" visible="true" />
+			<command commandId="org.eclipse.jst.jsp.ui.add.imports" id="addimport" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition" />
+				</visibleWhen>
+			</command>
+			<separator name="jspImportsEnd" visible="true" />
+		</menuContribution>
+		<menuContribution locationURI="popup:sourcePopupMenuId?before=sourceEnd">
+			<separator name="jspImportsBegin" visible="true" />
+			<command commandId="org.eclipse.jst.jsp.ui.add.imports" id="addimport" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition" />
+				</visibleWhen>
+			</command>
+			<separator name="jspImportsEnd" visible="true" />
 		</menuContribution>
 	</extension>
 	
