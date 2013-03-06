@@ -131,6 +131,12 @@
             <uri
                 name="http://www.w3.org/TR/html4/strict.dtd"
                 uri="dtds/strict.dtd"/>
+            <uri
+                name="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702"
+                uri="xsd/ws-securitypolicy-1.2.xsd" />
+            <uri
+                name="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200802"
+                uri="xsd/ws-securitypolicy.xsd" />
 
 
             <!-- these are removed from the catalog, since they are -not- 
