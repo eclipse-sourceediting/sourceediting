@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,6 @@
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.views.contentoutline;
-
-import java.util.List;
 
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -31,8 +29,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
@@ -91,22 +87,11 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 						// find an attribute of type (or just named)
 						// ID
 						if (elementDecl != null) {
+							final CMNamedNodeMap attributeDeclarationMap = elementDecl.getAttributes();
 							int i = 0;
 							while ((i < attributes.getLength()) && (idTypedAttribute == null)) {
 								Node attr = attributes.item(i);
 								String attrName = attr.getNodeName();
-								CMNamedNodeMap attributeDeclarationMap = elementDecl.getAttributes();
-								
-								CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributeDeclarationMap);
-								List nodes = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent(element, elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
-								for (int k = 0; k < nodes.size(); k++) {
-									CMNode cmnode = (CMNode) nodes.get(k);
-									if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-										allAttributes.put(cmnode);
-									}
-								}
-								attributeDeclarationMap = allAttributes;
-
 								CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attributeDeclarationMap.getNamedItem(attrName);
 								if (attrDecl != null) {
 									if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
