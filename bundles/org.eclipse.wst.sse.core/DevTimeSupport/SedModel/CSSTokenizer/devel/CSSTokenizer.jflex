@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -281,7 +281,7 @@ ident = -?{nmstart}{nmchar}*
 value_ident = -?{nmstart}"."?({nmchar}+"."?)*
 
 name = {nmchar}+
-num = [+-]?([0-9]+|[0-9]*"."[0-9]+)
+num = [+-]?([0-9]+|[0-9]*"."[0-9]*)
 string = {string1}|{string2}
 url = ([ !#$%&*-~]|{nonascii}|{escape})*
 s = [ \t\r\n\f]
