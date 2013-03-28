@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.format;
 
+import java.util.Arrays;
+
 import junit.framework.TestCase;
 
 import org.eclipse.wst.html.core.internal.format.HTMLFormattingUtil;
@@ -17,6 +19,8 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+
+import com.ibm.icu.text.Collator;
 
 public class TestFormatUtility extends TestCase {
 
@@ -26,6 +30,8 @@ public class TestFormatUtility extends TestCase {
 		assertTrue("Default element list has no elements", defaultElements.length > 0);
 
 		Object[] elements = HTMLFormattingUtil.getInlineElements();
+		Arrays.sort(elements, Collator.getInstance());
+		Arrays.sort(defaultElements, Collator.getInstance());
 		assertNotNull("Inline elements cannot be null", elements);
 		assertTrue("Inline elements size does not match the default", elements.length == defaultElements.length);
 
