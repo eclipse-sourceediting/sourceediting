@@ -63,6 +63,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.CompletionProposalCategory;
@@ -490,7 +491,13 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 			Iterator iter = getLegacyExtendedContentAssistProcessors().iterator();
 			while (iter.hasNext()) {
 				IContentAssistProcessor legacyProcessor = (IContentAssistProcessor) iter.next();
-				ICompletionProposal[] legacyComputed = legacyProcessor.computeCompletionProposals(viewer, offset);
+				ICompletionProposal[] legacyComputed = null;
+				try {
+					legacyComputed = legacyProcessor.computeCompletionProposals(viewer, offset);
+				}
+				catch (Exception e) {
+					Logger.logException("Problem occurred while gathering proposals from " + legacyProcessor.getClass().getName(), e); //$NON-NLS-1$
+				}
 				if (legacyComputed != null) {
 					proposals.addAll(Arrays.asList(legacyComputed));
 				}
