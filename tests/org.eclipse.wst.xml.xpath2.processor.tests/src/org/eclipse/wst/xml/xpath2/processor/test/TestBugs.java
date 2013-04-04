@@ -57,7 +57,7 @@
  *  Mukul Gandhi    - bug 339025 - fixes to fn:distinct-values function. ability to find distinct values on node items.
  *  Mukul Gandhi    - bug 341862 - improvements to computation of typed value of xs:boolean nodes.                                 
  *  Jesper Steen Moller  - bug 340933 - Migrate tests to new XPath2 API
- *  Lukasz Wycisk   - bug 361060 - Aggregations with nil=’true’ throw exceptions.
+ *  Lukasz Wycisk   - bug 361060 - Aggregations with nil='true' throw exceptions.
  *  Lukasz Wycisk   - bug 361059 - FnRoundHalfToEven is wrong in case of 2 arguments
  *  Jesper Moller   - bug 388504 - XPath scanner does not detect non-ASCII names                              
  ******************************************************************************/
@@ -204,7 +204,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		setupDynamicContext(null);
 
-		compileXPath("count(//Schlüssel)");
+		compileXPath("count(//Schl\u00FCssel)");
 		ResultSequence rs = evaluate(domDoc);
 
 		String actual = rs.first().getStringValue();
