@@ -99,7 +99,6 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 "::"	{ return symbol(XpathSym.COLONCOLON); }
 "@"	{ return symbol(XpathSym.AT_SYM); }
 "\.\."	{ return symbol(XpathSym.DOTDOT); }
-":="	{ return symbol(XpathSym.COLONEQ); }
 ":"	{ return symbol(XpathSym.COLON); }
 ","	{ return symbol(XpathSym.COMMA); }
 "\$"	{ return symbol(XpathSym.DOLLAR); }
@@ -149,7 +148,6 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 "for"				{ return symbol(XpathSym.FOR); }
 "in"				{ return symbol(XpathSym.IN); }
 "return"			{ return symbol(XpathSym.RETURN); }
-"let"				{ return symbol(XpathSym.LET); }
 "satisfies"			{ return symbol(XpathSym.SATISFIES); }
 "to"				{ return symbol(XpathSym.TO); }
 "some"				{ return symbol(XpathSym.SOME); }

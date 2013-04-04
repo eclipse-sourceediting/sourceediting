@@ -80,7 +80,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.InstOfExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntegerLiteral;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntersectExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.ItemType;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.LetExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.MinusExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.ModExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.MulExpr;
@@ -369,35 +368,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		return rs;
 	}
 
-	private void do_let(ListIterator<VarExprPair> iter,
-			Expr finalexpr, ResultBuffer destination) {
-
-		// we have more vars to bind...
-		if (iter.hasNext()) {
-			VarExprPair ve = (VarExprPair) iter.next();
-
-			// evaluate binding sequence
-			ResultSequence rs = (ResultSequence) ve.expr().accept(this);
-
-			QName varname = ve.varname();
-
-			// for each item of binding sequence, bind the range
-			// variable and do the expression, concatenating the
-			// result
-
-			pushScope(varname, rs);
-			do_let(iter, finalexpr, destination);
-			popScope();
-			iter.previous();
-		}
-		// we finally got to do the "last expression"
-		else {
-			destination.concat((ResultSequence) finalexpr.accept(this));
-		}
-	}
-
-
-	private void do_for_each(ListIterator<VarExprPair> iter,
+	private void do_for_each(ListIterator iter,
 			Expr finalexpr, ResultBuffer destination) {
 
 		// we have more vars to bind...
@@ -533,20 +504,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		List pairs = new ArrayList(fex.ve_pairs());
 		ResultBuffer rb = new ResultBuffer(); 
 		do_for_each(pairs.listIterator(), fex.expr(), rb);
-		return rb.getSequence();
-	}
-
-	/**
-	 * visit for expression
-	 * 
-	 * @param fex
-	 *            is the for expression.
-	 * @return a new function.
-	 */
-	public Object visit(LetExpr fex) {
-		List pairs = new ArrayList(fex.ve_pairs());
-		ResultBuffer rb = new ResultBuffer(); 
-		do_let(pairs.listIterator(), fex.expr(), rb);
 		return rb.getSequence();
 	}
 

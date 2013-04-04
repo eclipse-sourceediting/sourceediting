@@ -18,7 +18,7 @@ import java.util.*;
  * Class for the For expression.
  */
 public class ForExpr extends Expr {
-	private Collection<VarExprPair> _var_expr_pairs;
+	private Collection _var_expr_pairs;
 	private Expr _return;
 
 	/**
@@ -29,7 +29,7 @@ public class ForExpr extends Expr {
 	 * @param ret
 	 *            Return expression.
 	 */
-	public ForExpr(Collection<VarExprPair> varexp, Expr ret) {
+	public ForExpr(Collection varexp, Expr ret) {
 		_var_expr_pairs = varexp;
 		_return = ret;
 	}
@@ -48,7 +48,7 @@ public class ForExpr extends Expr {
 	 * 
 	 * @return Result of Iterator operation.
 	 */
-	public Iterator<VarExprPair> iterator() {
+	public Iterator iterator() {
 		return _var_expr_pairs.iterator();
 	}
 
@@ -79,7 +79,7 @@ public class ForExpr extends Expr {
 	public void truncate_pairs() {
 		boolean first = true;
 
-		for (Iterator<VarExprPair> i = _var_expr_pairs.iterator(); i.hasNext();) {
+		for (Iterator i = _var_expr_pairs.iterator(); i.hasNext();) {
 			i.next();
 			if (!first)
 				i.remove();
@@ -93,7 +93,7 @@ public class ForExpr extends Expr {
 	 * 
 	 * @return Expression pairs.
 	 */
-	public Collection<VarExprPair> ve_pairs() {
+	public Collection ve_pairs() {
 		return _var_expr_pairs;
 	}
 }

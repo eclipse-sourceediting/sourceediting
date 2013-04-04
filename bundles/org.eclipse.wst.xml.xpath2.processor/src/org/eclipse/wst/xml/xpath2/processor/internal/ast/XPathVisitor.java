@@ -28,11 +28,6 @@ public interface XPathVisitor {
 	public Object visit(ForExpr fex);
 
 	/**
-	 * Visit LetExpr.
-	 */
-	public Object visit(LetExpr fex);
-
-	/**
 	 * Visit QuantifiedExpr.
 	 */
 	public Object visit(QuantifiedExpr qex);

@@ -9,7 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *     Jesper Steen Moller - bug 343804 - Updated API information
- *     Lukasz Wycisk - bug 361802 - Default variable namespace ï¿½ no namespace
+ *     Lukasz Wycisk - bug 361802 - Default variable namespace Ð no namespace
  *     
  *******************************************************************************/
 
@@ -32,6 +32,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.StaticFunctNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticNsNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.StaticTypeNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticVarNameError;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.AddExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.AndExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.AnyKindTest;
@@ -60,7 +61,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.InstOfExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntegerLiteral;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntersectExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.ItemType;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.LetExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.MinusExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.ModExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.MulExpr;
@@ -300,7 +300,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 
 	// does a for and a quantified expression
 	// takes the iterator for var expr paris
-	private void doForLetExpr(Iterator<VarExprPair> iter, Expr expr) {
+	private void doForExpr(Iterator iter, Expr expr) {
 		int scopes = 0;
 
 		// add variables to scope and check the binding sequence
@@ -335,21 +335,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 */
 	public Object visit(ForExpr fex) {
 
-		doForLetExpr(fex.iterator(), fex.expr());
-
-		return null;
-	}
-
-	/**
-	 * Validate a let expression.
-	 * 
-	 * @param lex
-	 *            is the let expression.
-	 * @return null.
-	 */
-	public Object visit(LetExpr lex) {
-
-		doForLetExpr(lex.iterator(), lex.expr());
+		doForExpr(fex.iterator(), fex.expr());
 
 		return null;
 	}
@@ -363,7 +349,7 @@ public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	 */
 	public Object visit(QuantifiedExpr qex) {
 		// lets cheat
-		doForLetExpr(qex.iterator(), qex.expr());
+		doForExpr(qex.iterator(), qex.expr());
 
 		return null;
 	}

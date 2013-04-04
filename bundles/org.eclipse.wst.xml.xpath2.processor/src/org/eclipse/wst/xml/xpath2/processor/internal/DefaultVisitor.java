@@ -41,7 +41,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.InstOfExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntegerLiteral;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.IntersectExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.ItemType;
-import org.eclipse.wst.xml.xpath2.processor.internal.ast.LetExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.MinusExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.ModExpr;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.MulExpr;
@@ -97,20 +96,6 @@ public class DefaultVisitor implements XPathVisitor {
 			i.next().expr().accept(this);
 		}
 		fex.expr().accept(this);
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param lex
-	 *            is the Let expression.
-	 * @return lex expression.
-	 */
-	public Object visit(LetExpr lex) {
-		for (Iterator<VarExprPair> i = lex.iterator(); i.hasNext();) {
-			i.next().expr().accept(this);
-		}
-		lex.expr().accept(this);
 		return null;
 	}
 
