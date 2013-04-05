@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,9 +80,9 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyE
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Assert;
-import org.eclipse.wst.sse.core.internal.util.URIResolverExtension;
 import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
+import org.eclipse.wst.sse.core.internal.util.URIResolverExtension;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
 
 /**
@@ -2105,7 +2105,7 @@ public class ModelManagerImpl implements IModelManager {
 		Assert.isNotNull(iFile, "file parameter can not be null"); //$NON-NLS-1$
 		if (FileBufferModelManager.getInstance().isExistingBuffer(structuredDocument)) {
 			ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(structuredDocument);
-			if (buffer.getLocation().equals(iFile.getFullPath()) || buffer.getLocation().equals(iFile.getLocation())) {
+			if (iFile.getFullPath().equals(buffer.getLocation()) || (iFile.getLocation() != null && iFile.getLocation().equals(buffer.getLocation())) || (iFile.getLocationURI() != null && buffer.getFileStore() != null && iFile.getLocationURI().equals(buffer.getFileStore().toURI()))) {
 				buffer.commit(new NullProgressMonitor(), true);
 			}
 		}
