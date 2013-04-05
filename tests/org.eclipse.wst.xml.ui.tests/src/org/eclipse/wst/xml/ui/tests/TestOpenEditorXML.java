@@ -12,14 +12,24 @@
 package org.eclipse.wst.xml.ui.tests;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
@@ -28,6 +38,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -144,5 +155,38 @@ public class TestOpenEditorXML extends TestCase {
 		String newContent = "new content";
 		((IDocumentExtension4) doc).set(newContent, fFile.getModificationStamp());
 		assertEquals("Set contents in document with read only regions failed", newContent, doc.get());
+	}
+	
+	public void testOpenOnLocalFileStore() throws Exception {
+		// filebuffers for local files have a location
+		IPath stateLocation = XMLUITestsPlugin.getDefault().getStateLocation();
+		File file = stateLocation.append(FILE_NAME).toFile();
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		InputStream contents = fFile.getContents();
+		if (contents != null) {
+			int c;
+			byte bytes[] = new byte[2048];
+			try {
+				while ((c = contents.read(bytes)) >= 0) {
+					buffer.write(bytes, 0, c);
+				}
+				contents.close();
+			}
+			catch (IOException ioe) {
+				// no cleanup can be done
+			}
+		}
+
+		fileOutputStream.write(buffer.toByteArray());
+		URI uri = URIUtil.toURI(new Path(file.getAbsolutePath()));
+		IFileStore store = EFS.getStore(uri);
+		FileStoreEditorInput input = new FileStoreEditorInput(store);
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbenchWindow.getActivePage();
+		IEditorPart editor = IDE.openEditor(page, input, "org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart");
+		page.closeEditor(editor, false);
+		assertTrue("Unable to open structured text editor " + fEditor, (fEditor instanceof XMLMultiPageEditorPart) || (fEditor instanceof StructuredTextEditor));
 	}
 }
