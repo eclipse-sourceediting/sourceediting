@@ -193,8 +193,13 @@ public interface IModelManager {
 	IStructuredDocument createStructuredDocumentFor(String filename, String content, URIResolver resolver) throws IOException;
 
 	/**
-	 * Creates and returns an unmanaged model populated with the given IFile's
-	 * contents
+	 * <p>Creates and returns an unmanaged model populated with the given IFile's
+	 * contents.</p>
+	 * <p>
+	 * {@link IStructuredModel#releaseFromRead()} or
+	 * {@link IStructuredModel#releaseFromEdit()} should still be called directly
+	 * on returned instances to properly dispose of them.
+	 * </p>
 	 * 
 	 * @param iFile
 	 * @return a structured model, or null if one could not be created
@@ -204,10 +209,13 @@ public interface IModelManager {
 	IStructuredModel createUnManagedStructuredModelFor(IFile iFile) throws IOException, CoreException;
 
 	/**
-	 * Convenience method to create a new unmanaged model of the given content
-	 * type. Requires that an appropriate loader be registered to handle the
-	 * given content type and return an appropriately initialized
-	 * StructuredModel.
+	 * <p>Creates and returns an unmanaged model populated with the given IFile's
+	 * contents.</p>
+	 * <p>
+	 * {@link IStructuredModel#releaseFromRead()} or
+	 * {@link IStructuredModel#releaseFromEdit()} should still be called directly
+	 * on returned instances to properly dispose of them.
+	 * </p>
 	 * 
 	 * @param contentTypeId
 	 * @return a structured model for the given content type, or null if one

@@ -945,13 +945,13 @@ public class FileBufferModelManager {
 
 	public void revert(IDocument document) {
 		if (document == null) {
-			Exception iae = new IllegalArgumentException("can not release a model without a document reference"); //$NON-NLS-1$ 
+			Exception iae = new IllegalArgumentException("can not revert a model without a document reference"); //$NON-NLS-1$ 
 			Logger.logException(iae);
 			return;
 		}
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info == null) {
-			Logger.log(Logger.ERROR, "FileBufferModelManager was asked to revert a document but was not being managed"); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "FileBufferModelManager was asked to revert a document that was not being managed"); //$NON-NLS-1$
 		}
 		else {
 			// get path just for potential error message
@@ -960,9 +960,9 @@ public class FileBufferModelManager {
 				info.buffer.revert(getProgressMonitor());
 			}
 			catch (CoreException e) {
-				// ISSUE: shoudl we not be re-throwing CoreExceptions? Or
+				// ISSUE: should we not be re-throwing CoreExceptions? Or
 				// not catch them at all?
-				Logger.logException("Error reverting model for " + info.buffer.getLocation(), e); //$NON-NLS-1$
+				Logger.logException("Error reverting model for " + locationString(info.buffer), e); //$NON-NLS-1$
 			}
 		}
 	}
