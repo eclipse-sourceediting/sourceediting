@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Jesper Steen Møller - Bug 404956: Launching an XML file as 'XSL Transformation' doesn't transform anything
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui;
 
