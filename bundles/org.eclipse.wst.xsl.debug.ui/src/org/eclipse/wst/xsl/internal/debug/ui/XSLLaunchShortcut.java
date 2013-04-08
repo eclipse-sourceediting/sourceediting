@@ -257,6 +257,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 		if (xslFileList.isEmpty() && xmlFile != null) {
 			// Could it be we have a directive in the file, near the top
 			// <?xml-stylesheet type="text/xsl" href="test1.xsl"?>
+			// For details, see: http://www.w3.org/TR/xml-stylesheet/#the-xml-stylesheet-processing-instruction
 			XMLProcessingInstructionSniffer sniffer = new XMLProcessingInstructionSniffer();
 			try {
 				sniffer.parseContents(new InputSource(xmlFile.getContents()));
