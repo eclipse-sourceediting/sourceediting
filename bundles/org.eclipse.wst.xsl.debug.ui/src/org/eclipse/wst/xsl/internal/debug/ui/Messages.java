@@ -242,6 +242,7 @@ public class Messages extends NLS {
 	public static String XSLLaunchShortcut_1;
 	public static String XSLLaunchShortcut_2;
 	public static String XSLLaunchShortcut_6;
+	public static String XSLLaunchShortcut_7;
 	public static String XSLSelectExisting;
 
 	private Messages() {

@@ -40,7 +40,9 @@ public class PluginProcessorJar implements IProcessorJar
 			// There is surely a better way, but I can'd find it.
 			if (path == null)
 			{
-				url = Platform.getBundle(pluginId).getEntry("/"); //$NON-NLS-1$
+				Bundle bundle = Platform.getBundle(pluginId);
+				if (bundle == null) return null;
+				url = bundle.getEntry("/"); //$NON-NLS-1$
 				url = FileLocator.resolve(url);
 				String s = url.getPath();
 				if (s.endsWith("!/")) //$NON-NLS-1$
