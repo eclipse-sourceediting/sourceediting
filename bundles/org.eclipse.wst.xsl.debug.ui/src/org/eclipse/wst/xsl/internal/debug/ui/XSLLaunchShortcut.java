@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2013 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,20 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Jesper Steen Moller - Bug 404956: Launching an XML file as 'XSL Transformation' doesn't transform anything
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -46,10 +54,13 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.InputFileBlock;
+import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.TransformsBlock;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * <table border=1>
@@ -92,9 +103,12 @@ import org.eclipse.wst.xsl.launching.config.LaunchTransform;
  * @since 1.0
  */
 public class XSLLaunchShortcut implements ILaunchShortcut {
+	private static final String XML_STYLESHEET_PI = "xml-stylesheet"; //$NON-NLS-1$
 	private IFile xmlFile;
 	private IPath xmlFilePath;
 	private IFile[] xslFiles;
+	private String xslFilePath; // always an external path
+	private LaunchPipeline pipeline; 
 
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
@@ -115,8 +129,12 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 	private void searchAndLaunch(Object[] objects, String mode) {
 		if (fillFiles(objects)) {
 			// ensure we have an input file
-			if (xmlFile == null)
+			if (xmlFile == null) {
 				promptForInput();
+			}
+			if (xslFiles == null || xslFiles.length == 0 && xslFilePath == null) {
+				promptForStylesheet();
+			}
 			if (xmlFile != null || xmlFilePath != null)
 				launch(mode);
 		}
@@ -149,6 +167,11 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 
 			@Override
 			protected void okPressed() {
+				saveSelectedXmlFile();
+				super.okPressed();
+			}
+
+			private void saveSelectedXmlFile() {
 				IResource res = inputFileBlock.getResource();
 				if (res == null)
 					xmlFilePath = new Path(inputFileBlock.getText());
@@ -156,7 +179,52 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 						res.getFullPath())
 						&& res.getType() == IResource.FILE)
 					xmlFile = (IFile) res;
+			}
+		};
+		dialog.setHelpAvailable(false);
+		dialog.setStatusLineAboveButtons(true);
+		dialog.setTitle(Messages.XSLLaunchShortcut_1);
+		dialog.open();
+	}
+
+	private void promptForStylesheet() {
+		// prompt for input xml file
+		final LaunchPipeline promptedPipeline = new LaunchPipeline();
+		
+		StatusDialog dialog = new StatusDialog(getShell()) {
+			private TransformsBlock transformsBlock = new TransformsBlock();
+
+			@Override
+			protected Control createDialogArea(Composite parent) {
+				Composite comp = (Composite) super.createDialogArea(parent);
+				comp.setFont(parent.getFont());
+				GridLayout layout = new GridLayout(1, false);
+				comp.setLayout(layout);
+
+				Label label = new Label(comp, SWT.NONE);
+				label.setFont(comp.getFont());
+				GridData gd = new GridData();
+				gd.horizontalIndent = 5;
+				gd.verticalIndent = 5;
+				gd.widthHint = 380;
+				label.setLayoutData(gd);
+				label.setText(Messages.XSLLaunchShortcut_7);
+
+				promptedPipeline.setTransformDefs(new ArrayList<LaunchTransform>());
+				transformsBlock.setPipeline(promptedPipeline);
+				transformsBlock.createControl(comp);
+				transformsBlock.initializeFrom(null);
+				return comp;
+			}
+
+			@Override
+			protected void okPressed() {
+				savePipeline();
 				super.okPressed();
+			}
+
+			private void savePipeline() {
+				pipeline = promptedPipeline;
 			}
 
 		};
@@ -170,6 +238,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 		xmlFile = null;
 		xmlFilePath = null;
 		List<IFile> xslFileList = new ArrayList<IFile>();
+		xslFilePath = null;
 		for (Object object : selections) {
 			IResource resource = (IResource) object;
 			if (resource.getType() == IResource.FILE) {
@@ -185,6 +254,42 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 				}
 			}
 		}
+		if (xslFileList.isEmpty() && xmlFile != null) {
+			// Could it be we have a directive in the file, near the top
+			// <?xml-stylesheet type="text/xsl" href="test1.xsl"?>
+			XMLProcessingInstructionSniffer sniffer = new XMLProcessingInstructionSniffer();
+			try {
+				sniffer.parseContents(new InputSource(xmlFile.getContents()));
+				List<Map<String, String>> instructions = sniffer.getProcessingInstructions(XML_STYLESHEET_PI);
+				if (instructions != null) {
+					for (Map<String, String> attrs : instructions) {
+						String alternative = attrs.get("alternative"); //$NON-NLS-1$
+						if (alternative != null && alternative.equalsIgnoreCase("yes")) continue; //$NON-NLS-1$
+						
+						String href = attrs.get("href"); //$NON-NLS-1$
+						if (href == null) continue;
+						
+						// This is the one, now compute the path
+						if (new URI(href).isAbsolute()) {
+							xslFilePath = href;
+						} else {
+							xslFileList.add(xmlFile.getProject().getFile(xmlFile.getParent().getProjectRelativePath().append(href)));
+						}
+					}
+				}
+			} catch (IOException e) {
+				// ignored
+			} catch (ParserConfigurationException e) {
+				// ignored
+			} catch (SAXException e) {
+				// ignored
+			} catch (CoreException e) {
+				// ignored
+			} catch (URISyntaxException e) {
+				// ignored
+			}
+		}
+		
 		xslFiles = xslFileList.toArray(new IFile[0]);
 		return true;
 	}
@@ -308,11 +413,15 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE,
 					true);
 
-			LaunchPipeline pipeline = new LaunchPipeline();
+			if (pipeline == null) pipeline = new LaunchPipeline();
 			for (IFile element : xslFiles) {
 				pipeline.addTransformDef(new LaunchTransform(element
 						.getFullPath().toPortableString(),
 						LaunchTransform.RESOURCE_TYPE));
+			}
+			if (xslFilePath != null) {
+				pipeline.addTransformDef(new LaunchTransform(xslFilePath,
+						LaunchTransform.EXTERNAL_TYPE));
 			}
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_PIPELINE,
 					pipeline.toXML());

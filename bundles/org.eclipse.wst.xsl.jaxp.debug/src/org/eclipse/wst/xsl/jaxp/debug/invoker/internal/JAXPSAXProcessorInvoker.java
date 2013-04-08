@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2013 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Jesper Steen Moller - Bug 404956: Launching an XML file as 'XSL Transformation' doesn't transform anything
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.invoker.internal;
 
@@ -202,17 +203,14 @@ public class JAXPSAXProcessorInvoker implements IProcessorInvoker
 				SAXSource saxSource = new SAXSource(inputsource);
 				Source src = saxSource;
 				String media = null, title = null, charset = null;
-				while (true)
+				src = tFactory.getAssociatedStylesheet(src, media, title, charset);
+				if (src != null)
 				{
-					src = tFactory.getAssociatedStylesheet(src, media, title, charset);
-					if (src != null)
-					{
-						addStylesheet(saxSource, null, Collections.EMPTY_MAP, new Properties());
-					}
-					else
-					{
-						throw new TransformationException(Messages.getString("JAXPSAXProcessorInvoker.7") + inputsource.getSystemId()); //$NON-NLS-1$
-					}
+					addStylesheet(src, null, Collections.EMPTY_MAP, new Properties());
+				}
+				else
+				{
+					throw new TransformationException(Messages.getString("JAXPSAXProcessorInvoker.7") + inputsource.getSystemId()); //$NON-NLS-1$
 				}
 			}
 			th.setResult(res);

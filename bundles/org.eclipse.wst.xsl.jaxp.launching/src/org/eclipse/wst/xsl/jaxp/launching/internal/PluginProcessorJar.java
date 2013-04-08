@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2013 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Jesper Steen Moller - Bug 404956: Launching an XML file as 'XSL Transformation' doesn't transform anything
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.launching.internal;
 
@@ -40,7 +41,9 @@ public class PluginProcessorJar implements IProcessorJar
 			// There is surely a better way, but I can'd find it.
 			if (path == null)
 			{
-				url = Platform.getBundle(pluginId).getEntry("/"); //$NON-NLS-1$
+				Bundle bundle = Platform.getBundle(pluginId);
+				if (bundle == null) return null;
+				url = bundle.getEntry("/"); //$NON-NLS-1$
 				url = FileLocator.resolve(url);
 				String s = url.getPath();
 				if (s.endsWith("!/")) //$NON-NLS-1$
