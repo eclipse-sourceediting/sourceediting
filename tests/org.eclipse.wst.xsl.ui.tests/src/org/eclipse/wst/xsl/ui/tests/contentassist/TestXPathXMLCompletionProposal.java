@@ -78,6 +78,16 @@ public class TestXPathXMLCompletionProposal extends AbstractSourceViewerTest {
 	}
 
 	@Test
+	public void testBug337649() throws Exception {
+		fileName = "TestXPathXMLProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+
+		ICompletionProposal[] proposals = getProposals(17, 20);
+		assertNotNull("Did not find proposals.", proposals);
+	}
+
+	@Test
 	public void testTestAttributeProposal() throws Exception {
 		fileName = "TestTestAttributeProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;

@@ -13,6 +13,10 @@
 
       </xsl:for-each>
    </xsl:template>
+   <xsl:template match="XX">
+      <xsl:variable/ >
+      <xsl:if test=""/>
+   </xsl:variable>
 </xsl:stylesheet>
 <!-- /******************************************************************************* 
    * Copyright (c) 2008 Standards for Technology in Automotive Retail and others. 
