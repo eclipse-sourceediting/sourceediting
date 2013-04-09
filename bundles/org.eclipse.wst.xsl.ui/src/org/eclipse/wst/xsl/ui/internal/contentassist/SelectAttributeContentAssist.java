@@ -272,7 +272,9 @@ public class SelectAttributeContentAssist extends
 				for (int nodecnt = 0; nodecnt < nodes.getLength(); nodecnt++) {
 					Node node = nodes.item(nodecnt);
 
-					String variableName = "$" + node.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$ //$NON-NLS-2$
+					Node nameItem = node.getAttributes().getNamedItem("name"); //$NON-NLS-1$
+					if (nameItem == null) continue;
+					String variableName = "$" + nameItem.getNodeValue(); //$NON-NLS-1$
 					
 					CustomCompletionProposal proposal = new CustomCompletionProposal(
 							variableName, offset, 0, startLength
