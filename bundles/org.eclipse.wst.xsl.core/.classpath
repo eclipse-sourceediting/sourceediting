@@ -18,6 +18,5 @@
 			<accessrule kind="accessible" pattern="org/apache/xpath/**"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/xinclude.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
