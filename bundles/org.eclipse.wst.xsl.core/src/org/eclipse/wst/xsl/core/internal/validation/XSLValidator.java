@@ -232,7 +232,7 @@ public class XSLValidator {
 					String baseURI = include.getStylesheet().getFile().getLocationURI().toString();
 					
 					String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", att.getValue()); //$NON-NLS-1$
-					if (resolvedURI == null) {
+					if ((resolvedURI == null) || (!importOrIncludeExists(stylesheetComposed.getStylesheet().getFile(), resolvedURI))) {
 						createMarker(
 								report,
 								att,
@@ -262,7 +262,8 @@ public class XSLValidator {
 					String baseURI = include.getStylesheet().getFile().getLocationURI().toString();
 					
 					String resolvedURI = URIResolverPlugin.createResolver().resolve(baseURI, "", att.getValue()); //$NON-NLS-1$
-					if (resolvedURI == null) {
+					
+					if ((resolvedURI == null) || !(importOrIncludeExists(stylesheetComposed.getStylesheet().getFile(), resolvedURI))) {
 						createMarker(
 								report,
 								att,
@@ -286,6 +287,15 @@ public class XSLValidator {
 		}
 	}
 	
+	private boolean importOrIncludeExists(IFile currentStylesheet, String resolvedURI) {
+		if (resolvedURI.startsWith("file:")) {
+			IFile file = XSLCore.resolveFile(currentStylesheet, resolvedURI);
+			return (file!=null);
+		} else {
+			return false;
+		}
+	}
+
 	private void checkFunctions(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException {
 		for (Function function : stylesheetComposed.getStylesheet().getFunctions()) {
 			if (function.getName() != null) {
