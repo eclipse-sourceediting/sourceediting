@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.core.tests;
 
+import java.io.IOException;
+
+import javax.xml.xpath.XPathExpressionException;
+
+import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
 public class TestIncludedTemplates extends AbstractValidationTest {
@@ -18,4 +23,10 @@ public class TestIncludedTemplates extends AbstractValidationTest {
 	public void test1() throws Exception {
 		validate(getFile("style1.xsl"));
 	}
+	
+	@Test
+	public void testUnknownInclude() throws XPathExpressionException, CoreException, IOException {
+		validate(getFile("missingInclude.xsl"));
+	}
+
 }
