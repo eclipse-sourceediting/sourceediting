@@ -31,6 +31,53 @@
 				mode="run" perspective="org.eclipse.wst.xml.perspective" />
 		</launchConfigurationTabGroup>
 	</extension>
+
+	<extension point="org.eclipse.ui.commands">
+		<command
+			name="%launchMode.name.0"
+				description="%launchMode.description.0"
+				categoryId="org.eclipse.debug.ui.category.run"
+				id="org.eclipse.wst.xsl.debug.ui.launchshortcut.debug">
+		</command>
+		<command
+				name="%launchMode.name.1"
+				description="%launchMode.description.0"
+				categoryId="org.eclipse.debug.ui.category.run"
+				id="org.eclipse.wst.xsl.debug.ui.launchshortcut.run">
+		</command>
+	</extension>
+
+	<extension point="org.eclipse.ui.bindings">
+		<key
+			sequence="M2+M3+X X"
+			commandId="org.eclipse.wst.xsl.debug.ui.launchshortcut.run"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M2+M3+X X"
+			platform="carbon"
+
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M1+M3+X X"
+			platform="carbon"
+
+			commandId="org.eclipse.wst.xsl.debug.ui.launchshortcut.run"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+
+		<key
+			sequence="M2+M3+D X"
+			commandId="org.eclipse.wst.xsl.debug.ui.launchshortcut.debug"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M2+M3+D X"
+			platform="carbon"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M1+M3+D X"
+			platform="carbon"
+			commandId="org.eclipse.wst.xsl.debug.ui.launchshortcut.debug"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+	</extension>
 	
 	<extension point="org.eclipse.ui.contexts">
 		<context description="%context.description.0"
