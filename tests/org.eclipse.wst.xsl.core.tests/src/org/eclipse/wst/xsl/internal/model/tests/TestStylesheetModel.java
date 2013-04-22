@@ -67,7 +67,13 @@ public class TestStylesheetModel extends AbstractModelTest {
 		model = XSLCore.getInstance().getStylesheet(getFile("circularref.xsl"));
 		assertTrue("Undettected circular reference", model.hasCircularReference());
 	}
-	
+
+	@Test
+	public void testStackOverflow() {
+		model = XSLCore.getInstance().getStylesheet(getFile("stackOverflowInclude.xsl"));
+		assertTrue("Undettected circular reference", model.hasCircularReference());
+	}
+
 	@Test
 	public void testNoCircularReference() {
 		model = XSLCore.getInstance().getStylesheet(getFile("modeTest.xsl"));
