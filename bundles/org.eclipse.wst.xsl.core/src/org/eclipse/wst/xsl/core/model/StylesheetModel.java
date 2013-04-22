@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsl.core.XSLCore;
@@ -195,6 +196,7 @@ public class StylesheetModel extends XSLModelObject {
 		for (Import inc : stylesheet.getImports()) {
 			handleInclude(inc);
 		}
+		circularReference = checkCycles();
 		if (Debug.debugXSLModel) {
 			long end = System.currentTimeMillis();
 			System.out
@@ -202,6 +204,36 @@ public class StylesheetModel extends XSLModelObject {
 		}
 	}
 
+	private boolean checkCycles() {
+		Set<IFile> seen = new HashSet<IFile>();
+		IFile mainFile = getStylesheet().getFile();
+		if (checkCycles(mainFile, seen)) return true;
+
+		// For the remaining files, assume 
+		seen.add(mainFile);
+		for (IFile file : files) {
+			if (file.equals(mainFile)) continue;
+			if (checkCycles(file, seen)) return true;
+		}
+		return false;
+	}
+	
+	public static boolean checkCycles(IFile included, Set<IFile> seen) {
+		if (seen.contains(included)) return true;
+		seen.add(included);
+		
+		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(
+				included);
+
+		for (Include inc : includedModel.getIncludes()) {
+			IFile includedFile = inc.getHrefAsFile();
+			if (checkCycles(includedFile, seen)) return true;
+		}
+
+		seen.remove(included);
+		return false;
+	}
+	
 	private void handleInclude(Include include) {
 		IFile file = include.getHrefAsFile();
 
@@ -209,12 +241,6 @@ public class StylesheetModel extends XSLModelObject {
 			return;
 		}
 
-		if (stylesheet.getFile().equals(file) || files.contains(file)) {
-			circularReference = true;
-			return;
-		} else if (isNestedInclude(include, stylesheet.getFile())) {
-			circularReference = true;
-		}
 		files.add(file);
 
 		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(
@@ -237,26 +263,6 @@ public class StylesheetModel extends XSLModelObject {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Is the current stylesheet nested in one of the included stylesheets
-	 * 
-	 * @return
-	 */
-	private boolean isNestedInclude(Include include, IFile compareTo) {
-		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(
-				include.getHrefAsFile());
-
-		for (Include inc : includedModel.getIncludes()) {
-			if (inc.getHrefAsFile().equals(compareTo)
-					|| isNestedInclude(inc, compareTo)) {
-				return true;
-			}
-		}
-
-		return false;
-
 	}
 
 	@Override
