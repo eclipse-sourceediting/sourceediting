@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,17 +12,22 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.tasks;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -48,6 +53,8 @@ class TaskScanningJob extends Job {
 	static final int JOB_DELAY_DELTA = 1000;
 	private static final int JOB_DELAY_PROJECT = 5000;
 	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
+	/** List of scanned projects.  Since it's easily too long for a persistent property, and can be exported if stored in general preferences, store as a regular file. */
+	static final IPath TASK_TAG_PROJECTS_ALREADY_SCANNED_LOCATION = SSECorePlugin.getDefault().getStateLocation().append("task-tags.properties"); //$NON-NLS-1$
 	static final QualifiedName QTASK_TAG_PROJECTS_ALREADY_SCANNED = new QualifiedName(SSECorePlugin.ID, TASK_TAG_PROJECTS_ALREADY_SCANNED);
 	private List fQueue = null;
 
@@ -73,7 +80,12 @@ class TaskScanningJob extends Job {
 				setScannedProjects((String[]) updatedProjects.toArray(new String[updatedProjects.size()]));
 			}
 			if (isEnabledOnProject((IProject) projectResource)) {
-				fQueue.add(delta);
+				if (delta.getFlags() == IResourceDelta.OPEN) {
+					addProject((IProject) projectResource);
+				}
+				else {
+					fQueue.add(delta);
+				}
 				if (Logger.DEBUG_TASKSJOB) {
 					String kind = null;
 					switch (delta.getKind()) {
@@ -265,11 +277,17 @@ class TaskScanningJob extends Job {
 	
 	static String[] getScannedProjects() {
 		String rawValue = null;
-		try {
-			rawValue = ResourcesPlugin.getWorkspace().getRoot().getPersistentProperty(QTASK_TAG_PROJECTS_ALREADY_SCANNED);
-		}
-		catch (CoreException e) {
-			Logger.logException(e);
+		File file = TASK_TAG_PROJECTS_ALREADY_SCANNED_LOCATION.toFile();
+		if (file.canRead()) {
+			Properties props = new Properties();
+			try {
+				props.load(new FileInputStream(file));
+				rawValue = props.getProperty(TASK_TAG_PROJECTS_ALREADY_SCANNED);
+				props = null;
+			}
+			catch (IOException e) {
+				Logger.logException(e);
+			}
 		}
 		if (rawValue != null)
 			return StringUtils.unpack(rawValue);
@@ -279,11 +297,21 @@ class TaskScanningJob extends Job {
 	static void setScannedProjects(String[] projectNames) {
 		if (Logger.DEBUG_TASKSJOB)
 			System.out.println("Task scanned projects set to " + StringUtils.pack(projectNames)); //$NON-NLS-1$
-		try {
-			ResourcesPlugin.getWorkspace().getRoot().setPersistentProperty(QTASK_TAG_PROJECTS_ALREADY_SCANNED, StringUtils.pack(projectNames));
+
+		File file = TASK_TAG_PROJECTS_ALREADY_SCANNED_LOCATION.toFile();
+		if (!file.exists() || file.canWrite()) {
+			Properties props = new Properties();
+			props.setProperty(TASK_TAG_PROJECTS_ALREADY_SCANNED, StringUtils.pack(projectNames));
+			try {
+				props.store(new FileOutputStream(file), ""); //$NON-NLS-1$
+			}
+			catch (IOException e) {
+				Logger.logException(e);
+			}
+			props = null;
 		}
-		catch (CoreException e) {
-			Logger.logException(e);
+		else {
+			Logger.log(Logger.WARNING, "Could not write task tags scanned list to " + TASK_TAG_PROJECTS_ALREADY_SCANNED_LOCATION.toOSString()); //$NON-NLS-1$
 		}
 	}
 }
