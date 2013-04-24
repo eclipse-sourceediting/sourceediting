@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2013 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Jesper S Moller - 405223 - Processing and file name/type doesn't match output type from XSL
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
@@ -38,4 +39,11 @@ public class XSLLaunchConfigurationConstants
 	 * @since 1.0
 	 */
 	public static final String ATTR_WORKING_DIR = LaunchingPlugin.PLUGIN_ID + ".ATTR_WORKING_DIR"; //$NON-NLS-1$;
+	
+	/**
+	 * @since 1.1
+	 */
+	public static final String ATTR_DEFAULT_OUTPUT_METHOD = LaunchingPlugin.PLUGIN_ID + ".ATTR_DEFAULT_OUTPUT_METHOD"; //$NON-NLS-1$;
+	
+	
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2013 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Jesper S Moller - 405223 - Processing and file name/type doesn't match output type from XSL
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.output;
 
@@ -39,6 +40,7 @@ public class OutputFileBlock extends ResourceSelectionBlock {
 	private String inputFilename;
 	private Text fileNameText;
 	private String defaultOutputFileName;
+	private String defaultOutputFileMethod;
 	private String outputFileName;
 
 	public OutputFileBlock() {
@@ -196,6 +198,10 @@ public class OutputFileBlock extends ResourceSelectionBlock {
 
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
+			defaultOutputFileMethod = configuration.getAttribute(
+					XSLLaunchConfigurationConstants.ATTR_DEFAULT_OUTPUT_METHOD,
+					"xml"); //$NON-NLS-1$
+			
 			inputFilename = configuration.getAttribute(
 					XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, ""); //$NON-NLS-1$
 			updateDefaultOutputFile();
@@ -284,7 +290,7 @@ public class OutputFileBlock extends ResourceSelectionBlock {
 	private void updateDefaultOutputFile() {
 		try {
 			IPath path = XSLTRuntime
-					.defaultOutputFileForInputFile(inputFilename);
+					.defaultOutputFileForInputFile(inputFilename, defaultOutputFileMethod);
 			// determine whether this path exists in the workspace
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
 					.findFilesForLocation(path);

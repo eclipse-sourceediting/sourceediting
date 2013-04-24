@@ -11,11 +11,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -393,10 +394,11 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 		ILaunchConfiguration config = null;
 		try {
 			ILaunchConfigurationType configType = getConfigurationType();
+			String lastSegment = xmlFile != null ? xmlFile.getName() :  xmlFilePath != null ? xmlFilePath.lastSegment() : "XSLTransformation"; //$NON-NLS-1$
 			ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
 					getLaunchManager()
 							.generateUniqueLaunchConfigurationNameFrom(
-									xmlFilePath.lastSegment()));
+									lastSegment));
 			if (xmlFile != null)
 				wc
 						.setAttribute(
@@ -424,6 +426,16 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 				pipeline.addTransformDef(new LaunchTransform(xslFilePath,
 						LaunchTransform.EXTERNAL_TYPE));
 			}
+			if (! pipeline.getTransformDefs().isEmpty()) {
+				LaunchTransform lastDef = pipeline.getTransformDefs().get(pipeline.getTransformDefs().size()-1);
+				String outputFormat = guessOutputMethod(lastDef);
+				if (outputFormat != null) {
+					wc
+					.setAttribute(
+							XSLLaunchConfigurationConstants.ATTR_DEFAULT_OUTPUT_METHOD,
+							outputFormat);
+				}
+			}			
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_PIPELINE,
 					pipeline.toXML());
 			if (xmlFile != null)
@@ -434,6 +446,25 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 					exception.getStatus().getMessage());
 		}
 		return config;
+	}
+
+	private String guessOutputMethod(LaunchTransform lastDef) {
+		try {
+			XslOutputMethodSniffer xofs = new XslOutputMethodSniffer();
+			xofs.parseContents(new InputSource(new FileInputStream(lastDef.getLocation().toFile())));
+			return xofs.getOutputMethod();
+		} catch (FileNotFoundException e) {
+			// It's OK
+		} catch (IOException e) {
+			// It's OK
+		} catch (ParserConfigurationException e) {
+			// It's OK
+		} catch (SAXException e) {
+			// It's OK
+		} catch (CoreException e) {
+			// It really is OK!
+		}
+		return null;
 	}
 
 	protected Shell getShell() {

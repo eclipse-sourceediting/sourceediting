@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2013 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Jesper S Moller - 405223 - Processing and file name/type doesn't match output type from XSL
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching.config;
 
@@ -137,6 +138,10 @@ public class BaseLaunchHelper {
 	public static File hydrateOutputFile(ILaunchConfiguration configuration)
 			throws CoreException {
 		IPath outputFile = null;
+		
+		String method = configuration.getAttribute(
+				XSLLaunchConfigurationConstants.ATTR_DEFAULT_OUTPUT_METHOD, "xml"); //$NON-NLS-1$
+
 		boolean useDefaultOutputFile = configuration.getAttribute(
 				XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE,
 				true);
@@ -153,7 +158,7 @@ public class BaseLaunchHelper {
 			outputFile = XSLTRuntime
 					.defaultOutputFileForInputFile(configuration.getAttribute(
 							XSLLaunchConfigurationConstants.ATTR_INPUT_FILE,
-							(String) null));
+							(String) null), method);
 		}
 		return outputFile.toFile();
 	}

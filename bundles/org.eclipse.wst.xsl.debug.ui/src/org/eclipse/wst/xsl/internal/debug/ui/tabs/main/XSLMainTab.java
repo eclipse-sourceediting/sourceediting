@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007,2008 Chase Technology Ltd - http://www.chasetechnology.co.uk and others
+ * Copyright (c) 2007,2013 Chase Technology Ltd - http://www.chasetechnology.co.uk and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver - STAR - bug 223557 - Added Images contributed by Holger Voorman
+ *     Jesper S Moller - 405223 - Processing and file name/type doesn't match output type from XSL
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.main;
 
@@ -124,6 +125,14 @@ public class XSLMainTab extends XSLLaunchConfigurationTab {
 			configuration.setAttribute(
 					XSLLaunchConfigurationConstants.ATTR_PIPELINE, pipeline
 							.toXML());
+			
+			String method = pipeline.getOutputProperties().getProperty("method", null); //$NON-NLS-1$
+
+			if (method != null) {
+				configuration.setAttribute(
+						XSLLaunchConfigurationConstants.ATTR_DEFAULT_OUTPUT_METHOD, 
+						method);
+			}
 		} catch (CoreException e) {
 			XSLDebugUIPlugin.log(e);
 		}
