@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,6 +109,10 @@ public class TaglibVariable {
 	 */
 	public final String getDeclarationString(boolean includeDoc, int style) {
 		return getDeclarationString(includeDoc, "pageContext", style); //$NON-NLS-1$
+	}
+
+	public final String getDeclarationString(String context) {
+		return getDeclarationString(false, context, M_NONE);
 	}
 
 	public final String getDeclarationString(boolean includeDoc, String context, int style) {
