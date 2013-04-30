@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -285,11 +285,20 @@ public class HTMLAttributeValidator extends PrimeValidator {
 						if (source != null) {
 							char firstChar = source.charAt(0);
 							char lastChar = source.charAt(source.length() - 1);
+							boolean unclosedAttr = false;
 							if (isQuote(firstChar) || isQuote(lastChar)) {
 								if (lastChar != firstChar) {
-									rgnType = REGION_VALUE;
-									state = ErrorState.UNCLOSED_ATTR_VALUE;
+									unclosedAttr = true;
 								}
+							}
+							else{
+								if (CMUtil.isXHTML(edec)){
+									unclosedAttr = true;
+								}
+							}
+							if (unclosedAttr){
+								rgnType = REGION_VALUE;
+								state = ErrorState.UNCLOSED_ATTR_VALUE;
 							}
 						}
 					}
