@@ -230,6 +230,20 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 						processDeclaration(sdRegion);
 					}
 				}
+				else {
+					final String previousType = sdRegion.getPrevious() != null ? sdRegion.getPrevious().getType() : null;
+					if (previousType != null) {
+						if (DOMJSPRegionContexts.JSP_EXPRESSION_OPEN.equals(previousType)) {
+							processExpression(sdRegion, true);
+						}
+						else if (DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN.equals(previousType)) {
+							processScriptlet(sdRegion, true);
+						}
+						else if (DOMJSPRegionContexts.JSP_DECLARATION_OPEN.equals(previousType)) {
+							processDeclaration(sdRegion, true);
+						}
+					}
+				}
 			}
 			else {
 				fTagname = null;
@@ -314,23 +328,50 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	protected void processDeclaration(IStructuredDocumentRegion sdRegion) {
+		processDeclaration(sdRegion, false);
+	}
+
+	protected void processDeclaration(IStructuredDocumentRegion sdRegion, boolean embedded) {
 		prepareText(sdRegion);
 		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		this.fTranslator.translateDeclarationString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
+		if (embedded) {
+			this.fTranslator.translateDeclarationString(fStrippedText, sdRegion, currentNode.getStartOffset() + sdRegion.getStartOffset(), sdRegion.getLength(), fAppendAsIndirectSource);
+		}
+		else {
+			this.fTranslator.translateDeclarationString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
+		}
 		fPossibleOwner = JSPTranslator.DECLARATION;
 	}
 
 	protected void processExpression(IStructuredDocumentRegion sdRegion) {
+		processExpression(sdRegion, false);
+	}
+
+	protected void processExpression(IStructuredDocumentRegion sdRegion, boolean embedded) {
 		prepareText(sdRegion);
 		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		this.fTranslator.translateExpressionString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
+		if (embedded) {
+			this.fTranslator.translateExpressionString(fStrippedText, sdRegion, currentNode.getStartOffset() + sdRegion.getStartOffset(), sdRegion.getLength(), fAppendAsIndirectSource);
+		}
+		else {
+			this.fTranslator.translateExpressionString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
+		}
 		fPossibleOwner = JSPTranslator.EXPRESSION;
 	}
 
 	protected void processScriptlet(IStructuredDocumentRegion sdRegion) {
+		processScriptlet(sdRegion, false);
+	}
+
+	protected void processScriptlet(IStructuredDocumentRegion sdRegion, boolean embedded) {
 		prepareText(sdRegion);
 		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		this.fTranslator.translateScriptletString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
+		if (embedded) {
+			this.fTranslator.translateScriptletString(fStrippedText, sdRegion, currentNode.getStartOffset() + sdRegion.getStartOffset(), sdRegion.getLength(), fAppendAsIndirectSource);
+		}
+		else {
+			this.fTranslator.translateScriptletString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
+		}
 		fPossibleOwner = JSPTranslator.SCRIPTLET;
 	}
 
