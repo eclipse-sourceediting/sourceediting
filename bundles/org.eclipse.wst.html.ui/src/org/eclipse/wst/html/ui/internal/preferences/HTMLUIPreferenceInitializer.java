@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,12 +97,12 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.ENTITY_REFERENCE, 42, 0, 255) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.ENTITY_REFERENCE, styleValue);
 
-		// set default new html file template to use in new file wizard
+		// set default new html 5 file template to use in new file wizard
 		/*
 		 * Need to find template name that goes with default template id (name
 		 * may change for different language)
 		 */
-		store.setDefault(HTMLUIPreferenceNames.NEW_FILE_TEMPLATE_ID, "org.eclipse.wst.html.ui.templates.html"); //$NON-NLS-1$
+		store.setDefault(HTMLUIPreferenceNames.NEW_FILE_TEMPLATE_ID, "org.eclipse.wst.html.ui.templates.html5"); //$NON-NLS-1$
 		
 		// Defaults for the Typing preference page
 		store.setDefault(HTMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS, true);
