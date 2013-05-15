@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1296,12 +1296,7 @@ public class JSPTranslator implements Externalizable {
 					StringBuffer fullText = new StringBuffer(containerRegion.getFullText(region));
 					while(regions.hasNext()) {
 						region = (ITextRegion)regions.next();
-						if (region instanceof ITextRegionContainer) {
-							// pass in block text's container & iterator
-							Iterator regionIterator = ((ITextRegionCollection) region).getRegions().iterator();
-							translateJSPNode(region, regionIterator, type, EMBEDDED_JSP);
-						}
-						
+						// Do not immediately translate container regions, since they may use variables declared within the full text
 						if(region.getType() == DOMRegionContext.BLOCK_TEXT) {
 							fullText.append(containerRegion.getFullText(region));
 						} else {
