@@ -57,6 +57,10 @@
 			type="activecontexts"
 			value="org.eclipse.wst.css.core.csssource, org.eclipse.wst.sse.comments"
 			target="org.eclipse.wst.css.core.csssource" />
+		<doubleClickStrategy
+        	class="org.eclipse.wst.css.ui.doubleclick.CSSDoubleClickStrategy"
+        	target="org.eclipse.wst.css.STYLE">
+  		</doubleClickStrategy>
 	</extension>
 	
 	<extension point="org.eclipse.ui.contexts">

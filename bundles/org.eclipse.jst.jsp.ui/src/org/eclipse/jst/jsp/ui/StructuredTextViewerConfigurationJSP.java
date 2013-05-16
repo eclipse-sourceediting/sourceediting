@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,7 @@ import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.internal.style.jspel.LineStyleProviderForJSPEL;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
@@ -88,6 +89,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	private StructuredTextViewerConfiguration fHTMLSourceViewerConfiguration;
 	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
+	private StructuredTextViewerConfiguration fCSSSourceViewerConfiguration;
 	private ILabelProvider fStatusLineLabelProvider;
 
 	/**
@@ -229,6 +231,9 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		else if (contentType == IJSPPartitions.JSP_DEFAULT)
 			// JSP (just treat like html)
 			strategy = getHTMLSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, IHTMLPartitions.HTML_DEFAULT);
+		else if (contentType == ICSSPartitions.STYLE)
+			//CSS style
+			strategy = getCSSSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, contentType);
 		else
 			strategy = super.getDoubleClickStrategy(sourceViewer, contentType);
 
@@ -266,6 +271,13 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			fJavaSourceViewerConfiguration = new JavaSourceViewerConfiguration(JavaUI.getColorManager(), store, null, IJavaPartitions.JAVA_PARTITIONING);
 		}
 		return fJavaSourceViewerConfiguration;
+	}
+
+	private StructuredTextViewerConfiguration getCSSSourceViewerConfiguration() {
+		if (fCSSSourceViewerConfiguration == null) {
+			fCSSSourceViewerConfiguration = new StructuredTextViewerConfigurationCSS();
+		}
+		return fCSSSourceViewerConfiguration;
 	}
 
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {

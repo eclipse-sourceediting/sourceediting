@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForEmbeddedCSS;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
@@ -79,6 +80,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	 * One instance per configuration
 	 */
 	private StructuredTextViewerConfiguration fXMLSourceViewerConfiguration;
+	private StructuredTextViewerConfiguration fCSSSourceViewerConfiguration;
 	private ILabelProvider fStatusLineLabelProvider;
 
 	/**
@@ -155,6 +157,9 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			// use xml's doubleclick strategy
 			return getXMLSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, IXMLPartitions.XML_DEFAULT);
 		}
+		else if (contentType == ICSSPartitions.STYLE)
+			//CSS style
+			return getCSSSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, contentType);
 		else
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
 
@@ -267,6 +272,13 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			fXMLSourceViewerConfiguration = new StructuredTextViewerConfigurationXML();
 		}
 		return fXMLSourceViewerConfiguration;
+	}
+
+	private StructuredTextViewerConfiguration getCSSSourceViewerConfiguration() {
+		if (fCSSSourceViewerConfiguration == null) {
+			fCSSSourceViewerConfiguration = new StructuredTextViewerConfigurationCSS();
+		}
+		return fCSSSourceViewerConfiguration;
 	}
 
 	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
