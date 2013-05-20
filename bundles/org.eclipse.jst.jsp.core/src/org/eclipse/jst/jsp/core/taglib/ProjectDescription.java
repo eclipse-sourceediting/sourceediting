@@ -2267,6 +2267,8 @@ class ProjectDescription {
 		if (deltaKind == ITaglibIndexDelta.ADDED || deltaKind == ITaglibIndexDelta.CHANGED) {
 			// XXX: runs on folders as well?!
 			libraryRecord = createJARRecord(libraryLocation);
+			//Store the delta in temp list, then copy them to TaglibIndex to avoid deadlock.
+			List tempDeltas = new ArrayList();
 			synchronized (libraryRecord) {
 				if (libraryRecord.isConsistent) {
 					// Library loaded by another Project Description, initialize our references from the existing
@@ -2279,7 +2281,8 @@ class ProjectDescription {
 							urlDeltaKind = ITaglibIndexDelta.CHANGED;
 						}
 						fClasspathReferences.put(record.getURI(), record);
-						TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, urlDeltaKind));
+						//Add the delta to TablibIndex out of the synchronized block to avoid deadlock
+						tempDeltas.add(new TaglibIndexDelta(fProject, record, urlDeltaKind));
 						fClasspathReferences.put(record.info.uri, record);
 					}
 					return;
@@ -2316,7 +2319,8 @@ class ProjectDescription {
 												urlDeltaKind = ITaglibIndexDelta.CHANGED;
 											}
 											fClasspathReferences.put(urlRecord.getURI(), urlRecord);
-											TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, urlRecord, urlDeltaKind));
+											//Add the delta to TablibIndex out of the synchronized block to avoid deadlock
+											tempDeltas.add(new TaglibIndexDelta(fProject, urlRecord, urlDeltaKind));
 											fClasspathReferences.put(info.uri, urlRecord);
 											if (_debugIndexCreation)
 												Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -2347,6 +2351,11 @@ class ProjectDescription {
 					closeJarFile(jarfile);
 				}
 				libraryRecord.isConsistent = true;
+			}
+			//Add delta out of the synchronized block to avoid deadlock
+			Iterator it = tempDeltas.iterator();
+			while(it.hasNext()) {
+				TaglibIndex.getInstance().addDelta((TaglibIndexDelta)it.next());
 			}
 		}
 		if (libraryRecord != null) {
