@@ -38,6 +38,7 @@ public interface IProductConstants {
 	public static final String SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE = "showJavaEEModuleDependencyPage"; //$NON-NLS-1$
 	public static final String DYNAMIC_WEB_GENERATE_DD = "dynamic_web_generate_dd"; //$NON-NLS-1$
 	public static final String EE6_CONNECTOR_GENERATE_DD = "ee6_connector_generate_dd"; //$NON-NLS-1$
+	public static final String EE7_CONNECTOR_GENERATE_DD = "ee7_connector_generate_dd"; //$NON-NLS-1$
 	public static final String EJB_BUSINESS_INTERFACE_ANNOTATION_IN_BEAN = "ejb_business_interaface_annotation_in_bean"; //$NON-NLS-1$
 	public static final String EJB_BUSINESS_INTERFACE_ANNOTATION_IN_INTERFACE = "ejb_business_interaface_annotation_in_interface"; //$NON-NLS-1$
 	public static final String EJB_INTERFACE_PACKAGE_SUFFIX = "ejb_interface_package_suffix"; //$NON-NLS-1$
