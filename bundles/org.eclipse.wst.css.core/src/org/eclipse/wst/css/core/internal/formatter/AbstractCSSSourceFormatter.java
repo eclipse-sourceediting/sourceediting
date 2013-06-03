@@ -83,16 +83,18 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				int[] result = null;
 				if (prev == null || (prev.getType() == CSSRegionContexts.CSS_S && (result = TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0))[0] >= 0)) {
 					// Collapse to one empty line if there's more than one.
-					int offset = result[0] + DefaultLineTracker.DELIMITERS[result[1]].length();
-					if (offset < it.getStructuredDocumentRegion().getText(prev).length() ) {
-						if (TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), offset)[0] >= 0) {
-							source.append(delim);
+					if (result != null){
+						int offset = result[0] + DefaultLineTracker.DELIMITERS[result[1]].length();
+						if (offset < it.getStructuredDocumentRegion().getText(prev).length() ) {
+							if (TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), offset)[0] >= 0) {
+								source.append(delim);
+							}
 						}
+						source.append(delim);
+						source.append(getIndent(node));
+						if (needIndent)
+							source.append(getIndentString());
 					}
-					source.append(delim);
-					source.append(getIndent(node));
-					if (needIndent)
-						source.append(getIndentString());
 				}
 				else if (prev.getType() == CSSRegionContexts.CSS_COMMENT) {
 					String fullText = toAppend.getDocumentRegion().getFullText(prev);
