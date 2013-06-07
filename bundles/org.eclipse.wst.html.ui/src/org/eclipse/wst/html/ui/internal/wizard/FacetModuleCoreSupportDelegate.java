@@ -126,13 +126,17 @@ final class FacetModuleCoreSupportDelegate {
 					if (rootFolder == null)
 						continue;
 					IPath referencedPathRoot = rootFolder.getWorkspaceRelativePath();
-					/*
-					 * See Servlet 3.0, section 4.6 ; this is the only
-					 * referenced module/component type we support
-					 */
-					IPath resources = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES);
-					if (resources != null && component.getProject().findMember(resources.removeFirstSegments(1)) != null)
-						paths.add(resources);
+					/* http://bugs.eclipse.org/410161 */
+					if (referencedPathRoot != null) {
+						/*
+						 * See Servlet 3.0, section 4.6 ; this is the only
+						 * referenced module/component type we support
+						 */
+						IPath resources = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES);
+						if (resources != null && component.getProject().findMember(resources.removeFirstSegments(1)) != null) {
+							paths.add(resources);
+						}
+					}
 				}
 			}
 
