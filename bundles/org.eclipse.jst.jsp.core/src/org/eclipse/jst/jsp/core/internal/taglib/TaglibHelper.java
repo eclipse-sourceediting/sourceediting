@@ -11,6 +11,7 @@
 package org.eclipse.jst.jsp.core.internal.taglib;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -403,11 +404,55 @@ public class TaglibHelper {
 				String varClass = "java.lang.String"; // the default
 				// class...//$NON-NLS-1$
 				if (var.getVariableClass() != null) {
-					varClass = var.getVariableClass();
+					varClass = getVariableClass(var.getVariableClass());
 				}
 				results.add(new TaglibVariable(varClass, varName, var.getScope(), var.getDescription()));
 			}
 		}
+	}
+
+	/**
+	 * Returns the class name, and if the class has parameterized types in an environment that supports them, the parameter signature
+	 * @param varClass the class of the variable
+	 * @return the class name, and a parameterized signature if necessary
+	 */
+	private String getVariableClass(String varClass) {
+		String result = varClass;
+		if (compilerSupportsParameterizedTypes()) {
+			final ClassLoader loader = getClassloader();
+			try {
+				try {
+					// Check if the class has any parameterized types. For each one, add a type argument
+					final int length = ((Object[]) Class.class.getMethod("getTypeParameters", null).invoke(Class.forName(varClass, true, loader), null)).length; //$NON-NLS-1$
+					if (length > 0) {
+						final StringBuffer buffer = new StringBuffer("<"); //$NON-NLS-1$
+						for (int i = 0; i < length; i++) {
+							if (i > 0) {
+								buffer.append(',');
+							}
+							buffer.append('?');
+						}
+						buffer.append('>');
+						result = result + buffer.toString();
+					}
+				}
+				catch (NoSuchMethodException e) { }
+				catch (IllegalArgumentException e) { }
+				catch (IllegalAccessException e) { }
+				catch (InvocationTargetException e) { }
+			}
+			catch (ClassNotFoundException e) { }
+		}
+		return result;
+	}
+
+	private boolean compilerSupportsParameterizedTypes() {
+		String compliance = fJavaProject.getOption(JavaCore.COMPILER_SOURCE, true);
+		try {
+			return Float.parseFloat(compliance) >= 1.5;
+		}
+		catch (NumberFormatException e) { }
+		return false;
 	}
 
 	/**
@@ -456,7 +501,11 @@ public class TaglibHelper {
 						VariableInfo[] vInfos = tei.getVariableInfo(td);
 						if (vInfos != null) {
 							for (int i = 0; i < vInfos.length; i++) {
-								results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope(), decl.getDescription()));
+								String className = vInfos[i].getClassName();
+								if (className != null) {
+									className = getVariableClass(className);
+								}
+								results.add(new TaglibVariable(className, vInfos[i].getVarName(), vInfos[i].getScope(), decl.getDescription()));
 							}
 						}
 
