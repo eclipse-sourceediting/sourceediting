@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -235,7 +235,7 @@ public class HTML5ContentModelTest extends TestCase {
 	public void testAttributesOnHTML5InputTypes() {
 		checkAttrValues(CMDocType.HTML5_DOC_TYPE, HTML40Namespace.ElementName.INPUT, HTML40Namespace.ATTR_NAME_TYPE, 
 				new String[]{HTML40Namespace.ATTR_VALUE_TEXT, HTML40Namespace.ATTR_VALUE_PASSWORD, HTML40Namespace.ATTR_VALUE_CHECKBOX, HTML40Namespace.ATTR_VALUE_RADIO, HTML40Namespace.ATTR_VALUE_SUBMIT, HTML40Namespace.ATTR_VALUE_RESET, HTML40Namespace.ATTR_VALUE_FILE, HTML40Namespace.ATTR_VALUE_HIDDEN, HTML40Namespace.ATTR_VALUE_IMAGE, HTML40Namespace.ATTR_VALUE_BUTTON,
-				HTML50Namespace.ATTR_VALUE_COLOR, HTML50Namespace.ATTR_VALUE_DATE, HTML50Namespace.ATTR_VALUE_DATETIME, HTML50Namespace.ATTR_VALUE_DATETIME_LOCAL, HTML50Namespace.ATTR_VALUE_EMAIL, HTML50Namespace.ATTR_VALUE_MONTH, HTML50Namespace.ATTR_VALUE_NUMBER_STRING, HTML50Namespace.ATTR_VALUE_RANGE, HTML50Namespace.ATTR_VALUE_SEARCH, HTML50Namespace.ATTR_VALUE_TEL, HTML50Namespace.ATTR_VALUE_TIME});
+				HTML50Namespace.ATTR_VALUE_COLOR, HTML50Namespace.ATTR_VALUE_DATE, HTML50Namespace.ATTR_VALUE_DATETIME, HTML50Namespace.ATTR_VALUE_DATETIME_LOCAL, HTML50Namespace.ATTR_VALUE_EMAIL, HTML50Namespace.ATTR_VALUE_MONTH, HTML50Namespace.ATTR_VALUE_NUMBER_STRING, HTML50Namespace.ATTR_VALUE_RANGE, HTML50Namespace.ATTR_VALUE_SEARCH, HTML50Namespace.ATTR_VALUE_TEL, HTML50Namespace.ATTR_VALUE_TIME,HTML50Namespace.ATTR_VALUE_WEEK,HTML50Namespace.ATTR_VALUE_URL});
 	}
 
 	public void testHTML5document() {
