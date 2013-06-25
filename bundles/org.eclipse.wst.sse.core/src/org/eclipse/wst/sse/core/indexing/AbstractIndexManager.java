@@ -13,7 +13,6 @@ package org.eclipse.wst.sse.core.indexing;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -1244,7 +1243,7 @@ public abstract class AbstractIndexManager {
 		 * @see #preserveReceivedResourceEvents()
 		 * @see #loadPreservedReceivedResourceEvents(SubMonitor)
 		 */
-		private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 2L;
 
 		/** Whether this job has been paused or not */
 		private volatile boolean fIsPaused;
@@ -1676,12 +1675,13 @@ public abstract class AbstractIndexManager {
 							dos.writeByte(resourceEvent.fAction);
 							dos.writeByte(resource.getType());
 							byte[] pathBytes = resource.getFullPath().toString().getBytes(ENCODING_UTF16);
+							dos.writeInt(pathBytes.length);
 							dos.write(pathBytes);
-							dos.writeByte('\0');
-							if (resourceEvent.fMovePath != null) {
-								dos.writeBytes(resourceEvent.fMovePath.toPortableString());
+							pathBytes = resourceEvent.fMovePath != null ? resourceEvent.fMovePath.toPortableString().getBytes(ENCODING_UTF16) : new byte[0];
+							dos.writeInt(pathBytes.length);
+							if (pathBytes.length > 0) {
+								dos.write(pathBytes);
 							}
-							dos.writeByte('\0');
 						}
 					}
 
@@ -1775,24 +1775,10 @@ public abstract class AbstractIndexManager {
 							byte fileType = dis.readByte();
 
 							// resource location are the next bytes
-							ByteArrayOutputStream resourceLocationStream = new ByteArrayOutputStream();
-							byte b = dis.readByte();
-							while (b != '\0') {
-								resourceLocationStream.write(b);
-								b = dis.readByte();
-							}
-
-							// move path are the next bytes
-							ByteArrayOutputStream movePathBOS = new ByteArrayOutputStream();
-							b = dis.readByte();
-							while (b != '\0') {
-								movePathBOS.write(b);
-								b = dis.readByte();
-							}
-
+							final String resourceLocation = readStringFromStream(dis);
 							// get the resource
 							IResource resource = null;
-							IPath resourcePath = new Path(new String(resourceLocationStream.toByteArray(), ENCODING_UTF16));
+							IPath resourcePath = new Path(resourceLocation);
 							if (!resourcePath.isRoot() && resourcePath.segmentCount() > 1) {
 								if (fileType == IResource.FILE) {
 									resource = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
@@ -1805,10 +1791,12 @@ public abstract class AbstractIndexManager {
 								Logger.log(Logger.WARNING, "The AbstractIndexManager " + AbstractIndexManager.this.fName + " attempted to load an invlaid preserved resource event:\n" + "(" + resourcePath + ")");
 							}
 
+							// move path are the next bytes
+							final String moveLocation = readStringFromStream(dis);
 							// get the move path
 							IPath movePath = null;
-							if (movePathBOS.size() != 0) {
-								movePath = new Path(new String(movePathBOS.toByteArray(), ENCODING_UTF16));
+							if (moveLocation.length() > 0) {
+								movePath = new Path(moveLocation);
 							}
 
 							// add the object to the list of of preserved
@@ -1872,6 +1860,26 @@ public abstract class AbstractIndexManager {
 
 			progress.done();
 			return success;
+		}
+
+		/**
+		 * Reads a string from the input stream. An integer length is read first
+		 * followed by the bytes of the string
+		 * @param dis the input stream to read from
+		 * @return a String represented by the bytes
+		 * @throws IOException
+		 */
+		private String readStringFromStream(DataInputStream dis) throws IOException {
+			// Read the int for the string's length
+			final int length = dis.readInt();
+			// Read in length bytes for the string
+			final byte[] resourceLocation = new byte[length];
+			int read = 0;
+			int offset = 0;
+			while (offset < resourceLocation.length && (read = dis.read(resourceLocation, offset, resourceLocation.length - offset)) > 0) {
+				offset += read;
+			}
+			return new String(resourceLocation, ENCODING_UTF16);
 		}
 
 		/**
