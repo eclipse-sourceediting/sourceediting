@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2012, 2013 Eclipse Foundation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Distribution License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/org/documents/edl-v10.php
+ 
+  Contributors:
+    Thanh Ha (Eclipse Foundation) - initial implementation
+-->
+
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.eclipse</groupId>
+    <artifactId>wtp-parent</artifactId>
+    <version>3.5.0-SNAPSHOT</version>
+    <relativePath>../wtp-parent</relativePath>
+  </parent>
+
+  <groupId>org.eclipse.webtools.sourceediting</groupId>
+  <artifactId>org.eclipse.webtools.sourceediting</artifactId>
+  <version>3.5.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>docs/org.eclipse.jst.jsp.ui.infopop</module>
+    <module>docs/org.eclipse.wst.doc.user</module>
+    <module>docs/org.eclipse.wst.dtdeditor.doc.user</module>
+    <module>docs/org.eclipse.wst.dtd.ui.infopop</module>
+    <module>docs/org.eclipse.wst.html.ui.infopop</module>
+    <module>docs/org.eclipse.wst.sse.doc.user</module>
+    <module>docs/org.eclipse.wst.sse.ui.infopop</module>
+    <module>docs/org.eclipse.wst.webtools.doc.user</module>
+    <module>docs/org.eclipse.wst.xmleditor.doc.user</module>
+    <module>docs/org.eclipse.wst.xml.ui.infopop</module>
+    <module>docs/org.eclipse.wst.xsdeditor.doc.user</module>
+
+    <module>features/org.eclipse.wst.web_core.feature</module>
+    <module>features/org.eclipse.wst.web_core.feature.patch</module>
+    <module>features/org.eclipse.wst.web_sdk.feature</module>
+    <module>features/org.eclipse.wst.web_ui.feature</module>
+    <module>features/org.eclipse.wst.web_ui.feature.patch</module>
+    <module>features/org.eclipse.wst.web_userdoc.feature</module>
+    <module>features/org.eclipse.wst.xml_core.feature</module>
+    <module>features/org.eclipse.wst.xml_sdk.feature</module>
+    <module>features/org.eclipse.wst.xml_ui.feature</module>
+    <module>features/org.eclipse.wst.xml_ui.feature.patch</module>
+    <module>features/org.eclipse.wst.xml_userdoc.feature</module>
+
+    <module>bundles/org.eclipse.jst.jsp.core</module>
+    <module>bundles/org.eclipse.jst.jsp.ui</module>
+    <module>bundles/org.eclipse.jst.standard.schemas</module>
+    <module>bundles/org.eclipse.wst.css.core</module>
+    <module>bundles/org.eclipse.wst.css.ui</module>
+    <module>bundles/org.eclipse.wst.dtd.core</module>
+    <module>bundles/org.eclipse.wst.dtd.ui</module>
+    <module>bundles/org.eclipse.wst.html.core</module>
+    <module>bundles/org.eclipse.wst.html.ui</module>
+    <module>bundles/org.eclipse.wst.jsdt.web.core</module>
+    <module>bundles/org.eclipse.wst.jsdt.web.support.jsp</module>
+    <module>bundles/org.eclipse.wst.jsdt.web.ui</module>
+    <module>bundles/org.eclipse.wst.sse.core</module>
+    <module>bundles/org.eclipse.wst.sse.ui</module>
+    <module>bundles/org.eclipse.wst.standard.schemas</module>
+    <module>bundles/org.eclipse.wst.xml.core</module>
+    <module>bundles/org.eclipse.wst.xml.ui</module>
+    <module>bundles/org.eclipse.wst.xsd.core</module>
+    <module>bundles/org.eclipse.wst.xsd.ui</module>
+    <module>bundles/org.eclipse.wtp.javascript.capabilities</module>
+    <module>bundles/org.eclipse.wtp.web.capabilities</module>
+    <module>bundles/org.eclipse.wtp.xml.capabilities</module>
+  </modules>
+</project>
