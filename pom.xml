@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2012, 2013 Eclipse Foundation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Distribution License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/org/documents/edl-v10.php
+ 
+  Contributors:
+    Thanh Ha (Eclipse Foundation) - initial implementation
+-->
+
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.eclipse</groupId>
+    <artifactId>wtp-parent</artifactId>
+    <version>3.5.0-SNAPSHOT</version>
+    <relativePath>../wtp-parent</relativePath>
+  </parent>
+
+  <groupId>org.eclipse.webtools.sourceediting</groupId>
+  <artifactId>org.eclipse.webtools.sourceediting.xsl</artifactId>
+  <version>3.5.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>bundles/org.eclipse.wst.xsl</module>
+    <module>bundles/org.eclipse.wst.xsl.core</module>
+    <module>bundles/org.eclipse.wst.xsl.debug.ui</module>
+    <module>bundles/org.eclipse.wst.xsl.exslt.core</module>
+    <module>bundles/org.eclipse.wst.xsl.exslt.ui</module>
+    <module>bundles/org.eclipse.wst.xsl.jaxp.debug</module>
+    <module>bundles/org.eclipse.wst.xsl.jaxp.debug.ui</module>
+    <module>bundles/org.eclipse.wst.xsl.jaxp.launching</module>
+    <module>bundles/org.eclipse.wst.xsl.launching</module>
+    <module>bundles/org.eclipse.wst.xsl.saxon</module>
+    <module>bundles/org.eclipse.wst.xsl.ui</module>
+    <module>bundles/org.eclipse.wst.xsl.xalan</module>
+
+    <module>docs/org.eclipse.wst.xsl.doc</module>
+    <module>docs/org.eclipse.wst.xsl.sdk.documentation</module>
+
+    <module>features/org.eclipse.wst.xsl.feature</module>
+    <module>features/org.eclipse.wst.xsl_sdk.feature</module>
+  </modules>
+</project>
