@@ -253,8 +253,11 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				return;
 			}
 		}
-		if (!(source.length() > 0 && source.toString().charAt(source.length()-1) == ' '))
-			source.append(" ");//$NON-NLS-1$
+		//bug412395
+		//just verify if the source and the toAppend strings do not end with a whitespace to avoid the whitespace duplication.
+		if (!(source.length() > 0 && source.toString().charAt(source.length()-1) == ' ') && !(toAppend.length() > 0 && toAppend.charAt(toAppend.length()-1) == ' ')){	
+				source.append(" ");//$NON-NLS-1$
+		}
 	}
 
 	/**
