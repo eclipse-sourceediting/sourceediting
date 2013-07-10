@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2012 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.eclipse.wst.common.componentcore.ModuleCoreNature;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
+import org.eclipse.wst.common.componentcore.resources.IVirtualReference;
 import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
 
 /**
@@ -149,6 +150,10 @@ final class ModuleCoreSupportDelegate {
 								}
 							}
 						}
+						else {
+							// check assembled projects
+							return resolveInReferenced(project, referenceRuntimePath);
+						}
 					}
 				}
 			}
@@ -158,6 +163,29 @@ final class ModuleCoreSupportDelegate {
 			IVirtualFile virtualFile = ComponentCore.createFile(project, new Path(reference));
 			if (virtualFile != null && virtualFile.exists()) {
 				return virtualFile.getUnderlyingFile().getFullPath();
+			}
+		}
+		return null;
+	}
+
+	private static IPath resolveInReferenced(IProject project, IPath runtimeReference) {
+		IVirtualReference[] references = ComponentCore.createComponent(project).getReferences();
+		if (references != null) {
+			for (int i = 0; i < references.length; i++) {
+				IVirtualComponent referencedComponent = references[i].getReferencedComponent();
+				if (referencedComponent == null)
+					continue;
+				IVirtualComponent component = referencedComponent.getComponent();
+				if (component == null)
+					continue;
+				IVirtualFolder rootFolder = component.getRootFolder();
+				if (rootFolder == null)
+					continue;
+				// overlay?
+				IVirtualResource member = rootFolder.findMember(runtimeReference);
+				if (member != null) {
+					return member.getWorkspaceRelativePath();
+				}
 			}
 		}
 		return null;
