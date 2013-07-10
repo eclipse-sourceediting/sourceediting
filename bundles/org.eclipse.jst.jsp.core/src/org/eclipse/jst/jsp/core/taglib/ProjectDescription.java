@@ -238,7 +238,8 @@ class ProjectDescription {
 				}
 			}
 			String name = proxy.getName();
-			return name.length() != 0 && name.charAt(0) != '.' && visitMembers && !proxy.isDerived();
+			//  http://bugs.eclipse.org/378598 - always visit inside projects
+			return name.length() != 0 && (name.charAt(0) != '.' || proxy.getType() == IResource.PROJECT) && visitMembers && !proxy.isDerived();
 		}
 	}
 
