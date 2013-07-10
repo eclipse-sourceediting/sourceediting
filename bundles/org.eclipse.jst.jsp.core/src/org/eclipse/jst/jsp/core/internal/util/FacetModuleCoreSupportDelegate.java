@@ -192,13 +192,18 @@ final class FacetModuleCoreSupportDelegate {
 				/* http://bugs.eclipse.org/410161 */
 				if (referencedPathRoot != null) {
 					/*
-					 * See Servlet 3.0, section 4.6 ; this is the only
-					 * referenced module/component type we support
+					 * See Servlet 3.0, section 4.6, web fragments as required
+					 * projects
 					 */
 					IPath resolved = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES).append(runtimeReference);
 					if (resolved != null && component.getProject().findMember(resolved.removeFirstSegments(1)) != null) {
 						return resolved;
 					}
+				}
+				// overlay?
+				IVirtualResource member = rootFolder.findMember(runtimeReference);
+				if (member != null) {
+					return member.getWorkspaceRelativePath();
 				}
 			}
 		}
