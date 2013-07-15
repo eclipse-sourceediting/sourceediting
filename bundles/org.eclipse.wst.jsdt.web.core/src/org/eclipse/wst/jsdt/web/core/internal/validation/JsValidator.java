@@ -37,7 +37,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -132,13 +131,11 @@ public class JsValidator extends AbstractValidator implements IValidator, IExecu
 	private IMessage createMessageFromProblem(IProblem problem, IFile f, IJsTranslation translation, IDocument textDoc) {
 		int sourceStart = problem.getSourceStart();
 		int sourceEnd = problem.getSourceEnd();
-		if (sourceStart < 0) {
+		if (sourceStart == -1) {
 			return null;
 		}
-		sourceStart = ((JsTranslation)translation).getWebPageOffset(sourceStart);
-		if (sourceStart < 0)
-			return null;
-		sourceEnd = ((JsTranslation)translation).getWebPageOffset(sourceEnd);
+		sourceStart = translation.getWebPageOffset(sourceStart);
+		sourceEnd = translation.getWebPageOffset(sourceEnd);
 		/*
 		 * Bug 241794 - Validation shows errors when using JSP Expressions
 		 * inside JavaScript code

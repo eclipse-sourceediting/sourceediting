@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.text.IJsPartitions;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -58,7 +57,7 @@ public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
 				if (adapter != null) {
 					IJsTranslation translation = adapter.getJsTranslation(false);
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102211
-					elements = ((JsTranslation)translation).getElementsFromWebRange(selection.getOffset(), selection.getOffset() + selection.getLength());
+					elements = translation.getElementsFromJsRange(translation.getJavaScriptOffset(selection.getOffset()), translation.getJavaScriptOffset(selection.getOffset() + selection.getLength()));
 				}
 			}
 		} finally {

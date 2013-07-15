@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
-import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
+import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
 import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
@@ -42,7 +42,7 @@ import org.eclipse.wst.sse.core.indexing.AbstractIndexManager;
  * </ul></p>
  * 
  * <p><b>NOTE:</b> If any other file resource change listening needs to take place in the future
- * in this plugin it should be done here.</p>
+ * in this plug-in it should be done here.</p>
  */
 public class JSWebResourceEventManager extends AbstractIndexManager {
 	/** the singleton instance of the {@link JSWebResourceEventManager} */
@@ -59,7 +59,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 	 */
 	private JSWebResourceEventManager() {
 		super(Messages.build_analyzingDeltas, Messages.build_analyzingDeltas,
-				JsCoreMessages.model_initialization, Messages.manager_filesToIndex);
+				Messages.javamodel_initialization, Messages.manager_filesToIndex);
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 		if(this.fWorkingLocation == null) {
 			//create path to working area
     		IPath workingLocation =
-    			JsCorePlugin.getDefault().getStateLocation().append("resourceEventManager"); //$NON-NLS-1$
+    			JsCorePlugin.getDefault().getStateLocation().append("JSWebResourceEventManager"); //$NON-NLS-1$
 
             // ensure that it exists on disk
             File folder = new File(workingLocation.toOSString());
@@ -246,7 +246,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 	 * @return the module core roots for the given {@link IProject
 	 */
 	private static IResource[] getRoots(IProject project) {
-		IVirtualFolder root = ComponentCore.createFolder(project, Path.ROOT);
+		IVirtualFile root = ComponentCore.createFile(project, Path.ROOT);
 		IResource[] underlyingResources = root.getUnderlyingResources();
 		if (underlyingResources == null || underlyingResources.length == 0) {
 			underlyingResources = new IResource[]{root.getUnderlyingResource()};

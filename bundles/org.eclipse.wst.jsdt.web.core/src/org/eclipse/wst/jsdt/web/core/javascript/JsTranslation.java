@@ -8,9 +8,18 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     bug:244839 - eugene@genuitec.com
+ *     
+ * Provisional API: This class/interface is part of an interim API that is still under development and expected to 
+ * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
+ * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
+ * (repeatedly) as the API evolves.
+ *     
+ *     
  *******************************************************************************/
 
+
 package org.eclipse.wst.jsdt.web.core.javascript;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -45,7 +54,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-
 
 /**
 *
@@ -313,6 +321,9 @@ public class JsTranslation implements IJsTranslation {
 		return result;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public IJavaScriptElement[] getElementsFromWebRange(int webPositionStart, int webPositionEnd) {
 		int javaScriptPositionStart = getJavaScriptOffset(webPositionStart);
 		int javaScriptPositionEnd = getJavaScriptOffset(webPositionEnd);

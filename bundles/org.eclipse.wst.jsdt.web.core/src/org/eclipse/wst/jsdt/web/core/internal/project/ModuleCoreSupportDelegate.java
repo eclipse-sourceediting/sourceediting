@@ -167,7 +167,7 @@ final class ModuleCoreSupportDelegate {
 		}
 		return null;
 	}
-
+	
 	private static IPath resolveInReferenced(IProject project, IPath runtimeReference) {
 		IVirtualReference[] references = ComponentCore.createComponent(project).getReferences();
 		if (references != null) {

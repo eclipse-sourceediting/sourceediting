@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,15 +12,16 @@ package org.eclipse.wst.jsdt.web.ui.internal.taginfo;
 
 import java.io.Reader;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.ui.JSdocContentAccess;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.taginfo.AbstractHoverProcessor;
@@ -36,6 +37,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 * (repeatedly) as the API evolves.
 */
 public class JSDTHoverProcessor extends AbstractHoverProcessor {
+	private static final String[] PARTITION_TYPES= new String[] {"org.eclipse.wst.html.SCRIPT","org.eclipse.wst.html.SCRIPT.EVENTHANDLER"}; //$NON-NLS-1$ //$NON-NLS-2$
 	/*
 	 * Bulk of the work was copied from
 	 * org.eclipse.wst.jsdt.internal.ui.text.java.hover.JavadocHover
@@ -102,36 +104,31 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
-					IJsTranslation translation = adapter.getJsTranslation(true);
-					IJavaScriptElement[] result = ((JsTranslation)translation).getElementsFromWebRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
-// Vector filteredResults = new Vector();
-// List badFunctions = translation.getGeneratedFunctionNames();
-// boolean bad = false;
-// for(int i = 0;i<result.length;i++){
-// bad=false;
-// if(result[i] instanceof IFunction){
-// for(int j=0;j<badFunctions.size() && ! bad;j++){
-// if(((IFunction)result[i]).getElementName().equalsIgnoreCase((String)badFunctions.get(j))){
-// bad=true;
-// continue;
-// }
-// }
-// if(!bad)filteredResults.add(result[i]);
-// }
-// }
-// if(filteredResults.size()<1) return new String();
-//					
-// String filteredResult =
-// translation.fixupMangledName(getHoverInfo((IJavaScriptElement[])filteredResults.toArray(new
-// IJavaScriptElement[]{})));
-// for(int i = 0;i<badFunctions.size();i++){
-// filteredResult.replace((String)badFunctions.get(i), "");
-// }
-// return filteredResult;
-					return translation.fixupMangledName(getHoverInfo(result));
+					try {
+						boolean proceed = false;
+						ITypedRegion[] partitions = xmlDoc.getStructuredDocument().computePartitioning(hoverRegion.getOffset(), hoverRegion.getLength());
+						for (int i = 0; i < partitions.length; i++) {
+							for (int j = 0; j < PARTITION_TYPES.length; j++) {
+								if (PARTITION_TYPES[j].equals(partitions[i].getType())) {
+									proceed = true;
+									break;
+								}
+							}
+						}
+						if (proceed) {
+							IJsTranslation translation = adapter.getJsTranslation(true);
+							IJavaScriptElement[] result = translation.getElementsFromJsRange(translation.getJavaScriptOffset(hoverRegion.getOffset()), translation.getJavaScriptOffset(hoverRegion.getOffset() + hoverRegion.getLength()));
+		
+							return translation.fixupMangledName(getHoverInfo(result));
+						}
+					}
+					catch (BadLocationException e) {
+						// do nothing
+					}
 				}
 			}
-		} finally {
+		}
+		finally {
 			if (xmlModel != null) {
 				xmlModel.releaseFromRead();
 			}

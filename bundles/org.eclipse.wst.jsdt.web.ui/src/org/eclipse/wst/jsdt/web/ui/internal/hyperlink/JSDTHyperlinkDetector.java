@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -35,7 +36,6 @@ import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -52,7 +52,9 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 * (repeatedly) as the API evolves.
 */
 public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
-	private IHyperlink createHyperlink(IJavaScriptElement element, IRegion region, IDocument document) {
+	private static final String[] PARTITION_TYPES= new String[] {"org.eclipse.wst.html.SCRIPT","org.eclipse.wst.html.SCRIPT.EVENTHANDLER"}; //$NON-NLS-1$ //$NON-NLS-2$
+	
+	private IHyperlink createHyperlink(IJsTranslation jsTranslation, IJavaScriptElement element, IRegion region, IDocument document) {
 		IHyperlink link = null;
 		if (region != null) {
 			// open local variable in the JSP file...
@@ -80,13 +82,12 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 				// get Java range, translate coordinate to JSP
 				try {
 					ISourceRange range = null;
-					IJsTranslation jspTranslation = getJsTranslation(document);
-					if (jspTranslation != null) {
+					if (jsTranslation != null) {
 						// link to local variable definitions
 						if (element instanceof ILocalVariable) {
 							range = ((ILocalVariable) element).getNameRange();
 							IJavaScriptElement unit=((ILocalVariable) element).getParent();
-							IJavaScriptUnit myUnit = jspTranslation.getCompilationUnit();
+							IJavaScriptUnit myUnit = jsTranslation.getCompilationUnit();
 							
 							while(!(unit instanceof IJavaScriptUnit || unit instanceof IClassFile || unit==null)) {
 								unit = ((JavaElement) unit).getParent();
@@ -113,14 +114,14 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 						// linking to fields of the same compilation unit
 						else if (element.getElementType() == IJavaScriptElement.FIELD) {
 							Object cu = ((IField) element).getJavaScriptUnit();
-							if (cu != null && cu.equals(jspTranslation.getCompilationUnit())) {
+							if (cu != null && cu.equals(jsTranslation.getCompilationUnit())) {
 								range = ((ISourceReference) element).getSourceRange();
 							}
 						}
 						// linking to methods of the same compilation unit
 						else if (element.getElementType() == IJavaScriptElement.METHOD) {
 							Object cu = ((IFunction) element).getJavaScriptUnit();
-							if (cu != null && cu.equals(jspTranslation.getCompilationUnit())) {
+							if (cu != null && cu.equals(jsTranslation.getCompilationUnit())) {
 								range = ((ISourceReference) element).getSourceRange();
 							}
 						}
@@ -157,21 +158,36 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 		List hyperlinks = new ArrayList(0);
 		if (region != null && textViewer != null) {
 			IDocument document = textViewer.getDocument();
-			IJsTranslation jsTranslation = getJsTranslation(document);
-			if (jsTranslation != null) {
-				IJavaScriptElement[] elements = ((JsTranslation)jsTranslation).getElementsFromWebRange(region.getOffset(), region.getOffset() + region.getLength());
-				if (elements != null && elements.length > 0) {
-					// create a hyperlink for each JavaScript element
-					for (int i = 0; i < elements.length; ++i) {
-						IJavaScriptElement element = elements[i];
-						// find hyperlink range for Java element
-						IRegion hyperlinkRegion = selectWord(document, region.getOffset());
-						IHyperlink link = createHyperlink(element, hyperlinkRegion, document);
-						if (link != null) {
-							hyperlinks.add(link);
+			try {
+				boolean proceed = false;
+				ITypedRegion[] partitions = document.computePartitioning(region.getOffset(), region.getLength());
+				for (int i = 0; i < partitions.length; i++) {
+					for (int j = 0; j < PARTITION_TYPES.length; j++) {
+						if (PARTITION_TYPES[j].equals(partitions[i].getType())) {
+							proceed = true;
 						}
 					}
 				}
+				if (proceed) {
+					IJsTranslation jsTranslation = getJsTranslation(document);
+					if (jsTranslation != null) {
+						// find hyperlink range for JavaScript elements
+						IRegion hyperlinkRegion = selectWord(document, region.getOffset());
+						IJavaScriptElement[] elements = jsTranslation.getElementsFromJsRange(jsTranslation.getJavaScriptOffset(region.getOffset()), jsTranslation.getJavaScriptOffset(region.getOffset() + region.getLength()));
+						if (elements != null && elements.length > 0) {
+							// create a hyperlink for each JavaScript element
+							for (int i = 0; i < elements.length; ++i) {
+								IJavaScriptElement element = elements[i];
+								IHyperlink link = createHyperlink(jsTranslation, element, hyperlinkRegion, document);
+								if (link != null) {
+									hyperlinks.add(link);
+								}
+							}
+						}
+					}
+				}
+			}
+			catch (BadLocationException e) {
 			}
 		}
 		if (hyperlinks.size() == 0) {

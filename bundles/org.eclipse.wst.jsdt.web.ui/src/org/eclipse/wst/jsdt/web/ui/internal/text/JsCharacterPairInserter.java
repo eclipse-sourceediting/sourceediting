@@ -202,7 +202,6 @@ public class JsCharacterPairInserter extends AbstractCharacterPairInserter imple
 	}
 	
 	/**
-	 * TODO: IAN: comment me
 	 * @param identifier
 	 * @return
 	 */

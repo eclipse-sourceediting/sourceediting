@@ -1,34 +1,253 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<component id="org.eclipse.wst.jsdt.web.core" version="2">
-    <resource path="META-INF/MANIFEST.MF">
-        <filter id="924844039">
+<?xml version="1.0" encoding="UTF-8"?><component id="org.eclipse.wst.jsdt.web.core" version="2">
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/IncrementalBuilder.java" type="org.eclipse.wst.jsdt.web.core.internal.IncrementalBuilder">
+        <filter id="305365105">
             <message_arguments>
-                <message_argument value="1.0.500"/>
-                <message_argument value="1.0.401"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.IncrementalBuilder"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.IncrementalBuilder"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.1.0"/>
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/wst/jsdt/web/core/javascript/JsTranslation.java" type="org.eclipse.wst.jsdt.web.core.javascript.JsTranslation">
-        <filter id="1143996420">
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/JSWebResourceEventManager.java" type="org.eclipse.wst.jsdt.web.core.internal.JSWebResourceEventManager">
+        <filter id="305365105">
             <message_arguments>
-                <message_argument value="getElementsFromWebRange(int, int)"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.JSWebResourceEventManager"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
             </message_arguments>
         </filter>
-        <filter id="1143996420">
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/JsCoreMessages.java" type="org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages">
+        <filter id="305365105">
             <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/JsCorePlugin.java" type="org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/Logger.java" type="org.eclipse.wst.jsdt.web.core.internal.Logger">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.Logger"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/PathUtils.java" type="org.eclipse.wst.jsdt.web.core.internal.PathUtils">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.PathUtils"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/modelhandler/IWebDocumentChangeListener.java" type="org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebDocumentChangeListener">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebDocumentChangeListener"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/modelhandler/IWebResourceChangedListener.java" type="org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebResourceChangedListener">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.modelhandler.IWebResourceChangedListener"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/modelhandler/Messages.java" type="org.eclipse.wst.jsdt.web.core.internal.modelhandler.Messages">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.modelhandler.Messages"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/modelhandler/WebResourceChangeHandler.java" type="org.eclipse.wst.jsdt.web.core.internal.modelhandler.WebResourceChangeHandler">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.modelhandler.WebResourceChangeHandler"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/project/FacetedProjectListener.java" type="org.eclipse.wst.jsdt.web.core.internal.project.FacetedProjectListener">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.project.FacetedProjectListener"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/project/JsNatureInstaller.java" type="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/project/JsNatureUninstaller.java" type="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/project/JsWebNature.java" type="org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/project/Messages.java" type="org.eclipse.wst.jsdt.web.core.internal.project.Messages">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.project.Messages"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/project/ModuleCoreSupport.java" type="org.eclipse.wst.jsdt.web.core.internal.project.ModuleCoreSupport">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.project.ModuleCoreSupport"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/project/ModuleSourcePathProvider.java" type="org.eclipse.wst.jsdt.web.core.internal.project.ModuleSourcePathProvider">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.project.ModuleSourcePathProvider"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/project/WebProjectJsGlobalScopeContainerInitializer.java" type="org.eclipse.wst.jsdt.web.core.internal.project.WebProjectJsGlobalScopeContainerInitializer">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.project.WebProjectJsGlobalScopeContainerInitializer"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/provisional/contenttype/ContentTypeIdForEmbededJs.java" type="org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTypeIdForEmbededJs"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.1.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/provisional/contenttype/IContentDescriptionForJSP.java" type="org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.IContentDescriptionForJSP">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.IContentDescriptionForJSP"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.IContentDescriptionForJSP"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.1.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/validation/JsValidator.java" type="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/internal/validation/Util.java" type="org.eclipse.wst.jsdt.web.core.internal.validation.Util">
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.validation.Util"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.0.600"/>
+            </message_arguments>
+        </filter>
+        <filter id="305365105">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.internal.validation.Util"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core_1.1.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/jsdt/web/core/javascript/IJsTranslation.java" type="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation">
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation"/>
+                <message_argument value="getCodeRanges(int, int)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation"/>
                 <message_argument value="getJavaScriptOffset(int)"/>
             </message_arguments>
         </filter>
-        <filter id="1143996420">
+        <filter id="403804204">
             <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation"/>
+                <message_argument value="getWebEdit(TextEdit)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation"/>
                 <message_argument value="getWebPageOffset(int)"/>
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/wst/jsdt/web/core/javascript/JsTranslator.java" type="org.eclipse.wst.jsdt.web.core.javascript.JsTranslator">
-        <filter id="1143996420">
+    <resource path="src/org/eclipse/wst/jsdt/web/core/javascript/IJsTranslator.java" type="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator">
+        <filter id="403804204">
             <message_arguments>
-                <message_argument value="appendAndTrack(String, int)"/>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator"/>
+                <message_argument value="getCodeRanges(int, int)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator"/>
+                <message_argument value="getJavaScriptOffset(int)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator"/>
+                <message_argument value="getWebEdit(TextEdit)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator"/>
+                <message_argument value="getWebPageOffset(int)"/>
             </message_arguments>
         </filter>
     </resource>

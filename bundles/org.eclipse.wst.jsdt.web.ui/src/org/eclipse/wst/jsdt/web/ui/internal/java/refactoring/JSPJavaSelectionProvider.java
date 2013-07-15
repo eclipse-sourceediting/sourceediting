@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,7 @@ class JSPJavaSelectionProvider {
 					JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 					if (adapter != null) {
 						IJsTranslation translation = adapter.getJsTranslation(true);
-						elements = translation.getElementsFromJsRange(textSelection.getOffset(), textSelection.getOffset() + textSelection.getLength());
+						elements = translation.getElementsFromJsRange(translation.getJavaScriptOffset(textSelection.getOffset()), translation.getJavaScriptOffset(textSelection.getOffset() + textSelection.getLength()));
 					}
 				}
 			} finally {

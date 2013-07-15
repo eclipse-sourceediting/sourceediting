@@ -16,8 +16,8 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -72,11 +72,12 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 			fViewer = viewer;
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
 			IDOMDocument xmlDoc = xmlModel.getDocument();
+			JsTranslationAdapterFactory.setupAdapterFactory(xmlModel);
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			
 			if (translationAdapter != null) {
 				IJsTranslation translation = translationAdapter.getJsTranslation(true);
-				fJavaPosition = ((JsTranslation)translation).getJavaScriptOffset(getDocumentPosition());
+				fJavaPosition = translation.getJavaScriptOffset(getDocumentPosition());
 				try {
 					IJavaScriptUnit cu = translation.getCompilationUnit();
 					// can't get java proposals w/out a compilation unit

@@ -17,7 +17,6 @@ import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -86,8 +85,8 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		IJsTranslation translation = null;
 		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
 			translation = getTranslation(node);
-			startOffset = ((JsTranslation)translation).getJavaScriptOffset(((NodeImpl) node).getStartOffset());
-			endOffset = ((JsTranslation)translation).getJavaScriptOffset(((NodeImpl) node).getEndOffset() - 1);
+			startOffset = translation.getJavaScriptOffset(((NodeImpl) node).getStartOffset());
+			endOffset = translation.getJavaScriptOffset(((NodeImpl) node).getEndOffset() - 1);
 			if (startOffset >= 0 && endOffset >= 0)
 				result = translation.getAllElementsInJsRange(startOffset, endOffset);
 		}

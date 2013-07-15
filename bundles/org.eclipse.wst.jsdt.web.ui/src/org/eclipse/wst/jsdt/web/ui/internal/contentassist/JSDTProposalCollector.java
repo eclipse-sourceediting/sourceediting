@@ -23,7 +23,6 @@ import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 
 
 /**
@@ -91,10 +90,15 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 	private JSDTCompletionProposal createJSDTProposal(CompletionProposal proposal) {
 		JSDTCompletionProposal jspProposal;
 		String completion = String.valueOf(proposal.getCompletion());
-		// java offset
-		int offset = ((JsTranslation)fTranslation).getWebPageOffset(proposal.getReplaceStart());
+		
+		int webStart = fTranslation.getWebPageOffset(proposal.getReplaceStart());
+		int webLength = proposal.getReplaceEnd() - proposal.getReplaceStart();
+		proposal.setReplaceRange(webStart, webStart+webLength);
+
+		// javascript offset
+		int offset = proposal.getReplaceStart();
 		// replacement length
-		int length = proposal.getReplaceEnd() - proposal.getReplaceStart();
+		int length = proposal.getReplaceEnd() - offset;
 		// translate offset from Java > JSP
 		// cursor position after must be calculated
 		int positionAfter = calculatePositionAfter(proposal, completion);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,12 +13,10 @@ package org.eclipse.wst.jsdt.web.core.javascript.search;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
@@ -113,13 +111,12 @@ public class JsSearchDocument {
 			// get existing model for read, then get document from it
 			IModelManager modelManager = getModelManager();
 			if (modelManager != null) {
-				jspFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 				model = modelManager.getModelForRead(jspFile);
 			}
 			// handle unsupported
 			if (model instanceof IDOMModel) {
 				IDOMModel xmlModel = (IDOMModel)model;
-				setupAdapterFactory(xmlModel);
+				JsTranslationAdapterFactory.setupAdapterFactory(xmlModel);
 				IDOMDocument doc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) doc.getAdapterFor(IJsTranslation.class);
 				translation = adapter.getJsTranslation(false);
@@ -142,15 +139,6 @@ public class JsSearchDocument {
 			}
 		}
 		return translation;
-	}
-
-	/**
-	 * add the factory for JSPTranslationAdapter here
-	 * 
-	 * @param sm
-	 */
-	private void setupAdapterFactory(IStructuredModel sm) {
-		JsTranslationAdapterFactory.setupAdapterFactory(sm);
 	}
 
 	/**

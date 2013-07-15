@@ -58,7 +58,7 @@ class JSDTCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScanner {
 		// Add rule for multiple line comments.
 		rules.add(new MultiLineRule("/*", "*/", fMultiLineCommentToken));//$NON-NLS-1$ //$NON-NLS-2$
 		// Add rule for single line comments.
-		rules.add(new NoneInclusiveEndSequenceSingleLineRule("//", "-->", fSingleLineCommentToken));//$NON-NLS-1$
+		rules.add(new SingleLineRule("//", "\n" , fSingleLineCommentToken));//$NON-NLS-1$ //$NON-NLS-2$s
 		// Add rule for strings and character constants.
 		rules.add(new SingleLineRule("\"", "\"", fStringToken, '\\'));//$NON-NLS-2$//$NON-NLS-1$
 		rules.add(new SingleLineRule("'", "'", fStringToken, '\\'));//$NON-NLS-2$//$NON-NLS-1$
@@ -78,10 +78,7 @@ class JSDTCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScanner {
 		rules.add(wordRule);
 		
 		//add word rule for HTML style comment delimiters
-		rules.add(new WordRule(new HTMLCommentDetector(), this.fHTMLCommentBorderToken));
-		
-		//add rule for text after leading HTML comment delimiter
-		rules.add(new NoneInclusiveStartSequenceEndOfLineRule("<!--", this.fSingleLineCommentToken));
+		rules.add(new MultiLineRule("<!--", "-->", fHTMLCommentBorderToken));//$NON-NLS-1$ //$NON-NLS-2$
 		
 		IRule[] result = new IRule[rules.size()];
 		rules.toArray(result);

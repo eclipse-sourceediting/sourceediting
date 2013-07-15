@@ -33,7 +33,6 @@ import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -183,11 +182,10 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	private Object[] filterChildrenForRange(IJavaScriptElement[] allChildren, Node node) {
 		int javaPositionEnd = ((NodeImpl) node).getEndOffset();
 		int javaPositionStart = ((NodeImpl) node).getStartOffset();
-		IJsTranslation translation = getTranslation(node);
-		javaPositionStart = ((JsTranslation)translation).getJavaScriptOffset(((NodeImpl) node).getStartOffset());
+		javaPositionStart = getTranslation(node).getJavaScriptOffset(((NodeImpl) node).getStartOffset());
 		if (javaPositionStart < 0)
 			javaPositionStart = ((NodeImpl) node).getStartOffset();
-		javaPositionEnd = ((JsTranslation)translation).getJavaScriptOffset(((NodeImpl) node).getEndOffset() - 1);
+		javaPositionEnd = getTranslation(node).getJavaScriptOffset(((NodeImpl) node).getEndOffset() - 1);
 		if (javaPositionEnd < 0)
 			javaPositionEnd = ((NodeImpl) node).getEndOffset();
 

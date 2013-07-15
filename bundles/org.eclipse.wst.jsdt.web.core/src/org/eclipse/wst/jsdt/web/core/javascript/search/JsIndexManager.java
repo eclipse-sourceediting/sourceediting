@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -39,10 +38,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.core.JavaModelManager;
-import org.eclipse.wst.jsdt.internal.core.index.Index;
 import org.eclipse.wst.jsdt.internal.core.search.indexing.IndexManager;
-import org.eclipse.wst.jsdt.internal.core.search.indexing.IndexRequest;
-import org.eclipse.wst.jsdt.internal.core.search.indexing.ReadWriteMonitor;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
@@ -160,9 +156,6 @@ public class JsIndexManager {
 			if (delta.getResource() != null) {
 				IResource r = delta.getResource();
 				if ((r.getType() == IResource.FOLDER) && r.exists()) {
-					deleteIndex((IFolder) r);
-				}
-				if ((r.getType() == IResource.FILE) && r.exists()) {
 					deleteIndex((IFile) r);
 				}
 			}
@@ -188,7 +181,7 @@ public class JsIndexManager {
 			return p.segmentCount() > 0 && p.lastSegment().startsWith(".");
 		}
 
-		private void deleteIndex(IFolder folder) {
+		private void deleteIndex(IFile folder) {
 			// cleanup index
 			IndexManager im = JavaModelManager.getJavaModelManager().getIndexManager();
 			IPath folderPath = folder.getFullPath();
@@ -198,12 +191,6 @@ public class JsIndexManager {
 			// im.indexLocations.removeValue(indexLocation);
 			File f = indexLocation.toFile();
 			f.delete();
-		}
-
-		private void deleteIndex(IFile file) {
-			// have to use our own job to compute the correct index location
-			RemoveFileFromIndex removeFileFromIndex = new RemoveFileFromIndex(file.getFullPath());
-			JavaModelManager.getJavaModelManager().getIndexManager().request(removeFileFromIndex);
 		}
 
 		public IFile[] getFiles() {
@@ -276,41 +263,39 @@ public class JsIndexManager {
 						return Status.CANCEL_STATUS;
 					}
 					IFile file = filesToBeProcessed[lastFileCursor];
-					// do not add files that are derived
 					if(!file.isDerived()) {
-						try {
-							IJavaScriptProject project = JavaScriptCore.create(file.getProject());
-							if (project.exists()) {
-								ss.addJspFile(file);
-								// JS Indexer processing n files
-								processingNFiles = NLS.bind(JsCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed.length - lastFileCursor))});
-								monitor.subTask(processingNFiles + " - " + file.getName()); //$NON-NLS-1$
-								monitor.worked(1);
-	
-								if (DEBUG) {
-									System.out.println("JSIndexManager Job added file: " + file.getName()); //$NON-NLS-1$
-								}
+					try {
+						IJavaScriptProject project = JavaScriptCore.create(file.getProject());
+						if (project.exists()) {
+							ss.addJspFile(file);
+							// JS Indexer processing n files
+							processingNFiles = NLS.bind(JsCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed.length - lastFileCursor))});
+							monitor.subTask(processingNFiles + " - " + file.getName()); //$NON-NLS-1$
+							monitor.worked(1);
+
+							if (DEBUG) {
+								System.out.println("JSIndexManager Job added file: " + file.getName()); //$NON-NLS-1$
 							}
 						}
-						catch (Exception e) {
-							// RATLC00284776
-							// ISSUE: we probably shouldn't be catching EVERY
-							// exception, but
-							// the framework only allows to return IStatus in
-							// order to communicate
-							// that something went wrong, which means the loop
-							// won't complete, and we would hit the same problem
-							// the next time.
-							// 
-							// a possible solution is to keep track of the
-							// exceptions logged
-							// and only log a certain amt of the same one,
-							// otherwise skip it.
-							if (!frameworkIsShuttingDown()) {
-								String filename = file != null ? file.getFullPath().toString() : ""; //$NON-NLS-1$
-								Logger.logException("JSIndexer problem indexing:" + filename, e); //$NON-NLS-1$
-							}
+					}
+					catch (Exception e) {
+						// ISSUE: we probably shouldn't be catching EVERY
+						// exception, but
+						// the framework only allows to return IStatus in
+						// order to communicate
+						// that something went wrong, which means the loop
+						// won't complete, and we would hit the same problem
+						// the next time.
+						// 
+						// a possible solution is to keep track of the
+						// exceptions logged
+						// and only log a certain amt of the same one,
+						// otherwise skip it.
+						if (!frameworkIsShuttingDown()) {
+							String filename = file != null ? file.getFullPath().toString() : ""; //$NON-NLS-1$
+							Logger.logException("JSIndexer problem indexing:" + filename, e); //$NON-NLS-1$
 						}
+					}
 					}
 				} // end for
 			}
@@ -354,35 +339,6 @@ public class JsIndexManager {
 	}
 
 	// end class ProcessFilesJob
-
-	class RemoveFileFromIndex extends IndexRequest {
-		IPath filePath;
-
-		public RemoveFileFromIndex(IPath filePath) {
-			super(filePath.removeLastSegments(1), JavaModelManager.getJavaModelManager().getIndexManager());
-		}
-		public boolean execute(IProgressMonitor progressMonitor) {
-
-			if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
-
-			/* ensure no concurrent write access to index */
-			Index index = this.manager.getIndex(this.containerPath, JsSearchSupport.getInstance().computeIndexLocation(filePath.removeLastSegments(1)), true, /*reuse index file*/ false /*create if none*/);
-			if (index == null) return true;
-			ReadWriteMonitor monitor = index.monitor;
-			if (monitor == null) return true; // index got deleted since acquired
-
-			try {
-				monitor.enterWrite(); // ask permission to write
-				index.remove(filePath.lastSegment());
-			} finally {
-				monitor.exitWrite(); // free write lock
-			}
-			return true;
-		}
-		public String toString() {
-			return "removing " + filePath.lastSegment() + " from index " + this.containerPath; //$NON-NLS-1$ //$NON-NLS-2$
-		}
-	}
 
 	private static JsIndexManager fSingleton = null;
 	private boolean initialized;
@@ -567,7 +523,10 @@ public class JsIndexManager {
 				for (int i = 0; i < files.length; i++) {
 					if (files[i].toLowerCase().endsWith(".index")) { //$NON-NLS-1$
 						locay = jsModelWorkingLocation.toString() + "/" + files[i]; //$NON-NLS-1$
-						// XXX: might not be the right container path, check IndexManager.indexLocations ?
+						// reuse index file
+// index = new Index(locay, allProjects[j].getFullPath().toOSString(), true);
+// //$NON-NLS-1$
+// index.save();
 						indexManager.getIndex(allProjects[j].getFullPath(), new Path(locay), true, false);
 						// indexManager.saveIndex(index);
 					}

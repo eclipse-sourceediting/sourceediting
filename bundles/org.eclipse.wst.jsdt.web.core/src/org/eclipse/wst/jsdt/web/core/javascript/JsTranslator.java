@@ -361,7 +361,6 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		fScriptText.append(javaScript);
 	}
 	
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateInlineJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
 	 */
@@ -492,6 +491,8 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 				int scriptStartOffset = container.getStartOffset(region);
 				int scriptTextLength = container.getLength();
 				String regionText = container.getFullText(region);
+//				regionText = StringUtils.replace(regionText, CDATA_START, CDATA_START_PAD);
+//				regionText = StringUtils.replace(regionText, CDATA_END, CDATA_END_PAD);
 				int regionLength = region.getLength();
 				
 				spaces = Util.getPad(scriptStartOffset - scriptOffset);

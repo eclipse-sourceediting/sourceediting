@@ -14,6 +14,7 @@
 package org.eclipse.wst.jsdt.web.support.jsp;
 
 import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
@@ -72,5 +73,9 @@ public class JSDTStructuredTextViewerConfigurationJSP extends StructuredTextView
 		} else {
 			return super.getAutoEditStrategies(sourceViewer, contentType);
 		}
+	}
+
+	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
+		return super.getContentAssistProcessors(sourceViewer, partitionType);
 	}
 }

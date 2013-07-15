@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,14 +106,13 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		final TypedPosition partition = (TypedPosition) fPartitions.removeFirst();
 		
 		if (document != null) {
-			final Map preferences = getProjectOptions(document);
 			//calculate the indent of the leading <script> tag because we need to add that indent level to the JS indent level
 			IStructuredDocumentRegion scriptTagStartRegion = document.getRegionAtCharacterOffset(partition.offset-1);
 			String scriptRegionIndent = ""; //$NON-NLS-1$
 			if(scriptTagStartRegion != null) {
 				try {
 					int scriptRegionIndentLevel = getIndentOfLine(document,document.getLineOfOffset(scriptTagStartRegion.getStartOffset())).length();
-					scriptRegionIndent = getIndentationString(preferences, scriptRegionIndentLevel);
+					scriptRegionIndent = getIndentationString(getPreferences(), scriptRegionIndentLevel);
 					this.startIndentLevel += scriptRegionIndentLevel;
 				} catch (BadLocationException e) {
 					Logger.logException("Could not calculate starting indent of the script region, using 0", e);//$NON-NLS-1$
@@ -164,14 +163,14 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 				 * Set a default replace text that is the original contents
 				 * with a new line and proper indentation in front
 				 */
-				String replaceText = lineDelim + getIndentationString(preferences, startIndentLevel) + jsTextNotTranslated;
+				String replaceText = lineDelim + getIndentationString(getPreferences(), startIndentLevel) + jsTextNotTranslated;
 
 				int javaScriptOffset = ((JsTranslation) translation).getJavaScriptOffset(partition.getOffset());
 
 				// known range, proceed
 				if (javaScriptOffset >= 0) {
 					// format the translated text
-					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_JAVASCRIPT_UNIT, jsTextTranslated, javaScriptOffset, scriptLength, startIndentLevel, lineDelim, preferences);
+					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_JAVASCRIPT_UNIT, jsTextTranslated, javaScriptOffset, scriptLength, startIndentLevel, lineDelim, getPreferences());
 					IDocument jsDoc = new Document(jsTextTranslated);
 					
 					if (edit != null) {
@@ -203,7 +202,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 						}
 		
 						edit.apply(jsDoc);
-						replaceText = lineDelim + getIndentationString(preferences, startIndentLevel) + (jsDoc.get(edit.getOffset(), edit.getLength())).trim();
+						replaceText = lineDelim + getIndentationString(getPreferences(), startIndentLevel) + (jsDoc.get(edit.getOffset(), edit.getLength())).trim();
 					}
 					else {
 						/*
@@ -233,6 +232,11 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		fPartitions.addLast(context.getProperty(FormattingContextProperties.CONTEXT_PARTITION));
 		fDocuments.addLast(context.getProperty(FormattingContextProperties.CONTEXT_MEDIUM));
 		startIndentLevel = FormattingStrategyJSDT.regionStartIndentLevel + 0;
+		Map projectOptions = (Map) context.getProperty(FormattingContextProperties.CONTEXT_PREFERENCES);
+		if (projectOptions == null) {
+			IDocument doc = (IDocument) context.getProperty(FormattingContextProperties.CONTEXT_MEDIUM);
+			context.setProperty(FormattingContextProperties.CONTEXT_PREFERENCES, getProjectOptions(doc));
+		}
 		super.formatterStarts(context);
 	}
 	

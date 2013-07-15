@@ -22,7 +22,8 @@
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.pde.api.tools.apiAnalysisBuilder</name>
-			<arguments/>
+			<arguments>
+			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>

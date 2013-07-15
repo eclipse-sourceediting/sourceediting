@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.util.Vector;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -165,7 +164,6 @@ public class JsWebNature implements IProjectNature {
 		LibrarySuperType superType = new LibrarySuperType(new Path( SUPER_TYPE_LIBRARY),  getJavaProject(), SUPER_TYPE_NAME);
 		getJavaProject().setCommonSuperType(superType);
 		// getJavaProject().addToBuildSpec(BUILDER_ID);
-		fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 	
 	private void createSourceClassPath() {
@@ -198,7 +196,6 @@ public class JsWebNature implements IProjectNature {
 		getJavaProject().setRawIncludepath((IIncludePathEntry[]) goodEntries.toArray(new IIncludePathEntry[] {}), outputLocation, monitor);
 		getJavaProject().deconfigure();
 		JsWebNature.removeJsNature(fCurrProject, monitor);
-		fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 	
 	public JavaProject getJavaProject() {

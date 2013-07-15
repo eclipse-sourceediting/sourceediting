@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,41 +30,41 @@ import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
  */
 public class JSDTSearchDocumentDelegate extends JavaSearchDocument {
 	
-	private JsSearchDocument fJSPSearchDoc = null;
+	private JsSearchDocument fJSSearchDoc = null;
 	
-	public JSDTSearchDocumentDelegate(JsSearchDocument jspSearchDoc) {
+	public JSDTSearchDocumentDelegate(JsSearchDocument jsSearchDoc) {
 		
-		super(jspSearchDoc.getPath(), jspSearchDoc.getParticipant());
-		this.fJSPSearchDoc = jspSearchDoc;
+		super(jsSearchDoc.getPath(), jsSearchDoc.getParticipant());
+		this.fJSSearchDoc = jsSearchDoc;
 	}
 
 	public byte[] getByteContents() {
 		
-		return this.fJSPSearchDoc.getByteContents();
+		return this.fJSSearchDoc.getByteContents();
 	}
 
 	public char[] getCharContents() {
 		
-		return this.fJSPSearchDoc.getCharContents();
+		return this.fJSSearchDoc.getCharContents();
 	}
 	
 	public String getJavaText() {
-		return this.fJSPSearchDoc.getJavaText();
+		return this.fJSSearchDoc.getJavaText();
 	}
 
 	public String getEncoding() {
 		
-		return this.fJSPSearchDoc.getEncoding();
+		return this.fJSSearchDoc.getEncoding();
 	}
 	
 	public IFile getFile() {
 		
-		return this.fJSPSearchDoc.getFile();
+		return this.fJSSearchDoc.getFile();
 	}
 	
 	public IJsTranslation getJspTranslation() {
 		
-		return this.fJSPSearchDoc.getJSTranslation();
+		return this.fJSSearchDoc.getJSTranslation();
 	}
 	
 //	public int getJspOffset(int javaOffset) {
@@ -73,7 +73,7 @@ public class JSDTSearchDocumentDelegate extends JavaSearchDocument {
 //	}
 	
 	public void release() {
-		this.fJSPSearchDoc.release();
+		this.fJSSearchDoc.release();
 	}
 	public IJavaScriptElement getJavaElement() {
 		return getJspTranslation().getCompilationUnit();

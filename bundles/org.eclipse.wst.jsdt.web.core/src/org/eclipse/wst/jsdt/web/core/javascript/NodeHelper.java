@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,15 +7,8 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
- * Provisional API: This class/interface is part of an interim API that is still under development and expected to 
- * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
- * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
- * (repeatedly) as the API evolves.
- *     
- *     
+ * 
  *******************************************************************************/
-
 
 package org.eclipse.wst.jsdt.web.core.javascript;
 
@@ -25,14 +18,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-/**
-*
 
-* Provisional API: This class/interface is part of an interim API that is still under development and expected to
-* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
-* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
-* (repeatedly) as the API evolves.
-*/
 public class NodeHelper {
 	protected static final char DOUBLE_QUOTE_CHAR = '\"';
 	protected static final String DOUBLE_QUOTE_ENTITY = "&quot;"; //$NON-NLS-1$
@@ -80,11 +66,11 @@ public class NodeHelper {
 		ITextRegionList t = region.getRegions();
 		ITextRegion r;
 		Iterator regionIterator = t.iterator();
-		String StructuredValue = Messages.NodeHelper00 + getTagName() + Messages.NodeHelper01; //$NON-NLS-1$ //$NON-NLS-2$
+		String structuredValue = Messages.NodeHelper00 + getTagName() + Messages.NodeHelper01; //$NON-NLS-1$ //$NON-NLS-2$
 		while (regionIterator.hasNext()) {
 			r = (ITextRegion) regionIterator.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-				StructuredValue += "\t\t" + region.getText(r); //$NON-NLS-1$
+				structuredValue += "\t\t" + region.getText(r); //$NON-NLS-1$
 				/*
 				 * Theres a XML_TAG_ATTRIBUTE_EQUALS after the
 				 * XML_TAG_ATTRIBUTE_NAME we have to get rid of
@@ -97,12 +83,12 @@ public class NodeHelper {
 						r = ((ITextRegion) regionIterator.next());
 					}
 					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-						StructuredValue += "\t\t" + stripEndQuotes(region.getText(r)) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+						structuredValue += "\t\t" + stripEndQuotes(region.getText(r)) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 			}
 		}
-		return StructuredValue;
+		return structuredValue;
 	}
 	
 	public boolean containsAttribute(String name[]) {
@@ -118,7 +104,7 @@ public class NodeHelper {
 		while (regionIterator.hasNext()) {
 			r = (ITextRegion) regionIterator.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-				String tagname = region.getText(r).trim();
+				String tagname = region.getText(r);
 				/* Attribute values aren't case sensative */
 				if (NodeHelper.isInArray(name, tagname)) {
 					return true;
@@ -137,21 +123,24 @@ public class NodeHelper {
 		}
 		ITextRegionList t = region.getRegions();
 		ITextRegion r;
-		Iterator regionIterator = t.iterator();
-		while (regionIterator.hasNext()) {
-			r = (ITextRegion) regionIterator.next();
+		int size = t.size();
+		for (int i = 0; i < size; i++) {
+			r = t.get(i);
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-				String tagname = region.getText(r).trim();
+				String tagname = region.getText(r);
 				/*
 				 * Attribute values aren't case sensative, also make sure next
 				 * region is attrib value
 				 */
 				if (tagname.equalsIgnoreCase(name)) {
-					if (regionIterator.hasNext()) {
-						regionIterator.next();
+					if (i < size - 2) {
+						i++;
+						if (t.get(i).getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+							i++;
+						}
 					}
-					if (regionIterator.hasNext()) {
-						r = ((ITextRegion) regionIterator.next());
+					if (i < size) {
+						r = t.get(i);
 					}
 					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						return stripEndQuotes(region.getText(r));
@@ -183,9 +172,9 @@ public class NodeHelper {
 		}
 		ITextRegionList t = region.getRegions();
 		ITextRegion r;
-		Iterator regionIterator = t.iterator();
-		while (regionIterator.hasNext()) {
-			r = (ITextRegion) regionIterator.next();
+		int size = t.size();
+		for (int i = 0; i < size; i++) {
+			r = t.get(i);
 			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
 				return region.getText(r);
 			}
