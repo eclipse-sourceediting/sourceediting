@@ -13,14 +13,15 @@ package org.eclipse.wst.jsdt.web.ui.tests;
 
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.jsdt.web.ui.tests.conversion.IncludePathTests;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.jsdt.web.ui.tests.contentassist.AllContentAssistTests;
 import org.eclipse.wst.jsdt.web.ui.tests.format.FormattingTests;
+import org.eclipse.wst.jsdt.web.ui.tests.format.TestJSPContentFormatter;
 import org.eclipse.wst.jsdt.web.ui.tests.style.StyleTests;
 
-public class AllWebUITests extends TestCase {
+public class AllWebUITests extends TestSuite {
 	public AllWebUITests() {
 		super("JSDT Web UI Tests");
 	}
@@ -28,9 +29,13 @@ public class AllWebUITests extends TestCase {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("JSDT Web UI Tests");
 		// $JUnit-BEGIN$
-		suite.addTestSuite(IncludePathTests.class);
-		suite.addTest(FormattingTests.suite());
 		suite.addTestSuite(StyleTests.class);
+		suite.addTest(AllContentAssistTests.suite());
+		suite.addTest(FormattingTests.suite());
+		
+		if (Platform.getBundle("org.eclipse.jst.jsp.ui") != null) {
+			suite.addTest(TestJSPContentFormatter.suite());
+		}
 		// $JUnit-END$
 		return suite;
 	}

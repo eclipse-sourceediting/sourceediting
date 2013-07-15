@@ -5,7 +5,7 @@
        point="org.eclipse.ui.commands">
 	    <command
 	          id="org.eclipse.wst.jsdt.web.showTranslation"
-	          name="Show JavaScript Translation">
+	          name="%_UI_SHOW_TRANSLATION">
 	    </command>
 	    <command
 	          id="org.eclipse.wst.jsdt.web.runCode"

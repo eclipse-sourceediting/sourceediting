@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 IBM Corporation and others.
+ * Copyright (c) 2010, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -181,6 +181,10 @@ public class FormattingTests extends TestCase {
 	
 	public void testCDATAPreserved() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("test19.html", "test19-fmt.html", new StructuredTextViewerConfigurationJSDT());
+	}	
+	
+	public void testBug377979() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("test20.jsp", "test20-fmt.jsp", new StructuredTextViewerConfigurationJSDT());
 	}	
 	
 	/**
@@ -396,12 +400,18 @@ public class FormattingTests extends TestCase {
 		 * @see junit.extensions.TestSetup#tearDown()
 		 */
 		public void tearDown() throws Exception {
-			//delete test projects
-			fProject.delete(true, new NullProgressMonitor());
-			
-			//reset non-interactive
-			if (previousWTPAutoTestNonInteractivePropValue != null) {
-				System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonInteractivePropValue);
+			try {
+				// delete test projects
+				fProject.delete(true, new NullProgressMonitor());
+			}
+			catch (CoreException e) {
+				// problems deleting aren't a failure
+			}
+			finally {
+				// reset non-interactive
+				if (previousWTPAutoTestNonInteractivePropValue != null) {
+					System.setProperty(WTP_AUTOTEST_NONINTERACTIVE, previousWTPAutoTestNonInteractivePropValue);
+				}
 			}
 		}
 	}
