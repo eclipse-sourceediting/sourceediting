@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.wst.xml_ui.feature.path"
+      id="org.eclipse.wst.xml_ui.feature.patch"
       label="Path Feature"
       version="1.0.0">
 
