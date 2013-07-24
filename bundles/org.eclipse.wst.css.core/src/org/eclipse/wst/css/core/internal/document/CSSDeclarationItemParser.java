@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.document;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
@@ -111,6 +113,9 @@ class CSSDeclarationItemParser {
 	private IStructuredDocumentRegion fParentRegion = null;
 	private boolean fTempStructuredDocument = false;
 	private CSSModelUpdateContext fUpdateContext = null;
+
+	// Map ITextRegions to their propertyValues for regions not connected to a document
+	private Map regionValues = new HashMap(0);
 
 	/**
 	 * CSSDeclarationItemParser constructor comment.
@@ -998,6 +1003,7 @@ class CSSDeclarationItemParser {
 				case S_NORMAL :
 					if (type == CSSRegionContexts.CSS_DECLARATION_VALUE_FUNCTION) {
 						regionBuf.add(region);
+						regionValues.put(region, propertyValue);
 						status = S_FUNCTION;
 					}
 					else if (bFont && type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR && fParentRegion.getText(region).equals("/")) { //$NON-NLS-1$
@@ -1011,8 +1017,10 @@ class CSSDeclarationItemParser {
 				case S_FUNCTION :
 					if (type == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE) {
 						regionBuf.add(region);
+						regionValues.put(region, propertyValue);
 						value = createPrimitiveValue(regionBuf);
 						regionBuf.clear();
+						regionValues.clear();
 						status = S_NORMAL;
 					}
 					else if (!isBlank(type)) {
@@ -1032,6 +1040,7 @@ class CSSDeclarationItemParser {
 					if (type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR && fParentRegion.getText(region).equals(",")) { //$NON-NLS-1$
 						value = createPrimitiveValue(regionBuf);
 						regionBuf.clear();
+						regionValues.clear();
 						if (value != null) {
 							if (fUpdateContext == null || !fUpdateContext.isActive()) {
 								item.appendValue(value);
@@ -1041,6 +1050,7 @@ class CSSDeclarationItemParser {
 					}
 					else {
 						regionBuf.add(region);
+						regionValues.put(region, propertyValue);
 					}
 					break;
 				default :
@@ -1057,20 +1067,24 @@ class CSSDeclarationItemParser {
 			if (fUpdateContext == null || !fUpdateContext.isActive()) {
 				item.appendValue(value);
 			}
+			regionBuf.clear();
+			regionValues.clear();
 		}
 	}
 
 	private String getCollapsedText(ITextRegion region) {
 		if (fParentRegion == null)
 			return ""; //$NON-NLS-1$
-		StringBuffer text = new StringBuffer(fParentRegion.getFullText(region));
+		String value = (String) regionValues.get(region); // Use the property value if it exists
+		StringBuffer text = new StringBuffer(value != null ? value : fParentRegion.getFullText(region));
 		if (region.getLength() > region.getTextLength())
 			text.replace(region.getTextLength(), region.getLength(), " "); //$NON-NLS-1$
 		return text.toString();
 	}
 
 	private String getText(ITextRegion region) {
-		return (fParentRegion != null) ? fParentRegion.getText(region) : ""; //$NON-NLS-1$ 
+		String value = (String) regionValues.get(region); // Use the property value if it exists
+		return value != null ? value : ((fParentRegion != null) ? fParentRegion.getText(region) : ""); //$NON-NLS-1$ 
 	}
 
 	private static boolean isBlank(String type) {
