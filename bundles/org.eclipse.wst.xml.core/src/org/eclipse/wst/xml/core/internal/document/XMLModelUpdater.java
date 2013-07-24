@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.ISourceGenerator;
@@ -734,6 +737,18 @@ public class XMLModelUpdater {
 		return buffer.toString();
 	}
 
+	private boolean isSelfClosedContainer(IDOMElement element) {
+		if (element.getStartStructuredDocumentRegion() != null) {
+			final ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
+			if (mq !=  null) {
+				final CMElementDeclaration node = mq.getCMElementDeclaration(element);
+				if (node != null) {
+					return node.getContentType() != CMElementDeclaration.EMPTY && element.getStartStructuredDocumentRegion().getLastRegion().getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
+				}
+			}
+		}
+		return false;
+	}
 	/**
 	 */
 	private String getStartCloseTag(IDOMElement element) {
@@ -1408,7 +1423,7 @@ public class XMLModelUpdater {
 					// newly having a child
 					if (parentNode.getNodeType() == Node.ELEMENT_NODE) {
 						ElementImpl element = (ElementImpl) parentNode;
-						if (element.isEmptyTag()) { // empty tag format
+						if (element.isEmptyTag() || isSelfClosedContainer(element)) { // empty tag format
 							// need to generate the start and the end tags
 							end = element.getEndOffset();
 							start = end - 2; // for "/>"
