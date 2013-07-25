@@ -943,6 +943,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 		 * (disabled (disabled) #IMPLIED)
 		 * (autofocus Boolean; #IMPLIED)
 		 * (form CDATA; #IMPLIED)
+		 * (required)
 		 */
 		else if (elementName.equals(HTML40Namespace.ElementName.SELECT)){
 			// (size NUMBER #IMPLIED) ... should be defined locally.
@@ -953,6 +954,14 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			String[] names = {ATTR_NAME_FORM, ATTR_NAME_AUTOFOCUS,ATTR_NAME_NAME, ATTR_NAME_MULTIPLE, ATTR_NAME_DISABLED, ATTR_NAME_TABINDEX, ATTR_NAME_ONFOCUS, ATTR_NAME_ONBLUR, ATTR_NAME_ONCHANGE};
 			getDeclarations(attributes, Arrays.asList(names).iterator());
 		
+			// (required  #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+						// boolean attribute must have the same value as its name.
+			String[] requiredValues = {ATTR_NAME_REQUIRED};
+			atype.setEnumValues(requiredValues);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_REQUIRED, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_REQUIRED, attr);
+			
 		}
 		/*
 		 * (value NUMBER #IMPLIED) ... should be defined locally.
