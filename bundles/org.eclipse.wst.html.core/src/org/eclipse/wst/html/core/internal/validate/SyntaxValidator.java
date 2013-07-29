@@ -98,6 +98,10 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		ElementInfo info = new ElementInfo();
 		info.target = (IDOMElement) node;
 
+		if (info.target.getModel().isModelStateChanging()) {
+			return;
+		}
+
 		// gather information to validate from target at once.
 		getInfo(info);
 
