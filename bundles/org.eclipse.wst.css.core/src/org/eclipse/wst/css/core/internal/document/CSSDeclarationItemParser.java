@@ -1006,7 +1006,7 @@ class CSSDeclarationItemParser {
 						regionValues.put(region, propertyValue);
 						status = S_FUNCTION;
 					}
-					else if (bFont && type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR && fParentRegion.getText(region).equals("/")) { //$NON-NLS-1$
+					else if (bFont && type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR && isValueRegionEqual(region, propertyValue, "/")) { //$NON-NLS-1$
 						value = createPrimitiveValue(region, propertyValue);
 						status = S_FONT_SLASH;
 					}
@@ -1037,7 +1037,7 @@ class CSSDeclarationItemParser {
 					}
 					break;
 				case S_COMMA_SEPARATION :
-					if (type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR && fParentRegion.getText(region).equals(",")) { //$NON-NLS-1$
+					if (type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR && isValueRegionEqual(region, propertyValue, ",")) { //$NON-NLS-1$
 						value = createPrimitiveValue(regionBuf);
 						regionBuf.clear();
 						regionValues.clear();
@@ -1070,6 +1070,19 @@ class CSSDeclarationItemParser {
 			regionBuf.clear();
 			regionValues.clear();
 		}
+	}
+
+	/**
+	 * Checks if either the property value or the text region is equal to the string. Since
+	 * the parent structured document region may not be part of a document, the text value is checked first
+	 * 
+	 * @param region the text region to check
+	 * @param propertyValue the property value from the original string
+	 * @param string the string to test for
+	 * @return true if either the property value or the text region matches the string
+	 */
+	private boolean isValueRegionEqual(ITextRegion region, String propertyValue, String string) {
+		return propertyValue != null ? string.equals(propertyValue) : fParentRegion.getText(region).equals(string);
 	}
 
 	private String getCollapsedText(ITextRegion region) {
