@@ -693,6 +693,14 @@ public class JSPTranslator implements Externalizable {
 		fResult.append(fSuperclass + "{" + ENDL); //$NON-NLS-1$
 		javaOffset += fSuperclass.length() + 2;
 
+		List errorTypeNames = new ArrayList(2);
+		if (!isTypeFound(decodeType(fSuperclass), errorTypeNames)) {
+			for (int i = 0; i < errorTypeNames.size(); i++) {
+				Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPDirectiveValidator_8, new String[]{errorTypeNames.get(i).toString()}), 0,1);
+				fTranslationProblems.add(problem);
+			}
+		}
+
 		if(updateRanges) {
 			updateRanges(fDeclarationRanges, javaOffset);
 		}
@@ -829,8 +837,8 @@ public class JSPTranslator implements Externalizable {
 	}
 
 	/**
-	 * /* keep track of cursor position inside the buffer /* appends buffer to
-	 * the final result buffer
+	 * appends the given stringbuffer to the final result buffer, keeping
+	 * track of the position of its contents
 	 */
 	protected void append(StringBuffer buf) {
 		if (getCursorOwner() == buf) {
