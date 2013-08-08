@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2011 IBM Corporation and others.
+ * Copyright (c) 2008, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 /**
- * Detects hyper-links in Tag Library Descriptors
+ * Detects hyper-links to type names
  */
 public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 
@@ -108,11 +108,17 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 			IPath basePath = textFileBuffer.getLocation();
 			if (basePath != null && !basePath.isEmpty()) {
 				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0));
-				if (basePath.segmentCount() > 1 && project.isAccessible()) {
-					return createJavaElementHyperlink(JavaCore.create(project), elementName, region);
+				try {
+					if (basePath.segmentCount() > 1 && project.isAccessible() && project.hasNature(JavaCore.NATURE_ID)) {
+						return createJavaElementHyperlink(JavaCore.create(project), elementName, region);
+					}
+				}
+				catch (CoreException e) {
+					Logger.logException(e);
 				}
 			}
 		}
+		
 		// fallback to SSE-specific knowledge
 		IStructuredModel model = null;
 		try {
@@ -170,9 +176,8 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 		IStructuredModel model = null;
 		try {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			IDOMModel xmlModel = null;
 			if (model instanceof IDOMModel) {
-				xmlModel = (IDOMModel) model;
+				IDOMModel xmlModel = (IDOMModel) model;
 				if (xmlModel != null) {
 					final IDOMDocument xmlDoc = xmlModel.getDocument();
 					final JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
@@ -181,7 +186,7 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 						if (translation!=null) {
 							int javaOffset = translation.getJavaOffset(region.getOffset());
 							if (javaOffset > -1) {
-									return true;
+								return true;
 							}
 						}
 					}

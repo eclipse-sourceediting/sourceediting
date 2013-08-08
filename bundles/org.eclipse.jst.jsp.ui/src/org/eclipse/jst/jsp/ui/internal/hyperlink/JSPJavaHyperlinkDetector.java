@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.jst.jsp.ui.internal.hyperlink;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -27,7 +29,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -36,8 +37,6 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -45,7 +44,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * Detects hyperlinks in JSP Java content
  */
 public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
-	private static final String SUPPORTED_PARTITION_TYPE= "org.eclipse.jst.jsp.SCRIPT.JAVA"; //$NON-NLS-1$
 
 	private IHyperlink createHyperlink(IJavaElement element, IRegion region, IDocument document) {
 		IHyperlink link = null;
@@ -55,26 +53,14 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 			if (element instanceof ISourceReference) {
 				IFile file = null;
 				int jspOffset = 0;
-				IStructuredModel sModel = null;
 
 				// try to locate the file in the workspace
-				try {
-					sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-					if (sModel != null) {
-						URIResolver resolver = sModel.getResolver();
-						if (resolver != null) {
-							String uriString = resolver.getFileBaseLocation();
-							file = getFile(uriString);
-						}
-					}
-				}
-				finally {
-					if (sModel != null)
-						sModel.releaseFromRead();
+				ITextFileBuffer textFileBuffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(document);
+				if (textFileBuffer != null && textFileBuffer.getLocation() != null) {
+					file = getFile(textFileBuffer.getLocation().toString());
 				}
 
-				// get Java range, translate coordinate to JSP
-
+				// get Java range and translate to JSP range
 				try {
 					ISourceRange range = null;
 					IJSPTranslation jspTranslation = getJSPTranslation(document);
@@ -104,7 +90,7 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 						}
 					}
 
-					if (range != null && file != null) {
+					if (jspTranslation != null && range != null && file != null) {
 						jspOffset = jspTranslation.getJspOffset(range.getOffset());
 						if (jspOffset >= 0) {
 							link = new WorkspaceFileHyperlink(region, file, new Region(jspOffset, range.getLength()));
@@ -133,41 +119,26 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		if (region != null && textViewer != null) {
 			IDocument document = textViewer.getDocument();
-			boolean proceed = false;
-			try {
-				ITypedRegion[] partitions = document.computePartitioning(region.getOffset(), region.getLength());
-				for (int i = 0; i < partitions.length; i++) {
-					if (SUPPORTED_PARTITION_TYPE.equals(partitions[i].getType())) {
-						proceed = true;
-						break;
-					}
-				}
-			}
-			catch (BadLocationException e) {
-				proceed = true;
-			}
-			if (proceed) {
-				JSPTranslation jspTranslation = getJSPTranslation(document);
-				if (jspTranslation != null) {
-					// check if we are in JSP Java content
-					int javaOffset = jspTranslation.getJavaOffset(region.getOffset());
-					if (javaOffset > -1) {
-						// check that we are not in indirect Java content (like
-						// included files)
-						if (!jspTranslation.isIndirect(javaOffset)) {
-							// get Java elements
-							IJavaElement[] elements = jspTranslation.getElementsFromJspRange(region.getOffset(), region.getOffset() + region.getLength());
-							if (elements != null && elements.length > 0) {
-								// create a JSPJavaHyperlink for each Java element
-								for (int i = 0; i < elements.length; ++i) {
-									IJavaElement element = elements[i];
-	
-									// find hyperlink range for Java element
-									IRegion hyperlinkRegion = selectWord(document, region.getOffset());
-									IHyperlink link = createHyperlink(element, hyperlinkRegion, document);
-									if (link != null) {
-										hyperlinks.add(link);
-									}
+			JSPTranslation jspTranslation = getJSPTranslation(document);
+			if (jspTranslation != null) {
+				// check if we are in JSP Java content
+				int javaOffset = jspTranslation.getJavaOffset(region.getOffset());
+				if (javaOffset > -1) {
+					// check that we are not in indirect Java content (like
+					// included files)
+					if (!jspTranslation.isIndirect(javaOffset)) {
+						// get Java elements
+						IJavaElement[] elements = jspTranslation.getElementsFromJspRange(region.getOffset(), region.getOffset() + region.getLength());
+						if (elements != null && elements.length > 0) {
+							// create a JSPJavaHyperlink for each Java element
+							for (int i = 0; i < elements.length; ++i) {
+								IJavaElement element = elements[i];
+
+								// find hyperlink range for Java element
+								IRegion hyperlinkRegion = selectWord(document, region.getOffset());
+								IHyperlink link = createHyperlink(element, hyperlinkRegion, document);
+								if (link != null) {
+									hyperlinks.add(link);
 								}
 							}
 						}
@@ -176,7 +147,7 @@ public class JSPJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 			}
 		}
 
-		if (hyperlinks.size() == 0)
+		if (hyperlinks.isEmpty())
 			return null;
 		return (IHyperlink[]) hyperlinks.toArray(new IHyperlink[0]);
 	}
