@@ -33,6 +33,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.ACC;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -197,7 +200,13 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		this.getTree().setHeaderVisible(true);
 		this.getTree().setLinesVisible(true);
 		getTree().addControlListener(fResizeAdapter);
-
+		getTree().getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			public void getDescription(AccessibleEvent e) {
+				if (e.childID == ACC.CHILDID_SELF && getTree().getItemCount() == 0) {
+					e.result = XMLEditorMessages.XMLTreeExtension_3 + "\n" + XMLEditorMessages.XMLTreeExtension_4;
+				}
+			}
+		});
 		// set up providers
 		propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory();
 
