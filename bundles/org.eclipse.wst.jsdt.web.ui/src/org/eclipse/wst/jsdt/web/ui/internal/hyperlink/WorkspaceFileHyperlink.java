@@ -23,6 +23,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
+
 class WorkspaceFileHyperlink implements IHyperlink {
 	// copies of this class exist in:
 	// org.eclipse.wst.xml.ui.internal.hyperlink
@@ -76,8 +77,16 @@ class WorkspaceFileHyperlink implements IHyperlink {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				IEditorPart editor = IDE.openEditor(page, fFile, true);
 				// highlight range in editor if possible
-				if (fHighlightRange != null && editor instanceof ITextEditor) {
-					((ITextEditor) editor).selectAndReveal(fHighlightRange.getOffset(), fHighlightRange.getLength());
+				if (fHighlightRange != null && editor != null) { 
+					ITextEditor textEditor = null;
+					if (editor instanceof ITextEditor) {
+						textEditor = (ITextEditor) editor;
+					} else {
+						textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+					}
+					if (textEditor != null) {
+						textEditor.selectAndReveal(fHighlightRange.getOffset(), fHighlightRange.getLength());
+					}
 				}
 			} catch (PartInitException pie) {
 				Logger.log(Logger.WARNING_DEBUG, pie.getMessage(), pie);
