@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2013 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -209,4 +209,13 @@ public class HTMLUIMessages extends NLS {
 	// Hyperlinks
 	public static String Hyperlink_line;
 	public static String Open;
+	
+	// Ignore Attribute Name Patterns
+	public static String IgnoreAttributeNames;
+	public static String IgnoreAttributeNamesPattern;
+	public static String BadIgnoreAttributeNamesPattern;
+	public static String DoNotValidateAttribute;
+	public static String DoNotValidateAllAttributes;
+	public static String DoNotValidateAttributeAddInfo;
+	public static String DoNotValidateAllAttributesAddInfo;
 }

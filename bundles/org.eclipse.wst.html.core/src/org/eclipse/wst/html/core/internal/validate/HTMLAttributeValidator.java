@@ -11,14 +11,29 @@
 package org.eclipse.wst.html.core.internal.validate;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -49,6 +64,9 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	private static final char SINGLE_QUOTE = '\'';
 	private static final char DOUBLE_QUOTE = '\"';
 
+	private IPreferencesService fPreferenceService;
+	private static Map fIgnorePatterns = new HashMap(); // A storage for ignore patterns (instances of StringMatcher)
+
 	// HTML(5) data attributes
 	private static final String ATTR_NAME_DATA = "data-"; //$NON-NLS-1$
 	private static final int ATTR_NAME_DATA_LENGTH = ATTR_NAME_DATA.length();
@@ -63,6 +81,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	 */
 	public HTMLAttributeValidator() {
 		super();
+		fPreferenceService = Platform.getPreferencesService();
 	}
 
 	/**
@@ -153,11 +172,15 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			}
 			
 			if (adec == null) {
-				if ((attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA_LENGTH) || (attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH)) {
-					DocumentTypeAdapter documentTypeAdapter = (DocumentTypeAdapter) ((INodeNotifier) target.getOwnerDocument()).getAdapterFor(DocumentTypeAdapter.class);
-					if (documentTypeAdapter != null && documentTypeAdapter.hasFeature(HTMLDocumentTypeConstants.HTML5))
+				if ((attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA_LENGTH) || 
+						(attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH)) {
+					if (isHTML5(target))
 						continue;
-				}
+				}		
+				// Check for user-defined exclusions for HTML5 attribute names
+				if (!shouldValidateAttributeName(target, attrName)) 
+					continue;
+
 				// No attr declaration was found. That is, the attr name is
 				// undefined.
 				// but not regard it as undefined name if it includes nested
@@ -333,4 +356,60 @@ public class HTMLAttributeValidator extends PrimeValidator {
 		return (c == SINGLE_QUOTE) || (c == DOUBLE_QUOTE);
 	}
 	// D210422
+	
+	private boolean isHTML5(Element target) {
+		DocumentTypeAdapter documentTypeAdapter = (DocumentTypeAdapter) ((INodeNotifier) target.getOwnerDocument()).getAdapterFor(DocumentTypeAdapter.class);
+		return (documentTypeAdapter != null && 
+				documentTypeAdapter.hasFeature(HTMLDocumentTypeConstants.HTML5));
+	}
+	
+	private boolean shouldValidateAttributeName(Element target, String attrName) {
+		if (!isHTML5(target)) return true;
+
+		Object adapter = (target instanceof IAdaptable ? ((IAdaptable)target).getAdapter(IResource.class) : null);
+		IProject project = (adapter instanceof IResource ? ((IResource)adapter).getProject() : null);
+		
+		Iterator excludedAttributes = getExcludedAttributeNames(project).iterator();
+		while (excludedAttributes.hasNext()) {
+			String excluded = (String)excludedAttributes.next();
+			StringMatcher strMatcher = (StringMatcher)fIgnorePatterns.get(excluded);
+			if (strMatcher == null) {
+				strMatcher = new StringMatcher(excluded);
+				fIgnorePatterns.put(excluded, strMatcher);
+			}
+			if (strMatcher.match(attrName))
+				return false;
+		}
+
+		return true;
+	}
+	
+	private Set getExcludedAttributeNames(IProject project) {
+		IScopeContext[] fLookupOrder = new IScopeContext[] {new InstanceScope(), new DefaultScope()};
+		if (project != null) {
+			ProjectScope projectScope = new ProjectScope(project);
+			if(projectScope.getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(HTMLCorePreferenceNames.USE_PROJECT_SETTINGS, false))
+				fLookupOrder = new IScopeContext[] {projectScope, new InstanceScope(), new DefaultScope()};
+		}
+		
+		Set result = new HashSet();
+		if (fPreferenceService.getBoolean(HTMLCorePlugin.getDefault().getBundle().getSymbolicName(), 
+				HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES, HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES_DEFAULT, 
+				fLookupOrder)) {
+			String ignoreList = fPreferenceService.getString(HTMLCorePlugin.getDefault().getBundle().getSymbolicName(), 
+					HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT, 
+					fLookupOrder);
+			
+			if (ignoreList.trim().isEmpty())
+				return result;
+	
+			String[] names = ignoreList.split(","); //$NON-NLS-1$
+			for (int i = 0; names != null && i < names.length; i++) {
+				String name = names[i] == null ? null : names[i].trim();
+				if (name != null && !name.isEmpty()) 
+					result.add(name.toLowerCase());
+			}
+		}
+		return result; 
+	}
 }
