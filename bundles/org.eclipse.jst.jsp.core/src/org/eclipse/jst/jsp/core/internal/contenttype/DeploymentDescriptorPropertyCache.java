@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -553,7 +553,7 @@ public final class DeploymentDescriptorPropertyCache {
 	private static final DeploymentDescriptorPropertyCache _instance = new DeploymentDescriptorPropertyCache();
 	private static final boolean _debugResolutionCache = false;
 
-	private static final float defaultWebAppVersion = 3f;
+	static final float defaultWebAppVersion = 3f;
 	static final String EL_IGNORED = "el-ignored"; //$NON-NLS-1$
 	static final String ID = "id"; //$NON-NLS-1$
 	static final String INCLUDE_CODA = "include-coda"; //$NON-NLS-1$
@@ -737,7 +737,7 @@ public final class DeploymentDescriptorPropertyCache {
 		IStructuredModel model = null;
 		List groupList = new ArrayList();
 		List urlPatterns = new ArrayList();
-		Float[] version = new Float[1];
+		Float[] version = new Float[]{new Float(defaultWebAppVersion)};
 		SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 2);
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
 		builder.setEntityResolver(getEntityResolver());
@@ -745,10 +745,12 @@ public final class DeploymentDescriptorPropertyCache {
 		try {
 			InputSource inputSource = new InputSource();
 			String s = FileContentCache.getInstance().getContents(path);
-			inputSource.setCharacterStream(new StringReader(s));
-			inputSource.setSystemId(path.toString());
-			Document document = builder.parse(inputSource);
-			_parseDocument(path, version, groupList, urlPatterns, subMonitor, document);
+			if (s != null) {
+				inputSource.setCharacterStream(new StringReader(s));
+				inputSource.setSystemId(path.toString());
+				Document document = builder.parse(inputSource);
+				_parseDocument(path, version, groupList, urlPatterns, subMonitor, document);
+			}
 		}
 		catch (SAXException e1) {
 			/* encountered a fatal parsing error, try our own parser */
