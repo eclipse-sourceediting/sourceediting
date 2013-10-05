@@ -11,7 +11,9 @@
 package org.eclipse.jst.jsp.core.internal.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -348,7 +350,7 @@ final class FacetModuleCoreSupportDelegate {
 		if (!ModuleCoreNature.isFlexibleProject(current))
 			return new IProject[0];
 		
-		List projects = new ArrayList();
+		Set projects = new HashSet();
 		IVirtualReference[] references = ComponentCore.createComponent(current).getReferences();
 		if (references != null) {
 			for (int i = 0; i < references.length; i++) {
@@ -356,7 +358,7 @@ final class FacetModuleCoreSupportDelegate {
 				if (referencedComponent == null)
 					continue;
 				IProject project = referencedComponent.getProject();
-				if (project == null)
+				if (project == null || project.equals(current))
 					continue;
 				projects.add(project);
 			}
