@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: unloadable; singleton:=true
+Require-Bundle: javax.servlet;bundle-version="3.0",
+ javax.servlet.jsp;bundle-version="2.2"
+Bundle-ActivationPolicy: lazy

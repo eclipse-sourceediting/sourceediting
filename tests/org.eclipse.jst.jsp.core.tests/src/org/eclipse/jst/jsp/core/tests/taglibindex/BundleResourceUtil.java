@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -265,5 +266,27 @@ public class BundleResourceUtil {
 		catch (JavaModelException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static IProject createJavaWebProject(String name) throws CoreException {
+		// Create new project
+		IProject project = BundleResourceUtil.createSimpleProject(name, null, new String[]{JavaCore.NATURE_ID, "org.eclipse.pde.PluginNature"});
+
+		project.getFolder("META-INF").create(true, true, null);
+		project.getFolder("META-INF").getFile("MANIFEST.MF").create(new ByteArrayInputStream(("Manifest-Version: 1.0\nBundle-ManifestVersion: 2\nBundle-SymbolicName: "+name+"; singleton:=true\nRequire-Bundle: javax.servlet;bundle-version=\"3.0\",\n javax.servlet.jsp;bundle-version=\"2.2\"\nBundle-ActivationPolicy: lazy\n").getBytes()), true, null);
+
+		IJavaProject javaProject = JavaCore.create(project);
+		List buildPath = new ArrayList(Arrays.asList(javaProject.getRawClasspath()));
+		Iterator i = buildPath.iterator();
+		while (i.hasNext()) {
+			IClasspathEntry entry = (IClasspathEntry) i.next();
+			if (entry.getEntryKind() == IClasspathEntry.CPE_CONTAINER && "org.eclipse.jdt.launching.JRE_CONTAINER".equals(entry.getPath().segment(0))) {
+				i.remove();
+			}
+		}
+		buildPath.add(JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")));
+		buildPath.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6")));
+		javaProject.setRawClasspath((IClasspathEntry[]) buildPath.toArray(new IClasspathEntry[buildPath.size()]), new Path("/" + name + "/WebContent/WEB-INF/classes"), new NullProgressMonitor());
+		return project;
 	}
 }

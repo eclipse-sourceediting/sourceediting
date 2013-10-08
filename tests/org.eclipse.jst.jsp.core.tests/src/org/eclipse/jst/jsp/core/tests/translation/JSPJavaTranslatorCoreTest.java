@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
@@ -132,7 +131,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 	public void test_126377() throws Exception {
 		String projectName = "bug_126377";
 		// Create new project
-		IProject project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		IProject project = BundleResourceUtil.createJavaWebProject(projectName);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName);
 		IFile file = project.getFile("WebContent/test126377_noerror.jsp");
@@ -144,7 +143,11 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		helper.setURI(file.getFullPath().toOSString());
 		validator.validate(helper, reporter);
 		
-		assertTrue("found jsp java error within html comments when there are none", reporter.getMessages().isEmpty());
+		String strings = "";
+		for (int i = 0; i < reporter.getMessages().size(); i++) {
+			strings = strings + ((IMessage) reporter.getMessages().get(i)).getText() + "\n";
+		}
+		assertTrue("found problems within html comments when there should be none: "+ strings, reporter.getMessages().isEmpty());
 		
 		file = project.getFile("WebContent/test126377_error.jsp");
 		assertTrue(file.exists());
@@ -377,7 +380,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 	public void test_150794() throws Exception {
 		String testName = "bug_150794";
 		// Create new project
-		IProject project = BundleResourceUtil.createSimpleProject(testName, null, null);
+		IProject project = BundleResourceUtil.createJavaWebProject(testName);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 		
@@ -390,7 +393,11 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		helper.setURI(main.getFullPath().toOSString());
 		validator.validate(helper, reporter);
 
-		assertTrue("Unexpected problems found", reporter.getMessages().size() == 0);
+		String strings = "";
+		for (int i = 0; i < reporter.getMessages().size(); i++) {
+			strings = strings + ((IMessage) reporter.getMessages().get(i)).getText() + "\n";
+		}
+		assertTrue("Unexpected problems found: " + strings, reporter.getMessages().isEmpty());
 
 		// clean up if we got to the end
 		try {
@@ -711,7 +718,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 	}
 
 	public void test_389174() throws CoreException, IOException {
-		IProject j = BundleResourceUtil.createSimpleProject(getName(), null, new String[]{JavaCore.NATURE_ID});
+		IProject j = BundleResourceUtil.createJavaWebProject(getName());
 		assertTrue(j.exists());
 
 		String typeName = "List<List<Boolean>>";
@@ -728,7 +735,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			assertTrue("specified type did not survive translation", translator.getTranslation().indexOf(typeName) >= 0);
 			IJSPProblem[] translationProblems = (IJSPProblem[]) translator.getTranslationProblems().toArray(new IJSPProblem[0]);
 			for (int i = 0; i < translationProblems.length; i++) {
-				assertTrue(translationProblems[i].getID() != IProblem.UndefinedType);
+				assertEquals("expected IJSPProblem type: " + translationProblems[i].getMessage(), Integer.toHexString(IProblem.UndefinedType), Integer.toHexString(translationProblems[i].getID()));
 			}
 		}
 		finally {

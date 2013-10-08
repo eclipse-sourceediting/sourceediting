@@ -192,7 +192,7 @@ public class JSPDirectiveValidatorTest extends TestCase {
 		IPath path = new Path (filePath);
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
 		if (!project.exists()) {
-			BundleResourceUtil.createSimpleProject(path.segment(0), null, new String[]{JavaCore.NATURE_ID});
+			BundleResourceUtil.createJavaWebProject(path.segment(0));
 		}
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		file.create(new ByteArrayInputStream(content.getBytes("utf8")), true, null);

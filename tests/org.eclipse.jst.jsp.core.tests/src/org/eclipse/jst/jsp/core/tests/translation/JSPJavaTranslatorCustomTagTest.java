@@ -20,6 +20,7 @@ import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.jst.jsp.core.tests.validation.ReporterForTest;
 import org.eclipse.jst.jsp.core.tests.validation.ValidationContextForTest;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
 public class JSPJavaTranslatorCustomTagTest extends TestCase {
@@ -59,20 +60,23 @@ public class JSPJavaTranslatorCustomTagTest extends TestCase {
 	public void test_310085() throws Exception {
 		String projectName = "bug_310085"; //$NON-NLS-1$
 		// Create new project
-		IProject project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		IProject project = BundleResourceUtil.createJavaWebProject(projectName);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName);//$NON-NLS-1$ //$NON-NLS-2$
 		IFile file = project.getFile("WebContent/test310085.jsp");//$NON-NLS-1$
 		assertTrue(file.exists());
-				
+
 		JSPValidator validator = new JSPJavaValidator();
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		helper.setURI(file.getFullPath().toString());
 		validator.validate(helper, reporter);
 		
-		assertTrue("Found JSP Java problem for custom tag "+reporter.getMessages().size(), reporter.getMessages().isEmpty());//$NON-NLS-1$
-		
+		String strings = "";
+		for (int i = 0; i < reporter.getMessages().size(); i++) {
+			strings = strings + ((IMessage) reporter.getMessages().get(i)).getText() + "\n";
+		}
+		assertTrue("Found JSP Java problem(s) for custom tag: " + strings, reporter.getMessages().isEmpty());
 	}
 
 	/**
@@ -84,19 +88,22 @@ public class JSPJavaTranslatorCustomTagTest extends TestCase {
 	public void test_326193() throws Exception {
 		String projectName = "bug_326193"; //$NON-NLS-1$
 		// Create new project
-		IProject project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		IProject project = BundleResourceUtil.createJavaWebProject(projectName);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName); //$NON-NLS-1$ //$NON-NLS-2$
 		IFile file = project.getFile("WebContent/test326193.jsp"); //$NON-NLS-1$
 		assertTrue(file.exists());
-		
+
 		JSPValidator validator = new JSPJavaValidator();
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		helper.setURI(file.getFullPath().toOSString());
-		validator.validate(helper, reporter);
-		
-		assertTrue("found jsp java error for empty end tag in xml comment in script", reporter.getMessages().isEmpty());//$NON-NLS-1$
-			 		
-	 	}
+		validator.validate(helper, reporter);		
+
+		String strings = "";
+		for (int i = 0; i < reporter.getMessages().size(); i++) {
+			strings = strings + ((IMessage) reporter.getMessages().get(i)).getText() + "\n";
+		}
+		assertTrue("found jsp java error for empty end tag in xml comment in script:" + strings, reporter.getMessages().isEmpty());
 	}
+}
