@@ -19,15 +19,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestSuite;
-import org.eclipse.jst.jsp.tests.encoding.JSPEncodingTestSuite;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestSuite;
 import org.eclipse.wst.css.core.tests.CSSCoreTestSuite;
-import org.eclipse.wst.css.tests.encoding.CSSEncodingTestSuite;
 import org.eclipse.wst.css.ui.tests.CSSUITestSuite;
 import org.eclipse.wst.dtd.core.tests.DTDCoreTestSuite;
 import org.eclipse.wst.dtd.ui.tests.DTDUITestSuite;
 import org.eclipse.wst.html.core.tests.HTMLCoreTestSuite;
-import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestSuite;
 import org.eclipse.wst.html.ui.tests.HTMLUITestSuite;
 import org.eclipse.wst.jsdt.core.tests.RunJSDTCoreTests;
 import org.eclipse.wst.jsdt.core.tests.compiler.JSDTCompilerTests;
@@ -37,11 +34,8 @@ import org.eclipse.wst.jsdt.web.ui.tests.AllWebUITests;
 import org.eclipse.wst.sse.core.tests.SSEModelTestSuite;
 import org.eclipse.wst.sse.ui.tests.SSEUITestSuite;
 import org.eclipse.wst.xml.core.tests.SSEModelXMLTestSuite;
-import org.eclipse.wst.xml.tests.encoding.EncodingTestSuite;
 import org.eclipse.wst.xml.ui.tests.XMLUITestSuite;
-import org.eclipse.wst.xml.validation.tests.internal.AllXMLTests;
 import org.eclipse.wst.xsd.core.tests.internal.AllXSDCoreTests;
-import org.eclipse.wst.xsd.validation.tests.internal.AllXSDTests;
 
 public class MasterListTestSuite extends TestSuite {
 	private static final String CLASS = "class";
@@ -61,13 +55,13 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(HTMLCoreTestSuite.suite());
 		addTest(JSPCoreTestSuite.suite());
 
-		addTest(EncodingTestSuite.suite());
-		addTest(CSSEncodingTestSuite.suite());
-		addTest(HTMLEncodingTestSuite.suite());
-		addTest(JSPEncodingTestSuite.suite());
-
-		addTest(AllXMLTests.suite());
-		addTest(AllXSDTests.suite());
+//		addTest(EncodingTestSuite.suite());
+//		addTest(CSSEncodingTestSuite.suite());
+//		addTest(HTMLEncodingTestSuite.suite());
+//		addTest(JSPEncodingTestSuite.suite());
+//
+//		addTest(AllXMLTests.suite());
+//		addTest(AllXSDTests.suite());
 
 		addTest(SSEUITestSuite.suite());
 		addTest(XMLUITestSuite.suite());
