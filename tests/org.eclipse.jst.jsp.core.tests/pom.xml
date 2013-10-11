@@ -16,12 +16,12 @@
   <parent>
     <groupId>org.eclipse.webtools.sourceediting</groupId>
     <artifactId>org.eclipse.webtools.sourceediting.tests</artifactId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.6.0-SNAPSHOT</version>
     <relativePath>../../</relativePath>
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.jst.jsp.core.tests</artifactId>
-  <version>1.0.700-SNAPSHOT</version>
+  <version>1.0.800-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
