@@ -10,6 +10,8 @@ Export-Package: org.eclipse.wst.sse.unittests,
  org.eclipse.wst.sse.unittests.minortools
 Require-Bundle: org.junit;bundle-version="3.8.0",
  org.eclipse.core.runtime,
+ org.eclipse.ui.workbench;bundle-version="3.1.0",
+ org.eclipse.jface,
  org.eclipse.wst.css.tests.encoding;resolution:=optional,
  org.eclipse.wst.css.core.tests;resolution:=optional,
  org.eclipse.wst.css.ui.tests;resolution:=optional,

@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestSuite;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestSuite;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.core.tests.CSSCoreTestSuite;
 import org.eclipse.wst.css.ui.tests.CSSUITestSuite;
 import org.eclipse.wst.dtd.core.tests.DTDCoreTestSuite;
@@ -45,7 +47,8 @@ public class MasterListTestSuite extends TestSuite {
 		super("WTP Source Editing Master List Test Suite");
 
 		System.setProperty("wtp.autotest.noninteractive", "true");
-
+		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_SYSTEM_JOBS, true);
+		
 		addTest(SSEModelTestSuite.suite());
 
 		addTest(SSEModelXMLTestSuite.suite());
