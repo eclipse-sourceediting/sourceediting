@@ -793,6 +793,11 @@
 		<handler
 			class="org.eclipse.wst.sse.ui.internal.handlers.CustomFilterHandler"
 			commandId="org.eclipse.wst.sse.ui.outline.customFilter">
+			<enabledWhen>
+				<with variable="activeEditor">
+					<test property="org.eclipse.wst.sse.ui.outline.isConfigurableOutlinePage" forcePluginActivation="true"/>
+  				</with>
+			</enabledWhen>
 		</handler>
 		
 	</extension>
