@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<% String name; %>	
+<% String name = ""; %>
 <A HREF ='<portlet:actionURL><portlet:param name="<%=name%>" value="<%=name%>"/></portlet:actionURL>'>reset</A>
 
 </body>
