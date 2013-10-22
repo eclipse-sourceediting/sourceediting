@@ -124,7 +124,7 @@ public class JSPTranslator implements Externalizable {
 	 * @see #writeRanges(ObjectOutput, HashMap)
 	 * @see #readRanges(ObjectInput)
 	 */
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 	
 	/** for debugging */
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")).booleanValue(); //$NON-NLS-1$
@@ -328,6 +328,9 @@ public class JSPTranslator implements Externalizable {
 	 * <code>false</code> otherwise
 	 */
 	private boolean fCodeTranslated;
+
+	/** The model path as it was persisted */
+	private IPath fSavedModelPath = null;
 
 	/**
 	 * A structure for holding a region collection marker and list of variable
@@ -3080,7 +3083,8 @@ public class JSPTranslator implements Externalizable {
 	 * @return
 	 */
 	private boolean isTypeFound(String rawTypeValue, List errorTypeNames) {
-		IFile file = getFile();
+		// If the translation is being loaded from disk, the model and structured document may not have been intiailized yet
+		IFile file = getStructuredDocument() != null ? getFile() : (fSavedModelPath != null ? ResourcesPlugin.getWorkspace().getRoot().getFile(fSavedModelPath) : null);
 		if (file == null)
 			return true;
 
@@ -3316,6 +3320,8 @@ public class JSPTranslator implements Externalizable {
 		writeRanges(out, this.fUserELRanges);
 		writeRanges(out, this.fIndirectRanges);
 		writeString(out, this.fELTranslatorID);
+		final IPath modelPath = getModelPath();
+		writeString(out, modelPath != null && modelPath.segmentCount() > 1 ? modelPath.toString() : null );
 	}
 	
 	/**
@@ -3367,7 +3373,11 @@ public class JSPTranslator implements Externalizable {
 		this.fUserELRanges = readRanges(in);
 		this.fIndirectRanges = readRanges(in);
 		this.fELTranslatorID = readString(in);
-		
+
+		final String path = readString(in);
+		if (path != null && path.trim().length() > 0) {
+			fSavedModelPath = new Path(path);
+		}
 		//build result
 		this.buildResult(false);
 	}
