@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1657,7 +1657,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	 * If this tag can not be nested or we're already searching for an
 	 * attribute name, equals, or value, return immediately.
 	 */
-	if (!isNestable(tagName) || (!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_NAME || fStateStack.peek() == ST_XML_EQUALS || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE || fStateStack.peek() == ST_JSP_ATTRIBUTE_VALUE))) {
+	if (!isNestable(tagName) || (!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_NAME || fStateStack.peek() == ST_XML_EQUALS || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE || fStateStack.peek() == ST_JSP_ATTRIBUTE_VALUE || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE_DQUOTED || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE_SQUOTED))) {
 		yybegin(ST_XML_TAG_NAME);
 		return XML_TAG_OPEN;
 	}
