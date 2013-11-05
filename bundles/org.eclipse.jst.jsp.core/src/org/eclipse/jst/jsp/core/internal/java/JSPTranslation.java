@@ -538,14 +538,24 @@ public class JSPTranslation implements IJSPTranslation {
 	 */
 	public void reconcileCompilationUnit() {
 		ICompilationUnit cu = getCompilationUnit();
+		boolean isClosed = false;
 		if (cu != null) {
 			try {
 				synchronized(cu) {
-					cu.reconcile(ICompilationUnit.NO_AST, false, getWorkingCopyOwner(), getProgressMonitor());
+					isClosed = !cu.isOpen();
+					if (isClosed) {
+						cu.becomeWorkingCopy(null);
+					}
+					cu.reconcile(ICompilationUnit.NO_AST, true, getWorkingCopyOwner(), getProgressMonitor());
 				}
 			}
 			catch (JavaModelException e) {
 				Logger.logException(e);
+			}
+			finally {
+				if (isClosed) {
+					release();
+				}
 			}
 		}
 	}
