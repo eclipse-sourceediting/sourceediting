@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.jst.jsp.ui.internal.java.views.ImageDescriptorRegistry;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
@@ -21,6 +22,7 @@ import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistryImpl;
+import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -56,6 +58,15 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 	public AdapterFactoryRegistry getAdapterFactoryRegistry() {
 		return AdapterFactoryRegistryImpl.getInstance();
 
+	}
+
+	public void stop(BundleContext context) throws Exception {
+		try {
+			ImageDescriptorRegistry.dispose();
+		}
+		finally {
+			super.stop(context);
+		}
 	}
 
 	/**
