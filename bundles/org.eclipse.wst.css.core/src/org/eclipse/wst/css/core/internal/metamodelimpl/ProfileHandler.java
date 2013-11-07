@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.wst.css.core.internal.metamodel.CSSMMNode;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMMSelector;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfile;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfileRegistry;
+import org.eclipse.wst.css.core.internal.metamodelimpl.CSSProfileImpl.FallbackPropertyResourceBundle;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -62,11 +63,12 @@ class ProfileHandler extends DefaultHandler {
 		}
 
 		if (fResourceBundle != null) {
-			return fResourceBundle.getString(key.substring(1));
+			String result = fResourceBundle instanceof FallbackPropertyResourceBundle ? ((FallbackPropertyResourceBundle) fResourceBundle).getProperty(key.substring(1)) : fResourceBundle.getString(key.substring(1));
+			if (result != null) {
+				return result;
+			}
 		}
-		else {
-			return key;
-		}
+		return key;
 	}
 
 	public void startDocument() throws SAXException {
