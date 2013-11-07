@@ -400,13 +400,13 @@ public class HTMLAttributeValidator extends PrimeValidator {
 					HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT, 
 					fLookupOrder);
 			
-			if (ignoreList.trim().isEmpty())
+			if (ignoreList.trim().length() == 0)
 				return result;
 	
 			String[] names = ignoreList.split(","); //$NON-NLS-1$
 			for (int i = 0; names != null && i < names.length; i++) {
 				String name = names[i] == null ? null : names[i].trim();
-				if (name != null && !name.isEmpty()) 
+				if (name != null && name.length() > 0) 
 					result.add(name.toLowerCase());
 			}
 		}

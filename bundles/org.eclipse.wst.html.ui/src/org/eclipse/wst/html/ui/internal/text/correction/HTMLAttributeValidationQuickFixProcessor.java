@@ -149,11 +149,11 @@ public class HTMLAttributeValidationQuickFixProcessor implements IQuickAssistPro
 							HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT, fLookupOrder);
 
 					Set result = new HashSet();
-					if (!ignoreList.trim().isEmpty()) {
+					if (ignoreList.trim().length() > 0) {
 						String[] names = ignoreList.split(","); //$NON-NLS-1$
 						for (int i = 0; names != null && i < names.length; i++) {
 							String name = names[i] == null ? null : names[i].trim();
-							if (name != null && !name.isEmpty()) 
+							if (name != null && name.length() > 0) 
 								result.add(name.toLowerCase());
 						}
 					}
