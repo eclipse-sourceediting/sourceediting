@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Vector;
@@ -106,7 +107,7 @@ class CSSProfileImpl implements CSSProfile {
 						try {
 							inStream = FileLocator.openStream(bundle, path, true);
 							if (inStream != null)
-								resourceBundle = new PropertyResourceBundle(inStream);
+								resourceBundle = new FallbackPropertyResourceBundle(inStream, i + 1 < paths.length ? paths[i + 1] : null);
 							else
 								++i;
 						}
@@ -260,4 +261,68 @@ class CSSProfileImpl implements CSSProfile {
 	boolean fDefault = false;
 	boolean fLogging = false;
 	private String fRelativeURI = null;
+
+	/**
+	 * 
+	 * A property resource bundle that can fall back to a different resource bundle
+	 * in the case where there isn't a string for a key.
+	 * 
+	 */
+	class FallbackPropertyResourceBundle extends PropertyResourceBundle {
+
+		private PropertyResourceBundle fallback = null;
+		private IPath fallbackPath;
+
+		public FallbackPropertyResourceBundle(InputStream stream, IPath fallbackPath) throws IOException {
+			super(stream);
+			this.fallbackPath = fallbackPath;
+		}
+
+		/**
+		 * Returns the property value for a specified key. Returns null if a property
+		 * doesn't exist
+		 * 
+		 * @param key the key to look up
+		 * @return the string property or null if it doesn't exist
+		 */
+		public String getProperty(String key) {
+			String property = null;
+			try {
+				property = getString(key);
+			}
+			catch (MissingResourceException e) {
+				if (fallback == null && fallbackPath != null) {
+					final Bundle bundle = Platform.getBundle(getOwnerPluginID());
+					if (bundle != null) {
+						InputStream stream = null;
+						try {
+							stream = FileLocator.openStream(bundle, fallbackPath, true);
+							if (stream != null) {
+								fallback = new PropertyResourceBundle(stream);
+							}
+						}
+						catch (IOException ioe) {
+						}
+						finally {
+							if (stream != null) {
+								try {
+									stream.close();
+								}
+								catch (IOException ioe) {
+								}
+							}
+						}
+					}
+				}
+				if (fallback != null) {
+					try {
+						property = fallback.getString(key);
+					}
+					catch (MissingResourceException mre) {
+					}
+				}
+			}
+			return property;
+		}
+	}
 }
