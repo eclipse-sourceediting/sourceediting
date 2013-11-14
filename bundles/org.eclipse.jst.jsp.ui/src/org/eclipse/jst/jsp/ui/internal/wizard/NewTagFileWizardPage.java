@@ -103,16 +103,22 @@ class NewTagFileWizardPage extends WizardNewFileCreationPage {
 				if (!isJavaProject(project)) {
 					setMessage(JSPUIMessages._WARNING_FILE_MUST_BE_INSIDE_JAVA_PROJECT, WARNING);
 				}
-				// if inside web project, check if inside webContent folder
-				/*
-				if (isDynamicWebProject(project)) {
-					// check that the path is inside the webContent folder
-					IPath webContentPath = getWebContentPath(project).append("/WEB-INF/tags");
-					if (!webContentPath.isPrefixOf(fullPath)) {
-						setMessage(JSPUIMessages._WARNING_FOLDER_MUST_BE_INSIDE_WEB_CONTENT, WARNING);
+				else if (isDynamicWebProject(project)) {
+					// JSP Spec - 8.4.1
+					final IPath[] paths = FacetModuleCoreSupport.getAcceptableRootPaths(project);
+					if (paths != null) {
+						boolean inTagsFolder = false;
+						for (int i = 0; i < paths.length; i++) {
+							if (paths[i].append("/WEB-INF/tags").isPrefixOf(fullPath)) { //$NON-NLS-1$
+								inTagsFolder = true;
+								break;
+							}
+						}
+						if (!inTagsFolder) {
+							setMessage(JSPUIMessages._WARNING_INVALID_TAG_LOCATION, WARNING);
+						}
 					}
 				}
-				*/
 			}
 		}
 
@@ -129,7 +135,7 @@ class NewTagFileWizardPage extends WizardNewFileCreationPage {
 		StringBuffer newFileName = new StringBuffer(filename);
 
 //		Preferences preference = JSPCorePlugin.getDefault().getPluginPreferences();
-		String ext = "tag";//preference.getString(JSPCorePreferenceNames.DEFAULT_EXTENSION);
+		String ext = "tag";//preference.getString(JSPCorePreferenceNames.DEFAULT_EXTENSION); //$NON-NLS-1$
 
 		newFileName.append("."); //$NON-NLS-1$
 		newFileName.append(ext);
