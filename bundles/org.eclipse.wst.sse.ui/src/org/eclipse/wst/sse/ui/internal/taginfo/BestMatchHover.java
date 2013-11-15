@@ -45,6 +45,8 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 	 */
 	private String fPartitionType;
 
+	private ITextHover controlCreatorProvider;
+
 	public BestMatchHover(ITextHover infoTagHover) {
 		this(new ITextHover[]{infoTagHover});
 	}
@@ -89,7 +91,10 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 	public IInformationControlCreator getHoverControlCreator() {
 		IInformationControlCreator creator = null;
 
-		if (fBestMatchHover instanceof ITextHoverExtension) {
+		if (controlCreatorProvider instanceof ITextHoverExtension) {
+			creator = ((ITextHoverExtension) controlCreatorProvider).getHoverControlCreator();
+		}
+		else if (fBestMatchHover instanceof ITextHoverExtension) {
 			creator = ((ITextHoverExtension) fBestMatchHover).getHoverControlCreator();
 		}
 		return creator;
@@ -103,7 +108,7 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 	 */
 	public String getHoverInfo(ITextViewer viewer, IRegion hoverRegion) {
 		String displayText = null;
-
+		controlCreatorProvider = null;
 		// already have a best match hover picked out from getHoverRegion call
 		if (fBestMatchHover != null) {
 			displayText = fBestMatchHover.getHoverInfo(viewer, hoverRegion);
@@ -115,14 +120,20 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 			while ((i.hasNext()) && (displayText == null)) {
 				ITextHover hover = (ITextHover) i.next();
 				displayText = hover.getHoverInfo(viewer, hoverRegion);
+				if (displayText != null) {
+					controlCreatorProvider = hover;
+				}
 			}
+		}
+		else {
+			controlCreatorProvider = fBestMatchHover;
 		}
 		return displayText;
 	}
 
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		Object information = null;
-
+		controlCreatorProvider = null;
 		// already have a best match hover picked out from getHoverRegion call
 		if (fBestMatchHover instanceof ITextHoverExtension2) {
 			information = ((ITextHoverExtension2 ) fBestMatchHover).getHoverInfo2(textViewer, hoverRegion);
@@ -144,7 +155,13 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 				else {
 					information = hover.getHoverInfo(textViewer, hoverRegion);
 				}
+				if (information != null) {
+					controlCreatorProvider = hover;
+				}
 			}
+		}
+		else {
+			controlCreatorProvider = fBestMatchHover;
 		}
 		return information;
 	}
