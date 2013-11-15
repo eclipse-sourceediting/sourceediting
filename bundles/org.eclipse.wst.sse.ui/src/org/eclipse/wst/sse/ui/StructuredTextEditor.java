@@ -139,6 +139,7 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
+import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -1371,7 +1372,7 @@ public class StructuredTextEditor extends TextEditor {
 		// SourceView Action - requesting content assist to
 		// show completetion
 		// proposals for the current insert position
-		action = new TextOperationAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS + UNDERSCORE, this, ISourceViewer.CONTENTASSIST_PROPOSALS);
+		action = new ContentAssistAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS + UNDERSCORE, this);
 		helpSystem.setHelp(action, IHelpContextIds.CONTMNU_CONTENTASSIST_HELPID);
 		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS, action);
