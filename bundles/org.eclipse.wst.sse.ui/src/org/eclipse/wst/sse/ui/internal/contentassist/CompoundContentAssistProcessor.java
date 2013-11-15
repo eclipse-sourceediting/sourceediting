@@ -375,7 +375,6 @@ public class CompoundContentAssistProcessor implements IContentAssistProcessor, 
 				((IReleasable) p).release();
 			}
 		}
-		fProcessors.clear();
 	}
 	
 	private static class WrappedContextInformation implements IContextInformation, IContextInformationExtension {

@@ -339,9 +339,15 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		}
 		fViewer = viewer;
 		if (fViewer != null) {
+			if (fTextInputListener == null) {
+				fTextInputListener = new TextInputListener();
+			}
 			fViewer.addTextInputListener(fTextInputListener);
 		}
 		if (fAssistant != null) {
+			if (fCompletionListener == null) {
+				fCompletionListener = new CompletionListener();
+			}
 			fAssistant.addCompletionListener(fCompletionListener);
 		}
 	}
@@ -368,7 +374,6 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 		if (this.fAssistant != null) {
 			this.fAssistant.removeCompletionListener(fCompletionListener);
 			this.fCompletionListener = null;
-			this.fAssistant = null;
 		}
 	}
 	
