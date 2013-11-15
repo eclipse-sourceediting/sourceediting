@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,19 +13,28 @@
 package org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl;
                           
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.CRC32;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.IExternalSchemaLocationProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
@@ -79,24 +88,58 @@ public class CMDocumentLoader
       walkDocument = handleGrammar(doctypeInfo[0], doctypeInfo[1], "DTD"); //$NON-NLS-1$
     }                                   
     else
-    {                           
-      Element element = getRootElement(document);
-      if (element != null)
-      {
-        namespaceTable = new CMDocumentLoadingNamespaceTable(document);   
-        namespaceTable.addElement(element);
-        if (namespaceTable.isNamespaceEncountered())
-        {   
-          walkDocument = true;
-          //System.out.println("isNamespaceAware");
-        }
-        else
-        {
-          namespaceTable = null;
-          walkDocument = isInferredGrammarEnabled;
-          //System.out.println("is NOT namespaceAware");
-        }        
-      }
+    {      
+    	if (document.getDoctype() != null) {
+    		final String internalSubset = document.getDoctype().getInternalSubset();
+    		if (internalSubset != null) {
+    			IPath path = getInternalSubsetPath(document);
+    			if (!Path.EMPTY.equals(path)) {
+    				File subsets = path.removeLastSegments(1).toFile();
+        			if (!subsets.exists()) {
+        				subsets.mkdir();
+        			}
+        			FileOutputStream stream = null;
+        			try {
+        				stream = new FileOutputStream(path.toFile());
+        				final String charset = ((IFile) ((IAdaptable) document).getAdapter(IResource.class)).getCharset();
+        				stream.write(internalSubset.getBytes(charset != null ? charset : "UTF-8")); //$NON-NLS-1$
+        				stream.flush();
+        			} catch (FileNotFoundException e) {
+        			} catch (CoreException e) {
+        			} catch (UnsupportedEncodingException e) {
+        			} catch (IOException e) {
+        			}
+        			finally {
+        				if (stream != null) {
+        					try {
+        						stream.close();
+        					}
+        					catch (IOException e) { }
+        				}
+        			}
+        			walkDocument = handleGrammar(path.toPortableString(), path.toFile().toURI().toString(), "DTD"); //$NON-NLS-1$
+    			}
+    		}
+    	}
+    	else {
+	      Element element = getRootElement(document);
+	      if (element != null)
+	      {
+	        namespaceTable = new CMDocumentLoadingNamespaceTable(document);   
+	        namespaceTable.addElement(element);
+	        if (namespaceTable.isNamespaceEncountered())
+	        {   
+	          walkDocument = true;
+	          //System.out.println("isNamespaceAware");
+	        }
+	        else
+	        {
+	          namespaceTable = null;
+	          walkDocument = isInferredGrammarEnabled;
+	          //System.out.println("is NOT namespaceAware");
+	        }        
+	      }
+    	}
     } 
 
     if (walkDocument)
@@ -274,5 +317,18 @@ public class CMDocumentLoader
       }
     }
     return result;
+  }
+
+  static IPath getInternalSubsetPath(Document document) {
+	  IPath path = Path.EMPTY;
+	  if (document instanceof IAdaptable) {
+			final IResource resource = (IResource) ((IAdaptable) document).getAdapter(IResource.class);
+			if (resource instanceof IFile) {
+				CRC32 calc = new CRC32();
+				calc.update(resource.getFullPath().toString().getBytes());
+	  			path = XMLCorePlugin.getDefault().getStateLocation().append("internalsubsets").append(calc.getValue() + ".dtd"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+	  }
+	  return path;
   }
 }

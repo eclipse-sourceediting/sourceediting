@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2012 IBM Corporation and others.
+ * Copyright (c) 2002, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -231,6 +231,15 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
 		      if (cmDocument != null) {
 				  result = (CMElementDeclaration)cmDocument.getElements().getNamedItem(element.getNodeName());
 			  }
+		      else {
+	    		  IPath path = CMDocumentLoader.getInternalSubsetPath(document);
+	    		  if (!Path.EMPTY.equals(path)) {
+	    			  cmDocument = getCMDocument(path.toPortableString(), path.toFile().toURI().toString(), "DTD"); //$NON-NLS-1$
+	    			  if (cmDocument != null) {
+	    				  result = (CMElementDeclaration)cmDocument.getElements().getNamedItem(element.getNodeName());
+	    			  }
+	    		  }
+	    	  }
     	  }
       }
     }             

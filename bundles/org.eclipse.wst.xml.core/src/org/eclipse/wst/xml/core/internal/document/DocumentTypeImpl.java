@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,13 +18,17 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
+import java.util.Iterator;
+
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocumentType;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.UserDataHandler;
+
 
 
 /**
@@ -83,6 +87,25 @@ public class DocumentTypeImpl extends NodeImpl implements IDOMDocumentType {
 	/**
 	 */
 	public String getInternalSubset() {
+		if (internalSubset == null) {
+			IStructuredDocumentRegion region = getFirstStructuredDocumentRegion();
+			if (region != null) {
+				Iterator it = region.getRegions().iterator();
+				while (it.hasNext()) {
+					final Object next = it.next();
+					if (next instanceof ITextRegion) {
+						ITextRegion text = (ITextRegion) next;
+						if (text.getType() == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) {
+							final String regionText = region.getText(text);
+							if (regionText.length() > 0 && regionText.charAt(0) == '[' && regionText.charAt(regionText.length() - 1) == ']') {
+								internalSubset = regionText.substring(1, regionText.length() - 1);
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
 		return this.internalSubset;
 	}
 
