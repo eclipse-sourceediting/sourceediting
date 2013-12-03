@@ -40,15 +40,12 @@
     <module>docs/org.eclipse.wst.xsdeditor.doc.user</module>
 
     <module>features/org.eclipse.wst.web_core.feature</module>
-    <module>features/org.eclipse.wst.web_core.feature.patch</module>
     <module>features/org.eclipse.wst.web_sdk.feature</module>
     <module>features/org.eclipse.wst.web_ui.feature</module>
-    <module>features/org.eclipse.wst.web_ui.feature.patch</module>
     <module>features/org.eclipse.wst.web_userdoc.feature</module>
     <module>features/org.eclipse.wst.xml_core.feature</module>
     <module>features/org.eclipse.wst.xml_sdk.feature</module>
     <module>features/org.eclipse.wst.xml_ui.feature</module>
-    <module>features/org.eclipse.wst.xml_ui.feature.patch</module>
     <module>features/org.eclipse.wst.xml_userdoc.feature</module>
 
     <module>bundles/org.eclipse.jst.jsp.core</module>
