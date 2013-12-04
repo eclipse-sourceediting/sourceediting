@@ -34,6 +34,7 @@ public class ProductManager {
 	private static final String JCA_CONTENT_FOLDER = "connectorModule"; //$NON-NLS-1$
 	private static final String DEFAULT_SOURCE_FOLDER = "src"; //$NON-NLS-1$
 	private static final String ADD_TO_EAR_BY_DEFAULT = "false"; //$NON-NLS-1$
+	private static final String ADD_TO_EAR_RUNTIME_EXCEPTIONS = ""; //$NON-NLS-1$
 	private static final String OUTPUT_FOLDER = "build/classes"; //$NON-NLS-1$
 	private static final String USE_SINGLE_ROOT_STRUCTURE = "false"; //$NON-NLS-1$
 	private static final String VIEWER_SYNC_FOR_WEBSERVICES = "true"; //$NON-NLS-1$
@@ -81,6 +82,8 @@ public class ProductManager {
 				return DEFAULT_SOURCE_FOLDER;
 			else if (key.equals(IProductConstants.ADD_TO_EAR_BY_DEFAULT))
 				return ADD_TO_EAR_BY_DEFAULT;
+			else if (key.equals(IProductConstants.ADD_TO_EAR_RUNTIME_EXCEPTIONS))
+				return ADD_TO_EAR_RUNTIME_EXCEPTIONS;
 			else if (key.equals(IProductConstants.USE_SINGLE_ROOT_STRUCTURE))
 				return USE_SINGLE_ROOT_STRUCTURE;
 			else if (key.equals(IProductConstants.VIEWER_SYNC_FOR_WEBSERVICES))

@@ -32,6 +32,7 @@ public interface IProductConstants {
 	public static final String JCA_CONTENT_FOLDER = "jcaContent"; //$NON-NLS-1$
 	public static final String DEFAULT_SOURCE_FOLDER = "defaultSource"; //$NON-NLS-1$
 	public static final String ADD_TO_EAR_BY_DEFAULT = "addToEarByDefault"; //$NON-NLS-1$
+	public static final String ADD_TO_EAR_RUNTIME_EXCEPTIONS = "addToEARruntimeExceptions"; //$NON-NLS-1$
 	public static final String OUTPUT_FOLDER = "outputFolder"; //$NON-NLS-1$
 	public static final String USE_SINGLE_ROOT_STRUCTURE = "useSingleRootStructure"; //$NON-NLS-1$
 	public static final String ID_PERSPECTIVE_HIERARCHY_VIEW = "idPerspectiveHierarchyView"; //$NON-NLS-1$
