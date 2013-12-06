@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -422,7 +422,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		if (statusLineManager != null) {
 			statusLineManager.setMessage(null);
 		}
-		setConfiguration(NULL_CONFIGURATION);
+		unconfigure();
 		super.dispose();
 	}
 
@@ -521,64 +521,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	public void setConfiguration(ContentOutlineConfiguration configuration) {
 		// intentionally do not check to see if the new configuration != old
 		// configuration
-		if (getTreeViewer() != null) {
-			// remove the key listeners
-			if (getControl() != null && !getControl().isDisposed()) {
-				KeyListener[] listeners = getConfiguration().getKeyListeners(getTreeViewer());
-				if (listeners != null) {
-					for (int i = 0; i < listeners.length; i++) {
-						getControl().removeKeyListener(listeners[i]);
-					}
-				}
-			}
-
-			IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
-			if (toolbar != null) {
-				IContributionItem[] toolbarItems = getConfiguration().getToolbarContributions(getTreeViewer());
-				if (toolbarItems != null && toolbarItems.length > 0) {
-					for (int i = 0; i < toolbarItems.length; i++) {
-						toolbar.remove(toolbarItems[i]);
-					}
-					toolbar.update(false);
-				}
-			}
-
-			IContributionManager menubar = getSite().getActionBars().getMenuManager();
-			if (menubar != null) {
-				IContributionItem[] menuItems = getConfiguration().getMenuContributions(getTreeViewer());
-				if (menuItems != null && menuItems.length > 0) {
-					for (int i = 0; i < menuItems.length; i++) {
-						menubar.remove(menuItems[i]);
-					}
-					menubar.remove(IWorkbenchActionConstants.MB_ADDITIONS);
-					menubar.update(false);
-				}
-			}
-			// clear the DnD listeners and transfer types
-			if (fDragAdapter != null && !fDragAdapter.isEmpty() && fDragSource != null && !fDragSource.isDisposed() && fDragSource.getTransfer().length > 0) {
-				if (fActiveDragListeners != null) {
-					for (int i = 0; i < fActiveDragListeners.length; i++) {
-						fDragAdapter.removeDragSourceListener(fActiveDragListeners[i]);
-					}
-				}
-				fActiveDragListeners = null;
-				fDragSource.removeDragListener(fDragAdapter);
-				fDragSource.setTransfer(new Transfer[0]);
-			}
-			if (fDropAdapter != null && !fDropAdapter.isEmpty() && fDropTarget != null && !fDropTarget.isDisposed() && fDropTarget.getTransfer().length > 0) {
-				if (fActiveDropListeners != null) {
-					for (int i = 0; i < fActiveDropListeners.length; i++) {
-						fDropAdapter.removeDropTargetListener(fActiveDropListeners[i]);
-					}
-				}
-				fActiveDropListeners = null;
-				fDropTarget.removeDropListener(fDropAdapter);
-				fDropTarget.setTransfer(new Transfer[0]);
-			}
-			getConfiguration().getContentProvider(getTreeViewer()).inputChanged(getTreeViewer(), fInput, null);
-			// release any ties to this tree viewer
-			getConfiguration().unconfigure(getTreeViewer());
-		}
+		unconfigure();
 
 		fConfiguration = configuration;
 
@@ -641,6 +584,70 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 		if (fInput != null) {
 			setInput(fInput);
+		}
+	}
+
+	/**
+	 * Unconfigure the content outline page
+	 */
+	private void unconfigure() {
+		if (getTreeViewer() != null) {
+			// remove the key listeners
+			if (getControl() != null && !getControl().isDisposed()) {
+				KeyListener[] listeners = getConfiguration().getKeyListeners(getTreeViewer());
+				if (listeners != null) {
+					for (int i = 0; i < listeners.length; i++) {
+						getControl().removeKeyListener(listeners[i]);
+					}
+				}
+			}
+
+			IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
+			if (toolbar != null && !toolbar.isEmpty()) {
+				IContributionItem[] toolbarItems = getConfiguration().getToolbarContributions(getTreeViewer());
+				if (toolbarItems != null && toolbarItems.length > 0) {
+					for (int i = 0; i < toolbarItems.length; i++) {
+						toolbar.remove(toolbarItems[i]);
+					}
+					toolbar.update(false);
+				}
+			}
+
+			IContributionManager menubar = getSite().getActionBars().getMenuManager();
+			if (menubar != null && !menubar.isEmpty()) {
+				IContributionItem[] menuItems = getConfiguration().getMenuContributions(getTreeViewer());
+				if (menuItems != null && menuItems.length > 0) {
+					for (int i = 0; i < menuItems.length; i++) {
+						menubar.remove(menuItems[i]);
+					}
+					menubar.remove(IWorkbenchActionConstants.MB_ADDITIONS);
+					menubar.update(false);
+				}
+			}
+			// clear the DnD listeners and transfer types
+			if (fDragAdapter != null && !fDragAdapter.isEmpty() && fDragSource != null && !fDragSource.isDisposed() && fDragSource.getTransfer().length > 0) {
+				if (fActiveDragListeners != null) {
+					for (int i = 0; i < fActiveDragListeners.length; i++) {
+						fDragAdapter.removeDragSourceListener(fActiveDragListeners[i]);
+					}
+				}
+				fActiveDragListeners = null;
+				fDragSource.removeDragListener(fDragAdapter);
+				fDragSource.setTransfer(new Transfer[0]);
+			}
+			if (fDropAdapter != null && !fDropAdapter.isEmpty() && fDropTarget != null && !fDropTarget.isDisposed() && fDropTarget.getTransfer().length > 0) {
+				if (fActiveDropListeners != null) {
+					for (int i = 0; i < fActiveDropListeners.length; i++) {
+						fDropAdapter.removeDropTargetListener(fActiveDropListeners[i]);
+					}
+				}
+				fActiveDropListeners = null;
+				fDropTarget.removeDropListener(fDropAdapter);
+				fDropTarget.setTransfer(new Transfer[0]);
+			}
+			getConfiguration().getContentProvider(getTreeViewer()).inputChanged(getTreeViewer(), fInput, null);
+			// release any ties to this tree viewer
+			getConfiguration().unconfigure(getTreeViewer());
 		}
 	}
 
