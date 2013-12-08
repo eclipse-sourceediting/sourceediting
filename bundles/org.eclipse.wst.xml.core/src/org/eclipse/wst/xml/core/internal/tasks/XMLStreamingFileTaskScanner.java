@@ -106,6 +106,10 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 		monitor.beginTask("", IProgressMonitor.UNKNOWN);
 		// used for breaking multi-line comments into individual lines
 		DefaultLineTracker lineTracker = new DefaultLineTracker();
+		String[] searchTags = new String[taskTags.length];
+		for (int i = 0; i < searchTags.length; i++) {
+			searchTags[i] = taskTags[i].getTag().toLowerCase(Locale.ENGLISH);
+		}
 		try {
 			reset(new BufferedReader(new InputStreamReader(file.getContents(true), charset)));
 			while (!isEOF()) {
@@ -119,7 +123,7 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 						String lowercaseText = lineComment.toLowerCase(Locale.ENGLISH);
 
 						for (int i = 0; i < taskTags.length; i++) {
-							int tagIndex = lowercaseText.indexOf(taskTags[i].getTag().toLowerCase(Locale.ENGLISH));
+							int tagIndex = lowercaseText.indexOf(searchTags[i]);
 							if (tagIndex >= 0) {
 								String markerDescription = lineComment.substring(tagIndex);
 								int markerOffset = getOffset() + line.getOffset() + tagIndex;
