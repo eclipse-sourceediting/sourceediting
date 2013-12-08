@@ -1,0 +1,1 @@
+java -Xmx512M -cp ~/eclipse.wtp/JFlex-1.2.2/lib/JFlex.jar:. JFlex.Main XMLLineTokenizer.jflex -skel XMLLineTokenizer-skeleton.sse  && cp -v XMLLineTokenizer.java ../../../../../org.eclipse.wst.xml.core/src/org/eclipse/wst/xml/core/internal/tasks/

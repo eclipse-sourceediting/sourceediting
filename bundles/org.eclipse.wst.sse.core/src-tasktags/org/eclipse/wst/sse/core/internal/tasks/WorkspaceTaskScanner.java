@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,7 +53,6 @@ class WorkspaceTaskScanner {
 	private static WorkspaceTaskScanner _instance = null;
 	static final String SYNTHETIC_TASK = "org.eclipse.wst.sse.task-synthetic";
 	static final String MODIFICATION_STAMP = "org.eclipse.wst.sse.modification-stamp";
-	private boolean proceed = false;
 
 	static synchronized WorkspaceTaskScanner getInstance() {
 		if (_instance == null) {
@@ -284,7 +283,7 @@ class WorkspaceTaskScanner {
 						finally {
 							progressMonitor.worked(1);
 						}
-						if (proceed && markerAttributeMaps != null && markerAttributeMaps.length > 0) {
+						if (markerAttributeMaps != null && markerAttributeMaps.length > 0) {
 							if (Logger.DEBUG_TASKS) {
 								System.out.println("" + markerAttributeMaps.length + " tasks for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
@@ -333,9 +332,10 @@ class WorkspaceTaskScanner {
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			time0 = System.currentTimeMillis();
 		}
-		proceed = init(project);
-		internalScan(project, project, scanMonitor);
-		shutdownDelegates(project);
+		if (init(project)) {
+			internalScan(project, project, scanMonitor);
+			shutdownDelegates(project);
+		}
 		
 		if (Logger.DEBUG_TASKSOVERALLPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + project.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -444,8 +444,9 @@ class WorkspaceTaskScanner {
 		if (fileScanners != null && fileScanners.length > 0 ||
 				ignoredFileScanners != null && ignoredFileScanners.length > 0) {
 			IProgressMonitor markerUpdateMonitor = new SubProgressMonitor(monitor, 3, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
-			if (markerAttributes != null)
-			replaceTaskMarkers(file, (String[]) markerTypes.toArray(new String[markerTypes.size()]), (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
+			if (markerAttributes != null) {
+				replaceTaskMarkers(file, (String[]) markerTypes.toArray(new String[markerTypes.size()]), (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
+			}
 		}
 		else {
 			monitor.worked(3);

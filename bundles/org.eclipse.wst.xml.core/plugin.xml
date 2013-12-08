@@ -32,7 +32,7 @@
 	<extension point="org.eclipse.wst.sse.core.taskscanner">
 		<scanner
 			id="org.eclipse.wst.xml.core.internal.tasks.XMLFileTaskScanner"
-			class="org.eclipse.wst.xml.core.internal.tasks.XMLFileTaskScanner:org.eclipse.wst.xml.core.taskMarker"
+			class="org.eclipse.wst.xml.core.internal.tasks.XMLStreamingFileTaskScanner:org.eclipse.wst.xml.core.taskMarker"
 			contentTypeIds="org.eclipse.core.runtime.xml" />
 	</extension>
 	<extension
