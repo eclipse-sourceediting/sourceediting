@@ -1025,6 +1025,7 @@ class CSSDeclarationItemParser {
 					}
 					else if (!isBlank(type)) {
 						regionBuf.add(region);
+						regionValues.put(region, propertyValue);
 					}
 					break;
 				case S_FONT_SLASH :
