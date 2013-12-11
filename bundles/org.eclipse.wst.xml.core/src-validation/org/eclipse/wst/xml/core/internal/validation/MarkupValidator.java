@@ -895,8 +895,9 @@ public class MarkupValidator extends AbstractValidator implements IValidator {
 		ValidationResult result = new ValidationResult();
 		fReporter = result.getReporter(monitor);
 
-		validateV1File((IFile) resource, fReporter);
-		
+		//validateV1File((IFile) resource, fReporter);
+		result = new StreamingMarkupValidator().validate(resource, kind, state, monitor);
+		fReporter = result.getReporter(monitor);
 		return result;
 	}
 	

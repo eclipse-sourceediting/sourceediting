@@ -36,7 +36,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * on 12/7/13 8:44 PM from the specification file
  * <tt>file:/Users/nitin/git/webtools.sourceediting/bundles/org.eclipse.wst.sse.core/DevTimeSupport/SedModel/HTMLTokenizer/devel/XMLLineTokenizer.jflex</tt>
  */
-class XMLLineTokenizer implements BlockTokenizer, DOMRegionContext {
+public class XMLLineTokenizer implements BlockTokenizer, DOMRegionContext {
 
   /** this character denotes the end of file */
   final public static int YYEOF = -1;
@@ -592,6 +592,9 @@ public List getBlockMarkers() {
 public final int getOffset() {
 	return fOffset + yychar;
 }
+public final int getLine() {
+	return yyline;
+}
 private final boolean isBlockMarker() {
 	return isBlockMarker(fCurrentTagName);
 }
@@ -945,7 +948,7 @@ private final String scanXMLCommentText() throws IOException {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  XMLLineTokenizer(java.io.Reader in) {
+  public XMLLineTokenizer(java.io.Reader in) {
     this.yy_reader = in;
   }
 
