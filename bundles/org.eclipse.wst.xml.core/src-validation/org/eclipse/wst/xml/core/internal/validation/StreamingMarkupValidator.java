@@ -17,24 +17,37 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.validation.AbstractValidator;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
+import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
 import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
@@ -44,6 +57,9 @@ import org.eclipse.wst.xml.core.internal.tasks.XMLLineTokenizer;
 public class StreamingMarkupValidator extends AbstractValidator implements IValidator {
 
 	private static final String ANNOTATIONMSG = AnnotationMsg.class.getName();
+
+	/** The error threshold - sometimes, after you get so many errors, it's not worth seeing the others */
+	private static final int ERROR_THRESHOLD = 25;
 
 	private IReporter fReporter;
 
@@ -63,6 +79,11 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		}
 	}
 
+	private Stack tagStack;
+	private int tagErrorCount = 0;
+
+	private IContentType xmlContentType;
+
 	public void getAnnotationMsg(IReporter reporter, int problemId, LocalizedMessage message, Object attributeValueText, int len){
 		AnnotationMsg annotation = new AnnotationMsg(problemId, attributeValueText,len);
 		message.setAttribute(ANNOTATIONMSG, annotation);
@@ -73,16 +94,38 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 	 * @see org.eclipse.wst.validation.internal.provisional.core.IValidator#cleanup(org.eclipse.wst.validation.internal.provisional.core.IReporter)
 	 */
 	public void cleanup(IReporter reporter) {
-		// TODO Auto-generated method stub
-
+		if (tagStack != null) {
+			tagStack.clear();
+			tagStack = null;
+		}
+		xmlContentType = null;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.validation.internal.provisional.core.IValidator#validate(org.eclipse.wst.validation.internal.provisional.core.IValidationContext, org.eclipse.wst.validation.internal.provisional.core.IReporter)
 	 */
 	public void validate(IValidationContext helper, IReporter reporter)	throws ValidationException {
-		// TODO Auto-generated method stub
+		final String[] uris = helper.getURIs();
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		if (uris.length > 0) {
+			IFile currentFile = null;
 
+			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
+				// might be called with just project path?
+				IPath path = new Path(uris[i]);
+				if (path.segmentCount() > 1) {
+					currentFile = root.getFile(path);
+					if (shouldValidate(currentFile, true)) {
+						validateFile(currentFile, reporter);
+					}
+				}
+				else if (uris.length == 1) {
+					validateProject(helper, reporter);
+				}
+			}
+		}
+		else
+			validateProject(helper, reporter);
 	}
 
 	/* (non-Javadoc)
@@ -248,7 +291,7 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		final int regionLength = region.size();
 
 		// Start at one, since we know the first token is an tag-open
-		for (int i = 1; (i < regionLength) && (errors < 25); i++) {
+		for (int i = 1; (i < regionLength) && (errors < ERROR_THRESHOLD); i++) {
 			Token t = (Token) region.get(i);
 			if ((t.type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (t.type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (t.type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 				if (start == first.offset) {
@@ -284,7 +327,7 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		final int regionLength = region.size();
 
 		// Start at one, since we know the first token is an tag-open
-		for (int i = 1; i < regionLength && errorCount < 25; i++) {
+		for (int i = 1; i < regionLength && errorCount < ERROR_THRESHOLD; i++) {
 			Token t = (Token) region.get(i);
 			if (t.type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || t.type == DOMRegionContext.XML_TAG_CLOSE || t.type == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 				// dangling name and '='
@@ -358,6 +401,29 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		}
 	}
 
+	/**
+	 * Creates a missing tag error for the token
+	 * @param token the token that's missing its pair tag
+	 * @param isStartTag is the token a start tag
+	 * @param reporter  the reporter
+	 */
+	private void createMissingTagError(Token token, boolean isStartTag, IReporter reporter) {
+		Object[] args = {token.text};
+		String messageText = NLS.bind(isStartTag ? XMLCoreMessages.Missing_end_tag_ : XMLCoreMessages.Missing_start_tag_, args);
+
+		LocalizedMessage message = new LocalizedMessage(getPluginPreference().getInt(XMLCorePreferenceNames.MISSING_END_TAG) , messageText);
+		message.setOffset(token.offset);
+		message.setLength(token.length);
+		message.setLineNo(getLine(token));
+
+		getAnnotationMsg(reporter, ProblemIDsXML.MissingEndTag, message, token.text, token.length);
+
+		if (++tagErrorCount > ERROR_THRESHOLD) {
+			tagStack.clear();
+			tagStack = null;
+		}
+	}
+
 	private void checkTokens(XMLLineTokenizer tokenizer, IReporter reporter) throws IOException {
 		List previousRegion = null;
 		String type = null;
@@ -397,9 +463,50 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 						Token first = (Token) region.get(0);
 						if (first.type == DOMRegionContext.XML_END_TAG_OPEN) {
 							checkAttributsInEndTag(first, region, reporter);
+							if (first.type == DOMRegionContext.XML_END_TAG_OPEN && tagStack != null) {
+								if (regionLength > 1) {
+									Token name = (Token) region.get(1);
+									if (tagStack.isEmpty()) {
+										// We have an end tag without a start tag
+										createMissingTagError(name, false, reporter);
+									}
+									else {
+										if (!((Token) tagStack.peek()).text.equals(name.text)) {
+											boolean wasFound = false;
+											final int stackSize = tagStack.size();
+											for (int i = stackSize - 1; i >= 0; i--) {
+												Token pointer = (Token) tagStack.get(i);
+												if (pointer.text.equals(name.text)) {
+													wasFound = true;
+													Token top = null;
+													// Found the opening tag - everything in between that was unclosed should be flagged
+													while (!tagStack.isEmpty() && !(top = (Token) tagStack.pop()).text.equals(pointer.text)) {
+														createMissingTagError(top, true, reporter);
+													}
+													break;
+												}
+											}
+											if (!wasFound) {
+												// End tag doesn't have a matching start
+												createMissingTagError(name, false, reporter);
+											}
+										}
+										else {
+											// We've got a match
+											tagStack.pop();
+										}
+									}
+								}
+							}
 						}
 						else if (first.type == DOMRegionContext.XML_TAG_OPEN) {
 							checkAttributes(region, reporter);
+							if (type == DOMRegionContext.XML_TAG_CLOSE && tagStack != null && regionLength > 1) {
+								Token name = (Token) region.get(1);
+								if (name.type == DOMRegionContext.XML_TAG_NAME) {
+									tagStack.push(name);
+								}
+							}
 						}
 					}
 				}
@@ -418,6 +525,12 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 				if (first.type == DOMRegionContext.XML_TAG_OPEN) {
 					checkForTagClose(region, reporter);
 				}
+			}
+		}
+
+		if (tagStack != null) {
+			while (!tagStack.isEmpty()) {
+				createMissingTagError((Token) tagStack.pop(), true, reporter);
 			}
 		}
 	}
@@ -445,11 +558,34 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 
 		XMLLineTokenizer tokenizer = null;
 		try {
+			tagStack = new Stack();
 			tokenizer = new XMLLineTokenizer(new BufferedReader(new InputStreamReader(file.getContents(true), getCharset(file))));
 			checkTokens(tokenizer, reporter);
 		} catch (UnsupportedEncodingException e) {
 		} catch (CoreException e) {
 		} catch (IOException e) {
+		}
+	}
+
+	private void validateProject(IValidationContext helper, final IReporter reporter) {
+		// if uris[] length 0 -> validate() gets called for each project
+		if (helper instanceof IWorkbenchContext) {
+			IProject project = ((IWorkbenchContext) helper).getProject();
+			IResourceProxyVisitor visitor = new IResourceProxyVisitor() {
+				public boolean visit(IResourceProxy proxy) throws CoreException {
+					if (shouldValidate(proxy)) {
+						validateFile((IFile) proxy.requestResource(), reporter);
+					}
+					return true;
+				}
+			};
+			try {
+				// collect all jsp files for the project
+				project.accept(visitor, IResource.DEPTH_INFINITE);
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
 		}
 	}
 
@@ -476,5 +612,45 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		message.setLength(length);
 		message.setLineNo(line + 1);
 		getAnnotationMsg(reporter, problemId, message, attributeValueText,length);
+	}
+
+	private boolean shouldValidate(IResourceProxy proxy) {
+		if(proxy.getType() == IResource.FILE) {
+			String name = proxy.getName();
+			if(name.toLowerCase(Locale.US).endsWith(".xml")) { //$NON-NLS-1$
+				return true;
+			}
+		}
+		return shouldValidate(proxy.requestResource(), false);
+	}
+	
+	private boolean shouldValidate(IResource file, boolean checkExtension) {
+		if (file == null || !file.exists() || file.getType() != IResource.FILE)
+			return false;
+		if (checkExtension) {
+			String extension = file.getFileExtension();
+			if (extension != null && "xml".endsWith(extension.toLowerCase(Locale.US))) //$NON-NLS-1$
+				return true;
+		}
+
+		IContentDescription contentDescription = null;
+		try {
+			contentDescription = ((IFile) file).getContentDescription();
+			if (contentDescription != null) {
+				IContentType contentType = contentDescription.getContentType();
+				return contentDescription != null && contentType.isKindOf(getXMLContentType());
+			}
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return false;
+	}
+
+	private IContentType getXMLContentType() {
+		if (xmlContentType == null) {
+			xmlContentType = Platform.getContentTypeManager().getContentType("org.eclipse.core.runtime.xml"); //$NON-NLS-1$
+		}
+		return xmlContentType;
 	}
 }
