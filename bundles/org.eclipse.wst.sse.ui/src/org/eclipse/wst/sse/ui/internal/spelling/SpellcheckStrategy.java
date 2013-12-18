@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -151,12 +151,20 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		 */
 		List contexts = new ArrayList();
 		IContentType testType = contentType;
+		final String[] ignoredDefinitions = ExtendedConfigurationBuilder.getInstance().getDefinitions("ignorebasetypes", testType.getId()); //$NON-NLS-1$
+		// Look for ignorebasetypes on spellingregions
+		boolean ignoreBaseTypes = false;
+		for (int i = 0; i < ignoredDefinitions.length && !ignoreBaseTypes; i++) {
+			if (EXTENDED_BUILDER_TYPE_CONTEXTS.equals(ignoredDefinitions[i])) {
+				ignoreBaseTypes = true;
+			}
+		}
 		while (testType != null) {
 			String[] textRegionContexts = ExtendedConfigurationBuilder.getInstance().getDefinitions(EXTENDED_BUILDER_TYPE_CONTEXTS, testType.getId());
 			for (int j = 0; j < textRegionContexts.length; j++) {
 				contexts.addAll(Arrays.asList(StringUtils.unpack(textRegionContexts[j])));
 			}
-			testType = testType.getBaseType();
+			testType = !ignoreBaseTypes ? testType.getBaseType() : null;
 		}
 		fSupportedTextRegionContexts = (String[]) contexts.toArray(new String[contexts.size()]);
 
