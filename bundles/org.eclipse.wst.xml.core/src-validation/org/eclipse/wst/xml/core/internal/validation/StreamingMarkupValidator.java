@@ -36,6 +36,10 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.validation.AbstractValidator;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
@@ -51,9 +55,16 @@ import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.tasks.XMLLineTokenizer;
+import org.w3c.dom.Node;
 
+/**
+ * A markup validator that avoids loading the model into memory. Problems are detected while
+ * tokenizing the file.
+ *
+ */
 public class StreamingMarkupValidator extends AbstractValidator implements IValidator {
 
 	private static final String ANNOTATIONMSG = AnnotationMsg.class.getName();
@@ -61,8 +72,15 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 	/** The error threshold - sometimes, after you get so many errors, it's not worth seeing the others */
 	private static final int ERROR_THRESHOLD = 25;
 
+	/** The existing model, if available. */
+	private IStructuredModel model;
+
+	/** The validation reporter */
 	private IReporter fReporter;
 
+	/**
+	 * A token from the tokenizer
+	 */
 	private static class Token {
 		String type;
 		int offset;
@@ -79,9 +97,13 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		}
 	}
 
+	/** A stack used for finding missing start- and end-tag pairs */
 	private Stack tagStack;
+
+	/** Only count so many tag errors */
 	private int tagErrorCount = 0;
 
+	/** The xml content type */
 	private IContentType xmlContentType;
 
 	public void getAnnotationMsg(IReporter reporter, int problemId, LocalizedMessage message, Object attributeValueText, int len){
@@ -416,12 +438,42 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		message.setLength(token.length);
 		message.setLineNo(getLine(token));
 
-		getAnnotationMsg(reporter, ProblemIDsXML.MissingEndTag, message, token.text, token.length);
+		Object fixInfo = isStartTag ? (Object) getStartEndFixInfo(token.text, token) : token.text;
+		getAnnotationMsg(reporter, isStartTag ? ProblemIDsXML.MissingEndTag : ProblemIDsXML.MissingStartTag, message, fixInfo, token.length);
 
 		if (++tagErrorCount > ERROR_THRESHOLD) {
 			tagStack.clear();
 			tagStack = null;
 		}
+	}
+
+	private Object[] getStartEndFixInfo(String tagName, Token token) {
+		Object[] additionalInfo = null;
+		if (model != null) {
+			IDOMNode xmlNode = (IDOMNode) model.getIndexedRegion(token.offset);
+
+			if (xmlNode != null) {
+				// quick fix info
+				String tagClose = "/>"; //$NON-NLS-1$
+				int tagCloseOffset = xmlNode.getFirstStructuredDocumentRegion().getEndOffset();
+				ITextRegion last = xmlNode.getFirstStructuredDocumentRegion().getLastRegion();
+				if ((last != null) && (last.getType() == DOMRegionContext.XML_TAG_CLOSE)) {
+					tagClose = "/"; //$NON-NLS-1$
+					tagCloseOffset--;
+				}
+				IDOMNode firstChild = (IDOMNode) xmlNode.getFirstChild();
+				while ((firstChild != null) && (firstChild.getNodeType() == Node.TEXT_NODE)) {
+					firstChild = (IDOMNode) firstChild.getNextSibling();
+				}
+				int endOffset = xmlNode.getEndOffset(); 
+				int firstChildStartOffset = firstChild == null ? endOffset : firstChild.getStartOffset();
+				additionalInfo = new Object[] {tagName, tagClose, new Integer(tagCloseOffset), new Integer(xmlNode.getFirstStructuredDocumentRegion().getEndOffset()), // startTagEndOffset
+							new Integer(firstChildStartOffset), // firstChildStartOffset
+							new Integer(endOffset)}; // endOffset
+			}
+		}
+
+		return additionalInfo != null ? additionalInfo : new Object[] {};
 	}
 
 	private void checkTokens(XMLLineTokenizer tokenizer, IReporter reporter) throws IOException {
@@ -552,6 +604,12 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		return token;
 	}
 
+	/**
+	 * Validates the given file. It will stream the contents of the file without creating a model for the file; it will only
+	 * use existing 
+	 * @param file the file to validate
+	 * @param reporter the reporter
+	 */
 	private void validateFile(IFile file, IReporter reporter) {
 		Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, file.getFullPath().toString().substring(1));
 		reporter.displaySubtask(StreamingMarkupValidator.this, message);
@@ -559,8 +617,22 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		XMLLineTokenizer tokenizer = null;
 		try {
 			tagStack = new Stack();
-			tokenizer = new XMLLineTokenizer(new BufferedReader(new InputStreamReader(file.getContents(true), getCharset(file))));
-			checkTokens(tokenizer, reporter);
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+			try {
+				if (model == null) {
+					tokenizer = new XMLLineTokenizer(new BufferedReader(new InputStreamReader(file.getContents(true), getCharset(file))));
+				}
+				else {
+					tokenizer = new XMLLineTokenizer(new BufferedReader(new DocumentReader(model.getStructuredDocument())));
+				}
+				checkTokens(tokenizer, reporter);
+			}
+			finally {
+				if (model != null) {
+					model.releaseFromRead();
+					model = null;
+				}
+			}
 		} catch (UnsupportedEncodingException e) {
 		} catch (CoreException e) {
 		} catch (IOException e) {
