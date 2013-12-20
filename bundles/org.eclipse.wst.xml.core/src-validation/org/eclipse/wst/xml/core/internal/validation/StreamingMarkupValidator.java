@@ -30,6 +30,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
@@ -54,10 +55,10 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.parser.XMLLineTokenizer;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.core.internal.tasks.XMLLineTokenizer;
 import org.w3c.dom.Node;
 
 /**
@@ -160,6 +161,18 @@ public class StreamingMarkupValidator extends AbstractValidator implements IVali
 		fReporter = result.getReporter(monitor);
 		validateFile((IFile) resource, fReporter);
 		return result;
+	}
+
+	/**
+	 * Convenience method for validating a resource and getting back the reporter
+	 * @param resource The resource to be validated.
+	 * @param kind The way the resource changed. It uses the same values as the kind parameter in IResourceDelta.
+	 * @param state A way to pass arbitrary, validator specific, data from one invocation of a validator to the next, during the validation phase. At the end of the validation phase, this object will be cleared, thereby allowing any of this state information to be garbaged collected.
+	 * @return the validator's reporter
+	 */
+	public IReporter validate(IResource resource, int kind, ValidationState state) {
+		validate(resource, kind, state, new NullProgressMonitor());
+		return fReporter;
 	}
 
 	/**

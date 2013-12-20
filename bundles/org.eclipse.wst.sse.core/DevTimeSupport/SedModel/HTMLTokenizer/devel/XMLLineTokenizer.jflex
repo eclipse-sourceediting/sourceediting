@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xml.core.internal.tasks;
+package org.eclipse.wst.xml.core.internal.parser;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
@@ -133,6 +133,10 @@ public List getBlockMarkers() {
 /* user method */
 public final int getOffset() {
 	return fOffset + yychar;
+}
+/* user method */
+public final int getLine() {
+	return yyline;
 }
 private final boolean isBlockMarker() {
 	return isBlockMarker(fCurrentTagName);
@@ -485,6 +489,7 @@ private final String scanXMLCommentText() throws IOException {
 // do nothing, this is the downstream parser's job
 %eof}
 
+%public
 %class XMLLineTokenizer
 %implements BlockTokenizer, DOMRegionContext
 %function primGetNextToken

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,7 +97,7 @@ public class XMLValidator
   
   private static final String FILE_NOT_FOUND_KEY = "FILE_NOT_FOUND"; //$NON-NLS-1$
    
-  private MarkupValidator val = new MarkupValidator();
+  private StreamingMarkupValidator val = new StreamingMarkupValidator();
   
   private final String ANNOTATIONMSG = AnnotationMsg.class.getName();
 
@@ -511,7 +511,7 @@ public class XMLValidator
 		}
 		IReporter reporter = null;
 		if (resource != null){
-		    reporter = val.validate(resource, 0, new ValOperation().getState()) ;
+			reporter = val.validate(resource, 0, new ValOperation().getState());
 		}
 		return reporter;
 	}

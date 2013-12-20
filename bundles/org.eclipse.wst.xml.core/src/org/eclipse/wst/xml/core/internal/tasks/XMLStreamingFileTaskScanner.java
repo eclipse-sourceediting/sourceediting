@@ -37,6 +37,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.wst.xml.core.internal.parser.XMLLineTokenizer;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
@@ -128,7 +129,7 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 								String markerDescription = lineComment.substring(tagIndex);
 								int markerOffset = getOffset() + line.getOffset() + tagIndex;
 								int markerLength = line.getLength() - tagIndex;
-								fNewMarkerAttributeMaps.add(createInitialMarkerAttributes(markerDescription, lineNumber + yyline, markerOffset, markerLength, taskTags[i].getPriority()));
+								fNewMarkerAttributeMaps.add(createInitialMarkerAttributes(markerDescription, lineNumber + getLine(), markerOffset, markerLength, taskTags[i].getPriority()));
 							}
 						}
 					}
