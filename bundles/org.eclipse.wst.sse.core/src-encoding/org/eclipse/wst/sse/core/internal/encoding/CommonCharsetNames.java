@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -221,16 +221,13 @@ public final class CommonCharsetNames {
 			encodings = new ArrayList();
 			prefNames = new HashMap();
 
-			ResourceBundle bundle = null;
+			FallbackPropertyResourceBundle bundle = null;
 			InputStream bundleStream = null;
 			try {
-				URL bundleURL = Platform.find(Platform.getBundle(ICodedResourcePlugin.ID), Path.fromOSString("$nl$/config/charset.properties")); //$NON-NLS-1$
-				if (bundleURL != null) {
-					bundleStream = bundleURL.openStream();
-					bundle = new PropertyResourceBundle(bundleStream);
-				}
+				bundleStream = FileLocator.openStream(Platform.getBundle(ICodedResourcePlugin.ID), Path.fromOSString("$nl$/config/charset.properties"), true);
+				bundle = new FallbackPropertyResourceBundle(bundleStream, Path.fromOSString("/config/charset.properties"));
 
-				String totalNumString = bundle.getString("totalnumber");//$NON-NLS-1$
+				String totalNumString = bundle.getProperty("totalnumber");//$NON-NLS-1$
 				int totalNum = 0;
 				if (totalNumString.length() != 0) {
 					try {
@@ -242,11 +239,11 @@ public final class CommonCharsetNames {
 				}
 
 				for (int i = 0; i < totalNum; i++) {
-					String iana = bundle.getString("codeset." + i + ".iana");//$NON-NLS-2$//$NON-NLS-1$
-					String displayName = bundle.getString("codeset." + i + ".label");//$NON-NLS-2$//$NON-NLS-1$
+					String iana = bundle.getProperty("codeset." + i + ".iana");//$NON-NLS-2$//$NON-NLS-1$
+					String displayName = bundle.getProperty("codeset." + i + ".label");//$NON-NLS-2$//$NON-NLS-1$
 					String prefName = null;
 					try {
-						prefName = bundle.getString("codeset." + i + ".prefName"); //$NON-NLS-1$ //$NON-NLS-2$
+						prefName = bundle.getProperty("codeset." + i + ".prefName"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					catch (MissingResourceException e) {
 					}
@@ -268,6 +265,70 @@ public final class CommonCharsetNames {
 				catch (IOException x) {
 				}
 			}
+		}
+	}
+
+	/**
+	 * 
+	 * A property resource bundle that can fall back to a different resource bundle
+	 * in the case where there isn't a string for a key.
+	 * 
+	 */
+	static class FallbackPropertyResourceBundle extends PropertyResourceBundle {
+
+		private PropertyResourceBundle fallback = null;
+		private IPath fallbackPath;
+
+		public FallbackPropertyResourceBundle(InputStream stream, IPath fallbackPath) throws IOException {
+			super(stream);
+			this.fallbackPath = fallbackPath;
+		}
+
+		/**
+		 * Returns the property value for a specified key. Returns null if a property
+		 * doesn't exist
+		 * 
+		 * @param key the key to look up
+		 * @return the string property or null if it doesn't exist
+		 */
+		public String getProperty(String key) {
+			String property = null;
+			try {
+				property = getString(key);
+			}
+			catch (MissingResourceException e) {
+				if (fallback == null && fallbackPath != null) {
+					final Bundle bundle = Platform.getBundle(ICodedResourcePlugin.ID);
+					if (bundle != null) {
+						InputStream stream = null;
+						try {
+							stream = FileLocator.openStream(bundle, fallbackPath, true);
+							if (stream != null) {
+								fallback = new PropertyResourceBundle(stream);
+							}
+						}
+						catch (IOException ioe) {
+						}
+						finally {
+							if (stream != null) {
+								try {
+									stream.close();
+								}
+								catch (IOException ioe) {
+								}
+							}
+						}
+					}
+				}
+				if (fallback != null) {
+					try {
+						property = fallback.getString(key);
+					}
+					catch (MissingResourceException mre) {
+					}
+				}
+			}
+			return property;
 		}
 	}
 
