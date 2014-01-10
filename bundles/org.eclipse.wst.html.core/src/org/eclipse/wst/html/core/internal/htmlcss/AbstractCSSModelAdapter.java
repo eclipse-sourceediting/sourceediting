@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.wst.css.core.internal.document.CSSModelImpl;
 import org.eclipse.wst.css.core.internal.provisional.adapters.ICSSModelAdapter;
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -41,11 +42,16 @@ public abstract class AbstractCSSModelAdapter implements ICSSModelAdapter {
 	 */
 	protected ICSSModel createModel() {
 		// create embedded CSS model (not for external CSS)
-		if (getElement() == null)
+		Element element = getElement();
+		if (element == null)
 			return null;
-		IStructuredModel baseModel = ((IDOMNode) getElement()).getModel();
-		ICSSModel newModel = (ICSSModel) baseModel.getModelManager().createUnManagedStructuredModelFor(CSS_ID);
-		((CSSModelImpl) newModel).setOwnerDOMNode(getElement());
+		String contentType = null;
+		if (element instanceof ElementStyleImpl) {
+			contentType = ((ElementStyleImpl) element).getEmbeddedStyleType();
+		}
+		IStructuredModel baseModel = ((IDOMNode) element).getModel();
+		ICSSModel newModel = (ICSSModel) baseModel.getModelManager().createUnManagedStructuredModelFor(contentType != null ? contentType : CSS_ID);
+		((CSSModelImpl) newModel).setOwnerDOMNode(element);
 		return newModel;
 	}
 

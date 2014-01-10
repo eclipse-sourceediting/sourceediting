@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ package org.eclipse.wst.html.core.internal.document;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
+import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
@@ -66,4 +67,11 @@ public class ElementStyleImpl extends ElementImpl implements IDOMElement, Elemen
 		return new ElementStyleImpl(this);
 	}
 
+	/**
+	 * Indicates the content type identifier of the embedded stylesheet
+	 * @return the content type identifier of the embedded stylesheet
+	 */
+	public String getEmbeddedStyleType() {
+		return ContentTypeIdForCSS.ContentTypeID_CSS;
+	}
 }
