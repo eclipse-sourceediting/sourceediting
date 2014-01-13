@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,11 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 
@@ -36,7 +39,7 @@ public class DefaultCSSSourceFormatter extends AbstractCSSSourceFormatter {
 	protected void appendSpaceBetween(ICSSNode node, CompoundRegion prev, CompoundRegion next, StringBuffer source) {
 		if (isCleanup() && !getCleanupStrategy(node).isFormatSource())
 			return; // for not formatting case on cleanup action
-
+		final Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		// in selector
 		String prevType = prev.getType();
 		String nextType = next.getType();
@@ -54,7 +57,7 @@ public class DefaultCSSSourceFormatter extends AbstractCSSSourceFormatter {
 			return;
 		}
 
-		if (prevType == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || prevType == CSSRegionContexts.CSS_COMMENT || nextType == CSSRegionContexts.CSS_COMMENT || nextType == CSSRegionContexts.CSS_LBRACE || nextType == CSSRegionContexts.CSS_UNKNOWN) {
+		if (prevType == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || prevType == CSSRegionContexts.CSS_COMMENT || nextType == CSSRegionContexts.CSS_COMMENT || nextType == CSSRegionContexts.CSS_LBRACE || nextType == CSSRegionContexts.CSS_UNKNOWN || (prevType == CSSRegionContexts.CSS_SELECTOR_SEPARATOR && preferences.getBoolean(CSSCorePreferenceNames.FORMAT_SPACE_BETWEEN_SELECTORS))) {
 			appendSpaceBefore(node, next, source);
 			return;
 		}

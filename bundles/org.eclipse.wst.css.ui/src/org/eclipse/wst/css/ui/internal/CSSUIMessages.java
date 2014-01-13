@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,6 +52,7 @@ public class CSSUIMessages extends NLS {
 	public static String PrefsLabel_CasePropValueLower;
 	public static String PrefsLabel_SelectorTagNameUpper;
 	public static String PrefsLabel_SelectorTagNameLower;
+	public static String PrefsLabel_SelectorWhitespace;
 	public static String PrefsLabel_ColorSample;
 	public static String PrefsLabel_ColorNormal;
 	public static String PrefsLabel_ColorAtmarkRule;

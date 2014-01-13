@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,6 +59,8 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 	// one property per one line
 	protected Button fPropertyPerLine;
 	protected Button fPropNameLower;
+
+	protected Button spaceBetweenSelectors;
 
 	// case of property name
 	protected Button fPropNameUpper;
@@ -140,6 +142,9 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		fPropertyPerLine = createCheckBox(formattingGroup, CSSUIMessages.PrefsLabel_WrappingInsertLineBreak);
 		((GridData) fPropertyPerLine.getLayoutData()).horizontalSpan = 2;
 
+		spaceBetweenSelectors = createCheckBox(formattingGroup, CSSUIMessages.PrefsLabel_SelectorWhitespace);
+		((GridData) spaceBetweenSelectors.getLayoutData()).horizontalSpan = 2;
+
 		fNowrapAttr = createCheckBox(formattingGroup, CSSUIMessages.PrefsLabel_WrappingWithoutAttr);
 		((GridData) fNowrapAttr.getLayoutData()).horizontalSpan = 2;
 
@@ -206,7 +211,8 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		fLineWidthText.setText(prefs.getString(CSSCorePreferenceNames.LINE_WIDTH));
 		fPropertyPerLine.setSelection(prefs.getBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE));
 		fNowrapAttr.setSelection(prefs.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR));
-		
+		spaceBetweenSelectors.setSelection(prefs.getBoolean(CSSCorePreferenceNames.FORMAT_SPACE_BETWEEN_SELECTORS));
+
 		if (CSSCorePreferenceNames.TAB.equals(getModelPreferences().getString(CSSCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
 			fIndentUsingSpaces.setSelection(false);
@@ -247,7 +253,8 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		fLineWidthText.setText(prefs.getDefaultString(CSSCorePreferenceNames.LINE_WIDTH));
 		fPropertyPerLine.setSelection(prefs.getDefaultBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE));
 		fNowrapAttr.setSelection(prefs.getDefaultBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR));
-		
+		spaceBetweenSelectors.setSelection(prefs.getDefaultBoolean(CSSCorePreferenceNames.FORMAT_SPACE_BETWEEN_SELECTORS));
+
 		if (CSSCorePreferenceNames.TAB.equals(getModelPreferences().getDefaultString(CSSCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
 			fIndentUsingSpaces.setSelection(false);
@@ -285,7 +292,8 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		prefs.setValue(CSSCorePreferenceNames.LINE_WIDTH, fLineWidthText.getText());
 		prefs.setValue(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE, fPropertyPerLine.getSelection());
 		prefs.setValue(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR, fNowrapAttr.getSelection());
-		
+		prefs.setValue(CSSCorePreferenceNames.FORMAT_SPACE_BETWEEN_SELECTORS, spaceBetweenSelectors.getSelection());
+
 		if (fIndentUsingTabs.getSelection()) {
 			getModelPreferences().setValue(CSSCorePreferenceNames.INDENTATION_CHAR, CSSCorePreferenceNames.TAB);
 		} else {

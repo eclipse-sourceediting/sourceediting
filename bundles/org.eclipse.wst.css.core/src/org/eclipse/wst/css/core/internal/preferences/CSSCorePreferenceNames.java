@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ public class CSSCorePreferenceNames {
 	public static final String FORMAT_PROP_PRE_DELIM = "preDelim"; //$NON-NLS-1$
 	public static final String FORMAT_QUOTE = "quote"; //$NON-NLS-1$
 	public static final String FORMAT_QUOTE_IN_URI = "quoteInURI"; //$NON-NLS-1$
+	public static final String FORMAT_SPACE_BETWEEN_SELECTORS = "spaceBetweenSelectors"; //$NON-NLS-1$
 	public static final String WRAPPING_NEWLINE_ON_OPEN_BRACE = "newLineOnOpenBrace"; //$NON-NLS-1$
 	public static final String WRAPPING_ONE_PER_LINE = "onePropertyPerLine"; //$NON-NLS-1$
 	public static final String WRAPPING_PROHIBIT_WRAP_ON_ATTR = "prohibitWrapOnAttr"; //$NON-NLS-1$

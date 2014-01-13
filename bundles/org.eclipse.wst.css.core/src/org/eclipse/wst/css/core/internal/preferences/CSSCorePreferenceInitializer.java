@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,7 @@ public class CSSCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putInt(CSSCorePreferenceNames.FORMAT_PROP_POST_DELIM, 1);
 		node.put(CSSCorePreferenceNames.FORMAT_QUOTE, "\"");//$NON-NLS-1$
 		node.put(CSSCorePreferenceNames.FORMAT_BETWEEN_VALUE, " ");//$NON-NLS-1$
+		node.putBoolean(CSSCorePreferenceNames.FORMAT_SPACE_BETWEEN_SELECTORS, true);
 		node.putBoolean(CSSCorePreferenceNames.FORMAT_QUOTE_IN_URI, true);
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE, true);
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR, true);
