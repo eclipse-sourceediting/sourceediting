@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -390,6 +390,25 @@ public class XSDImpl
               if (baseType != null && !(type.getSchema().getSchemaForSchema() == baseType.getSchema()))
               {
                 getEnumeratedValuesForSimpleType(baseType, result);
+              	// Bug 424276 - The above is not sufficient.  First check if there are enumerations for the base type.  
+                // If there are none, then we should be able to add the enumerations for the current type
+                if (result.isEmpty())
+                {
+                  getEnumeratedValuesForSimpleType(type, result);
+                }
+                else // There are enumerations on the base type
+                {
+                  // If there are enumerations on the current type also, then we should just add the ones from the current type
+                  // since we're restricting the values
+                  List enumerationsForCurrentType = new ArrayList();
+              	  getEnumeratedValuesForSimpleType(type, enumerationsForCurrentType);
+              	  if (!enumerationsForCurrentType.isEmpty())
+              	  {
+              		 result.clear();
+              		 result.addAll(enumerationsForCurrentType);
+              	  }
+              	  // Otherwise, just use the enumerations on the base type
+                }
               }
               else
               {
