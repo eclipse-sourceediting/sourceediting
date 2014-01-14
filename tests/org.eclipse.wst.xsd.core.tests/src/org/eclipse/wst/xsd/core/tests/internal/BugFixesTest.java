@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2012 IBM Corporation and others.
+ * Copyright (c) 2008, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl.XSDElementDeclarationAd
 import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl.XSDModelGroupAdapter;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.osgi.framework.Bundle;
 
@@ -458,5 +459,58 @@ public class BugFixesTest extends BaseTestCase
 
 	  String impliedValue = dataType.generateInstanceValue();
 	  assertEquals("MA==", impliedValue); //$NON-NLS-1$
-	}  		
+	}
+	
+	  public void testEnumerationsInSimpleTypeHierarchy()
+	  {
+	    // See bug 424276
+		  
+  	    Bundle bundle = Platform.getBundle(XSDCoreTestsPlugin.PLUGIN_ID);
+		URL url = bundle.getEntry("/testresources/samples/bugzilla424276.xsd"); //$NON-NLS-1$
+
+		CMDocument cmDocument = XSDImpl.buildCMDocument(url.toExternalForm());
+		assertNotNull(cmDocument);
+	    XSDSchema xsdSchema = XSDImpl.buildXSDModel(url.toExternalForm());
+	    assertNotNull("failed to build model for " + url.toExternalForm()); //$NON-NLS-1$
+
+	    assertTrue("Number of types in the test schema is 8", xsdSchema.getTypeDefinitions().size() == 8); //$NON-NLS-1$
+	    for (Iterator<XSDTypeDefinition> types = xsdSchema.getTypeDefinitions().iterator(); types.hasNext();)
+	    {
+	      XSDTypeDefinition type = types.next();
+	      if (type instanceof XSDSimpleTypeDefinition)
+	      {
+	    	XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition)type;
+	    	System.out.println(simpleType.getName());
+	        if ("A".equals(simpleType.getName()))
+	        {
+	          String[] enumeratedValuesForType = XSDImpl.getEnumeratedValuesForType(simpleType);
+	          assertEquals(1, enumeratedValuesForType.length);
+	          assertEquals(enumeratedValuesForType[0], "01");
+	        }
+	        if ("B0".equals(simpleType.getName()))
+	        {
+	          String[] enumeratedValuesForType = XSDImpl.getEnumeratedValuesForType(simpleType);
+	          assertEquals(1, enumeratedValuesForType.length);
+	          assertEquals(enumeratedValuesForType[0], "01");
+	        }
+	        if ("C0".equals(simpleType.getName()))
+	        {
+	          String[] enumeratedValuesForType = XSDImpl.getEnumeratedValuesForType(simpleType);
+	          assertEquals(2, enumeratedValuesForType.length);
+	          assertEquals(enumeratedValuesForType[0], "01");
+	          assertEquals(enumeratedValuesForType[1], "02");
+	        }
+	        if ("D0".equals(simpleType.getName()))
+	        {
+	          String[] enumeratedValuesForType = XSDImpl.getEnumeratedValuesForType(simpleType);
+	          assertEquals(4, enumeratedValuesForType.length);
+	          assertEquals(enumeratedValuesForType[0], "01");
+	          assertEquals(enumeratedValuesForType[1], "02");
+	          assertEquals(enumeratedValuesForType[2], "03");
+	          assertEquals(enumeratedValuesForType[3], "04");
+	        }
+	      }
+	    }
+	  }
+
 }
