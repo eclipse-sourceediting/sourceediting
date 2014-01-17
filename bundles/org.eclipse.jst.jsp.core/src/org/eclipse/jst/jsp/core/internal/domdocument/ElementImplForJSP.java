@@ -13,13 +13,12 @@
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.w3c.dom.Document;
 
 public class ElementImplForJSP extends ElementStyleImpl {
-
-	private static final String ContentTypeIdForJSPedCSS = "org.eclipse.jst.jsp.core.cssjspsource"; //$NON-NLS-1$
 
 	/**
 	 * 
@@ -68,6 +67,6 @@ public class ElementImplForJSP extends ElementStyleImpl {
 	}
 
 	public String getEmbeddedStyleType() {
-		return ContentTypeIdForJSPedCSS;
+		return ContentTypeIdForCSS.ContentTypeID_CSS;
 	}
 }
