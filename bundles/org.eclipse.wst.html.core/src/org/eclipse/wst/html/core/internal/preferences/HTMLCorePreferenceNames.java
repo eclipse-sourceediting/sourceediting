@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     Red Hat, Inc. - Bug #426939 - [validator] HTML5 attribute validator 
+ *                     marks ng-app AngularJS attributes as undefined
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.preferences;
 
@@ -238,7 +239,23 @@ public class HTMLCorePreferenceNames {
 	 */
 	public static final int UPPER = 2;
 	
+	/**
+	 * Default value for the preference #IGNORE_ATTRIBUTE_NAMES
+	 * 
+	 * @see #IGNORE_ATTRIBUTE_NAMES
+	 */
+	public static final boolean IGNORE_ATTRIBUTE_NAMES_DEFAULT = false;
+
+	/**
+	 * Default value for the preference #ATTRIBUTE_NAMES_TO_IGNORE
+	 * 
+	 * @see #ATTRIBUTE_NAMES_TO_IGNORE
+	 */
+	public static final String ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT = ""; //$NON-NLS-1$
+	
 	public static final String USE_PROJECT_SETTINGS = "use-project-settings";//$NON-NLS-1$
+	public static final String IGNORE_ATTRIBUTE_NAMES = "ignoreAttrNames";//$NON-NLS-1$
+	public static final String ATTRIBUTE_NAMES_TO_IGNORE = "attrNamesToIgnore";//$NON-NLS-1$
 	
 	public static final String ATTRIBUTE_UNDEFINED_NAME = "attrUndefName";//$NON-NLS-1$
 	public static final String ATTRIBUTE_UNDEFINED_VALUE = "attrUndefValue";//$NON-NLS-1$
@@ -251,7 +268,6 @@ public class HTMLCorePreferenceNames {
 	public static final String ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND = "resourceNotFound";//$NON-NLS-1$
 	public static final String ATTRIBUTE_OBSOLETE_NAME = "attrObsoleteName";//$NON-NLS-1$
 	public static final String ATTRIBUTE_VALUE_EQUALS_MISSING = "attrValueEqualsMissing";//$NON-NLS-1$
-	
 	
 	public static final String ELEM_UNKNOWN_NAME = "elemUnknownName";//$NON-NLS-1$
 	public static final String ELEM_INVALID_NAME = "elemInvalidName";//$NON-NLS-1$
