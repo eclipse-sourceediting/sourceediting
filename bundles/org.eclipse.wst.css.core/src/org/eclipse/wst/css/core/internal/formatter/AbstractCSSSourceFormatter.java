@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -493,6 +493,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 	 */
 	protected final void formatChildren(ICSSNode node, StringBuffer source) {
 		ICSSNode child = node.getFirstChild();
+		ICSSNode last = null;
 		boolean first = true;
 		while (child != null) {
 			// append child
@@ -505,9 +506,33 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				formatBefore(node, child, new String(childSource), source, null);
 			}
 			source.append(childSource);
+			last = child;
 			// append between children
 			child = child.getNextSibling();
 			first = false;
+		}
+		// This handles the case where the last child doesn't align with the end of the parent node, likely malformed content
+		if (node instanceof IndexedRegion && last instanceof IndexedRegion && (node.getOwnerDocument().getNodeType() == ICSSNode.STYLEDECLARATION_NODE)) {
+			IndexedRegion parent = (IndexedRegion) node;
+			IndexedRegion lastChild = (IndexedRegion) last;
+			if (lastChild.getEndOffset() < parent.getEndOffset()) {
+				// Find the region at the end offset of the last child
+				IStructuredDocumentRegion region = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(lastChild.getEndOffset());
+				ITextRegionList regions = region != null ? region.getRegions() : null;
+				if (regions != null) {
+					Iterator it = regions.iterator();
+					while (it.hasNext()) {
+						ITextRegion token = (ITextRegion) it.next();
+						if (token.getType() == CSSRegionContexts.CSS_UNKNOWN) {
+							// Found something that won't be consumed. Append the regions that remain in the node to the source
+							do {
+								source.append(region.getFullText());
+							} while ((region = region.getNext()) != null && region.getEndOffset() <= parent.getEndOffset());
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 
