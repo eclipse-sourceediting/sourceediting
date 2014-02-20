@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -177,7 +177,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 					if (isHTML5(target))
 						continue;
 				}		
-				// Check for user-defined exclusions for HTML5 attribute names
+				// Check for user-defined exclusions
 				if (!shouldValidateAttributeName(target, attrName)) 
 					continue;
 
@@ -364,8 +364,6 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	}
 	
 	private boolean shouldValidateAttributeName(Element target, String attrName) {
-		if (!isHTML5(target)) return true;
-
 		Object adapter = (target instanceof IAdaptable ? ((IAdaptable)target).getAdapter(IResource.class) : null);
 		IProject project = (adapter instanceof IResource ? ((IResource)adapter).getProject() : null);
 		
@@ -377,7 +375,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				strMatcher = new StringMatcher(excluded);
 				fIgnorePatterns.put(excluded, strMatcher);
 			}
-			if (strMatcher.match(attrName))
+			if (strMatcher.match(attrName.toLowerCase()))
 				return false;
 		}
 

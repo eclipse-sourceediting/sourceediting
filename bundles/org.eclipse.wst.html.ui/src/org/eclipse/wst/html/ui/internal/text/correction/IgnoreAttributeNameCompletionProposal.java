@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 IBM Corporation and others.
+ * Copyright (c) 2013, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.text.correction;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -23,6 +26,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
@@ -92,10 +96,12 @@ public class IgnoreAttributeNameCompletionProposal implements ICompletionProposa
 		
 		StringBuffer ignoreList = new StringBuffer(originalAttributeNames);
 	
-		if (ignoreList.length() > 0)
-			ignoreList.append(',');
-		
-		ignoreList.append(fPattern);
+		if (!containsPattern(originalAttributeNames, fPattern)) { 
+			if (ignoreList.length() > 0)
+				ignoreList.append(',');
+			
+			ignoreList.append(fPattern.toLowerCase());
+		}
 
 		fLookupOrder[0].getNode(getPreferenceNodeQualifier())
 			.putBoolean(HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES, true); 
@@ -103,25 +109,49 @@ public class IgnoreAttributeNameCompletionProposal implements ICompletionProposa
 		fLookupOrder[0].getNode(getPreferenceNodeQualifier())
 			.put(HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, ignoreList.toString()); 
 
-		for(int i = 0; i < fLookupOrder.length; i++) {
-			try {
-				fLookupOrder[i].getNode(getPreferenceNodeQualifier()).flush();
-			} catch (BackingStoreException e) {
-				Logger.logException(e);
-			}
-		}
-
 		PreferenceDialog dialog = hasProjectSettings ? 
 				PreferencesUtil.createPropertyDialogOn(getShell(), project, HTMLValidationPreferencePage.PROPERTY_PAGE_ID, null, null) :
 					PreferencesUtil.createPreferenceDialogOn(getShell(), HTMLValidationPreferencePage.PREFERENCE_PAGE_ID, null, null);
+
+		int result = Window.CANCEL;
 		if (dialog != null) {
 			Object page = dialog.getSelectedPage();
 			if (page instanceof HTMLValidationPreferencePage) {
 				((HTMLValidationPreferencePage)page).overrideOriginValues(originalEnableIgnore, originalAttributeNames);
 			}
-			dialog.open();
+			result = dialog.open();
+		}
+
+		if (Window.CANCEL == result) {
+			fLookupOrder[0].getNode(getPreferenceNodeQualifier())
+			.putBoolean(HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES, originalEnableIgnore); 
+
+			fLookupOrder[0].getNode(getPreferenceNodeQualifier())
+				.put(HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, originalAttributeNames); 
+		
+			for(int i = 0; i < fLookupOrder.length; i++) {
+				try {
+					fLookupOrder[i].getNode(getPreferenceNodeQualifier()).flush();
+				} catch (BackingStoreException e) {
+					Logger.logException(e);
+				}
+			}
 		}
 	}
+	
+	private boolean containsPattern(String ignoreList, String pattern) {
+		Set result = new HashSet();
+		if (ignoreList.trim().length() > 0) {
+			String[] names = ignoreList.split(","); //$NON-NLS-1$
+			for (int i = 0; names != null && i < names.length; i++) {
+				String name = names[i] == null ? null : names[i].trim();
+				if (name != null && name.length() > 0) 
+					result.add(name.toLowerCase());
+			}
+		}
+		return result.contains(pattern.toLowerCase());
+	}
+
 	
 	/*
 	 * @see ICompletionProposal#getDisplayString()

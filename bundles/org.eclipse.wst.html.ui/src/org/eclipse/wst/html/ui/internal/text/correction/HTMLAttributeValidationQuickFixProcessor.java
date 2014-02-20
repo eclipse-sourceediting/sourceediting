@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 IBM Corporation and others.
+ * Copyright (c) 2013, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
 public class HTMLAttributeValidationQuickFixProcessor implements IQuickAssistProcessor {
@@ -132,6 +133,8 @@ public class HTMLAttributeValidationQuickFixProcessor implements IQuickAssistPro
 						continue;
 
 					IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
+					if (!(node instanceof Element))
+						continue;
 
 					Object adapter = (node instanceof IAdaptable ? ((IAdaptable)node).getAdapter(IResource.class) : null);
 					IProject project = (adapter instanceof IResource ? ((IResource)adapter).getProject() : null);
@@ -144,6 +147,10 @@ public class HTMLAttributeValidationQuickFixProcessor implements IQuickAssistPro
 							fLookupOrder = new IScopeContext[] {projectScope, new InstanceScope(), new DefaultScope()};
 					}
 					
+					boolean ignore = fPreferenceService.getBoolean(
+							getPreferenceNodeQualifier(), HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES, 
+							HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES_DEFAULT, fLookupOrder);
+
 					String ignoreList = fPreferenceService.getString(
 							getPreferenceNodeQualifier(), HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, 
 							HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT, fLookupOrder);
@@ -161,9 +168,10 @@ public class HTMLAttributeValidationQuickFixProcessor implements IQuickAssistPro
 					String name = getAttributeName(node, offset);
 					if (name == null) continue;
 					
-					if (!result.contains(name.toLowerCase())) {
+					// If ignore == false. then show a quick fix anyway (due to allow to turn 'ignore' option on)
+					if (!ignore || shouldShowQuickFix(result, name.toLowerCase())) {
 						IgnoreAttributeNameCompletionProposal p = new IgnoreAttributeNameCompletionProposal(
-								name, offset, NLS.bind(HTMLUIMessages.DoNotValidateAttribute, name), 
+								name.toLowerCase(), offset, NLS.bind(HTMLUIMessages.DoNotValidateAttribute, name), 
 								HTMLUIMessages.DoNotValidateAttributeAddInfo, node);
 						if (!proposals.contains(p))
 							proposals.add(p);  
@@ -175,16 +183,15 @@ public class HTMLAttributeValidationQuickFixProcessor implements IQuickAssistPro
 						
 						// Do not continue creating proposals for the rest of patterns if 
 						// a more common pattern is already created
-						if (result.contains(namePattern.toString().toLowerCase())) 
+						if (ignore && result.contains(namePattern.toString().toLowerCase()))
 							break;
 						
-						if (!result.contains(namePattern.toString().toLowerCase())) {
-							IgnoreAttributeNameCompletionProposal p = new IgnoreAttributeNameCompletionProposal(
-									namePattern.toString(), offset, NLS.bind(HTMLUIMessages.DoNotValidateAllAttributes, namePattern.toString()), 
-									HTMLUIMessages.DoNotValidateAllAttributesAddInfo, node); 
-							if (!proposals.contains(p))
-								proposals.add(p);  
-						}
+						IgnoreAttributeNameCompletionProposal p = new IgnoreAttributeNameCompletionProposal(
+								namePattern.toString().toLowerCase(), offset, NLS.bind(HTMLUIMessages.DoNotValidateAllAttributes, namePattern.toString()), 
+								HTMLUIMessages.DoNotValidateAllAttributesAddInfo, node); 
+						if (!proposals.contains(p))
+							proposals.add(p);  
+
 						dashIndex = name.indexOf('-', dashIndex + 1);
 					}
 				}
@@ -216,6 +223,20 @@ public class HTMLAttributeValidationQuickFixProcessor implements IQuickAssistPro
 		}
 		
 		return null;
+	}
+	
+	private boolean shouldShowQuickFix(Set lcIgnoredPatterns, String attrName) {
+		// Check the attribute name absence in ignore list
+		String [] lcPatterns = (String[])lcIgnoredPatterns.toArray(new String[0]);
+		for (int i = 0; i < lcPatterns.length; i++) {
+			StringMatcher strMatcher = new StringMatcher(lcPatterns[i]);
+			if (strMatcher.match(attrName.toLowerCase())) {
+				return false; // The attribute name is already ignored, no need to show a quickfix
+			}
+		}
+
+		// The attribute name is not ignored yet, need to show a quickfix
+		return true;
 	}
 	
 	private String getPreferenceNodeQualifier() {
