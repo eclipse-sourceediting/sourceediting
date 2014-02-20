@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2013 IBM Corporation and others.
+ * Copyright (c) 2008, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -475,23 +475,28 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		if (text.length() == 0)
 			return true;
 
+		String[] names = text.split(","); //$NON-NLS-1$
 		boolean valid = true;
-		for (int i = 0; valid && i < text.length(); i++) {
-			if (!Character.isJavaIdentifierPart(text.charAt(i)) &&
-					'-' != text.charAt(i) && '_' != text.charAt(i) &&
-					'*' != text.charAt(i) && '?' != text.charAt(i) &&
-					',' != text.charAt(i))
-				valid = false;
+		for (int i = 0; names != null && i < names.length; i++) {
+			String name = names[i] == null ? null : names[i].trim();
+			if (name != null && name.length() > 0) {
+				for (int j = 0; valid && j < name.length(); j++) {
+					if (!Character.isJavaIdentifierPart(name.charAt(j)) &&
+							'-' != name.charAt(j) && '_' != name.charAt(j) &&
+							'*' != name.charAt(j) && '?' != name.charAt(j))
+						valid = false;
+				}
+			}
 		}
 		
 		if (!valid) {
 			setErrorMessage(NLS.bind(HTMLUIMessages.BadIgnoreAttributeNamesPattern, text));
 			setValid(false);
-		}
-		else {
+		} else {
 			setErrorMessage(null);
 			setValid(true);
 		}
+
 		return valid;
 	}
 	
@@ -509,6 +514,8 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 					fIgnoredAttributeNames.setFocus();
 				}
 			}
+		} else {
+			super.controlChanged(widget);
 		}
 	}
 
@@ -537,11 +544,12 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 
 		BooleanData ignoreData = (BooleanData)fIgnoreAttributeNames.getData();
 		contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(ignoreData.getKey(), ignoreData.getValue()); 
+		ignoreData.originalValue = ignoreData.getValue();
 
 		TextData data = (TextData)fIgnoredAttributeNames.getData();
 		contexts[0].getNode(getPreferenceNodeQualifier()).put(data.getKey(), data.getValue()); 
-		
-		
+		data.originalValue = data.getValue();
+
 		for(int i = 0; i < contexts.length; i++) {
 			try {
 				contexts[i].getNode(getPreferenceNodeQualifier()).flush();
@@ -549,6 +557,7 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 				Logger.logException(e);
 			}
 		}
+
 		super.storeValues();
 	}
 	
