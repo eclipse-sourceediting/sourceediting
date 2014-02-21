@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
@@ -86,7 +88,18 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
     private int fLayer = DEFAULT_LAYER;
     
     private Image fImage = null;
+    
+	private static Image fInfoImage;
+	private static Image fWarningImage;
+	private static Image fErrorImage;
 
+	static {
+		ISharedImages sharedImages= PlatformUI.getWorkbench().getSharedImages();
+		fInfoImage= sharedImages.getImage(ISharedImages.IMG_OBJS_INFO_TSK);
+		fWarningImage= sharedImages.getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+		fErrorImage= sharedImages.getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+	}
+	
 	public TemporaryAnnotation(Position p, String type, String message, ReconcileAnnotationKey key) {
 		super();
 		fPosition = p;
@@ -123,15 +136,14 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
     }
     
     private void initImage() {
-        // later we can add support for quick fix images.
         String type = getType();
         if(type.equals(ANNOT_ERROR)) {
-            fImage = null;
-        }
-        else if(type.equals(ANNOT_WARNING)) {
-            fImage = null;
-        }
-        else if(type.equals(ANNOT_INFO)) {
+            fImage = fErrorImage;
+        } else if(type.equals(ANNOT_WARNING)) {
+            fImage = fWarningImage;
+        } else if(type.equals(ANNOT_INFO)) {
+            fImage = fInfoImage;
+        } else {
             fImage = null;
         }
     }
@@ -226,7 +238,7 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
      * @see Annotation#paint
      */
     public void paint(GC gc, Canvas canvas, Rectangle r) {
-        //initializeImages();
+        initImage();
         if (fImage != null)
             ImageUtilities.drawImage(fImage, gc, canvas, r, SWT.CENTER, SWT.TOP);
     }
