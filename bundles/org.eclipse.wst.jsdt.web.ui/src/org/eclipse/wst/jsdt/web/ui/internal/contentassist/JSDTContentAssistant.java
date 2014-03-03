@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -131,12 +131,13 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor impleme
 			//proposals.add(endScript);
 		}
 		JSDTProposalCollector theCollector = getProposalCollector(context.getViewer(), context.getInvocationOffset());
+		if(theCollector==null) return new ArrayList(0);
+		
 		/* add end script tag if needed */
 		
 		theCollector.setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
 
 		/* --------- Content Assistant --------- */
-		if(theCollector==null) return new ArrayList(0);
 		
 		getContentAssistProcessor().setProposalCollector(theCollector);
 		completionProposals = getContentAssistProcessor().computeCompletionProposals(context.getViewer(), context.getInvocationOffset());
