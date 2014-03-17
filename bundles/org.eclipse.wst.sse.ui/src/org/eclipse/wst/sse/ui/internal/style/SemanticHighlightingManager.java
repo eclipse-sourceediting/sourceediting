@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -298,6 +298,8 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	private static final String TARGET_ATTR = "target"; //$NON-NLS-1$
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	private static final String STYLE_KEY_ATTR = "styleStringKey"; //$NON-NLS-1$
+	private static final String ID_ATTR = "id"; //$NON-NLS-1$
+	private static final String AFTER_ATTR = "after"; //$NON-NLS-1$
 
 	private ISourceViewer fSourceViewer;
 	private IPreferenceStore fPreferenceStore;
@@ -348,6 +350,8 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		
 		ISemanticHighlighting highlighting = null;
 		String styleKey = null;
+		String id = null;
+		String after = null;
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(SSEUIPlugin.ID, SEMANTIC_HIGHLIGHTING_EXTENSION_POINT);
 		
 		IContentType contentType = Platform.getContentTypeManager().getContentType(fContentTypeId);
@@ -361,11 +365,26 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 					try {
 						highlighting = (ISemanticHighlighting) elements[i].createExecutableExtension(CLASS_ATTR);
 						styleKey = elements[i].getAttribute(STYLE_KEY_ATTR);
+						id = elements[i].getAttribute(ID_ATTR);
+						after = elements[i].getAttribute(AFTER_ATTR);
 					} catch (CoreException e) {
 						Logger.logException(e);
 					}
-					if (highlighting != null)
-						semantics.add(new SemanticContent(targetContentType, highlighting, styleKey));
+					if (highlighting != null) {
+						int length = semantics.size();
+						int insertPosition = 0;
+						if (after != null) {
+							for (int k = 0; k < length - 1; k++) {
+								SemanticContent sc = (SemanticContent) semantics.get(k);
+								if (after.equals(sc.id)) {
+									insertPosition = k + 1;
+									break;
+								}
+							}
+						}
+						// The highlighting was not inserted through priority; insert at the beginning of the list
+						semantics.add(insertPosition, new SemanticContent(targetContentType, highlighting, styleKey, id));
+					}
 
 					break;
 				}
@@ -394,11 +413,12 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		public IContentType type;
 		public ISemanticHighlighting highlighting;
 		public String styleKey;
-
-		public SemanticContent(IContentType type, ISemanticHighlighting highlighting, String styleKey) {
+		public String id;
+		public SemanticContent(IContentType type, ISemanticHighlighting highlighting, String styleKey, String id) {
 			this.type = type;
 			this.highlighting = highlighting;
 			this.styleKey = styleKey;
+			this.id = id;
 		}
 
 		public int compareTo(Object arg0) {

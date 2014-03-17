@@ -73,6 +73,20 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="after" type="string">
+            <annotation>
+               <documentation>
+                  The id of the highlighting that this one should be applied after.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
