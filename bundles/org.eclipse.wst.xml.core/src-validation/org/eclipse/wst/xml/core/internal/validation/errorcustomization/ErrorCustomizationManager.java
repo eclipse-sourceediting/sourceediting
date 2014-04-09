@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,15 @@ public class ErrorCustomizationManager
 {
   protected Stack elementInformationStack = new Stack();
   protected ErrorMessageInformation messageForConsideration;
+  /** The uri of the file being validated */
+  protected String fileURI;
+
+  public ErrorCustomizationManager() {
+  }
+
+  public ErrorCustomizationManager(String fileURI) {
+	  this.fileURI = fileURI;
+  }
 
   /**
    * This method should be called in the start element method of the XML validator's
@@ -35,7 +44,7 @@ public class ErrorCustomizationManager
    */
   public void startElement(String uri, String localName)
   { 
-    ElementInformation elementInformation = new ElementInformation(uri, localName);
+    ElementInformation elementInformation = new ElementInformation(uri, localName, fileURI);
     if (elementInformationStack.size() > 0)
     {
       ElementInformation parent = (ElementInformation) elementInformationStack.peek();

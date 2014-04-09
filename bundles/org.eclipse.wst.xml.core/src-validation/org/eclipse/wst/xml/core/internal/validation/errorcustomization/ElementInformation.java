@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ public class ElementInformation
 {
   protected String localName;
   protected String namespace;
+  protected String fileURI;
   protected List children = new ArrayList();
 
   /**
@@ -36,6 +37,20 @@ public class ElementInformation
     this.namespace = uri;
   }
   
+  /**
+   * Constructor.
+   * 
+   * @param uri
+   * 		The namespace URI of the element.
+   * @param localName
+   * 		The local name of the element.
+   * @param fileURI
+   * 		The URI of the file being validated
+   */
+  public ElementInformation(String uri, String localName, String fileURI) {
+	  this(uri, localName);
+	  this.fileURI = fileURI;
+  }
   /**
    * Get the namespace of this element.
    * 
@@ -68,5 +83,14 @@ public class ElementInformation
   public List getChildren()
   {
 	return children;
+  }
+
+  /**
+   * Get the URI of the file that this element belongs to
+   * @return
+   * 	The URI of the file that this element belongs to
+   */
+  public String getFileURI() {
+	  return fileURI;
   }
 }
