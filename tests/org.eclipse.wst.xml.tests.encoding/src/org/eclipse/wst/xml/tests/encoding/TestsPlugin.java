@@ -86,6 +86,10 @@ public class TestsPlugin extends Plugin {
 		return resolvedLocation;
 	}
 
+	public static URL getTestResource(String filePath) {
+		return Platform.getBundle("org.eclipse.wst.xml.tests.encoding").getEntry(filePath);
+	}
+
 	public static File getTestFile(String filepath) {
 		URL installURL = getInstallLocation();
 		// String scheme = installURL.getProtocol();

@@ -15,29 +15,27 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.dialogs.IOverwriteQuery;
-import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
-import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
-import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 
 /**
  * Imports zipped files into the test workspace. Deletes all projects in
@@ -46,11 +44,11 @@ import org.eclipse.ui.wizards.datatransfer.ImportOperation;
  * @author pavery
  */
 public class ProjectUnzipUtility {
-	class MyOverwriteQuery implements IOverwriteQuery {
+	/*class MyOverwriteQuery implements IOverwriteQuery {
 		public String queryOverwrite(String pathString) {
 			return ALL;
 		}
-	}
+	}*/
 
 	public final static String PROJECT_ZIPS_FOLDER = "ProjectTestFiles";
 	private List fCreatedProjects = null;
@@ -67,7 +65,7 @@ public class ProjectUnzipUtility {
 	 *            the container path within the workspace
 	 */
 	public void importFile(File fileToImport, String folderPath) {
-		WorkspaceProgressMonitor importProgress = new WorkspaceProgressMonitor();
+		/*WorkspaceProgressMonitor importProgress = new WorkspaceProgressMonitor();
 		try {
 			if (fileToImport.exists()) {
 				IPath containerPath = new Path(folderPath);
@@ -89,7 +87,7 @@ public class ProjectUnzipUtility {
 		}
 		finally {
 			importProgress.done();
-		}
+		}*/
 	}
 
 	/**
@@ -98,6 +96,60 @@ public class ProjectUnzipUtility {
 	 */
 	// specify buffer size for extraction
 	static final int BUFFER = 2048;
+	public void unzipAndImport(URL url, String destinationDirectory) {
+		InputStream stream = null;
+		try {
+			// Specify file to decompress
+			File unzipDestinationDirectory = new File(destinationDirectory);
+			// Open Zip file for reading
+			stream = url.openStream();
+			ZipInputStream zipStream = new ZipInputStream(stream);
+			//String projectFolderName = null;
+			// Process each entry
+			ZipEntry entry = zipStream.getNextEntry();
+			while (entry != null) {
+				// grab a zip file entry
+				String currentEntry = entry.getName();
+				//System.out.println("Extracting: " + entry);
+				File destFile = new File(unzipDestinationDirectory, currentEntry);
+				// grab file's parent directory structure
+				File destinationParent = destFile.getParentFile();
+				// create the parent directory structure if needed
+				destinationParent.mkdirs();
+				// extract file if not a directory
+				if (!entry.isDirectory()) {
+					// establish buffer for writing file
+					byte data[] = new byte[BUFFER];
+					// write the current file to disk
+					FileOutputStream fileOutputStream = new FileOutputStream(destFile);
+					ByteArrayOutputStream dest = new ByteArrayOutputStream(BUFFER);
+					// read and write until last byte is encountered
+					int i = -1;
+					while ((i = zipStream.read(data)) > -1) {
+						dest.write(data, 0, i);
+					}
+					dest.flush();
+					dest.close();
+					fileOutputStream.write(dest.toByteArray());
+					fileOutputStream.close();
+				}
+				else {
+				}
+				entry = zipStream.getNextEntry();
+			}
+		}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+	}
 
 	public void unzipAndImport(File inFile, String destinationDirectory) {
 		try {
@@ -112,7 +164,7 @@ public class ProjectUnzipUtility {
 			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
 			// Create an enumeration of the entries in the zip file
 			Enumeration zipFileEntries = zipFile.entries();
-			String projectFolderName = null;
+			//String projectFolderName = null;
 			IProject currentProject = null;
 			// Process each entry
 			while (zipFileEntries.hasMoreElements()) {
@@ -150,8 +202,9 @@ public class ProjectUnzipUtility {
 					fileOutputStream.write(dest.toByteArray());
 					fileOutputStream.close();
 					is.close();
-					if (projectFolderName != null)
-						importFile(destFile, projectFolderName);
+					// This was never actually invoked
+					/*if (projectFolderName != null)
+						importFile(destFile, projectFolderName);*/
 				}
 				else {
 					// need handle to the main project folder to create
@@ -205,8 +258,9 @@ public class ProjectUnzipUtility {
 	 */
 	public void deleteProjects() throws Exception {
 		final IProject[] projects = getCreatedProjects();
-		WorkspaceModifyOperation deleteOp = new WorkspaceModifyOperation() {
-			protected void execute(IProgressMonitor monitor) throws CoreException {
+		ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+			
+			public void run(IProgressMonitor monitor) throws CoreException {
 				for (int i = 0; i < projects.length; i++) {
 					projects[i].clearHistory(null);
 					projects[i].close(null);
@@ -214,9 +268,7 @@ public class ProjectUnzipUtility {
 				}
 				refreshWorkspace();
 			}
-		};
-		WorkspaceProgressMonitor progress = new WorkspaceProgressMonitor();
-		deleteOp.run(progress);
+		}, null);
 		// saves the new workspace metadata
 		ResourcesPlugin.getWorkspace().save(true, null);
 	}
@@ -225,11 +277,9 @@ public class ProjectUnzipUtility {
 		final String name = projectName;
 		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 		final IProject proj = wsRoot.getProject(name);
-		WorkspaceModifyOperation deleteOp = new WorkspaceModifyOperation(proj) {
-			protected void execute(IProgressMonitor monitor) throws CoreException {
-				//				IWorkspaceRoot wsRoot =
-				// ResourcesPlugin.getWorkspace().getRoot();
-				//				IProject proj = wsRoot.getProject(name);
+		ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+			
+			public void run(IProgressMonitor monitor) throws CoreException {
 				if (proj != null && proj.exists()) {
 					proj.clearHistory(null);
 					//proj.close(null);
@@ -247,9 +297,7 @@ public class ProjectUnzipUtility {
 				}
 				refreshWorkspace();
 			}
-		};
-		WorkspaceProgressMonitor progress = new WorkspaceProgressMonitor();
-		deleteOp.run(progress);
+		}, null);
 		// saves the new workspace metadata
 		ResourcesPlugin.getWorkspace().save(true, null);
 	}
@@ -314,11 +362,10 @@ public class ProjectUnzipUtility {
 
 	public void deleteProject(IProject fProject) throws InvocationTargetException, InterruptedException {
 		final IProject proj = fProject;
-		WorkspaceModifyOperation deleteOp = new WorkspaceModifyOperation(proj) {
-			protected void execute(IProgressMonitor monitor) throws CoreException {
-				//				IWorkspaceRoot wsRoot =
-				// ResourcesPlugin.getWorkspace().getRoot();
-				//				IProject proj = wsRoot.getProject(name);
+		try {
+		ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+			
+			public void run(IProgressMonitor monitor) throws CoreException {
 				if (proj != null && proj.exists()) {
 					proj.clearHistory(null);
 					//proj.close(null);
@@ -328,9 +375,12 @@ public class ProjectUnzipUtility {
 				}
 				refreshWorkspace();
 			}
-		};
+		}, null);
+		}
+		catch (CoreException e) {
+			
+		}
 		//WorkspaceProgressMonitor progress = new WorkspaceProgressMonitor();
-		deleteOp.run(null);
 		// saves the new workspace metadata
 		//ResourcesPlugin.getWorkspace().save(true, null);
 	}

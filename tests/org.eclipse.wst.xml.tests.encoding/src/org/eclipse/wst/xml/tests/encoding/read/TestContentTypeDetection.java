@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.tests.encoding.read;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -172,9 +171,8 @@ public class TestContentTypeDetection extends TestCase {
 			String destinationProjectString = fTestProject.getLocation().toOSString();
 			String destinationFolder = destinationProjectString + "/";
 			// this zip file is sitting in the "root" of test plugin
-			File zipFile = TestsPlugin.getTestFile("testfiles.zip");
 			ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
-			projUtil.unzipAndImport(zipFile, destinationFolder);
+			projUtil.unzipAndImport(TestsPlugin.getTestResource("testfiles.zip"), destinationFolder);
 			projUtil.initJavaProject(TEST_PROJECT_NAME);
 			fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			fTestProjectInitialized = true;
