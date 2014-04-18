@@ -371,19 +371,8 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 						Logger.logException(e);
 					}
 					if (highlighting != null) {
-						int length = semantics.size();
-						int insertPosition = 0;
-						if (after != null) {
-							for (int k = 0; k < length - 1; k++) {
-								SemanticContent sc = (SemanticContent) semantics.get(k);
-								if (after.equals(sc.id)) {
-									insertPosition = k + 1;
-									break;
-								}
-							}
-						}
 						// The highlighting was not inserted through priority; insert at the beginning of the list
-						semantics.add(insertPosition, new SemanticContent(targetContentType, highlighting, styleKey, id));
+						semantics.add(new SemanticContent(targetContentType, highlighting, styleKey, id, after));
 					}
 
 					break;
@@ -414,18 +403,24 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		public ISemanticHighlighting highlighting;
 		public String styleKey;
 		public String id;
-		public SemanticContent(IContentType type, ISemanticHighlighting highlighting, String styleKey, String id) {
+		public String after;
+		public SemanticContent(IContentType type, ISemanticHighlighting highlighting, String styleKey, String id, String after) {
 			this.type = type;
 			this.highlighting = highlighting;
 			this.styleKey = styleKey;
 			this.id = id;
+			this.after = after;
 		}
 
 		public int compareTo(Object arg0) {
 			SemanticContent other = (SemanticContent) arg0;
 			/* Equal weighting for the same types */
-			if (this.type.equals(other.type))
+			if (this.type.equals(other.type)) {
+				if (this.after != null && other.id != null && other.id.equals(this.after)) {
+					return 1;
+				}
 				return 0;
+			}
 			/* Subtypes have more weight than base types */
 			if (this.type.isKindOf(other.type))
 				return 1;

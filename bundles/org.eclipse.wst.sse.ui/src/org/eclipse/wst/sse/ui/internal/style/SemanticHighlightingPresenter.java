@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,15 +98,15 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 					int length= position.getLength();
 					int end= offset + length;
 
-					if (offset > eventEnd)
+					if (offset > eventEnd) {
 						updateWithPrecedingEvent(position, event);
-					else if (end < eventOffset) {
+					} else if (end < eventOffset) {
 						// do nothing
 						// updateWithSucceedingEvent(position, event);
 					}
 					else if (offset <= eventOffset && end >= eventEnd) {
 						 // Previous region updated to overlap the beginning of this one; just bump the start.
-						if (i > 0 && positions[i - 1].offset + positions[i - 1].length > offset)
+						if (i > 0 && positions[i - 1].offset + positions[i - 1].length > offset + length && positions[i - 1].offset != offset)
 							updateWithPrecedingEvent(position, event);
 						else
 							updateWithIncludedEvent(position, event);
