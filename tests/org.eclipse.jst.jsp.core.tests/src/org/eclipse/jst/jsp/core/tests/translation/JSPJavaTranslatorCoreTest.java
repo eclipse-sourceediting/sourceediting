@@ -743,4 +743,39 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 				structuredModel.releaseFromRead();
 		}
 	}
+
+	public void test_432978() throws Exception {
+        String testName = "bug_432978";
+        // Create new project
+        IProject project = BundleResourceUtil.createJavaWebProject(testName);
+        assertTrue(project.exists());
+        BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+
+        IFile file = project.getFile("/WebContent/test.jsp");
+        JSPTranslator translator = new JSPTranslator();
+        IDOMModel structuredModel = null;
+        try {
+            structuredModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file);
+            translator.reset(structuredModel.getDocument(), new NullProgressMonitor());
+            translator.translate();
+
+            final String translation = translator.getTranslation().toString();
+            assertTrue( translation.contains( "extra" ) );
+
+            // the extra variable should only be declared once in the translated text
+            assertEquals( 2, translation.split( "java.lang.Integer extra" ).length );
+        }
+        finally {
+            if (structuredModel != null)
+                structuredModel.releaseFromRead();
+        }
+//        waitForBuildAndValidation(project);
+//        ValidationFramework.getDefault().validate(new IProject[]{project}, true, true, new NullProgressMonitor());
+//        waitForBuildAndValidation(project);
+//
+//        IFile main = project.getFile("/WebContent/test.jsp");
+//        assertTrue("test file does not exist", main.isAccessible());
+//        IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+//        assertEquals("number of markers not 1", 1, markers.length );
+	}
 }
