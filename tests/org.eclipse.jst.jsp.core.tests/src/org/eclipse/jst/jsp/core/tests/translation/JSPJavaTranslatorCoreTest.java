@@ -751,16 +751,20 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
         assertTrue(project.exists());
         BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 
+        waitForBuildAndValidation(project);
+
         IFile file = project.getFile("/WebContent/test.jsp");
-        JSPTranslator translator = new JSPTranslator();
         IDOMModel structuredModel = null;
         try {
             structuredModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file);
-            translator.reset(structuredModel.getDocument(), new NullProgressMonitor());
-            translator.translate();
 
-            final String translation = translator.getTranslation().toString();
-            assertTrue( translation.contains( "extra" ) );
+            ModelHandlerForJSP.ensureTranslationAdapterFactory(structuredModel);
+
+            JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) structuredModel.getDocument().getAdapterFor(IJSPTranslation.class);
+
+            final String translation = translationAdapter.getJSPTranslation().getJavaText();
+
+            assertTrue( translation.indexOf( "extra" ) != -1 );
 
             // the extra variable should only be declared once in the translated text
             assertEquals( 2, translation.split( "java.lang.Integer extra" ).length );
@@ -769,13 +773,5 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
             if (structuredModel != null)
                 structuredModel.releaseFromRead();
         }
-//        waitForBuildAndValidation(project);
-//        ValidationFramework.getDefault().validate(new IProject[]{project}, true, true, new NullProgressMonitor());
-//        waitForBuildAndValidation(project);
-//
-//        IFile main = project.getFile("/WebContent/test.jsp");
-//        assertTrue("test file does not exist", main.isAccessible());
-//        IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-//        assertEquals("number of markers not 1", 1, markers.length );
 	}
 }
