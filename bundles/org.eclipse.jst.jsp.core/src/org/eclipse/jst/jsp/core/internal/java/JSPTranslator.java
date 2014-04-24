@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Frits Jalvingh - contributions for bug 150794
+ *     Gregory Amerson - [bug 432978] better support for multiple AT_BEGIN variables
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
@@ -332,6 +333,9 @@ public class JSPTranslator implements Externalizable {
 	/** The model path as it was persisted */
 	private IPath fSavedModelPath = null;
 
+	/** the set of variable names that we have declared */
+	private Set fDeclSet = new HashSet();
+
 	/**
 	 * A structure for holding a region collection marker and list of variable
 	 * information. The region can be used later for positioning validation
@@ -640,7 +644,7 @@ public class JSPTranslator implements Externalizable {
 		
 		fFoundNonTranslatedCode = false;
 		fCodeTranslated = false;
-
+		fDeclSet.clear();
 	}
 
 	/**
@@ -976,7 +980,14 @@ public class JSPTranslator implements Externalizable {
 		 */
 		for (int i = 0; i < taglibVars.length; i++) {
 			if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
-				decl = taglibVars[i].getDeclarationString(fContext);
+				// check to see if we have already declared this variable once, if so then just reassign it instead
+				if (fDeclSet.contains(taglibVars[i].getVarName())) {
+					decl = taglibVars[i].getDeclarationString(false, fContext, TaglibVariable.M_REASSIGN);
+				}
+				else {
+					decl = taglibVars[i].getDeclarationString(fContext);
+					fDeclSet.add( taglibVars[i].getVarName() );
+				}
 				appendToBuffer(decl, fUserCode, true, customTag);
 			}
 		}

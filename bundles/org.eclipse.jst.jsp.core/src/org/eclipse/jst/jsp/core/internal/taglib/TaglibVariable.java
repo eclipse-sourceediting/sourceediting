@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Gregory Amerson - [bug 432978] better support for multiple AT_BEGIN variables
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.taglib;
 
@@ -31,8 +32,9 @@ public class TaglibVariable {
 	private final static String AT_BEGIN = "AT_BEGIN";
 	private final static String NESTED = "NESTED";
 
-	public static final int M_PRIVATE = 1;
-	public static final int M_NONE = 0;
+	public static final int M_PRIVATE = 2;
+	public static final int M_NONE = 1;
+	public static final int M_REASSIGN = 4;
 
 	/**
 	 * 
@@ -122,19 +124,19 @@ public class TaglibVariable {
 		 * variables and ILocalVariable has no "doc range"
 		 */
 		if (includeDoc && getDescription() != null) {
-			if (style == M_PRIVATE) {
+			if ((style & M_PRIVATE) > 0) {
 				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + "private " + getVarClass() + " " + getVarName() + " = (" + getVarClass() + ") "+context+".getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 			}
 			else {
-				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + getVarClass() + " " + getVarName() + " = (" + getVarClass() + ") "+context+".getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+				declaration = "/** " + ENDL + StringUtils.replace(getDescription(), "*/", "*\\/") + ENDL + " */ " + ENDL + (((style & M_REASSIGN) > 0 ) ? "" : getVarClass()) + " " + getVarName() + " = (" + getVarClass() + ") "+context+".getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 			}
 		}
 		else {
-			if (style == M_PRIVATE) {
+			if ((style & M_PRIVATE) > 0 ) {
 				declaration = "private " + getVarClass() + " " + getVarName() + " = (" + getVarClass() + ") "+context+".getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 			}
 			else {
-				declaration = getVarClass() + " " + getVarName() + " = (" + getVarClass() + ") "+context+".getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+				declaration = (((style & M_REASSIGN) > 0 ) ? "" : getVarClass()) + " " + getVarName() + " = (" + getVarClass() + ") "+context+".getAttribute(\"" + getVarName() + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			}
 		}
 		return declaration;
