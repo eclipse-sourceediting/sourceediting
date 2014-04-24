@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.eclipse.jst.jsp.core.tests.WebContainerInitializer"
+            id="org.eclipse.jst.jsp.core.tests.webContainerInitializer">
+      </classpathContainerInitializer>
+   </extension>
+</plugin>

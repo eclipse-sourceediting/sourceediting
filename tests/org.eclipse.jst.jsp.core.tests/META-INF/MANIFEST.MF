@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.eclipse.jst.jsp.core.tests
+Bundle-SymbolicName: org.eclipse.jst.jsp.core.tests;singleton:=true
 Bundle-Version: 1.0.800.qualifier
 Bundle-ClassPath: jspcoretests.jar
 Bundle-Activator: org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin
@@ -23,7 +23,7 @@ Export-Package: org.eclipse.jst.jsp.core.tests,
  org.eclipse.jst.jsp.css.core.tests.source,
  org.eclipse.jst.jsp.css.core.tests.testfiles,
  org.eclipse.jst.jsp.css.core.tests.testfiles.results
-Require-Bundle: org.junit;bundle-version=3.8.2,
+Require-Bundle: org.junit;bundle-version="3.8.2",
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
  org.eclipse.wst.sse.core,

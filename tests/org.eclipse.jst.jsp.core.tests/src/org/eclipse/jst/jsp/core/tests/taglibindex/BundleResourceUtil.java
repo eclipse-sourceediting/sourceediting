@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -268,12 +268,28 @@ public class BundleResourceUtil {
 		}
 	}
 	
+	public static void addWebContainer(IProject proj) {
+		IJavaProject jProj = JavaCore.create(proj);
+		try {
+			IClasspathEntry[] entries = jProj.getRawClasspath();
+			for (int i = 0; i < entries.length; i++) {
+				if (entries[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER && "org.eclipse.jst.jsp.core.tests.webContainerInitializer".equals(entries[i].getPath().segment(0))) {
+					return;
+				}
+			}
+			List newEntries = new ArrayList();
+			newEntries.addAll(Arrays.asList(entries));
+			newEntries.add(JavaCore.newContainerEntry(new Path("org.eclipse.jst.jsp.core.tests.webContainerInitializer")));
+			jProj.setRawClasspath((IClasspathEntry[]) newEntries.toArray(new IClasspathEntry[newEntries.size()]), null);
+		}
+		catch (JavaModelException e) {
+
+		}
+	}
+
 	public static IProject createJavaWebProject(String name) throws CoreException {
 		// Create new project
-		IProject project = BundleResourceUtil.createSimpleProject(name, null, new String[]{JavaCore.NATURE_ID, "org.eclipse.pde.PluginNature"});
-
-		project.getFolder("META-INF").create(true, true, null);
-		project.getFolder("META-INF").getFile("MANIFEST.MF").create(new ByteArrayInputStream(("Manifest-Version: 1.0\nBundle-ManifestVersion: 2\nBundle-SymbolicName: "+name+"; singleton:=true\nRequire-Bundle: javax.servlet;bundle-version=\"3.0\",\n javax.servlet.jsp;bundle-version=\"2.2\"\nBundle-ActivationPolicy: lazy\n").getBytes()), true, null);
+		IProject project = BundleResourceUtil.createSimpleProject(name, null, new String[]{JavaCore.NATURE_ID});
 
 		IJavaProject javaProject = JavaCore.create(project);
 		List buildPath = new ArrayList(Arrays.asList(javaProject.getRawClasspath()));
@@ -284,7 +300,7 @@ public class BundleResourceUtil {
 				i.remove();
 			}
 		}
-		buildPath.add(JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")));
+		buildPath.add(JavaCore.newContainerEntry(new Path("org.eclipse.jst.jsp.core.tests.webContainerInitializer")));
 		buildPath.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6")));
 		javaProject.setRawClasspath((IClasspathEntry[]) buildPath.toArray(new IClasspathEntry[buildPath.size()]), new Path("/" + name + "/WebContent/WEB-INF/classes"), new NullProgressMonitor());
 		return project;
