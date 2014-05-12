@@ -74,8 +74,16 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	//WHATWG x-vendor-feature attributes
 	private static final String ATTR_NAME_USER_AGENT_FEATURE = "x-"; //$NON-NLS-1$
 	private static final int ATTR_NAME_USER_AGENT_FEATURE_LENGTH = ATTR_NAME_USER_AGENT_FEATURE.length();
-
+	
 	// D210422
+
+	// Accessible Rich Internet Applications (WAI-ARIA)
+	private static final String ATTR_NAME_WAI_ARIA_ROLE = "role"; //$NON-NLS-1$
+
+	private static final String ATTR_NAME_WAI_ARIA = "aria-"; //$NON-NLS-1$
+	private static final int ATTR_NAME_WAI_ARIA_LENGTH = ATTR_NAME_WAI_ARIA.length();
+
+
 	/**
 	 * HTMLAttributeValidator constructor comment.
 	 */
@@ -173,7 +181,9 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			
 			if (adec == null) {
 				if ((attrName.startsWith(ATTR_NAME_DATA) && attrName.length() > ATTR_NAME_DATA_LENGTH) || 
-						(attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH)) {
+						(attrName.startsWith(ATTR_NAME_USER_AGENT_FEATURE) && attrName.length() > ATTR_NAME_USER_AGENT_FEATURE_LENGTH) ||
+						attrName.equals(ATTR_NAME_WAI_ARIA_ROLE) ||
+						(attrName.startsWith(ATTR_NAME_WAI_ARIA) && attrName.length() > ATTR_NAME_WAI_ARIA_LENGTH)) {
 					if (isHTML5(target))
 						continue;
 				}		
