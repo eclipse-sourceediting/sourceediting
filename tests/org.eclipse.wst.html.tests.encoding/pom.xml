@@ -29,4 +29,23 @@
     <testSuite>${project.artifactId}</testSuite>
     <testClass>org.eclipse.wst.html.tests.encoding.HTMLEncodingTestSuite</testClass>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <dependencies>
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.jdt.core</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+          </dependencies>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
