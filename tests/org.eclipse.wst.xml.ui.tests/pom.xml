@@ -52,7 +52,27 @@
             </dependency>
             <dependency>
               <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.wst.dtd.ui</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>p2-installable-unit</type>
               <artifactId>org.eclipse.wst.xsd.core</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.wst.xsd.ui</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.jst.jsp.core</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.jst.jsp.ui</artifactId>
               <version>0.0.0</version>
             </dependency>
           </dependencies>
