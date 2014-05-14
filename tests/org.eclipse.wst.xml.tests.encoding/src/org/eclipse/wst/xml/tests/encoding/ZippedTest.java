@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.xml.tests.encoding;
-
-import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -39,9 +37,9 @@ public class ZippedTest {
 			String destinationProjectString = fProject.getLocation().toOSString();
 			String destinationFolder = destinationProjectString + "/";
 
-			File zipFile = TestsPlugin.getTestFile("testfiles.zip");
+			//File zipFile = TestsPlugin.getTestFile("testfiles.zip");
 			ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
-			projUtil.unzipAndImport(zipFile, destinationFolder);
+			projUtil.unzipAndImport(TestsPlugin.getTestResource("testfiles.zip"), destinationFolder);
 			projUtil.initJavaProject(TEST_PROJECT_NAME);
 			fProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			isSetUp = true;
