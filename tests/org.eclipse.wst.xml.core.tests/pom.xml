@@ -45,6 +45,11 @@
             </dependency>
             <dependency>
               <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.wst.dtd.core</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>p2-installable-unit</type>
               <artifactId>org.eclipse.wst.standard.schemas</artifactId>
               <version>0.0.0</version>
             </dependency>
