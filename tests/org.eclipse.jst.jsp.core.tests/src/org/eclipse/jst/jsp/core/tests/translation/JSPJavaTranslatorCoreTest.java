@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -275,6 +275,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		// Create new project
 		IProject project = BundleResourceUtil.createSimpleProject(testName, Platform.getStateLocation(JSPCoreTestsPlugin.getDefault().getBundle()).append(testName), null);
 		assertTrue(project.exists());
+		BundleResourceUtil.addWebContainer(project);
 		/*
 		 * Should be set to false. A referenced class in an included segment
 		 * does not exist.
@@ -665,6 +666,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			project = BundleResourceUtil.createSimpleProject(testName, null, null);
 			assertTrue(project.exists());
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			BundleResourceUtil.addWebContainer(project);
 		}
 		waitForBuildAndValidation(project);
 		TaglibHelper helper = new TaglibHelper(project);
@@ -689,6 +691,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		IProject project = BundleResourceUtil.createSimpleProject(testFolderName, null, null);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testFolderName, "/" + testFolderName);
+		BundleResourceUtil.addWebContainer(project);
 
 		waitForBuildAndValidation(project);
 		
