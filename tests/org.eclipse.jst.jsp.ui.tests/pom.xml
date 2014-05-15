@@ -50,6 +50,12 @@
               <artifactId>org.eclipse.wst.dtd.ui</artifactId>
               <version>0.0.0</version>
             </dependency>
+            <dependency>
+              <!-- A JSF template proposal is contributed and expected by the unit tests -->
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.jst.jsf.ui</artifactId>
+              <version>0.0.0</version>
+            </dependency>
           </dependencies>
         </configuration>
       </plugin>
