@@ -51,9 +51,20 @@
               <version>0.0.0</version>
             </dependency>
             <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.wst.standard.schemas</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
               <!-- A JSF template proposal is contributed and expected by the unit tests -->
               <type>p2-installable-unit</type>
               <artifactId>org.eclipse.jst.jsf.ui</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <!-- This is needed after adding the jsf.ui dependency -->
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.jst.jee.ejb</artifactId>
               <version>0.0.0</version>
             </dependency>
           </dependencies>
