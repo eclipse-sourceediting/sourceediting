@@ -35,6 +35,7 @@ import org.eclipse.wst.validation.ReporterHelper;
 import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
+import org.eclipse.wst.validation.Validator;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
 /**
@@ -70,6 +71,15 @@ public class JSPBatchValidatorTest extends TestCase {
 		workspaceScope = new InstanceScope().getNode(qualifier);
 		projectScope = new ProjectScope(fragment.getProject()).getNode(qualifier);
 		originalWorkspaceValue = workspaceScope.get(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, null);
+
+		Validator[] vs = ValidationFramework.getDefault().getValidators();
+		for (int i = 0; i < vs.length; i++) {
+			if (!"org.eclipse.jst.jsp.core.JSPBatchValidator".equals(vs[i].getId()) && !"org.eclipse.jst.jsp.core.JSPContentValidator".equals(vs[i].getId())) {
+				vs[i].setManualValidation(false);
+				vs[i].setBuildValidation(false);
+			}
+		}
+		ValidationFramework.getDefault().saveValidators(vs);
 	}
 	
 	protected void tearDown() throws Exception {
