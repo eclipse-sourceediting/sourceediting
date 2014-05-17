@@ -282,11 +282,12 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		 * Should be set to false. A referenced class in an included segment
 		 * does not exist.
 		 */
-		long timeBuild = System.currentTimeMillis();
+		long timeCopy = System.currentTimeMillis();
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/WebContent/WEB-INF/lib/struts.jar");
-
+		timeCopy = System.currentTimeMillis() - timeCopy;
+		long timeBuild = System.currentTimeMillis();
 		waitForBuildAndValidation(project);
 		timeBuild = System.currentTimeMillis() - timeBuild;
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
@@ -300,7 +301,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		for (int i = 0; i < messages.size(); i++) {
 			s.append("\nproblem on line " + ((IMessage)messages.get(i)).getAttribute(IMarker.LINE_NUMBER) + ": " + ((IMessage)messages.get(i)).getText());
 		}
-		assertEquals("problem markers found" + s.toString() + "\nCreate: " + timeCreate + "\nBuild: " + timeBuild + "\nValidate: " + timeValidate, 0, messages.size());
+		assertEquals("problem markers found" + s.toString() + "\nCreate: " + timeCreate + "\nCopy: " + timeCopy + "\nBuild: " + timeBuild + "\nValidate: " + timeValidate, 0, messages.size());
 	}
 
 	public void test_181057a() throws Exception {
