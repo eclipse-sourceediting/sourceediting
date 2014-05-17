@@ -341,7 +341,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		 */
 		String testName = "testTranslatorMessagesWithIncludes";
 		// Create new project
-		IProject project = BundleResourceUtil.createSimpleProject(testName, null, null);
+		IProject project = BundleResourceUtil.createJavaWebProject(testName);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 
@@ -663,10 +663,9 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
 		if (!project.isAccessible()) {
 			// Create new project
-			project = BundleResourceUtil.createSimpleProject(testName, null, null);
+			project = BundleResourceUtil.createJavaWebProject(testName);
 			assertTrue(project.exists());
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-			BundleResourceUtil.addWebContainer(project);
 		}
 		waitForBuildAndValidation(project);
 		TaglibHelper helper = new TaglibHelper(project);
@@ -688,10 +687,9 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 	public void test_javaVariableIncludes() throws Exception {
 		String testFolderName = "jspx_javaVariable_includes";
 		// Create new project
-		IProject project = BundleResourceUtil.createSimpleProject(testFolderName, null, null);
+		IProject project = BundleResourceUtil.createJavaWebProject(testFolderName);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testFolderName, "/" + testFolderName);
-		BundleResourceUtil.addWebContainer(project);
 
 		waitForBuildAndValidation(project);
 		
