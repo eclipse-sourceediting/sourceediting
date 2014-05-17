@@ -273,29 +273,34 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		boolean doValidateSegments = JSPCorePlugin.getDefault().getPluginPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
 		String testName = "bug_109721";
 		// Create new project
+		long timeCreate = System.currentTimeMillis();
 		IProject project = BundleResourceUtil.createSimpleProject(testName, Platform.getStateLocation(JSPCoreTestsPlugin.getDefault().getBundle()).append(testName), null);
 		assertTrue(project.exists());
 		BundleResourceUtil.addWebContainer(project);
+		timeCreate = System.currentTimeMillis() - timeCreate;
 		/*
 		 * Should be set to false. A referenced class in an included segment
 		 * does not exist.
 		 */
+		long timeBuild = System.currentTimeMillis();
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/WebContent/WEB-INF/lib/struts.jar");
 
 		waitForBuildAndValidation(project);
-
+		timeBuild = System.currentTimeMillis() - timeBuild;
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("WebContent/main.jsp");
+		long timeValidate = System.currentTimeMillis();
 		ValidationResult result = new JSPJavaValidator().validate(main, IResourceDelta.ADDED, new ValidationState(), new NullProgressMonitor());
+		timeValidate = System.currentTimeMillis() - timeValidate;
 		List messages = result.getReporter(null).getMessages();
 
 		StringBuffer s = new StringBuffer();
 		for (int i = 0; i < messages.size(); i++) {
 			s.append("\nproblem on line " + ((IMessage)messages.get(i)).getAttribute(IMarker.LINE_NUMBER) + ": " + ((IMessage)messages.get(i)).getText());
 		}
-		assertEquals("problem markers found" + s.toString(), 0, messages.size());
+		assertEquals("problem markers found" + s.toString() + "\nCreate: " + timeCreate + "\nBuild: " + timeBuild + "\nValidate: " + timeValidate, 0, messages.size());
 	}
 
 	public void test_181057a() throws Exception {
