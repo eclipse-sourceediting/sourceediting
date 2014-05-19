@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.Stack;
@@ -250,6 +251,8 @@ public class JSPTranslator implements Externalizable {
 	 * the ones needed for AT_END variable support.
 	 */
 	private StackMap fTagToVariableMap = null;
+	private Map fAtBeginVariableMap = null;
+	private Stack fAtBeginScopeStack = new Stack();
 	private Stack fUseBeansStack = new Stack();
 
 	/** the final translated java document */
@@ -333,9 +336,6 @@ public class JSPTranslator implements Externalizable {
 	/** The model path as it was persisted */
 	private IPath fSavedModelPath = null;
 
-	/** the set of variable names that we have declared */
-	private Set fDeclSet = new HashSet();
-
 	/**
 	 * A structure for holding a region collection marker and list of variable
 	 * information. The region can be used later for positioning validation
@@ -344,10 +344,12 @@ public class JSPTranslator implements Externalizable {
 	static class RegionTags {
 		ITextRegionCollection region;
 		CustomTag tag;
+		Collection scopedVarNames = null;
 
-		RegionTags(ITextRegionCollection region, CustomTag tag) {
+		RegionTags(ITextRegionCollection region, CustomTag tag, Collection scopedVarNames) {
 			this.region = region;
 			this.tag = tag;
+			this.scopedVarNames = scopedVarNames;
 		}
 	}
 
@@ -644,7 +646,6 @@ public class JSPTranslator implements Externalizable {
 		
 		fFoundNonTranslatedCode = false;
 		fCodeTranslated = false;
-		fDeclSet.clear();
 	}
 
 	/**
@@ -953,6 +954,8 @@ public class JSPTranslator implements Externalizable {
 					appendToBuffer(decl, fUserCode, true, customTag);
 				}
 			}
+
+			fAtBeginVariableMap.remove( fAtBeginScopeStack.pop() );
 		}
 		else {
 			/*
@@ -975,19 +978,46 @@ public class JSPTranslator implements Externalizable {
 		CustomTag tag = helper.getCustomTag(tagToAdd, getStructuredDocument(), customTag, problems);
 		TaglibVariable[] taglibVars = tag.getTagVariables();
 		fTranslationProblems.addAll(problems);
+		Set scopedVarNames = new HashSet(0);
 		/*
 		 * Add AT_BEGIN variables
 		 */
 		for (int i = 0; i < taglibVars.length; i++) {
 			if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
-				// check to see if we have already declared this variable once, if so then just reassign it instead
-				if (fDeclSet.contains(taglibVars[i].getVarName())) {
+				scopedVarNames.add(taglibVars[i].getVarName());
+				boolean declaredInParentScope = false;
+				/*
+				 * Check to see if we have already declared this variable
+				 * once, if so then just reassign it instead. Declaring twice
+				 * in the same scope should cause an error, so we're only
+				 * checking parent scopes and the current scope.
+				 */
+				RegionTags[] parentTags = (RegionTags[]) fTagToVariableMap.values().toArray(new RegionTags[fTagToVariableMap.size()]);
+				String varName = taglibVars[i].getVarName();
+				for (int j = 0; j < parentTags.length && !declaredInParentScope; j++) {
+					declaredInParentScope |= parentTags[j].scopedVarNames.contains(varName);
+				}
+
+				Set currentAtBeginVars = (Set) fAtBeginVariableMap.get( fAtBeginScopeStack.peek() );
+
+				boolean declaredInCurrentScope = currentAtBeginVars != null && currentAtBeginVars.contains( varName );
+
+				if (declaredInParentScope || declaredInCurrentScope) {
 					decl = taglibVars[i].getDeclarationString(false, fContext, TaglibVariable.M_REASSIGN);
 				}
 				else {
 					decl = taglibVars[i].getDeclarationString(fContext);
-					fDeclSet.add( taglibVars[i].getVarName() );
+
+					if( currentAtBeginVars == null ) {
+					    currentAtBeginVars = new HashSet();
+					    currentAtBeginVars.add( varName );
+					    fAtBeginVariableMap.put( fAtBeginScopeStack.peek(), currentAtBeginVars );
+					}
+					else {
+					    currentAtBeginVars.add( varName );
+					}
 				}
+
 				appendToBuffer(decl, fUserCode, true, customTag);
 			}
 		}
@@ -1015,6 +1045,7 @@ public class JSPTranslator implements Externalizable {
 
 		for (int i = 0; i < taglibVars.length; i++) {
 			if (taglibVars[i].getScope() == VariableInfo.NESTED) {
+				scopedVarNames.add(taglibVars[i].getVarName());
 				decl = taglibVars[i].getDeclarationString(fContext);
 				appendToBuffer(decl, fUserCode, true, customTag);
 			}
@@ -1040,7 +1071,8 @@ public class JSPTranslator implements Externalizable {
 			/*
 			 * For non-empty tags, remember the variable information
 			 */
-			fTagToVariableMap.push(tagToAdd, new RegionTags(customTag, tag));
+			fTagToVariableMap.push(tagToAdd, new RegionTags(customTag, tag, scopedVarNames));
+			fAtBeginScopeStack.push( tagToAdd );
 		}
 		
 	}
@@ -1131,6 +1163,11 @@ public class JSPTranslator implements Externalizable {
 		if (fTagToVariableMap == null) {
 			fTagToVariableMap = new StackMap();
 		}
+        if( fAtBeginVariableMap == null ) {
+            fAtBeginVariableMap = new HashMap();
+        }
+        fAtBeginScopeStack.clear();
+		fAtBeginScopeStack.push( "__root__" ); // need to existing scope for top level customtags
 		fTranslationProblems.clear();
 
 		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, 0));
@@ -1192,6 +1229,7 @@ public class JSPTranslator implements Externalizable {
 			appendToBuffer(text.toString(), fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
 		}
 		fTagToVariableMap.clear();
+		fAtBeginVariableMap.clear();
 
 		/*
 		 * Now do the same for jsp:useBean tags, whose contents get their own
