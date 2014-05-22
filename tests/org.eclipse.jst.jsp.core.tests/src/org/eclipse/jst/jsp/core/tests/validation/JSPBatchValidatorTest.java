@@ -191,7 +191,6 @@ public class JSPBatchValidatorTest extends TestCase {
 	public void testELConditional() throws Exception {
 		if (!ResourcesPlugin.getWorkspace().getRoot().getProject("testIterationTags").exists()) {
 			BundleResourceUtil.createSimpleProject("testIterationTags", null, new String[]{JavaCore.NATURE_ID});
-			BundleResourceUtil.addWebContainer(ResourcesPlugin.getWorkspace().getRoot().getProject("testIterationTags"));
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + PROJECT_NAME, "/" + PROJECT_NAME);
 		}
 		assertTrue("project could not be created", ResourcesPlugin.getWorkspace().getRoot().getProject("testIterationTags").exists());
