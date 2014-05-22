@@ -275,7 +275,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		// Create new project
 		IProject project = BundleResourceUtil.createSimpleProject(testName, Platform.getStateLocation(JSPCoreTestsPlugin.getDefault().getBundle()).append(testName), null);
 		assertTrue(project.exists());
-
+		BundleResourceUtil.addWebContainer(project);
 		/*
 		 * Should be set to false. A referenced class in an included segment
 		 * does not exist.
@@ -283,8 +283,6 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/WebContent/WEB-INF/lib/struts.jar");
-
-		BundleResourceUtil.addWebContainer(project);
 
 		waitForBuildAndValidation(project);
 
@@ -556,10 +554,9 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
 		if (!project.isAccessible()) {
 			// Create new project
-			project = BundleResourceUtil.createJavaWebProject(testName);
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
 			assertTrue(project.exists());
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-			BundleResourceUtil.addWebContainer(project);
 		}
 		waitForBuildAndValidation(project);
 		IFile testFile = project.getFile("/WebContent/test.jsp");
@@ -610,10 +607,9 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
 		if (!project.isAccessible()) {
 			// Create new project
-			project = BundleResourceUtil.createJavaWebProject(testName);
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
 			assertTrue(project.exists());
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-			BundleResourceUtil.addWebContainer(project);
 		}
 		waitForBuildAndValidation(project);
 		IFile testFile = project.getFile("/WebContent/test_missing_end_tag.jsp");
@@ -641,10 +637,9 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
 		if (!project.isAccessible()) {
 			// Create new project
-			project = BundleResourceUtil.createJavaWebProject(testName);
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
 			assertTrue(project.exists());
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-			BundleResourceUtil.addWebContainer(project);
 		}
 		waitForBuildAndValidation(project);
 		TaglibHelper helper = new TaglibHelper(project);
@@ -671,7 +666,6 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			project = BundleResourceUtil.createJavaWebProject(testName);
 			assertTrue(project.exists());
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-			BundleResourceUtil.addWebContainer(project);
 		}
 		waitForBuildAndValidation(project);
 		TaglibHelper helper = new TaglibHelper(project);
@@ -696,7 +690,6 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		IProject project = BundleResourceUtil.createJavaWebProject(testFolderName);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testFolderName, "/" + testFolderName);
-		BundleResourceUtil.addWebContainer(project);
 
 		waitForBuildAndValidation(project);
 		
@@ -758,7 +751,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
         IProject project = BundleResourceUtil.createJavaWebProject(testName);
         assertTrue(project.exists());
         BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
-        BundleResourceUtil.addWebContainer(project);
+
         waitForBuildAndValidation(project);
 
         IFile file = project.getFile("/WebContent/test.jsp");
