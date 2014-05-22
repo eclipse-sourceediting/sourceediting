@@ -755,7 +755,9 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
         waitForBuildAndValidation(project);
 
         IFile file = project.getFile("/WebContent/test.jsp");
+        IFile file2= project.getFile("/WebContent/test2.jsp");
         IDOMModel structuredModel = null;
+        IDOMModel structuredModel2 = null;
         try {
             structuredModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file);
 
@@ -769,10 +771,26 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 
             // the extra variable should only be declared once in the translated text
             assertEquals( 2, translation.split( "java.lang.Integer extra" ).length );
+
+            structuredModel2 = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file2);
+
+            ModelHandlerForJSP.ensureTranslationAdapterFactory(structuredModel2);
+
+            JSPTranslationAdapter translationAdapter2 = (JSPTranslationAdapter) structuredModel2.getDocument().getAdapterFor(IJSPTranslation.class);
+
+            final String translation2 = translationAdapter2.getJSPTranslation().getJavaText();
+
+            assertTrue( translation2.indexOf( "extra" ) != -1 );
+
+            // the extra variable should be declared twice because of the nested atbegin tags
+            assertEquals( 3, translation2.split( "java.lang.Integer extra" ).length );
         }
         finally {
             if (structuredModel != null)
                 structuredModel.releaseFromRead();
+
+            if (structuredModel2 != null)
+                structuredModel2.releaseFromRead();
         }
 	}
 }
