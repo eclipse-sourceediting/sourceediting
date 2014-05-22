@@ -275,7 +275,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		// Create new project
 		IProject project = BundleResourceUtil.createSimpleProject(testName, Platform.getStateLocation(JSPCoreTestsPlugin.getDefault().getBundle()).append(testName), null);
 		assertTrue(project.exists());
-		BundleResourceUtil.addWebContainer(project);
+
 		/*
 		 * Should be set to false. A referenced class in an included segment
 		 * does not exist.
