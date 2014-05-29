@@ -238,11 +238,30 @@ public class HTML5ContentModelTest extends TestCase {
 				HTML50Namespace.ATTR_VALUE_COLOR, HTML50Namespace.ATTR_VALUE_DATE, HTML50Namespace.ATTR_VALUE_DATETIME, HTML50Namespace.ATTR_VALUE_DATETIME_LOCAL, HTML50Namespace.ATTR_VALUE_EMAIL, HTML50Namespace.ATTR_VALUE_MONTH, HTML50Namespace.ATTR_VALUE_NUMBER_STRING, HTML50Namespace.ATTR_VALUE_RANGE, HTML50Namespace.ATTR_VALUE_SEARCH, HTML50Namespace.ATTR_VALUE_TEL, HTML50Namespace.ATTR_VALUE_TIME,HTML50Namespace.ATTR_VALUE_WEEK,HTML50Namespace.ATTR_VALUE_URL});
 	}
 
+	/*
+	 * Test Case for Bug #427969 - Names of HTML 5 BODY element events
+	 */
+	public void testAttributesOnHTML5Body() {
+		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML40Namespace.ElementName.BODY, 
+				getMergedlist(getMergedlist(getGlobalList(), HTML5AttributeCollection.getBodyEventList()),
+					new String[] {HTML40Namespace.ATTR_NAME_BGCOLOR, HTML40Namespace.ATTR_NAME_TEXT, HTML40Namespace.ATTR_NAME_LINK, 
+						HTML40Namespace.ATTR_NAME_ONLOAD, HTML40Namespace.ATTR_NAME_ONUNLOAD, HTML40Namespace.ATTR_NAME_BACKGROUND, 
+						HTML40Namespace.ATTR_NAME_MARGINWIDTH, HTML40Namespace.ATTR_NAME_MARGINHEIGHT, HTML40Namespace.ATTR_NAME_TOPMARGIN, 
+						HTML40Namespace.ATTR_NAME_BOTTOMMARGIN, HTML40Namespace.ATTR_NAME_LEFTMARGIN, HTML40Namespace.ATTR_NAME_RIGHTMARGIN}));
+	}
+	
+	/*
+	 * Test Case for Bug #427969 - Values of 'translate' attribute.
+	 * The attribute is common for all HTML 5 elements, we'll use 'body' element for test.  
+	 */
+	public void testAttributesOnHTML5BodyTranslate() {
+		checkAttrValues(CMDocType.HTML5_DOC_TYPE, HTML40Namespace.ElementName.BODY, HTML50Namespace.ATTR_NAME_TRANSLATE, 
+				new String[]{"", HTML40Namespace.ATTR_VALUE_YES, HTML40Namespace.ATTR_VALUE_NO});
+	}
+
 	public void testHTML5document() {
 		checkDocument(CMDocType.HTML5_DOC_TYPE);
 	}
-	
-	
 	
 	private void verifyAttributeDeclaration(CMElementDeclaration elemDecl, CMNode attr) {
 		assertTrue(attr.getNodeType() == CMNode.ATTRIBUTE_DECLARATION);
