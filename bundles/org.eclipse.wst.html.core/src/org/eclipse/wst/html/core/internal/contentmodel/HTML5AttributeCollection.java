@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 IBM Corporation and others.
+ * Copyright (c) 2010, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,12 +20,105 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 
 public class HTML5AttributeCollection extends AttributeCollection implements HTML50Namespace {
 	/** html5 core attribs */
-	private static final String[] CORE = {ATTR_NAME_ACCESSKEY, ATTR_NAME_CLASS, ATTR_NAME_CONTENT_EDITABLE, ATTR_NAME_CONTEXT_MENU, ATTR_NAME_DIR, ATTR_NAME_DRAGGABLE, ATTR_NAME_HIDDEN, ATTR_NAME_ID, ATTR_NAME_LANG, ATTR_NAME_SPELLCHECK,ATTR_NAME_STYLE, ATTR_NAME_TABINDEX, ATTR_NAME_TITLE};
+	private static final String[] CORE = {
+		ATTR_NAME_ACCESSKEY, 
+		ATTR_NAME_CLASS, 
+		ATTR_NAME_CONTENT_EDITABLE, 
+		ATTR_NAME_CONTEXT_MENU, 
+		ATTR_NAME_DIR, 
+		ATTR_NAME_DRAGGABLE,
+		ATTR_NAME_DROPZONE,
+		ATTR_NAME_HIDDEN, 
+		ATTR_NAME_ID, 
+		ATTR_NAME_LANG, 
+		ATTR_NAME_ROLE,
+		ATTR_NAME_SPELLCHECK,
+		ATTR_NAME_STYLE, 
+		ATTR_NAME_TABINDEX, 
+		ATTR_NAME_TITLE,
+		ATTR_NAME_TRANSLATE};
+	
 	/** events for HTML5. */
-	private static final String[] EVENTS = {ATTR_NAME_ONABORT, ATTR_NAME_ONBLUR, ATTR_NAME_ONCAN_PLAY, ATTR_NAME_ONCAN_PLAY_THROUGH, ATTR_NAME_ONCHANGE, ATTR_NAME_ONCLICK, ATTR_NAME_ONCONTEXT_MENU, ATTR_NAME_ONDBLCLICK, ATTR_NAME_ONDRAG, ATTR_NAME_ONDRAG_END, ATTR_NAME_ONDRAG_ENTER, ATTR_NAME_ONDRAG_LEAVE, 
-		ATTR_NAME_ONDRAG_OVER, ATTR_NAME_ONDRAG_START, ATTR_NAME_ONDROP, ATTR_NAME_ONDURATION_CHANGE, ATTR_NAME_ONEMPTIED, ATTR_NAME_ONENDED, ATTR_NAME_ONERROR, ATTR_NAME_ONFOCUS, ATTR_NAME_ONFORM_CHANGE, ATTR_NAME_ONFORM_INPUT, ATTR_NAME_ONINPUT, ATTR_NAME_ONINVALID,ATTR_NAME_ONKEYPRESS, ATTR_NAME_ONKEYDOWN, ATTR_NAME_ONKEYUP, 
-		ATTR_NAME_ONLOAD, ATTR_NAME_ONLOAD_START, ATTR_NAME_ONLOADED_DATA, ATTR_NAME_ONLOADED_METADATA, ATTR_NAME_ONMOUSEDOWN, ATTR_NAME_ONMOUSEUP, ATTR_NAME_ONMOUSEOVER, ATTR_NAME_ONMOUSEMOVE, ATTR_NAME_ONMOUSEOUT, ATTR_NAME_ONMOUSE_WHEEL, ATTR_NAME_ONPAUSE, ATTR_NAME_ONPLAY, ATTR_NAME_ONPLAYING, ATTR_NAME_ONPROGRESS,
-		ATTR_NAME_ONRATE_CHANGE, ATTR_NAME_ONREADY_STATE_CHANGE, ATTR_NAME_ONSCROLL, ATTR_NAME_ONSEEKED, ATTR_NAME_ONSEEKING, ATTR_NAME_ONSELECT, ATTR_NAME_ONSHOW, ATTR_NAME_ONSTALLED, ATTR_NAME_ONSUBMIT, ATTR_NAME_ONSUSPEND, ATTR_NAME_ONTIME_UPDATE, ATTR_NAME_ONVOLUME_UPDATE, ATTR_NAME_ONWAITING};
+	private static final String[] EVENTS = {
+		ATTR_NAME_ONABORT, 
+		ATTR_NAME_ONBLUR, 
+		ATTR_NAME_ONCANCEL,
+		ATTR_NAME_ONCAN_PLAY, 
+		ATTR_NAME_ONCAN_PLAY_THROUGH, 
+		ATTR_NAME_ONCHANGE, 
+		ATTR_NAME_ONCLICK,
+		ATTR_NAME_ONCLOSE,
+		ATTR_NAME_ONCONTEXT_MENU, 
+		ATTR_NAME_ONCUE_CHANGE,
+		ATTR_NAME_ONDBLCLICK, 
+		ATTR_NAME_ONDRAG, 
+		ATTR_NAME_ONDRAG_END, 
+		ATTR_NAME_ONDRAG_ENTER, 
+		ATTR_NAME_ONDRAG_EXIT,
+		ATTR_NAME_ONDRAG_LEAVE, 
+		ATTR_NAME_ONDRAG_OVER, 
+		ATTR_NAME_ONDRAG_START, 
+		ATTR_NAME_ONDROP, 
+		ATTR_NAME_ONDURATION_CHANGE, 
+		ATTR_NAME_ONEMPTIED, 
+		ATTR_NAME_ONENDED, 
+		ATTR_NAME_ONERROR, 
+		ATTR_NAME_ONFOCUS, 
+		ATTR_NAME_ONFORM_CHANGE, 
+		ATTR_NAME_ONFORM_INPUT, 
+		ATTR_NAME_ONINPUT, 
+		ATTR_NAME_ONINVALID,
+		ATTR_NAME_ONKEYDOWN, 
+		ATTR_NAME_ONKEYPRESS, 
+		ATTR_NAME_ONKEYUP, 
+		ATTR_NAME_ONLOAD, 
+		ATTR_NAME_ONLOADED_DATA, 
+		ATTR_NAME_ONLOADED_METADATA, 
+		ATTR_NAME_ONLOAD_START, 
+		ATTR_NAME_ONMOUSEDOWN, 
+		ATTR_NAME_ONMOUSEENTER,
+		ATTR_NAME_ONMOUSELEAVE,
+		ATTR_NAME_ONMOUSEMOVE, 
+		ATTR_NAME_ONMOUSEOUT, 
+		ATTR_NAME_ONMOUSEOVER, 
+		ATTR_NAME_ONMOUSEUP, 
+		ATTR_NAME_ONMOUSE_WHEEL, 
+		ATTR_NAME_ONPAUSE, 
+		ATTR_NAME_ONPLAY, 
+		ATTR_NAME_ONPLAYING, 
+		ATTR_NAME_ONPROGRESS,
+		ATTR_NAME_ONRATE_CHANGE, 
+		ATTR_NAME_ONREADY_STATE_CHANGE,
+		ATTR_NAME_ONRESET,
+		ATTR_NAME_ONRESIZE,
+		ATTR_NAME_ONSCROLL, 
+		ATTR_NAME_ONSEEKED, 
+		ATTR_NAME_ONSEEKING, 
+		ATTR_NAME_ONSELECT, 
+		ATTR_NAME_ONSHOW, 
+		ATTR_NAME_ONSTALLED, 
+		ATTR_NAME_ONSUBMIT, 
+		ATTR_NAME_ONSUSPEND, 
+		ATTR_NAME_ONTIME_UPDATE,
+		ATTR_NAME_ONTOGGLE,
+		ATTR_NAME_ONVOLUME_CHANGE,
+		ATTR_NAME_ONVOLUME_UPDATE, 
+		ATTR_NAME_ONWAITING};
+	
+	/** additional events for body element in HTML5. */
+	private static final String[] BODY_EVENTS = {
+		ATTR_NAME_ONAFTER_PRINT,
+		ATTR_NAME_ONBEFORE_PRINT,
+		ATTR_NAME_ONBEFORE_UNLOAD,
+		ATTR_NAME_ONHASH_CHANGE,
+		ATTR_NAME_ONMESSAGE,
+		ATTR_NAME_ONOFFLINE,
+		ATTR_NAME_ONONLINE,
+		ATTR_NAME_ONPAGEHIDE,
+		ATTR_NAME_ONPAGESHOW,
+		ATTR_NAME_ONPOPSTATE,
+		ATTR_NAME_ONSTORAGE,
+		ATTR_NAME_ONUNLOAD};
 
 	protected HTMLAttrDeclImpl create(String attrName) {
 		HTMLAttrDeclImpl attr = null;
@@ -63,6 +156,11 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype.setEnumValues(values);
 			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_FALSE);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_DRAGGABLE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_DROPZONE)) {
+			// (dropzone CDATA #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_DROPZONE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_FORM)) {
 			// (form CDATA; #IMPLIED)
@@ -111,6 +209,11 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype.setEnumValues(new String[] { ATTR_NAME_PUBDATE });
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_PUBDATE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ROLE)) {
+			// (role CDATA #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ROLE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_SPELLCHECK)) {
 			// (spellcheck (EMPTY|TRUE|FALSE) TRUE)
 			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
@@ -119,257 +222,323 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_FALSE);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_SPELLCHECK, atype, CMAttributeDeclaration.OPTIONAL);
 		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_TRANSLATE)) {
+			// (translate (EMPTY|TRUE|FALSE) TRUE)
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] values = {ATTR_VALUE_EMPTY, ATTR_VALUE_YES, ATTR_VALUE_NO};
+			atype.setEnumValues(values);
+			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_YES);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_TRANSLATE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONABORT)) {
 			// (onabort %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONABORT, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONAFTER_PRINT)) {
+			// (onafterprint %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONAFTER_PRINT, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONBEFORE_PRINT)) {
+			// (onbeforeprint %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONBEFORE_PRINT, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONBEFORE_UNLOAD)) {
+			// (onbeforunload %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONBEFORE_UNLOAD, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONCANCEL)) {
+			// (oncancel %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONCANCEL, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONCAN_PLAY)) {
 			// (oncanplay %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONCAN_PLAY, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONCAN_PLAY_THROUGH)) {
 			// (oncanplaythrough %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONCAN_PLAY_THROUGH, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONCHANGE)) {
 			// (onchange %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONCHANGE, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONCONTEXT_MENU)) {
 			// (onacontextmenu %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONCONTEXT_MENU, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONCLOSE)) {
+			// (onclose %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONCLOSE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONCUE_CHANGE)) {
+			// (oncuechange %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONCUE_CHANGE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDRAG)) {
 			// (onadrag %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDRAG, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDRAG_END)) {
 			// (ondragend %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDRAG_END, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDRAG_ENTER)) {
 			// (ondragenter %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDRAG_ENTER, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDRAG_EXIT)) {
+			// (ondragexit %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDRAG_EXIT, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDRAG_LEAVE)) {
 			// (ondragleave %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDRAG_LEAVE, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDRAG_OVER)) {
 			// (ondragover %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDRAG_OVER, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDRAG_START)) {
 			// (ondragstart %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDRAG_START, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDROP)) {
 			// (ondrop %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDROP, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONDURATION_CHANGE)) {
 			// (ondurationchange %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONDURATION_CHANGE, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONEMPTIED)) {
 			// (onemptied %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONEMPTIED, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONENDED)) {
 			// (onended %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONENDED, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONERROR)) {
 			// (onerror %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONERROR, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONFOCUS)) {
 			// (onfocus %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONFOCUS, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONFORM_CHANGE)) {
 			// (onformchange %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONFORM_CHANGE, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONFORM_INPUT)) {
 			// (onforminput %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONFORM_INPUT, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONHASH_CHANGE)) {
+			// (onhashchange %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONHASH_CHANGE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONINPUT)) {
 			// (oninput %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONINPUT, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONINVALID)) {
 			// (oninvalid %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONINVALID, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONLOAD)) {
 			// (onload %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONLOAD, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONLOAD_START)) {
 			// (onloadstart %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONLOAD_START, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONLOADED_DATA)) {
 			// (onloadeddata %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONLOADED_DATA, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONLOADED_METADATA)) {
 			// (onloadedmetadata %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONLOADED_METADATA, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONMESSAGE)) {
+			// (onmessage %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONMESSAGE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONMOUSEENTER)) {
+			// (onmouseenter %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONMOUSEENTER, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONMOUSELEAVE)) {
+			// (onmouseleave %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONMOUSELEAVE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONMOUSE_WHEEL)) {
 			// (onmousewheel %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONMOUSE_WHEEL, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONOFFLINE)) {
+			// (onoffline %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONOFFLINE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONONLINE)) {
+			// (ononline %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONONLINE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONPAGEHIDE)) {
+			// (onpagehide %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONPAGEHIDE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONPAGESHOW)) {
+			// (onpageshow %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONPAGESHOW, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONPLAY)) {
 			// (onplay %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONPLAY, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONPLAYING)) {
 			// (onplaying %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONPLAYING, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONPAUSE)) {
 			// (onpause %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONPAUSE, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONPOPSTATE)) {
+			// (onpopstate %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONPOPSTATE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONPROGRESS)) {
 			// (onprogress %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONPROGRESS, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONRATE_CHANGE)) {
 			// (onratechange %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONRATE_CHANGE, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONREADY_STATE_CHANGE)) {
 			// (onreadystatechange %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONREADY_STATE_CHANGE, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONRESIZE)) {
+			// (onresize %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONRESIZE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSCROLL)) {
 			// (onscroll %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSCROLL, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSEEKED)) {
 			// (onseeked %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSEEKED, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSEEKING)) {
 			// (onseeking %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSEEKING, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSELECT)) {
 			// (onselect %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSELECT, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSHOW)) {
 			// (onshow %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSHOW, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSTALLED)) {
 			// (onstalled %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSTALLED, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSTORAGE)) {
+			// (onstalled %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSTORAGE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSUBMIT)) {
 			// (onsubmit %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSUBMIT, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONSUSPEND)) {
 			// (onsuspend %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONSUSPEND, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONTIME_UPDATE)) {
 			// (ontimeupdate %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONTIME_UPDATE, atype, CMAttributeDeclaration.OPTIONAL);
-
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONTOGGLE)) {
+			// (ontimeupdate %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONTOGGLE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONVOLUME_CHANGE)) {
+			// (onvolumechange %Script; #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONVOLUME_CHANGE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONVOLUME_UPDATE)) {
 			// (onvolumeupdate %Script; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.SCRIPT);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ONVOLUME_UPDATE, atype, CMAttributeDeclaration.OPTIONAL);
-
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_ONWAITING)) {
 			// (onwaiting %Script; #IMPLIED)
@@ -396,6 +565,11 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 
 	public void getEvents(CMNamedNodeMapImpl declarations) {
 		Iterator names = Arrays.asList(EVENTS).iterator();
+		getDeclarations(declarations, names);
+	}
+	
+	public void getBodyEvents(CMNamedNodeMapImpl declarations) {
+		Iterator names = Arrays.asList(BODY_EVENTS).iterator();
 		getDeclarations(declarations, names);
 	}
 	
@@ -572,7 +746,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			String[] names = {ATTR_NAME_NAME, ATTR_NAME_VALUE, ATTR_NAME_CHECKED, ATTR_NAME_DISABLED, ATTR_NAME_READONLY, ATTR_NAME_SIZE, ATTR_NAME_MAXLENGTH, ATTR_NAME_SRC, ATTR_NAME_ALT, ATTR_NAME_ACCEPT, //<<D215684
 						ATTR_NAME_WIDTH, ATTR_NAME_HEIGHT,			//<D215684
 				//html5
-						ATTR_NAME_AUTOFOCUS
+						ATTR_NAME_AUTOFOCUS, ATTR_NAME_ROLE, ATTR_NAME_TRANSLATE
 			};
 			getDeclarations(attributes, Arrays.asList(names).iterator());
 			//discouraged
@@ -589,9 +763,6 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_USEMAP, atype, CMAttributeDeclaration.OPTIONAL);
 			attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_USEMAP, attr);
-
-			
-			getDeclarations(attributes, Arrays.asList(names).iterator());
 		}
 		/* (href %URI; #IMPLIED)
 		 * (hreflang %LanguageCode; #IMPLIED)
@@ -1350,8 +1521,17 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_BORDERCOLOR, atype, CMAttributeDeclaration.OPTIONAL);
 			attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_BORDERCOLOR, attr);
-			
-			
+		}
+		/*
+		 * CORE + EVENTS + BODY_EVENTS
+		 */
+		else if (elementName.equals(HTML40Namespace.ElementName.BODY)){
+			// %coreattrs;
+			getCore(attributes);
+			// %events;
+			getEvents(attributes);
+			// %body_events;
+			getBodyEvents(attributes);
 		}
 	}
 	
@@ -1361,5 +1541,9 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 	
 	public static String[] getGlobalEventList(){
 		return EVENTS;
+	}
+	
+	public static String[] getBodyEventList(){
+		return BODY_EVENTS;
 	}
 }

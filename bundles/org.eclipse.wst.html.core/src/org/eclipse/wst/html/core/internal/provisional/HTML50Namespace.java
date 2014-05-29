@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,14 +50,22 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_CONTENT_EDITABLE = "contenteditable"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_CONTEXT_MENU = "contextmenu"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_DRAGGABLE = "draggable"; // %coreattrs; //$NON-NLS-1$
+	String ATTR_NAME_DROPZONE = "dropzone"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_ROLE = "role"; // %coreattrs; //$NON_NLS-1$
 	String ATTR_NAME_SPELLCHECK = "spellcheck"; // %coreattrs; //$NON-NLS-1$
+	String ATTR_NAME_TRANSLATE = "translate"; // %coreattrs; //$NON-NLS-1$
+	
+	// event attribute names
 	String ATTR_NAME_ONABORT = "onabort"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONCANCEL = "oncancel"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONCAN_PLAY = "oncanplay"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONCAN_PLAY_THROUGH = "oncanplaythrough"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONCLOSE = "onclose"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONCONTEXT_MENU = "oncontextmenu"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONCUE_CHANGE = "oncuechange"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONDRAG = "ondrag"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONDRAG_END = "ondragend"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONDRAG_EXIT = "ondragexit"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONDRAG_OVER = "ondragover"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONDRAG_ENTER = "ondragenter"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONDRAG_LEAVE = "ondragleave"; // %event; //$NON-NLS-1$
@@ -72,8 +80,10 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_ONINPUT = "oninput"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONINVALID = "oninvalid"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONLOADED_DATA = "onloadeddata"; // %event; //$NON-NLS-1$
-	String ATTR_NAME_ONLOADED_METADATA = "onloadedmetadeta"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONLOADED_METADATA = "onloadedmetadata"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONLOAD_START = "onloadstart"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONMOUSEENTER = "onmouseenter"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONMOUSELEAVE = "onmouseleave"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONMOUSE_WHEEL = "onmousewheel"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONPAUSE = "onpause"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONPLAY = "onplay"; // %event; //$NON-NLS-1$
@@ -81,6 +91,7 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_ONPROGRESS = "onprogress"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONRATE_CHANGE = "onratechange"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONREADY_STATE_CHANGE = "onreadystatechange"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONRESIZE = "onresize"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONSCROLL = "onscroll"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONSEEKED = "onseeked"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONSEEKING = "onseeking"; // %event; //$NON-NLS-1$
@@ -88,6 +99,8 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_ONSTALLED = "onstalled"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONSUSPEND = "onsuspend"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONTIME_UPDATE = "ontimeupdate"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONTOGGLE = "ontoggle"; // %event; //$NON-NLS-1$
+	String ATTR_NAME_ONVOLUME_CHANGE = "onvolumechange"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONVOLUME_UPDATE = "onvolumeupdate"; // %event; //$NON-NLS-1$
 	String ATTR_NAME_ONWAITING = "onwaiting"; // %event; //$NON-NLS-1$
 
@@ -132,6 +145,19 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_PLACEHOLDER = "placeholder"; //input //$NON-NLS-1$
 	String ATTR_NAME_WRAP = "wrap"; //textarea //$NON-NLS-1$
 	String ATTR_NAME_XMLNS = "xmlns"; //html //$NON-NLS-1$
+	
+	// additional event attribute names for body element
+	String ATTR_NAME_ONAFTER_PRINT = "onafterprint";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONBEFORE_PRINT = "onbeforeprint";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONBEFORE_UNLOAD = "onbeforeunload";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONHASH_CHANGE = "onhashchange";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONMESSAGE = "onmessage";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONOFFLINE = "onoffline";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONONLINE = "ononline";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONPAGEHIDE = "onpagehide";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONPAGESHOW = "onpageshow";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONPOPSTATE = "onpopstate";  // BODY //$NON-NLS-1$
+	String ATTR_NAME_ONSTORAGE = "onstorage";  // BODY //$NON-NLS-1$
 	
 	// Global attributes properties
 
