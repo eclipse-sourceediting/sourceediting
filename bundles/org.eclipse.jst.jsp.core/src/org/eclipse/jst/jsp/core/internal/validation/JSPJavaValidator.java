@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -36,6 +37,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -190,7 +192,18 @@ public class JSPJavaValidator extends JSPValidator {
 					sev = ValidationMessage.IGNORE;
 				}
 				break;
-
+				case IProblem.UnresolvedVariable : {
+					try {
+						// If the unresolved variable is in a fragment, post as a warning. The fragment may be included in a page that has declared the variable
+						IContentType contentType = f.getContentDescription().getContentType();
+						IContentType fragmentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT);
+						if (contentType != null && fragmentType != null && contentType.isKindOf(fragmentType)) {
+							sev = IMessage.NORMAL_SEVERITY;
+							break;
+						}
+					}
+					catch (CoreException e) {  } // Doesn't matter, we'll just fall back to the default
+				}
 				default : {
 					if (problem.isError()) {
 						sev = IMessage.HIGH_SEVERITY;
