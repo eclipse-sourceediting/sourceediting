@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2013 IBM Corporation and others.
+ * Copyright (c) 2001, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ package org.eclipse.wst.xml.core.internal.tasks;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +44,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * A delegate to create IMarker.TASKs for "todos" and similar comments.
  */
 public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFileTaskScanner, IExecutableExtension {
-	private static final boolean DEBUG_TASKSPERF = true;
+	private static final boolean DEBUG_TASKSPERF = false;
 
 	// the list of attribute maps for the new tasks for the current file
 	protected List fNewMarkerAttributeMaps = null;
@@ -111,8 +111,10 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 		for (int i = 0; i < searchTags.length; i++) {
 			searchTags[i] = taskTags[i].getTag().toLowerCase(Locale.ENGLISH);
 		}
+		InputStream contents = null;
 		try {
-			reset(new BufferedReader(new InputStreamReader(file.getContents(true), charset)));
+			contents = file.getContents(true);
+			reset(new BufferedReader(new InputStreamReader(contents, charset)));
 			while (!isEOF()) {
 				String regionType = primGetNextToken();
 				if (isCommentType(regionType)) {
@@ -136,9 +138,6 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 				}
 			}
 		}
-		catch (UnsupportedEncodingException e) {
-			Logger.logException(e);
-		}
 		catch (IOException e) {
 			Logger.logException(e);
 		}
@@ -147,6 +146,15 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 		}
 		catch (BadLocationException e) {
 			Logger.logException(e);
+		}
+		finally {
+			if (contents != null)
+				try {
+					contents.close();
+				}
+				catch (IOException e) {
+					// nothing to do
+				}
 		}
 		monitor.done();
 	}
