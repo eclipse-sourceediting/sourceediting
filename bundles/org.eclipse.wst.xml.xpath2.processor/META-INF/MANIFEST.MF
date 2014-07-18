@@ -4,8 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.processor
 Bundle-Version: 2.1.100.qualifier
 Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
- java_cup.runtime;bundle-version="0.10.0",
- com.ibm.icu;bundle-version="3.8.0";resolution:=optional
+ java_cup.runtime;bundle-version="0.10.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xml.xpath2.api,
  org.eclipse.wst.xml.xpath2.api.typesystem,
@@ -23,3 +22,6 @@ Export-Package: org.eclipse.wst.xml.xpath2.api,
  org.eclipse.wst.xml.xpath2.processor.util
 Bundle-Vendor: %provider
 Bundle-Localization: plugin
+Import-Package: com.ibm.icu.lang;version="3.8",
+ com.ibm.icu.text;version="3.8",
+ com.ibm.icu.util;version="3.8"
