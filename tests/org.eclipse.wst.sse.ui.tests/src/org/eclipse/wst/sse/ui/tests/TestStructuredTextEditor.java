@@ -320,7 +320,7 @@ public class TestStructuredTextEditor extends TestCase {
 		textFileBuffer.commit(new NullProgressMonitor(), true);
 		textFileBufferManager.disconnect(file.getFullPath(), LocationKind.IFILE, new NullProgressMonitor());
 		activePage.closeEditor(openedEditor, false);
-		assertEquals("Some non-UI changes did not apply\n" + "Edits: " + numEdits[0] + "\n" + document.get(), testLength + 1, finalLength);
+		assertEquals("Some non-UI changes did not apply\n" + "Edits: " + numEdits[0] + "\n" + document.get(), testLength, finalLength);
 	}
 
 	/**
