@@ -279,6 +279,8 @@ public class TestStructuredTextEditor extends TestCase {
 
 		final int finished[] = new int[]{numberOfJobs};
 		Job changers[] = new Job[numberOfJobs];
+		final int numEdits[] = new int[]{0};
+		final Exception[] jobException = new Exception[1];
 		for (int i = 0; i < changers.length; i++) {
 			changers[i] = new Job("Text Changer " + Integer.toString(i)) {
 				protected IStatus run(IProgressMonitor monitor) {
@@ -286,9 +288,13 @@ public class TestStructuredTextEditor extends TestCase {
 						char names[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 						for (int j = 0; j < names.length; j++) {
 							document.replace(insertionPoint + 4 * j, 0, "<" + names[j] + "/>");
+							synchronized (numEdits) {
+								numEdits[0]++;
+							}
 						}
 					}
 					catch (Exception e) {
+						jobException[0] = e;
 						return new Status(IStatus.ERROR, SSEUIPlugin.ID, e.getMessage());
 					}
 					finally {
@@ -309,12 +315,12 @@ public class TestStructuredTextEditor extends TestCase {
 			openedEditor.getSite().getShell().getDisplay().readAndDispatch();
 		}
 		assertTrue("Test timed out", runtime - startTime < timeout);
-
+		assertNull("There was an exception while making changes: " + (jobException[0] != null ? jobException[0].getMessage() : ""), jobException[0]);
 		int finalLength = document.getLength();
 		textFileBuffer.commit(new NullProgressMonitor(), true);
 		textFileBufferManager.disconnect(file.getFullPath(), LocationKind.IFILE, new NullProgressMonitor());
 		activePage.closeEditor(openedEditor, false);
-		assertEquals("Some non-UI changes did not apply", testLength, finalLength);
+		assertEquals("Some non-UI changes did not apply\n" + "Edits: " + numEdits[0] + "\n" + document.get(), testLength + 1, finalLength);
 	}
 
 	/**
