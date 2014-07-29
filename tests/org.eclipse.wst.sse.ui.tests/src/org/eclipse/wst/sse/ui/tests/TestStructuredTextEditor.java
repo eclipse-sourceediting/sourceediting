@@ -315,6 +315,9 @@ public class TestStructuredTextEditor extends TestCase {
 			openedEditor.getSite().getShell().getDisplay().readAndDispatch();
 		}
 		assertTrue("Test timed out", runtime - startTime < timeout);
+		if (jobException[0] != null) {
+			throw jobException[0];
+		}
 		assertNull("There was an exception while making changes: " + (jobException[0] != null ? jobException[0].getMessage() : ""), jobException[0]);
 		int finalLength = document.getLength();
 		textFileBuffer.commit(new NullProgressMonitor(), true);
