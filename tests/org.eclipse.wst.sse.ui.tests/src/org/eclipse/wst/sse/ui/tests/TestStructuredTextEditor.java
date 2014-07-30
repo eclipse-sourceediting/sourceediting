@@ -279,7 +279,6 @@ public class TestStructuredTextEditor extends TestCase {
 
 		final int finished[] = new int[]{numberOfJobs};
 		Job changers[] = new Job[numberOfJobs];
-		final int numEdits[] = new int[]{0};
 		for (int i = 0; i < changers.length; i++) {
 			changers[i] = new Job("Text Changer " + Integer.toString(i)) {
 				protected IStatus run(IProgressMonitor monitor) {
@@ -287,9 +286,6 @@ public class TestStructuredTextEditor extends TestCase {
 						char names[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 						for (int j = 0; j < names.length; j++) {
 							document.replace(insertionPoint + 4 * j, 0, "<" + names[j] + "/>");
-							synchronized (numEdits) {
-								numEdits[0]++;
-							}
 						}
 					}
 					catch (Exception e) {
@@ -313,12 +309,12 @@ public class TestStructuredTextEditor extends TestCase {
 			openedEditor.getSite().getShell().getDisplay().readAndDispatch();
 		}
 		assertTrue("Test timed out", runtime - startTime < timeout);
+
 		int finalLength = document.getLength();
 		textFileBuffer.commit(new NullProgressMonitor(), true);
 		textFileBufferManager.disconnect(file.getFullPath(), LocationKind.IFILE, new NullProgressMonitor());
 		activePage.closeEditor(openedEditor, false);
-		assertEquals("Some non-UI changes did not apply\n" + "Edits: " + numEdits[0] + "\n" + document.get(), testLength, finalLength);
-		assertEquals("Did not have the proper number of edits", 50*26, numEdits[0]);
+		assertEquals("Some non-UI changes did not apply", testLength, finalLength);
 	}
 
 	/**
