@@ -24,37 +24,4 @@
   <artifactId>org.eclipse.wst.xml_userdoc.feature</artifactId>
   <version>3.6.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho.extras</groupId>
-        <artifactId>tycho-source-feature-plugin</artifactId>
-        <version>${tycho-extras.version}</version>
-        <executions>
-          <execution>
-            <id>source-feature</id>
-            <phase>package</phase>
-            <goals>
-              <goal>source-feature</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-p2-plugin</artifactId>
-        <version>${tycho.version}</version>
-        <executions>
-          <execution>
-            <id>attach-p2-metadata</id>
-            <phase>package</phase>
-            <goals>
-              <goal>p2-metadata</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>

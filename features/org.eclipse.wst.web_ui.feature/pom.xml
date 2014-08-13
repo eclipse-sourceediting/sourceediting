@@ -38,6 +38,13 @@
             <goals>
               <goal>source-feature</goal>
             </goals>
+            <configuration>
+                <excludes>
+                    <feature id="org.eclipse.wst.web_userdoc.feature"/>
+                    <plugin id="org.eclipse.wst.html.ui.infopop"/>
+                    <plugin id="org.eclipse.wst.web.ui.infopop"/>
+                </excludes>
+            </configuration>
           </execution>
         </executions>
       </plugin>
