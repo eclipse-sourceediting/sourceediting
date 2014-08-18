@@ -54,9 +54,7 @@ public class HTMLAttributeValidationQuickFixProcessor implements IQuickAssistPro
 	private IPreferencesService fPreferenceService;
 
 	public HTMLAttributeValidationQuickFixProcessor() {
-		String templ = HTMLCoreMessages.Undefined_attribute_name___ERROR_;
-		templ = templ.replaceAll("\\{[0-9]*\\}", "\\*"); //$NON-NLS-1$
-		UNDEFINED_ATTRIBUTE_NAME_MATCHER = new StringMatcher(templ);
+		UNDEFINED_ATTRIBUTE_NAME_MATCHER = new StringMatcher(NLS.bind(HTMLCoreMessages.Undefined_attribute_name___ERROR_, "*")); //$NON-NLS-1$
 		fPreferenceService = Platform.getPreferencesService();
 	}
 	
