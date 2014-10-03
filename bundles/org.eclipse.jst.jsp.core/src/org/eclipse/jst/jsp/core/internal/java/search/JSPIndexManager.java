@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,10 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
@@ -58,13 +61,55 @@ public class JSPIndexManager extends AbstractIndexManager {
 		return INSTANCE != null ? INSTANCE : (INSTANCE = new JSPIndexManager());
 	}
 
-	/**
-	 * @see indexer.internal.indexing.AbstractIndexManager#isResourceToIndex(int, java.lang.String)
+	/*
+	 * @see org.eclipse.wst.sse.core.indexing.AbstractIndexManager#isResourceToIndex(int, org.eclipse.core.runtime.IPath)
 	 */
 	protected boolean isResourceToIndex(int type, IPath path) {
 		String name = path.lastSegment();
-		
-		return type == IResource.PROJECT || (type == IResource.FOLDER && !name.equals("bin") && !name.startsWith(".")) || ContentTypeIdForJSP.indexOfJSPExtension(path.lastSegment()) >= 0;//$NON-NLS-1$ //$NON-NLS-2$
+		if (name.startsWith(".")) {
+			return false;
+		}
+		switch (type) {
+			case IResource.PROJECT : {
+				// true for Java projects
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
+				try {
+					return project.isAccessible() && project.hasNature(JavaCore.NATURE_ID);
+				}
+				catch (CoreException e) {
+					Logger.logException(e);
+					return false;
+				}
+			}
+			case IResource.FOLDER : {
+				// false for Java Build Path output folders
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
+				try {
+					if (project.isAccessible() && project.hasNature(JavaCore.NATURE_ID)) {
+						IJavaProject javaProject = JavaCore.create(project);
+						if (javaProject.getOutputLocation().isPrefixOf(path)) {
+							return false;
+						}
+						IClasspathEntry[] rawClasspath = javaProject.getRawClasspath();
+						for (int i = 0; i < rawClasspath.length; i++) {
+							IPath specificOutput = rawClasspath[i].getOutputLocation();
+							if (specificOutput != null && specificOutput.isPrefixOf(path)) {
+								return false;
+							}
+						}
+					}
+				}
+				catch (CoreException e) {
+					Logger.logException(e);
+					return false;
+				}
+			}
+			case IResource.FILE : {
+				// true for file extensions from the JSP content types
+				return ContentTypeIdForJSP.indexOfJSPExtension(path.lastSegment()) >= 0;
+			}
+		}
+		return true;
 	}
 
 	/**
