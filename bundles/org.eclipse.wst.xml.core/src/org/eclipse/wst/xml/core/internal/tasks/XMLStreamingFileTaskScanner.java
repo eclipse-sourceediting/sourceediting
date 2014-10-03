@@ -148,13 +148,20 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 			Logger.logException(e);
 		}
 		finally {
-			if (contents != null)
+			if (contents != null) {
 				try {
 					contents.close();
 				}
 				catch (IOException e) {
 					// nothing to do
 				}
+			}
+			try {
+				yyclose();
+			}
+			catch (IOException e) {
+				// nothing to do
+			}
 		}
 		monitor.done();
 	}
