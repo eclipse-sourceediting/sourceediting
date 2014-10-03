@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2013 IBM Corporation and others.
+ * Copyright (c) 2001, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -262,6 +262,21 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			}
 		}
 	}
+	
+	private class ShowInSource implements IShowInSource {
+		/*
+		 * Always return as an IShowInSource adapter, but a context only when
+		 * valid.
+		 * 
+		 * @see org.eclipse.ui.part.IShowInSource#getShowInContext()
+		 */
+		public ShowInContext getShowInContext() {
+			if (fEditor != null && fEditor.getEditorSite() != null) {
+				return new ShowInContext(fEditor.getEditorInput(), fEditor.getEditorSite().getSelectionProvider().getSelection());
+			}
+			return null;
+		}
+	}
 
 	private class ShowInTarget implements IShowInTarget {
 		/*
@@ -436,17 +451,11 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		if (key.equals(IShowInTarget.class)) {
 			adapter = new ShowInTarget();
 		}
-		final IEditorPart editor = fEditor;
-
-		if (key.equals(IShowInSource.class) && editor != null) {
-			adapter = new IShowInSource() {
-				public ShowInContext getShowInContext() {
-					return new ShowInContext(editor.getEditorInput(), editor.getEditorSite().getSelectionProvider().getSelection());
-				}
-			};
+		else if (key.equals(IShowInSource.class)) {
+			adapter = new ShowInSource();
 		}
-		else if (key.equals(IShowInTargetList.class) && editor != null) {
-			adapter = editor.getAdapter(key);
+		else if (key.equals(IShowInTargetList.class) && fEditor != null) {
+			adapter = fEditor.getAdapter(key);
 		}
 		return adapter;
 	}
@@ -736,7 +745,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 				 * also register this menu for source page part and structured
 				 * text outline view ids
 				 */
-				if (fEditor != null) {
+				if (fEditor != null && fEditor.getSite() != null) {
 					String partId = fEditor.getSite().getId();
 					if (partId != null) {
 						getSite().registerContextMenu(partId + OUTLINE_CONTEXT_MENU_SUFFIX, fContextMenuManager, this);
