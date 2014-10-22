@@ -54,6 +54,10 @@
 			class="org.eclipse.wst.html.ui.internal.text.correction.HTMLAttributeValidationQuickFixProcessor"
 			target="org.eclipse.wst.html.HTML_DEFAULT" />
 		<provisionalConfiguration
+			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"
+			class="org.eclipse.wst.html.ui.internal.text.correction.HTMLSyntaxValidationQuickFixProcessor"
+			target="org.eclipse.wst.html.HTML_DEFAULT" />
+		<provisionalConfiguration
 			type="autoeditstrategy"
 			class="org.eclipse.wst.html.ui.internal.autoedit.StructuredAutoEditStrategyHTML"
 			target="org.eclipse.wst.html.HTML_DEFAULT, org.eclipse.wst.html.HTML_DECLARATION" />

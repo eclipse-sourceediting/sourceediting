@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 IBM Corporation and others.
+ * Copyright (c) 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,8 +43,8 @@ import org.eclipse.wst.html.ui.internal.preferences.ui.HTMLValidationPreferenceP
 import org.osgi.service.prefs.BackingStoreException;
 import org.w3c.dom.Node;
 
-public class IgnoreAttributeNameCompletionProposal implements ICompletionProposal {
-	/** The string to be added to the Ignored HTML Attributes list. */
+public class IgnoreElementNameCompletionProposal implements ICompletionProposal {
+	/** The string to be added to the Ignored HTML Elements list. */
 	private String fPattern;
 	/** The target node */
 	private Node fTarget;
@@ -59,7 +59,7 @@ public class IgnoreAttributeNameCompletionProposal implements ICompletionProposa
 	
 	private IPreferencesService fPreferenceService;
 
-	public IgnoreAttributeNameCompletionProposal(String pattern, int offset, String displayString, String additionalProposalInfo, Node target) {
+	public IgnoreElementNameCompletionProposal(String pattern, int offset, String displayString, String additionalProposalInfo, Node target) {
 		fReplacementOffset= offset;
 		fPattern = pattern;
 		fDisplayString= displayString;
@@ -87,16 +87,16 @@ public class IgnoreAttributeNameCompletionProposal implements ICompletionProposa
 		}
 		
 		boolean originalEnableIgnore = fPreferenceService.getBoolean(
-				getPreferenceNodeQualifier(), HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES, 
-				HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES_DEFAULT, fLookupOrder);
+				getPreferenceNodeQualifier(), HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES, 
+				HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES_DEFAULT, fLookupOrder);
 		
-		String originalAttributeNames = fPreferenceService.getString(
-				getPreferenceNodeQualifier(), HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, 
-				HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT, fLookupOrder);
+		String originalElementNames = fPreferenceService.getString(
+				getPreferenceNodeQualifier(), HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE, 
+				HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE_DEFAULT, fLookupOrder);
 		
-		StringBuffer ignoreList = new StringBuffer(originalAttributeNames);
+		StringBuffer ignoreList = new StringBuffer(originalElementNames);
 	
-		if (!containsPattern(originalAttributeNames, fPattern)) { 
+		if (!containsPattern(originalElementNames, fPattern)) { 
 			if (ignoreList.length() > 0)
 				ignoreList.append(',');
 			
@@ -104,10 +104,10 @@ public class IgnoreAttributeNameCompletionProposal implements ICompletionProposa
 		}
 
 		fLookupOrder[0].getNode(getPreferenceNodeQualifier())
-			.putBoolean(HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES, true); 
+			.putBoolean(HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES, true); 
 
 		fLookupOrder[0].getNode(getPreferenceNodeQualifier())
-			.put(HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, ignoreList.toString()); 
+			.put(HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE, ignoreList.toString()); 
 
 		PreferenceDialog dialog = hasProjectSettings ? 
 				PreferencesUtil.createPropertyDialogOn(getShell(), project, HTMLValidationPreferencePage.PROPERTY_PAGE_ID, null, null) :
@@ -117,17 +117,17 @@ public class IgnoreAttributeNameCompletionProposal implements ICompletionProposa
 		if (dialog != null) {
 			Object page = dialog.getSelectedPage();
 			if (page instanceof HTMLValidationPreferencePage) {
-				((HTMLValidationPreferencePage)page).overrideIgnoredAttributesOriginValues(originalEnableIgnore, originalAttributeNames);
+				((HTMLValidationPreferencePage)page).overrideIgnoredElementsOriginValues(originalEnableIgnore, originalElementNames);
 			}
 			result = dialog.open();
 		}
 
 		if (Window.CANCEL == result) {
 			fLookupOrder[0].getNode(getPreferenceNodeQualifier())
-			.putBoolean(HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES, originalEnableIgnore); 
+			.putBoolean(HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES, originalEnableIgnore); 
 
 			fLookupOrder[0].getNode(getPreferenceNodeQualifier())
-				.put(HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, originalAttributeNames); 
+				.put(HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE, originalElementNames); 
 		
 			for(int i = 0; i < fLookupOrder.length; i++) {
 				try {
@@ -194,8 +194,8 @@ public class IgnoreAttributeNameCompletionProposal implements ICompletionProposa
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
-		if (obj instanceof IgnoreAttributeNameCompletionProposal) {
-			IgnoreAttributeNameCompletionProposal p = (IgnoreAttributeNameCompletionProposal)obj;
+		if (obj instanceof IgnoreElementNameCompletionProposal) {
+			IgnoreElementNameCompletionProposal p = (IgnoreElementNameCompletionProposal)obj;
 			return (this.fPattern.equals(p.fPattern) && this.fTarget == p.fTarget && this.fReplacementOffset == p.fReplacementOffset);
 		}
 		return false;

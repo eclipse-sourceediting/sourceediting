@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.PixelConverter;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -39,8 +40,10 @@ import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractValidationSettingsPage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.osgi.service.prefs.BackingStoreException;
 
 public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage {
@@ -131,19 +134,55 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 	}
 	
 	private PixelConverter fPixelConverter;
+	private Button fIgnoreElementNames;
+	private Label fIgnoredElementNamesLabel;
+	private Text fIgnoredElementNames;
 	private Button fIgnoreAttributeNames;
 	private Label fIgnoredAttributeNamesLabel;
 	private Text fIgnoredAttributeNames;
 	private IPreferencesService fPreferencesService = null;
 	
-	private boolean fUseOriginOverrides = false;
+	private boolean fUseElementsOriginOverrides = false;
+	private boolean fIgnoreElementNamesOriginOverride = HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES_DEFAULT;
+	private String  fIgnoredElementNamesOriginOverride = HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE_DEFAULT;
+
+	private boolean fUseAttributesOriginOverrides = false;
 	private boolean fIgnoreAttributeNamesOriginOverride = HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES_DEFAULT;
 	private String  fIgnoredAttributeNamesOriginOverride = HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT;
 
+	public void overrideIgnoredElementsOriginValues(boolean enableIgnore, String elementNames) {
+		fIgnoreElementNamesOriginOverride = enableIgnore;
+		fIgnoredElementNamesOriginOverride = elementNames;
+		fUseElementsOriginOverrides = true;
+		
+		if (fIgnoreElementNames != null) {
+			BooleanData data = (BooleanData)fIgnoreElementNames.getData();
+			if (data != null)
+				data.originalValue = fIgnoreElementNamesOriginOverride;
+		}
+		if (fIgnoredElementNames != null) {
+			TextData data = (TextData)fIgnoredElementNames.getData();
+			if (data != null)
+				data.originalValue = fIgnoredElementNamesOriginOverride;
+		}
+	}
+
+	/**
+	 * Overrides the origin values for Ignored Attribute Names
+	 * 
+	 * @deprecated Use overrideIgnoredAttributesOriginValues(boolean, String)
+	 * 
+	 * @param enableIgnore
+	 * @param attributeNames
+	 */
 	public void overrideOriginValues(boolean enableIgnore, String attributeNames) {
+		this.overrideIgnoredAttributesOriginValues(enableIgnore, attributeNames);
+	}
+	
+	public void overrideIgnoredAttributesOriginValues(boolean enableIgnore, String attributeNames) {
 		fIgnoreAttributeNamesOriginOverride = enableIgnore;
 		fIgnoredAttributeNamesOriginOverride = attributeNames;
-		fUseOriginOverrides = true;
+		fUseAttributesOriginOverrides = true;
 		
 		if (fIgnoreAttributeNames != null) {
 			BooleanData data = (BooleanData)fIgnoreAttributeNames.getData();
@@ -156,7 +195,7 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 				data.originalValue = fIgnoredAttributeNamesOriginOverride;
 		}
 	}
-	
+
 	protected Control createCommonContents(Composite parent) {
 		final Composite page = new Composite(parent, SWT.NULL);
 		
@@ -188,8 +227,61 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		layout.marginWidth= 0;
 		composite.setLayout(layout);
 		
+		// Ignored Element Names Pattern
+		BooleanData ignoreData = new BooleanData(HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES);
+		fIgnoreElementNames = new Button(composite, SWT.CHECK);
+		fIgnoreElementNames.setData(ignoreData);
+		fIgnoreElementNames.setFont(page.getFont());
+		fIgnoreElementNames.setText(HTMLUIMessages.IgnoreElementNames);
+		fIgnoreElementNames.setEnabled(true);
+		
+		boolean ignoreElementNamesIsSelected = fPreferencesService.getBoolean(getPreferenceNodeQualifier(), 
+				ignoreData.getKey(), HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES_DEFAULT, createPreferenceScopes());
+		ignoreData.setValue(ignoreElementNamesIsSelected);
+		ignoreData.originalValue = fUseElementsOriginOverrides ? fIgnoreElementNamesOriginOverride : ignoreElementNamesIsSelected;
+		
+		fIgnoreElementNames.setSelection(ignoreData.getValue());
+		fIgnoreElementNames.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				controlChanged(e.widget);
+			}
+			public void widgetSelected(SelectionEvent e) {
+				controlChanged(e.widget);
+			}
+		});
+		fIgnoreElementNames.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 3, 1));
+		
+		fIgnoredElementNamesLabel = new Label(composite, SWT.LEFT | SWT.WRAP);
+		fIgnoredElementNamesLabel.setFont(composite.getFont());
+		fIgnoredElementNamesLabel.setEnabled(ignoreData.getValue());
+		fIgnoredElementNamesLabel.setText(HTMLUIMessages.IgnoreElementNamesPattern);
+		fIgnoredElementNamesLabel.setLayoutData(new GridData(SWT.FILL, SWT.END, true, false, 3, 1));
+		setHorizontalIndent(fIgnoredElementNamesLabel, 20);
+
+		TextData data = new TextData(HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE);
+		fIgnoredElementNames = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		fIgnoredElementNames.setData(data);
+		fIgnoredElementNames.setTextLimit(500);
+		fIgnoredElementNames.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 3, 1));
+		setHorizontalIndent(fIgnoredElementNames, 20);
+		setWidthHint(fIgnoredElementNames, convertWidthInCharsToPixels(65));
+		String ignoredElementNames = fPreferencesService.getString(getPreferenceNodeQualifier(), data.getKey(), HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE_DEFAULT, createPreferenceScopes());
+		data.setValue(ignoredElementNames);
+		data.originalValue = fUseElementsOriginOverrides ? fIgnoredElementNamesOriginOverride : ignoredElementNames;
+		fIgnoredElementNames.setText(data.getValue());
+		
+		fIgnoredElementNames.addModifyListener(new ModifyListener() {
+			
+			public void modifyText(ModifyEvent e) {
+				if (verifyIgnoredNames(fIgnoredElementNames.getText().trim())) {
+					controlChanged(e.widget);
+				}
+			}
+		});
+		controlChanged(fIgnoreElementNames);
+
 		// Ignored Attribute Names Pattern
-		BooleanData ignoreData = new BooleanData(HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES);
+		ignoreData = new BooleanData(HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES);
 		fIgnoreAttributeNames = new Button(composite, SWT.CHECK);
 		fIgnoreAttributeNames.setData(ignoreData);
 		fIgnoreAttributeNames.setFont(page.getFont());
@@ -199,7 +291,7 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		boolean ignoreAttributeNamesIsSelected = fPreferencesService.getBoolean(getPreferenceNodeQualifier(), 
 				ignoreData.getKey(), HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES_DEFAULT, createPreferenceScopes());
 		ignoreData.setValue(ignoreAttributeNamesIsSelected);
-		ignoreData.originalValue = fUseOriginOverrides ? fIgnoreAttributeNamesOriginOverride : ignoreAttributeNamesIsSelected;
+		ignoreData.originalValue = fUseAttributesOriginOverrides ? fIgnoreAttributeNamesOriginOverride : ignoreAttributeNamesIsSelected;
 		
 		fIgnoreAttributeNames.setSelection(ignoreData.getValue());
 		fIgnoreAttributeNames.addSelectionListener(new SelectionListener() {
@@ -219,7 +311,7 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		fIgnoredAttributeNamesLabel.setLayoutData(new GridData(SWT.FILL, SWT.END, true, false, 3, 1));
 		setHorizontalIndent(fIgnoredAttributeNamesLabel, 20);
 
-		TextData data = new TextData(HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE);
+		data = new TextData(HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE);
 		fIgnoredAttributeNames = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		fIgnoredAttributeNames.setData(data);
 		fIgnoredAttributeNames.setTextLimit(500);
@@ -228,13 +320,13 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		setWidthHint(fIgnoredAttributeNames, convertWidthInCharsToPixels(65));
 		String ignoredAttributeNames = fPreferencesService.getString(getPreferenceNodeQualifier(), data.getKey(), HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT, createPreferenceScopes());
 		data.setValue(ignoredAttributeNames);
-		data.originalValue = fUseOriginOverrides ? fIgnoredAttributeNamesOriginOverride : ignoredAttributeNames;
+		data.originalValue = fUseAttributesOriginOverrides ? fIgnoredAttributeNamesOriginOverride : ignoredAttributeNames;
 		fIgnoredAttributeNames.setText(data.getValue());
 		
 		fIgnoredAttributeNames.addModifyListener(new ModifyListener() {
 			
 			public void modifyText(ModifyEvent e) {
-				if (verifyIgnoredAttributeNames()) {
+				if (verifyIgnoredNames(fIgnoredAttributeNames.getText().trim())) {
 					controlChanged(e.widget);
 				}
 			}
@@ -470,14 +562,13 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		}
 	}
 	
-	private boolean verifyIgnoredAttributeNames() {
-		final String text = fIgnoredAttributeNames.getText().trim();
-		if (text.length() == 0)
+	private boolean verifyIgnoredNames(String value) {
+		if (value.length() == 0)
 			return true;
 
-		String[] names = text.split(","); //$NON-NLS-1$
+		String[] names = value.split(","); //$NON-NLS-1$
 		boolean valid = true;
-		for (int i = 0; names != null && i < names.length; i++) {
+		for (int i = 0; valid && names != null && i < names.length; i++) {
 			String name = names[i] == null ? null : names[i].trim();
 			if (name != null && name.length() > 0) {
 				for (int j = 0; valid && j < name.length(); j++) {
@@ -490,7 +581,7 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		}
 		
 		if (!valid) {
-			setErrorMessage(NLS.bind(HTMLUIMessages.BadIgnoreAttributeNamesPattern, text));
+			setErrorMessage(NLS.bind(HTMLUIMessages.BadIgnoreAttributeNamesPattern, value));
 			setValid(false);
 		} else {
 			setErrorMessage(null);
@@ -508,10 +599,18 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 			BooleanData data = (BooleanData) widget.getData();
 			if (data != null) {
 				data.setValue(((Button)widget).getSelection());
-				fIgnoredAttributeNamesLabel.setEnabled(data.getValue());
-				fIgnoredAttributeNames.setEnabled(data.getValue());
-				if (data.getValue()) {
-					fIgnoredAttributeNames.setFocus();
+				if (fIgnoreElementNames == widget) {
+					fIgnoredElementNamesLabel.setEnabled(data.getValue());
+					fIgnoredElementNames.setEnabled(data.getValue());
+					if (data.getValue()) {
+						fIgnoredElementNames.setFocus();
+					}
+				} else if (fIgnoreAttributeNames == widget) {
+					fIgnoredAttributeNamesLabel.setEnabled(data.getValue());
+					fIgnoredAttributeNames.setEnabled(data.getValue());
+					if (data.getValue()) {
+						fIgnoredAttributeNames.setFocus();
+					}
 				}
 			}
 		} else {
@@ -524,11 +623,19 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 	 * causing the full validation to be requested.
 	 */
 	protected boolean shouldRevalidateOnSettingsChange() {
-		TextData data = (TextData)fIgnoredAttributeNames.getData();
+		TextData data = (TextData)fIgnoredElementNames.getData();
 		if (data.isChanged())
 			return true;
 		
-		BooleanData ignoreData = (BooleanData)fIgnoreAttributeNames.getData();
+		BooleanData ignoreData = (BooleanData)fIgnoreElementNames.getData();
+		if (ignoreData.isChanged())
+			return true;
+		
+		data = (TextData)fIgnoredAttributeNames.getData();
+		if (data.isChanged())
+			return true;
+		
+		ignoreData = (BooleanData)fIgnoreAttributeNames.getData();
 		if (ignoreData.isChanged())
 			return true;
 		
@@ -542,11 +649,19 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 	protected void storeValues() {
 		IScopeContext[] contexts = createPreferenceScopes();
 
-		BooleanData ignoreData = (BooleanData)fIgnoreAttributeNames.getData();
+		BooleanData ignoreData = (BooleanData)fIgnoreElementNames.getData();
 		contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(ignoreData.getKey(), ignoreData.getValue()); 
 		ignoreData.originalValue = ignoreData.getValue();
 
-		TextData data = (TextData)fIgnoredAttributeNames.getData();
+		TextData data = (TextData)fIgnoredElementNames.getData();
+		contexts[0].getNode(getPreferenceNodeQualifier()).put(data.getKey(), data.getValue()); 
+		data.originalValue = data.getValue();
+
+		ignoreData = (BooleanData)fIgnoreAttributeNames.getData();
+		contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(ignoreData.getKey(), ignoreData.getValue()); 
+		ignoreData.originalValue = ignoreData.getValue();
+
+		data = (TextData)fIgnoredAttributeNames.getData();
 		contexts[0].getNode(getPreferenceNodeQualifier()).put(data.getKey(), data.getValue()); 
 		data.originalValue = data.getValue();
 
@@ -559,6 +674,15 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 		}
 
 		super.storeValues();
+		
+		forceReconciling();
+	}
+	
+	private void forceReconciling() {
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+		boolean value = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
+		store.setValue(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, !value);
+		store.setValue(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, value);
 	}
 	
 	/*
@@ -566,19 +690,30 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
 	 */
 	protected void performDefaults() {
-		resetIgnoreAttributeNamesPattern();
+		resetIgnoreNamesPatterns();
 		resetSeverities();
 		super.performDefaults();
 	}
 	
-	protected void resetIgnoreAttributeNamesPattern() {
+	protected void resetIgnoreNamesPatterns() {
 		IEclipsePreferences defaultContext = new DefaultScope().getNode(getPreferenceNodeQualifier());
-		BooleanData ignoreData = (BooleanData)fIgnoreAttributeNames.getData();
+
+		BooleanData ignoreData = (BooleanData)fIgnoreElementNames.getData();
+		boolean ignoreElementNames = defaultContext.getBoolean(ignoreData.getKey(), HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES_DEFAULT);
+		ignoreData.setValue(ignoreElementNames);
+		fIgnoreElementNames.setSelection(ignoreData.getValue());
+
+		TextData data = (TextData)fIgnoredElementNames.getData();
+		String ignoredElementNames = defaultContext.get(data.getKey(), HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE_DEFAULT);
+		data.setValue(ignoredElementNames);
+		fIgnoredElementNames.setText(data.getValue());
+
+		ignoreData = (BooleanData)fIgnoreAttributeNames.getData();
 		boolean ignoreAttributeNames = defaultContext.getBoolean(ignoreData.getKey(), HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES_DEFAULT);
 		ignoreData.setValue(ignoreAttributeNames);
 		fIgnoreAttributeNames.setSelection(ignoreData.getValue());
 
-		TextData data = (TextData)fIgnoredAttributeNames.getData();
+		data = (TextData)fIgnoredAttributeNames.getData();
 		String ignoredAttributeNames = defaultContext.get(data.getKey(), HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT);
 		data.setValue(ignoredAttributeNames);
 		fIgnoredAttributeNames.setText(data.getValue());
