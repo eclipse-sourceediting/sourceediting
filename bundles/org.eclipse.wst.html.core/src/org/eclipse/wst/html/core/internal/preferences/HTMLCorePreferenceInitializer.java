@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,6 +72,10 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 	 * @param node the Eclipse preference node
 	 */
 	private void initializeValidationPreferences(IEclipsePreferences node) {
+		// Ignored Element names
+		node.putBoolean(HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES, HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES_DEFAULT);
+		node.put(HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE, HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE_DEFAULT);
+		
 		// Ignored Attribute names
 		node.putBoolean(HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES, HTMLCorePreferenceNames.IGNORE_ATTRIBUTE_NAMES_DEFAULT);
 		node.put(HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE, HTMLCorePreferenceNames.ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT);

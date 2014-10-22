@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,12 +10,27 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLPropertyDeclaration;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -36,7 +51,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 class SyntaxValidator extends PrimeValidator implements ErrorState {
-
+	private IPreferencesService fPreferenceService;
+	private static Map fIgnorePatterns = new HashMap(); // A storage for ignore patterns (instances of StringMatcher)
 
 	static private boolean isValidRegion(ITextRegion rgn) {
 		String type = rgn.getType();
@@ -65,6 +81,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 
 	public SyntaxValidator() {
 		super();
+		fPreferenceService = Platform.getPreferencesService();
 	}
 
 	public boolean isAdapterForType(Object type) {
@@ -306,6 +323,9 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 				reportCorruptedEndTagError(info);
 			}
 			else {
+				if (!shouldValidateElementName(info.target))
+					return;
+				
 				Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG_NAME);
 				report(UNDEFINED_NAME_ERROR, errorSeg, info.target);
 			}
@@ -320,6 +340,53 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		}
 	}
 
+	private boolean shouldValidateElementName(Element target) {
+		Object adapter = (target instanceof IAdaptable ? ((IAdaptable)target).getAdapter(IResource.class) : null);
+		IProject project = (adapter instanceof IResource ? ((IResource)adapter).getProject() : null);
+		
+		Iterator excludedElements = getExcludedElementNames(project).iterator();
+		while (excludedElements.hasNext()) {
+			String excluded = (String)excludedElements.next();
+			StringMatcher strMatcher = (StringMatcher)fIgnorePatterns.get(excluded);
+			if (strMatcher == null) {
+				strMatcher = new StringMatcher(excluded);
+				fIgnorePatterns.put(excluded, strMatcher);
+			}
+			if (strMatcher.match(target.getNodeName()))
+				return false;
+		}
+		return true;
+	}
+
+	private Set getExcludedElementNames(IProject project) {
+		IScopeContext[] fLookupOrder = new IScopeContext[] {new InstanceScope(), new DefaultScope()};
+		if (project != null) {
+			ProjectScope projectScope = new ProjectScope(project);
+			if(projectScope.getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(HTMLCorePreferenceNames.USE_PROJECT_SETTINGS, false))
+				fLookupOrder = new IScopeContext[] {projectScope, new InstanceScope(), new DefaultScope()};
+		}
+
+		Set result = new HashSet();
+		if (fPreferenceService.getBoolean(HTMLCorePlugin.getDefault().getBundle().getSymbolicName(), 
+				HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES, HTMLCorePreferenceNames.IGNORE_ELEMENT_NAMES_DEFAULT, 
+				fLookupOrder)) {
+			String ignoreList = fPreferenceService.getString(HTMLCorePlugin.getDefault().getBundle().getSymbolicName(), 
+					HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE, HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE_DEFAULT, 
+					fLookupOrder);
+
+			if (ignoreList.trim().isEmpty())
+				return result;
+
+			String[] names = ignoreList.split(","); //$NON-NLS-1$
+			for (int i = 0; names != null && i < names.length; i++) {
+				String name = names[i] == null ? null : names[i].trim();
+				if (name != null && !name.isEmpty()) 
+					result.add(name.toLowerCase());
+			}
+		}
+		return result; 
+	}
+	
 	/* perform validation tag case only for XHTML document */
 	private void validateTagCase(ElementInfo info) {
 		String declared = info.decl.getElementName();
