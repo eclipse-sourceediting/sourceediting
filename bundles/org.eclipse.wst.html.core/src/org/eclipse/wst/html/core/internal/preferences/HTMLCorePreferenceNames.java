@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -239,6 +239,20 @@ public class HTMLCorePreferenceNames {
 	public static final int UPPER = 2;
 	
 	/**
+	 * Default value for the preference #IGNORE_ELEMENT_NAMES
+	 * 
+	 * @see #IGNORE_ELEMENT_NAMES
+	 */
+	public static final boolean IGNORE_ELEMENT_NAMES_DEFAULT = false;
+
+	/**
+	 * Default value for the preference #ELEMENT_NAMES_TO_IGNORE
+	 * 
+	 * @see #ELEMENT_NAMES_TO_IGNORE
+	 */
+	public static final String ELEMENT_NAMES_TO_IGNORE_DEFAULT = ""; //$NON-NLS-1$
+	
+	/**
 	 * Default value for the preference #IGNORE_ATTRIBUTE_NAMES
 	 * 
 	 * @see #IGNORE_ATTRIBUTE_NAMES
@@ -253,6 +267,8 @@ public class HTMLCorePreferenceNames {
 	public static final String ATTRIBUTE_NAMES_TO_IGNORE_DEFAULT = ""; //$NON-NLS-1$
 	
 	public static final String USE_PROJECT_SETTINGS = "use-project-settings";//$NON-NLS-1$
+	public static final String IGNORE_ELEMENT_NAMES = "ignoreElementNames";//$NON-NLS-1$
+	public static final String ELEMENT_NAMES_TO_IGNORE = "elementNamesToIgnore";//$NON-NLS-1$
 	public static final String IGNORE_ATTRIBUTE_NAMES = "ignoreAttrNames";//$NON-NLS-1$
 	public static final String ATTRIBUTE_NAMES_TO_IGNORE = "attrNamesToIgnore";//$NON-NLS-1$
 	
