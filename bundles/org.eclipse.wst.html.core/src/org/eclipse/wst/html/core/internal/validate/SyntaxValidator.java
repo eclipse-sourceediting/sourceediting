@@ -323,11 +323,10 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 				reportCorruptedEndTagError(info);
 			}
 			else {
-				if (!shouldValidateElementName(info.target))
-					return;
-				
-				Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG_NAME);
-				report(UNDEFINED_NAME_ERROR, errorSeg, info.target);
+				if (shouldValidateElementName(info.target)) {
+					Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG_NAME);
+					report(UNDEFINED_NAME_ERROR, errorSeg, info.target);
+				}
 			}
 		}
 		else {
