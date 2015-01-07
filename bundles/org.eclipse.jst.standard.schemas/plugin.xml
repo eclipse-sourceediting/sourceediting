@@ -301,6 +301,20 @@
                 uri="dtdsAndSchemas/persistence_2_1.xsd" />
 
 
+            <uri
+                name="http://www.jboss.org/xml/ns/javax/validation/configuration/validation-configuration-1.0.xsd"
+                uri="dtdsAndSchemas/validation-configuration-1.0.xsd"/>
+            <uri
+                name="http://www.jboss.org/xml/ns/javax/validation/configuration/validation-configuration-1.1.xsd"
+                uri="dtdsAndSchemas/validation-configuration-1.1.xsd"/>
+            <uri
+                name="http://www.jboss.org/xml/ns/javax/validation/mapping/validation-mapping-1.0.xsd"
+                uri="dtdsAndSchemas/validation-mapping-1.0.xsd"/>
+            <uri
+                name="http://www.jboss.org/xml/ns/javax/validation/mapping/validation-mapping-1.1.xsd"
+                uri="dtdsAndSchemas/validation-mapping-1.1.xsd"/>
+
+
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
                 uri="dtdsAndSchemas/web-app_2_2.dtd"
