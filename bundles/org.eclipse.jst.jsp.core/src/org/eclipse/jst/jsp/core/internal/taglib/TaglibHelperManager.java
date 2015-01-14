@@ -129,6 +129,7 @@ public class TaglibHelperManager implements IElementChangedListener {
 					return Status.OK_STATUS;
 				}
 			};
+			toucher.setRule(project.getProject());
 			toucher.setPriority(Job.BUILD);
 			toucher.setUser(false);
 			toucher.setSystem(false);
