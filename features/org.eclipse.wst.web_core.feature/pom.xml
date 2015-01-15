@@ -22,7 +22,7 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.web_core.feature</artifactId>
-  <version>3.6.2-SNAPSHOT</version>
+  <version>3.6.3-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 
   <build>
