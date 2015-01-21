@@ -1,0 +1,31 @@
+/***************************************************************************
+ * Copyright (c) 2014 Kaloyan Raev and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Kaloyan Raev - initial API and implementation
+ *     Andrea Guarinoni - intial color schema definition
+ ***************************************************************************/
+
+/* ####################### HTML syntax highlighting ###################### */
+
+IEclipsePreferences#org-eclipse-wst-html-ui {
+	preferences:
+		'commentBorder=#626262 | null | false | false | false | false'
+		'commentText=#626262 | null | false | false | false | false'
+		'declBoder=#A7EC21 | null | false | false | false | false'
+		'doctypeExternalId=#cf96eb | null | false | false | false | false'
+		'doctypeExternalPubref=#f0a253 | null | false | false | false | false'
+		'doctypeExtrenalSysref=#fbd153 | null | false | false | false | false'
+		'doctypeName=#fea88f | null | false | false | false | false'
+		'entityReference=#DD2867 | null | null | null | null | null'
+		'tagAttributeEquals=#52ca11 | null | false | false | false | false'
+		'tagAttributeName=#a7ec21 | null | false | false | false | false'
+		'tagAttributeValue=#17C6A3 | null | null | true | null | null'
+		'tagBorder=#0080ff | null | false | false | false | false'
+		'tagName=#03a8d8 | null | true | false | false | false'
+		'xmlContent=#D9E8F7 | null | null | null | null | null'
+}
