@@ -318,6 +318,9 @@ public class HTMLTextFormatter extends HTMLFormatter {
 	}
 
 	private boolean isWordInComplexRegion(SpaceConverter converter, IDOMText text) {
+		if (textRegion == null) {
+			return false;
+		}
 		final int offset = text.getFirstStructuredDocumentRegion().getStartOffset();
 		while (textRegion != null && (converter.getWordOffset() + offset >= textRegion.getEnd()) && textRegion != text.getLastStructuredDocumentRegion()) {
 			textRegion = textRegion.getNext();
