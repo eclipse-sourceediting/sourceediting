@@ -24,4 +24,26 @@
   <artifactId>org.eclipse.wst.dtd.ui</artifactId>
   <version>1.0.801-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+  
+  <!--  added this "constraint" for bug 458962 -->
+   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <dependency-resolution>
+            <extraRequirements>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>com.ibm.icu</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+            </extraRequirements>
+          </dependency-resolution>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
 </project>
