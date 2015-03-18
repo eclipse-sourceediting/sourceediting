@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 IBM Corporation and others.
+ * Copyright (c) 2004, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -501,18 +501,20 @@ public class JSPTranslator implements Externalizable {
 	}
 
 	private IJSPProblem createJSPProblem(final int problemEID, final int problemID, final String message, final int start, final int end) {
-		final int line = fStructuredDocument.getLineOfOffset(start);
 		final char[] classname = fClassname.toCharArray();
 
 		/*
 		 * Note: these problems would result in translation errors on the
 		 * server, so the severity is not meant to be controllable
 		 */
-		return new IJSPProblem() {
+		IJSPProblem problem = new IJSPProblem() {
+			private int lineNumber = -1;
+			
 			public void setSourceStart(int sourceStart) {
 			}
 
 			public void setSourceLineNumber(int lineNumber) {
+				this.lineNumber = lineNumber;
 			}
 
 			public void setSourceEnd(int sourceEnd) {
@@ -531,7 +533,7 @@ public class JSPTranslator implements Externalizable {
 			}
 
 			public int getSourceLineNumber() {
-				return line;
+				return lineNumber;
 			}
 
 			public int getSourceEnd() {
@@ -558,6 +560,14 @@ public class JSPTranslator implements Externalizable {
 				return problemEID;
 			}
 		};
+		
+		// Update Source Line Number if a document is initialized
+		// (Because in this case postReadExternalSetup() method may not be called)
+		if (fStructuredDocument != null) {
+			problem.setSourceLineNumber(fStructuredDocument.getLineOfOffset(start));
+		}
+
+		return problem;
 	}
 
 	public void setClassname(String classname) {
@@ -3443,6 +3453,16 @@ public class JSPTranslator implements Externalizable {
 		this.fJspTextBuffer = new StringBuffer(this.fStructuredDocument.get());
 		if(jspModel instanceof IDOMModel) {
 			this.fStructuredModel = (IDOMModel)jspModel;
+		}
+		
+		// Do Post-Initialization of created problems if any
+		for (int i = 0; i < fTranslationProblems.size(); i++) {
+			if (fTranslationProblems.get(i) instanceof IJSPProblem) {
+				IJSPProblem problem = (IJSPProblem)fTranslationProblems.get(i);
+				if (problem.getSourceLineNumber() == -1) {
+					problem.setSourceLineNumber(fStructuredDocument.getLineOfOffset(problem.getSourceStart()));
+				}
+			}
 		}
 	}
 	
