@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,7 +72,7 @@ public class RenameElementHandler extends AbstractHandler {
 	private IJavaElement getSelectedElement() {
 		IJavaElement element = null;
 		if (fEditor != null) {
-			ITextEditor editor = (ITextEditor) ((fEditor instanceof ITextEditor) ? fEditor : fEditor.getAdapter(ITextEditor.class));
+			ITextEditor editor= ((fEditor instanceof ITextEditor) ? (ITextEditor) fEditor : (ITextEditor) fEditor.getAdapter(ITextEditor.class));
 			if (editor != null) {
 				IJavaElement[] elements = JSPJavaSelectionProvider.getSelection(editor);
 				if (elements.length == 1)
