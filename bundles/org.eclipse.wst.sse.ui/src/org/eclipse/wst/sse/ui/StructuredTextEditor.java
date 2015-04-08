@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2013 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -3088,7 +3088,8 @@ public class StructuredTextEditor extends TextEditor {
 			ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
 			((ConfigurableContentOutlinePage) fOutlinePage).setConfiguration(cfg);
 			IStructuredModel internalModel = getInternalModel();
-			((ConfigurableContentOutlinePage) fOutlinePage).setInputContentTypeIdentifier(internalModel.getContentTypeIdentifier());
+			((ConfigurableContentOutlinePage) fOutlinePage).setInputContentTypeIdentifier(
+					internalModel == null ? null : internalModel.getContentTypeIdentifier());
 			((ConfigurableContentOutlinePage) fOutlinePage).setInput(internalModel);
 		}
 		if (fPropertySheetPage != null && fPropertySheetPage instanceof ConfigurablePropertySheetPage) {
