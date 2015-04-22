@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2013 IBM Corporation and others.
+ * Copyright (c) 2008, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -230,7 +230,8 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 			IDocument document = textViewer.getDocument();
 			// find hyperlink range for Java element
 			IRegion hyperlinkRegion = region.getLength() > 0 ? region : selectQualifiedName(document, region.getOffset());
-			if (isJspJavaContent(document, hyperlinkRegion)) { // Handled by JSPJavaHyperlinkDetector
+			if (hyperlinkRegion == null || // Bug #462949 - Because selectQualifiedName may return null
+					isJspJavaContent(document, hyperlinkRegion)) { // Handled by JSPJavaHyperlinkDetector
 				return null;
 			}
 			String name = null;
