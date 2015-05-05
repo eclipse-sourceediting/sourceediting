@@ -50,6 +50,11 @@
               <artifactId>org.eclipse.jst.jsp.core</artifactId>
               <version>0.0.0</version>
             </dependency>
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>com.ibm.icu</artifactId>
+              <version>0.0.0</version>
+            </dependency>
           </dependencies>
         </configuration>
       </plugin>
