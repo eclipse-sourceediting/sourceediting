@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,7 @@ class ConvertJob extends WorkspaceJob {
 					fixed.add(projectFacet);
 					copy.setFixedProjectFacets(fixed);
 					copy.commitChanges(new NullProgressMonitor());
+					copy.dispose();
 				}
 				else {
 					Set fixed = new HashSet(facetedProject.getFixedProjectFacets());
