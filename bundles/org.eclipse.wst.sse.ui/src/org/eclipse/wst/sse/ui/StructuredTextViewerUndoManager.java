@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,8 @@
 package org.eclipse.wst.sse.ui;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.IUndoManager;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
@@ -29,20 +26,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
  * handles communication between IUndoManager and IStructuredTextUndoManager.
  */
 class StructuredTextViewerUndoManager implements IUndoManager {
-	class UndoNotifier implements ISelectionChangedListener {
-		public void selectionChanged(SelectionChangedEvent event) {
-			if ((fUndoManager != null) && (event != null)) {
-				if (event.getSelection() instanceof ITextSelection) {
-					fUndoManager.forceEndOfPendingCommand(this, ((ITextSelection) event.getSelection()).getOffset(), ((ITextSelection) event.getSelection()).getLength());
-				}
-			}
-		}
-
-	}
-
 	private StructuredTextViewer fTextViewer = null;
 	private IStructuredTextUndoManager fUndoManager = null;
-	private ISelectionChangedListener fUndoNotifier = new UndoNotifier();
 
 	/*
 	 * (non-Javadoc)
@@ -86,7 +71,6 @@ class StructuredTextViewerUndoManager implements IUndoManager {
 	public void disconnect() {
 		// disconnect the viewer from the undo manager
 		if (fUndoManager != null) {
-			fTextViewer.removeSelectionChangedListener(fUndoNotifier);
 			fUndoManager.disconnect(fTextViewer);
 		}
 
@@ -151,14 +135,12 @@ class StructuredTextViewerUndoManager implements IUndoManager {
 	 */
 	public void setDocument(IStructuredDocument document) {
 		if (fUndoManager != null) {
-			fTextViewer.removeSelectionChangedListener(fUndoNotifier);
 			fUndoManager.disconnect(fTextViewer);
 		}
 
 		fUndoManager = document.getUndoManager();
 		if (fUndoManager != null) {
 			fUndoManager.connect(fTextViewer);
-			fTextViewer.addSelectionChangedListener(fUndoNotifier);
 		}
 	}
 
