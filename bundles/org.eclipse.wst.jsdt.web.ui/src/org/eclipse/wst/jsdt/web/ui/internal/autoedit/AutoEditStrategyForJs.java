@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 IBM Corporation and others.
+ * Copyright (c) 2007, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,9 @@ public class AutoEditStrategyForJs implements IAutoEditStrategy {
 		IJavaScriptProject javaProject = null;
 		try {
 			model = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			if (model == null)
+				return null;
+			
 			String baseLocation = model.getBaseLocation();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IPath filePath = new Path(baseLocation);
