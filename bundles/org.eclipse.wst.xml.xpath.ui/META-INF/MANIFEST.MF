@@ -21,8 +21,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.core.resources;bundle-version="3.5.0",
  org.apache.xalan;bundle-version="2.7.1",
  org.eclipse.wst.xml.xpath2.processor;bundle-version="[2.0.0,3.0.0)",
- org.eclipse.wst.xml.xpath2.wtptypes;bundle-version="[2.0.0,3.0.0)",
- org.eclipse.core.runtime.compatibility;bundle-version="3.2.0"
+ org.eclipse.wst.xml.xpath2.wtptypes;bundle-version="[2.0.0,3.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xml.xpath.ui.internal;x-friends:="org.eclipse.wst.xsl.*",
