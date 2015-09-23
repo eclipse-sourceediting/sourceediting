@@ -22,6 +22,6 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.xml.xpath.ui.tests</artifactId>
-  <version>1.0.100-SNAPSHOT</version>
+  <version>1.0.101-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
 </project>
