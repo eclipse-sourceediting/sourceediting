@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2013 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,8 +100,6 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
  * Dumpers based on 'type'.</p>
  */
 public class ModelManagerImpl implements IModelManager {
-
-	
 	
 	static class ReadEditType {
 		ReadEditType(String type) {
@@ -200,7 +198,6 @@ public class ModelManagerImpl implements IModelManager {
 	 * @return
 	 */
 	public synchronized static IModelManager getInstance() {
-
 		if (instance == null) {
 			instance = new ModelManagerImpl();
 		}
@@ -288,10 +285,16 @@ public class ModelManagerImpl implements IModelManager {
 	private void _decrCount(SharedObject sharedObject, ReadEditType type) {
 		if (type == READ) {
 			sharedObject.referenceCountForRead--;
+			if (Logger.DEBUG_MODELMANAGER) {
+				trace("decrementing Read count for model", sharedObject.theSharedModel.getId(), sharedObject.referenceCountForRead);
+			}
 			FileBufferModelManager.getInstance().disconnect(sharedObject.theSharedModel.getStructuredDocument());
 		}
 		else if (type == EDIT) {
 			sharedObject.referenceCountForEdit--;
+			if (Logger.DEBUG_MODELMANAGER) {
+				trace("decrementing Edit count for model", sharedObject.theSharedModel.getId(), sharedObject.referenceCountForEdit);
+			}
 			FileBufferModelManager.getInstance().disconnect(sharedObject.theSharedModel.getStructuredDocument());
 		}
 		else
@@ -663,10 +666,16 @@ public class ModelManagerImpl implements IModelManager {
 		synchronized(sharedObject) {
 			if (type == READ) {
 				sharedObject.referenceCountForRead++;
+				if (Logger.DEBUG_MODELMANAGER) {
+					trace("incrementing Read count for model", sharedObject.theSharedModel.getId(), sharedObject.referenceCountForRead);
+				}
 				FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
 			}
 			else if (type == EDIT) {
 				sharedObject.referenceCountForEdit++;
+				if (Logger.DEBUG_MODELMANAGER) {
+					trace("incrementing Edit count for model", sharedObject.theSharedModel.getId(), sharedObject.referenceCountForEdit);
+				}
 				FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
 			}
 			else
@@ -677,10 +686,16 @@ public class ModelManagerImpl implements IModelManager {
 	private void _initCount(SharedObject sharedObject, ReadEditType type) {
 		synchronized(sharedObject) {
 			if (type == READ) {
+				if (Logger.DEBUG_MODELMANAGER) {
+					trace("Creating model for Read", sharedObject.theSharedModel.getId(), 1);
+				}
 				FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
 				sharedObject.referenceCountForRead = 1;
 			}
 			else if (type == EDIT) {
+				if (Logger.DEBUG_MODELMANAGER) {
+					trace("Creating model for Edit", sharedObject.theSharedModel.getId(), 1);
+				}
 				FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
 				sharedObject.referenceCountForEdit = 1;
 			}
@@ -1876,6 +1891,9 @@ public class ModelManagerImpl implements IModelManager {
 		}
 
 		cleanupDiscardedModel(sharedObject.theSharedModel);
+		if (Logger.DEBUG_MODELMANAGER) {
+			trace("Remaining models in the model manager", fManagedObjects.entrySet(), fManagedObjects.size());
+		}
 	}
 
 	private void cleanupDiscardedModel(IStructuredModel structuredModel) {
