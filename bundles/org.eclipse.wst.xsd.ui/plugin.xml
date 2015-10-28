@@ -64,6 +64,14 @@
           name="%_UI_XML_SCHEMA_VALIDATOR_PREFERENCE">
     </page>
 	</extension>
+	
+	   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferenceInitializer">
+      </initializer>
+   </extension>
+   
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<provisionalDefinition
 			type="preferencepages"
