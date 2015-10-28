@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Timer;
@@ -40,6 +41,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.core.runtime.content.IContentTypeSettings;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.jface.action.Action;
@@ -183,6 +185,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.UnknownContentTypeDialog;
+import org.eclipse.wst.sse.ui.internal.UnknownContentTypeDialog2;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
@@ -1054,6 +1057,15 @@ public class StructuredTextEditor extends TextEditor {
 	private static final String UNDO_ACTION_DESC_DEFAULT = SSEUIMessages.Undo_Text_Change__UI_; //$NON-NLS-1$ = "Undo Text Change."
 	private static final String UNDO_ACTION_TEXT = SSEUIMessages._Undo__0___Ctrl_Z_UI_; //$NON-NLS-1$ = "&Undo {0} @Ctrl+Z"
 	private static final String UNDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Undo_Text_Change__Ctrl_Z_UI_; //$NON-NLS-1$ = "&Undo Text Change @Ctrl+Z"
+
+	/*
+	 * The user will be prompted to associate the input's name with the
+	 * content type matching this initialiation data value, if a model could
+	 * not be built for the input, a value is given, and a content type was
+	 * found for it.
+	 */
+	private static final String PREFERRED_CONTENT_TYPE_WHEN_UNSUPPORTED = "org.eclipse.wst.sse.ui.unsupported_preferred_default"; //$NON-NLS-1$
+
 	// development time/debug variables only
 	private int adapterRequests;
 
@@ -1100,6 +1112,9 @@ public class StructuredTextEditor extends TextEditor {
 	private boolean fUpdateMenuTextPending;
 	/** The quick outline handler */
 	private QuickOutlineHandler fOutlineHandler;
+
+	/** initialization data from this instance's editor extension */
+	private Map fInitializationData = null;
 
 	private boolean shouldClose = false;
 	private long startPerfTime;
@@ -1946,16 +1961,32 @@ public class StructuredTextEditor extends TextEditor {
 		/* if could not get the model prompt user to update content type
 		 * if preferences allow, then try to get model again
 		 */
-		if(model == null &&	SSEUIPlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
-			// display a dialog informing user of unknown content type giving them chance to update preferences
-			UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
-			dialog.open();
+		if (model == null && SSEUIPlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
+			if (fInitializationData != null && fInitializationData.containsKey(PREFERRED_CONTENT_TYPE_WHEN_UNSUPPORTED)) {
+				IContentType contentType = Platform.getContentTypeManager().getContentType(fInitializationData.get(PREFERRED_CONTENT_TYPE_WHEN_UNSUPPORTED).toString());
+				if (contentType != null && !StringUtils.contains(contentType.getFileSpecs(IContentTypeSettings.FILE_NAME_SPEC), input.getName(), false)) {
+					/*
+					 * Display a dialog informing user of unknown content type,
+					 * offering to update preferences for them
+					 */
+					UnknownContentTypeDialog2 dialog = new UnknownContentTypeDialog2(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), input.getName(), contentType);
+					dialog.open();
+				}
+			}
+			else {
+				/*
+				 * Display a dialog informing user of unknown content type,
+				 * giving them chance to update preferences
+				 */
+				UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
+				dialog.open();
+			}
 
-			//try to get model again in hopes user updated preferences
+			// try to get model again in hopes user updated preferences
 			super.doSetInput(input);
 			model = tryToGetModel(input);
 			
-			//still could not get the model to open this editor so log
+			// still could not get the model to open this editor, so log
 			if(model == null) {
 				logUnexpectedDocumentKind(input);
 			}
@@ -3722,5 +3753,12 @@ public class StructuredTextEditor extends TextEditor {
 				return new QuickOutlinePopupDialog(parent, shellStyle, getInternalModel(), config);
 			}
 		};
+	}
+
+	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
+		super.setInitializationData(cfig, propertyName, data);
+		if (data instanceof Map) {
+			fInitializationData = (Map) data;
+		}
 	}
 }

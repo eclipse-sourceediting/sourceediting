@@ -9,9 +9,11 @@
 			name="%HTML_Source_Page_Editor.name"
 			icon="$nl$/icons/full/obj16/sourceEditor.gif"
 			contributorClass="org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML"
-			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.html.core.htmlsource.source">
+			<class class="org.eclipse.wst.sse.ui.StructuredTextEditor">
+				<parameter name="org.eclipse.wst.sse.ui.unsupported_preferred_default" value="org.eclipse.wst.html.core.htmlsource"/>
+			</class>
 			<contentTypeBinding
 				contentTypeId="org.eclipse.wst.html.core.htmlsource" />
 		</editor>
