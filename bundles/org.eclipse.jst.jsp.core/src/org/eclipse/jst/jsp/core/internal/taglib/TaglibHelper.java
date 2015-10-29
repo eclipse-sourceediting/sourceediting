@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 IBM Corporation and others.
+ * Copyright (c) 2004, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,9 +97,9 @@ public class TaglibHelper {
 	 * Because the TaglibHelper is destroyed and recreated whenever
 	 * the classpath changes this cache will not become stale
 	 */
-	private Set fNotFoundClasses = null;
+	Set fNotFoundClasses = null;
 
-	private Map fClassMap = null;
+	Map fClassMap = null;
 
 	/**
 	 * Used to keep the {@link #fNotFoundClasses} cache clean when memory is low
@@ -639,6 +639,10 @@ public class TaglibHelper {
 				return false;
 			}
 
+			public boolean isInfo() {
+				return false;
+			}
+
 			public boolean isError() {
 				return true;
 			}
@@ -724,6 +728,10 @@ public class TaglibHelper {
 			}
 
 			public void setSourceEnd(int sourceEnd) {
+			}
+
+			public boolean isInfo() {
+				return false;
 			}
 
 			public boolean isWarning() {

@@ -12,6 +12,10 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 import org.eclipse.jdt.core.compiler.IProblem;
 
+/**
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
+ */
 public interface IJSPProblem extends IProblem {
 
 	int F_PROBLEM_ID_LITERAL = 0xA0000000;

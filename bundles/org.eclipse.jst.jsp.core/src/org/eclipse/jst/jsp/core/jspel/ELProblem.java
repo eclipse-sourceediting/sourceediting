@@ -95,6 +95,10 @@ public class ELProblem implements IJSPProblem {
 		return fSeverity == ValidationMessage.WARNING;
 	}
 
+	public boolean isInfo() {
+		return fSeverity == ValidationMessage.INFORMATION;
+	}
+
 	public void setSourceEnd(int sourceEnd) {}
 
 	public void setSourceLineNumber(int lineNumber) {}

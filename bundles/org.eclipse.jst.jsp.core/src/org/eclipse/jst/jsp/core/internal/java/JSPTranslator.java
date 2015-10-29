@@ -520,6 +520,10 @@ public class JSPTranslator implements Externalizable {
 			public void setSourceEnd(int sourceEnd) {
 			}
 
+			public boolean isInfo() {
+				return false;
+			}
+
 			public boolean isWarning() {
 				return false;
 			}
