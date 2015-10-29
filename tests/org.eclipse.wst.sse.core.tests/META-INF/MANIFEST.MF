@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.sse.core.tests
 Bundle-Version: 1.0.601.qualifier
-Bundle-ClassPath: ssemodeltests.jar
 Bundle-Activator: org.eclipse.wst.sse.core.tests.SSEModelTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin

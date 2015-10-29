@@ -15,9 +15,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.eclipse.webtools.sourceediting</groupId>
-    <artifactId>org.eclipse.webtools.sourceediting.tests</artifactId>
+    <artifactId>tests</artifactId>
     <version>3.6.0-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
@@ -32,30 +31,31 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho.version}</version>
-        <configuration>
-          <dependencies>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.jdt.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.jst.jsp.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>com.ibm.icu</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-          </dependencies>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <plugin>
+    <groupId>org.eclipse.tycho</groupId>
+    <artifactId>target-platform-configuration</artifactId>
+    <configuration>
+      <dependency-resolution>
+         <extraRequirements>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.jdt.core</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.jst.jsp.core</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>com.ibm.icu</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+          </extraRequirements>
+       </dependency-resolution>
+     </configuration>
+     </plugin>
+     </plugins>
+  </build> 
 </project>

@@ -15,9 +15,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.eclipse.webtools.sourceediting</groupId>
-    <artifactId>org.eclipse.webtools.sourceediting.tests</artifactId>
+    <artifactId>tests</artifactId>
     <version>3.6.0-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
@@ -34,16 +33,17 @@
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho.version}</version>
+        <artifactId>target-platform-configuration</artifactId>
         <configuration>
-          <dependencies>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.wst.xml.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-          </dependencies>
+          <dependency-resolution>
+             <extraRequirements>
+                <requirement>
+                  <type>eclipse-plugin</type>
+                  <id>org.eclipse.wst.xml.core</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+             </extraRequirements>
+          </dependency-resolution>
         </configuration>
       </plugin>
     </plugins>

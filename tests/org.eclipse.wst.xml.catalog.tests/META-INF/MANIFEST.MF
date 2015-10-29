@@ -15,5 +15,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xsd,
  org.eclipse.wst.common.uriresolver
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: catalogtests.jar
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

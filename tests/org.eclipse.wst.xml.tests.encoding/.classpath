@@ -5,6 +5,7 @@
 	<classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con">
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/wst/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/jst/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

@@ -22,7 +22,7 @@
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
-  <artifactId>org.eclipse.webtools.sourceediting</artifactId>
+  <artifactId>sourceediting-parent</artifactId>
   <version>3.6.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -31,74 +31,50 @@
   </properties>
 
   <modules>
-    <module>docs/org.eclipse.jst.jsp.ui.infopop</module>
-    <module>docs/org.eclipse.wst.doc.user</module>
-    <module>docs/org.eclipse.wst.dtdeditor.doc.user</module>
-    <module>docs/org.eclipse.wst.dtd.ui.infopop</module>
-    <module>docs/org.eclipse.wst.html.ui.infopop</module>
-    <module>docs/org.eclipse.wst.sse.doc.user</module>
-    <module>docs/org.eclipse.wst.sse.ui.infopop</module>
-    <module>docs/org.eclipse.wst.webtools.doc.user</module>
-    <module>docs/org.eclipse.wst.xmleditor.doc.user</module>
-    <module>docs/org.eclipse.wst.xml.ui.infopop</module>
-    <module>docs/org.eclipse.wst.xsdeditor.doc.user</module>
-
-    <module>features/org.eclipse.wst.web_core.feature</module>
-    <module>features/org.eclipse.wst.web_sdk.feature</module>
-    <module>features/org.eclipse.wst.web_ui.feature</module>
-    <module>features/org.eclipse.wst.web_userdoc.feature</module>
-    <module>features/org.eclipse.wst.xml_core.feature</module>
-    <module>features/org.eclipse.wst.xml_sdk.feature</module>
-    <module>features/org.eclipse.wst.xml_ui.feature</module>
-    <module>features/org.eclipse.wst.xml_userdoc.feature</module>
-    <module>features/org.eclipse.wst.web_tests.feature</module>
-    <module>features/org.eclipse.wst.xml_tests.feature</module>
-
-    <module>bundles/org.eclipse.jst.jsp.core</module>
-    <module>bundles/org.eclipse.jst.jsp.ui</module>
-    <module>bundles/org.eclipse.jst.standard.schemas</module>
-    <module>bundles/org.eclipse.wst.css.core</module>
-    <module>bundles/org.eclipse.wst.css.ui</module>
-    <module>bundles/org.eclipse.wst.dtd.core</module>
-    <module>bundles/org.eclipse.wst.dtd.ui</module>
-    <module>bundles/org.eclipse.wst.html.core</module>
-    <module>bundles/org.eclipse.wst.html.ui</module>
-    <module>bundles/org.eclipse.wst.jsdt.web.core</module>
-    <module>bundles/org.eclipse.wst.jsdt.web.support.jsp</module>
-    <module>bundles/org.eclipse.wst.jsdt.web.ui</module>
-    <module>bundles/org.eclipse.wst.sse.core</module>
-    <module>bundles/org.eclipse.wst.sse.ui</module>
-    <module>bundles/org.eclipse.wst.standard.schemas</module>
-    <module>bundles/org.eclipse.wst.xml.core</module>
-    <module>bundles/org.eclipse.wst.xml.ui</module>
-    <module>bundles/org.eclipse.wst.xsd.core</module>
-    <module>bundles/org.eclipse.wst.xsd.ui</module>
-    <module>bundles/org.eclipse.wtp.javascript.capabilities</module>
-    <module>bundles/org.eclipse.wtp.web.capabilities</module>
-    <module>bundles/org.eclipse.wtp.xml.capabilities</module>
-
-    <module>tests/org.eclipse.jst.jsp.core.tests</module>
-    <module>tests/org.eclipse.jst.jsp.tests.encoding</module>
-    <module>tests/org.eclipse.jst.jsp.ui.tests</module>
-    <module>tests/org.eclipse.wst.css.core.tests</module>
-    <module>tests/org.eclipse.wst.css.tests.encoding</module>
-    <module>tests/org.eclipse.wst.css.ui.tests</module>
-    <module>tests/org.eclipse.wst.dtd.core.tests</module>
-    <module>tests/org.eclipse.wst.dtd.ui.tests</module>
-    <module>tests/org.eclipse.wst.html.core.tests</module>
-    <module>tests/org.eclipse.wst.html.tests.encoding</module>
-    <module>tests/org.eclipse.wst.html.ui.tests</module>
-    <module>tests/org.eclipse.wst.jsdt.web.core.tests</module>
-    <module>tests/org.eclipse.wst.jsdt.web.ui.tests</module>
-    <module>tests/org.eclipse.wst.sse.core.tests</module>
-    <module>tests/org.eclipse.wst.sse.ui.tests</module>
-    <module>tests/org.eclipse.wst.xml.catalog.tests</module>
-    <module>tests/org.eclipse.wst.xml.core.tests</module>
-    <module>tests/org.eclipse.wst.xml.tests.encoding</module>
-    <module>tests/org.eclipse.wst.xml.ui.tests</module>
-    <module>tests/org.eclipse.wst.xml.validation.tests</module>
-    <module>tests/org.eclipse.wst.xsd.core.tests</module>
-    <module>tests/org.eclipse.wst.xsd.ui.tests</module>
-    <module>tests/org.eclipse.wst.xsd.validation.tests</module>
+    <module>bundles</module>
+    <module>docs</module>
+    <module>tests</module>
+    <module>features</module>
   </modules>
+  
+  <profiles>
+    <profile>
+      <id>build-individual-bundles</id>
+      <modules>
+        <module>site</module>
+      </modules>
+    </profile>
+  </profiles>
+
+  <!-- build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build -->
+    
+    <repositories>
+  	<!-- Additional dependencies -->
+  	<repository>
+  		<id>org.eclipse.e4.ui-snapshots</id>
+  		<url>http://download.eclipse.org/e4/snapshots/org.eclipse.e4.ui</url>
+  		<layout>p2</layout>
+  	</repository>
+    <!-- To reference parent pom -->
+    <repository>
+      <id>Webtools Repository - Releases</id>
+      <name>Webtools Repository - Releases</name>
+      <url>https://repo.eclipse.org/content/repositories/webtools-releases/</url>
+    </repository>
+    <repository>
+      <id>Webtools Repository - Snapshots</id>
+      <name>Webtools Repository - Snapshots</name>
+      <url>https://repo.eclipse.org/content/repositories/webtools-snapshots/</url>
+    </repository>
+  </repositories>
 </project>

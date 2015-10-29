@@ -15,9 +15,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.eclipse.webtools.sourceediting</groupId>
-    <artifactId>org.eclipse.webtools.sourceediting.tests</artifactId>
+    <artifactId>tests</artifactId>
     <version>3.6.0-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
@@ -39,35 +38,43 @@
         <configuration>
           <useUIHarness>true</useUIHarness>
           <useUIThread>true</useUIThread>
-          <dependencies>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.equinox.event</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.wst.dtd.ui</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.wst.standard.schemas</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <!-- A JSF template proposal is contributed and expected by the unit tests -->
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.jst.jsf.ui</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <!-- This is needed after adding the jsf.ui dependency -->
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.jst.jee.ejb</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-          </dependencies>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <dependency-resolution>
+             <extraRequirements>
+                <requirement>
+                  <type>eclipse-plugin</type>
+                  <id>org.eclipse.equinox.event</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+                <requirement>
+                  <type>eclipse-plugin</type>
+                  <id>org.eclipse.wst.dtd.ui</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+                <requirement>
+                  <type>eclipse-plugin</type>
+                  <id>org.eclipse.wst.standard.schemas</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+                <requirement>
+                  <!-- A JSF template proposal is contributed and expected by the unit tests -->
+                  <type>eclipse-plugin</type>
+                  <id>org.eclipse.jst.jsf.ui</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+                <requirement>
+                  <!-- This is needed after adding the jsf.ui dependency -->
+                  <type>eclipse-plugin</type>
+                  <id>org.eclipse.jst.jee.ejb</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+             </extraRequirements>
+          </dependency-resolution>
         </configuration>
       </plugin>
     </plugins>

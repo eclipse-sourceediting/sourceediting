@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <category-def name="SourceEditing" label="WTP SourceEditing">Editors to efficiently develop XML/HTNML/JSP</category-def>
+   <feature id="org.eclipse.wst.web_core.feature" version="0.0.0">
+      <category name="WST Web Core"/>
+   </feature>
+   <feature id="org.eclipse.wst.web_sdk.feature" version="0.0.0">
+      <category name="Eclipse Web Developer Tools SDK"/>
+   </feature>
+   <feature id="org.eclipse.wst.web_tests.feature" version="0.0.0">
+      <category name="WST Web Tests"/>
+   </feature>
+   <feature id="org.eclipse.wst.web_ui.feature" version="0.0.0">
+      <category name="Eclipse Web Developer Tools"/>
+   </feature>
+   <feature id="org.eclipse.wst.web_userdoc.feature" version="0.0.0">
+      <category name="Eclipse Web Developer Tools User Documentation"/>
+   </feature>
+   <feature id="org.eclipse.wst.xml_core.feature" version="0.0.0">
+      <category name="WST XML Core"/>
+   </feature>
+   <feature id="org.eclipse.wst.xml_sdk.feature" version="0.0.0">
+      <category name="Eclipse XML Editors and Tools SDK"/>
+   </feature>
+   <feature id="org.eclipse.wst.xml_tests.feature" version="0.0.0">
+      <category name="WST XML Tests"/>
+   </feature>
+   <feature id="org.eclipse.wst.xml_ui.feature" version="0.0.0">
+      <category name="Eclipse XML Editors and Tools"/>
+   </feature>
+   <feature id="org.eclipse.wst.xml_userdoc.feature" version="0.0.0">
+      <category name="Eclipse XML Editors and Tools User Documentation"/>
+   </feature>
+</site>

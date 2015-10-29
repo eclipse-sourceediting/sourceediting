@@ -15,9 +15,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.eclipse.webtools.sourceediting</groupId>
-    <artifactId>org.eclipse.webtools.sourceediting.tests</artifactId>
+    <artifactId>tests</artifactId>
     <version>3.6.0-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
@@ -32,65 +31,66 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <version>${tycho.version}</version>
-        <configuration>
-          <dependencies>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.wst.dtd.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.wst.xsd.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.wst.standard.schemas</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.jst.standard.schemas</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.pde.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>javax.servlet</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>javax.servlet.jsp</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.osgi.compatibility.state</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.update.configurator</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>p2-installable-unit</type>
-              <artifactId>org.eclipse.jst.j2ee.core</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-          </dependencies>
-        </configuration>
-      </plugin>
-    </plugins>
+    <plugin>
+    <groupId>org.eclipse.tycho</groupId>
+    <artifactId>target-platform-configuration</artifactId>
+    <configuration>
+      <dependency-resolution>
+         <extraRequirements>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.wst.dtd.core</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.wst.xsd.core</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.wst.standard.schemas</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.jst.standard.schemas</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.pde.core</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>javax.servlet</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>javax.servlet.jsp</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.osgi.compatibility.state</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.update.configurator</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+            <requirement>
+               <type>eclipse-plugin</type>
+               <id>org.eclipse.jst.j2ee.core</id>
+               <versionRange>0.0.0</versionRange>
+            </requirement>
+         </extraRequirements>
+       </dependency-resolution>
+     </configuration>
+   </plugin>
+   </plugins>
   </build>
 </project>
