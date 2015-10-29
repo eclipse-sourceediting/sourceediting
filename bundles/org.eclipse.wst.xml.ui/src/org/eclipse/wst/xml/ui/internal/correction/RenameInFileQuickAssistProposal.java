@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 	 */
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		IDocument document = viewer.getDocument();
+		Point originalRange = viewer.getSelectedRange();
 		LinkedPositionGroup group = new LinkedPositionGroup();
 		try {
 				IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
@@ -102,7 +103,11 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 			LinkedModeUI ui = new EditorLinkedModeUI(linkedModeModel, viewer);
 			ui.setExitPosition(viewer, offset, 0, LinkedPositionGroup.NO_STOP);
 			ui.enter();
-
+			/*
+			 * Keep the cursor at the original offset and restore the original
+			 * selection instead of the entire first matching region
+			 */
+			viewer.setSelectedRange(originalRange.x, originalRange.y);
 			fSelectedRegion = ui.getSelectedRegion();
 		}
 		catch (BadLocationException e) {
@@ -144,7 +149,6 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getImage()
 	 */
 	public Image getImage() {
-		// return JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_LOCAL);
 		return XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_LOCAL_VARIABLE);
 	}
 
@@ -154,7 +158,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getSelection(org.eclipse.jface.text.IDocument)
 	 */
 	public Point getSelection(IDocument document) {
-		return new Point(fSelectedRegion.getOffset(), fSelectedRegion.getLength());
+		return null;
 	}
 
 	/*
