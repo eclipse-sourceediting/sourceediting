@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1306,9 +1306,9 @@ class ProjectDescription {
 	/**
 	 * @return Returns the implicitReferences for the given path
 	 */
-	Hashtable getImplicitReferences(String path) {
+	ArrayMap getImplicitReferences(String path) {
 		String localRoot = getLocalRoot(path);
-		Hashtable implicitReferences = (Hashtable) fImplicitReferences.get(localRoot);
+		ArrayMap implicitReferences = (ArrayMap) fImplicitReferences.get(localRoot);
 		if (implicitReferences == null) {
 			implicitReferences = new ArrayMap(1);
 			fImplicitReferences.put(localRoot, implicitReferences);
@@ -1742,7 +1742,7 @@ class ProjectDescription {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
 				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, records[i], ITaglibIndexDelta.REMOVED));
-				((ArrayMap) getImplicitReferences(jar.getFullPath().toString())).remove(records[i].getURI(), records[i]);
+				getImplicitReferences(jar.getFullPath().toString()).removeFirstPair(records[i].getURI(), records[i]);
 			}
 			if (record.has11TLD) {
 				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.REMOVED));
@@ -1774,7 +1774,7 @@ class ProjectDescription {
 		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath().toString());
 		if (record != null) {
 			if (record.getURI() != null) {
-				((ArrayMap) getImplicitReferences(tld.getFullPath().toString())).remove(record.getURI(), record);
+				getImplicitReferences(tld.getFullPath().toString()).removeFirstPair(record.getURI(), record);
 			}
 			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.REMOVED));
 		}
@@ -1789,7 +1789,7 @@ class ProjectDescription {
 			for (int i = 0; i < records.length; i++) {
 				if (_debugIndexCreation)
 					Logger.log(Logger.INFO, "removed record for " + records[i].getURI() + "@" + records[i].path); //$NON-NLS-1$ //$NON-NLS-2$
-				((ArrayMap) getImplicitReferences(webxml.getFullPath().toString())).remove(records[i].getURI(), records[i]);
+				getImplicitReferences(webxml.getFullPath().toString()).removeFirstPair(records[i].getURI(), records[i]);
 				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, records[i], ITaglibIndexDelta.REMOVED));
 			}
 		}

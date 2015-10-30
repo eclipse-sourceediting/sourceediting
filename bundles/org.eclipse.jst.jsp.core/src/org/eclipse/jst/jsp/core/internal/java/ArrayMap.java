@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,15 +27,16 @@ import java.util.Iterator;
  */
 public class ArrayMap extends Hashtable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	public ArrayMap(int size) {
 		super(size);
 	}
 	
+	/*
+	 * Adds the given value to a collection of values stored for the given
+	 * key.
+	 */
 	public synchronized Object put(Object key, Object value) {
 		Object[] values = (Object[]) super.get(key);
 		Object[] newValues = null;
@@ -59,7 +60,7 @@ public class ArrayMap extends Hashtable {
 	 * @param value the specific value to remove from the key
 	 * @return The item removed from the list of values
 	 */
-	public synchronized Object remove(Object key, Object value) {
+	public synchronized Object removeFirstPair(Object key, Object value) {
 		Object[] values = (Object[]) super.get(key);
 		Object removed = null;
 		Object[] result = null;
