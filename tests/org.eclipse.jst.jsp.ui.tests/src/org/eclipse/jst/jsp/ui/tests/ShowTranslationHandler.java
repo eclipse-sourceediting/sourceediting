@@ -62,7 +62,6 @@ public class ShowTranslationHandler extends AbstractHandler {
 	public ShowTranslationHandler() {
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -71,8 +70,6 @@ public class ShowTranslationHandler extends AbstractHandler {
 	 * .ExecutionEvent)
 	 */
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		// IDE.openEditor(event.getApplicationContext(), createEditorInput(),
-		// JavaUI.ID_CU_EDITOR, true);
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
 		if (selection instanceof IStructuredSelection) {
 			List list = ((IStructuredSelection) selection).toList();

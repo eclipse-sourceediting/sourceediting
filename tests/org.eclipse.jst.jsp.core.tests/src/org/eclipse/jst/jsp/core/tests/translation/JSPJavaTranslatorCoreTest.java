@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2014 IBM Corporation and others.
+ * Copyright (c) 2006, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,13 +20,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -42,6 +39,7 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslationUtil;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
@@ -57,13 +55,13 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.ValidationFramework;
-import org.eclipse.wst.validation.ValidationResult;
-import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.operations.ValidatorManager;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+
+import junit.framework.TestCase;
 
 public class JSPJavaTranslatorCoreTest extends TestCase {
 
@@ -99,6 +97,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		IProject project = BundleResourceUtil.createSimpleProject(projectName, null, null);
 		assertTrue(project.exists());
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName);
+		project.open(new NullProgressMonitor());
 		IFile file = project.getFile("WebContent/test107338.jsp");
 		assertTrue(file.exists());
 
@@ -270,32 +269,30 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 	}
 
 	public void test_109721() throws Exception {
-		boolean doValidateSegments = JSPCorePlugin.getDefault().getPluginPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
+		/*
+		 * https://bugs.eclipse.org/109721 JSP editor does not find taglib
+		 * directives in include-prelude or jsp:include, make sure the
+		 * contents were processed
+		 */
 		String testName = "bug_109721";
 		// Create new project
-		IProject project = BundleResourceUtil.createSimpleProject(testName, Platform.getStateLocation(JSPCoreTestsPlugin.getDefault().getBundle()).append(testName), null);
-		assertTrue(project.exists());
+		final IProject project = BundleResourceUtil.createSimpleProject(testName, null, null);
+		assertTrue(project.isAccessible());
 
-		/*
-		 * Should be set to false. A referenced class in an included segment
-		 * does not exist.
-		 */
-		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
 		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/WebContent/WEB-INF/lib/struts.jar");
 
 		waitForBuildAndValidation(project);
 
-		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
-		IFile main = project.getFile("WebContent/main.jsp");
-		ValidationResult result = new JSPJavaValidator().validate(main, IResourceDelta.ADDED, new ValidationState(), new NullProgressMonitor());
-		List messages = result.getReporter(null).getMessages();
+		String filename = "/WebContent/main.jsp";
+		IStructuredModel sm = StructuredModelManager.getModelManager().getModelForRead(project.getFile(filename));
+		assertNotNull("couldn't load JSP for test", sm);
+		JSPTranslationUtil translationUtil = new JSPTranslationUtil(sm.getStructuredDocument());
+		String translation = translationUtil.getTranslation().getJavaText();
+		sm.releaseFromRead();
 
-		StringBuffer s = new StringBuffer();
-		for (int i = 0; i < messages.size(); i++) {
-			s.append("\nproblem on line " + ((IMessage)messages.get(i)).getAttribute(IMarker.LINE_NUMBER) + ": " + ((IMessage)messages.get(i)).getText());
-		}
-		assertEquals("problem markers found" + s.toString(), 0, messages.size());
+		assertTrue("Java content from Fragment included by web.xml is missing", translation.indexOf("int alpha = 5;") > 0);
+		assertTrue("Tag that could only be known by processing Fragment included only by web.xml is not in the translation", translation.indexOf("org.apache.struts.taglib.bean.DefineTag") > 0);
 	}
 
 	public void test_181057a() throws Exception {

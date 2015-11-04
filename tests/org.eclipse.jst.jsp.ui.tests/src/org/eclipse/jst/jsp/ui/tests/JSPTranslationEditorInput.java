@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2010 IBM Corporation and others.
+ * Copyright (c) 2008, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 /**
  * @author nitin
- * 
+ *
  */
 public class JSPTranslationEditorInput implements IStorageEditorInput {
 	private class JSPTranslationStorage implements IStorage {
@@ -63,7 +63,7 @@ public class JSPTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#getFullPath()
 		 */
 		public IPath getFullPath() {
-			return new Path(getTranslationAdapter().getJSPTranslation().getJavaPath());
+			return new Path(fModel.getBaseLocation() + ".java");
 		}
 
 		/*
@@ -72,7 +72,6 @@ public class JSPTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#getName()
 		 */
 		public String getName() {
-//			return getTranslationAdapter().getJSPTranslation().getCompilationUnit().getElementName();
 			return new Path(fModel.getBaseLocation()).lastSegment() + ".java";
 		}
 
@@ -164,6 +163,4 @@ public class JSPTranslationEditorInput implements IStorageEditorInput {
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) fModel.getDocument().getAdapterFor(IJSPTranslation.class);
 		return adapter;
 	}
-
-
 }
