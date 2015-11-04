@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,7 +63,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#getFullPath()
 		 */
 		public IPath getFullPath() {
-			return new Path(fTranslation.getJavaPath());
+			return new Path(fBaseLocation + ".js"); //$NON-NLS-1$
 		}
 
 		/*
@@ -72,7 +72,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#getName()
 		 */
 		public String getName() {
-			return new Path(fBaseLocation).lastSegment() + ".js";
+			return new Path(fBaseLocation + ".js").lastSegment(); //$NON-NLS-1$
 		}
 
 		/*
@@ -81,7 +81,7 @@ public class JSTranslationEditorInput implements IStorageEditorInput {
 		 * @see org.eclipse.core.resources.IStorage#isReadOnly()
 		 */
 		public boolean isReadOnly() {
-			return false;
+			return true;
 		}
 	}
 
