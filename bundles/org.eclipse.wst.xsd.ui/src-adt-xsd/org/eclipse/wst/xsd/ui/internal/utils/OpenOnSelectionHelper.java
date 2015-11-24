@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -161,9 +161,11 @@ public class OpenOnSelectionHelper
   {
     XSDSchema schema = xsdSchema;
     String name = null;
+    String namespace = null;
     if (comp instanceof XSDNamedComponent)
     {
       name = ((XSDNamedComponent) comp).getName();
+      namespace = ((XSDNamedComponent) comp).getTargetNamespace();
     }
     if (name == null)
     {
@@ -175,6 +177,7 @@ public class OpenOnSelectionHelper
         if (comp instanceof XSDNamedComponent)
         {
           name = ((XSDNamedComponent) comp).getName();
+          namespace = ((XSDNamedComponent) comp).getTargetNamespace();
         }
       }
     }
@@ -210,19 +213,34 @@ public class OpenOnSelectionHelper
       objects = schema.getAttributeDeclarations();
     }
 
-    if (objects != null)
-    {
-      for (Iterator iter = objects.iterator(); iter.hasNext();)
-      {
-        XSDNamedComponent namedComp = (XSDNamedComponent) iter.next();
-        
-        if (namedComp.getName().equals(name))
-        {
-          revealObject(namedComp);
-          return namedComp;
-        }
-      }
-    }
+	if (objects != null)
+	{
+		if (namespace != null)
+		{
+			// First, look for a namespace and name match
+			for (Iterator iter = objects.iterator(); iter.hasNext();)
+			{
+				XSDNamedComponent namedComp = (XSDNamedComponent) iter.next();
+				String targetNamespace = namedComp.getTargetNamespace();
+				if (namedComp.getName().equals(name) && targetNamespace != null && targetNamespace.equals(namespace))
+				{
+					revealObject(namedComp);
+					return namedComp;
+				}
+			}
+		}
+
+		// Next, look for just a name match
+		for (Iterator iter = objects.iterator(); iter.hasNext();)
+		{
+			XSDNamedComponent namedComp = (XSDNamedComponent) iter.next();
+			if (namedComp.getName().equals(name))
+			{
+				revealObject(namedComp);
+				return namedComp;
+			}
+		}
+	}
     return null;
   }
   
