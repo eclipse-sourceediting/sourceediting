@@ -1,0 +1,40 @@
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.jsp.*;
+
+public class __2F_INCLUDES_5F_TESTS_2F_cdata_2F_cdata_2E_jsp extends javax.servlet.http.HttpServlet{
+public void _jspService(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response)
+		throws java.io.IOException, javax.servlet.ServletException {
+javax.servlet.jsp.PageContext pageContext = JspFactory.getDefaultFactory().getPageContext(this, request, response, null, true, JspWriter.DEFAULT_BUFFER, true);
+javax.servlet.ServletContext application = pageContext.getServletContext();
+javax.servlet.ServletConfig config = pageContext.getServletConfig();
+javax.servlet.jsp.JspWriter out = pageContext.getOut();
+Object page = this;
+javax.servlet.http.HttpSession session = pageContext.getSession();
+
+try {
+{out.print("");} //markup
+
+int a = 1;
+if (a 
+<
+ 2) {
+ out.println("x");
+} 
+{out.print("");} //markup
+   
+String test = "";
+
+
+   
+int a = 1;
+if (a < 2) {   
+ out.println("x");
+}
+
+
+ 
+ test.toUpperCase();
+{out.print("");} //markup
+ } catch (java.lang.Exception e) {} 
+}}

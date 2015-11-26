@@ -1,0 +1,43 @@
+/* primitive values */
+NUMBERS {
+    NUMBER: 123.456;
+    PERCENTAGE: 123.456%;
+    EMS: 123.456em;
+    EXS: 123.456ex;
+    PX: 123.456px;
+    PX2: -123px;
+    CM: 123.456cm;
+    MM: 123.456mm;
+    IN: 123.456in;
+    PT: 123.456pt;
+    PC: 123.456pc;
+    DEG: -123.456deg;
+    RAD: 123.456rad;
+    GRAD: 123.456grad;
+    MS: 123.456ms;
+    S: 123.456s;
+    HZ: 123.456Hz;
+    KHZ: 123.456kHz;
+    DIMENSION: -123.456zzz;
+    INTEGER: 123;
+}
+
+STRINGS {
+    STRING: "string";
+    URI: URL("http://www.ibm.com/");
+    IDENT: left;
+    HASH: #abcdef;
+    URANGE: U+20A7;
+    SLASH: /;
+    COMMA: ,;
+    INHERIT_PRIMITIVE: inherit;
+    ATTR: attr(KEY);
+    FORMAT: format("truedoc");
+    LOCAL: local("Excelsior Roman");
+}
+
+FUNCTIONS {
+    COUNTER: counter(par-num, upper-roman);
+    RECT: rect(12, 34, 56, 78);
+    RGBCOLOR: rgb(255, 128, 0);
+}

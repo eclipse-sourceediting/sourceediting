@@ -1,0 +1,32 @@
+/* global (begin) */
+body {
+    font-family: sans-serif;
+    color: #000;
+    background: #fff url("global/body-back.gif") repeat-x;
+}
+
+/* global (end) */
+
+/* header (begin) */
+    #header {
+        margin-bottom: 1em;
+        padding-bottom: 2px;
+    }
+    #header form {
+        font-size: 85%;
+        display: inline;
+    }
+
+    #header .btn,
+    #header .txt {
+        font-size: 80%;
+    }
+
+    .message {
+        border: 1px solid red;
+        margin: 0.3em 0em;
+        padding: 0.3em;
+        color: green;
+    }
+
+/* header (end)   */

@@ -1,0 +1,554 @@
+[0, 21] (@charset "ISO-8859-1")
+    ContextRegion--> CHARSET: 0-8/9, ContextRegion--> STRING: 9-21, 
+[21, 22] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[22, 26] (
+
+)
+    ContextRegion--> S: 0-4, 
+[26, 49] (@import url("hoge.css"))
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> URI: 8-23, 
+[49, 50] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[50, 52] (
+)
+    ContextRegion--> S: 0-2, 
+[52, 87] (@import /* comment */ url(hoge.css))
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> COMMENT: 8-21, ContextRegion--> S: 21-22, ContextRegion--> URI: 22-35, 
+[87, 88] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[88, 90] (
+)
+    ContextRegion--> S: 0-2, 
+[90, 122] (@import "hoge.css" /* comment */)
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> STRING: 8-18/19, ContextRegion--> COMMENT: 19-32, 
+[122, 123] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[123, 125] (
+)
+    ContextRegion--> S: 0-2, 
+[125, 166] (@IMPORT 'hoge.css' media1,media2 , media3)
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> STRING: 8-18/19, ContextRegion--> MEDIUM: 19-25, ContextRegion--> MEDIA_SEPARATOR: 25-26, ContextRegion--> MEDIUM: 26-32/33, ContextRegion--> MEDIA_SEPARATOR: 33-34/35, ContextRegion--> MEDIUM: 35-41, 
+[166, 167] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[167, 171] (
+
+)
+    ContextRegion--> S: 0-4, 
+[171, 184] (@media print )
+    ContextRegion--> MEDIA: 0-6/7, ContextRegion--> MEDIUM: 7-12/13, 
+[184, 189] ({
+
+)
+    ContextRegion--> LBRACE: 0-1/5, 
+[189, 190] (})
+    ContextRegion--> RBRACE: 0-1, 
+[190, 194] (
+
+)
+    ContextRegion--> S: 0-4, 
+[194, 206] (@page :left )
+    ContextRegion--> PAGE: 0-5/6, ContextRegion--> CSS_PAGE_SELECTOR: 6-11/12, 
+[206, 211] ({
+
+)
+    ContextRegion--> LBRACE: 0-1/5, 
+[211, 212] (})
+    ContextRegion--> RBRACE: 0-1, 
+[212, 216] (
+
+)
+    ContextRegion--> S: 0-4, 
+[216, 227] (h1, h2, h3 )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2, ContextRegion--> SELECTOR_SEPARATOR: 2-3/4, ContextRegion--> SELECTOR_ELEMENT_NAME: 4-6, ContextRegion--> SELECTOR_SEPARATOR: 6-7/8, ContextRegion--> SELECTOR_ELEMENT_NAME: 8-10/11, 
+[227, 230] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[230, 253] (font-family: sans-serif)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11, ContextRegion--> DECLARATION_SEPARATOR: 11-12/13, ContextRegion--> DECLARATION_VALUE_IDENT: 13-23, 
+[253, 255] (  )
+    ContextRegion--> S: 0-2, 
+[255, 256] (})
+    ContextRegion--> RBRACE: 0-1, 
+[256, 258] (
+)
+    ContextRegion--> S: 0-2, 
+[258, 264] (h1 em )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2, ContextRegion--> SELECTOR_COMBINATOR: 2-3, ContextRegion--> SELECTOR_ELEMENT_NAME: 3-5/6, 
+[264, 267] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[267, 278] (color: blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-11, 
+[278, 280] (  )
+    ContextRegion--> S: 0-2, 
+[280, 281] (})
+    ContextRegion--> RBRACE: 0-1, 
+[281, 283] (
+)
+    ContextRegion--> S: 0-2, 
+[283, 297] (div p *[href] )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-3, ContextRegion--> SELECTOR_COMBINATOR: 3-4, ContextRegion--> SELECTOR_ELEMENT_NAME: 4-5, ContextRegion--> SELECTOR_COMBINATOR: 5-6, ContextRegion--> SELECTOR_UNIVERSAL: 6-7, ContextRegion--> SELECTOR_ATTRIBUTE_START: 7-8, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 8-12, ContextRegion--> SELECTOR_ATTRIBUTE_END: 12-13/14, 
+[297, 300] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[300, 311] (color: blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-11, 
+[311, 313] (  )
+    ContextRegion--> S: 0-2, 
+[313, 314] (})
+    ContextRegion--> RBRACE: 0-1, 
+[314, 316] (
+)
+    ContextRegion--> S: 0-2, 
+[316, 325] (body > P )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/5, ContextRegion--> SELECTOR_COMBINATOR: 5-6/7, ContextRegion--> SELECTOR_ELEMENT_NAME: 7-8/9, 
+[325, 328] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[328, 344] (line-height: 1.3)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11, ContextRegion--> DECLARATION_SEPARATOR: 11-12/13, ContextRegion--> DECLARATION_VALUE_NUMBER: 13-16, 
+[344, 346] (  )
+    ContextRegion--> S: 0-2, 
+[346, 347] (})
+    ContextRegion--> RBRACE: 0-1, 
+[347, 349] (
+)
+    ContextRegion--> S: 0-2, 
+[349, 361] (div ol>li p )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-3, ContextRegion--> SELECTOR_COMBINATOR: 3-4, ContextRegion--> SELECTOR_ELEMENT_NAME: 4-6, ContextRegion--> SELECTOR_COMBINATOR: 6-7, ContextRegion--> SELECTOR_ELEMENT_NAME: 7-9, ContextRegion--> SELECTOR_COMBINATOR: 9-10, ContextRegion--> SELECTOR_ELEMENT_NAME: 10-11/12, 
+[361, 363] ({ )
+    ContextRegion--> LBRACE: 0-1/2, 
+[363, 364] (})
+    ContextRegion--> RBRACE: 0-1, 
+[364, 366] (
+)
+    ContextRegion--> S: 0-2, 
+[366, 375] (math + p )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/5, ContextRegion--> SELECTOR_COMBINATOR: 5-6/7, ContextRegion--> SELECTOR_ELEMENT_NAME: 7-8/9, 
+[375, 378] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[378, 392] (text-indent: 0)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11, ContextRegion--> DECLARATION_SEPARATOR: 11-12/13, ContextRegion--> DECLARATION_VALUE_NUMBER: 13-14, 
+[392, 394] (  )
+    ContextRegion--> S: 0-2, 
+[394, 395] (})
+    ContextRegion--> RBRACE: 0-1, 
+[395, 397] (
+)
+    ContextRegion--> S: 0-2, 
+[397, 412] (h1.opener + h2 )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2, ContextRegion--> SELECTOR_CLASS: 2-9/10, ContextRegion--> SELECTOR_COMBINATOR: 10-11/12, ContextRegion--> SELECTOR_ELEMENT_NAME: 12-14/15, 
+[412, 415] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[415, 431] (margin-top: -5mm)
+    ContextRegion--> DECLARATION_PROPERTY: 0-10, ContextRegion--> DECLARATION_SEPARATOR: 10-11/12, ContextRegion--> DECLARATION_VALUE_DIMENSION: 12-16, 
+[431, 433] (  )
+    ContextRegion--> S: 0-2, 
+[433, 434] (})
+    ContextRegion--> RBRACE: 0-1, 
+[434, 436] (
+)
+    ContextRegion--> S: 0-2, 
+[436, 446] (h1[title] )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2, ContextRegion--> SELECTOR_ATTRIBUTE_START: 2-3, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 3-8, ContextRegion--> SELECTOR_ATTRIBUTE_END: 8-9/10, 
+[446, 449] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[449, 460] (color: blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-11, 
+[460, 461] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[461, 463] (  )
+    ContextRegion--> S: 0-2, 
+[463, 464] (})
+    ContextRegion--> RBRACE: 0-1, 
+[464, 466] (
+)
+    ContextRegion--> S: 0-2, 
+[466, 486] (span[class=example] )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4, ContextRegion--> SELECTOR_ATTRIBUTE_START: 4-5, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 5-10, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 10-11, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 11-18, ContextRegion--> SELECTOR_ATTRIBUTE_END: 18-19/20, 
+[486, 489] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[489, 500] (color: blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-11, 
+[500, 501] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[501, 503] (  )
+    ContextRegion--> S: 0-2, 
+[503, 504] (})
+    ContextRegion--> RBRACE: 0-1, 
+[504, 506] (
+)
+    ContextRegion--> S: 0-2, 
+[506, 550] (span[hello="Cleveland"][goodbye="Columbus"] )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4, ContextRegion--> SELECTOR_ATTRIBUTE_START: 4-5, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 5-10, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 10-11, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 11-22, ContextRegion--> SELECTOR_ATTRIBUTE_END: 22-23, ContextRegion--> SELECTOR_ATTRIBUTE_START: 23-24, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 24-31, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 31-32, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 32-42, ContextRegion--> SELECTOR_ATTRIBUTE_END: 42-43/44, 
+[550, 553] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[553, 564] (color: blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-11, 
+[564, 565] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[565, 567] (  )
+    ContextRegion--> S: 0-2, 
+[567, 568] (})
+    ContextRegion--> RBRACE: 0-1, 
+[568, 570] (
+)
+    ContextRegion--> S: 0-2, 
+[570, 590] (a[rel~="copyright"] )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_ATTRIBUTE_START: 1-2, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 2-5, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 5-7, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 7-18, ContextRegion--> SELECTOR_ATTRIBUTE_END: 18-19/20, 
+[590, 593] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[593, 604] (color: blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-11, 
+[604, 606] (  )
+    ContextRegion--> S: 0-2, 
+[606, 607] (})
+    ContextRegion--> RBRACE: 0-1, 
+[607, 609] (
+)
+    ContextRegion--> S: 0-2, 
+[609, 638] (a[href="http://www.w3.org/"] )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_ATTRIBUTE_START: 1-2, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 2-6, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 6-7, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 7-27, ContextRegion--> SELECTOR_ATTRIBUTE_END: 27-28/29, 
+[638, 641] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[641, 652] (color: blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-11, 
+[652, 654] (  )
+    ContextRegion--> S: 0-2, 
+[654, 655] (})
+    ContextRegion--> RBRACE: 0-1, 
+[655, 657] (
+)
+    ContextRegion--> S: 0-2, 
+[657, 668] (*[lang=fr] )
+    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_ATTRIBUTE_START: 1-2, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 2-6, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 6-7, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 7-9, ContextRegion--> SELECTOR_ATTRIBUTE_END: 9-10/11, 
+[668, 671] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[671, 685] (display : none)
+    ContextRegion--> DECLARATION_PROPERTY: 0-7/8, ContextRegion--> DECLARATION_SEPARATOR: 8-9/10, ContextRegion--> DECLARATION_VALUE_IDENT: 10-14, 
+[685, 687] (  )
+    ContextRegion--> S: 0-2, 
+[687, 688] (})
+    ContextRegion--> RBRACE: 0-1, 
+[688, 690] (
+)
+    ContextRegion--> S: 0-2, 
+[690, 704] (*[lang|="en"] )
+    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_ATTRIBUTE_START: 1-2, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 2-6, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 6-8, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 8-12, ContextRegion--> SELECTOR_ATTRIBUTE_END: 12-13/14, 
+[704, 707] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[707, 718] (color : red)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5/6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> DECLARATION_VALUE_IDENT: 8-11, 
+[718, 720] (  )
+    ContextRegion--> S: 0-2, 
+[720, 721] (})
+    ContextRegion--> RBRACE: 0-1, 
+[721, 723] (
+)
+    ContextRegion--> S: 0-2, 
+[723, 750] (DIALOGUE[character=romeo]
+)
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-8, ContextRegion--> SELECTOR_ATTRIBUTE_START: 8-9, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 9-18, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 18-19, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 19-24, ContextRegion--> SELECTOR_ATTRIBUTE_END: 24-25/27, 
+[750, 753] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[753, 800] (voice-family: "Lawrence Olivier", charles, male)
+    ContextRegion--> DECLARATION_PROPERTY: 0-12, ContextRegion--> DECLARATION_SEPARATOR: 12-13/14, ContextRegion--> DECLARATION_VALUE_STRING: 14-32, ContextRegion--> DECLARATION_VALUE_OPERATOR: 32-33/34, ContextRegion--> DECLARATION_VALUE_IDENT: 34-41, ContextRegion--> DECLARATION_VALUE_OPERATOR: 41-42/43, ContextRegion--> DECLARATION_VALUE_IDENT: 43-47, 
+[800, 802] (  )
+    ContextRegion--> S: 0-2, 
+[802, 803] (})
+    ContextRegion--> RBRACE: 0-1, 
+[803, 805] (
+)
+    ContextRegion--> S: 0-2, 
+[805, 837] (DIALOGUE[ character = juliet ]
+)
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-8, ContextRegion--> SELECTOR_ATTRIBUTE_START: 8-9/10, ContextRegion--> SELECTOR_ATTRIBUTE_NAME: 10-19/20, ContextRegion--> SELECTOR_ATTRIBUTE_OPERATOR: 20-21/22, ContextRegion--> SELECTOR_ATTRIBUTE_VALUE: 22-28/29, ContextRegion--> SELECTOR_ATTRIBUTE_END: 29-30/32, 
+[837, 840] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[840, 886] (voice-family: "Vivien Leigh", victoria, female)
+    ContextRegion--> DECLARATION_PROPERTY: 0-12, ContextRegion--> DECLARATION_SEPARATOR: 12-13/14, ContextRegion--> DECLARATION_VALUE_STRING: 14-28, ContextRegion--> DECLARATION_VALUE_OPERATOR: 28-29/30, ContextRegion--> DECLARATION_VALUE_IDENT: 30-38, ContextRegion--> DECLARATION_VALUE_OPERATOR: 38-39/40, ContextRegion--> DECLARATION_VALUE_IDENT: 40-46, 
+[886, 888] (  )
+    ContextRegion--> S: 0-2, 
+[888, 889] (})
+    ContextRegion--> RBRACE: 0-1, 
+[889, 891] (
+)
+    ContextRegion--> S: 0-2, 
+[891, 902] (*.pastoral )
+    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_CLASS: 1-10/11, 
+[902, 905] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[905, 917] (color: green)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-12, 
+[917, 919] (  )
+    ContextRegion--> S: 0-2, 
+[919, 920] (})
+    ContextRegion--> RBRACE: 0-1, 
+[920, 922] (
+)
+    ContextRegion--> S: 0-2, 
+[922, 932] (.pastoral )
+    ContextRegion--> SELECTOR_CLASS: 0-9/10, 
+[932, 935] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[935, 947] (color: green)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-12, 
+[947, 949] (  )
+    ContextRegion--> S: 0-2, 
+[949, 950] (})
+    ContextRegion--> RBRACE: 0-1, 
+[950, 952] (
+)
+    ContextRegion--> S: 0-2, 
+[952, 964] (H1.pastoral )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2, ContextRegion--> SELECTOR_CLASS: 2-11/12, 
+[964, 967] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[967, 979] (color: green)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-12, 
+[979, 981] (  )
+    ContextRegion--> S: 0-2, 
+[981, 982] (})
+    ContextRegion--> RBRACE: 0-1, 
+[982, 984] (
+)
+    ContextRegion--> S: 0-2, 
+[984, 1002] (p.pastoral.marine )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_CLASS: 1-10, ContextRegion--> SELECTOR_CLASS: 10-17/18, 
+[1002, 1005] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1005, 1017] (color: green)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-12, 
+[1017, 1019] (  )
+    ContextRegion--> S: 0-2, 
+[1019, 1020] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1020, 1022] (
+)
+    ContextRegion--> S: 0-2, 
+[1022, 1034] (h1#chapter1 )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2, ContextRegion--> SELECTOR_ID: 2-11/12, 
+[1034, 1037] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1037, 1055] (text-align: center)
+    ContextRegion--> DECLARATION_PROPERTY: 0-10, ContextRegion--> DECLARATION_SEPARATOR: 10-11/12, ContextRegion--> DECLARATION_VALUE_IDENT: 12-18, 
+[1055, 1057] (  )
+    ContextRegion--> S: 0-2, 
+[1057, 1058] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1058, 1060] (
+)
+    ContextRegion--> S: 0-2, 
+[1060, 1080] (div > p:first-child )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-3/4, ContextRegion--> SELECTOR_COMBINATOR: 4-5/6, ContextRegion--> SELECTOR_ELEMENT_NAME: 6-7, ContextRegion--> SELECTOR_PSEUDO: 7-19/20, 
+[1080, 1083] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1083, 1097] (text-indent: 0)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11, ContextRegion--> DECLARATION_SEPARATOR: 11-12/13, ContextRegion--> DECLARATION_VALUE_NUMBER: 13-14, 
+[1097, 1099] (  )
+    ContextRegion--> S: 0-2, 
+[1099, 1100] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1100, 1102] (
+)
+    ContextRegion--> S: 0-2, 
+[1102, 1119] (p:first-child em )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-13, ContextRegion--> SELECTOR_COMBINATOR: 13-14, ContextRegion--> SELECTOR_ELEMENT_NAME: 14-16/17, 
+[1119, 1122] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1122, 1140] (font-weight : bold)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11/12, ContextRegion--> DECLARATION_SEPARATOR: 12-13/14, ContextRegion--> DECLARATION_VALUE_IDENT: 14-18, 
+[1140, 1142] (  )
+    ContextRegion--> S: 0-2, 
+[1142, 1143] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1143, 1145] (
+)
+    ContextRegion--> S: 0-2, 
+[1145, 1163] (* > a:first-child )
+    ContextRegion--> SELECTOR_UNIVERSAL: 0-1/2, ContextRegion--> SELECTOR_COMBINATOR: 2-3/4, ContextRegion--> SELECTOR_ELEMENT_NAME: 4-5, ContextRegion--> SELECTOR_PSEUDO: 5-17/18, 
+[1163, 1166] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1166, 1184] (font-weight : bold)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11/12, ContextRegion--> DECLARATION_SEPARATOR: 12-13/14, ContextRegion--> DECLARATION_VALUE_IDENT: 14-18, 
+[1184, 1186] (  )
+    ContextRegion--> S: 0-2, 
+[1186, 1187] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1187, 1189] (
+)
+    ContextRegion--> S: 0-2, 
+[1189, 1203] (a:first-child )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-13/14, 
+[1203, 1206] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1206, 1224] (font-weight : bold)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11/12, ContextRegion--> DECLARATION_SEPARATOR: 12-13/14, ContextRegion--> DECLARATION_VALUE_IDENT: 14-18, 
+[1224, 1226] (  )
+    ContextRegion--> S: 0-2, 
+[1226, 1227] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1227, 1229] (
+)
+    ContextRegion--> S: 0-2, 
+[1229, 1248] (a.external:visited )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_CLASS: 1-10, ContextRegion--> SELECTOR_PSEUDO: 10-18/19, 
+[1248, 1251] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1251, 1262] (color: blue)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-11, 
+[1262, 1264] (  )
+    ContextRegion--> S: 0-2, 
+[1264, 1265] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1265, 1267] (
+)
+    ContextRegion--> S: 0-2, 
+[1267, 1281] (a:focus:hover )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-7, ContextRegion--> SELECTOR_PSEUDO: 7-13/14, 
+[1281, 1284] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1284, 1301] (background: white)
+    ContextRegion--> DECLARATION_PROPERTY: 0-10, ContextRegion--> DECLARATION_SEPARATOR: 10-11/12, ContextRegion--> DECLARATION_VALUE_IDENT: 12-17, 
+[1301, 1303] (  )
+    ContextRegion--> S: 0-2, 
+[1303, 1304] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1304, 1306] (
+)
+    ContextRegion--> S: 0-2, 
+[1306, 1320] (html:lang(fr) )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4, ContextRegion--> SELECTOR_PSEUDO: 4-13/14, 
+[1320, 1323] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1323, 1340] (quotes: '<<' '>>')
+    ContextRegion--> DECLARATION_PROPERTY: 0-6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> DECLARATION_VALUE_STRING: 8-12/13, ContextRegion--> DECLARATION_VALUE_STRING: 13-17, 
+[1340, 1342] (  )
+    ContextRegion--> S: 0-2, 
+[1342, 1343] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1343, 1345] (
+)
+    ContextRegion--> S: 0-2, 
+[1345, 1359] (html:lang(de) )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4, ContextRegion--> SELECTOR_PSEUDO: 4-13/14, 
+[1359, 1362] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1362, 1395] (quotes: '>>' '<<' '\2039' '\203A')
+    ContextRegion--> DECLARATION_PROPERTY: 0-6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> DECLARATION_VALUE_STRING: 8-12/13, ContextRegion--> DECLARATION_VALUE_STRING: 13-17/18, ContextRegion--> DECLARATION_VALUE_STRING: 18-25/26, ContextRegion--> DECLARATION_VALUE_STRING: 26-33, 
+[1395, 1397] (  )
+    ContextRegion--> S: 0-2, 
+[1397, 1398] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1398, 1400] (
+)
+    ContextRegion--> S: 0-2, 
+[1400, 1414] (:lang(fr) > Q )
+    ContextRegion--> SELECTOR_PSEUDO: 0-9/10, ContextRegion--> SELECTOR_COMBINATOR: 10-11/12, ContextRegion--> SELECTOR_ELEMENT_NAME: 12-13/14, 
+[1414, 1417] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1417, 1434] (quotes: '<<' '>>')
+    ContextRegion--> DECLARATION_PROPERTY: 0-6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> DECLARATION_VALUE_STRING: 8-12/13, ContextRegion--> DECLARATION_VALUE_STRING: 13-17, 
+[1434, 1436] (  )
+    ContextRegion--> S: 0-2, 
+[1436, 1437] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1437, 1439] (
+)
+    ContextRegion--> S: 0-2, 
+[1439, 1453] (:lang(de) > Q )
+    ContextRegion--> SELECTOR_PSEUDO: 0-9/10, ContextRegion--> SELECTOR_COMBINATOR: 10-11/12, ContextRegion--> SELECTOR_ELEMENT_NAME: 12-13/14, 
+[1453, 1456] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1456, 1489] (quotes: '>>' '<<' '\2039' '\203A')
+    ContextRegion--> DECLARATION_PROPERTY: 0-6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> DECLARATION_VALUE_STRING: 8-12/13, ContextRegion--> DECLARATION_VALUE_STRING: 13-17/18, ContextRegion--> DECLARATION_VALUE_STRING: 18-25/26, ContextRegion--> DECLARATION_VALUE_STRING: 26-33, 
+[1489, 1491] (  )
+    ContextRegion--> S: 0-2, 
+[1491, 1492] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1492, 1494] (
+)
+    ContextRegion--> S: 0-2, 
+[1494, 1509] (p:first-letter )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-14/15, 
+[1509, 1512] ({  )
+    ContextRegion--> LBRACE: 0-1/3, 
+[1512, 1526] (font-size: 3em)
+    ContextRegion--> DECLARATION_PROPERTY: 0-9, ContextRegion--> DECLARATION_SEPARATOR: 9-10/11, ContextRegion--> DECLARATION_VALUE_DIMENSION: 11-14, 
+[1526, 1527] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[1527, 1528] ( )
+    ContextRegion--> S: 0-1, 
+[1528, 1547] (font-weight: normal)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11, ContextRegion--> DECLARATION_SEPARATOR: 11-12/13, ContextRegion--> DECLARATION_VALUE_IDENT: 13-19, 
+[1547, 1549] (  )
+    ContextRegion--> S: 0-2, 
+[1549, 1550] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1550, 1552] (
+)
+    ContextRegion--> S: 0-2, 
+[1552, 1569] (p.special:before )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_CLASS: 1-9, ContextRegion--> SELECTOR_PSEUDO: 9-16/17, 
+[1569, 1571] ({ )
+    ContextRegion--> LBRACE: 0-1/2, 
+[1571, 1591] (content: "Special! ")
+    ContextRegion--> DECLARATION_PROPERTY: 0-7, ContextRegion--> DECLARATION_SEPARATOR: 7-8/9, ContextRegion--> DECLARATION_VALUE_STRING: 9-20, 
+[1591, 1592] ( )
+    ContextRegion--> S: 0-1, 
+[1592, 1593] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1593, 1595] (
+)
+    ContextRegion--> S: 0-2, 
+[1595, 1618] (p.special:first-letter )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_CLASS: 1-9, ContextRegion--> SELECTOR_PSEUDO: 9-22/23, 
+[1618, 1620] ({ )
+    ContextRegion--> LBRACE: 0-1/2, 
+[1620, 1634] (color: #ffd800)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_HASH: 7-14, 
+[1634, 1635] ( )
+    ContextRegion--> S: 0-1, 
+[1635, 1636] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1636, 1638] (
+)
+    ContextRegion--> S: 0-2, 
+[1638, 1643] (BODY )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/5, 
+[1643, 1645] ({ )
+    ContextRegion--> LBRACE: 0-1/2, 
+[1645, 1703] (font-family: Baskerville, "Heisi Mincho W3", Symbol, serif)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11, ContextRegion--> DECLARATION_SEPARATOR: 11-12/13, ContextRegion--> DECLARATION_VALUE_IDENT: 13-24, ContextRegion--> DECLARATION_VALUE_OPERATOR: 24-25/26, ContextRegion--> DECLARATION_VALUE_STRING: 26-43, ContextRegion--> DECLARATION_VALUE_OPERATOR: 43-44/45, ContextRegion--> DECLARATION_VALUE_IDENT: 45-51, ContextRegion--> DECLARATION_VALUE_OPERATOR: 51-52/53, ContextRegion--> DECLARATION_VALUE_IDENT: 53-58, 
+[1703, 1704] ( )
+    ContextRegion--> S: 0-1, 
+[1704, 1705] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1705, 1707] (
+)
+    ContextRegion--> S: 0-2, 
+[1707, 1721] (*:lang(ja-jp) )
+    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-13/14, 
+[1721, 1723] ({ )
+    ContextRegion--> LBRACE: 0-1/2, 
+[1723, 1768] (font: 900 14pt/16pt "Heisei Mincho W9", serif)
+    ContextRegion--> DECLARATION_PROPERTY: 0-4, ContextRegion--> DECLARATION_SEPARATOR: 4-5/6, ContextRegion--> DECLARATION_VALUE_NUMBER: 6-9/10, ContextRegion--> DECLARATION_VALUE_DIMENSION: 10-14, ContextRegion--> DECLARATION_VALUE_OPERATOR: 14-15, ContextRegion--> DECLARATION_VALUE_DIMENSION: 15-19/20, ContextRegion--> DECLARATION_VALUE_STRING: 20-38, ContextRegion--> DECLARATION_VALUE_OPERATOR: 38-39/40, ContextRegion--> DECLARATION_VALUE_IDENT: 40-45, 
+[1768, 1769] ( )
+    ContextRegion--> S: 0-1, 
+[1769, 1770] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1770, 1772] (
+)
+    ContextRegion--> S: 0-2, 
+[1772, 1786] (*:lang(zh-tw) )
+    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-13/14, 
+[1786, 1788] ({ )
+    ContextRegion--> LBRACE: 0-1/2, 
+[1788, 1826] (font: 800 14pt/16.5pt "Li Sung", serif)
+    ContextRegion--> DECLARATION_PROPERTY: 0-4, ContextRegion--> DECLARATION_SEPARATOR: 4-5/6, ContextRegion--> DECLARATION_VALUE_NUMBER: 6-9/10, ContextRegion--> DECLARATION_VALUE_DIMENSION: 10-14, ContextRegion--> DECLARATION_VALUE_OPERATOR: 14-15, ContextRegion--> DECLARATION_VALUE_DIMENSION: 15-21/22, ContextRegion--> DECLARATION_VALUE_STRING: 22-31, ContextRegion--> DECLARATION_VALUE_OPERATOR: 31-32/33, ContextRegion--> DECLARATION_VALUE_IDENT: 33-38, 
+[1826, 1827] ( )
+    ContextRegion--> S: 0-1, 
+[1827, 1828] (})
+    ContextRegion--> RBRACE: 0-1, 
+[1828, 1830] (
+)
+    ContextRegion--> S: 0-2, 
+
+-------

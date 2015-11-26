@@ -1,0 +1,5 @@
+number of errors      : 1
+
+------------error list-------------------------------------------
+Element type "complexType" must be followed by either attribute specifications, ">" or "/>". [6, 3]
+-----------------------------------------------------------------

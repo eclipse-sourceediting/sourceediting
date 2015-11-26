@@ -1,0 +1,15 @@
+<root><desc>Warmed leek salad</desc><!-- inline comment after tag -->
+<desc>Warmed leek salad</desc>   <!-- inline comment after text -->
+<price units="usd">6.95<!-- inline comment after text --></price>
+<price units="usd"><number/><!-- inline comment after tag --></price>
+<price units="usd"><number/>   <!-- inline comment after tag --></price>
+<price units="usd">   <number/><!-- inline comment after tag --></price>
+<price units="usd" units="usd">6.95<!-- inline comment after text --></price>
+<price units="usd" units="usd">6.95<!-- inline comment after text and followed by text -->dollars</price>
+<price units="usd" units="usd"><number/><!-- inline comment after tag --><unit/></price>
+<price><number/><!-- inline comment after tag --><unit/></price>
+<price><number/>
+<!-- comment on a new line --><unit/></price>
+<price><!-- inline comment --></price>
+<th><b>Fahrenheit <!-- testing --></b></th>
+</root>

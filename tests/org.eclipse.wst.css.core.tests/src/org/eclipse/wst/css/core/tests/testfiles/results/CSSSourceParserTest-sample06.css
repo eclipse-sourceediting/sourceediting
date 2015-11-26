@@ -1,0 +1,68 @@
+[0, 12] (declaration )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-11/12, 
+[12, 16] ({
+	)
+    ContextRegion--> LBRACE: 0-1/4, 
+[16, 33] (dimension : 100ex)
+    ContextRegion--> DECLARATION_PROPERTY: 0-9/10, ContextRegion--> DECLARATION_SEPARATOR: 10-11/12, ContextRegion--> DECLARATION_VALUE_DIMENSION: 12-17, 
+[33, 34] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[34, 37] (
+	)
+    ContextRegion--> S: 0-3, 
+[37, 133] (function : rect(100, 200, 300, 400), format("intellifont"), local("Excelsior Cyrilllic Upright"))
+    ContextRegion--> DECLARATION_PROPERTY: 0-8/9, ContextRegion--> DECLARATION_SEPARATOR: 9-10/11, ContextRegion--> DECLARATION_VALUE_FUNCTION: 11-16, ContextRegion--> DECLARATION_VALUE_NUMBER: 16-19, ContextRegion--> DECLARATION_VALUE_OPERATOR: 19-20/21, ContextRegion--> DECLARATION_VALUE_NUMBER: 21-24, ContextRegion--> DECLARATION_VALUE_OPERATOR: 24-25/26, ContextRegion--> DECLARATION_VALUE_NUMBER: 26-29, ContextRegion--> DECLARATION_VALUE_OPERATOR: 29-30/31, ContextRegion--> DECLARATION_VALUE_NUMBER: 31-34, ContextRegion--> DECLARATION_VALUE_PARENTHESIS_CLOSE: 34-35, ContextRegion--> DECLARATION_VALUE_OPERATOR: 35-36/37, ContextRegion--> DECLARATION_VALUE_FUNCTION: 37-44, ContextRegion--> DECLARATION_VALUE_STRING: 44-57, ContextRegion--> DECLARATION_VALUE_PARENTHESIS_CLOSE: 57-58, ContextRegion--> DECLARATION_VALUE_OPERATOR: 58-59/60, ContextRegion--> DECLARATION_VALUE_FUNCTION: 60-66, ContextRegion--> DECLARATION_VALUE_STRING: 66-95, ContextRegion--> DECLARATION_VALUE_PARENTHESIS_CLOSE: 95-96, 
+[133, 134] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[134, 137] (
+	)
+    ContextRegion--> S: 0-3, 
+[137, 151] (hash : #aabbcc)
+    ContextRegion--> DECLARATION_PROPERTY: 0-4/5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_HASH: 7-14, 
+[151, 152] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[152, 155] (
+	)
+    ContextRegion--> S: 0-3, 
+[155, 166] (ident : any)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5/6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> DECLARATION_VALUE_IDENT: 8-11, 
+[166, 167] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[167, 170] (
+	)
+    ContextRegion--> S: 0-3, 
+[170, 184] (number : 99999)
+    ContextRegion--> DECLARATION_PROPERTY: 0-6/7, ContextRegion--> DECLARATION_SEPARATOR: 7-8/9, ContextRegion--> DECLARATION_VALUE_NUMBER: 9-14, 
+[184, 185] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[185, 188] (
+	)
+    ContextRegion--> S: 0-3, 
+[188, 205] (percentage : 100%)
+    ContextRegion--> DECLARATION_PROPERTY: 0-10/11, ContextRegion--> DECLARATION_SEPARATOR: 11-12/13, ContextRegion--> DECLARATION_VALUE_PERCENTAGE: 13-17, 
+[205, 206] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[206, 209] (
+	)
+    ContextRegion--> S: 0-3, 
+[209, 226] (string : "string")
+    ContextRegion--> DECLARATION_PROPERTY: 0-6/7, ContextRegion--> DECLARATION_SEPARATOR: 7-8/9, ContextRegion--> DECLARATION_VALUE_STRING: 9-17, 
+[226, 227] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[227, 230] (
+	)
+    ContextRegion--> S: 0-3, 
+[230, 268] (unicode-range : U+??, U+100-220, U+4??)
+    ContextRegion--> DECLARATION_PROPERTY: 0-13/14, ContextRegion--> DECLARATION_SEPARATOR: 14-15/16, ContextRegion--> DECLARATION_VALUE_UNICODE_RANGE: 16-20, ContextRegion--> DECLARATION_VALUE_OPERATOR: 20-21/22, ContextRegion--> DECLARATION_VALUE_UNICODE_RANGE: 22-31, ContextRegion--> DECLARATION_VALUE_OPERATOR: 31-32/33, ContextRegion--> DECLARATION_VALUE_UNICODE_RANGE: 33-38, 
+[268, 269] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[269, 271] (
+)
+    ContextRegion--> S: 0-2, 
+[271, 272] (})
+    ContextRegion--> RBRACE: 0-1, 
+[272, 274] (
+)
+    ContextRegion--> S: 0-2, 
+
+-------

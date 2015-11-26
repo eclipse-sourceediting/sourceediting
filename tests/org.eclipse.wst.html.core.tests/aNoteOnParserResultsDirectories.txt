@@ -1,0 +1,18 @@
+These notes pertain to the v20041210_2300 version 
+in CVS repository. 
+
+Note, the "05-24" directory *should* match
+the parser results from parser of same date, 
+*but* after transition to org.eclipse, it seems 
+the case of tags is different. Oddly, seems 
+like the current treatement of case is correct, 
+so ... 12-10 parser results should be used as 
+reference, unless some new insight is gained. 
+It does match previous version except for case. 
+(And, the previous version was changed "by hand" 
+to accomidate the transition to org.eclipse). 
+
+TODO: this file, and 05-24 reference directory
+can be deleted around M3, once whole team has 
+reviewed and confident 12-10 version is correct
+reference. 

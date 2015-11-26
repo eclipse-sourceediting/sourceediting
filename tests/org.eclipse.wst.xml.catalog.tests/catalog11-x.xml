@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <public id="idvalue1" publicId="Kroelleboelle" uri="http://tempuri.org"/>
+  <system systemId="http://old-DTD-location.org/" uri="http://www.new-location.com/"/>
+  <uri name="urn:fishy:fish" uri="http://www.example.org/"/>
+  <public id="idvalue2" publicId="Sleepy" uri="http://tempuri.org"/>
+  <system systemId="http://old-DTD-location.org/" uri="http://www.new-location.com/"/>
+  <nextCatalog catalog="catalog.xml"/>
+  <delegatePublic catalog="tom.xml" publicIdStartString="-//OASIS//"/>
+  <delegateSystem catalog="fritz.xml" systemIdStartString="http:"/>
+  <delegateURI catalog="garfield.xml" uriStartString="urn:x-foods:lasagna"/>
+  <systemSuffix systemIdSuffix="schemas/goof.xml" uri="file:///Users/jesper/Documents/workspace-helios/org.eclipse.wst.xml.catalog.tests/data/schemas/2009/goof-v2.xml"/>
+  <uriSuffix uri="file:///Users/jesper/Documents/workspace-helios/org.eclipse.wst.xml.catalog.tests/data/schemas/2009/fun-v2.xml" uriSuffix="schemas/goof.xml"/>
+  <rewriteSystem rewritePrefix="http://cache.some-repository.com/schemes/" systemIdStartString="http://www.original-repository.com/schemes/"/>
+  <rewriteURI rewritePrefix="urn:funny:" uriStartString="urn:x-funny:"/>
+</catalog>

@@ -1,0 +1,534 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>index</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+</head>
+<body>
+	<script type="text/javascript">
+		function boo() {
+		}
+
+		boo();
+
+		define(
+				"ibm/PaperSheet",
+				[ "dojo", "dijit", "dojo/_base/array", "dijit/_WidgetBase",
+						"dojox/mobile/Container", "dojo/NodeList-traverse" ],
+				function(dojo, dijit, array, _WidgetBase, Container) {
+					return dojo
+							.declare(
+									"ibm.PaperSheet",
+									[ dijit._WidgetBase, dojox.mobile.Container ],
+									{
+
+										_sideMargin : 15,
+										_topMargin : 20,
+										_bottomMargin : 40,
+
+										_bottomLeft : null,
+										_bottomRight : null,
+										_bottomCenter : null,
+										_leftSide : null,
+										_rightSide : null,
+
+										constructor : function() {
+										},
+
+										postMixInProperties : function() {
+										},
+
+										postCreate : function() {
+											dojo.style(this.domNode,
+													"marginLeft", "auto");
+											dojo.style(this.domNode,
+													"marginRight", "auto");
+											dojo.style(this.domNode,
+													"marginBottom", "50px");
+											dojo.style(this.domNode,
+													"position", "relative");
+											dojo.style(this.domNode,
+													"backgroundColor", "white");
+											dojo
+													.style(this.domNode,
+															"backgroundImage",
+															"-webkit-linear-gradient(bottom, #F0F0F0 40%, #FFFFFF 100%)");
+
+											this._createSides();
+											this._createBottom();
+										},
+
+										// react to the parent resizing
+										resize : function() {
+											array.forEach(this.getChildren(),
+													function(child) {
+														if (child.resize) {
+															child.resize();
+														}
+													});
+
+											var domNodeHeight = dojo
+													.position(this.domNode).h;
+											var screenSize = dojox.mobile
+													.getScreenSize();
+											var containerWidth = screenSize.w
+													- (2 * this._sideMargin);
+
+											dojo.style(this.domNode, "width",
+													containerWidth + "px");
+											dojo.style(this.domNode, "top",
+													this._topMargin + "px");
+
+											var bottomWidth = Math.min(300,
+													(containerWidth / 2) + 10);
+
+											// bottom left
+											dojo
+													.style(this._bottomLeft,
+															"width",
+															bottomWidth + "px");
+											dojo.style(this._bottomLeft,
+													"height", "26px");
+											dojo.style(this._bottomLeft,
+													"left", "-10px");
+											dojo.style(this._bottomLeft, "top",
+													domNodeHeight + "px");
+
+											// bottom right
+											dojo.style(this._bottomRight,
+													"height", "26px");
+											dojo
+													.style(this._bottomRight,
+															"width",
+															bottomWidth + "px");
+											dojo.style(this._bottomRight,
+													"position", "absolute");
+											dojo
+													.style(
+															this._bottomRight,
+															"left",
+															((containerWidth - bottomWidth) + 10)
+																	+ "px");
+											dojo
+													.style(this._bottomRight,
+															"top",
+															domNodeHeight
+																	+ "px");
+
+											// bottom center
+											dojo.style(this._bottomCenter,
+													"height", "26px");
+											dojo
+													.style(this._bottomCenter,
+															"top",
+															domNodeHeight
+																	+ "px");
+											dojo.style(this._bottomCenter,
+													"left", (bottomWidth - 10)
+															+ "px");
+											dojo
+													.style(
+															this._bottomCenter,
+															"width",
+															(Math
+																	.max(
+																			0,
+																			containerWidth
+																					+ 20
+																					- (2 * bottomWidth)))
+																	+ "px");
+
+											// left
+											dojo.style(this._leftSide, "width",
+													"10px");
+											dojo.style(this._leftSide,
+													"height", domNodeHeight
+															+ "px");
+											dojo.style(this._leftSide, "left",
+													"-10px");
+
+											// right
+											dojo.style(this._rightSide,
+													"width", "10px");
+											dojo.style(this._rightSide,
+													"height", domNodeHeight
+															+ "px");
+											dojo.style(this._rightSide, "left",
+													containerWidth + "px");
+										},
+
+										_createBottom : function() {
+											this._bottomLeft = dojo.create(
+													"div", {}, this.domNode,
+													"last");
+											dojo.style(this._bottomLeft,
+													"position", "absolute");
+
+											// set background 
+											dojo
+													.style(
+															this._bottomLeft,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/left_bottom_shadow.png")
+																	+ "')");
+											dojo.style(this._bottomLeft,
+													"backgroundPosition",
+													"top left");
+											dojo.style(this._bottomLeft,
+													"backgroundRepeat",
+													"no-repeat");
+
+											this._bottomCenter = dojo.create(
+													"div", {}, this.domNode,
+													"last");
+											dojo.style(this._bottomCenter,
+													"position", "absolute");
+											dojo
+													.style(
+															this._bottomCenter,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/middle_bottom_shadow.png")
+																	+ "')");
+											dojo
+													.style(
+															this._bottomCenter,
+															"backgroundPosition",
+															"top");
+											dojo.style(this._bottomCenter,
+													"backgroundRepeat",
+													"repeat-x");
+
+											this._bottomRight = dojo.create(
+													"div", {}, this.domNode,
+													"last");
+											dojo.style(this._bottomRight,
+													"position", "absolute");
+
+											// set the shadow background
+											dojo
+													.style(
+															this._bottomRight,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/right_bottom_shadow.png")
+																	+ "')");
+											dojo.style(this._bottomRight,
+													"backgroundPosition",
+													"top right");
+											dojo.style(this._bottomRight,
+													"backgroundRepeat",
+													"no-repeat");
+										},
+
+										_createSides : function() {
+											this._leftSide = dojo.create("div",
+													{}, this.domNode, "first");
+											dojo.style(this._leftSide,
+													"position", "absolute");
+											dojo.style(this._leftSide, "top",
+													"0px");
+
+											// set background 
+											dojo
+													.style(
+															this._leftSide,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/left_shadow.png")
+																	+ "')");
+											dojo.style(this._leftSide,
+													"backgroundPosition",
+													"top left");
+
+											this._rightSide = dojo.create(
+													"div", {}, this.domNode,
+													"last");
+											dojo.style(this._rightSide,
+													"position", "absolute");
+											dojo.style(this._rightSide, "top",
+													"0px");
+
+											// set background 
+											dojo
+													.style(
+															this._rightSide,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/right_shadow.png")
+																	+ "')");
+											dojo.style(this._rightSide,
+													"backgroundPosition",
+													"top right");
+										}
+									});
+				});
+		<!--
+		define(
+				"ibm/PaperSheet",
+				[ "dojo", "dijit", "dojo/_base/array", "dijit/_WidgetBase",
+						"dojox/mobile/Container", "dojo/NodeList-traverse" ],
+				function(dojo, dijit, array, _WidgetBase, Container) {
+					return dojo
+							.declare(
+									"ibm.PaperSheet",
+									[ dijit._WidgetBase, dojox.mobile.Container ],
+									{
+
+										_sideMargin : 15,
+										_topMargin : 20,
+										_bottomMargin : 40,
+
+										_bottomLeft : null,
+										_bottomRight : null,
+										_bottomCenter : null,
+										_leftSide : null,
+										_rightSide : null,
+
+										constructor : function() {
+										},
+
+										postMixInProperties : function() {
+										},
+
+										postCreate : function() {
+											dojo.style(this.domNode,
+													"marginLeft", "auto");
+											dojo.style(this.domNode,
+													"marginRight", "auto");
+											dojo.style(this.domNode,
+													"marginBottom", "50px");
+											dojo.style(this.domNode,
+													"position", "relative");
+											dojo.style(this.domNode,
+													"backgroundColor", "white");
+											dojo
+													.style(this.domNode,
+															"backgroundImage",
+															"-webkit-linear-gradient(bottom, #F0F0F0 40%, #FFFFFF 100%)");
+
+											this._createSides();
+											this._createBottom();
+										},
+
+										// react to the parent resizing
+										resize : function() {
+											array.forEach(this.getChildren(),
+													function(child) {
+														if (child.resize) {
+															child.resize();
+														}
+													});
+
+											var domNodeHeight = dojo
+													.position(this.domNode).h;
+											var screenSize = dojox.mobile
+													.getScreenSize();
+											var containerWidth = screenSize.w
+													- (2 * this._sideMargin);
+
+											dojo.style(this.domNode, "width",
+													containerWidth + "px");
+											dojo.style(this.domNode, "top",
+													this._topMargin + "px");
+
+											var bottomWidth = Math.min(300,
+													(containerWidth / 2) + 10);
+
+											// bottom left
+											dojo
+													.style(this._bottomLeft,
+															"width",
+															bottomWidth + "px");
+											dojo.style(this._bottomLeft,
+													"height", "26px");
+											dojo.style(this._bottomLeft,
+													"left", "-10px");
+											dojo.style(this._bottomLeft, "top",
+													domNodeHeight + "px");
+
+											// bottom right
+											dojo.style(this._bottomRight,
+													"height", "26px");
+											dojo
+													.style(this._bottomRight,
+															"width",
+															bottomWidth + "px");
+											dojo.style(this._bottomRight,
+													"position", "absolute");
+											dojo
+													.style(
+															this._bottomRight,
+															"left",
+															((containerWidth - bottomWidth) + 10)
+																	+ "px");
+											dojo
+													.style(this._bottomRight,
+															"top",
+															domNodeHeight
+																	+ "px");
+
+											// bottom center
+											dojo.style(this._bottomCenter,
+													"height", "26px");
+											dojo
+													.style(this._bottomCenter,
+															"top",
+															domNodeHeight
+																	+ "px");
+											dojo.style(this._bottomCenter,
+													"left", (bottomWidth - 10)
+															+ "px");
+											dojo
+													.style(
+															this._bottomCenter,
+															"width",
+															(Math
+																	.max(
+																			0,
+																			containerWidth
+																					+ 20
+																					- (2 * bottomWidth)))
+																	+ "px");
+
+											// left
+											dojo.style(this._leftSide, "width",
+													"10px");
+											dojo.style(this._leftSide,
+													"height", domNodeHeight
+															+ "px");
+											dojo.style(this._leftSide, "left",
+													"-10px");
+
+											// right
+											dojo.style(this._rightSide,
+													"width", "10px");
+											dojo.style(this._rightSide,
+													"height", domNodeHeight
+															+ "px");
+											dojo.style(this._rightSide, "left",
+													containerWidth + "px");
+										},
+
+										_createBottom : function() {
+											this._bottomLeft = dojo.create(
+													"div", {}, this.domNode,
+													"last");
+											dojo.style(this._bottomLeft,
+													"position", "absolute");
+
+											// set background 
+											dojo
+													.style(
+															this._bottomLeft,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/left_bottom_shadow.png")
+																	+ "')");
+											dojo.style(this._bottomLeft,
+													"backgroundPosition",
+													"top left");
+											dojo.style(this._bottomLeft,
+													"backgroundRepeat",
+													"no-repeat");
+
+											this._bottomCenter = dojo.create(
+													"div", {}, this.domNode,
+													"last");
+											dojo.style(this._bottomCenter,
+													"position", "absolute");
+											dojo
+													.style(
+															this._bottomCenter,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/middle_bottom_shadow.png")
+																	+ "')");
+											dojo
+													.style(
+															this._bottomCenter,
+															"backgroundPosition",
+															"top");
+											dojo.style(this._bottomCenter,
+													"backgroundRepeat",
+													"repeat-x");
+
+											this._bottomRight = dojo.create(
+													"div", {}, this.domNode,
+													"last");
+											dojo.style(this._bottomRight,
+													"position", "absolute");
+
+											// set the shadow background
+											dojo
+													.style(
+															this._bottomRight,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/right_bottom_shadow.png")
+																	+ "')");
+											dojo.style(this._bottomRight,
+													"backgroundPosition",
+													"top right");
+											dojo.style(this._bottomRight,
+													"backgroundRepeat",
+													"no-repeat");
+										},
+
+										_createSides : function() {
+											this._leftSide = dojo.create("div",
+													{}, this.domNode, "first");
+											dojo.style(this._leftSide,
+													"position", "absolute");
+											dojo.style(this._leftSide, "top",
+													"0px");
+
+											// set background 
+											dojo
+													.style(
+															this._leftSide,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/left_shadow.png")
+																	+ "')");
+											dojo.style(this._leftSide,
+													"backgroundPosition",
+													"top left");
+
+											this._rightSide = dojo.create(
+													"div", {}, this.domNode,
+													"last");
+											dojo.style(this._rightSide,
+													"position", "absolute");
+											dojo.style(this._rightSide, "top",
+													"0px");
+
+											// set background 
+											dojo
+													.style(
+															this._rightSide,
+															"backgroundImage",
+															"url('"
+																	+ require
+																			.toUrl("ibm/images/right_shadow.png")
+																	+ "')");
+											dojo.style(this._rightSide,
+													"backgroundPosition",
+													"top right");
+										}
+									});
+				});
+	//-->
+	</script>
+</body>
+</html>

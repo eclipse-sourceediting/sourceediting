@@ -51,6 +51,8 @@
     <module>features/org.eclipse.wst.xml_sdk.feature</module>
     <module>features/org.eclipse.wst.xml_ui.feature</module>
     <module>features/org.eclipse.wst.xml_userdoc.feature</module>
+    <module>features/org.eclipse.wst.web_tests.feature</module>
+    <module>features/org.eclipse.wst.xml_tests.feature</module>
 
     <module>bundles/org.eclipse.jst.jsp.core</module>
     <module>bundles/org.eclipse.jst.jsp.ui</module>
@@ -74,5 +76,29 @@
     <module>bundles/org.eclipse.wtp.javascript.capabilities</module>
     <module>bundles/org.eclipse.wtp.web.capabilities</module>
     <module>bundles/org.eclipse.wtp.xml.capabilities</module>
+
+    <module>tests/org.eclipse.jst.jsp.core.tests</module>
+    <module>tests/org.eclipse.jst.jsp.tests.encoding</module>
+    <module>tests/org.eclipse.jst.jsp.ui.tests</module>
+    <module>tests/org.eclipse.wst.css.core.tests</module>
+    <module>tests/org.eclipse.wst.css.tests.encoding</module>
+    <module>tests/org.eclipse.wst.css.ui.tests</module>
+    <module>tests/org.eclipse.wst.dtd.core.tests</module>
+    <module>tests/org.eclipse.wst.dtd.ui.tests</module>
+    <module>tests/org.eclipse.wst.html.core.tests</module>
+    <module>tests/org.eclipse.wst.html.tests.encoding</module>
+    <module>tests/org.eclipse.wst.html.ui.tests</module>
+    <module>tests/org.eclipse.wst.jsdt.web.core.tests</module>
+    <module>tests/org.eclipse.wst.jsdt.web.ui.tests</module>
+    <module>tests/org.eclipse.wst.sse.core.tests</module>
+    <module>tests/org.eclipse.wst.sse.ui.tests</module>
+    <module>tests/org.eclipse.wst.xml.catalog.tests</module>
+    <module>tests/org.eclipse.wst.xml.core.tests</module>
+    <module>tests/org.eclipse.wst.xml.tests.encoding</module>
+    <module>tests/org.eclipse.wst.xml.ui.tests</module>
+    <module>tests/org.eclipse.wst.xml.validation.tests</module>
+    <module>tests/org.eclipse.wst.xsd.core.tests</module>
+    <module>tests/org.eclipse.wst.xsd.ui.tests</module>
+    <module>tests/org.eclipse.wst.xsd.validation.tests</module>
   </modules>
 </project>

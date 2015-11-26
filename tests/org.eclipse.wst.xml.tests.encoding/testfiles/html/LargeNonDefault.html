@@ -1,0 +1,665 @@
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD/ HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Mozilla/4.7 [en] (WinNT; U) [Netscape]">
+<META content="text/css" http-equiv="Content-Style-Type">
+<title>smoke</title>
+</head>
+<body>
+<h2> Smoke Test - XML Editor</h2>
+Last updated: June 25, 2001
+<P>This Smoke Test primarily focuses on the RTP portion of the XML 
+Editior, which is the Source page of the XML Editor. It also performs 
+some integration testing. For example, it tests synchronization between 
+the Design and Source pages of the XML Editor, as well as with the 
+Outline and Properties views. It also verifies that files created 
+through the XML File wizard and references to the XML Catalog are 
+supported as expected.</P>
+<P><FONT color="#ff0000"><B>NOTE</B>: XML files are case-sensitive so be sure that things appear 
+exactly as noted.</FONT></P>
+
+<!-- ===========================================================
+                           Setup
+     ===========================================================
+-->
+<H2><FONT color="#0000ff">Setup</FONT></H2>
+<P><B>Starting Clean</B></P>
+<ul>
+    <li> Delete any existing workbench</li>
+    <li> Start Eclipse</li>
+</ul>
+<P><B>Open an XML Perspective<BR>
+</B></P>
+<UL>
+    <LI>Select the <B>Open Perspective</B> toolbar button in the upper left</LI>
+    <LI>Select <B>Other...</B></LI>
+    <LI>Select <B>XML</B></LI>
+    <LI>Verify the following views appear in the XML perspective: <FONT color="#ff0000">The location of the Outline and Navigator views are reversed from the Resource and Web perspectives. Do we want to try to be consistent across the perspectives? Also, I opened <B>defect</B> 177664 to enable easy access to the Properties view from within the XML perspective. If this view isn't included in the Perspective because its use is limited, then recommend we at least provide a Show or Hide Properties View toolbar button (similar to the buttons that Page Designer provides).</FONT></LI>
+</UL>
+<P><B>Project Creation and File Imports<BR>
+</B></P>
+<UL>
+    <LI>Create a Project, <B>XMLTest2</B> </LI>
+    <LI>Import the following files into this project:
+    <UL>
+        <LI><B>PurchaseOrder.xsd</B></LI>
+        <LI><B>Invoice.dtd</B></LI>
+    <LI><B>JobDesc.xml</B></LI>
+    <LI><B>Wireless.xml</B></LI>
+    <LI><B>gotchaTCBeans.set</B></LI>
+    <LI><B>ATS.dtd</B></LI>
+    <LI><FONT color="#ff0000">any others?</FONT></LI>
+    </UL>
+    </LI>
+</UL>
+
+<!-- ===========================================================
+                    Create/Open/Edit test cases
+     ===========================================================
+-->
+<H2><FONT color="#0000ff">Create/Open/Edit test cases</FONT></H2>
+<P><B>Create an XML File from scratch</B></P>
+<UL>
+    <LI>Select the <B>Create a new XML file</B> toolbar button.</LI>
+    <LI>Verify the Create a XML File wizard appears and the Finish button is disabled. <FONT color="#ff0000"><B>DEFECT:</B> 177660 - XML File wizard: disable Finish button on the first page</FONT>.</LI>
+    <LI>Accept the default to <B>Create a new XML file</B></LI>
+    <LI>Go to the Next page
+    <UL>
+        <LI>Select <B>XMLTest2</B> as the folder</LI>
+        <LI>Specify a File name of <B>fromScratch</B></LI>
+        <LI>Select <B>Finish</B></LI>
+    </UL>
+    </LI>
+    <LI>Verify the following:
+    <UL>
+        <LI>fromScratch.xml appears in the Navigator view.</LI>
+        <LI>fromScratch.xml is open to the Design page of the XML Editor and has focus.</LI>
+        <LI>the Design tab appears before the Source tab in the XML Editor.</LI>
+        <LI>the Design and Source page show no content.</LI>
+        <LI>the Outline and Properties views show nothing.</LI>
+    </UL>
+    </LI>
+    <LI>Switch to the Source page. Verify the cursor appears at the beginning of the file.</LI>
+    <LI>Right mouse button 2 and verify a popup menu appears.</LI>
+    <LI>Hit <B>Ctrl+Space</B>. Verify the content assist proposal list appears.</LI>
+    <LI>Select <B>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</B></LI>
+    <LI>Verify &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; is inserted and appears syntax highlighted and an entry appears for it in the Outline view.</LI>
+    <LI>Position the cursor within the XML declaration and verify <B>version</B> and <B>encoding</B> appear in the Properties view. <FONT color="#ff0000">This used to work, but now it's not working. Opened <B>defect</B> 177662 - XML declaration attributes not appearing in Properties view. If we decide to not treat version and encoding as attributes, then this step should be removed.</FONT></LI>
+    <LI>Continue to the next section.</LI>
+</UL>
+<P><B>Identify a local DTD (</B>verifies a DTD is immediately recognized; in the past, you had to close and reopen the Workbench<B>)</B></P>
+<UL>
+    <LI>Type the following after the XML declaration in <B>fromScratch.xml</B>: <B>&lt;!DOCTYPE Invoice SYSTEM &quot;Invoice.dtd&quot;&gt;</B>. The text should be syntax highlighted as you type and you should see an entry get added to the Outline view.</LI>
+    <LI>Hit <B>Enter</B> to create a new line after the DOCTYPE declaration.</LI>
+    <LI>Hit <B>Ctrl+Space</B>.Verify only <B>Invoice</B> and <B>comment</B> appear in the proposal list. (<B>NOTE</B>: <B>Invoice</B> is the root element)</LI>
+    <LI>Hit <B>Enter</B> to accept <B>Invoice</B> as a selection. Verify the Invoice start and end tags are inserted into the Source and the cursor appears between them. An element entry should appear for Invoice in the Outline view. (<B>NOTE</B>: XML is case-sensitive so be sure you see Invoice and not invoice everywhere).</LI>
+    <LI>Hit <B>Ctrl+Space</B>. Verify the following appears in the proposal list (in the order shown): <FONT color="#ff0000">Item is appearing before Header. The default is not to sort the list alphabetically. That means the list should be sorted based on the order in which the child tags are defined in the element definition for Invoice in the DTD. In other words, users should see child tags listed according to their sequencing order in the DTD, which the DTD Editor shows. Violating the sequencing order causes an XML file to become not valid. <B>DEFECT:</B> 177668</FONT>
+    <UL>
+        <LI>Header</LI>
+        <LI>Item</LI>
+        <LI>comment</LI>
+    </UL>
+    </LI>
+    <LI>Hit <B>Enter</B> to accept <B>Header</B> as a selection.</LI>
+    <LI>Verify the Source now looks like the following and the cursor appears before <B>invoiceNumber</B>:<IMG border="0" height="83" src="identifyDTD.jpg" width="485"></LI>
+    <LI>Verify <B>Header</B> appears nested under <B>Invoice</B> in the Outline view.</LI>
+  <LI>Close this file, and respond <B>Yes</B> when prompted to save the changes.</LI>
+  <LI>Reopen the file and verify the changes were saved.</LI>
+  <LI>Close the file. Verify no save changes prompt appears.</LI>
+</UL>
+<P><B>Create an XML File from an imported DTD</B></P>
+<UL>
+    <LI>Select the <B>File-&gt;New-&gt;XML File</B>.</LI>
+    <LI>Verify the Create a XML File wizard appears.</LI>
+    <LI>Select to <B>Create a new XML file from a DTD file</B></LI>
+    <LI>Go to the Next page
+    <UL>
+        <LI>Select <B>XMLTest2</B> as the folder</LI>
+        <LI>Specify a File name of <B>fromLocalDTD</B></LI>
+        <LI>Go to the Next page</LI>
+    </UL>
+    </LI>
+    <LI>Select the <B>Import File</B> button
+    <UL>
+        <LI>Use the Browse button to find <B>testcase.dtd</B></LI>
+        <LI>Select <B>XMLTest2</B> as the folder. <FONT color="#ff0000">Would be nice if this were already filled in. Open a defect.</FONT></LI>
+        <LI>Select <B>Finish</B> to close the Import File wizard</LI>
+    </UL>
+    </LI>
+    <LI>Expand <B>XMLtest2</B> and then select <B>testcase.dtd</B>. <FONT color="#ff0000">Was expecting to see the imported file selected in the Workbench files list, but it wasn't. Open a defect.</FONT></LI>
+    <LI>Go to the Next page.</LI>
+    <LI>Select <B>testcase</B> as the Root Element.</LI>
+    <LI>Accept the default to <B>Create required content only</B>.</LI>
+    <LI>Verify <B>testcase.dtd</B> appears as the System Id.</LI>
+    <LI>Select Finish. Verify <B>fromLocalDTD.xml</B> appears in the XML Editor. Verify the Source page looks like the following: <IMG border="0" height="290" src="importDTD.jpg" width="660"></LI>
+  <LI>Verify the Outline view and the formatting indentation reflect the proper element/tag hierarchy. Here's what the Outline view should look like:<IMG border="0" height="297" src="outline1.jpg" width="655"></LI>
+  <LI>Verify selection synchronization between the Design page, Source page, Outline view, 
+        and Properties view.
+    <UL>
+        <LI>From the Source page, click within the <B>header</B> start tag. 
+            Verify <B>header</B> is selected in the Outline view and in the Design 
+            page and that the following properties and property values appear in the 
+            Properties view:
+        <TABLE border="1">
+            <TBODY>
+                <TR>
+                    <TD width="100"><B>Property</B></TD>
+                    <TD width="76"><B>Value</B></TD>
+                </TR>
+                <TR>
+                    <TD width="100">category</TD>
+                    <TD width="76">webtool</TD>
+                </TR>
+                <TR>
+                    <TD width="100">number</TD>
+                    <TD width="76">idvalue0</TD>
+                </TR>
+                <TR>
+                    <TD width="100">state</TD>
+                    <TD width="76">&nbsp;</TD>
+                </TR>
+                <TR>
+                    <TD width="100">subCategory</TD>
+                    <TD width="76">Accessability</TD>
+                </TR>
+                <TR>
+                    <TD width="100">subSubCategory</TD>
+                    <TD width="76">&nbsp;</TD>
+                </TR>
+            </TBODY>
+        </TABLE>
+        </LI>
+	<LI>From the Outline view, select the <B>testBucket</B> tag.
+            Verify <B>testBucket</B> is selected in the Design page and the current marker
+            in the lefthand margin of the Source page indicates the range of the 
+            <B>testBucket</B> tag. The Properties view should show a property of <B>type</B>
+            with a value of <B>ComponentTest</B>.
+        </LI>
+    </UL>   
+    </LI> 
+    <LI>Verify edit synchronization between the Design page, Source page, and 
+        Properties view (focus here is on adding attributes and attribute values).
+    <UL>
+        <LI>From the Source page, use content assist to insert an attribute and attribute value
+            for the <B>header</B> start tag.
+            <UL>
+            <LI>Position the cursor after the <B>category</B> attribute in the <B>header</B> start tag.</LI>
+            <LI>Type <B>space</B> and then hit prompt for content assist.</LI>
+            <LI>Verify only <B>state</B> and <B>subSubCategory</B> appear in the proposal list (content assist is smart enough not to list any attributes that already exist in the start tag since attributes can only appear once. <FONT color="#0000ff">Cool!</FONT>).</LI>
+            <LI>Select <B>state</B>.</LI>   
+            <LI>Verify <B>state="UnderConstruction"</B> is inserted in the Source page (content assist automatically inserts any default values. <FONT color="#0000ff">Cool!</FONT>). Verify the Design page and Properties view reflect this change.</LI>         
+            </UL>
+        </LI>
+        <LI>From the Properties view, update the <B>state</B> attribute value to "UnderReview" 
+            (a pulldown list of values should be available). Verify the change is reflected
+            in the Source and Design pages.
+        </LI>
+        <LI>From the Design page, add an attribute and attribute value to the <B>header</B> tag.
+            <UL>
+            <LI>Bring up the popup menu for the <B>header</B> tag.</LI>
+            <LI>Select <B>Add Attribute->subSubCategory</B> from the popup menu (it's smart
+                enough to know which attributes haven't been specified yet ... like content 
+                assist. Cool!).</LI>
+            <LI>Type in a value of <B>Keyboard support</B>.</LI>
+            <LI>Verify the change is reflected in the Source page and Properties view</LI>
+            </UL>
+        </LI>
+    </UL>
+    </LI>
+</UL>
+<P><B>Open an XML File that references a remote DTD</B></P>
+<UL>
+    <LI>Open the <B>Wireless.xml</B> file.</LI>
+    <LI>Verify it looks like the following in the Source page:<IMG border="0" height="239" src="wireless.jpg" width="656"></LI>
+    <LI>Verify the Outline view and the formatting indentation reflect the proper 
+        element/tag hierarchy. Here's what the Outline view should look like: <IMG border="0" height="189" src="outline2.jpg" width="656"></LI> 
+    <LI>Verify content assist <FONT color="#ff0000">Defect 176379 (in verify state, but still not working)</FONT>.</LI>
+        <UL>
+           <LI>Create a new line after the <B>wml</B> start tag.</LI>
+           <LI>Prompt for content assist on the new line.</LI>
+           <LI>Verify the following appear as proposals (in the order shown): 
+               <UL>
+                   <LI>head</LI>
+                   <LI>template</LI>
+                   <LI>card</LI>
+               </UL>
+           </LI>
+           <LI>Create a new line after the <B>wml</B> start tag.</LI>
+           <LI>Type a space before the ending delimiter on the card start tag.</LI>
+           <LI>Prompt for content assist</LI>
+           <LI>Verify the following appear as proposals (not necessarily in the
+               order shown). 
+               <UL>
+                   <LI>title</LI>
+                   <LI>newcontext</LI>
+                   <LI>ordered</LI>
+                   <LI>xml:lang</LI>
+                   <LI>onenterbackward</LI>
+                   <LI>ontimer</LI>
+                   <LI>id</LI>
+                   <LI>class</LI>
+               </UL>
+           </LI>
+           <LI>Position the cursor within the <B>method</B> attribute value in the <B>go</B> start tag.</LI>
+           <LI>Prompt for content assist</LI>
+           <LI>Verify <B>post</B> and <B>get</B> appear as proposals.</LI>
+        </UL>
+    <LI>Verify selection synchronization between the Design page, Source page, Outline view, 
+        and Properties view.
+    <UL>
+        <LI>From the Source page, click within the <B>card</B> start tag. 
+            Verify <B>card</B> is selected in the Outline view and in the Design 
+            page and that the content assist proposals listed above for the
+            <B>card</B> tag appear as properties in the Properties view. No values should appear for these properties.</LI>
+	<LI>From the Outline view, select the <B>postfield</B> tag.
+            Verify <B>postfield</B> is selected in the Design page and the current marker
+            in the lefthand margin of the Source page indicates the range of the 
+            <B>postfield</B> tag. The Properties view should show the following properties,
+            none of which should have a value:
+               <UL>
+                   <LI>name</LI>
+                   <LI>value</LI>
+                   <LI>id</LI>
+                   <LI>class</LI>
+               </UL>
+           </LI>
+    </UL>   
+    </LI>
+    <LI>Verify edit synchronization between the Design page, Source page, Outline view, and 
+        Properties view (focus here is on adding elements/tags).
+    <UL>
+        <LI>From the Source page, copy and paste the <B>card</B> tag.
+            <UL>
+            <LI>Position the cursor in the <B>card</B> start tag.</LI>
+            <LI>Notice the range of the <B>card</B> tag in the lefthand margin area.</LI>
+            <LI>Copy this range of lines using the <B>Edit->Copy</B> pulldown menu selection.</LI>
+            <LI>Paste after the <B>card</B> end tag using Ctrl+V.</LI>
+            <LI>Verify the appropriate lines were pasted n the Source page.
+                Verify the Design page, Outline view, and the Properties 
+                view reflect this change.</LI>         
+            </UL>
+        </LI>
+        <LI>From the Design page, add another <B>card</B> tag.
+            <UL>
+            <LI>Bring up the popup menu for the <B>wml</B> tag.</LI>
+            <LI>Select <B>Add Child->card</B> from the popup menu.</LI>
+            <LI>Verify the Source page, Outline view, and the Properties
+                view reflect this change. NOTE: it should have generated out
+                the same thing as the original card tag, with the exception
+                that a <B>method</B> attribute should not exist in the <B>go</B> start tag. </LI>
+            </UL>
+        </LI>
+    </UL>
+    </LI> 
+</UL>
+<P><B>Create and Validate an XML File from a schema</B><BR>
+
+<P>(these steps are taken from the 'Design' smoke test, except the Source Page is the focus)</P>
+<ul>
+<li>
+Right mouse button 2 on the PurchaseOrder.xsd and select <b>Create XML
+File</b>.</li>
+
+<li>
+Accept the default file names.</li>
+
+<li>
+In the Select Root Element page, choose <b>purchaseOrder</b> as root element.</li>
+
+<li>
+Choose <b>Create required and optional content</b> to create a minimal
+document.</li>
+
+<li>
+Enter <b>po</b> as the namespace prefix.</li>
+
+<li>On Finish, a PurchaseOrder.xml is created and the XML Editor is opened. (Select Source Page if not already there.)</li>
+
+<li>
+Run Validate. The PurchaseOrder.xml should be invalid.</li>
+
+<li>
+Double click on the error message. It should be positioned to the line
+in error, i.e. the <b>partNum</b> attribute. It is invalid because the
+value is not set to match the XML schema pattern facet "d3-[A-Z]{2}" (3
+digits followed by 2 characters).</li>
+
+<li>In the Source View, locate the <b>partNum</b> attribute under element item.
+Enter the value 333-AB.</li>
+
+<li>
+Run Validate. The PurchaseOrder.xml document should now be valid.</li>
+</UL>
+<UL>
+  <LI>
+  <HR></LI>
+  <li>Place the cursor after the &lt;items&gt; tag and besure "item" is 
+  listed in the content assist list. </li>
+<li>Rename the purchaseOrder.xsd to, say, purchaseOrderHOLD.xsd</li>
+<li>Verify that content assist still gives you "item" as above.</li>
+<li>Now select the "Reload Dependancies" button.</li>
+<li>Verify that now content assist no longer lists any items other 
+that the macro "comment".</li>
+<li>Repeat making purchaseOrder.xsd workable again.</li>
+</ul>
+<P></P><P></P><P></P><P></P><P></P></P>
+<P><B>Open an XML File for a shipped DTD catalog entry</B><BR>
+<BR>
+[put in optional section .. this isn't a customer scenerio]<BR>
+To verify that shipped DTDs are working:<BR>
+<UL>
+<LI>
+Use a web project with a standard web.xml file in it. Be sure 
+there is no web-app_2_2.dtd file in the directory. In the web.xml file 
+itself, mangle the web-app_2_2.dtd filename in the system id a little, such as 
+change it to xeb-app_2_2.dtd to be sure it can't be found via the
+normal http method (This isn't really necessary for the funtion to work,
+its just to be sure only the catalog function is in effect).
+</LI>
+<LI>
+Go to the preferences page, and open the XML Catalog. Verify there 
+is an entry for -//Sun Microsystems, Inc.//DTD Web Application 2.2//EN.
+</LI>
+<LI>
+Once all the prep work is done (files deleted, text modified), you should 
+exit and restart Eclipse to be sure you have a fresh start.
+</LI>
+<LI>
+Open the web.xml file and be sure that content assist works for that file.
+For example, right after the end of the &lt;/display-name&gt; tag, ctrl-space 
+should provide a long list of elements, starting with servlet, servlet-mapping, etc.
+This indicates the shipped DTD function is working and configured 
+correctly (at least for the web.xml file).
+</LI>
+</UL>
+</P>
+<P><B>Create an XML File from a new DTD catalog entry</B><BR><IMG border="0" height="63" src="u011ani.gif" width="63"></P>
+
+<b>The following comes directly from the 'Design' Smoke Test: XML Catalog for XML Schema</b>
+<ul>
+<li>
+Run Validate on PurchaseOrder.xml to make sure it is valid</li>
+
+<li>
+Create a new project, XMLTest2</li>
+
+<li>
+Move the PurchaseOrder.xsd into XMLTest2.</li>
+
+<li>
+Run Validate on PurchaseOrder.xml. You will notice that it is no longer
+valid. The error message should give you a hint that the file PurchaseOrder.xsd
+can no longer be found.</li>
+
+<li>
+Open the Window->Preferences and select the XML Catalog.</li>
+
+<li>
+Enter the pair <b>Id = PurchaseOrder.xsd Uri = f:\eclipse\XMLTest2\PurchaseOrder.xsd</b></li>
+
+<br>Or alternatively, you can use a relative path to the install directory
+of the workbench as follows:
+<br><b>Id = PurchaseOrder.xsd Uri = .\XMLTest2\PurchaseOrder.xsd</b>
+<li>
+Click on the Reload button to reload the catalog settings.</li>
+
+<li>
+Run Validate. The PurchaseOrder.xml document should now be valid.</li>
+</ul>
+<!-- ===========================================================
+                      Save/Validate test cases
+     ===========================================================
+-->
+<H2><FONT color="#0000ff">Save/Validate test cases</FONT></H2>
+<P><B>Saving an XML File</B><BR>
+(NOTE: the <B>Identify a local DTD</B> test case tests the save prompt on a file close.)</P>
+<UL>
+  <LI>If any files are open, select <B>File-&gt;Close All</B> (or <B>Ctrl+Shift+F4</B>) to close them.</LI>
+  <LI>Open any xml file in the <B>XMLTest2</B> project.</LI>
+  <LI>Verify the following (no-changes-made condition):
+  <UL>
+    <LI><B>File-&gt;Save</B> is disabled.</LI>
+    <LI><B>File-&gt;Save All</B> is disabled.</LI>
+    <LI><B>File-&gt;Save As</B> is enabled.</LI>
+    <LI>the <B>Save</B> toolbar button (a diskette) is disabled.</LI>
+    <LI>the <B>Save As</B> toolbar button is enabled.</LI>
+    <LI><B>Save</B> is disabled on the Source popup menu. <FONT color="#ff0000">Would be nice if the Design popup menu also had a Save selection. Open a suggestion defect.</FONT></LI>
+    <LI>no <B>*</B> appears in the file tab.</LI>
+  </UL></LI>
+  <LI>Make a change in the Source page.</LI>
+  <LI>Verify the following (changes-made condition):
+  <UL>
+    <LI><B>File-&gt;Save</B> is enabled.</LI>
+    <LI><B>File-&gt;Save All</B> is enabled</LI>
+    <LI>the <B>Save</B> toolbar button (a diskette) is enabled.</LI>
+    <LI><B>Save</B> is enabled on the Source popup menu.</LI>
+    <LI>a <B>*</B> appears in the file tab.</LI>
+  </UL></LI>
+  <LI>Hit <B>Ctrl+S</B>. </LI>
+  <LI>Verify the no-changes-made conditions apply.</LI>
+  <LI>Make a change in the Design page.</LI>
+  <LI>Verify the changes-made conditions apply.</LI>
+  <LI>File-&gt;Save All<B></B>.</LI>
+  <LI>Verify the no-changes-made conditions apply.</LI>
+  <LI>Make a change in the Properties view.</LI>
+  <LI>Verify the changes-made conditions apply.</LI>
+  <LI>Select <B>Save</B> from the Source popup menu.</LI>
+  <LI>Verify the no-changes-made conditions apply.</LI>
+  <LI>Close and then reopen the file.</LI>
+  <LI>Verify the changes that were made in the previous steps appear in the Design and Source pages.</LI>
+</UL>
+<P><B>Saving an XML File across multiple perspectives (optional)</B></P>
+<UL>
+  <LI>Open any xml file in the <B>XMLTest2</B> project.</LI>
+  <LI>Make a change to the file.</LI>
+  <LI>Open another XML Perspective by:
+  <UL>
+    <LI><B>selecting Perspective-&gt;Open-&gt;Other...</B></LI>
+    <LI>while holding down the <B>Shift</B> key, select <B>XML</B>.</LI>
+  </UL></LI>
+  <LI>Verify another XML Perspective button appears in the lefthand side of the Workbench to represent this second perspective.</LI>
+  <LI>Open the same xml file as in the first step above.</LI>
+  <LI>Verify the changes-made conditions apply in both XML Perspectives and verify that the changes made to the file in the first perspective appear in the same file in the second perspective. <FONT color="#ff0000">The * never appears in the file tab of the second perspective even when make changes to the file in the second perspective. Talk to David.</FONT></LI>
+  <LI>Make some changes to the file in the second perspective.</LI>
+  <LI>Verify these changes appear in the same file in the first perspective.</LI>
+  <LI>Close the file in the second perspective and respond <B>Yes</B> to the save changes prompt.</LI>
+  <LI>Verify the no-changes-made condition applies in the first perspective.</LI>
+</UL>
+<P><B>Validating a non well formed XML File (no DTD/Schema)</B><BR>
+(NOTE: it's important that the following be typed in. This test case tries to cover some of the more common errors that render an XML file as not being well-formed. It is not intended to verify that all possible errors are being detected and gracefully handled. )</P>
+<UL>
+  <LI>Select the <B>Create a new XML file</B> toolbar button.</LI><LI>Accept the default to <B>Create a new XML file</B></LI>
+  <LI>Go to the Next page
+    <UL>
+        <LI>Select <B>XMLTest2</B> as the folder</LI>
+        <LI>Specify a File name of <B>NonWellFormed</B></LI>
+        <LI>Select <B>Finish</B></LI>
+  </UL></LI>
+  <LI>Prompt for content assist.</LI>
+  <LI>Select <B>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;.</B></LI>
+  <LI>Create a new line after the XML declaration.</LI>
+  <LI>Prompt for content assist.</LI>
+  <LI>Select comment.</LI>
+  <LI>Embed more than 2 consecutive dashes in the comment. 
+        <FONT color="#0000ff">(NOTE: more than 2 consecutive dashes can not be embedded within a comment)</FONT></LI>
+  <LI>Type in the remaining lines as shown below: 
+        <FONT color="#ff0000">(I can't show the lines until defect 177755 is fixed ... until then, here's the type of things that cause 
+        a document to not be well-formed):</FONT>
+  <UL>
+    <LI>create a start and end tag that don't match in their case sensitivity 
+        (e.g., &lt;tag&gt; and &lt;/Tag&gt;). </LI>
+    <LI>create a start and end tag where the start tag contains an attribute value that is not 
+        enclosed in quotes.
+        <FONT color="#0000ff">(NOTE: this is permitted in HTML, but not XML)</FONT></LI>
+    <LI>create tags that are not properly nested.
+        <FONT color="#0000ff">(NOTE: a child tag must be completed before its parent tag)</FONT></LI>
+    <LI>create a start tag without a corresonding end tag.
+        <FONT color="#0000ff">(NOTE: all start tags must have a corresponding end tag unless the 
+        tag is an empty tag, in which case the shorthand version can be used (&lt;shortTag/&gt;)).</FONT></LI>
+    <LI>do not provide an attribute value (=&quot;value&quot;).
+        <FONT color="#0000ff">(NOTE: this is permitted in HTML for those attributes that have 
+        only one value, but it's not valid in XML)</FONT></LI>
+     <LI>define an attribute more than once in a start tag.</LI>
+  </UL></LI>
+  <LI>Save the file.</LI>
+  <LI>Verify errors are listed in the Tasks view for the above violations and that error markers appear on the appropriate 
+         lines in the Source page. <FONT color="#ff0000">I'm not sure how the Design page handles any of these violations 
+         and what will appear in the Outline and Properties view. Talk to Craig and David.</FONT></LI>
+  <LI>Reopen the file and verify everything was saved.</LI>
+</UL>
+
+
+<P><B>Validate an XML File based on a DTD</B></P>
+<UL>
+<LI>Open <B>fromScratch.xml</B>.</LI>
+<LI>Delete a character from one of the start tags (mistyping a tag is not uncommon).</LI>
+<LI>Prompt for content assist within the bad tag. Verify a message appears in the status area
+of the Workbench indicating that the bad tag is an unknown tag.</LI>
+<LI>Select the <B>Validate</B> toolbar button.</LI>
+<LI>Verify an error appears in the Tasks view and an error marker appears in the Source page
+to flag the invalid tag.</LI>
+<LI>Select <B>Edit->Undo</B> from the Source page.</LI>
+<LI>Verify the bad tag error no longer appears in the Tasks view.</LI>
+<LI>Remove the <B>Header</B> end tag from the Source page.</LI>
+<LI>Save the file.</LI>
+<LI>Verify an error appears in the Tasks view indicating that the <B>Header</B> end tag is missing</LI>
+<LI>Close the file, responding <B>Yes</B> to the save changes prompt.</LI>
+<LI>Double-click on the error in the Tasks view, and verify <B>fromScratch.xml</B> opens to the
+appropriate line in the Source page of the XML Editor.</LI>
+<LI>Here's some other violations that can be attempted:
+<UL>
+<LI>Specify a bad attribute.</LI>
+<LI>Specify a bad attribute value.</LI>
+<LI>Specify child tags out of sequencing order</LI>
+<LI>Violate the occurrence indicator for a tag (e.g., if the DTD shows ?, then only
+0 or 1 occurrences of the tag is permitted).
+</UL></LI>
+<LI>Save the file.</LI>
+<LI>Verify errors are listed in the Tasks view for the above violations and that error markers appear on the appropriate 
+lines in the Source page. <FONT color="#ff0000">I'm not sure how the Design page handles any of these violations 
+and what will appear in the Outline and Properties view. Talk to Craig and David.</FONT></LI>
+<LI>Reopen the file and verify everything was saved.</LI>
+</UL>
+
+<!--  removed since done elsewhere as part of other scenerios
+<P><B>Validate an XML File based on a Schema</B><BR>
+-->
+<IMG border="0" height="63" src="u011ani.gif" width="63"></P>
+
+<!-- ===========================================================
+                        Source Specific test cases
+     ===========================================================
+-->
+<H2><B><FONT color="#0000ff">Source Specific test cases (optional)</FONT></B></H2>
+<P><B>Using the Auto Completion Content Assist Preference</B><BR>
+<UL>
+<LI>Open a any XML file that has enough tags to provide syntax hightlighting.</LI>
+<LI>While that file is left open, go to the Preferences page, select
+XML Editor, then Source Styles. </LI>
+<LI>On that page, use the mouse to "select" a tag name. The tag name is not literally
+selected, but when you click on an element in the example text, the list
+above it will display the type of element it is, and what its current colors are.</LI>
+<LI>For "tag name", select the bold check box. Then press Apply, and you should
+see the change take effect in your active editor.</LI>
+<LI>Select "Defaults" and make sure the tag names are set back to not bold.</LI>
+</UL>
+<IMG border="0" height="63" src="u011ani.gif" width="63"></P>
+<P><B>Double-Clicking Within the Source</B> <BR>
+(NOTE: if you continue to double-click at a given cursor position, the selection area will continue to expand. When the maximum region area has been reached, the next double-click will cause the original selection. So, the selections will wrap/cycle. <FONT color="#0000ff">Cool!</FONT>).</P>
+<UL>
+  <LI>Open <B>JobDesc.xml</B>.</LI>
+  <LI>Double-clicking within tag content:
+  <UL>
+    <LI>Double-click within <B>Middleware</B> on line 7.</LI>
+    <LI>Verify <B>Middleware</B> is selected in the Source and Design pages and <B>BusType</B> is selected in the Outline view. <FONT color="#ff0000">Not sure what the Properties view is supposed to show. It goes blank. See defect 177753. Also, <B>Middleware</B> wasn't selected in the Design page as had expected. The Design page only seems to stay in sync at the element/tag level like the Outline view. Talk to Craig about this.</FONT></LI>
+    <LI>Double-click again at the same cursor position.</LI>
+    <LI>Verify <B>Application and Middleware Software</B> is selected in the Source and Design pages and <B>BusType</B> remains to be the only thing selected in the Outline view.</LI>
+    <LI>Double-clicking again will cause cycling back to the original selection.</LI>
+  </UL></LI>
+  <LI>Double-clicking within a tag name:
+  <UL>
+    <LI>Double-click within <B>HowToApply</B> on line 61.</LI>
+    <LI>Verify <B>HowToApply</B> is selected in the Source page, Design page, and Outline view. 
+        <B>class</B>, <B>distribute</B>, <B>id</B>, and <B>name</B> should appear in the 
+        Properties view. Only <B>distribute</B> should show a value.</LI>
+    <LI>Double-click again at the same cursor position.</LI>
+    <LI>Verify the whole <B>HowToApply</B> start tag (including its delimiters) is selected 
+        in the Source page. <B>HowToApply</B> should remain selected in
+        the Design page and Outline view. <B><FONT color="#ff0000">HowToApply</FONT></B><FONT color="#ff0000"> and all descendents become selected in the Outline view (defect 177752). Also, the Properties view shows no properties (defect 177753).</FONT></LI>
+    <LI>Double-clicking again will cause cycling back to the original selection.</LI>
+  </UL></LI>
+  <LI>Double-clicking within an attribute name:
+  <UL>
+    <LI>Type <B>Ctrl+End</B> to position the cursor at the end of the file.</LI>
+    <LI>Double-click within <B>distribute</B> on line 61. Verify <B>distribute</B> is selected 
+        in the Source page and <B>HowToApply</B> is selected in the Design page and Outline 
+        view. <B>class</B>, <B>distribute</B>, <B>id</B>, and <B>name</B> should appear in 
+        the Properties view. Only <B>distribute</B> should show a value.</LI>
+    <LI>Double-click at the same cursor position. Verify <B>distribute="internal"</B> is
+        selected in the Source. Nothing should change in the Design page or views.</LI>                 
+    <LI>Double-click at the same cursor position. Verify the whole <B>HowToApply</B> start tag is selected in the Source page (including its delimiters). Nothing should change in the Design page or views.<B><FONT color="#ff0000">HowToApply</FONT></B><FONT color="#ff0000"> and all descendents become selected in the Outline view (defect 177752). Also, the Properties view shows no properties (defect 177753).</FONT></LI>
+    <LI>Double-clicking again will cause cycling back to the original selection.</LI>
+  </UL></LI>
+ <LI>Double-clicking within an attribute value:
+  <UL>
+    <LI>Type <B>Ctrl+Home</B> to position the cursor at the beginning of the file.</LI>
+    <LI>Scroll down such that line 61 is visible.</LI>
+    <LI>Double-click within <B>internal</B> on line 61. Verify <B>internal</B> is selected 
+        in the Source page and <B>HowToApply</B> is selected in the Design page and Outline 
+        view. <B>class</B>, <B>distribute</B>, <B>id</B>, and <B>name</B> should appear in 
+        the Properties view. Only <B>distribute</B> should show a value.</LI>
+    <LI>Double-click at the same cursor position. Verify <B>"internal"</B> is
+        selected in the Source. Nothing should change in the Design page or views.</LI>
+    <LI>Double-click at the same cursor position. Verify <B>distribute="internal"</B> is
+        selected in the Source. Nothing should change in the Design page or views.</LI>                 
+    <LI>Double-click at the same cursor position. Verify the whole <B>HowToApply</B> start tag is selected in the Source page (including its delimiters). Nothing should change in the Design page or views. <B><FONT color="#ff0000">HowToApply</FONT></B><FONT color="#ff0000"> and all descendents become selected in the Outline view (defect 177752). Also, the Properties view shows no properties (defect 177753).</FONT></LI>
+    <LI>Double-clicking again will cause cycling back to the original selection.</LI>
+  </UL></LI>
+</UL>
+
+<P><B>Formatting a File Created by Different Editors</B><BR>
+<ul>
+<li>
+Import the <b>JobPosting.dtd</b> and <b>JobDesc.xml</b></li>
+
+<li>
+Open the JobDesc.xml. Check the source for indentation to see if it preserves
+the white space from the original document.</li>
+
+<li>
+The orignal document uses spaces and tabs, so the formatting will appear a little wrong.
+By using the right/left arrows, verify that some space is spaces and some space
+is tab characters.</li>
+<LI>Use 'format document' to be sure it formats. </LI>
+<LI>The default is to format with spaces ... verify only spaces remain in file, not tab charactes. 
+(Just a little movement with the arrow keys should suffice.</LI>
+<LI>Go to the preference page to change the format settings for the XML Editor
+to use the tab character instead of 4 spaces. While there, verify that the dialog
+will not allow other values to be intered except "whitespace" ...'\t's and blanks.
+</LI>
+<LI>Format the document again and be sure this time tab characters were used.</LI>
+</ul>
+<IMG border="0" height="63" src="u011ani.gif" width="63"></P>
+<!-- ===========================================================
+                           Other test cases
+     ===========================================================
+-->
+<H2><B><FONT color="#0000ff">Other test cases</FONT></B></H2>
+<P><B>Associate the XML Editor to a new file type</B></P>
+<UL>
+  <LI>Window-&gt;Preferences<B></B>.</LI>
+  <LI>Expand <B>Workbench</B>.</LI>
+  <LI>Select <B>File Editors</B>.</LI>
+  <LI>Select the <B>Add</B> button to add a new file type.</LI>
+  <LI>Specify a file type of <B>*.set</B> and then close the Add dialog.</LI>
+  <LI>Verify <B>*.set</B> is selected in the list of file types.</LI>
+  <LI>Select the <B>Add</B> button to associate the XML Editor to the new file type.</LI>
+  <LI>Select <B>XML Editor</B> from the list of editors. Verify it appears with its own special icon. Close the dialog. <FONT color="#ff0000">NOTE: waiting to hear back from OTI on how can prevent 2 XML Editor entries from appearing in the list.</FONT></LI>
+  <LI>Verify <B>XML Editor</B> appears as the default editor now for the <B>*.set</B> file type.</LI>
+  <LI>Open <B>gotchaTCBeans.set</B> from the Navigator view. Verify it opens to the XML Editor.</LI>
+</UL>
+<P><FONT color="#0000ff">THE END!</FONT></P>
+</body>
+</html>

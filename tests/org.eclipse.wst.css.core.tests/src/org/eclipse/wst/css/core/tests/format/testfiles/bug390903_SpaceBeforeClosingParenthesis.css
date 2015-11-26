@@ -1,0 +1,4 @@
+div {
+  background-image: linear-gradient(top, rgba(255, 255, 255, .2), rgba(150, 150, 150, .2), rgba(0, 0, 0, .0)) !important;
+  background-image: linear-gradient(top, rgba(255, 255, 255, .2), rgba(150, 150, 150, .2), rgba(0, 0, 0, .0) ) !important;
+}

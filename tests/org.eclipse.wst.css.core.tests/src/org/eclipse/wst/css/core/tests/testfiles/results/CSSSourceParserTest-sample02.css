@@ -1,0 +1,41 @@
+[0, 23] (@import url("hoge.css"))
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> URI: 8-23, 
+[23, 24] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[24, 26] (
+)
+    ContextRegion--> S: 0-2, 
+[26, 61] (@import /* comment */ url(hoge.css))
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> COMMENT: 8-21, ContextRegion--> S: 21-22, ContextRegion--> URI: 22-35, 
+[61, 62] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[62, 64] (
+)
+    ContextRegion--> S: 0-2, 
+[64, 96] (@import "hoge.css" /* comment */)
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> STRING: 8-18/19, ContextRegion--> COMMENT: 19-32, 
+[96, 97] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[97, 99] (
+)
+    ContextRegion--> S: 0-2, 
+[99, 155] (@IMPORT 'hoge.css' ,media1,media2,,media3 media4,media5 )
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> STRING: 8-18/19, ContextRegion--> UNKNOWN: 19-20, ContextRegion--> MEDIUM: 20-26, ContextRegion--> MEDIA_SEPARATOR: 26-27, ContextRegion--> MEDIUM: 27-33, ContextRegion--> MEDIA_SEPARATOR: 33-34, ContextRegion--> UNKNOWN: 34-35, ContextRegion--> MEDIUM: 35-41/42, ContextRegion--> UNKNOWN: 42-48, ContextRegion--> MEDIA_SEPARATOR: 48-49, ContextRegion--> MEDIUM: 49-55/56, 
+[155, 169] (@import media6)
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> UNKNOWN: 8-14, 
+[169, 170] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[170, 221] (
+
+<!-- /* hogehoge */
+
+-->
+
+/* comment 2 */
+)
+    ContextRegion--> S: 0-4, ContextRegion--> CDO: 4-8/9, ContextRegion--> COMMENT: 9-23, ContextRegion--> S: 23-27, ContextRegion--> CDC: 27-30/34, ContextRegion--> COMMENT: 34-49, ContextRegion--> S: 49-51, 
+[221, 227] (kuso
+)
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/6, 
+
+-------

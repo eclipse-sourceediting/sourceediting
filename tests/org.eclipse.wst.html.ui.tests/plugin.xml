@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.views">
+		<view
+			name="%view.name.0"
+			icon="$nl$/icons/sourceEditor.gif"
+			category="org.eclipse.wst.sse.ui.tests"
+			class="org.eclipse.wst.html.ui.tests.viewer.ViewerTestHTML"
+			id="org.eclipse.wst.html.ui.tests.viewer.ViewerTestHTML">
+		</view>
+	</extension>
+
+</plugin>

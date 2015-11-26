@@ -1,0 +1,6 @@
+
+
+.hoge {
+	float : ${XXX};
+	border-${XXX}-color : red;
+}

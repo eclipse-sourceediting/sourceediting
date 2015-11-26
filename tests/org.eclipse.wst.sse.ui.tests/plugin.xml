@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="%editor.name.0"
+			extensions="project, classpath, websettings, serverPreference, html"
+			icon="$nl$/icons/sourceEditor.gif"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
+			contributorClass="org.eclipse.wst.sse.ui.internal.actions.ActionContributor"
+			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+			id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+			
+		</editor>
+	</extension>
+	
+	<!-- Editor actionsets -->
+	<extension point="org.eclipse.ui.actionSetPartAssociations">
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+			<part
+				id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+			</part>
+		</actionSetPartAssociation>
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.NavigateActionSet">
+			<part
+				id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+			</part>
+		</actionSetPartAssociation>
+	</extension>
+
+	<extension point="org.eclipse.ui.views">
+		<category
+			name="%category.name.0"
+			id="org.eclipse.wst.sse.ui.tests">
+		</category>
+		<view
+			name="%view.name.0"
+			category="org.eclipse.wst.sse.ui.tests"
+			class="org.eclipse.wst.sse.ui.tests.ExtendedStorageEditorInputView"
+			id="org.eclipse.wst.sse.ui.tests.ExtendedStorageEditorInputView">
+		</view>
+		<view
+			name="%view.name.1"
+			category="org.eclipse.wst.sse.ui.tests"
+			class="org.eclipse.wst.sse.ui.tests.ActionTestView"
+			id="org.eclipse.wst.sse.ui.tests.ActionTestView">
+		</view>
+	</extension>
+
+	<extension point="org.eclipse.ui.popupMenus">
+		<viewerContribution
+			targetID="org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext"
+			id="org.eclipse.wst.sse.ui.tests.test">
+			<action
+				label="%action.label.0"
+				class="org.eclipse.wst.sse.ui.tests.TestActionDelegate"
+				menubarPath="additions"
+				id="org.eclipse.wst.sse.ui.tests.test.1" />
+			<action
+				label="%action.label.1"
+				class="org.eclipse.wst.sse.ui.tests.ReadOnlyToggleDelegate"
+				menubarPath="additions"
+				id="org.eclipse.wst.sse.ui.tests.test.2" />
+			<action
+				label="%action.label.2"
+				class="org.eclipse.wst.sse.ui.tests.ClearReadOnlyDelegate"
+				menubarPath="additions"
+				id="org.eclipse.wst.sse.ui.tests.test.2" />
+		</viewerContribution>
+	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution id="markerConversion" objectClass="org.eclipse.core.resources.IFile">
+            	<action
+       id="markerConvertor" enablesFor="1" class="org.eclipse.wst.sse.ui.tests.markers.XMLWriter" label="Convert to XML">
+       <selection class="org.eclipse.core.resources.IFile"  name=".markers">
+       </selection>
+	</action>
+          		
+		</objectContribution>
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<provisionalConfiguration
+			type="linestyleprovider"
+			class="org.eclipse.wst.sse.ui.tests.TestLineStyleProvider"
+			target="org.eclipse.wst.html.SCRIPT.language.BLUE" />
+		<provisionalConfiguration
+			type="linestyleprovider"
+			class="org.eclipse.wst.sse.ui.tests.TestLineStyleProvider"
+			target="org.eclipse.wst.html.SCRIPT.type.TEXT/BLUE" />
+		<provisionalConfiguration
+			type="linestyleprovider"
+			class="org.eclipse.wst.sse.ui.tests.TestLineStyleProvider"
+			target="org.eclipse.jst.jsp.SCRIPT.BLUE" />
+	</extension>
+	
+</plugin>

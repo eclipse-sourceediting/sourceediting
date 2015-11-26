@@ -1,0 +1,46 @@
+BODY {
+	font-family: "Times New Roman", "MS Sans Serif";
+	text-decoration: none;
+	background-color: white;
+}
+
+TD {
+	font-family: "Times New Roman";
+	font-size: 12pt;
+	color: black;
+	font-style: normal;
+	text-align: left;
+}
+
+TH {
+	font-family: "Times New Roman";
+	font-size: 12pt;
+	color: black;
+	font-style: normal;
+	font-weight: bolder;
+	text-align: left;
+}
+
+H1 {
+	font-family: "Times New Roman";
+	font-size: 14pt;
+	color: black;
+	font-style: normal;
+	font-weight: bolder;
+	text-align: center
+}
+
+H2 {
+	font-family: "Times New Roman";
+	font-size: 12pt;
+	color: black;
+	font-style: normal;
+	font-weight: bolder
+}
+
+H3 {
+	font-family: "Times New Roman";
+	font-size: 12pt;
+	color: black;
+	font-style: italic  
+}

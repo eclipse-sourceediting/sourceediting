@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified" 
+    targetNamespace="http://www.example.org/Import4" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://www.example.org/Import4" xmlns:Q1="http://www.example.org/Import">
+
+    <xsd:import schemaLocation="Import3.xsd" namespace="http://www.example.org/Import"></xsd:import>
+    <xsd:complexType name="Imp4CT1">
+    	<xsd:sequence>
+    		<xsd:element name="e1" type="xsd:string" maxOccurs="25"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:group name="Imp4Gr1">
+    	<xsd:sequence>
+    		<xsd:element name="e1" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:group>
+
+    <xsd:attribute name="Imp4Attr1" type="tns:Imp4ST1"></xsd:attribute>
+
+    <xsd:attributeGroup name="Imp4AttrGr1">
+    	<xsd:attribute name="at1" type="xsd:string"></xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:element name="Imp4Elem1" type="xsd:string"></xsd:element>
+
+    <xsd:simpleType name="Imp4ST1">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Imp4ST2">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="Imp4CT2">
+    	<xsd:attribute name="attr1" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+
+
+    <xsd:element name="Imp4Elem2" type="Q1:Imp3CT2"></xsd:element>
+</xsd:schema>

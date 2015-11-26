@@ -1,0 +1,81 @@
+/* Class as selector */
+H1.pastoral {
+	color: #00FF00
+}
+
+/* ID as selector */
+#z98y {
+	letter-spacing: 0.3em
+}
+
+H1#z98y {
+	letter-spacing: 0.5em
+}
+
+/* Contextual selectors */
+DIV P {
+	font: small sans-serif
+}
+
+.reddish H1 {
+	color: red
+}
+
+#x78y CODE {
+	background: blue
+}
+
+DIV.sidenote H1 {
+	font-size: large
+}
+
+/* Anchor pseudo-classes */
+A:link {
+	color: red
+} /* unvisited link */
+A:visited {
+	color: blue
+} /* visited links */
+A:active {
+	color: lime
+} /* active links */
+
+/* Pseudo-class combined with normal class */
+A.external:visited {
+	color: blue
+}
+
+/* 'first-line' pseudo-element */
+P:first-line {
+	font-variant: small-caps
+}
+
+/* 'first-letter' pseudo-element */
+P:first-letter {
+	font-size: 200%;
+	float: left
+}
+
+/* Pseudo-elements in selectors */
+BODY P:first-letter {
+	color: purple
+}
+
+P.initial:first-letter {
+	color: red
+}
+
+/* Multiple pseudo-elements */
+P {
+	color: red;
+	font-size: 12pt
+}
+
+P:first-letter {
+	color: green;
+	font-size: 200%
+}
+
+P:first-line {
+	color: blue
+}

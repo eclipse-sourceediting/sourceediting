@@ -1,0 +1,5 @@
+number of errors      : 1
+
+------------error list-------------------------------------------
+src-resolve.4.2: Error resolving component 'stringa'. It was detected that 'stringa' is in namespace 'http://www.w3.org/2001/XMLSchema', but components from this namespace are not referenceable from schema document 'platform:/resource/Project/InvalidSchemaInXMLCatalog.xsd'. If this is the incorrect namespace, perhaps the prefix of 'stringa' needs to be changed. If this is the correct namespace, then an appropriate 'import' tag should be added to 'platform:/resource/Project/InvalidSchemaInXMLCatalog.xsd'. [3, 50]
+-----------------------------------------------------------------

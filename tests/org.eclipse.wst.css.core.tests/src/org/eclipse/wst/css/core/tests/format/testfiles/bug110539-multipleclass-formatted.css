@@ -1,0 +1,19 @@
+/* 2 separate classes - yes space */
+.classOne .classTwo {
+	color: red;
+}
+
+/* multiple classes - no space */
+.classOne.classTwo {
+	color: lime;
+}
+
+/* id and class - yes space */
+#myid .myclass {
+	border-top: 0px;
+}
+
+/* id with class - no space */
+#myid.myclass {
+	border-top: 0px;
+}

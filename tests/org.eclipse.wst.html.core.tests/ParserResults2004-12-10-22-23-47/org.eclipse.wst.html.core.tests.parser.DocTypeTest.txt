@@ -1,0 +1,59 @@
+org.eclipse.wst.html.core.tests.parser.DocTypeTest
+Source :
+<!DOCTYPE HTML><html></html>
+
+
+StructuredDocument Regions :
+[0, 15] (<!DOCTYPE HTML>)
+[15, 21] (<html>)
+[21, 28] (</html>)
+
+Tree :
+#document
+--HTML(null)(null)@[0, 15] (<!DOCTYPE HTML>)
+--html/html@[15, 21] (<html>)@[21, 28] (</html>)
+
+Source :
+<!DOCTYPE HTML SYSTEM "sytem"><html></html>
+
+
+StructuredDocument Regions :
+[0, 30] (<!DOCTYPE HTML SYSTEM "sytem">)
+[30, 36] (<html>)
+[36, 43] (</html>)
+
+Tree :
+#document
+--HTML(null)(sytem)@[0, 30] (<!DOCTYPE HTML SYSTEM "sytem">)
+--html/html@[30, 36] (<html>)@[36, 43] (</html>)
+
+Source :
+<!DOCTYPE HTML PUBLIC "public" "sytem"><html></html>
+
+
+StructuredDocument Regions :
+[0, 39] (<!DOCTYPE HTML PUBLIC "public" "sytem">)
+[39, 45] (<html>)
+[45, 52] (</html>)
+
+Tree :
+#document
+--HTML(public)(sytem)@[0, 39] (<!DOCTYPE HTML PUBLIC "public" "sytem">)
+--html/html@[39, 45] (<html>)@[45, 52] (</html>)
+
+Source :
+ <!DOCTYPE HTML PUBLIC "public" "sytem"><html></html>
+
+
+StructuredDocument Regions :
+[0, 1] ( )
+[1, 40] (<!DOCTYPE HTML PUBLIC "public" "sytem">)
+[40, 46] (<html>)
+[46, 53] (</html>)
+
+Tree :
+#document
+--#text( )@[0, 1] ( )
+--HTML(public)(sytem)@[1, 40] (<!DOCTYPE HTML PUBLIC "public" "sytem">)
+--html/html@[40, 46] (<html>)@[46, 53] (</html>)
+

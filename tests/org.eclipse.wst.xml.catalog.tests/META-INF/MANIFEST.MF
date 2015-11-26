@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.eclipse.wst.xml.catalog.tests; singleton:=true
+Bundle-Version: 1.0.100.qualifier
+Bundle-Activator: org.eclipse.wst.xml.catalog.tests.internal.TestPlugin
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Localization: plugin
+Export-Package: org.eclipse.wst.xml.catalog.tests.internal
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.junit,
+ org.eclipse.wst.xml.core,
+ org.apache.xerces,
+ org.eclipse.xsd,
+ org.eclipse.wst.common.uriresolver
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: catalogtests.jar
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

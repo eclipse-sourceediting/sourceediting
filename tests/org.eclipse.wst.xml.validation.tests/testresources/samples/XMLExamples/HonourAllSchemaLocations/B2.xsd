@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="urn:nsB" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema">
+    <element name="B2" type="string"></element>
+</schema>

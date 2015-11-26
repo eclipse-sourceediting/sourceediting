@@ -1,0 +1,30 @@
+[0, 3] (H1 )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-2/3, 
+[3, 9] ({
+
+	)
+    ContextRegion--> LBRACE: 0-1/6, 
+[9, 21] (color: white)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5, ContextRegion--> DECLARATION_SEPARATOR: 5-6/7, ContextRegion--> DECLARATION_VALUE_IDENT: 7-12, 
+[21, 24] (
+	)
+    ContextRegion--> S: 0-3, 
+[24, 25] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[25, 30] (
+
+	)
+    ContextRegion--> S: 0-5, 
+[30, 54] (background-color : black)
+    ContextRegion--> DECLARATION_PROPERTY: 0-16/17, ContextRegion--> DECLARATION_SEPARATOR: 17-18/19, ContextRegion--> DECLARATION_VALUE_IDENT: 19-24, 
+[54, 59] (
+	
+)
+    ContextRegion--> S: 0-5, 
+[59, 60] (})
+    ContextRegion--> RBRACE: 0-1, 
+[60, 62] (
+)
+    ContextRegion--> S: 0-2, 
+
+-------

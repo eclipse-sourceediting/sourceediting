@@ -1,0 +1,4 @@
+<%
+String variableFromHeader1 = "initialized in header 1";
+%>
+<%@ include file="test_header2.jspf" %>

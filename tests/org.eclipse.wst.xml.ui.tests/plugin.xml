@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.views">
+
+		<view
+			name="%view.name.0"
+			icon="$nl$/icons/sourceEditor.gif"
+			category="org.eclipse.wst.sse.ui.tests"
+			class="org.eclipse.wst.xml.ui.tests.viewer.ViewerTestXML"
+			id="org.eclipse.wst.xml.ui.tests.viewer.ViewerTestXML">
+		</view>
+	</extension>
+
+	<!-- test for breakpoint error handling -->
+		<extension
+		point="org.eclipse.wst.sse.ui.breakpoint">
+		<breakpointContribution
+		id="org.eclipse.wst.xml.ui.providers.test">
+		<provider
+		contentTypes="org.eclipse.wst.xml.core.xmlsource,org.eclipse.core.runtime.xml"
+		class="org.eclipse.wst.xml.ui.tests.breakpoints.BreakpointErrorProvider"
+		id="org.eclipse.wst.xml.ui.tests.breakpoints.BreakpointErrorProvider">
+		</provider>
+		</breakpointContribution>
+		</extension>
+
+	<extension point="org.eclipse.wst.sse.ui.extendedEditorActions">
+		<editorContribution
+			targetID="org.eclipse.wst.sse.ui.StructuredTextEditor"
+			id="org.eclipse.wst.xml.ui.tests.actions">
+			<action
+				popupmenuPath="group.editor"
+				class="org.eclipse.wst.xml.ui.tests.breakpoints.EnableWarningAction"
+				menubarPath="edit/MenuAdditions"
+				icon="icons/brkp_obj.gif"
+				id="org.eclipse.wst.xml.ui.tests.breakpoints.EnableWarningAction">
+			</action>
+		</editorContribution>
+	</extension>
+	<extension
+       id="xml.ui.tests1"
+       name="%Bundle-Name.0"
+       point="org.eclipse.ui.editors">
+		<editor
+        class="org.eclipse.wst.xml.ui.tests.TestSourceValidationFramework$TestStructuredTextEditor"
+        contributorClass="org.eclipse.wst.xml.ui.internal.actions.ActionContributorXML"
+        default="false"
+        filenames="*.xml99"
+        icon="icons/sourceEditor.gif"
+        id="org.eclipse.wst.xml.ui.tests.TestSourceValidationFramework$TestStructuredTextEditor"
+        name="%contentTypeTestXML99.editor"
+        symbolicFontName="org.eclipse.wst.sse.ui.textfont">
+		</editor>
+	</extension>
+    <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+        <content-type
+			file-extensions="xml99"
+			priority="low"
+			name="%contentTypeTestXML99.ct"
+			id="xml99source"
+			base-type="org.eclipse.core.runtime.xml">
+		</content-type>
+	</extension>
+	<extension point="org.eclipse.wst.sse.core.commentElementHandler">
+		<handler-custom
+			commenttype="xml"
+			class="org.eclipse.wst.xml.ui.tests.commentelement.CommentElementHandlerForFoo">
+			<startwith prefix="$"></startwith>
+		</handler-custom>
+	</extension>
+ 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<provisionalConfiguration
+			type="sourceReconcilingListener" target="org.eclipse.core.runtime.xml" class="org.eclipse.wst.xml.ui.tests.XMLCodeFoldingTest"/>
+	</extension>
+</plugin>

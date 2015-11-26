@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ex:purchaseReport
+        xmlns:ex="http://www.example.com/Report"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.example.com/Report report.xsd">
+    <ex:regions>
+        <ex:zip code="39487">
+            <ex:part number="293-AX" quantity="3"/>
+            <ex:part number="293-LD" quantity="3"/>
+        </ex:zip>
+        <ex:zip code="29387">
+            <ex:part number="897-JD" quantity="30"/>
+        </ex:zip>
+        <ex:zip code="19285">
+            <ex:part number="123-CK" quantity="19"/>
+            <ex:part number="175-FQ" quantity="8"/>
+        </ex:zip>
+    </ex:regions>
+
+    <ex:parts>
+        <ex:part number="293-AX"/>
+        <ex:part number="897-JD"/>
+        <ex:part number="123-CK"/>
+        <ex:part number="293-LD"/>
+        <ex:part number="175-FQ"/>
+    </ex:parts>
+</ex:purchaseReport>
+

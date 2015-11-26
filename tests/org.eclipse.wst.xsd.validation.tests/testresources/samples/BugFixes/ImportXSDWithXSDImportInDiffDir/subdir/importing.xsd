@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.com/importing" xmlns:ex="http://www.example.com/importing" xmlns:simple="http://www.example.com/simple">
+  <import namespace="http://www.example.com/simple" schemaLocation="simple.xsd"/>
+    <simpleType name="mySimpleType">
+    <list itemType="string"/>
+  </simpleType>
+</schema>

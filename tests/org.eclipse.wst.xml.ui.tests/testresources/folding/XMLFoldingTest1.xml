@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<foo1></foo1>
+	<foo2>
+		<bar1></bar1>
+		<bar2 one="1"
+		two="2"
+		three="3">
+		
+		</bar2>
+		
+		<bar3>
+		</bar3>
+	
+	</foo2>
+	
+	<!-- 
+		My Awesome comment!!!!
+	 -->
+
+</root>

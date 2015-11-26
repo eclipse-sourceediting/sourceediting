@@ -1,0 +1,31 @@
+org.eclipse.wst.html.core.tests.parser.UpdaterTest14
+Source :
+<%= aaaa %>
+
+
+StructuredDocument Regions :
+[0, 1] (<)
+[1, 4] (%= )
+[4, 9] (aaaa )
+[9, 10] (%)
+[10, 11] (>)
+
+Tree :
+#document
+--#text(<%&#61; aaaa %>)@{[0, 1] (<),[1, 4] (%&#61; ),[4, 9] (aaaa ),[9, 10] (%),[10, 11] (>)}
+
+Source :
+<% = aaaa %>
+
+
+StructuredDocument Regions :
+[0, 1] (<)
+[1, 5] (% = )
+[5, 10] (aaaa )
+[10, 11] (%)
+[11, 12] (>)
+
+Tree :
+#document
+--#text(<% &#61; aaaa %>)@{[0, 1] (<),[1, 5] (% &#61; ),[5, 10] (aaaa ),[10, 11] (%),[11, 12] (>)}
+

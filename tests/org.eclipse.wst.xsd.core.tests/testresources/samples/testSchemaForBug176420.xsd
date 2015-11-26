@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/testSchemaForBug176420"
+	xmlns:tns="http://www.example.org/testSchemaForBug176420"
+	elementFormDefault="qualified">
+	<simpleType name="numbersType">
+		<restriction base="string">
+			<enumeration value="1"/>
+			<enumeration value="2"/>
+			<enumeration value="3"/>
+			<enumeration value="4"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="lettersType">
+		<restriction base="string">
+			<enumeration value="a"/>
+			<enumeration value="b"/>
+			<enumeration value="c"/>
+			<enumeration value="d"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="unionType">
+		<union memberTypes="tns:lettersType tns:numbersType tns:union2Type" />
+	</simpleType>
+	<element name="element" type="tns:unionType"></element>
+    <simpleType name="numbers2Type">
+    	<restriction base="string">
+    		<enumeration value="4"/>
+    		<enumeration value="5"/>
+    		<enumeration value="6"/>
+    	</restriction>
+    </simpleType>
+    <simpleType name="letters2Type">
+    	<restriction base="string">
+    		<enumeration value="d"/>
+    		<enumeration value="e"/>
+    		<enumeration value="f"/>
+    	</restriction>
+    </simpleType>
+    <simpleType name="union2Type">
+    	<union memberTypes="tns:letters2Type tns:numbers2Type"/></simpleType>
+</schema>

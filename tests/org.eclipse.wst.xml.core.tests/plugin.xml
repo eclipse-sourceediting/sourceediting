@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+		<!-- associate .fragx files with the XML content type -->
+		<file-association
+			content-type="org.eclipse.core.runtime.xml"
+			file-extensions="fragx" />
+	</extension>
+
+	<extension
+		id="Test"
+		point="org.eclipse.core.runtime.applications">
+		<application>
+			<run
+				class="org.eclipse.wst.xml.core.tests.contentmodel.CMVisitorTest" />
+		</application>
+	</extension>
+	
+	<extension point="org.eclipse.wst.xml.core.catalogContributions">
+		<catalogContribution id="default">
+			<uri
+                name="http://www.example.org/GlobalCMDocumentCacheTestSchema.xsd"
+                uri="projecttestfiles/testfiles/GlobalCMDocumentCacheTestSchema.xsd" />
+		</catalogContribution>
+	</extension>
+
+	<extension
+		point="org.eclipse.wst.xml.core.externalSchemaLocations">
+		<provider class="org.eclipse.wst.xml.core.tests.contentmodel.ExternalSchemaTest$ExternalSchemaLocationProvider">
+		</provider>
+	</extension>
+</plugin>

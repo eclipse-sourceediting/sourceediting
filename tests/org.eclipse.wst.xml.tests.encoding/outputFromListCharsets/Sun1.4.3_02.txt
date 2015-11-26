@@ -1,0 +1,343 @@
+
+Current Locale: en_US
+
+JRE version: 1.4.2_03 (1.4.2_03-b02)
+-- listing properties --
+java.runtime.name=Java(TM) 2 Runtime Environment, Stand...
+sun.boot.library.path=D:\JDKs\j2sdk1.4.2_03\jre\bin
+java.vm.version=1.4.2_03-b02
+java.vm.vendor=Sun Microsystems Inc.
+java.vendor.url=http://java.sun.com/
+path.separator=;
+java.vm.name=Java HotSpot(TM) Client VM
+file.encoding.pkg=sun.io
+user.country=US
+sun.os.patch.level=Service Pack 1
+java.vm.specification.name=Java Virtual Machine Specification
+user.dir=D:\builds\Daily\eclipse-SDK-I20040304...
+java.runtime.version=1.4.2_03-b02
+java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
+java.endorsed.dirs=D:\JDKs\j2sdk1.4.2_03\jre\lib\endorsed
+os.arch=x86
+java.io.tmpdir=C:\DOCUME~1\DAVIDW~1.DMW\LOCALS~1\Temp\
+line.separator=
+
+java.vm.specification.vendor=Sun Microsystems Inc.
+user.variant=
+os.name=Windows XP
+sun.java2d.fontpath=
+java.library.path=D:\JDKs\j2sdk1.4.2_03\bin;.;C:\WINDOW...
+java.specification.name=Java Platform API Specification
+java.class.version=48.0
+java.util.prefs.PreferencesFactory=java.util.prefs.WindowsPreferencesFac...
+os.version=5.1
+user.home=C:\Documents and Settings\davidw.DMW2T23
+user.timezone=
+java.awt.printerjob=sun.awt.windows.WPrinterJob
+file.encoding=Cp1252
+java.specification.version=1.4
+user.name=davidw
+java.class.path=D:\builds\Daily\eclipse-SDK-I20040304...
+java.vm.specification.version=1.0
+sun.arch.data.model=32
+java.home=D:\JDKs\j2sdk1.4.2_03\jre
+java.specification.vendor=Sun Microsystems Inc.
+user.language=en
+awt.toolkit=sun.awt.windows.WToolkit
+java.vm.info=mixed mode
+java.version=1.4.2_03
+java.ext.dirs=D:\JDKs\j2sdk1.4.2_03\jre\lib\ext
+sun.boot.class.path=D:\JDKs\j2sdk1.4.2_03\jre\lib\rt.jar;...
+java.vendor=Sun Microsystems Inc.
+file.separator=\
+java.vendor.url.bug=http://java.sun.com/cgi-bin/bugreport...
+sun.cpu.endian=little
+sun.io.unicode.encoding=UnicodeLittle
+sun.cpu.isalist=pentium i486 i386
+Available Locales
+ar
+ar_AE
+ar_BH
+ar_DZ
+ar_EG
+ar_IQ
+ar_JO
+ar_KW
+ar_LB
+ar_LY
+ar_MA
+ar_OM
+ar_QA
+ar_SA
+ar_SD
+ar_SY
+ar_TN
+ar_YE
+hi_IN
+iw
+iw_IL
+ja
+ja_JP
+ko
+ko_KR
+th
+th_TH
+th_TH_TH
+zh
+zh_CN
+zh_HK
+zh_TW
+be
+be_BY
+bg
+bg_BG
+ca
+ca_ES
+cs
+cs_CZ
+da
+da_DK
+de
+de_AT
+de_CH
+de_DE
+de_LU
+el
+el_GR
+en_AU
+en_CA
+en_GB
+en_IE
+en_IN
+en_NZ
+en_ZA
+es
+es_AR
+es_BO
+es_CL
+es_CO
+es_CR
+es_DO
+es_EC
+es_ES
+es_GT
+es_HN
+es_MX
+es_NI
+es_PA
+es_PE
+es_PR
+es_PY
+es_SV
+es_UY
+es_VE
+et
+et_EE
+fi
+fi_FI
+fr
+fr_BE
+fr_CA
+fr_CH
+fr_FR
+fr_LU
+hr
+hr_HR
+hu
+hu_HU
+is
+is_IS
+it
+it_CH
+it_IT
+lt
+lt_LT
+lv
+lv_LV
+mk
+mk_MK
+nl
+nl_BE
+nl_NL
+no
+no_NO
+no_NO_NY
+pl
+pl_PL
+pt
+pt_BR
+pt_PT
+ro
+ro_RO
+ru
+ru_RU
+sh
+sh_YU
+sk
+sk_SK
+sl
+sl_SI
+sq
+sq_AL
+sr
+sr_YU
+sv
+sv_SE
+tr
+tr_TR
+uk
+uk_UA
+en
+en_US
+file.encoding.pkg: sun.io
+file.encoding: Cp1252
+
+
+Available Charsets
+1.  Charsetname: Big5
+	displayName: Big5
+	aliases: [csBig5]
+2.  Charsetname: Big5-HKSCS
+	displayName: Big5-HKSCS
+	aliases: [big5-hkscs, Big5_HKSCS, big5hkscs]
+3.  Charsetname: EUC-JP
+	displayName: EUC-JP
+	aliases: [eucjis, x-eucjp, csEUCPkdFmtjapanese, eucjp, Extended_UNIX_Code_Packed_Format_for_Japanese, x-euc-jp, euc_jp]
+4.  Charsetname: EUC-KR
+	displayName: EUC-KR
+	aliases: [ksc5601, 5601, ksc5601_1987, ksc_5601, ksc5601-1987, euc_kr, ks_c_5601-1987, euckr, csEUCKR]
+5.  Charsetname: GB18030
+	displayName: GB18030
+	aliases: [gb18030-2000]
+6.  Charsetname: GBK
+	displayName: GBK
+	aliases: [windows-936, CP936]
+7.  Charsetname: ISO-2022-JP
+	displayName: ISO-2022-JP
+	aliases: [jis, jis_encoding, csjisencoding, csISO2022JP, iso2022jp]
+8.  Charsetname: ISO-2022-KR
+	displayName: ISO-2022-KR
+	aliases: [ISO2022KR, csISO2022KR]
+9.  Charsetname: ISO-8859-1
+	displayName: ISO-8859-1
+	aliases: [iso-ir-100, 8859_1, ISO_8859-1, ISO8859_1, 819, csISOLatin1, IBM-819, ISO_8859-1:1987, latin1, cp819, ISO8859-1, IBM819, ISO_8859_1, l1]
+10.  Charsetname: ISO-8859-13
+	displayName: ISO-8859-13
+	aliases: [iso8859_13]
+11.  Charsetname: ISO-8859-15
+	displayName: ISO-8859-15
+	aliases: [8859_15, csISOlatin9, IBM923, cp923, 923, L9, IBM-923, ISO8859-15, LATIN9, ISO_8859-15, LATIN0, csISOlatin0, ISO8859_15_FDIS, ISO-8859-15]
+12.  Charsetname: ISO-8859-2
+	displayName: ISO-8859-2
+	aliases: [l2, iso-ir-101, ISO_8859-2:1987, ISO_8859-2, latin2, csISOLatin2, iso8859_2]
+13.  Charsetname: ISO-8859-3
+	displayName: ISO-8859-3
+	aliases: []
+14.  Charsetname: ISO-8859-4
+	displayName: ISO-8859-4
+	aliases: [iso-ir-110, l4, latin4, csISOLatin4, iso8859_4, ISO_8859-4:1988, ISO_8859-4]
+15.  Charsetname: ISO-8859-5
+	displayName: ISO-8859-5
+	aliases: [cyrillic, iso8859_5, ISO_8859-5, iso-ir-144, csISOLatinCyrillic]
+16.  Charsetname: ISO-8859-6
+	displayName: ISO-8859-6
+	aliases: []
+17.  Charsetname: ISO-8859-7
+	displayName: ISO-8859-7
+	aliases: [greek8, ECMA-118, sun_eu_greek, ELOT_928, ISO_8859-7:1987, iso-ir-126, ISO_8859-7, iso8859_7, greek, csISOLatinGreek]
+18.  Charsetname: ISO-8859-8
+	displayName: ISO-8859-8
+	aliases: []
+19.  Charsetname: ISO-8859-9
+	displayName: ISO-8859-9
+	aliases: [iso-ir-148, latin5, l5, ISO_8859-9, ISO_8859-9:1989, csISOLatin5, iso8859_9]
+20.  Charsetname: JIS_X0201
+	displayName: JIS_X0201
+	aliases: [JIS_X0201, X0201, JIS0201, csHalfWidthKatakana]
+21.  Charsetname: JIS_X0212-1990
+	displayName: JIS_X0212-1990
+	aliases: [jis_x0212-1990, iso-ir-159, x0212, JIS0212, csISO159JISX02121990]
+22.  Charsetname: KOI8-R
+	displayName: KOI8-R
+	aliases: [koi8, cskoi8r]
+23.  Charsetname: Shift_JIS
+	displayName: Shift_JIS
+	aliases: [shift-jis, x-sjis, ms_kanji, shift_jis, csShiftJIS, sjis, pck]
+24.  Charsetname: TIS-620
+	displayName: TIS-620
+	aliases: []
+25.  Charsetname: US-ASCII
+	displayName: US-ASCII
+	aliases: [ISO646-US, IBM367, ASCII, cp367, ascii7, ANSI_X3.4-1986, iso-ir-6, us, 646, iso_646.irv:1983, csASCII, ANSI_X3.4-1968, ISO_646.irv:1991]
+26.  Charsetname: UTF-16
+	displayName: UTF-16
+	aliases: [UTF_16]
+27.  Charsetname: UTF-16BE
+	displayName: UTF-16BE
+	aliases: [X-UTF-16BE, UTF_16BE, ISO-10646-UCS-2]
+28.  Charsetname: UTF-16LE
+	displayName: UTF-16LE
+	aliases: [UTF_16LE, X-UTF-16LE]
+29.  Charsetname: UTF-8
+	displayName: UTF-8
+	aliases: [UTF8]
+30.  Charsetname: windows-1250
+	displayName: windows-1250
+	aliases: [cp1250]
+31.  Charsetname: windows-1251
+	displayName: windows-1251
+	aliases: [cp1251]
+32.  Charsetname: windows-1252
+	displayName: windows-1252
+	aliases: [cp1252]
+33.  Charsetname: windows-1253
+	displayName: windows-1253
+	aliases: [cp1253]
+34.  Charsetname: windows-1254
+	displayName: windows-1254
+	aliases: [cp1254]
+35.  Charsetname: windows-1255
+	displayName: windows-1255
+	aliases: []
+36.  Charsetname: windows-1256
+	displayName: windows-1256
+	aliases: []
+37.  Charsetname: windows-1257
+	displayName: windows-1257
+	aliases: [cp1257]
+38.  Charsetname: windows-1258
+	displayName: windows-1258
+	aliases: []
+39.  Charsetname: windows-31j
+	displayName: windows-31j
+	aliases: [csWindows31J, windows-932, MS932]
+40.  Charsetname: x-EUC-CN
+	displayName: x-EUC-CN
+	aliases: [gb2312, EUC_CN, euccn, euc-cn, gb2312-80, gb2312-1980]
+41.  Charsetname: x-euc-jp-linux
+	displayName: x-euc-jp-linux
+	aliases: [euc_jp_linux, euc-jp-linux]
+42.  Charsetname: x-EUC-TW
+	displayName: x-EUC-TW
+	aliases: [cns11643, euc_tw, EUC-TW, euctw]
+43.  Charsetname: x-ISCII91
+	displayName: x-ISCII91
+	aliases: [iscii, ST_SEV_358-88, iso-ir-153, csISO153GOST1976874, ISCII91]
+44.  Charsetname: x-JIS0208
+	displayName: x-JIS0208
+	aliases: [JIS_C6626-1983, JIS0208, csISO87JISX0208, x0208, JIS_X0208-1983, iso-ir-87]
+45.  Charsetname: x-Johab
+	displayName: x-Johab
+	aliases: [johab, ms1361, ksc5601-1992, ksc5601_1992]
+46.  Charsetname: x-MS950-HKSCS
+	displayName: x-MS950-HKSCS
+	aliases: [MS950_HKSCS]
+47.  Charsetname: x-mswin-936
+	displayName: x-mswin-936
+	aliases: [ms936, ms_936]
+48.  Charsetname: x-windows-949
+	displayName: x-windows-949
+	aliases: [windows949, ms_949, ms949]
+49.  Charsetname: x-windows-950
+	displayName: x-windows-950
+	aliases: [windows-950, ms950]

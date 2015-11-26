@@ -1,0 +1,4 @@
+<%
+variableFromMainJSP = "reassigned in header 2";
+variableFromHeader1 = "reassigned in header 2";
+%>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.example.org/Main"
+	elementFormDefault="qualified"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:imp="http://www.example.org/Import"
+	xmlns="http://www.example.org/Main">
+
+    <xsd:import schemaLocation="../../Import1.xsd" namespace="http://www.example.org/Import"></xsd:import>
+
+    <xsd:group name="MainGroup1">
+    	<xsd:sequence>
+    		<xsd:element name="localElem1" type="xsd:string"></xsd:element>
+            <xsd:choice>
+    			<xsd:element name="localElem2" type="xsd:string"></xsd:element>
+    			<xsd:element ref="imp:ImpElem1"></xsd:element>
+    		</xsd:choice>
+    	</xsd:sequence>
+    </xsd:group>
+</xsd:schema>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	<!-- comment on a new line -->
+		<menu date="11/30/2000"><!-- inline comment after tag -->
+	<rname>Liam's Chowder House and Grill</rname><!-- inline comment after tag -->
+	<!-- block comment
+		Black = #000000
+		Silver= #C0C0C0
+		Gray  = #808080
+		White = #FFFFFF
+	-->
+	<!-- block comment
+			Black = #000000
+		Silver= #C0C0C0
+				Gray  = #808080
+	White = #FFFFFF
+-->
+	<item type="appetizer">
+		<desc>Warmed leek salad</desc><!-- inline comment after tag --><price units="usd">6.95<!-- inline comment after text --></price><price units="usd" units="usd">6.95<!-- inline comment after text --></price>
+	</item>
+	<!-- comment on a new line -->
+	<!--   comment   on   a   new   line   -->
+	<!--comment on a new line with no space-->
+<!--
+No space
+-->
+<!--
+ OneSpace
+-->
+<!--
+	One tab
+-->
+<!--
+This is a long paragraph.
+
+The text
+in this paragraph should NOT be re-flowed.-->
+<!--
+This is a long paragraph.
+
+The text
+in this paragraph should NOT be re-flowed.
+-->
+<!--
+This is a long paragraph.
+
+
+The text
+in this paragraph should NOT be re-flowed.
+-->
+<!--
+This is a long paragraph.
+
+
+
+The text
+in this paragraph should NOT be re-flowed.
+-->
+<!--
+
+This is a long paragraph.
+
+The text
+in this paragraph should NOT be re-flowed.
+-->
+<!--
+
+This is a long paragraph.
+
+The text
+in this paragraph should NOT be re-flowed.
+
+-->
+<!--
+
+
+
+This is a long paragraph.
+
+
+
+The text
+in this paragraph should NOT be re-flowed.
+
+
+
+-->
+	<item type="appetizer">
+<!-- a
+     b-->
+<!-- a
+     b -->
+<!--
+a
+     b-->
+<!--
+a
+     b -->
+<!--
+a
+     b
+-->
+<!-- a
+     b
+      -->
+<!--
+
+
+
+a
+
+
+
+b
+
+
+
+-->
+		<desc>Prosciutto ham with melon</desc>
+<!-- this block comment should line up with the sibilings
+	Black = #000000
+	Silver= #C0C0C0
+	Gray  = #808080
+	White = #FFFFFF
+-->
+	<price units="usd">7.95</price>
+	<!-- comment before missing end tag -->
+</menu>

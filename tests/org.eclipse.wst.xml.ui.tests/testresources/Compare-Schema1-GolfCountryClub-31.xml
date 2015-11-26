@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:GolfCountryClub xmlns:tns="http://www.example.org/GolfCountryClub" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/GolfCountryClub Schema1.xsd ">
+  <GolfCourse NumberOfHoles="18">
+    <Name>Name</Name>
+    <Yardage>1</Yardage>
+    <Par>1</Par>
+    <Handicap>0.0</Handicap>
+    <Slope>Slope</Slope>
+  </GolfCourse>
+  <Member handicap="0">
+    <RestrictedMember>
+      <FirstName>FirstName</FirstName>
+      <MiddleName>MiddleName</MiddleName>
+      <LastName>LastName</LastName>
+      <MembershipExpiry>2001-01-01</MembershipExpiry>
+      <LimitedPlay>Weekday Only</LimitedPlay>
+    </RestrictedMember>
+  </Member>
+  <Employee>
+    <FirstName>FirstName</FirstName>
+    <MiddleName>MiddleName</MiddleName>
+    <LastName>LastName</LastName>
+    <EmployeeNumber>EmployeeNumber</EmployeeNumber>
+  </Employee>
+  <ProShop>
+    <GolfClub>
+      <ManufacturerName>ManufacturerName</ManufacturerName>
+      <Quantity>1</Quantity>
+      <ClubKind>Driver</ClubKind>
+      <Loft>Loft</Loft>
+      <Shaft>Regular</Shaft>
+    </GolfClub>
+    <BoxOfBalls>
+      <ManufacturerName>ManufacturerName</ManufacturerName>
+      <Quantity>1</Quantity>
+      <ProductDetails>ProductDetails</ProductDetails>
+    </BoxOfBalls>
+  </ProShop>
+</tns:GolfCountryClub>

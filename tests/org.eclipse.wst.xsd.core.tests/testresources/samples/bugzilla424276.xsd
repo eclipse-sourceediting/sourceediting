@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/bugzilla424276" xmlns:tns="http://www.example.org/bugzilla424276" elementFormDefault="qualified">
+
+    <simpleType name="A">
+    	<restriction base="normalizedString">
+    		<enumeration value="01"></enumeration>
+    	</restriction>
+    </simpleType>
+
+    <simpleType name="B0">
+    	<restriction base="tns:B1">
+    	    <enumeration value="01"></enumeration>
+    	</restriction>
+    </simpleType>
+    
+    <simpleType name="B1">
+    	<restriction
+    		base="tns:B2">
+    		<maxLength value="40"></maxLength>
+    	</restriction>
+    </simpleType>
+    
+    <simpleType name="B2">
+    	<restriction base="string">
+    		<pattern value="[A-Za-z0-9_]+"></pattern>
+    	</restriction>
+    </simpleType>
+
+    <simpleType name="C0">
+    	<restriction base="tns:C1">
+    	    <enumeration value="01"></enumeration>
+    	    <enumeration value="02"></enumeration>
+    	</restriction>
+    </simpleType>
+    
+    <simpleType name="C1">
+    	<restriction
+    		base="string">
+    		<maxLength value="40"></maxLength>
+    	    <enumeration value="01"></enumeration>
+    		<enumeration value="02"></enumeration>
+    		<enumeration value="03"></enumeration>
+    	</restriction>
+    </simpleType>
+
+    <simpleType name="D0">
+    	<restriction base="tns:D1">
+    	</restriction>
+    </simpleType>
+    
+    <simpleType name="D1">
+    	<restriction
+    		base="string">
+    		<maxLength value="40"></maxLength>
+    	    <enumeration value="01"></enumeration>
+    		<enumeration value="02"></enumeration>
+    		<enumeration value="03"></enumeration>
+    		<enumeration value="04"></enumeration>
+    	</restriction>
+    </simpleType>
+
+    <element name="ElemOfTypeA" type="tns:A"></element>
+    <element name="ElemOfTypeB0" type="tns:B0"></element>
+    <element name="ElemOfTypeC0" type="tns:C0"></element>
+    <element name="ElemOfTypeD0" type="tns:D0"></element>
+</schema>

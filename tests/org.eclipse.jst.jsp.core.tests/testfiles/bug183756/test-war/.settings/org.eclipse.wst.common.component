@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="test-war">
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/test-jar/test-jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="test-war"/>
+        <property name="java-output-path" value="build/classes"/>
+<property name="web_app_libraries_processed" value="true"/>
+<property name="ear_libraries_processed" value="true"/>
+    </wb-module>
+</project-modules>

@@ -1,0 +1,102 @@
+[0, 29] (@import url("../sample2.css"))
+    ContextRegion--> IMPORT: 0-7/8, ContextRegion--> URI: 8-29, 
+[29, 30] (;)
+    ContextRegion--> DELIMITER: 0-1, 
+[30, 57] (
+
+/* Sample Styles */
+
+)
+    ContextRegion--> S: 0-4, ContextRegion--> COMMENT: 4-23, ContextRegion--> S: 23-27, 
+[57, 62] (BODY )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/5, 
+[62, 66] ({
+	)
+    ContextRegion--> LBRACE: 0-1/4, 
+[66, 79] (color : black)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5/6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> DECLARATION_VALUE_IDENT: 8-13, 
+[79, 80] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[80, 83] (
+	)
+    ContextRegion--> S: 0-3, 
+[83, 120] (background-color : rgb(181, 253, 211))
+    ContextRegion--> DECLARATION_PROPERTY: 0-16/17, ContextRegion--> DECLARATION_SEPARATOR: 17-18/19, ContextRegion--> DECLARATION_VALUE_FUNCTION: 19-23, ContextRegion--> DECLARATION_VALUE_NUMBER: 23-26, ContextRegion--> DECLARATION_VALUE_OPERATOR: 26-27/28, ContextRegion--> DECLARATION_VALUE_NUMBER: 28-31, ContextRegion--> DECLARATION_VALUE_OPERATOR: 31-32/33, ContextRegion--> DECLARATION_VALUE_NUMBER: 33-36, ContextRegion--> DECLARATION_VALUE_PARENTHESIS_CLOSE: 36-37, 
+[120, 121] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[121, 124] (
+	)
+    ContextRegion--> S: 0-3, 
+[124, 143] (text-align : center)
+    ContextRegion--> DECLARATION_PROPERTY: 0-10/11, ContextRegion--> DECLARATION_SEPARATOR: 11-12/13, ContextRegion--> DECLARATION_VALUE_IDENT: 13-19, 
+[143, 144] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[144, 147] (
+	)
+    ContextRegion--> S: 0-3, 
+[147, 186] (font-family : "Heisei Mincho W3", serif)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11/12, ContextRegion--> DECLARATION_SEPARATOR: 12-13/14, ContextRegion--> DECLARATION_VALUE_STRING: 14-32, ContextRegion--> DECLARATION_VALUE_OPERATOR: 32-33/34, ContextRegion--> DECLARATION_VALUE_IDENT: 34-39, 
+[186, 188] (
+)
+    ContextRegion--> S: 0-2, 
+[188, 189] (})
+    ContextRegion--> RBRACE: 0-1, 
+[189, 193] (
+
+)
+    ContextRegion--> S: 0-4, 
+[193, 205] (@page :left )
+    ContextRegion--> PAGE: 0-5/6, ContextRegion--> CSS_PAGE_SELECTOR: 6-11/12, 
+[205, 207] ({ )
+    ContextRegion--> LBRACE: 0-1/2, 
+[207, 224] (margin-left : 4cm)
+    ContextRegion--> DECLARATION_PROPERTY: 0-11/12, ContextRegion--> DECLARATION_SEPARATOR: 12-13/14, ContextRegion--> DECLARATION_VALUE_DIMENSION: 14-17, 
+[224, 225] ( )
+    ContextRegion--> S: 0-1, 
+[225, 226] (})
+    ContextRegion--> RBRACE: 0-1, 
+[226, 230] (
+
+)
+    ContextRegion--> S: 0-4, 
+[230, 243] (@media aural )
+    ContextRegion--> MEDIA: 0-6/7, ContextRegion--> MEDIUM: 7-12/13, 
+[243, 247] ({
+	)
+    ContextRegion--> LBRACE: 0-1/4, 
+[247, 255] (P.heidi )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_CLASS: 1-7/8, 
+[255, 260] ({
+		)
+    ContextRegion--> LBRACE: 0-1/5, 
+[260, 281] (azimuth : center-left)
+    ContextRegion--> DECLARATION_PROPERTY: 0-7/8, ContextRegion--> DECLARATION_SEPARATOR: 8-9/10, ContextRegion--> DECLARATION_VALUE_IDENT: 10-21, 
+[281, 282] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[282, 286] (
+		)
+    ContextRegion--> S: 0-4, 
+[286, 305] (elevation : 12.3deg)
+    ContextRegion--> DECLARATION_PROPERTY: 0-9/10, ContextRegion--> DECLARATION_SEPARATOR: 10-11/12, ContextRegion--> DECLARATION_VALUE_DIMENSION: 12-19, 
+[305, 306] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[306, 310] (
+		)
+    ContextRegion--> S: 0-4, 
+[310, 327] (pause : 30ms 1.6s)
+    ContextRegion--> DECLARATION_PROPERTY: 0-5/6, ContextRegion--> DECLARATION_SEPARATOR: 6-7/8, ContextRegion--> DECLARATION_VALUE_DIMENSION: 8-12/13, ContextRegion--> DECLARATION_VALUE_DIMENSION: 13-17, 
+[327, 330] (
+	)
+    ContextRegion--> S: 0-3, 
+[330, 331] (})
+    ContextRegion--> RBRACE: 0-1, 
+[331, 333] (
+)
+    ContextRegion--> S: 0-2, 
+[333, 334] (})
+    ContextRegion--> RBRACE: 0-1, 
+[334, 336] (
+)
+    ContextRegion--> S: 0-2, 
+
+-------

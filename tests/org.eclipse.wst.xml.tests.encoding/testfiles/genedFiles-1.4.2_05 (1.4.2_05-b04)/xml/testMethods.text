@@ -1,0 +1,193 @@
+48
+	public void testFile0() throws CoreException, IOException  {
+		String charsetName = "Big5";
+		doGenTest(charsetName);
+	}
+	public void testFile1() throws CoreException, IOException  {
+		String charsetName = "Big5-HKSCS";
+		doGenTest(charsetName);
+	}
+	public void testFile2() throws CoreException, IOException  {
+		String charsetName = "EUC-JP";
+		doGenTest(charsetName);
+	}
+	public void testFile3() throws CoreException, IOException  {
+		String charsetName = "EUC-KR";
+		doGenTest(charsetName);
+	}
+	public void testFile4() throws CoreException, IOException  {
+		String charsetName = "GB18030";
+		doGenTest(charsetName);
+	}
+	public void testFile5() throws CoreException, IOException  {
+		String charsetName = "GBK";
+		doGenTest(charsetName);
+	}
+	public void testFile6() throws CoreException, IOException  {
+		String charsetName = "ISO-2022-JP";
+		doGenTest(charsetName);
+	}
+	public void testFile7() throws CoreException, IOException  {
+		String charsetName = "ISO-2022-KR";
+		doGenTest(charsetName);
+	}
+	public void testFile8() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-1";
+		doGenTest(charsetName);
+	}
+	public void testFile9() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-13";
+		doGenTest(charsetName);
+	}
+	public void testFile10() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-15";
+		doGenTest(charsetName);
+	}
+	public void testFile11() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-2";
+		doGenTest(charsetName);
+	}
+	public void testFile12() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-3";
+		doGenTest(charsetName);
+	}
+	public void testFile13() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-4";
+		doGenTest(charsetName);
+	}
+	public void testFile14() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-5";
+		doGenTest(charsetName);
+	}
+	public void testFile15() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-6";
+		doGenTest(charsetName);
+	}
+	public void testFile16() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-7";
+		doGenTest(charsetName);
+	}
+	public void testFile17() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-8";
+		doGenTest(charsetName);
+	}
+	public void testFile18() throws CoreException, IOException  {
+		String charsetName = "ISO-8859-9";
+		doGenTest(charsetName);
+	}
+	public void testFile19() throws CoreException, IOException  {
+		String charsetName = "JIS_X0201";
+		doGenTest(charsetName);
+	}
+	public void testFile20() throws CoreException, IOException  {
+		String charsetName = "JIS_X0212-1990";
+		doGenTest(charsetName);
+	}
+	public void testFile21() throws CoreException, IOException  {
+		String charsetName = "KOI8-R";
+		doGenTest(charsetName);
+	}
+	public void testFile22() throws CoreException, IOException  {
+		String charsetName = "Shift_JIS";
+		doGenTest(charsetName);
+	}
+	public void testFile23() throws CoreException, IOException  {
+		String charsetName = "TIS-620";
+		doGenTest(charsetName);
+	}
+	public void testFile24() throws CoreException, IOException  {
+		String charsetName = "US-ASCII";
+		doGenTest(charsetName);
+	}
+	public void testFile25() throws CoreException, IOException  {
+		String charsetName = "UTF-16";
+		doGenTest(charsetName);
+	}
+	public void testFile26() throws CoreException, IOException  {
+		String charsetName = "UTF-16BE";
+		doGenTest(charsetName);
+	}
+	public void testFile27() throws CoreException, IOException  {
+		String charsetName = "UTF-16LE";
+		doGenTest(charsetName);
+	}
+	public void testFile28() throws CoreException, IOException  {
+		String charsetName = "UTF-8";
+		doGenTest(charsetName);
+	}
+	public void testFile29() throws CoreException, IOException  {
+		String charsetName = "windows-1250";
+		doGenTest(charsetName);
+	}
+	public void testFile30() throws CoreException, IOException  {
+		String charsetName = "windows-1251";
+		doGenTest(charsetName);
+	}
+	public void testFile31() throws CoreException, IOException  {
+		String charsetName = "windows-1252";
+		doGenTest(charsetName);
+	}
+	public void testFile32() throws CoreException, IOException  {
+		String charsetName = "windows-1253";
+		doGenTest(charsetName);
+	}
+	public void testFile33() throws CoreException, IOException  {
+		String charsetName = "windows-1254";
+		doGenTest(charsetName);
+	}
+	public void testFile34() throws CoreException, IOException  {
+		String charsetName = "windows-1255";
+		doGenTest(charsetName);
+	}
+	public void testFile35() throws CoreException, IOException  {
+		String charsetName = "windows-1256";
+		doGenTest(charsetName);
+	}
+	public void testFile36() throws CoreException, IOException  {
+		String charsetName = "windows-1257";
+		doGenTest(charsetName);
+	}
+	public void testFile37() throws CoreException, IOException  {
+		String charsetName = "windows-1258";
+		doGenTest(charsetName);
+	}
+	public void testFile38() throws CoreException, IOException  {
+		String charsetName = "windows-31j";
+		doGenTest(charsetName);
+	}
+	public void testFile39() throws CoreException, IOException  {
+		String charsetName = "x-EUC-CN";
+		doGenTest(charsetName);
+	}
+	public void testFile40() throws CoreException, IOException  {
+		String charsetName = "x-euc-jp-linux";
+		doGenTest(charsetName);
+	}
+	public void testFile41() throws CoreException, IOException  {
+		String charsetName = "x-EUC-TW";
+		doGenTest(charsetName);
+	}
+	public void testFile42() throws CoreException, IOException  {
+		String charsetName = "x-JIS0208";
+		doGenTest(charsetName);
+	}
+	public void testFile43() throws CoreException, IOException  {
+		String charsetName = "x-Johab";
+		doGenTest(charsetName);
+	}
+	public void testFile44() throws CoreException, IOException  {
+		String charsetName = "x-MS950-HKSCS";
+		doGenTest(charsetName);
+	}
+	public void testFile45() throws CoreException, IOException  {
+		String charsetName = "x-mswin-936";
+		doGenTest(charsetName);
+	}
+	public void testFile46() throws CoreException, IOException  {
+		String charsetName = "x-windows-949";
+		doGenTest(charsetName);
+	}
+	public void testFile47() throws CoreException, IOException  {
+		String charsetName = "x-windows-950";
+		doGenTest(charsetName);
+	}

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nsA:A xmlns:nsA="urn:nsA" xmlns:p="urn:nsB" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:nsA A.xsd ">
+  <p:B1>p:B1</p:B1>
+  <p:B2>p:B2</p:B2>
+</nsA:A>

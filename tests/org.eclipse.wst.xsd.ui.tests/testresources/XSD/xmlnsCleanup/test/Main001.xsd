@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/Main"
+	xmlns:tns01="http://www.example.org/Main"
+	xmlns:tns02="http://www.example.org/Main"
+	xmlns:tns03="http://www.example.org/Main"
+	xmlns:tns04="http://www.example.org/Main"
+	xmlns:tns05="http://www.example.org/Main"
+	xmlns:tns06="http://www.example.org/Main"
+	xmlns:tns07="http://www.example.org/Main"
+	xmlns:tns08="http://www.example.org/Main"
+	xmlns:tns09="http://www.example.org/Main"
+	xmlns:tns10="http://www.example.org/Main"
+	xmlns:tns11="http://www.example.org/Main"
+	xmlns:tns12="http://www.example.org/Main"
+	xmlns:p="http://www.example.org/Import"
+	elementFormDefault="qualified">
+
+	<element name="MainElem001" type="string"></element>
+	
+	<complexType name="MainCT001">
+		<sequence>
+			<element name="CT001Elem001" type="string"></element>
+			<element ref="tns01:MainElem001"></element>
+			<any></any>
+		</sequence>
+	</complexType>
+
+	<complexType name="MainCT002">
+		<complexContent>
+			<extension base="tns02:MainCT001"></extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="MainCT003">
+		<complexContent>
+			<restriction base="tns03:MainCT001"></restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="MainCT004">
+		<simpleContent>
+			<extension base="string">
+				<annotation>
+					<appinfo></appinfo>
+				</annotation>
+				<attribute name="attr1" type="short"></attribute>
+				<attributeGroup ref="tns04:MainAttrGr001"></attributeGroup>
+				<anyAttribute></anyAttribute>
+			</extension>
+		</simpleContent>
+	</complexType>
+
+	<simpleType name="MainST001">
+		<restriction base="string">
+			<enumeration value="enum1"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="MainST002">
+		<restriction base="tns05:MainST001"></restriction>
+	</simpleType>
+
+	<simpleType name="MainST003">
+		<list itemType="tns06:MainST001"></list>
+	</simpleType>
+
+	<simpleType name="MainST004">
+		<list>
+			<simpleType>
+				<restriction base="tns07:MainST001"></restriction>
+			</simpleType>
+		</list>
+	</simpleType>
+
+
+	<simpleType name="MainST005">
+		<union memberTypes="tns08:MainST001 tns09:MainST002"></union>
+	</simpleType>
+
+	<attribute name="MainAttr001" type="string"></attribute>
+
+	<attribute name="MainAttr002" type="string"></attribute>
+
+	<attributeGroup name="MainAttrGr001">
+		<attribute ref="tns10:MainAttr001"></attribute>
+	</attributeGroup>
+
+	<attributeGroup name="MainAttrGr002"></attributeGroup>
+
+	<group name="MainGroup001">
+		<sequence>
+			<group ref="tns11:MainGroup002"></group>
+		</sequence>
+	</group>
+	
+	<element name="MainElem002" type="string" substitutionGroup="tns12:MainElem001"></element>
+	
+	<group name="MainGroup002">
+		<sequence>
+			<element name="e1" type="string">
+				<annotation>
+					<appinfo>
+						<p:ImpElem1></p:ImpElem1>
+					</appinfo>
+				</annotation>
+			</element>
+		</sequence>
+	</group>
+
+</schema>

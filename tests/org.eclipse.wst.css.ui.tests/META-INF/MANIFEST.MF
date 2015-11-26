@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.eclipse.wst.css.ui.tests; singleton:=true
+Bundle-Version: 1.0.500.qualifier
+Bundle-Activator: org.eclipse.wst.css.ui.tests.CSSUITestsPlugin
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Localization: plugin
+Export-Package: org.eclipse.wst.css.ui.tests,
+ org.eclipse.wst.css.ui.tests.viewer
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.wst.css.ui,
+ org.eclipse.wst.sse.ui,
+ org.eclipse.wst.css.core,
+ org.eclipse.jface.text,
+ org.eclipse.ui.workbench,
+ org.eclipse.ui.editors,
+ org.eclipse.wst.sse.core,
+ org.junit;bundle-version=3.8.2,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide
+Eclipse-LazyStart: true
+Bundle-ClassPath: cssuitests.jar
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Import-Package: org.eclipse.core.resources

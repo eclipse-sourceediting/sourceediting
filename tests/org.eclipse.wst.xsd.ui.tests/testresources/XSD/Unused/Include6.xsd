@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified" 
+    targetNamespace="http://www.example.org/Main" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://www.example.org/Main" xmlns:Q1="http://www.example.org/Import">
+
+    <xsd:import schemaLocation="Import1.xsd" namespace="http://www.example.org/Import"></xsd:import>
+    <xsd:complexType name="Inc6CT1">
+    	<xsd:sequence>
+    		<xsd:element name="e1" type="xsd:string" maxOccurs="25"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:group name="Inc6Gr1">
+    	<xsd:sequence>
+    		<xsd:element name="e1" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:group>
+
+    <xsd:attribute name="Inc6Attr1" type="tns:Inc6ST1"></xsd:attribute>
+
+    <xsd:attributeGroup name="Inc6AttrGr1">
+    	<xsd:attribute name="at1" type="xsd:string"></xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:element name="Inc6Elem1" type="Q1:ImpCT1"></xsd:element>
+
+    <xsd:simpleType name="Inc6ST1">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Inc6ST2">
+    	<xsd:restriction base="xsd:string"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="Inc6CT2">
+    	<xsd:attribute name="attr1" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.views">
+		<view
+			name="%view.name.0"
+			icon="$nl$/icons/sourceEditor.gif"
+			category="org.eclipse.wst.sse.ui.tests"
+			class="org.eclipse.jst.jsp.ui.tests.viewer.ViewerTestJSP"
+			id="org.eclipse.jst.jsp.ui.tests.viewer.ViewerTestJSP" />
+		<view
+			name="%taglibview.name.0"
+			icon="$nl$/icons/sourceEditor.gif"
+			category="org.eclipse.wst.sse.ui.tests"
+			class="org.eclipse.jst.jsp.ui.tests.TaglibIndexDeltaTraceView"
+			id="org.eclipse.jst.jsp.ui.tests.TaglibIndexDeltaTraceView" />
+	</extension>
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="%editor.name.0"
+			extensions="project, classpath, websettings, serverPreference"
+			icon="$nl$/icons/sourceEditor.gif"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
+			contributorClass="org.eclipse.wst.sse.ui.internal.actions.ActionContributor"
+			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+			id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+		</editor>
+	</extension>
+    <extension
+       point="org.eclipse.ui.commands">
+	    <command
+	          id="org.eclipse.jst.jsp.ui.showTranslation"
+	          name="%_UI_SHOW_TRANSLATION">
+	    </command>
+	</extension>
+	<extension point="org.eclipse.ui.bindings">
+      <!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
+            carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL
+            gtk: ? 
+      -->
+		<key
+			sequence="M1+M2+9"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.jst.jsp.ui.showTranslation"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+	</extension>
+    <extension point="org.eclipse.ui.handlers">
+       <handler
+             class="org.eclipse.jst.jsp.ui.tests.ShowTranslationHandler"
+             commandId="org.eclipse.jst.jsp.ui.showTranslation">
+       </handler>
+	</extension>
+    <extension
+          point="org.eclipse.jst.jsp.ui.classPatternProvider">
+       <classPatternProvider
+             contentType="org.eclipse.jst.jsp.ui.tests.type"
+             pattern="*foo,*bar">
+       </classPatternProvider>
+       <classPatternProvider
+             contentType="org.eclipse.jst.jsp.ui.tests.multitype"
+             pattern="*foo,*bar">
+       </classPatternProvider>
+       <classPatternProvider
+             contentType="org.eclipse.jst.jsp.ui.tests.multitype"
+             pattern="*baz">
+       </classPatternProvider>
+    </extension>
+</plugin>

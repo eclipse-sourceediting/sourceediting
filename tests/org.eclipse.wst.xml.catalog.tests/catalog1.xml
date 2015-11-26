@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <public publicId="InvoiceId_test" uri="file:///Users/jesper/Documents/workspace-helios/org.eclipse.wst.xml.catalog.tests/data/Invoice/Invoice.dtd" webURL="http://webURL"/>
+  <system chached="yes" property="value1" systemId="Invoice.dtd" uri="file:///Users/jesper/Documents/workspace-helios/org.eclipse.wst.xml.catalog.tests/data/Invoice/Invoice.dtd"/>
+  <uri chached="no" name="http://www.test.com/Invoice.dtd" property="value2" uri="file:///Users/jesper/Documents/workspace-helios/org.eclipse.wst.xml.catalog.tests/data/Invoice/Invoice.dtd"/>
+  <nextCatalog catalog="catalog2.xml" id="nextCatalog1"/>
+</catalog>

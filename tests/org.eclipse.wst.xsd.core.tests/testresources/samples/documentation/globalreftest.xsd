@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+*******************************************************************************
+ * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     David Carver - STAR - bug 157254 - Test file for documentation
+ *******************************************************************************/
+ -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/globalreftest" xmlns="http://www.example.org/globalreftest" elementFormDefault="qualified">
+    <xsd:element name="rootTest" type="TestType"/>
+	<xsd:element name="test" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>This some global documentation</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+    <xsd:element name="testElement" type="xsd:string">
+    	<xsd:annotation>
+    		<xsd:documentation>Some more testing</xsd:documentation>
+    	</xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="TestType">
+    	<xsd:sequence>
+    		<xsd:element ref="test" minOccurs="0" maxOccurs="1"/>
+    		<xsd:element ref="testElement" minOccurs="0" maxOccurs="1">
+    			<xsd:annotation>
+    				<xsd:documentation>This is an override</xsd:documentation>
+    			</xsd:annotation>
+    		</xsd:element>
+    		<xsd:element name="testAttribute" type="AttributeTestType" minOccurs="0" maxOccurs="1"/>
+    	</xsd:sequence>
+    </xsd:complexType>  
+    <xsd:complexType name="AttributeTestType">
+    	<xsd:sequence>
+    		<xsd:element name="test2" type="xsd:string"/>
+    	</xsd:sequence>
+    	<xsd:attribute name="testAt" type="xsd:string">
+    		<xsd:annotation>
+    			<xsd:appinfo/>
+    		</xsd:annotation>
+    	</xsd:attribute>
+    	<xsd:attribute name="testAtWithDoc" type="xsd:string">
+    		<xsd:annotation>
+    			<xsd:documentation>Attribute Documentation</xsd:documentation>
+    		</xsd:annotation>
+    	</xsd:attribute>
+    </xsd:complexType>
+</xsd:schema>

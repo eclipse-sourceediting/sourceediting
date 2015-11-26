@@ -1,0 +1,15 @@
+<!DOCTYPE catalog
+ PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN"
+ "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
+	prefer="public">
+	
+	<uri name="http://www.example.com/Report"
+		uri="./PurchaseOrder/international/report_.xsd" />
+    <!-- we can not map PublicId or URI of the included/redefined schemas -->	
+	<uri name="http://www.example.com/IPO"
+		uri="./PurchaseOrder/international/ipo_.xsd" />
+	<system systemId="address_.xsd"
+		uri="./PurchaseOrder/international/address.xsd" />
+
+</catalog>

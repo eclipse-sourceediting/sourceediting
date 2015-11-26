@@ -1,0 +1,14 @@
+<html 
+ 	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" >  
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />  
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Page</title>
+	</head>
+   	<body>
+   		<c:if test="${pageContext.request.requestURI != null}">	
+   	 		<c:out value=" foo "/>
+		</c:if>			
+	</body>
+</html>

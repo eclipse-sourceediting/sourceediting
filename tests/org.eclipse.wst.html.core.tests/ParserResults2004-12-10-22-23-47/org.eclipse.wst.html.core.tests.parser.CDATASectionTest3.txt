@@ -1,0 +1,46 @@
+org.eclipse.wst.html.core.tests.parser.CDATASectionTest3
+Source :
+<a><![CDATA[contentOfCDATASection]]></a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 36] (<![CDATA[contentOfCDATASection]]>)
+[36, 40] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[36, 40] (</a>)
+----#cdata-section(contentOfCDATASection)@[3, 36] (<![CDATA[contentOfCDATASection]]>)
+
+contentOfCDATASection
+Source :
+<a><![CDATA[new < content]]></a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 28] (<![CDATA[new < content]]>)
+[28, 32] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[28, 32] (</a>)
+----#cdata-section(new < content)@[3, 28] (<![CDATA[new < content]]>)
+
+new < content
+Source :
+<a><![CDATA[new > content]]></a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 28] (<![CDATA[new > content]]>)
+[28, 32] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[28, 32] (</a>)
+----#cdata-section(new > content)@[3, 28] (<![CDATA[new > content]]>)
+
+new > content

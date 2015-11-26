@@ -1,0 +1,197 @@
+org.eclipse.wst.html.core.tests.parser.UpdaterTest
+Source :
+<html></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 13] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[6, 13] (</html>)
+
+Source :
+<html><body></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 19] (</body>)
+[19, 26] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[19, 26] (</html>)
+----body/body@[6, 12] (<body>)@[12, 19] (</body>)
+
+Source :
+<html><body><p></p></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 15] (<p>)
+[15, 19] (</p>)
+[19, 26] (</body>)
+[26, 33] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[26, 33] (</html>)
+----body/body@[6, 12] (<body>)@[19, 26] (</body>)
+------p/p@[12, 15] (<p>)@[15, 19] (</p>)
+
+Source :
+<html><body><p>text</p></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 15] (<p>)
+[15, 19] (text)
+[19, 23] (</p>)
+[23, 30] (</body>)
+[30, 37] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[30, 37] (</html>)
+----body/body@[6, 12] (<body>)@[23, 30] (</body>)
+------p/p@[12, 15] (<p>)@[19, 23] (</p>)
+--------#text(text)@[15, 19] (text)
+
+Source :
+<html><body><p><br>text</p></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 15] (<p>)
+[15, 19] (<br>)
+[19, 23] (text)
+[23, 27] (</p>)
+[27, 34] (</body>)
+[34, 41] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[34, 41] (</html>)
+----body/body@[6, 12] (<body>)@[27, 34] (</body>)
+------p/p@[12, 15] (<p>)@[23, 27] (</p>)
+--------br@[15, 19] (<br>)
+--------#text(text)@[19, 23] (text)
+
+Source :
+<html><body><p><br>text<img></p></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 15] (<p>)
+[15, 19] (<br>)
+[19, 23] (text)
+[23, 28] (<img>)
+[28, 32] (</p>)
+[32, 39] (</body>)
+[39, 46] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[39, 46] (</html>)
+----body/body@[6, 12] (<body>)@[32, 39] (</body>)
+------p/p@[12, 15] (<p>)@[28, 32] (</p>)
+--------br@[15, 19] (<br>)
+--------#text(text)@[19, 23] (text)
+--------img@[23, 28] (<img>)
+
+Source :
+<html><body><p><br><img></p></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 15] (<p>)
+[15, 19] (<br>)
+[19, 24] (<img>)
+[24, 28] (</p>)
+[28, 35] (</body>)
+[35, 42] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[35, 42] (</html>)
+----body/body@[6, 12] (<body>)@[28, 35] (</body>)
+------p/p@[12, 15] (<p>)@[24, 28] (</p>)
+--------br@[15, 19] (<br>)
+--------img@[19, 24] (<img>)
+
+Source :
+<html><body><p><br>text<img></p></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 15] (<p>)
+[15, 19] (<br>)
+[19, 23] (text)
+[23, 28] (<img>)
+[28, 32] (</p>)
+[32, 39] (</body>)
+[39, 46] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[39, 46] (</html>)
+----body/body@[6, 12] (<body>)@[32, 39] (</body>)
+------p/p@[12, 15] (<p>)@[28, 32] (</p>)
+--------br@[15, 19] (<br>)
+--------#text(text)@[19, 23] (text)
+--------img@[23, 28] (<img>)
+
+Source :
+<html><body></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 19] (</body>)
+[19, 26] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[19, 26] (</html>)
+----body/body@[6, 12] (<body>)@[12, 19] (</body>)
+
+Source :
+<html><body><p><br>text<img></p></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 15] (<p>)
+[15, 19] (<br>)
+[19, 23] (text)
+[23, 28] (<img>)
+[28, 32] (</p>)
+[32, 39] (</body>)
+[39, 46] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[39, 46] (</html>)
+----body/body@[6, 12] (<body>)@[32, 39] (</body>)
+------p/p@[12, 15] (<p>)@[28, 32] (</p>)
+--------br@[15, 19] (<br>)
+--------#text(text)@[19, 23] (text)
+--------img@[23, 28] (<img>)
+

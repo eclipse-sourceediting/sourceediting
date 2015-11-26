@@ -1,0 +1,16 @@
+org.eclipse.wst.html.core.tests.parser.PITest
+Source :
+<a><?echo $PHP_SELF?></a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 21] (<?echo $PHP_SELF?>)
+[21, 25] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[21, 25] (</a>)
+----echo($PHP_SELF)
+
+target(echo) data ($PHP_SELF)

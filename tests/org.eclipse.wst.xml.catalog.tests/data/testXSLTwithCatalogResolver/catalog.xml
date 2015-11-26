@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xml:base=".">
+   		<public publicId="myquote" uri="quote2.xml"/>  
+</catalog>

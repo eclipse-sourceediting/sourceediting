@@ -1,0 +1,11 @@
+@import url("hoge.css");
+@import /* comment */ url(hoge.css);
+@import "hoge.css" /* comment */;
+@IMPORT 'hoge.css' ,media1,media2,,media3 media4,media5 @import media6;
+
+<!-- /* hogehoge */
+
+-->
+
+/* comment 2 */
+kuso

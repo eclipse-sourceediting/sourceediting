@@ -1,0 +1,7 @@
+<!ELEMENT simple (simple1)>
+<!ATTLIST simple 
+           version CDATA #REQUIRED
+           xmlns CDATA #FIXED 'http://www.simple.com/simple' 
+           >
+<!ELEMENT simple1 (simple2)>
+<!ELEMENT simple2 EMPTY>

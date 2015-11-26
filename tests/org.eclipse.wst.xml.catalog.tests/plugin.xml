@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+    	<extension point="org.eclipse.wst.xml.core.catalogContributions">
+	  <catalogContribution> 
+           <system id="testSystemId"
+               systemId="http://personal/personal.dtd"
+               uri="data/Personal/personal.dtd"> 
+               </system>
+           <public id="testPublicId1"
+               publicId="InvoiceId_test"
+               uri="data/Invoice/Invoice.dtd"
+               webURL="http://org.eclipse.wst.xml.example/Invoice.dtd">
+          </public>
+          <uri id="testUriId1"
+               name="http://apache.org/xml/xcatalog/example" 
+               uri="data/example/example.xsd"/> 
+          <uri id="testURIId2"
+               name="http://www.w3.org/2001/XMLSchema"
+               uri="platform:/plugin/org.eclipse.xsd/cache/www.w3.org/2001/XMLSchema.xsd">
+          </uri> 
+          <nextCatalog id="testNestedCatalog"
+               catalog="data/catalog1.xml"/> 
+       </catalogContribution> 
+	</extension> 
+   
+ 
+</plugin>

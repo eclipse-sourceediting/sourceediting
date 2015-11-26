@@ -1,6 +1,7 @@
 # copied from eclipse.platform.debug/.gitignore
 bin/
 */*/bin/
+/*/*/bin/
 *~
 *.rej
 *.bak
