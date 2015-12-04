@@ -1,0 +1,29 @@
+<?json version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="%NPM_Editor.name"
+			icon="$nl$/icons/full/obj16/npm.png"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
+			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+			id="org.eclipse.wst.json.npm.ui.NPMEditor">
+			<contentTypeBinding
+				contentTypeId="org.eclipse.wst.json.npm.core.npmsource" />
+		</editor>
+	</extension>
+   
+   <!-- Custom completion for dependency key/value for 
+   		"dependencies" and "devDependencies" JSON node
+   		of package.json-->
+	<extension
+	       point="org.eclipse.wst.json.ui.completionProposalCollectors">
+	    <completionProposalCollector 
+	    	paths="$.dependencies,$.devDependencies"
+	    	targets="key,value"
+	    	class="org.eclipse.wst.json.npm.ui.internal.contentassist.NPMDependencyCompletionProposalCollector"
+	    	contentTypeId="org.eclipse.wst.json.npm.core.npmsource" />	    		   
+	</extension>
+	       
+</plugin>

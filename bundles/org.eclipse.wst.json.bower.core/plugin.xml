@@ -1,0 +1,25 @@
+<?json version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+
+		<content-type
+		    file-names="bower.json"
+			priority="high"
+			name="%Bower_Content_Type_Extension_Element.name"
+			id="org.eclipse.wst.json.bower.core.bowersource"
+			base-type="org.eclipse.wst.json.core.jsonsource">
+		</content-type>
+
+		<content-type
+		    file-names=".bowerrc"
+			priority="high"
+			name="%Bowerrc_Content_Type_Extension_Element.name"
+			id="org.eclipse.wst.json.bower.core.bowerrcsource"
+			base-type="org.eclipse.wst.json.core.jsonsource">
+		</content-type>
+		
+	</extension>
+
+</plugin>

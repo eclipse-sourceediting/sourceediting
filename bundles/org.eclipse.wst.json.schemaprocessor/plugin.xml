@@ -1,0 +1,11 @@
+<?json version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.wst.json.core.schemaProcessors">
+		<schemaProcessor id="org.eclipse.wst.json.schemaprocessor.DefaultJSONSchemaProcessor"
+						 name="%schemaProcessor.name"
+						 class="org.eclipse.wst.json.schemaprocessor.internal.JSONSchemaProcessor" />
+	</extension>
+
+</plugin>

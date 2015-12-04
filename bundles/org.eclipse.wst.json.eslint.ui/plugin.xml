@@ -1,0 +1,17 @@
+<?json version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="%ESlint_Editor.name"
+			icon="$nl$/icons/full/obj16/eslint.png"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
+			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+			id="org.eclipse.json.wst.eslint.ui.ESLintEditor">
+			<contentTypeBinding
+				contentTypeId="org.eclipse.wst.json.eslint.core.eslintsource" />
+		</editor>
+	</extension>
+   
+</plugin>

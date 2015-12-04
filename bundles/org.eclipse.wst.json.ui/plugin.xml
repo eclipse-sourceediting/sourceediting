@@ -1,0 +1,715 @@
+<?json version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension-point id="completionProposalCollectors" name="%completionProposalCollectors.name"
+		schema="schema/completionProposalCollectors.exsd" />
+		
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="%JSON_Editor.name"
+			icon="$nl$/icons/full/obj16/jsondoc.png"
+			contributorClass="org.eclipse.wst.json.ui.internal.editor.ActionContributorJSON"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
+			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+			id="org.eclipse.wst.json.ui.JSONEditor">
+			<contentTypeBinding
+				contentTypeId="org.eclipse.wst.json.core.jsonsource" />
+		</editor>
+	</extension>
+	
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<contentOutlineConfiguration
+			class="org.eclipse.wst.json.ui.views.contentoutline.JSONContentOutlineConfiguration"
+			target="org.eclipse.wst.json.core.jsonsource" />
+		<!--<quickOutlineConfiguration
+			class="org.eclipse.wst.json.ui.views.contentoutline.JSONQuickOutlineConfiguration"
+			target="org.eclipse.wst.json.core.jsonsource" />-->
+		<sourceViewerConfiguration
+			class="org.eclipse.wst.json.ui.StructuredTextViewerConfigurationJSON"
+			target="org.eclipse.wst.json.core.jsonsource" />
+		<!--<propertySheetConfiguration
+			class="org.eclipse.wst.json.ui.views.properties.JSONPropertySheetConfiguration"
+			target="org.eclipse.wst.json.core.jsonsource" />
+		-->
+		<documentationTextHover
+        	class="org.eclipse.wst.json.ui.internal.text.hover.JSONHoverProcessor"
+        	target="org.eclipse.wst.json.JSON" />
+		<!--<provisionalConfiguration
+			type="characterpairmatcher"
+			class="org.eclipse.wst.json.ui.internal.text.JSONDocumentRegionEdgeMatcher"
+			target="org.eclipse.wst.json.core.jsonsource" />-->
+		<provisionalConfiguration
+			type="foldingstrategy"
+			class="org.eclipse.wst.json.ui.internal.projection.JSONFoldingStrategy"
+			target="org.eclipse.wst.json.core.jsonsource" />
+		<!--<provisionalConfiguration
+			type="autoeditstrategy"
+			class="org.eclipse.wst.json.ui.internal.autoedit.StructuredAutoEditStrategyJSON"
+			target="org.eclipse.wst.json.JSON" />
+		<provisionalDefinition
+			type="preferencepages"
+			value="org.eclipse.wst.json.ui.preferences.json org.eclipse.wst.sse.ui.preferences.json.source, org.eclipse.wst.json.ui.preferences.templates, org.eclipse.wst.sse.ui.preferences.json.styles, org.eclipse.wst.sse.ui.preferences.json.contentassist"
+			target="org.eclipse.wst.json.core.jsonsource" />
+		<provisionalDefinition
+			type="spellingregions"
+			value="COMMENT"
+			target="org.eclipse.wst.json.core.jsonsource" />
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.wst.json.core.jsonsource, org.eclipse.wst.sse.comments"
+			target="org.eclipse.wst.json.core.jsonsource" />
+		<doubleClickStrategy
+        	class="org.eclipse.wst.json.ui.doubleclick.JSONDoubleClickStrategy"
+        	target="org.eclipse.wst.json.JSON">
+  		</doubleClickStrategy>-->
+	</extension>
+	
+	<extension point="org.eclipse.ui.contexts">
+		<context
+			name="%scope.structured.text.editor.json.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.json.description"
+			id="org.eclipse.wst.json.core.jsonsource">
+		</context>
+	</extension>
+	
+	<extension
+		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
+		<adapterFactoryDescription
+			class="org.eclipse.wst.json.ui.internal.registry.AdapterFactoryProviderForJSON">
+			<contentType id="org.eclipse.wst.json.core.jsonsource" />
+		</adapterFactoryDescription>
+	</extension>
+
+	<extension
+		point="org.eclipse.core.filebuffers.annotationModelCreation">
+		<factory
+			contentTypeId="org.eclipse.wst.json.core.jsonsource"
+			class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactory" />
+	</extension>
+
+	<extension point="org.eclipse.ui.preferencePages">
+		<!-- The "top-level" JSON category -->
+		<page
+			name="%JSON.name"
+			class="org.eclipse.wst.json.ui.internal.preferences.EmptyFilePreferencePage"
+			id="org.eclipse.wst.json.ui.preferences.json">
+		</page>
+		<!-- The "lower level" JSON Files category/page -->
+		<page
+			name="%JSON_Files.name"
+			category="org.eclipse.wst.json.ui.preferences.json"
+			class="org.eclipse.wst.json.ui.internal.preferences.JSONFilesPreferencePage"
+			id="org.eclipse.wst.json.ui.preferences.json.json">
+         	<keywordReference id="org.eclipse.wst.json.ui.files"/>
+        </page>
+		<!-- JSON PREFERENCE PAGES -->
+		<page
+			name="%JSON_Source.name"
+			category="org.eclipse.wst.json.ui.preferences.json.json"
+			class="org.eclipse.wst.json.ui.internal.preferences.JSONSourcePreferencePage"
+			id="org.eclipse.wst.sse.ui.preferences.json.source">
+         	<keywordReference id="org.eclipse.wst.json.ui.source"/>
+		</page>
+		<page
+			name="%JSON_Content_Assist.name"
+			category="org.eclipse.wst.sse.ui.preferences.json.source"
+			class="org.eclipse.wst.json.ui.internal.preferences.JSONContentAssistPreferencePage"
+			id="org.eclipse.wst.sse.ui.preferences.json.contentassist">
+         	<keywordReference id="org.eclipse.wst.json.ui.contentassist"/>
+		</page>
+		<page
+			name="%JSON_Templates.name"
+			category="org.eclipse.wst.sse.ui.preferences.json.source"
+			class="org.eclipse.wst.json.ui.internal.preferences.JSONTemplatePreferencePage"
+			id="org.eclipse.wst.sse.ui.preferences.json.templates">
+         	<keywordReference id="org.eclipse.wst.json.ui.templates"/>
+		</page>
+		<page
+			name="%JSON_Syntax_Coloring"
+			category="org.eclipse.wst.sse.ui.preferences.json.source"
+			class="org.eclipse.wst.json.ui.internal.preferences.JSONSyntaxColoringPage"
+			id="org.eclipse.wst.sse.ui.preferences.json.colors">
+         	<keywordReference id="org.eclipse.wst.json.ui.styles"/>
+		</page>
+		<!--<page
+			name="%_UI_PREF_JSON_CATALOG"
+			category="org.eclipse.wst.json.ui.preferences.json"
+			class="org.eclipse.wst.json.ui.internal.catalog.JSONCatalogPreferencePage"
+			id="org.eclipse.wst.json.core.ui.JSONCatalogPreferencePage">
+         	<keywordReference id="org.eclipse.wst.json.ui.jsoncatalog"/>
+		</page>-->
+		<page
+			name="%JSON_Typing"
+			category="org.eclipse.wst.sse.ui.preferences.json.source"
+			class="org.eclipse.wst.json.ui.internal.preferences.JSONTypingPreferencePage"
+			id="org.eclipse.wst.sse.ui.preferences.json.typing">
+		</page>
+    	<page
+            name="%JSON_Validator.name"
+            category="org.eclipse.wst.json.ui.preferences.json.json"
+            class="org.eclipse.wst.json.ui.internal.preferences.JSONValidatorPreferencePage"
+            id="org.eclipse.wst.sse.ui.preferences.json.validation">
+       	    <keywordReference id="org.eclipse.wst.json.ui.severities"/>
+    	</page>
+	</extension>
+
+	<!-- JSON Content Settings Property Page -->
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			name="%JSON_Property_validation"
+			class="org.eclipse.wst.json.ui.internal.preferences.JSONValidatorPreferencePage"
+			id="org.eclipse.wst.json.ui.propertyPage.project.validation"
+			category="ValidationPropertiesPage">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+					
+				</adapt>
+			</enabledWhen>
+		</page>
+	</extension>
+	
+	<!-- Keywords for preference and properties pages -->
+	<extension point="org.eclipse.ui.keywords">
+		<keyword
+			label="%preferenceKeywords.files"
+			id="org.eclipse.wst.json.ui.files"/>
+		<keyword
+			label="%preferenceKeywords.source"
+			id="org.eclipse.wst.json.ui.source"/>
+		<keyword
+			label="%preferenceKeywords.templates"
+			id="org.eclipse.wst.json.ui.templates"/>
+		<keyword
+			label="%preferenceKeywords.styles"
+			id="org.eclipse.wst.json.ui.styles"/>
+		<keyword
+			label="%preferenceKeywords.webcontent"
+			id="org.eclipse.wst.json.ui.webcontent"/>
+  <keyword
+        id="org.eclipse.wst.json.ui.contentassist"
+        label="%preferenceKeywords.contentassist">
+  </keyword>
+    </extension>
+
+	<!-- Editor actionsets -->
+	<extension point="org.eclipse.ui.actionSetPartAssociations">
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+			<part id="org.eclipse.wst.json.ui.JSONEditor"></part>
+		</actionSetPartAssociation>
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.NavigateActionSet">
+			<part id="org.eclipse.wst.json.ui.JSONEditor"></part>
+		</actionSetPartAssociation>
+	</extension>
+
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory
+			adaptableType="org.eclipse.wst.json.core.document.IJSONModel"
+			class="org.eclipse.wst.json.ui.internal.editor.JSONSelectionConvertorFactory">
+			<adapter
+            	type="org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor"/>
+		</factory>
+	</extension>
+	
+	<!-- initialize json ui preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.wst.json.ui.internal.preferences.JSONUIPreferenceInitializer" />
+	</extension>
+
+	<!-- New JSON wizard -->
+	<!-- TODO
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard
+			id="org.eclipse.wst.json.ui.internal.wizard.NewJSONWizard"
+			name="%_UI_WIZARD_NAME"
+			class="org.eclipse.wst.json.ui.internal.wizard.NewJSONWizard"
+			category="org.eclipse.wst.web.ui"
+			icon="$nl$/icons/full/etool16/newjson_wiz.gif">
+			<description>%_UI_WIZARD_CREATE_NEW_FILE</description>
+			<selection class="org.eclipse.core.resources.IResource" />
+		</wizard>
+	</extension>
+	-->
+	
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:edit?after=additions">
+			<command commandId="org.eclipse.ui.edit.text.contentAssist.proposals" id="JSONContentAssist" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.json.ui.jsonSourceContributions.definition"></reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+
+	<extension point="org.eclipse.ui.popupMenus">
+		<viewerContribution
+			targetID="org.eclipse.wst.json.ui.JSONEditor.RulerContext"
+			id="org.eclipse.ui.texteditor.ruler.context.actions">
+			<action
+				label="%AddTask.label"
+				helpContextId="org.eclipse.ui.AddTask_action_context"
+				class="org.eclipse.ui.texteditor.TaskRulerAction"
+				tooltip="%AddTask.tooltip"
+				menubarPath="additions"
+				id="org.eclipse.ui.texteditor.TaskRulerAction">
+			</action>
+			<action
+				label="%AddBookmark.label"
+				helpContextId="org.eclipse.ui.bookmark_action_context"
+				class="org.eclipse.ui.texteditor.BookmarkRulerAction"
+				tooltip="%AddBookmark.tooltip"
+				menubarPath="additions"
+				id="org.eclipse.ui.texteditor.BookmarkRulerAction">
+			</action>
+		</viewerContribution>
+	</extension>
+
+	<!-- Templates -->
+	<extension point="org.eclipse.ui.editors.templates">
+		<contextType
+			name="%All_JSON_context_type_Extension_Element.name"
+			class="org.eclipse.wst.json.ui.internal.templates.TemplateContextTypeJSON"
+			id="json_all">
+		</contextType>
+		<contextType
+			name="%JSON_New_context_type_Extension_Element.name"
+			class="org.eclipse.wst.json.ui.internal.templates.TemplateContextTypeJSON"
+			id="json_new">
+		</contextType>
+		<include
+			file="templates/jsondefault-templates.json"
+			translations="$nl$/templates/jsondefault-templates.properties">
+		</include>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+		<target
+			id="org.eclipse.wst.json.core.jsonsource"
+			name="%JSON_source_target_name">
+		</target>
+	</extension>
+	
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+		<hyperlinkDetector
+			class="org.eclipse.wst.json.ui.internal.hyperlink.JSONHyperlinkDetector"
+			id="org.eclipse.wst.json.ui.internal.hyperlink.JSONHyperlinkDetector"
+			name="%JSON_detector_name"
+			targetId="org.eclipse.wst.json.core.jsonsource">
+		</hyperlinkDetector>
+	</extension>
+
+	<extension
+ 		point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.wst.json.ui.internal.handlers.CleanupDocumentHandler"
+			commandId="org.eclipse.wst.sse.ui.cleanup.document">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.json.ui.jsonSourceContributions.definition"/>
+			</activeWhen>
+		</handler>
+		<handler
+			class="org.eclipse.wst.json.ui.internal.handlers.StructuredSelectEnclosingHandler"
+			commandId="org.eclipse.wst.sse.ui.structure.select.enclosing">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.json.ui.jsonSourceContributions.definition"/>
+			</activeWhen>
+		</handler>
+		<handler
+			class="org.eclipse.wst.json.ui.internal.handlers.StructuredSelectNextHandler"
+			commandId="org.eclipse.wst.sse.ui.structure.select.next">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.json.ui.jsonSourceContributions.definition"/>
+			</activeWhen>
+		</handler>
+		<handler
+			class="org.eclipse.wst.json.ui.internal.handlers.StructuredSelectPreviousHandler"
+			commandId="org.eclipse.wst.sse.ui.structure.select.previous">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.json.ui.jsonSourceContributions.definition"/>
+			</activeWhen>
+		</handler>
+		<!-- TODO Use the handler from SSE or JSON's declaration -->
+		<handler
+			class="org.eclipse.wst.sse.ui.internal.handlers.StructuredSelectHistoryHandler"
+			commandId="org.eclipse.wst.sse.ui.structure.select.last">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.json.ui.jsonSourceContributions.definition"/>
+			</activeWhen>
+		</handler>
+	</extension>
+
+	<!-- JSON editor actions -->
+	<extension point="org.eclipse.ui.editorActions">
+		<!--<editorContribution
+			id="org.eclipse.wst.json.ui.JSONEditor.editorActions"
+			targetID="org.eclipse.wst.json.ui.JSONEditor">
+			<action
+				id="CleanupDocument"
+				label="%CleanupDocument_label"
+				definitionId="org.eclipse.wst.sse.ui.cleanup.document"
+				tooltip="%CleanupDocument_tooltip"
+				class="org.eclipse.wst.json.ui.internal.edit.ui.CleanupActionJSONDelegate"
+				actionID="CleanupDocument">
+			</action>
+			<action
+				id="StructureSelectEnclosing"
+				label="%StructureSelectEnclosing_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.enclosing"
+				tooltip="%StructureSelectEnclosing_tooltip"
+				class="org.eclipse.wst.json.ui.internal.selection.StructuredSelectEnclosingJSONActionDelegate"
+				actionID="StructureSelectEnclosing">
+			</action>
+			<action
+				id="StructureSelectNext"
+				label="%StructureSelectNext_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.next"
+				tooltip="%StructureSelectNext_tooltip"
+				class="org.eclipse.wst.json.ui.internal.selection.StructuredSelectNextJSONActionDelegate"
+				actionID="StructureSelectNext">
+			</action>
+			<action
+				id="StructureSelectPrevious"
+				label="%StructureSelectPrevious_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.previous"
+				tooltip="%StructureSelectPrevious_tooltip"
+				class="org.eclipse.wst.json.ui.internal.selection.StructuredSelectPreviousJSONActionDelegate"
+				actionID="StructureSelectPrevious">
+			</action>
+			<action
+				id="StructureSelectHistory"
+				label="%StructureSelectHistory_label"
+				definitionId="org.eclipse.wst.sse.ui.structure.select.last"
+				tooltip="%StructureSelectHistory_tooltip"
+				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
+				actionID="StructureSelectHistory">
+			</action>
+		</editorContribution>-->
+        <editorContribution
+            targetID="org.eclipse.wst.json.ui.JSONEditor"
+            id="org.eclipse.wst.json.core.jsonsource.ruler.actions">
+         <action
+               label="%AddBookmark.label"
+               helpContextId="org.eclipse.ui.bookmark_action_context"
+               class="org.eclipse.ui.texteditor.BookmarkRulerAction"
+               actionID="RulerDoubleClick"
+               id="org.eclipse.ui.texteditor.BookmarkRulerAction"/>
+         <action
+               label="%SelectRuler.label"
+               class="org.eclipse.ui.texteditor.SelectRulerAction"
+               actionID="RulerClick"
+               id="org.eclipse.ui.texteditor.SelectRulerAction"/>
+        </editorContribution>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.json.ui.jsonSourceContributions.definition">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.wst.json.core.jsonsource"/>
+	           </iterate>
+            </with>
+		</definition>
+	</extension>
+	
+	<!-- Define theme -->
+	<extension
+		point="org.eclipse.ui.themes">
+		<theme
+			id="org.eclipse.ui.ide.systemDefault">
+			<colorOverride
+				id="ATMARK_RULE"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="SELECTOR"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="MEDIA"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="COMMENT"
+				value="COLOR_LIST_SELECTION">
+			</colorOverride>
+			<colorOverride
+				id="PROPERTY_NAME"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="PROPERTY_VALUE"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="URI"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="STRING"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ERROR"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="UNIVERSAL"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ID"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="CLASS"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ATTRIBUTE_DELIM"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ATTRIBUTE_NAME"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ATTRIBUTE_OPERATOR"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ATTRIBUTE_VALUE"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="PSEUDO"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="COMBINATOR"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+		</theme>
+		<colorDefinition
+			id="ATMARK_RULE"
+			isEditable="false"
+			label="%Colors.atmarkRule"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="SELECTOR"
+			isEditable="false"
+			label="%Colors.selector"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="MEDIA"
+			isEditable="false"
+			label="%Colors.media"
+			value="42, 0, 225">
+		</colorDefinition>
+		<colorDefinition
+			id="COMMENT"
+			isEditable="false"
+			label="%Colors.comment"
+			value="63, 95, 191">
+		</colorDefinition>
+		<colorDefinition
+			id="PROPERTY_NAME"
+			isEditable="false"
+			label="%Colors.propertyName"
+			value="127, 0, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="PROPERTY_VALUE"
+			isEditable="false"
+			label="%Colors.propertyValue"
+			value="42, 0, 225">
+		</colorDefinition>
+		<colorDefinition
+			id="URI"
+			isEditable="false"
+			label="%Colors.uri"
+			value="42, 0, 225">
+		</colorDefinition>
+		<colorDefinition
+			id="STRING"
+			isEditable="false"
+			label="%Colors.string"
+			value="42, 0, 225">
+		</colorDefinition>
+		<colorDefinition
+			id="ERROR"
+			isEditable="false"
+			label="%Colors.error"
+			value="191, 63, 63">
+		</colorDefinition>
+		<colorDefinition
+			id="UNIVERSAL"
+			isEditable="false"
+			label="%Colors.universal"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ID"
+			isEditable="false"
+			label="%Colors.id"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="CLASS"
+			isEditable="false"
+			label="%Colors.class"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ATTRIBUTE_DELIM"
+			isEditable="false"
+			label="%Colors.attrDelim"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ATTRIBUTE_NAME"
+			isEditable="false"
+			label="%Colors.attrName"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ATTRIBUTE_OPERATOR"
+			isEditable="false"
+			label="%Colors.attrOp"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="ATTRIBUTE_VALUE"
+			isEditable="false"
+			label="%Colors.attrValue"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="PSEUDO"
+			isEditable="false"
+			label="%Colors.pseudo"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="COMBINATOR"
+			isEditable="false"
+			label="%Colors.combinator"
+			value="63, 127, 127">
+		</colorDefinition>
+	</extension>
+	
+	<!-- Enable the FormatHandler for JSON Content Type -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler 
+			class="org.eclipse.wst.sse.ui.internal.handlers.FormatHandler"
+			commandId="org.eclipse.wst.sse.ui.format">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.json.ui.jsonContentType.definition"></reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	
+	<!-- Set up a definition for JSON Content Types -->
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.json.ui.jsonContentType.definition">
+			<iterate ifEmpty="false">
+				<adapt type="org.eclipse.core.resources.IFile">
+					<!-- Force property tester to load, should not cause entire plug-in to start -->
+					<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
+						value="org.eclipse.wst.json.core.jsonsource" forcePluginActivation="true"/>
+				</adapt>
+			</iterate>
+		</definition>
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.ui.characterPairing">
+		<inserter class="org.eclipse.wst.json.ui.internal.text.JSONCharacterPairInserter" id="org.eclipse.wst.json.ui.inserter">
+			<contentTypeIdentifier
+				id="org.eclipse.wst.json.core.jsonsource"
+				partitions="org.eclipse.wst.json.JSON">
+			</contentTypeIdentifier>
+		</inserter>
+	</extension>
+	
+ <extension
+       point="org.eclipse.wst.sse.ui.commentingStrategy">
+    <blockCommentingStrategy
+          prefix="/*"
+          suffix="*/">
+       <contentType
+             associatedCommentPartitionTypeID="org.eclipse.wst.json.COMMENT"
+             id="org.eclipse.wst.json.core.jsonsource">
+          <allowablePartitionTypes
+                anyPartitionType="true">
+          </allowablePartitionTypes>
+       </contentType>
+    </blockCommentingStrategy>
+ </extension>
+ 
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalCategory
+          icon="icons/full/obj16/tag_selector.gif"
+          id="org.eclipse.wst.json.ui.proposalCategory.json"
+          name="%proposalCategory.json">
+    </proposalCategory>
+    <proposalCategory
+          icon="icons/full/obj16/tag-template.gif"
+          id="org.eclipse.wst.json.ui.proposalCategory.jsonTemplates"
+          name="%proposalCategory.jsonTemplates">
+    </proposalCategory>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.json.ui.proposalCategory.json"
+          class="org.eclipse.wst.json.ui.internal.contentassist.JSONCompletionProposalComputer"
+          id="org.eclipse.wst.json.ui.proposalComputer.json">
+       <contentType
+             id="org.eclipse.wst.json.core.jsonsource">
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.json.ui.proposalCategory.jsonTemplates"
+          class="org.eclipse.wst.json.ui.internal.contentassist.JSONTemplatesCompletionProposalComputer"
+          id="org.eclipse.wst.json.ui.proposalComputer.jsonTemplates">
+       <contentType
+             id="org.eclipse.wst.json.core.jsonsource">
+       </contentType>
+    </proposalComputer>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposalCategoriesConfiguration">
+    <categoriesConfiguration
+          class="org.eclipse.wst.json.ui.internal.preferences.JSONCompletionProposalCategoriesConfiguration"
+          contentTypeID="org.eclipse.wst.json.core.jsonsource">
+    </categoriesConfiguration>
+ </extension>
+ 
+  <extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.wst.json.ui.internal.validation.DelegatingSourceValidatorForJSON"
+			id="org.eclipse.wst.json.ui.internal.validation.DelegatingSourceValidatorForJSON">
+			<contentTypeIdentifier id="org.eclipse.wst.json.core.jsonsource">
+				<partitionType id="org.eclipse.wst.json.JSON"/>
+				<partitionType id="org.eclipse.wst.json.COMMENT"/>
+			</contentTypeIdentifier>
+		</validator>
+  </extension>
+	
+   <!-- dark theme defaults -->
+   <extension
+      point="org.eclipse.e4.ui.css.swt.theme">
+      <stylesheet uri="css/dark/preferencestyle.css"> 
+         <themeid refid="org.eclipse.e4.ui.css.theme.e4_dark"></themeid>
+      </stylesheet>
+   </extension>
+   
+</plugin>

@@ -1,0 +1,51 @@
+<!--
+    Copyright (c) 2009 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+    
+    Contributors:
+        IBM Corporation - initial API and implementation
+        Zend Technologies
+        Angelo ZERR
+ -->
+<project default="generateJSONTokenizer">
+
+	<target name="checkUpToDateJSONTokenizer">
+		<uptodate
+			property="upToDate"
+			srcfile="JSONTokenizer.jflex"
+			targetfile="../../../src/org/eclipse/wst/json/core/internal/parser/JSONTokenizer.java" />
+	</target>
+
+	<target name="generateJSONTokenizer" depends="checkUpToDateJSONTokenizer" unless="upToDate">
+		<java jar="../JFlex-1.4.2/JFlex.jar" fork="true">
+			<arg value="-d" />
+			<arg value="../../../src/org/eclipse/wst/json/core/internal/parser" />
+			<!--<arg value="-skel" />
+			<arg value="skeleton.sse" />-->
+			<arg value="JSONTokenizer.jflex" />
+		</java>		
+		<delete file="../../../src/org/eclipse/wst/json/core/internal/parser/JSONTokenizer.java~" />
+	</target>
+
+	<target name="checkUpToDateJSONLineTokenizer">
+		<uptodate
+			property="upToDate"
+			srcfile="JSONLineTokenizer.jflex"
+			targetfile="../../../src/org/eclipse/wst/json/core/internal/parser/JSONLineTokenizer.java" />
+	</target>
+				
+	<target name="generateJSONLineTokenizer" depends="checkUpToDateJSONLineTokenizer" unless="upToDate">
+			<java jar="../JFlex-1.4.2/JFlex.jar" fork="true">
+				<arg value="-d" />
+				<arg value="../../../src/org/eclipse/wst/json/core/internal/parser" />
+				<!--<arg value="-skel" />
+				<arg value="skeleton.sse" />-->
+				<arg value="JSONLineTokenizer.jflex" />
+			</java>		
+			<delete file="../../../src/org/eclipse/wst/json/core/internal/parser/JSONLineTokenizer.java~" />
+	</target>
+	
+</project>

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.wst.json.schemaprocessor;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.wst.json.schemaprocessor.JSONSchemaProcessorCorePlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.wst.sse.core,
+ com.ibm.icu,
+ org.eclipse.core.resources,
+ org.eclipse.wst.json.core,
+ org.eclipse.wst.common.uriresolver,
+ org.eclipse.json
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+

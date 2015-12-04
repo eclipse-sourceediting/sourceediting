@@ -1,0 +1,17 @@
+<?json version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+
+		<content-type
+		    file-names="package.json"
+			priority="high"
+			name="%NPM_Content_Type_Extension_Element.name"
+			id="org.eclipse.wst.json.npm.core.npmsource"
+			base-type="org.eclipse.wst.json.core.jsonsource">
+		</content-type>
+
+	</extension>
+
+</plugin>

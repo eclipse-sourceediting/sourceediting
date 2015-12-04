@@ -1,0 +1,24 @@
+/***************************************************************************
+ * Copyright (c) 2015-present Angelo Zerr and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Angelo Zerr <angelo.zerr@gmail.com> - Initial API and implementation 
+ ***************************************************************************/
+
+/* ####################### JSON syntax highlighting ###################### */
+
+IEclipsePreferences#org-eclipse-wst-json-ui {
+	preferences:
+	'COLON=#FFFFFF | null | false | false | false | false'
+	'COMMA=#FFFFFF | null | false | false | false | false'
+	'CURLY_BRACE=#FFFFFF | null | false | false | false | false'
+	'OBJECT_KEY=#BED6FF | null | false | false | false | false'
+	'VALUE_BOOLEAN=#03A8D8 | null | false | false | false | false'
+	'VALUE_NULL=#969696 | null | false | false | false | false'	
+	'VALUE_NUMBER=#D25242 | null | false | false | false | false'
+	'VALUE_STRING=#FFC600 | null | true | true | false | false'
+}

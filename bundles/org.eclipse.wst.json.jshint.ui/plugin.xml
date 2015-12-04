@@ -1,0 +1,17 @@
+<?json version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="%JSHint_Editor.name"
+			icon="$nl$/icons/full/obj16/jshint.png"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
+			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+			id="org.eclipse.wst.json.jshint.core.jshintrcsource.source">
+			<contentTypeBinding
+				contentTypeId="org.eclipse.wst.json.jshint.core.jshintrcsource" />
+		</editor>
+	</extension>
+   
+</plugin>
