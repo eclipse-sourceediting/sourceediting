@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.wst.html.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.wst.html.core" id="syntaxValidator" name="Validator"/>
+      </appInfo>
+      <documentation>
+         Extension point which allows to add external validators for HTML5-like tags.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="validator" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="validator">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.html.core.internal.validate.extension.IHTMLCustomTagValidator:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         Extension point for validating custom html tags. Only one error message will be displayed for each validated tag.
+&lt;pre&gt;
+ &lt;extension point=&quot;org.eclipse.wst.html.core.syntaxValidator&quot;&gt;
+  &lt;validator class=&quot;org.package.YourValidator&quot;&gt;&lt;/validator&gt;
+ &lt;/extension&gt;
+&lt;/pre&gt;
+
+YourValidator should implement IHTMLCustomTagValidator
+
+&lt;pre&gt;
+public class YourValidator impements IHTMLCustomTagValidator{
+
+ public boolean canValidate(IDOMElement target) {
+  if (target.getLocalName().startsWith(&quot;tag&quot;)) {
+   return true;
+  }
+  return false;
+ }
+
+ public void init() {
+  //called only once while validator was loaded
+ }
+
+ public ValidationMessage validateTag(IDOMElement target) {
+  String tagName = target.getLocalName();
+  if (tagName.contains(&quot;error&quot;)) {
+   Segment segment = CustomValidatorUtil.getTagSegment(target, SEG_START_TAG_NAME);
+   return new ValidationMessage(&quot;This is error tag&quot;, segment.getOffset(), segment.getLength(), ValidationMessage.ERROR);
+  }
+  return null;
+ }
+}
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

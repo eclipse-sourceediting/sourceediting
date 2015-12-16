@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,12 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Red Hat, Inc. - test for external validator
  *******************************************************************************/
 package org.eclipse.wst.html.ui.tests.validation;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.wst.html.core.internal.validation.HTMLValidator;
 import org.eclipse.wst.html.ui.tests.ProjectUtil;
@@ -135,6 +138,46 @@ public class TestHTMLValidator extends TestCase {
 			reporter = new TestReporter();
 			fValidator.validate(context, reporter);
 			assertFalse("There should be no validation errors on " + testFile, reporter.isMessageReported());
+		} finally {
+			if(model != null) {
+				model.releaseFromEdit();
+			}
+		}
+	}
+	
+	public void testExtendedValidator() throws Exception{
+		IFile testFile = fProject.getFile("validCustomTags.html");
+		performExternalValidatorTest(testFile, false);
+		testFile = fProject.getFile("customTags.html");
+		performExternalValidatorTest(testFile, true);
+		testFile = fProject.getFile("invalidAttrTestFile.html");
+		performExternalValidatorTest(testFile, true);
+	}
+	
+	private void performExternalValidatorTest(IFile testFile, boolean errorExpected) throws IOException, CoreException {
+		IStructuredModel model = null;
+		
+		try {
+			assertTrue("Test file " + testFile + " does not exist", testFile.exists());
+			
+			//get the document
+			model = StructuredModelManager.getModelManager().getModelForEdit(testFile);
+			
+			//set up for fValidator
+			WorkbenchContext context = new WorkbenchContext();
+			List fileList = new ArrayList();
+			fileList.add(testFile.getFullPath().toPortableString());
+			context.setValidationFileURIs(fileList);
+			
+			//validate clean file
+			TestReporter reporter = new TestReporter();
+			fValidator.validate(context, reporter);
+			if (errorExpected) {
+				assertTrue("There should be validation errors on " + testFile, reporter.isMessageReported());
+			} else {
+				assertFalse("There should be no validation errors on " + testFile, reporter.isMessageReported());
+			}
+			
 		} finally {
 			if(model != null) {
 				model.releaseFromEdit();

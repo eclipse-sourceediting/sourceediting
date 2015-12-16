@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,36 +7,45 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Red Hat, Inc. - external validator extension
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLPropertyDeclaration;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
+import org.eclipse.wst.html.core.validate.extension.IHTMLCustomTagValidator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.internal.document.SourceValidator;
@@ -53,7 +62,8 @@ import org.w3c.dom.Node;
 class SyntaxValidator extends PrimeValidator implements ErrorState {
 	private IPreferencesService fPreferenceService;
 	private static Map fIgnorePatterns = new HashMap(); // A storage for ignore patterns (instances of StringMatcher)
-
+	private List<IHTMLCustomTagValidator> externalValidators;
+	
 	static private boolean isValidRegion(ITextRegion rgn) {
 		String type = rgn.getType();
 		if (type == null)
@@ -324,8 +334,31 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			}
 			else {
 				if (shouldValidateElementName(info.target)) {
-					Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG_NAME);
-					report(UNDEFINED_NAME_ERROR, errorSeg, info.target);
+					// not excluded in preferences - check for extension point
+					boolean validated = false;
+					
+					if (externalValidators == null) {
+						initValidators(info.target.getStructuredDocument());
+					}
+					for (IHTMLCustomTagValidator v : externalValidators) {
+						try {
+							if (v.canValidate(info.target)) {
+								validated = true;
+								ValidationMessage result = v.validateTag(info.target);
+								if(result != null) {
+									// report only one validation result or nothing if all reports are null
+									reporter.report(result);
+									break;
+								}
+							}
+						} catch (Throwable t) {
+							Logger.logException(t);
+						}
+					}
+					if (!validated) {
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG_NAME);
+						report(UNDEFINED_NAME_ERROR, errorSeg, info.target);
+					}
 				}
 			}
 		}
@@ -339,6 +372,20 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		}
 	}
 
+	private void initValidators(IStructuredDocument doc) {
+		externalValidators = new ArrayList<IHTMLCustomTagValidator>();
+		for (IConfigurationElement e : CustomHTMLTagValidatorExtensionLoader.getInstance().getValidators()) {
+			IHTMLCustomTagValidator validator;
+			try {
+				validator = (IHTMLCustomTagValidator) e.createExecutableExtension("class");
+				validator.init(doc);
+				externalValidators.add(validator);			
+			} catch (CoreException e1) {
+				Logger.logException(e1);
+			}
+		}
+	}
+	
 	private boolean shouldValidateElementName(Element target) {
 		Object adapter = (target instanceof IAdaptable ? ((IAdaptable)target).getAdapter(IResource.class) : null);
 		IProject project = (adapter instanceof IResource ? ((IResource)adapter).getProject() : null);
