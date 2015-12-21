@@ -31,4 +31,13 @@
    <feature id="org.eclipse.wst.xml_userdoc.feature" version="0.0.0">
       <category name="Eclipse XML Editors and Tools User Documentation"/>
    </feature>
+   <feature id="org.eclipse.wst.json_core.feature" version="0.0.0">
+      <category name="WST JSON Core"/>
+   </feature>
+   <feature id="org.eclipse.wst.json_sdk.feature" version="0.0.0">
+      <category name="Eclipse JSON Editors and Tools SDK"/>
+   </feature>
+   <feature id="org.eclipse.wst.json_ui.feature" version="0.0.0">
+      <category name="Eclipse JSON Editors and Tools"/>
+   </feature>
 </site>

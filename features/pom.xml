@@ -33,5 +33,8 @@
     <module>org.eclipse.wst.xml_userdoc.feature</module>
     <module>org.eclipse.wst.web_tests.feature</module>
     <module>org.eclipse.wst.xml_tests.feature</module>
+    <module>org.eclipse.wst.json_core.feature</module>
+    <module>org.eclipse.wst.json_sdk.feature</module>
+    <module>org.eclipse.wst.json_ui.feature</module>
   </modules>
 </project>

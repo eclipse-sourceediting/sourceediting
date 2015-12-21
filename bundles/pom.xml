@@ -45,5 +45,17 @@
     <module>org.eclipse.wtp.javascript.capabilities</module>
     <module>org.eclipse.wtp.web.capabilities</module>
     <module>org.eclipse.wtp.xml.capabilities</module>
+    <module>org.eclipse.json</module>
+    <module>org.eclipse.wst.json.bower.core</module>
+    <module>org.eclipse.wst.json.bower.ui</module>
+    <module>org.eclipse.wst.json.core</module>
+    <module>org.eclipse.wst.json.eslint.core</module>
+    <module>org.eclipse.wst.json.eslint.ui</module>
+    <module>org.eclipse.wst.json.jshint.core</module>
+    <module>org.eclipse.wst.json.jshint.ui</module>
+    <module>org.eclipse.wst.json.npm.core</module>
+    <module>org.eclipse.wst.json.npm.ui</module>
+    <module>org.eclipse.wst.json.schemaprocessor</module>
+    <module>org.eclipse.wst.json.ui</module>
   </modules>
 </project>
