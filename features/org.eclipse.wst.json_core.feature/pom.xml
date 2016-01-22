@@ -30,11 +30,6 @@
         <groupId>org.eclipse.tycho.extras</groupId>
         <artifactId>tycho-source-feature-plugin</artifactId>
         <version>${tycho-extras.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho.extras</groupId>
-        <artifactId>tycho-source-feature-plugin</artifactId>
-        <version>${tycho-extras.version}</version>
         <executions>
           <execution>
             <id>source-feature</id>
