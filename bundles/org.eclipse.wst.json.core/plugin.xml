@@ -97,7 +97,7 @@
          			description="Bower configuration file"
          			fileMatch=".bowerrc"
          			url="http://json.schemastore.org/bowerrc"
-         			uri="schemastore/bowercc" />
+         			uri="schemastore/bowerrc" />
 			<schema name=".jshintrc"
          			description="JSHint configuration file"
          			fileMatch=".jshintrc"
