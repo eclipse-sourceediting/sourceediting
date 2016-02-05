@@ -70,6 +70,11 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 		ITextRegion completionRegion = getCompletionRegion(documentPosition,
 				node);
 
+		// Fix completion region in case of JSON_OBJECT_CLOSE
+		if (completionRegion.getType() == JSONRegionContexts.JSON_OBJECT_CLOSE && documentPosition > 0) {
+			completionRegion = getCompletionRegion(documentPosition - 1, node);
+		}
+		
 		String matchString = getMatchString(sdRegion, completionRegion,
 				documentPosition);
 
@@ -78,7 +83,7 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 				completionRegion, (IJSONNode) treeNode, node != null ? node.getParentNode() : null, context);
 		if (contentAssistRequest == null) {
 			contentAssistRequest = new ContentAssistRequest(
-					(IJSONNode) treeNode, node.getParentNode(), sdRegion,
+					(IJSONNode) treeNode, node != null ? node.getParentNode() : null, sdRegion,
 					completionRegion, documentPosition, 0, ""); //$NON-NLS-1$
 			setErrorMessage(JSONUIMessages.Content_Assist_not_availab_UI_);
 		}
@@ -139,17 +144,21 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 
 		// Handle the most common and best supported cases
 		if(xmlnode != null) {
-			if ((xmlnode.getNodeType() == IJSONNode.OBJECT_NODE)) {
-				if (regionType == JSONRegionContexts.JSON_OBJECT_OPEN
-						|| regionType == JSONRegionContexts.JSON_OBJECT_CLOSE
-						|| regionType == JSONRegionContexts.JSON_COMMA) {
-					contentAssistRequest = computeObjectKeyProposals(matchString,
-							completionRegion, treeNode, xmlnode, context);
-				}
-			} else if ((xmlnode.getNodeType() == IJSONNode.PAIR_NODE)) {
-				if (regionType == JSONRegionContexts.JSON_OBJECT_KEY) {
-					contentAssistRequest = computeObjectKeyProposals(matchString,
-							completionRegion, treeNode, xmlnode, context);
+			if (xmlnode.getNodeType() == IJSONNode.DOCUMENT_NODE || xmlnode.getNodeType() == IJSONNode.OBJECT_NODE) {
+				if (treeNode.getNodeType() == IJSONNode.OBJECT_NODE) {
+					if (regionType == JSONRegionContexts.JSON_OBJECT_OPEN
+							|| regionType == JSONRegionContexts.JSON_OBJECT_CLOSE
+							|| regionType == JSONRegionContexts.JSON_COMMA) {
+						contentAssistRequest = computeObjectKeyProposals(matchString,
+								completionRegion, treeNode, xmlnode, context);
+					}
+				} else if ((treeNode.getNodeType() == IJSONNode.PAIR_NODE)) {
+					if (regionType == JSONRegionContexts.JSON_OBJECT_KEY
+							|| regionType == JSONRegionContexts.JSON_OBJECT_OPEN
+							|| regionType == JSONRegionContexts.JSON_COMMA) {
+						contentAssistRequest = computeObjectKeyProposals(matchString,
+								completionRegion, treeNode, xmlnode, context);
+					}
 				}
 			}
 		}

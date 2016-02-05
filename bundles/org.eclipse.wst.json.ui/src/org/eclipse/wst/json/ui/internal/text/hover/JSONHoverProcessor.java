@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -148,11 +148,11 @@ public class JSONHoverProcessor extends AbstractHoverProcessor implements
 			return null;
 		}
 		String regionType = region.getType();
-		if (regionType == JSONRegionContexts.JSON_OBJECT_KEY) {
+		if (treeNode instanceof IJSONPair && regionType == JSONRegionContexts.JSON_OBJECT_KEY) {
 			return computeObjectKeyHelp((IJSONPair) treeNode, parentNode,
 					flatNode, region);
 		}
-		if (JSONUtil.isJSONSimpleValue(regionType)) {
+		if (treeNode instanceof IJSONValue && JSONUtil.isJSONSimpleValue(regionType)) {
 			return computeValueHelp((IJSONValue) treeNode, parentNode,
 					flatNode, region);
 		}

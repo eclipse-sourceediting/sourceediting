@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * Copyright (c) 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,8 +43,7 @@ public class JSONFoldingStrategy extends AbstractStructuredFoldingStrategy {
 		Position retPos = null;
 
 		// only want to fold regions of the valid type and with a valid range
-		if (indexedRegion.getStartOffset() >= 0
-				&& indexedRegion.getLength() >= 0) {
+		if (indexedRegion.getStartOffset() >= 0 && indexedRegion.getLength() >= 0) {
 			IJSONNode node = (IJSONNode) indexedRegion;
 			IStructuredDocumentRegion startRegion = node
 					.getStartStructuredDocumentRegion();
@@ -57,7 +56,8 @@ public class JSONFoldingStrategy extends AbstractStructuredFoldingStrategy {
 			// else if the region is only an open tag or an open/close tag then
 			// don't fold it
 			if (startRegion != null && endRegion != null) {
-				if (endRegion.getEndOffset() >= startRegion.getStartOffset())
+				if (endRegion.getEndOffset() >= startRegion.getStartOffset() && 
+						endRegion.getEndOffset() <= getDocument().getLength())
 					retPos = new JSONObjectFoldingPosition(startRegion,
 							endRegion);
 			}

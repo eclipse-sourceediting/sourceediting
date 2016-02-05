@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2015, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -538,8 +538,11 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 		JSONModelParser parser = getModelParser();
 		setActive(parser);
 		try {
-			parser.replaceStructuredDocumentRegions(
-					newStructuredDocumentRegions, oldStructuredDocumentRegions);
+			/* workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=486860 */
+//			parser.replaceStructuredDocumentRegions(
+//					newStructuredDocumentRegions, oldStructuredDocumentRegions);
+			this.refresh = true;
+			handleRefresh();
 		} catch (Exception ex) {
 			if (ex.getClass().equals(
 					StructuredDocumentRegionManagementException.class)) {
@@ -599,7 +602,10 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 		JSONModelParser parser = getModelParser();
 		setActive(parser);
 		try {
-			parser.changeRegion(event, flatNode, region);
+			/* workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=486860 */
+//			parser.changeRegion(event, flatNode, region);
+			this.refresh = true;
+			handleRefresh();
 		} catch (Exception ex) {
 			Logger.logException(ex);
 			this.refresh = true;
@@ -655,7 +661,10 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 		JSONModelParser parser = getModelParser();
 		setActive(parser);
 		try {
-			parser.replaceRegions(flatNode, newRegions, oldRegions);
+			/* workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=486860 */
+//			parser.replaceRegions(flatNode, newRegions, oldRegions);
+			this.refresh = true;
+			handleRefresh();
 		} catch (Exception ex) {
 			Logger.logException(ex);
 			this.refresh = true;
