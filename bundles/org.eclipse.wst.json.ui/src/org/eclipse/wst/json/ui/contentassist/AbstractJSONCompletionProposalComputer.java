@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2015-2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,7 +75,7 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 
 		// compute normal proposals
 		contentAssistRequest = computeCompletionProposals(matchString,
-				completionRegion, (IJSONNode) treeNode, node, context);
+				completionRegion, (IJSONNode) treeNode, node != null ? node.getParentNode() : null, context);
 		if (contentAssistRequest == null) {
 			contentAssistRequest = new ContentAssistRequest(
 					(IJSONNode) treeNode, node.getParentNode(), sdRegion,
@@ -134,21 +134,23 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 		int documentPosition = context.getInvocationOffset();
 
 		ContentAssistRequest contentAssistRequest = null;
-		String regionType = completionRegion.getType();
+		String regionType = completionRegion!= null ? completionRegion.getType() : "";
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
 
 		// Handle the most common and best supported cases
-		if ((xmlnode.getNodeType() == IJSONNode.OBJECT_NODE)) {
-			if (regionType == JSONRegionContexts.JSON_OBJECT_OPEN
-					|| regionType == JSONRegionContexts.JSON_OBJECT_CLOSE
-					|| regionType == JSONRegionContexts.JSON_COMMA) {
-				contentAssistRequest = computeObjectKeyProposals(matchString,
-						completionRegion, treeNode, xmlnode, context);
-			}
-		} else if ((xmlnode.getNodeType() == IJSONNode.PAIR_NODE)) {
-			if (regionType == JSONRegionContexts.JSON_OBJECT_KEY) {
-				contentAssistRequest = computeObjectKeyProposals(matchString,
-						completionRegion, treeNode, xmlnode, context);
+		if(xmlnode != null) {
+			if ((xmlnode.getNodeType() == IJSONNode.OBJECT_NODE)) {
+				if (regionType == JSONRegionContexts.JSON_OBJECT_OPEN
+						|| regionType == JSONRegionContexts.JSON_OBJECT_CLOSE
+						|| regionType == JSONRegionContexts.JSON_COMMA) {
+					contentAssistRequest = computeObjectKeyProposals(matchString,
+							completionRegion, treeNode, xmlnode, context);
+				}
+			} else if ((xmlnode.getNodeType() == IJSONNode.PAIR_NODE)) {
+				if (regionType == JSONRegionContexts.JSON_OBJECT_KEY) {
+					contentAssistRequest = computeObjectKeyProposals(matchString,
+							completionRegion, treeNode, xmlnode, context);
+				}
 			}
 		}
 		return contentAssistRequest;
