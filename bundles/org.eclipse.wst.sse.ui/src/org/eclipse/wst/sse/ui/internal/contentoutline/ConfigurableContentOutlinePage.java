@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2014 IBM Corporation and others.
+ * Copyright (c) 2001, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,8 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -536,7 +538,13 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 		if (getTreeViewer() != null && getControl() != null && !getControl().isDisposed()) {
 			// (re)set the providers
-			getTreeViewer().setLabelProvider(getConfiguration().getLabelProvider(getTreeViewer()));
+			ILabelProvider labelProvider = getConfiguration().getLabelProvider(getTreeViewer());
+			if (labelProvider instanceof IStyledLabelProvider) {
+				getTreeViewer().setLabelProvider(new DelegatingStyledCellLabelProvider((IStyledLabelProvider) labelProvider));
+			}
+			else {
+				getTreeViewer().setLabelProvider(labelProvider);
+			}
 			getTreeViewer().setContentProvider(getConfiguration().getContentProvider(getTreeViewer()));
 
 			// view toolbar

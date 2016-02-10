@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2013 IBM Corporation and others.
+ * Copyright (c) 2001, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,14 @@ package org.eclipse.wst.xml.ui.views.contentoutline;
 
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
@@ -51,9 +52,77 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 	static final String ATTR_NAME = "name";
 	static final String ATTR_ID = "id";
 
-	private class AttributeShowingLabelProvider extends JFaceNodeLabelProvider {
+	private class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implements IStyledLabelProvider {
 		public boolean isLabelProperty(Object element, String property) {
 			return true;
+		}
+
+		private Node getAttributeToShow(Element element) {
+			NamedNodeMap attributes = element.getAttributes();
+			Node idTypedAttribute = null;
+			Node requiredAttribute = null;
+			boolean hasId = false;
+			boolean hasName = false;
+			Node shownAttribute = null;
+
+			// try to get content model element
+			// declaration
+			CMElementDeclaration elementDecl = null;
+			ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
+			if (mq != null) {
+				elementDecl = mq.getCMElementDeclaration(element);
+			}
+			// find an attribute of type (or just named)
+			// ID
+			if (elementDecl != null) {
+				final CMNamedNodeMap attributeDeclarationMap = elementDecl.getAttributes();
+				int i = 0;
+				while (i < attributes.getLength() && idTypedAttribute == null) {
+					Node attr = attributes.item(i);
+					String attrName = attr.getNodeName();
+					CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attributeDeclarationMap.getNamedItem(attrName);
+					if (attrDecl != null) {
+						if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
+							idTypedAttribute = attr;
+						}
+						else if ((attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) && (requiredAttribute == null)) {
+							/*
+							 * as a backup, keep tabs on any required
+							 * attributes
+							 */
+							requiredAttribute = attr;
+						}
+						else {
+							hasId = hasId || attrName.equals(ATTR_ID);
+							hasName = hasName || attrName.equals(ATTR_NAME);
+						}
+					}
+					++i;
+				}
+			}
+
+			/*
+			 * If no suitable attribute with type "ID" was found, then prefer
+			 * "id" or "name", otherwise try using a required attribute, if
+			 * none, then just use the first attribute
+			 */
+			if (idTypedAttribute != null) {
+				shownAttribute = idTypedAttribute;
+			}
+			else if (hasId) {
+				shownAttribute = attributes.getNamedItem(ATTR_ID);
+			}
+			else if (hasName) {
+				shownAttribute = attributes.getNamedItem(ATTR_NAME);
+			}
+			else if (requiredAttribute != null) {
+				shownAttribute = requiredAttribute;
+			}
+			if (shownAttribute == null) {
+				shownAttribute = attributes.item(0);
+			}
+
+			return shownAttribute;
 		}
 
 		/*
@@ -62,98 +131,31 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
 		public String getText(Object o) {
-			StringBuffer text = null;
 			if (o instanceof Node) {
 				Node node = (Node) o;
-				if ((node.getNodeType() == Node.ELEMENT_NODE) && fShowAttributes) {
-					text = new StringBuffer(super.getText(o));
+				StringBuffer buffer = new StringBuffer(super.getText(node));
+				if (node.getNodeType() == Node.ELEMENT_NODE && fShowAttributes) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 					if (node.hasAttributes()) {
-						Element element = (Element) node;
-						NamedNodeMap attributes = element.getAttributes();
-						Node idTypedAttribute = null;
-						Node requiredAttribute = null;
-						boolean hasId = false;
-						boolean hasName = false;
-						Node shownAttribute = null;
-
-						// try to get content model element
-						// declaration
-						CMElementDeclaration elementDecl = null;
-						ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
-						if (mq != null) {
-							elementDecl = mq.getCMElementDeclaration(element);
-						}
-						// find an attribute of type (or just named)
-						// ID
-						if (elementDecl != null) {
-							final CMNamedNodeMap attributeDeclarationMap = elementDecl.getAttributes();
-							int i = 0;
-							while ((i < attributes.getLength()) && (idTypedAttribute == null)) {
-								Node attr = attributes.item(i);
-								String attrName = attr.getNodeName();
-								CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attributeDeclarationMap.getNamedItem(attrName);
-								if (attrDecl != null) {
-									if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
-										idTypedAttribute = attr;
-									}
-									else if ((attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) && (requiredAttribute == null)) {
-										// as a backup, keep tabs on
-										// any required
-										// attributes
-										requiredAttribute = attr;
-									}
-									else {
-										hasId = hasId || attrName.equals(ATTR_ID);
-										hasName = hasName || attrName.equals(ATTR_NAME);
-									}
+						Node shownAttribute = getAttributeToShow((Element) node);
+						if (shownAttribute != null) {
+							String attributeName = shownAttribute.getNodeName();
+							if (attributeName != null && attributeName.length() > 0) {
+								String attributeValue = shownAttribute.getNodeValue();
+								if (attributeValue != null) {
+									buffer.append(" "); //$NON-NLS-1$
+									buffer.append(attributeName);
+									// https://bugs.eclipse.org/486252
+									buffer.append("="); //$NON-NLS-1$
+									buffer.append(attributeValue);
 								}
-								++i;
-							}
-						}
-
-						/*
-						 * If no suitable attribute was found, try using a
-						 * required attribute, if none, then prefer "id" or
-						 * "name", otherwise just use first attribute
-						 */
-						if (idTypedAttribute != null) {
-							shownAttribute = idTypedAttribute;
-						}
-						else if (requiredAttribute != null) {
-							shownAttribute = requiredAttribute;
-						}
-						else if (hasId) {
-							shownAttribute = attributes.getNamedItem(ATTR_ID);
-						}
-						else if (hasName) {
-							shownAttribute = attributes.getNamedItem(ATTR_NAME);
-						}
-						if (shownAttribute == null) {
-							shownAttribute = attributes.item(0);
-						}
-
-						// display the attribute and value (without quotes)
-						String attributeName = shownAttribute.getNodeName();
-						if ((attributeName != null) && (attributeName.length() > 0)) {
-							String attributeValue = shownAttribute.getNodeValue();
-							if ((attributeValue != null) && (attributeValue.length() > 0)) {
-								text.append(" "); //$NON-NLS-1$
-								text.append(attributeName);
-								text.append("="); //$NON-NLS-1$
-								text.append(StringUtils.strip(attributeValue));
 							}
 						}
 					}
 				}
-				else {
-					text = new StringBuffer(super.getText(o));
-				}
+				return buffer.toString();
 			}
-			else {
-				return super.toString();
-			}
-			return text.toString();
+			return super.toString();
 		}
 
 		/* (non-Javadoc)
@@ -204,6 +206,36 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 				}
 			}
 			return nodeText.toString();
+		}
+
+		public StyledString getStyledText(Object element) {
+			if (element instanceof Node) {
+				Node node = (Node) element;
+				StyledString styleString = new StyledString(super.getText(node));
+				if (node.getNodeType() == Node.ELEMENT_NODE && fShowAttributes) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+					if (node.hasAttributes()) {
+						Node shownAttribute = getAttributeToShow((Element) node);
+						if (shownAttribute != null) {
+							// display the attribute and styled value
+							String attributeName = shownAttribute.getNodeName();
+							if (attributeName != null && attributeName.length() > 0) {
+								String attributeValue = shownAttribute.getNodeValue();
+								if (attributeValue != null) {
+									StringBuffer buffer = new StringBuffer(" "); //$NON-NLS-1$
+									buffer.append(attributeName);
+									// https://bugs.eclipse.org/486252
+									buffer.append("="); //$NON-NLS-1$
+									buffer.append(attributeValue);
+									styleString.append(buffer.toString(), StyledString.QUALIFIER_STYLER);
+								}
+							}
+						}
+					}
+				}
+				return styleString;
+			}
+			return new StyledString(getText(element));
 		}
 	}
 
