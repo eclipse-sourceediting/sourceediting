@@ -15,5 +15,5 @@ package org.eclipse.wst.json.bower.ui.internal.editor;
  */
 public class BowerEditorPluginImages {
 
-	public static final String IMG_OBJ_BOWER = "icons/full/obj16/bower.png"; //$NON-NLS-1$
+	public static final String IMG_OBJ_BOWER = "icons/full/obj16/bower-16.png"; //$NON-NLS-1$
 }

@@ -15,5 +15,5 @@ package org.eclipse.wst.json.npm.ui.internal.editor;
  */
 public class NPMEditorPluginImages {
 
-	public static final String IMG_OBJ_NPM = "icons/full/obj16/npm.png"; //$NON-NLS-1$
+	public static final String IMG_OBJ_NPM = "icons/full/obj16/npm-16.png"; //$NON-NLS-1$
 }

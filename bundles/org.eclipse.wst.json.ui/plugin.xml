@@ -8,7 +8,7 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%JSON_Editor.name"
-			icon="$nl$/icons/full/obj16/jsondoc.png"
+			icon="$nl$/icons/full/obj16/json-16.png"
 			contributorClass="org.eclipse.wst.json.ui.internal.editor.ActionContributorJSON"
 			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
@@ -656,12 +656,12 @@
  <extension
        point="org.eclipse.wst.sse.ui.completionProposal">
     <proposalCategory
-          icon="icons/full/obj16/tag_selector.gif"
+          icon="icons/full/obj16/json-16.png"
           id="org.eclipse.wst.json.ui.proposalCategory.json"
           name="%proposalCategory.json">
     </proposalCategory>
     <proposalCategory
-          icon="icons/full/obj16/tag-template.gif"
+          icon="icons/full/obj16/json-16.png"
           id="org.eclipse.wst.json.ui.proposalCategory.jsonTemplates"
           name="%proposalCategory.jsonTemplates">
     </proposalCategory>
