@@ -21,7 +21,7 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.jsdt.web.ui</artifactId>
-  <version>1.0.800-SNAPSHOT</version>
+  <version>1.0.801-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   
    <!--  added this "constraint" for bug 458962 -->

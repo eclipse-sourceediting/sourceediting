@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.jsdt.web.ui; singleton:=true
-Bundle-Version: 1.0.800.qualifier
+Bundle-Version: 1.0.801.qualifier
 Bundle-Activator: org.eclipse.wst.jsdt.web.ui.internal.JsUIPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
@@ -48,8 +48,8 @@ Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.ltk.core.refactoring;bundle-version="[3.5.0,4.0.0)",
  org.eclipse.wst.common.uriresolver;bundle-version="[1.1.300,2.0.0)",
  org.eclipse.ui.ide;bundle-version="[3.5.0,4.0.0)",
- org.eclipse.wst.jsdt.core;bundle-version="[1.1.0,2.0.0)",
- org.eclipse.wst.jsdt.ui;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.wst.jsdt.core;bundle-version="[2.0.0,3.0.0)",
+ org.eclipse.wst.jsdt.ui;bundle-version="[2.0.0,3.0.0)",
  org.eclipse.wst.html.ui;bundle-version="[1.0.500,2.0.0)",
  org.eclipse.wst.html.core;bundle-version="[1.1.400,2.0.0)",
  org.eclipse.wst.jsdt.manipulation;bundle-version="[1.0.200,2.0.0)"
