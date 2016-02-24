@@ -36,6 +36,7 @@
     <module>org.eclipse.wst.html.ui.tests</module>
     <module>org.eclipse.wst.jsdt.web.core.tests</module>
     <module>org.eclipse.wst.jsdt.web.ui.tests</module>
+    <module>org.eclipse.wst.json.core.tests</module>
     <module>org.eclipse.wst.sse.core.tests</module>
     <module>org.eclipse.wst.sse.ui.tests</module>
     <module>org.eclipse.wst.xml.catalog.tests</module>
