@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.json_ui.feature"
       label="%featureName"
-      version="3.8.0.qualifier"
+      version="1.0.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.wst.json.ui"
       license-feature="org.eclipse.license"
@@ -16,7 +16,7 @@
       %copyright
    </copyright>
 
-   <license url="%licenseURL">
+   <license url="license.html">
       %license
    </license>
 
