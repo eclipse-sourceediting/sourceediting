@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2015 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -954,10 +954,10 @@ class ProjectDescription {
 	/**
 	 * @return
 	 */
-	private TagDirRecord createTagdirRecord(IFolder tagdir) {
+	private TagDirRecord createTagdirRecord(IContainer tagdir) {
 		IPath tagdirPath = tagdir.getFullPath();
 		TagDirRecord record = new TagDirRecord();
-		record.path = tagdir.getFullPath();
+		record.path = tagdirPath;
 		record.info = new TaglibInfo();
 		// 8.4.3
 		if (tagdir.getName().equals("tags")) //$NON-NLS-1$
@@ -2509,7 +2509,7 @@ class ProjectDescription {
 	void updateTag(IResource resource, int kind) {
 		TagDirRecord record = (TagDirRecord) fTagDirReferences.get(resource.getParent().getFullPath().toString());
 		if (record == null) {
-			record = createTagdirRecord((IFolder) resource.getParent());
+			record = createTagdirRecord(resource.getParent());
 			fTagDirReferences.put(resource.getParent().getFullPath().toString(), record);
 			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.ADDED));
 		}
