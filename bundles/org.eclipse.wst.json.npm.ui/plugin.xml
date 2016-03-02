@@ -17,13 +17,14 @@
    <!-- Custom completion for dependency key/value for 
    		"dependencies" and "devDependencies" JSON node
    		of package.json-->
-	<extension
+	<!-- Disabled until we find a better way to provide content assist fot npm dependencies. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=486849 -->
+	<!--extension
 	       point="org.eclipse.wst.json.ui.completionProposalCollectors">
 	    <completionProposalCollector 
 	    	paths="$.dependencies,$.devDependencies"
 	    	targets="key,value"
 	    	class="org.eclipse.wst.json.npm.ui.internal.contentassist.NPMDependencyCompletionProposalCollector"
 	    	contentTypeId="org.eclipse.wst.json.npm.core.npmsource" />	    		   
-	</extension>
+	</extension-->
 	       
 </plugin>
