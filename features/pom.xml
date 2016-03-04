@@ -36,5 +36,6 @@
     <module>org.eclipse.wst.json_core.feature</module>
     <module>org.eclipse.wst.json_sdk.feature</module>
     <module>org.eclipse.wst.json_ui.feature</module>
+    <module>org.eclipse.wst.json_tests.feature</module>
   </modules>
 </project>
