@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <category-def name="SourceEditing" label="WTP SourceEditing">Editors to efficiently develop XML/HTNML/JSP</category-def>
+   <category-def name="Source Editing" label="WTP Source Editing">Editors to efficiently develop XML, HTML, JSP, CSS, XML Schema, and DTD files</category-def>
    <feature id="org.eclipse.wst.web_core.feature" version="0.0.0">
         <category name="Web Tools Platform (WTP) @buildversionid@"/>
-  </feature>
+   </feature>
    <feature id="org.eclipse.wst.web_sdk.feature" version="0.0.0">
         <category name="Web Tools Platform SDK (WTP SDK) @buildversionid@"/>
    </feature>
