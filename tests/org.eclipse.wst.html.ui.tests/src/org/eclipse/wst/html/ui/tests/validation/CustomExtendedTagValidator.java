@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Red Hat, Inc.
+ * Copyright (c) 2016 Red Hat, Inc. and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  * Red Hat, Inc. - initial API and implementation
+ * IBM Corporation - bug489230 - Compilation error for CustomExtendedTagValidator
  *******************************************************************************/
 package org.eclipse.wst.html.ui.tests.validation;
 
@@ -38,7 +39,7 @@ public class CustomExtendedTagValidator implements IHTMLCustomTagValidator{
 	public ValidationMessage validateTag(IDOMElement target) {
 		Assert.assertEquals(currentFileLocation, getResource(target.getStructuredDocument()));
 		String tagName = target.getLocalName();
-		if (tagName.contains("thym")) {
+		if (tagName.indexOf("thym") >= 0) {
 			Segment segment = CustomValidatorUtil.getTagSegment(target, CustomValidatorUtil.SEG_START_TAG_NAME);
 			return new ValidationMessage("Thym is available only with external installation", segment.getOffset(), segment.getLength(), ValidationMessage.ERROR);
 		}
@@ -47,8 +48,9 @@ public class CustomExtendedTagValidator implements IHTMLCustomTagValidator{
 	
 	private String getResource(IDocument document) {
 		if (document == null) return null;
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+		IStructuredModel sModel = null;
 		try {
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (sModel != null) {
 				return sModel.getBaseLocation();
 			}
