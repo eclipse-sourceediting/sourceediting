@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.xml.core.internal.document.XMLModelContext
- *                                           modified in order to process JSON Objects.     
+ *                                           modified in order to process JSON Objects.
+ *     Alina Marin <alina@mx1.ibm.com> - fixed some stuff to improve the synch between the editor and the model. 
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.document;
 
@@ -27,6 +28,7 @@ import org.w3c.dom.Text;
  */
 class JSONModelContext {
 	private IJSONNode nextNode = null;
+	private IJSONNode currentNode = null;
 	private IJSONNode parentNode = null;
 
 	// private JSONModelImpl model = null;
@@ -160,7 +162,7 @@ class JSONModelContext {
 	// return null;
 	// }
 
-	IJSONObject findPreviousObject() {
+	IJSONObject findParentObject() {
 		if (parentNode != null
 				&& parentNode.getNodeType() == IJSONNode.OBJECT_NODE) {
 			return (IJSONObject) parentNode;
@@ -168,7 +170,7 @@ class JSONModelContext {
 		return null;
 	}
 
-	IJSONArray findPreviousArray() {
+	IJSONArray findParentArray() {
 		if (parentNode != null
 				&& parentNode.getNodeType() == IJSONNode.ARRAY_NODE) {
 			return (IJSONArray) parentNode;
@@ -176,13 +178,22 @@ class JSONModelContext {
 		return null;
 	}
 
-	IJSONStructure findPreviousStructure() {
+	IJSONStructure findParentStructure() {
 		if (parentNode != null
 				&& (parentNode.getNodeType() == IJSONNode.OBJECT_NODE || parentNode
 						.getNodeType() == IJSONNode.ARRAY_NODE)) {
 			return (IJSONStructure) parentNode;
 		}
 		return null;
+	}
+	
+	/**
+	 * getCurrentNode method
+	 * 
+	 * @return org.w3c.dom.Node
+	 */
+	IJSONNode getCurrentNode() {
+		return this.currentNode;
 	}
 
 	/**
@@ -252,11 +263,12 @@ class JSONModelContext {
 	 * @param nextNode
 	 *            org.w3c.dom.Node
 	 */
-	void setNextNode(IJSONNode nextNode) {
-		this.nextNode = nextNode;
-		if (nextNode == null)
+	void setCurrentNode(IJSONNode currentNode) {
+		this.currentNode = currentNode;
+		if (currentNode == null)
 			return;
-		this.parentNode = nextNode.getParentNode();
+		this.parentNode = currentNode.getParentNode();
+		this.nextNode = currentNode.getNextSibling();
 	}
 
 	/**

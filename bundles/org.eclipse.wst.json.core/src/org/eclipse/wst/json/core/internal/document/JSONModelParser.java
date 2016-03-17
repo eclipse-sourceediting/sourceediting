@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,12 @@
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.xml.core.internal.document.XMLModelParser
- *                                           modified in order to process JSON Objects.     
+ *                                           modified in order to process JSON Objects.
+ *     Alina Marin <alina@mx1.ibm.com> - fixed some stuff to improve the synch between the editor and the model.  
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.document;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.wst.json.core.document.IJSONArray;
 import org.eclipse.wst.json.core.document.IJSONModel;
@@ -47,73 +47,6 @@ public class JSONModelParser {
 	}
 
 	/**
-	 */
-	// protected boolean canBeImplicitTag(Element element) {
-	// ModelParserAdapter adapter = getParserAdapter();
-	// if (adapter != null) {
-	// return adapter.canBeImplicitTag(element);
-	// }
-	// return false;
-	// }
-
-	/**
-	 */
-	// protected boolean canBeImplicitTag(Element element, Node child) {
-	// ModelParserAdapter adapter = getParserAdapter();
-	// if (adapter != null) {
-	// return adapter.canBeImplicitTag(element, child);
-	// }
-	// return false;
-	// }
-
-	/**
-	 */
-	// protected boolean canContain(Element element, Node child) {
-	// if (element == null || child == null)
-	// return false;
-	// JSONObjectImpl impl = (JSONObjectImpl) element;
-	// if (impl.isEndTag())
-	// return false; // invalid (floating) end tag
-	// if (!impl.isContainer())
-	// return false;
-	// if (child.getNodeType() != Node.TEXT_NODE) {
-	// if (impl.isJSPContainer() || impl.isCDATAContainer()) {
-	// // accepts only Text child
-	// return false;
-	// }
-	// }
-	// ModelParserAdapter adapter = getParserAdapter();
-	// if (adapter != null) {
-	// return adapter.canContain(element, child);
-	// }
-	// return true;
-	// }
-
-	/**
-	 */
-	// private void changeAttrEqual(IStructuredDocumentRegion flatNode,
-	// ITextRegion region) {
-	// int offset = flatNode.getStart();
-	// if (offset < 0)
-	// return;
-	// JSONNodeImpl root = (JSONNodeImpl) this.context.getRootNode();
-	// if (root == null)
-	// return;
-	// Node node = root.getNodeAt(offset);
-	// if (node == null)
-	// return;
-	// if (node.getNodeType() != IJSONNode.OBJECT_NODE) {
-	// if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
-	// // just notify the change instead of setting data
-	// ProcessingInstructionImpl pi = (ProcessingInstructionImpl) node;
-	// pi.notifyValueChanged();
-	// }
-	// return;
-	// }
-	// // actually, do nothing
-	// }
-
-	/**
 	 * changeAttrName method
 	 * 
 	 */
@@ -135,150 +68,28 @@ public class JSONModelParser {
 		JSONPairImpl pair = (JSONPairImpl) node;
 		String name = flatNode.getText(region); 
 		pair.setName(name);
-		/*
-		 * List<IJSONPair> attributes = element.getPairs(); if (attributes ==
-		 * null) return; for (IJSONPair attr : attributes) { if (((JSONPairImpl)
-		 * attr).getNameRegion() != region) continue;
-		 * 
-		 * String name = flatNode.getText(region); ((JSONPairImpl)
-		 * attr).setName(name); break; }
-		 */
 	}
-
-	/**
-	 * changeAttrValue method
-	 * 
-	 */
-	// private void changeAttrValue(IStructuredDocumentRegion flatNode,
-	// ITextRegion region) {
-	// int offset = flatNode.getStart();
-	// if (offset < 0)
-	// return;
-	// JSONNodeImpl root = (JSONNodeImpl) this.context.getRootNode();
-	// if (root == null)
-	// return;
-	// Node node = root.getNodeAt(offset);
-	// if (node == null)
-	// return;
-	// if (node.getNodeType() != IJSONNode.OBJECT_NODE) {
-	// if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
-	// // just notify the change instead of setting data
-	// ProcessingInstructionImpl pi = (ProcessingInstructionImpl) node;
-	// pi.notifyValueChanged();
-	// }
-	// return;
-	// }
-	//
-	// JSONObjectImpl element = (JSONObjectImpl) node;
-	// NamedNodeMap attributes = element.getAttributes();
-	// if (attributes == null)
-	// return;
-	// int length = attributes.getLength();
-	// for (int i = 0; i < length; i++) {
-	// AttrImpl attr = (AttrImpl) attributes.item(i);
-	// if (attr == null)
-	// continue;
-	// if (attr.getValueRegion() != region)
-	// continue;
-	// // just notify the change instead of setting value
-	// attr.notifyValueChanged();
-	// break;
-	// }
-	// }
-	//
-	// /**
-	// * changeData method
-	// *
-	// */
-	// private void changeData(IStructuredDocumentRegion flatNode,
-	// ITextRegion region) {
-	// int offset = flatNode.getStart();
-	// if (offset < 0)
-	// return;
-	// JSONNodeImpl root = (JSONNodeImpl) this.context.getRootNode();
-	// if (root == null)
-	// return;
-	// Node node = root.getNodeAt(offset);
-	// if (node == null)
-	// return;
-	// switch (node.getNodeType()) {
-	// case Node.TEXT_NODE: {
-	// TextImpl text = (TextImpl) node;
-	// if (text.isSharingStructuredDocumentRegion(flatNode)) {
-	// // has consecutive text sharing IStructuredDocumentRegion
-	// changeStructuredDocumentRegion(flatNode);
-	// return;
-	// }
-	// this.context.setNextNode(node);
-	// cleanupText();
-	// break;
-	// }
-	// case Node.CDATA_SECTION_NODE:
-	// case Node.PROCESSING_INSTRUCTION_NODE:
-	// break;
-	// case Node.COMMENT_NODE:
-	// case IJSONNode.OBJECT_NODE:
-	// // comment tag
-	// changeStructuredDocumentRegion(flatNode);
-	// return;
-	// default:
-	// return;
-	// }
-	//
-	// // just notify the change instead of setting data
-	// JSONNodeImpl impl = (JSONNodeImpl) node;
-	// impl.notifyValueChanged();
-	// }
-
-	/**
-	 */
-	private void changeEndTag(IStructuredDocumentRegion flatNode,
-			ITextRegionList newRegions, ITextRegionList oldRegions) {
+	
+	private void changeAttrValue(IStructuredDocumentRegion flatNode,
+			ITextRegion region) {
 		int offset = flatNode.getStart();
 		if (offset < 0)
-			return; // error
+			return;
 		JSONNodeImpl root = (JSONNodeImpl) this.context.getRootNode();
 		if (root == null)
-			return; // error
+			return;
 		IJSONNode node = root.getNodeAt(offset);
 		if (node == null)
-			return; // error
-
-		if (node.getNodeType() != IJSONNode.OBJECT_NODE) {
-			changeStructuredDocumentRegion(flatNode);
 			return;
+		JSONValueImpl value = (JSONValueImpl) createJSONValue(region.getType());
+		value.setStructuredDocumentRegion(flatNode);
+		if(node.getNodeType() == IJSONNode.PAIR_NODE) {
+			JSONPairImpl pair = (JSONPairImpl) node;
+			pair.updateValue(value);
+		} else if (isJSONValue(node.getFirstStructuredDocumentRegion().getType())) {
+			JSONValueImpl oldValue = (JSONValueImpl) node;
+			oldValue.updateValue(value);
 		}
-
-		// check if change is only for close tag
-		// if (newRegions != null) {
-		// Iterator e = newRegions.iterator();
-		// while (e.hasNext()) {
-		// ITextRegion region = (ITextRegion) e.next();
-		// String regionType = region.getType();
-		// if (regionType == JSONRegionContexts.JSON_TAG_CLOSE)
-		// continue;
-		//
-		// // other region has changed
-		// changeStructuredDocumentRegion(flatNode);
-		// return;
-		// }
-		// }
-		// if (oldRegions != null) {
-		// Iterator e = oldRegions.iterator();
-		// while (e.hasNext()) {
-		// ITextRegion region = (ITextRegion) e.next();
-		// String regionType = region.getType();
-		// if (regionType == JSONRegionContexts.JSON_TAG_CLOSE)
-		// continue;
-		//
-		// // other region has changed
-		// changeStructuredDocumentRegion(flatNode);
-		// return;
-		// }
-		// }
-
-		// change for close tag has no impact
-		// do nothing
 	}
 
 	/**
@@ -315,13 +126,11 @@ public class JSONModelParser {
 		 * changeData(flatNode, region); } else
 		 */
 		if (regionType == JSONRegionContexts.JSON_OBJECT_KEY) {
-			if (isWhitespaceChange
-					&& (change.getOffset() >= flatNode.getStartOffset()
-							+ region.getTextEnd())) {
-				// change is entirely in white-space
-				return;
-			}
 			changeAttrName(flatNode, region);
+		} else if (isJSONValue(regionType)) {
+			changeAttrValue(flatNode, region);
+		} else if(regionType == JSONRegionContexts.JSON_UNKNOWN) {
+			return;
 		}
 		// else if (regionType == JSONRegionContexts.JSON_TAG_ATTRIBUTE_VALUE) {
 		// if (isWhitespaceChange
@@ -548,7 +357,7 @@ public class JSONModelParser {
 			return;
 
 		setupContext(flatNode);
-
+		
 		removeStructuredDocumentRegion(flatNode);
 		// make sure the parent is set to deepest level
 		// when end tag has been removed
@@ -591,10 +400,10 @@ public class JSONModelParser {
 				if (first != null) {
 					parent = next;
 					next = first;
-					this.context.setNextNode(next);
+					this.context.setCurrentNode(next);
 				} else {
 					next = next.getNextSibling();
-					this.context.setNextNode(next);
+					this.context.setCurrentNode(next);
 				}
 			}
 
@@ -618,122 +427,12 @@ public class JSONModelParser {
 			next = parent.getNextSibling();
 			parent = parent.getParentNode();
 			if (next != null) {
-				this.context.setNextNode(next);
+				this.context.setCurrentNode(next);
 			} else {
 				this.context.setParentNode(parent);
 			}
 		}
 	}
-
-	/**
-	 */
-	// private void cleanupText() {
-	// if (lastTextNode != null) {
-	// lastTextNode.notifyValueChanged();
-	// lastTextNode = null;
-	// }
-	// Node parent = this.context.getParentNode();
-	// if (parent == null)
-	// return; // error
-	// Node next = this.context.getNextNode();
-	// Node prev = (next == null ? parent.getLastChild() : next
-	// .getPreviousSibling());
-	//
-	// TextImpl nextText = null;
-	// TextImpl prevText = null;
-	// if (next != null && next.getNodeType() == Node.TEXT_NODE) {
-	// nextText = (TextImpl) next;
-	// }
-	// if (prev != null && prev.getNodeType() == Node.TEXT_NODE) {
-	// prevText = (TextImpl) prev;
-	// }
-	// if (nextText == null && prevText == null)
-	// return;
-	// if (nextText != null && prevText != null) {
-	// // consecutive Text nodes created by setupContext(),
-	// // concat them
-	// IStructuredDocumentRegion flatNode = nextText
-	// .getStructuredDocumentRegion();
-	// if (flatNode != null)
-	// prevText.appendStructuredDocumentRegion(flatNode);
-	// Node newNext = next.getNextSibling();
-	// parent.removeChild(next);
-	// next = null;
-	// this.context.setNextNode(newNext);
-	// }
-	//
-	// TextImpl childText = (prevText != null ? prevText : nextText);
-	// if (childText.getNextSibling() == null
-	// && childText.getPreviousSibling() == null) {
-	// if (parent.getNodeType() == IJSONNode.OBJECT_NODE) {
-	// JSONObjectImpl parentElement = (JSONObjectImpl) parent;
-	// if (!parentElement.hasStartTag() && !parentElement.hasEndTag()) {
-	// if (childText.isWhitespace() || childText.isInvalid()) {
-	// // implicit parent is not required
-	// Node newParent = parent.getParentNode();
-	// if (newParent != null) {
-	// Node newNext = parent.getNextSibling();
-	// newParent.removeChild(parent);
-	// parent.removeChild(childText);
-	// newParent.insertBefore(childText, newNext);
-	// if (childText == next) {
-	// this.context.setNextNode(childText);
-	// } else if (newNext != null) {
-	// this.context.setNextNode(newNext);
-	// } else {
-	// this.context.setParentNode(newParent);
-	// }
-	// // try again
-	// cleanupText();
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
-
-	/**
-	 * This routine create an Element from comment data for comment style
-	 * elements, such as SSI and METADATA
-	 */
-	// protected Element createCommentElement(String data, boolean isJSPTag) {
-	// String trimmedData = data.trim();
-	// CommentElementConfiguration[] configs = CommentElementRegistry
-	// .getInstance().getConfigurations();
-	// for (int iConfig = 0; iConfig < configs.length; iConfig++) {
-	// CommentElementConfiguration config = configs[iConfig];
-	// if ((isJSPTag && !config.acceptJSPComment())
-	// || (!isJSPTag && !config.acceptJSONComment())) {
-	// continue;
-	// }
-	// String[] prefixes = config.getPrefix();
-	// for (int iPrefix = 0; iPrefix < prefixes.length; iPrefix++) {
-	// if (trimmedData.startsWith(prefixes[iPrefix])) {
-	// return config.createElement(this.model.getDocument(), data,
-	// isJSPTag);
-	// }
-	// }
-	// }
-	// ModelParserAdapter adapter = getParserAdapter();
-	// if (adapter != null) {
-	// return adapter.createCommentElement(this.model.getDocument(), data,
-	// isJSPTag);
-	// }
-	// return null;
-	// }
-
-	/**
-	 * This routine create an implicit Element for given parent and child, such
-	 * as HTML, BODY, HEAD, and TBODY for HTML document.
-	 */
-	// protected Element createImplicitElement(Node parent, Node child) {
-	// ModelParserAdapter adapter = getParserAdapter();
-	// if (adapter != null) {
-	// return adapter.createImplicitElement(this.model.getDocument(),
-	// parent, child);
-	// }
-	// return null;
-	// }
 
 	/**
 	 */
@@ -843,211 +542,11 @@ public class JSONModelParser {
 		}
 	}
 
-	// private ModelParserAdapter getParserAdapter() {
-	// return (ModelParserAdapter) this.model.getDocument().getAdapterFor(
-	// ModelParserAdapter.class);
-	// }
-	//
-	// /**
-	// */
-	// protected String getFindRootName(String tagName) {
-	// ModelParserAdapter adapter = getParserAdapter();
-	// if (adapter != null) {
-	// return adapter.getFindRootName(tagName);
-	// }
-	// return null;
-	// }
-
 	/**
 	 */
 	protected final IJSONModel getModel() {
 		return this.model;
 	}
-
-	//
-	// /**
-	// * insertCDATASection method
-	// *
-	// */
-	// private void insertCDATASection(IStructuredDocumentRegion flatNode) {
-	// ITextRegionList regions = flatNode.getRegions();
-	// if (regions == null)
-	// return;
-	//
-	// CDATASectionImpl cdata = null;
-	// try {
-	// cdata = (CDATASectionImpl) this.model.getDocument()
-	// .createCDATASection(null);
-	// } catch (JSONException ex) {
-	// }
-	// if (cdata == null) { // CDATA section might not be supported
-	// insertInvalidDecl(flatNode); // regard as invalid decl
-	// return;
-	// }
-	//
-	// cdata.setStructuredDocumentRegion(flatNode);
-	// insertNode(cdata);
-	// }
-
-	/**
-	 * insertComment method
-	 * 
-	 */
-	// private void insertComment(IStructuredDocumentRegion flatNode) {
-	// ITextRegionList regions = flatNode.getRegions();
-	// if (regions == null)
-	// return;
-	//
-	// StringBuffer data = null;
-	// boolean isJSPTag = false;
-	// Iterator e = regions.iterator();
-	// while (e.hasNext()) {
-	// ITextRegion region = (ITextRegion) e.next();
-	// String regionType = region.getType();
-	// if (isNestedCommentOpen(regionType)) {
-	// isJSPTag = true;
-	// } else if (regionType == JSONRegionContexts.JSON_COMMENT_TEXT
-	// || isNestedCommentText(regionType)) {
-	// if (data == null) {
-	// data = new StringBuffer(flatNode.getText(region));
-	// } else {
-	// data.append(flatNode.getText(region));
-	// }
-	// }
-	// }
-	//
-	// if (data != null) {
-	// JSONObjectImpl element = (JSONObjectImpl) createCommentElement(
-	// data.toString(), isJSPTag);
-	// if (element != null) {
-	// if (!isEndTag(element)) {
-	// element.setStartStructuredDocumentRegion(flatNode);
-	// insertStartTag(element);
-	// return;
-	// }
-	//
-	// // end tag
-	// element.setEndStructuredDocumentRegion(flatNode);
-	//
-	// String tagName = element.getTagName();
-	// String rootName = getFindRootName(tagName);
-	// JSONObjectImpl start = (JSONObjectImpl) this.context.findStartTag(
-	// tagName, rootName);
-	// if (start != null) { // start tag found
-	// insertEndTag(start);
-	// start.addEndTag(element);
-	// return;
-	// }
-	//
-	// // invalid end tag
-	// insertNode(element);
-	// return;
-	// }
-	// }
-	//
-	// CommentImpl comment = (CommentImpl) this.model.getDocument()
-	// .createComment(null);
-	// if (comment == null)
-	// return;
-	// if (isJSPTag)
-	// comment.setJSPTag(true);
-	// comment.setStructuredDocumentRegion(flatNode);
-	// insertNode(comment);
-	// }
-
-	/**
-	 * insertDecl method
-	 * 
-	 */
-	// private void insertDecl(IStructuredDocumentRegion flatNode) {
-	// ITextRegionList regions = flatNode.getRegions();
-	// if (regions == null)
-	// return;
-	//
-	// boolean isDocType = false;
-	// String name = null;
-	// String publicId = null;
-	// String systemId = null;
-	// Iterator e = regions.iterator();
-	// while (e.hasNext()) {
-	// ITextRegion region = (ITextRegion) e.next();
-	// String regionType = region.getType();
-	// if (regionType == JSONRegionContexts.JSON_DOCTYPE_DECLARATION) {
-	// isDocType = true;
-	// } else if (regionType == JSONRegionContexts.JSON_DOCTYPE_NAME) {
-	// if (name == null)
-	// name = flatNode.getText(region);
-	// } else if (regionType ==
-	// JSONRegionContexts.JSON_DOCTYPE_EXTERNAL_ID_PUBREF) {
-	// if (publicId == null)
-	// publicId = StructuredDocumentRegionUtil.getAttrValue(
-	// flatNode, region);
-	// } else if (regionType ==
-	// JSONRegionContexts.JSON_DOCTYPE_EXTERNAL_ID_SYSREF) {
-	// if (systemId == null)
-	// systemId = StructuredDocumentRegionUtil.getAttrValue(
-	// flatNode, region);
-	// }
-	// }
-	//
-	// // invalid declaration
-	// if (!isDocType) {
-	// insertInvalidDecl(flatNode);
-	// return;
-	// }
-	//
-	// DocumentTypeImpl docType = (DocumentTypeImpl) this.model.getDocument()
-	// .createDoctype(name);
-	// if (docType == null)
-	// return;
-	// if (publicId != null)
-	// docType.setPublicId(publicId);
-	// if (systemId != null)
-	// docType.setSystemId(systemId);
-	// docType.setStructuredDocumentRegion(flatNode);
-	// insertNode(docType);
-	// }
-
-	/**
-	 * insertEndTag method can be used by subclasses, but not overrided.
-	 * 
-	 * @param element
-	 *            org.w3c.dom.Element
-	 */
-	// protected void insertEndTag(Element element) {
-	// if (element == null)
-	// return;
-	//
-	// Node newParent = element.getParentNode();
-	// if (newParent == null)
-	// return; // error
-	//
-	// if (!((JSONObjectImpl) element).isContainer()) {
-	// // just update context
-	// Node elementNext = element.getNextSibling();
-	// if (elementNext != null)
-	// this.context.setNextNode(elementNext);
-	// else
-	// this.context.setParentNode(newParent);
-	// return;
-	// }
-	//
-	// // promote children
-	// Node newNext = element.getNextSibling();
-	// Node oldParent = this.context.getParentNode();
-	// if (oldParent == null)
-	// return; // error
-	// Node oldNext = this.context.getNextNode();
-	// promoteNodes(element, newParent, newNext, oldParent, oldNext);
-	//
-	// // update context
-	// // re-check the next sibling
-	// newNext = element.getNextSibling();
-	// if (newNext != null)
-	// this.context.setNextNode(newNext);
-	// else
-	// this.context.setParentNode(newParent);
-	// }
 
 	/**
 	 * insertEndTag method
@@ -1077,7 +576,7 @@ public class JSONModelParser {
 		//
 		// String rootName = getFindRootName(tagName);
 		JSONObjectImpl start = (JSONObjectImpl) this.context
-				.findPreviousObject();
+				.findParentObject();
 		if (start != null) { // start tag found
 			// insertEndTag(start);
 			start.setEndStructuredDocumentRegion(flatNode);
@@ -1087,7 +586,7 @@ public class JSONModelParser {
 			// // re-check the next sibling
 			// newNext = start.getNextSibling();
 			// if (newNext != null)
-			// this.context.setNextNode(newNext);
+			// this.context.setCurrentNode(newNext);
 			// else
 			// this.context.setParentNode(newParent);
 			// return;
@@ -1107,178 +606,6 @@ public class JSONModelParser {
 		// end.setEndStructuredDocumentRegion(flatNode);
 		// insertNode(end);
 	}
-
-	/**
-	 * insertEntityRef method
-	 * 
-	 */
-	// private void insertEntityRef(IStructuredDocumentRegion flatNode) {
-	// ITextRegionList regions = flatNode.getRegions();
-	// if (regions == null)
-	// return;
-	//
-	// String name = null;
-	// Iterator e = regions.iterator();
-	// while (e.hasNext()) {
-	// ITextRegion region = (ITextRegion) e.next();
-	// String regionType = region.getType();
-	// if (regionType == JSONRegionContexts.JSON_ENTITY_REFERENCE
-	// || regionType == JSONRegionContexts.JSON_CHAR_REFERENCE) {
-	// if (name == null)
-	// name = StructuredDocumentRegionUtil.getEntityRefName(
-	// flatNode, region);
-	// }
-	// }
-	//
-	// if (name == null) { // invalid entity
-	// insertText(flatNode);
-	// return;
-	// }
-	//
-	// // ISSUE: avoid this cast
-	// String value = ((DocumentImpl) this.model.getDocument())
-	// .getCharValue(name);
-	// if (value != null) { // character entity
-	// TextImpl text = (TextImpl) this.context.findPreviousText();
-	// if (text != null) { // existing text found
-	// // do not append data
-	// text.appendStructuredDocumentRegion(flatNode);
-	// // Adjacent text nodes, where changes were queued
-	// if (lastTextNode != null && lastTextNode != text)
-	// lastTextNode.notifyValueChanged();
-	// lastTextNode = text;
-	// return;
-	// }
-	//
-	// // new text
-	// text = (TextImpl) this.model.getDocument().createTextNode(null);
-	// if (text == null)
-	// return;
-	// text.setStructuredDocumentRegion(flatNode);
-	// insertNode(text);
-	// return;
-	// }
-	//
-	// // general entity reference
-	// EntityReferenceImpl ref = null;
-	// try {
-	// ref = (EntityReferenceImpl) this.model.getDocument()
-	// .createEntityReference(name);
-	// } catch (JSONException ex) {
-	// }
-	// if (ref == null) { // entity reference might not be supported
-	// insertText(flatNode); // regard as invalid text
-	// return;
-	// }
-	//
-	// ref.setStructuredDocumentRegion(flatNode);
-	// insertNode(ref);
-	// }
-
-	/**
-	 * insertInvalidDecl method
-	 * 
-	 */
-	// private void insertInvalidDecl(IStructuredDocumentRegion flatNode) {
-	// ITextRegionList regions = flatNode.getRegions();
-	// if (regions == null)
-	// return;
-	//
-	// JSONObjectImpl element = null;
-	// try {
-	//			element = (JSONObjectImpl) this.model.getDocument().createElement("!");//$NON-NLS-1$
-	// } catch (JSONException ex) {
-	// }
-	// if (element == null) { // invalid tag
-	// insertText(flatNode); // regard as invalid text
-	// return;
-	// }
-	// element.setEmptyTag(true);
-	// element.setStartStructuredDocumentRegion(flatNode);
-	// insertNode(element);
-	// }
-
-	/**
-	 * insertJSPTag method
-	 * 
-	 */
-	// private void insertNestedTag(IStructuredDocumentRegion flatNode) {
-	// ITextRegionList regions = flatNode.getRegions();
-	// if (regions == null)
-	// return;
-	//
-	// String tagName = null;
-	// AttrImpl attr = null;
-	// List attrNodes = null;
-	// boolean isCloseTag = false;
-	// Iterator e = regions.iterator();
-	// while (e.hasNext()) {
-	// ITextRegion region = (ITextRegion) e.next();
-	// String regionType = region.getType();
-	// if (isNestedTagOpen(regionType) || isNestedTagName(regionType)) {
-	// tagName = computeNestedTag(regionType, tagName, flatNode,
-	// region);
-	// } else if (isNestedTagClose(regionType)) {
-	// isCloseTag = true;
-	// } else if (regionType == JSONRegionContexts.JSON_TAG_ATTRIBUTE_NAME) {
-	// String name = flatNode.getText(region);
-	// attr = (AttrImpl) this.model.getDocument()
-	// .createAttribute(name);
-	// if (attr != null) {
-	// attr.setNameRegion(region);
-	// if (attrNodes == null)
-	// attrNodes = new ArrayList();
-	// attrNodes.add(attr);
-	// }
-	// } else if (regionType == JSONRegionContexts.JSON_TAG_ATTRIBUTE_EQUALS) {
-	// if (attr != null) {
-	// attr.setEqualRegion(region);
-	// }
-	// } else if (regionType == JSONRegionContexts.JSON_TAG_ATTRIBUTE_VALUE) {
-	// if (attr != null) {
-	// attr.setValueRegion(region);
-	// attr = null;
-	// }
-	// }
-	// }
-	//
-	// if (tagName == null) {
-	// if (isCloseTag) {
-	// // close JSP tag
-	// Node parent = this.context.getParentNode();
-	// if (parent != null && parent.getNodeType() == IJSONNode.OBJECT_NODE) {
-	// JSONObjectImpl start = (JSONObjectImpl) parent;
-	// if (start.isJSPContainer()) {
-	// insertEndTag(start);
-	// start.setEndStructuredDocumentRegion(flatNode);
-	// return;
-	// }
-	// }
-	// }
-	// // invalid JSP tag
-	// insertText(flatNode); // regard as invalid text
-	// return;
-	// }
-	//
-	// JSONObjectImpl element = null;
-	// try {
-	// element = (JSONObjectImpl) this.model.getDocument().createElement(
-	// tagName);
-	// } catch (JSONException ex) {
-	// }
-	// if (element == null) { // invalid tag
-	// insertText(flatNode); // regard as invalid text
-	// return;
-	// }
-	// if (attrNodes != null) {
-	// for (int i = 0; i < attrNodes.size(); i++) {
-	// element.appendAttributeNode((Attr) attrNodes.get(i));
-	// }
-	// }
-	// element.setJSPTag(true);
-	// element.setStartStructuredDocumentRegion(flatNode);
-	// insertStartObject(element);
-	// }
 
 	/**
 	 * insertNode method
@@ -1312,7 +639,7 @@ public class JSONModelParser {
 		insertNode(parent, node, next);
 		next = node.getNextSibling();
 		if (next != null) {
-			this.context.setNextNode(next);
+			this.context.setCurrentNode(next);
 		} else {
 			this.context.setParentNode(node.getParentNode());
 		}
@@ -1348,7 +675,7 @@ public class JSONModelParser {
 		// insertNode(parent, node, next);
 		// next = node.getNextSibling();
 		// if (next != null) {
-		// this.context.setNextNode(next);
+		// this.context.setCurrentNode(next);
 		// } else {
 		// this.context.setParentNode(node.getParentNode());
 		// }
@@ -1374,100 +701,21 @@ public class JSONModelParser {
 		parent.insertBefore(node, next);
 	}
 
-	/**
-	 * insertPI method
-	 * 
-	 */
-	// private void insertPI(IStructuredDocumentRegion flatNode) {
-	// ITextRegionList regions = flatNode.getRegions();
-	// if (regions == null)
-	// return;
-	//
-	// String target = null;
-	// Iterator e = regions.iterator();
-	// while (e.hasNext()) {
-	// ITextRegion region = (ITextRegion) e.next();
-	// String regionType = region.getType();
-	// if (regionType == JSONRegionContexts.JSON_PI_OPEN
-	// || regionType == JSONRegionContexts.JSON_PI_CLOSE)
-	// continue;
-	// if (target == null)
-	// target = flatNode.getText(region);
-	// }
-	//
-	// ProcessingInstructionImpl pi = (ProcessingInstructionImpl) this.model
-	// .getDocument().createProcessingInstruction(target, null);
-	// if (pi == null)
-	// return;
-	// pi.setStructuredDocumentRegion(flatNode);
-	// insertNode(pi);
-	// }
-
-	// ---------------------------- JSON Object
-
 	private void insertObject(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
 		if (regions == null)
 			return;
 
-		String tagName = null;
-		boolean isEmptyTag = false;
-		// AttrImpl attr = null;
-		// List attrNodes = null;
-		// Iterator e = regions.iterator();
-		// while (e.hasNext()) {
-		// ITextRegion region = (ITextRegion) e.next();
-		// String regionType = region.getType();
-		// if (regionType == JSONRegionContexts.JSON_TAG_NAME
-		// || isNestedTagName(regionType)) {
-		// if (tagName == null)
-		// tagName = flatNode.getText(region);
-		// } else if (regionType == JSONRegionContexts.JSON_EMPTY_TAG_CLOSE) {
-		// isEmptyTag = true;
-		// } else if (regionType == JSONRegionContexts.JSON_TAG_ATTRIBUTE_NAME)
-		// {
-		// String name = flatNode.getText(region);
-		// attr = (AttrImpl) this.model.getDocument()
-		// .createAttribute(name);
-		// if (attr != null) {
-		// attr.setNameRegion(region);
-		// if (attrNodes == null)
-		// attrNodes = new ArrayList();
-		// attrNodes.add(attr);
-		// }
-		// } else if (regionType ==
-		// JSONRegionContexts.JSON_TAG_ATTRIBUTE_EQUALS) {
-		// if (attr != null) {
-		// attr.setEqualRegion(region);
-		// }
-		// } else if (regionType == JSONRegionContexts.JSON_TAG_ATTRIBUTE_VALUE)
-		// {
-		// if (attr != null) {
-		// attr.setValueRegion(region);
-		// attr = null;
-		// }
-		// }
-		// }
-		//
-		// if (tagName == null) { // invalid start tag
-		// insertText(flatNode); // regard as invalid text
-		// return;
-		// }
-
-		JSONObjectImpl element = (JSONObjectImpl) this.model.getDocument()
-				.createJSONObject();
-
-		if (element == null) { // invalid tag
-			// insertText(flatNode); // regard as invalid text
+		JSONObjectImpl element = null;
+		if(this.context.getCurrentNode() != null && this.context.getCurrentNode() instanceof IJSONObject) {
+			element = (JSONObjectImpl) this.context.getCurrentNode();
+		} else {
+			element = (JSONObjectImpl) this.model.getDocument()
+					.createJSONObject();
+		}
+		if (element == null) {
 			return;
 		}
-		// if (attrNodes != null) {
-		// for (int i = 0; i < attrNodes.size(); i++) {
-		// element.appendAttributeNode((Attr) attrNodes.get(i));
-		// }
-		// }
-		// if (isEmptyTag)
-		// element.setEmptyTag(true);
 		element.setStartStructuredDocumentRegion(flatNode);
 		insertStartObjectOLD(element);
 	}
@@ -1501,7 +749,7 @@ public class JSONModelParser {
 		// update context
 		IJSONNode firstChild = element.getFirstChild();
 		if (firstChild != null)
-			this.context.setNextNode(firstChild);
+			this.context.setCurrentNode(firstChild);
 		else
 			this.context.setParentNode(element);
 	}
@@ -1528,7 +776,7 @@ public class JSONModelParser {
 		// update context
 		IJSONNode firstChild = element.getFirstChild();
 		if (firstChild != null)
-			this.context.setNextNode(firstChild);
+			this.context.setCurrentNode(firstChild);
 		else
 			this.context.setParentNode(element);
 	}
@@ -1548,7 +796,7 @@ public class JSONModelParser {
 	}
 
 	private void updateEndArray(IStructuredDocumentRegion flatNode) {
-		JSONArrayImpl start = (JSONArrayImpl) this.context.findPreviousArray();
+		JSONArrayImpl start = (JSONArrayImpl) this.context.findParentArray();
 		if (start != null) { // start tag found
 			start.setEndStructuredDocumentRegion(flatNode);
 			// update context
@@ -1586,41 +834,6 @@ public class JSONModelParser {
 		} else if (regionType == JSONRegionContexts.JSON_VALUE_STRING) {
 			insertValue(flatNode, regionType);
 		}
-		/*
-		 * else if (regionType == JSONRegionContexts.JSON_COLON) {
-		 * updateColon(flatNode); } else if (regionType ==
-		 * JSONRegionContexts.JSON_VALUE_BOOLEAN) {
-		 * updateBooleanValue(flatNode); }else { System.err.println(flatNode); }
-		 */
-		// else if (regionType == JSONRegionContexts.JSON_END_TAG_OPEN) {
-		// insertEndTag(flatNode);
-		// }
-		// else if (regionType == JSONRegionContexts.JSON_COMMENT_OPEN
-		// || isNestedCommentOpen(regionType)) {
-		// insertComment(flatNode);
-		// } else if (regionType == JSONRegionContexts.JSON_ENTITY_REFERENCE
-		// || regionType == JSONRegionContexts.JSON_CHAR_REFERENCE) {
-		// insertEntityRef(flatNode);
-		// isTextNode = true;
-		// } else if (regionType == JSONRegionContexts.JSON_DECLARATION_OPEN) {
-		// insertDecl(flatNode);
-		// } else if (regionType == JSONRegionContexts.JSON_PI_OPEN) {
-		// insertPI(flatNode);
-		// } else if (regionType == JSONRegionContexts.JSON_CDATA_OPEN) {
-		// insertCDATASection(flatNode);
-		// } else if (isNestedTag(regionType)) {
-		// insertNestedTag(flatNode);
-		// } else {
-		// insertText(flatNode);
-		// isTextNode = true;
-		// }
-
-		// Changes to text regions are queued up, and once the value is done
-		// changing a notification is sent
-		// if (!isTextNode && lastTextNode != null) {
-		// lastTextNode.notifyValueChanged();
-		// lastTextNode = null;
-		// }
 	}
 
 	private void insertValue(IStructuredDocumentRegion flatNode,
@@ -1628,21 +841,46 @@ public class JSONModelParser {
 		ITextRegionList regions = flatNode.getRegions();
 		if (regions == null)
 			return;
-
 		ITextRegion nameRegion = StructuredDocumentRegionUtil
 				.getFirstRegion(flatNode);
-		JSONStructureImpl structure = (JSONStructureImpl) this.context
-				.findPreviousStructure();
-		if (structure != null) {
-			JSONValueImpl value = (JSONValueImpl) createJSONValue(regionType);
-			value.setStructuredDocumentRegion(flatNode);
-			if (structure.getNodeType() == IJSONNode.OBJECT_NODE) {
-				if (structure.getLastChild() != null
-						&& structure.getLastChild().getNodeType() == IJSONNode.PAIR_NODE) {
-					((JSONPairImpl) structure.getLastChild()).setValue(value);
+		// Create JSON Value
+		JSONValueImpl value = (JSONValueImpl) createJSONValue(regionType);
+		value.setStructuredDocumentRegion(flatNode);
+		// If current node is different from null, it means this value shoyld be
+		// inserted as the value of an existing pair node
+		if (this.context.getCurrentNode() != null && this.context.getCurrentNode() instanceof JSONPairImpl) {
+			JSONPairImpl pair = (JSONPairImpl) this.context.getCurrentNode();
+			pair.setValue(value);
+			JSONNodeImpl parent = (JSONNodeImpl) this.context.getParentNode();
+			parent.insertBefore(pair, this.context.getNextNode());
+			// If parent is an instance of JSONObject add the pair node to the
+			// parent node
+			if(parent instanceof IJSONObject) {
+				JSONObjectImpl parentObject = (JSONObjectImpl) parent;
+				parentObject.add(pair);
+			}
+		} else {
+			// There is no context, it means the model is reloaded or loaded for
+			// the first time
+			JSONStructureImpl structure = (JSONStructureImpl) this.context.findParentStructure();
+			if (structure != null) {
+				if (structure.getNodeType() == IJSONNode.OBJECT_NODE) {
+					// If the parent is a JSONObject look for the last children,
+					// ensure it is a JSONPair and add set the value of the last
+					// children
+					if (structure.getLastChild() != null
+							&& structure.getLastChild().getNodeType() == IJSONNode.PAIR_NODE) {
+						((JSONPairImpl) structure.getLastChild()).setValue(value);
+					}
+				} else if (structure.getNodeType() == IJSONNode.ARRAY_NODE) {
+					// If the parent is a JSONArray insert the new JSONValue at
+					// the end of the structure
+					JSONArrayImpl array = (JSONArrayImpl) structure;
+					structure.insertBefore(value, null);
+					array.add(value);
+				} else {
+					insertNode(structure, value, null);
 				}
-			} else {
-				insertNode(structure, value, null);
 			}
 		}
 	}
@@ -1668,7 +906,7 @@ public class JSONModelParser {
 		ITextRegion nameRegion = StructuredDocumentRegionUtil
 				.getFirstRegion(flatNode);
 		JSONStructureImpl array = (JSONStructureImpl) this.context
-				.findPreviousStructure();
+				.findParentStructure();
 		if (array != null) {
 			JSONNumberValueImpl value = (JSONNumberValueImpl) this.model
 					.getDocument().createNumberValue();
@@ -1684,7 +922,7 @@ public class JSONModelParser {
 		ITextRegion nameRegion = StructuredDocumentRegionUtil
 				.getFirstRegion(flatNode);
 		JSONStructureImpl array = (JSONStructureImpl) this.context
-				.findPreviousStructure();
+				.findParentStructure();
 		if (array != null) {
 			JSONNullValueImpl value = (JSONNullValueImpl) this.model
 					.getDocument().createNullValue();
@@ -1700,7 +938,7 @@ public class JSONModelParser {
 		ITextRegion nameRegion = StructuredDocumentRegionUtil
 				.getFirstRegion(flatNode);
 		JSONStructureImpl array = (JSONStructureImpl) this.context
-				.findPreviousStructure();
+				.findParentStructure();
 		if (array != null) {
 			JSONStringValueImpl value = (JSONStringValueImpl) this.model
 					.getDocument().createStringValue();
@@ -1714,7 +952,7 @@ public class JSONModelParser {
 			return;
 		}
 		JSONObjectImpl object = (JSONObjectImpl) this.context
-				.findPreviousObject();
+				.findParentObject();
 		if (object == null) {
 			return;
 		}
@@ -1726,13 +964,24 @@ public class JSONModelParser {
 				continue;
 			}
 			if (region.getType() == JSONRegionContexts.JSON_OBJECT_KEY) {
+				// Set the proper name and region to the JSONPair node
 				String name = flatNode.getText(region);
-				pair = (JSONPairImpl) this.model.getDocument().createJSONPair(
-						name);
+				pair = (JSONPairImpl) this.model.getDocument().createJSONPair(name);
 				pair.setStartStructuredDocumentRegion(flatNode);
 				pair.setNameRegion(region);
-				insertNode(object, pair, null);
+				// Ensure to add the pair node in the right place, taking as
+				// reference the current node offset from the context
+				if (context.getCurrentNode() != null
+						&& context.getCurrentNode().getStartOffset() > pair.getStartOffset())
+					insertNode(object, pair, this.context.getCurrentNode());
+				else
+					insertNode(object, pair, this.context.getNextNode());
+				// Add the pair to the parent object
 				object.add(pair);
+				// Update context with the new JSONPair as the current node
+				if (this.context.getCurrentNode() != null
+						&& this.context.getCurrentNode().getStartOffset() == pair.getStartOffset())
+					this.context.setCurrentNode(pair);
 			} else if (region.getType() == JSONRegionContexts.JSON_COLON) {
 				pair.setEqualRegion(region);
 			} else if (region.getType() == JSONRegionContexts.JSON_VALUE_BOOLEAN) {
@@ -1779,40 +1028,6 @@ public class JSONModelParser {
 		boolean result = false;
 		return result;
 	}
-
-	/**
-	 * insertText method Can be called from subclasses, not to be overrided or
-	 * re-implemented.
-	 * 
-	 */
-	// protected void insertText(IStructuredDocumentRegion flatNode) {
-	// TextImpl text = (TextImpl) this.context.findPreviousText();
-	// if (text != null) { // existing text found
-	// text.appendStructuredDocumentRegion(flatNode);
-	// // Adjacent text nodes, where changes were queued
-	// if (lastTextNode != null && lastTextNode != text)
-	// lastTextNode.notifyValueChanged();
-	// lastTextNode = text;
-	// return;
-	// }
-	//
-	// // new text
-	// text = (TextImpl) this.model.getDocument().createTextNode(null);
-	// if (text == null)
-	// return;
-	// text.setStructuredDocumentRegion(flatNode);
-	// insertNode(text);
-	// }
-
-	/**
-	 */
-	// protected boolean isEndTag(IJSONElement element) {
-	// ModelParserAdapter adapter = getParserAdapter();
-	// if (adapter != null) {
-	// return adapter.isEndTag(element);
-	// }
-	// return element.isEndTag();
-	// }
 
 	/**
 	 */
@@ -1933,7 +1148,7 @@ public class JSONModelParser {
 			// just update context
 			IJSONNode elementNext = element.getNextSibling();
 			if (elementNext != null)
-				this.context.setNextNode(elementNext);
+				this.context.setCurrentNode(elementNext);
 			else
 				this.context.setParentNode(parent);
 			return;
@@ -1963,66 +1178,10 @@ public class JSONModelParser {
 		else
 			newNext = newElement.getFirstChild();
 		if (newNext != null)
-			this.context.setNextNode(newNext);
+			this.context.setCurrentNode(newNext);
 		else
 			this.context.setParentNode(newElement);
 	}
-
-	/**
-	 * Remove the specified node if it is no longer required implicit tag with
-	 * remaining child nodes promoted.
-	 */
-	// private Element removeImplicitElement(IJSONNode parent) {
-	// if (parent == null)
-	// return null;
-	// if (parent.getNodeType() != IJSONNode.OBJECT_NODE)
-	// return null;
-	// JSONObjectImpl element = (JSONObjectImpl) parent;
-	// if (!element.isImplicitTag())
-	// return null;
-	// if (canBeImplicitTag(element))
-	// return null;
-	//
-	// Node elementParent = element.getParentNode();
-	// if (elementParent == null)
-	// return null; // error
-	// Node firstChild = element.getFirstChild();
-	// Node child = firstChild;
-	// Node elementNext = element.getNextSibling();
-	// while (child != null) {
-	// Node nextChild = child.getNextSibling();
-	// element.removeChild(child);
-	// elementParent.insertBefore(child, elementNext);
-	// child = nextChild;
-	// }
-	//
-	// // reset context
-	// if (this.context.getParentNode() == element) {
-	// Node oldNext = this.context.getNextNode();
-	// if (oldNext != null) {
-	// this.context.setNextNode(oldNext);
-	// } else {
-	// if (elementNext != null) {
-	// this.context.setNextNode(elementNext);
-	// } else {
-	// this.context.setParentNode(elementParent);
-	// }
-	// }
-	// } else if (this.context.getNextNode() == element) {
-	// if (firstChild != null) {
-	// this.context.setNextNode(firstChild);
-	// } else {
-	// if (elementNext != null) {
-	// this.context.setNextNode(elementNext);
-	// } else {
-	// this.context.setParentNode(elementParent);
-	// }
-	// }
-	// }
-	//
-	// removeNode(element);
-	// return element;
-	// }
 
 	/**
 	 * removeNode method
@@ -2037,8 +1196,14 @@ public class JSONModelParser {
 			return;
 
 		IJSONNode parent = node.getParentNode();
-		if (parent == null)
-			return;
+		if (parent == null) {
+			if(node instanceof IJSONValue) {
+				parent = node.getParentOrPairNode();
+				if(parent == null) {
+					return;
+				}
+			}
+		}
 		IJSONNode next = node.getNextSibling();
 		IJSONNode prev = node.getPreviousSibling();
 
@@ -2046,13 +1211,13 @@ public class JSONModelParser {
 		IJSONNode oldParent = this.context.getParentNode();
 		if (node == oldParent) {
 			if (next != null)
-				this.context.setNextNode(next);
+				this.context.setCurrentNode(next);
 			else
 				this.context.setParentNode(parent);
 		} else {
 			IJSONNode oldNext = this.context.getNextNode();
 			if (node == oldNext) {
-				this.context.setNextNode(next);
+				this.context.setCurrentNode(next);
 			}
 		}
 
@@ -2087,7 +1252,7 @@ public class JSONModelParser {
 				else
 					newNext = newElement.getFirstChild();
 				if (newNext != null)
-					this.context.setNextNode(newNext);
+					this.context.setCurrentNode(newNext);
 				else
 					this.context.setParentNode(newElement);
 			}
@@ -2129,7 +1294,7 @@ public class JSONModelParser {
 		// // update context
 		// Node child = oldElement.getFirstChild();
 		// if (child != null) {
-		// this.context.setNextNode(child);
+		// this.context.setCurrentNode(child);
 		// } else if (oldElement.hasEndTag()) {
 		// this.context.setParentNode(oldElement);
 		// }
@@ -2361,9 +1526,9 @@ public class JSONModelParser {
 		IJSONNode oldNext = this.context.getNextNode();
 		if (element == oldParent) {
 			if (oldNext != null) {
-				this.context.setNextNode(oldNext); // reset for new parent
+				this.context.setCurrentNode(oldNext); // reset for new parent
 			} else if (newNext != null) {
-				this.context.setNextNode(newNext);
+				this.context.setCurrentNode(newNext);
 			} else {
 				this.context.setParentNode(parent);
 			}
@@ -2371,164 +1536,33 @@ public class JSONModelParser {
 			if (firstElement != null) {
 				this.context.setParentNode(firstElement);
 			} else if (first != null) {
-				this.context.setNextNode(first);
+				this.context.setCurrentNode(first);
 			} else if (startElement != null) {
 				this.context.setParentNode(startElement);
 			} else {
-				this.context.setNextNode(newNext);
+				this.context.setCurrentNode(newNext);
 			}
 		}
 
 		// removeImplicitElement(elementParent);
 	}
 
-	/**
-	 * removeStructuredDocumentRegion method
-	 * 
-	 */
 	private void removeStructuredDocumentRegion(
 			IStructuredDocumentRegion oldStructuredDocumentRegion) {
-		JSONNodeImpl next = (JSONNodeImpl) this.context.getNextNode();
-		if (next != null) {
-			short nodeType = next.getNodeType();
+		JSONNodeImpl node = (JSONNodeImpl) this.context.getCurrentNode();
+		if (node != null) {
+			short nodeType = node.getNodeType();
 			if (nodeType == IJSONNode.OBJECT_NODE
 					|| nodeType == IJSONNode.ARRAY_NODE
 					|| nodeType == IJSONNode.PAIR_NODE) {
-				IStructuredDocumentRegion flatNode = next
-						.getStructuredDocumentRegion();
-				if (flatNode == oldStructuredDocumentRegion) {
-					removeNode(next);
-					return;
-				}
-				// if (nodeType != Node.TEXT_NODE) {
-				// throw new StructuredDocumentRegionManagementException();
-				// }
-				if (flatNode == null) {
-					// this is the case for empty Text
-					// remove and continue
-					removeNode(next);
-					removeStructuredDocumentRegion(oldStructuredDocumentRegion);
-					return;
-				}
-				// TextImpl text = (TextImpl) next;
-				// boolean isShared = text
-				// .isSharingStructuredDocumentRegion(oldStructuredDocumentRegion);
-				// if (isShared) {
-				// // make sure there is next Text node sharing this
-				// TextImpl nextText = (TextImpl) this.context.findNextText();
-				// if (nextText == null
-				// || !nextText
-				// .hasStructuredDocumentRegion(oldStructuredDocumentRegion)) {
-				// isShared = false;
-				// }
-				// }
-				// oldStructuredDocumentRegion = text
-				// .removeStructuredDocumentRegion(oldStructuredDocumentRegion);
-				// if (oldStructuredDocumentRegion == null) {
-				// throw new StructuredDocumentRegionManagementException();
-				// }
-				// if (text.getStructuredDocumentRegion() == null) {
-				// // this is the case partial IStructuredDocumentRegion is
-				// // removed
-				// removeNode(text);
-				// } else {
-				// // notify the change
-				// text.notifyValueChanged();
-				// }
-				// // if shared, continue to remove IStructuredDocumentRegion
-				// // from them
-				// if (isShared)
-				// removeStructuredDocumentRegion(oldStructuredDocumentRegion);
+				removeNode(node);
+//				if(context.getCurrentNode() != null && context.getCurrentNode().equals(node))
+//					context.setCurrentNode(null);
 				return;
 			}
-
-			if (next instanceof JSONPairImpl) {
-				next = (JSONNodeImpl)((JSONPairImpl) next).getValue();
-			}
-			
-			//JSONObjectImpl element = (JSONObjectImpl) next;
-			//if (element.hasStartTag()) {
-//				IStructuredDocumentRegion flatNode = element
-//						.getStartStructuredDocumentRegion();
-//				if (flatNode != oldStructuredDocumentRegion) {
-//					throw new StructuredDocumentRegionManagementException();
-//				}
-				/*
-				 * if (element.hasEndTag() || element.hasChildNodes()) {
-				 * element.setStartStructuredDocumentRegion(null);
-				 * removeStartObject(element); } else {
-				 */
-				removeNode(next);
-				// }
-			/*} else {
-				IJSONNode child = element.getFirstChild();
-				if (child != null) {
-					this.context.setNextNode(child);
-					removeStructuredDocumentRegion(oldStructuredDocumentRegion);
-					return;
-				}
-
-				if (!element.hasEndTag()) {
-					// implicit element
-					removeNode(element);
-					removeStructuredDocumentRegion(oldStructuredDocumentRegion);
-					return;
-				}
-
-				IStructuredDocumentRegion flatNode = element
-						.getEndStructuredDocumentRegion();
-				if (flatNode != oldStructuredDocumentRegion) {
-					throw new StructuredDocumentRegionManagementException();
-				}
-				removeNode(element);
-			}*/
-			return;
-		}
-
-		IJSONNode parent = this.context.getParentNode();
-		if (parent == null ||  (parent.getNodeType() != IJSONNode.OBJECT_NODE && parent.getNodeType() != IJSONNode.PAIR_NODE)) {
-			throw new StructuredDocumentRegionManagementException();
-		}
-
-//		if (parent instanceof IJSONPair) {
-//			this.context.setNextNode(parent);
-//			removeNode(parent);
-//			return;
-//		}
-		
-		
-		JSONObjectImpl end = (JSONObjectImpl) parent;
-		if (end.hasEndTag()) {
-			IStructuredDocumentRegion flatNode = end
-					.getEndStructuredDocumentRegion();
-			if (flatNode != oldStructuredDocumentRegion) {
-				throw new StructuredDocumentRegionManagementException();
-			}
-			if (!end.hasStartTag() && !end.hasChildNodes()) {
-				this.context.setNextNode(end);
-				removeNode(end);
-			} else {
-				end.setEndStructuredDocumentRegion(null);
-				removeEndTag(end);
-			}
-			return;
-		}
-
-		next = (JSONNodeImpl) end.getNextSibling();
-		if (next != null) {
-			this.context.setNextNode(next);
-			removeStructuredDocumentRegion(oldStructuredDocumentRegion);
-			return;
-		}
-
-		parent = end.getParentNode();
-		if (parent != null) {
-			this.context.setParentNode(parent);
-			removeStructuredDocumentRegion(oldStructuredDocumentRegion);
-			return;
 		}
 	}
-
+	
 	/**
 	 * replaceRegions method
 	 * 
@@ -2565,6 +1599,13 @@ public class JSONModelParser {
 		if (regionType == JSONRegionContexts.JSON_OBJECT_OPEN) {
 			changeStartObject(flatNode, newRegions, oldRegions);
 		}
+		if(regionType == JSONRegionContexts.JSON_OBJECT_KEY) {
+			changeAttrName(flatNode, flatNode.getFirstRegion());
+		} else if (isJSONValue(regionType)) {
+			changeAttrValue(flatNode, flatNode.getFirstRegion());
+		} else if(regionType == JSONRegionContexts.JSON_UNKNOWN){
+			return;
+		}
 		// else if (regionType == JSONRegionContexts.JSON_END_TAG_OPEN) {
 		// changeEndTag(flatNode, newRegions, oldRegions);
 		// }
@@ -2588,20 +1629,38 @@ public class JSONModelParser {
 				.getLength() : 0);
 		int oldCount = (oldStructuredDocumentRegions != null ? oldStructuredDocumentRegions
 				.getLength() : 0);
+		
+		int index;
+		// Find the first document region from the list that is not a comma
+		// region
+		for (index = 0; index < oldCount-1; index++) {
+			if(!oldStructuredDocumentRegions.item(index).getType().equals(JSONRegionContexts.JSON_COMMA))
+				break;
+		}
+		
+		if(oldCount > 0 && !oldStructuredDocumentRegions.item(index).getType().equals(JSONRegionContexts.JSON_COMMA)) {
+			// Set up the model context, just ensure the region is not a comma
+			setupContext(oldStructuredDocumentRegions.item(index));
 
-		if (oldCount > 0) {
-			setupContext(oldStructuredDocumentRegions.item(0));
-			// Node startParent = this.context.getParentNode();
-
-			for (int i = 0; i < oldCount; i++) {
+			for (int i = index; i < oldCount; i++) {
 				IStructuredDocumentRegion documentRegion = oldStructuredDocumentRegions
 						.item(i);
+				// Remove the old document region
 				removeStructuredDocumentRegion(documentRegion);
 			}
 		} else {
 			if (newCount == 0)
 				return;
-			setupContext(newStructuredDocumentRegions.item(0));
+			// In case the oldStructuredDocumentRegions list is empty find the
+			// first document region from the list that is not a comma region
+			for (index = 0; index < newCount-1; index++) {
+				if(!newStructuredDocumentRegions.item(index).getType().equals(JSONRegionContexts.JSON_COMMA))
+					break;
+			}
+			
+			if(newCount > 0 && !newStructuredDocumentRegions.item(index).getType().equals(JSONRegionContexts.JSON_COMMA)) {
+				setupContext(newStructuredDocumentRegions.item(index));
+			}
 		}
 		// make sure the parent is set to deepest level
 		// when end tag has been removed
@@ -2611,12 +1670,12 @@ public class JSONModelParser {
 			for (int i = 0; i < newCount; i++) {
 				IStructuredDocumentRegion documentRegion = newStructuredDocumentRegions
 						.item(i);
+				// Add each of the new document regions
 				insertStructuredDocumentRegion(documentRegion);
 			}
 		}
 
-		// cleanupText();
-		cleanupEndTag();
+		this.context.setCurrentNode(null);
 	}
 
 	/**
@@ -2636,12 +1695,14 @@ public class JSONModelParser {
 			// at the beginning of document
 			IJSONNode child = root.getFirstChild();
 			if (child != null)
-				this.context.setNextNode(child);
+				this.context.setCurrentNode(child);
 			else
 				this.context.setParentNode(root);
 			return;
 		}
-
+		
+		// Get the JSON Node at the specified position in the document, this
+		// position is the start offset of the flatNode
 		JSONNodeImpl node = (JSONNodeImpl) root.getNodeAt(offset);
 		if (node == null) {
 			// might be at the end of document
@@ -2649,36 +1710,70 @@ public class JSONModelParser {
 			this.context.setLast();
 			return;
 		}
-
-		if (offset == node.getStartOffset()) {
-			this.context.setNextNode(node);
-			return;
+		
+		if(node.getStartStructuredDocumentRegion() != null) {
+			if(offset == node.getStartStructuredDocumentRegion().getStartOffset()) {
+				// This is a JSONPair and the flatNode might be and update of
+				// the object key value
+				this.context.setCurrentNode(node);
+				return;
+			} else if (node.getEndStructuredDocumentRegion() != null) {
+				if(offset == node.getEndStructuredDocumentRegion().getStartOffset()) {
+					// This is a JSONPair and the flatNode might be an update of
+					// the pair value
+					this.context.setCurrentNode(node);
+					return;
+				}
+			}
 		}
-
-		// if (node.getNodeType() == Node.TEXT_NODE) {
-		// TextImpl text = (TextImpl) node;
-		// Text nextText = text.splitText(startStructuredDocumentRegion);
-		// // notify the change
-		// text.notifyValueChanged();
-		// if (nextText == null)
-		// return; // error
-		// this.context.setNextNode(nextText);
-		// return;
-		// }
-
+		
+		if(node instanceof JSONPairImpl && ((JSONPairImpl) node).getValue() == null) {
+			if(isJSONValue(startStructuredDocumentRegion.getType())) {
+				// This is a JSONPair and the flatNode might be the pair value
+				this.context.setCurrentNode(node);
+				return;
+			}
+		}
+		
+		// In case Node is a JSONObject or JSONArray, look for the current node
+		// into the children
 		for (IJSONNode child = node.getFirstChild(); child != null; child = child
 				.getNextSibling()) {
-			if (offset >= ((JSONNodeImpl) child).getEndOffset())
-				continue;
-			this.context.setNextNode(child);
+			if (offset >= ((JSONNodeImpl) child).getEndOffset()) {
+				if(child instanceof JSONPairImpl && ((JSONPairImpl) child).getValue() == null) {
+					if (isJSONValue(startStructuredDocumentRegion.getType())) {
+						this.context.setCurrentNode(child);
+						return;
+					}
+				} else {
+					continue;
+				}
+			}		
+			this.context.setCurrentNode(child);
 			return;
 		}
+		
+		// The node is tha paret node of the flatNode
 		this.context.setParentNode(node);
 		this.context.setLast();
 	}
 
 	protected JSONModelContext getContext() {
 		return context;
+	}
+	
+	/**
+	 * Returns true if the region type is a JSONValue
+	 * 
+	 */
+	private boolean isJSONValue(String regionType){
+		if(regionType == JSONRegionContexts.JSON_VALUE_STRING
+				|| regionType == JSONRegionContexts.JSON_VALUE_BOOLEAN
+				|| regionType == JSONRegionContexts.JSON_VALUE_NUMBER
+				|| regionType == JSONRegionContexts.JSON_VALUE_NULL) {
+			return true;
+		}
+		return false;
 	}
 
 }

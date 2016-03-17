@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2016 Angelo ZERR and others.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ *  Alina Marin <alina@mx1.ibm.com> - fixed some stuff to improve the synch between the editor and the model.
  */
 package org.eclipse.wst.json.core.internal.document;
 
@@ -36,19 +37,8 @@ public class JSONPairImpl extends JSONStructureImpl implements IJSONPair {
 	protected void setName(String name) {
 		name = name.substring(1, name.length() - 1); // remove start/end quote
 		String oldName = this.name;
-		IJSONValue value = null;
-		int startOffset = 0;
-		if (this.ownerObject != null) {
-			value = getValue();
-			startOffset = this.ownerObject.getStartOffset();
-			this.ownerObject.notify(REMOVE, this, value, null, startOffset);
-		}
 		this.name = name;
-		if (this.ownerObject != null) {
-			this.ownerObject.notify(ADD, this, null, value, startOffset);
-		}
 		notify(CHANGE, null, oldName, name, getStartOffset());
-
 	}
 
 	@Override
@@ -156,7 +146,7 @@ public class JSONPairImpl extends JSONStructureImpl implements IJSONPair {
 		}
 		return value.getSimpleValue();
 	}
-
+	
 	@Override
 	public String getValueRegionType() {
 		if (value != null) {
@@ -169,15 +159,23 @@ public class JSONPairImpl extends JSONStructureImpl implements IJSONPair {
 	}
 
 	public void setValue(IJSONValue value) {
-		this.value = value;
 		((JSONValueImpl) value).setParentNode(ownerObject);
 		((JSONValueImpl) value).setOwnerPairNode(this);
+		this.value = value;
+	}
+	
+	public void updateValue(IJSONValue value) {
+		IJSONValue oldValue = this.value;
+		((JSONValueImpl) value).setParentNode(ownerObject);
+		((JSONValueImpl) value).setOwnerPairNode(this);
+		this.value = value;
+		notify(CHANGE, null, oldValue, this.value, getStartOffset());
 	}
 
 	@Override
 	public IStructuredDocumentRegion getEndStructuredDocumentRegion() {
 		if (value != null) {
-			return ((IJSONStructure) value).getEndStructuredDocumentRegion();
+			return ((IJSONStructure) value).getStartStructuredDocumentRegion();
 		}
 		return super.getEndStructuredDocumentRegion();
 	}

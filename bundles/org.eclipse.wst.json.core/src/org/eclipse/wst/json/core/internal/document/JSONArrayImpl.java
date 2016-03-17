@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2016 Angelo ZERR and others.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ *  Alina Marin <alina@mx1.ibm.com> - fixed some stuff to improve the synch between the editor and the model.
  */
 package org.eclipse.wst.json.core.internal.document;
 
@@ -41,25 +42,30 @@ public class JSONArrayImpl extends JSONStructureImpl implements IJSONArray {
 
 	@Override
 	public String getNodeName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "array";
 	}
 
 	@Override
 	public String getNodeValue() throws JSONException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IJSONArray add(IJSONValue value) {
-		// TODO Auto-generated method stub
+		if (value == null || value.getOwnerPairNode() != null)
+			return null;
+		JSONValueImpl attr = (JSONValueImpl) value;
+		attr.setOwnerPairNode(this.getOwnerPairNode());
+		attr.setParentNode(this);
+		this.notifyChildReplaced(value, null);
 		return this;
 	}
 
 	@Override
 	public IJSONArray remove(IJSONValue value) {
-		// TODO Auto-generated method stub
+		if (value == null || value.getOwnerPairNode() != null)
+			return null;
+		this.notifyChildReplaced(null, value);
 		return this;
 	}
 

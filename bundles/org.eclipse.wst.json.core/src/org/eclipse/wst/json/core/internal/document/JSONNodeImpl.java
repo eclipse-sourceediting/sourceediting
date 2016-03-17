@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,8 @@
  *                                        Unit Tests covered in wst.xsl XPath 2.0 tests.
  *     David Carver (STAR) - bug 296999 - Inefficient use of new String()
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.xml.core.internal.document.NodeImpl
- *                                           modified in order to process JSON Objects.     
+ *                                           modified in order to process JSON Objects.
+ *     Alina Marin <alina@mx1.ibm.com> - fixed some stuff to improve the synch between the editor and the model.
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.document;
 
@@ -27,6 +28,7 @@ import org.eclipse.json.schema.IJSONPath;
 import org.eclipse.wst.json.core.document.IJSONDocument;
 import org.eclipse.wst.json.core.document.IJSONModel;
 import org.eclipse.wst.json.core.document.IJSONNode;
+import org.eclipse.wst.json.core.document.IJSONValue;
 import org.eclipse.wst.json.core.document.JSONException;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
@@ -342,6 +344,14 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 
 			// dig more
 			parent = child;
+			// In case parent is a JSONPair ensure the value is not a container
+			// JSONNode like JSONObject or JSONArray
+			if (parent instanceof JSONPairImpl) {
+				IJSONValue value = ((JSONPairImpl) parent).getValue();
+				if (value instanceof JSONObjectImpl || value instanceof JSONArrayImpl) {
+					parent = value;
+				}
+			}
 			child = (IJSONNode) parent.getFirstChild();
 		}
 

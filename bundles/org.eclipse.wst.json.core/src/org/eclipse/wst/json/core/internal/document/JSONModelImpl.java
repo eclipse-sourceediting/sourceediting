@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 IBM Corporation and others.
+ * Copyright (c) 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.xml.core.internal.document.DOMModelImpl
  *                                           modified in order to process JSON Objects.
+ *     Alina Marin <alina@mx1.ibm.com> - fixed some stuff to improve the synch between the editor and the model.
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.document;
 
@@ -21,6 +22,7 @@ import org.eclipse.wst.json.core.document.IJSONObject;
 import org.eclipse.wst.json.core.document.IJSONPair;
 import org.eclipse.wst.json.core.document.IJSONValue;
 import org.eclipse.wst.json.core.internal.Logger;
+import org.eclipse.wst.json.core.regions.JSONRegionContexts;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -539,10 +541,37 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 		setActive(parser);
 		try {
 			/* workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=486860 */
-//			parser.replaceStructuredDocumentRegions(
-//					newStructuredDocumentRegions, oldStructuredDocumentRegions);
-			this.refresh = true;
-			handleRefresh();
+//			this.refresh = true;
+//			handleRefresh();
+			boolean reloadModel = false;
+			// Check if the insertion is between two previously existing JSON Nodes, in that case
+			// the model is reloaded completely.
+			if (newStructuredDocumentRegions != null) {
+				int newCount = newStructuredDocumentRegions.getLength();
+				for (int i = 0; i < newCount; i++) {
+					if (newStructuredDocumentRegions.item(i).getType().equals(JSONRegionContexts.JSON_COMMA)
+							&& newStructuredDocumentRegions.item(i).getNext() != null) {
+						reloadModel = true;
+						break;
+					}
+				}
+			}
+			if (!reloadModel && oldStructuredDocumentRegions != null && oldStructuredDocumentRegions.getLength() > 0) {
+				// Reload all the model when the first region that will be
+				// replaced is a JSONObject or if more than 3 regions are
+				// replaced in the model (a JSONPair is composed by 3 regions,
+				// this means more that one JSON Pair are replaced in the model)
+				if (oldStructuredDocumentRegions.item(0).getType().equals(JSONRegionContexts.JSON_OBJECT_OPEN)
+						|| oldStructuredDocumentRegions.getLength() > 3)
+					reloadModel = true;
+			}
+			if(reloadModel) {
+				this.refresh = true;
+				handleRefresh();
+			}
+			else {
+				parser.replaceStructuredDocumentRegions(newStructuredDocumentRegions, oldStructuredDocumentRegions);
+			}
 		} catch (Exception ex) {
 			if (ex.getClass().equals(
 					StructuredDocumentRegionManagementException.class)) {
@@ -602,10 +631,10 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 		JSONModelParser parser = getModelParser();
 		setActive(parser);
 		try {
+			parser.changeRegion(event, flatNode, region);
 			/* workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=486860 */
-//			parser.changeRegion(event, flatNode, region);
-			this.refresh = true;
-			handleRefresh();
+//			this.refresh = true;
+//			handleRefresh();
 		} catch (Exception ex) {
 			Logger.logException(ex);
 			this.refresh = true;
@@ -662,9 +691,10 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 		setActive(parser);
 		try {
 			/* workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=486860 */
-//			parser.replaceRegions(flatNode, newRegions, oldRegions);
-			this.refresh = true;
-			handleRefresh();
+//			this.refresh = true;
+//			handleRefresh();
+
+			parser.replaceRegions(flatNode, newRegions, oldRegions);
 		} catch (Exception ex) {
 			Logger.logException(ex);
 			this.refresh = true;
