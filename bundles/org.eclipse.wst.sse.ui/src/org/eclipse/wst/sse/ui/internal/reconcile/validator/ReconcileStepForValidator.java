@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,11 +15,13 @@ package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -54,7 +56,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	protected static final boolean DEBUG;
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		DEBUG = Boolean.valueOf(value).booleanValue();
 	}
 
 	private final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
@@ -67,75 +69,24 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	 */
 	private int fScope = -1;
 	private IValidator fValidator = null;
-	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
+	private static final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
 
+	private static final Object NO_FILE = new Object();
+	private Object fFile = null;
 
 	public ReconcileStepForValidator(IValidator v, int scope) {
 		super();
-
-		if (v == null)
+		if (v == null) {
 			throw new IllegalArgumentException("validator cannot be null"); //$NON-NLS-1$
+		}
 
 		fValidator = v;
 		fScope = scope;
 	}
 
-	/**
-	 * Converts a map of IValidatorForReconcile to List to annotations based
-	 * on those messages
-	 * 
-	 * @param messages
-	 * @return
-	 */
-	// protected IReconcileResult[] createAnnotations(List messageList) {
-	// List annotations = new ArrayList();
-	// for (int i = 0; i < messageList.size(); i++) {
-	// IMessage validationMessage = (IMessage) messageList.get(i);
-	//
-	// int offset = validationMessage.getOffset();
-	//
-	// if (offset < 0)
-	// continue;
-	//
-	// String messageText = null;
-	// try {
-	// messageText =
-	// validationMessage.getText(validationMessage.getClass().getClassLoader());
-	// }
-	// catch (Exception t) {
-	// Logger.logException("exception reporting message from validator", t);
-	// //$NON-NLS-1$
-	// continue;
-	// }
-	//			
-	// String type = getSeverity(validationMessage);
-	// // this position seems like it would be possibly be the wrong
-	// // length
-	// int length = validationMessage.getLength();
-	// if (length >= 0) {
-	// Position p = new Position(offset, length);
-	// ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(),
-	// offset), getScope());
-	// annotations.add(new TemporaryAnnotation(p, type, messageText, key));
-	// }
-	// }
-	//
-	// return (IReconcileResult[]) annotations.toArray(new
-	// IReconcileResult[annotations.size()]);
-	// }
-	/**
-	 * Converts a map of IValidatorForReconcile to List to annotations based
-	 * on those messages
-	 * 
-	 * @param messages
-	 * @return
-	 */
 	protected IReconcileResult[] createAnnotations(AnnotationInfo[] infos) {
-
-
 		List annotations = new ArrayList();
 		for (int i = 0; i < infos.length; i++) {
-
 			AnnotationInfo info = infos[i];
 
 			IMessage validationMessage = info.getMessage();
@@ -196,41 +147,36 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 
 	private IFile getFile() {
-		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = null;
-		IFile file = null;
-		if(modelManager != null) {
-			try {
-				model = modelManager.getExistingModelForRead(getDocument());
-				if (model != null) {
-					String baseLocation = model.getBaseLocation();
-					// The baseLocation may be a path on disk or relative to the
-					// workspace root. Don't translate on-disk paths to
-					// in-workspace resources.
-					IPath basePath = new Path(baseLocation);
-					if (basePath.segmentCount() > 1 && !basePath.toFile().exists()) {
-						file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+		if (fFile == null) {
+			fFile = NO_FILE;
+			ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(getDocument());
+			if (buffer != null && buffer.getLocation() != null) {
+				IPath path = buffer.getLocation();
+				if (path.segmentCount() > 1) {
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+					if (file.isAccessible()) {
+						fFile = file;
 					}
 				}
 			}
-			finally {
-				if (model != null) {
-					model.releaseFromRead();
-				}
-			}
 		}
-		return file;
+
+		if (fFile != NO_FILE)
+			return (IFile) fFile;
+		return null;
 	}
 
 	private IncrementalHelper getHelper(IProject project) {
-		if (fHelper == null)
+		if (fHelper == null) {
 			fHelper = new IncrementalHelper(getDocument(), project);
+		}
 		return fHelper;
 	}
 
 	private IncrementalReporter getReporter() {
-		if (fReporter == null)
+		if (fReporter == null) {
 			fReporter = new IncrementalReporter(getProgressMonitor());
+		}
 		return fReporter;
 	}
 
@@ -263,7 +209,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				}
 			}
 			catch (Exception ex) {
-				Logger.logException("EXEPTION IN RECONCILE STEP FOR VALIDATOR", ex); //$NON-NLS-1$
+				Logger.logException("EXCEPTION IN RECONCILE STEP FOR VALIDATOR", ex); //$NON-NLS-1$
 			}
 		}
 
@@ -275,8 +221,9 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 	public String toString() {
 		StringBuffer debugString = new StringBuffer("ValidatorStep: "); //$NON-NLS-1$
-		if (fValidator != null)
+		if (fValidator != null) {
 			debugString.append(fValidator.toString());
+		}
 		return debugString.toString();
 	}
 
@@ -302,7 +249,6 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			reporter = getReporter();
 			fValidator.validate(helper, reporter);
 
-			// results = createAnnotations(reporter.getMessages());
 			results = createAnnotations(reporter.getAnnotationInfo());
 			reporter.removeAllMessages(fValidator);
 
@@ -316,15 +262,19 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		return results;
 	}
 
-	/**
-	 * @return
-	 */
 	private String getURI() {
 		IStructuredModel model = null;
 		try {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			if (model != null && !(IModelManager.UNMANAGED_MODEL.equals(model.getBaseLocation()))) {
 				return model.getBaseLocation();
+			}
+			ITextFileBufferManager textFileBufferManager = FileBuffers.getTextFileBufferManager();
+			if (textFileBufferManager != null) {
+				ITextFileBuffer textFileBuffer = textFileBufferManager.getTextFileBuffer(getDocument());
+				if (textFileBuffer != null && textFileBuffer.getLocation() != null) {
+					return textFileBuffer.getLocation().toString();
+				}
 			}
 		}
 		finally {
@@ -385,7 +335,6 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				 * call IValidator.cleanup() during release() because this
 				 * validator might be called again on a different region
 				 */
-				// results = createAnnotations(reporter.getMessages());
 				results = createAnnotations(reporter.getAnnotationInfo());
 				reporter.removeAllMessages(fValidator);
 			}
