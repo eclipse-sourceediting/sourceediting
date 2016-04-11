@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2013 IBM Corporation and others.
+ * Copyright (c) 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,19 +42,11 @@ import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractValidationSettings
 public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage {
 	private static final String SETTINGS_SECTION_NAME = "JSONValidationSeverities";//$NON-NLS-1$
 
-	boolean fOriginalUseXIncludeButtonSelected;
-
-	boolean fOriginalUseHonourAllButtonSelected;
-
 	boolean fOriginalUseExtendedSyntaxValidation;
 
 	private Combo fIndicateNoGrammar = null;
 
 	private Combo fIndicateNoDocumentElement = null;
-
-	private Button fHonourAllSchemaLocations = null;
-
-	private Button fUseXinclude = null;
 
 	private Button fExtendedSyntaxValidation;
 
@@ -123,6 +115,7 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 				.setSelection(fOriginalUseExtendedSyntaxValidation);
 
 		fExtendedSyntaxValidation.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleSyntaxSeveritySelection(fExtendedSyntaxValidation
 						.getSelection());
@@ -260,6 +253,7 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 		}
 	}
 
+	@Override
 	protected void performDefaults() {
 		resetSeverities();
 		//performDefaultsForValidatingGroup();
@@ -275,6 +269,7 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 		JSONCorePlugin.getDefault().savePluginPreferences(); // model
 	}
 
+	@Override
 	protected void storeValues() {
 		super.storeValues();
 		IScopeContext[] contexts = createPreferenceScopes();
@@ -300,22 +295,27 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 		return page;
 	}
 
+	@Override
 	protected String getPreferenceNodeQualifier() {
 		return JSONCorePlugin.getDefault().getBundle().getSymbolicName();
 	}
 
+	@Override
 	protected String getPreferencePageID() {
 		return "org.eclipse.wst.sse.ui.preferences.json.validation";//$NON-NLS-1$
 	}
 
+	@Override
 	protected String getProjectSettingsKey() {
 		return JSONCorePreferenceNames.USE_PROJECT_SETTINGS;
 	}
 
+	@Override
 	protected String getPropertyPageID() {
 		return "org.eclipse.wst.json.ui.propertyPage.project.validation";//$NON-NLS-1$
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -354,6 +354,7 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 		return button;
 	}
 
+	@Override
 	public void dispose() {
 		storeSectionExpansionStates(getDialogSettings().addNewSection(
 				SETTINGS_SECTION_NAME));
@@ -364,13 +365,10 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 		return JSONUIPlugin.getDefault().getDialogSettings();
 	}
 
+	@Override
 	protected boolean shouldRevalidateOnSettingsChange() {
 		return fOriginalUseExtendedSyntaxValidation != fExtendedSyntaxValidation
 				.getSelection()
-				|| fOriginalUseXIncludeButtonSelected != fUseXinclude
-						.getSelection()
-				|| fOriginalUseHonourAllButtonSelected != fHonourAllSchemaLocations
-						.getSelection()
 				|| super.shouldRevalidateOnSettingsChange();
 	}
 }
