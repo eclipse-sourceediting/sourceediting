@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -184,6 +184,17 @@ public class XMLCorePreferenceNames {
 	 */
 	public static final String INDICATE_NO_GRAMMAR = "indicateNoGrammar";//$NON-NLS-1$
 
+	
+	/**
+	 * Indicates whether or not a message should be produced when validating a
+	 * file that references other files which contain errors
+	 * <p>
+	 * Value is of type <code>integer</code>.<br />
+	 * Possible values: {0, 1, 2} (none, warning, error)
+	 * </p>
+	 */
+	public static final String INDICATE_REFERENCED_FILE_CONTAINS_ERRORS = "indicateReferencedFileContainsErrors";
+	
 	/**
 	 * Indicates whether or not a message should be produced when validating a file that does not contain
 	 * a document element

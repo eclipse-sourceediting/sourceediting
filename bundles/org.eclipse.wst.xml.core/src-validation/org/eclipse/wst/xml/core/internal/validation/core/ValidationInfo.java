@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,24 @@
 package org.eclipse.wst.xml.core.internal.validation.core;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidationMessages;
 
 /**
@@ -36,6 +48,7 @@ public class ValidationInfo implements ValidationReport
   private boolean valid = true;
   private List messages = new ArrayList();
   private HashMap nestedMessages = new HashMap();
+  private IScopeContext[] sameFilePreferenceContext = null;
 
   /**
    * Constructor.
@@ -163,21 +176,36 @@ public class ValidationInfo implements ValidationReport
     //boolean doDialog = true;
     if (errorURL != null)
     {
+      boolean isSameFile = (validating_file_url != null && validating_file_url.sameFile(errorURL));
+      int validationErrorSeverity = -1;
+      if( !isSameFile) {
+    	  // Error is in referenced file. Pull from prefs. 
+          int referencedFileSeverity = Platform.getPreferencesService().getInt(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), 
+        		  XMLCorePreferenceNames.INDICATE_REFERENCED_FILE_CONTAINS_ERRORS, 0, getPreferenceScopes());
+          // ignore = -1,  warning = 1,  error = 2
+          if( referencedFileSeverity == 1 ) {
+        	  validationErrorSeverity = ValidationMessage.SEV_LOW;
+          } else if( referencedFileSeverity == 2) {
+        	  validationErrorSeverity = ValidationMessage.SEV_NORMAL;
+          } // else leave as -1 and ignore
+      } else {
+    	  validationErrorSeverity = (severity == SEV_ERROR ? ValidationMessage.SEV_NORMAL : ValidationMessage.SEV_LOW);
+      }
       successfullyAdded = true;
+      if( validationErrorSeverity == -1 ) {
+    	  // Only possible if error is in different file and user chose to ignore
+    	  return successfullyAdded;
+      }
+      
+      
       // Add to the appropriate list if nested error support is off or
       // this message is for the current file.
-      if (!WRAPPER_ERROR_SUPPORT_ENABLED || (validating_file_url != null && validating_file_url.sameFile(errorURL)))
-      {
+      if (!WRAPPER_ERROR_SUPPORT_ENABLED || isSameFile) {
+    	// effectively just isSameFile since WRAPPER_ERROR_SUPPORT_ENABLED is always true?
 
         ValidationMessage valmes = new ValidationMessage(message, line,
             column, validating_file_uri, key, messageArguments);
-        if (severity == SEV_ERROR)
-        {
-          valmes.setSeverity(ValidationMessage.SEV_NORMAL);
-        } else if (severity == SEV_WARNING)
-        {
-          valmes.setSeverity(ValidationMessage.SEV_LOW);
-        }
+        valmes.setSeverity(validationErrorSeverity);
         messages.add(valmes);
       }
       // If nested error support is enabled create a nested error.
@@ -186,15 +214,8 @@ public class ValidationInfo implements ValidationReport
         String nesteduri = errorURL.toExternalForm();
         ValidationMessage nestedmess = new ValidationMessage(message, line,
             column, nesteduri, key, messageArguments);
-        if(severity == SEV_WARNING)
-        {
-          nestedmess.setSeverity(ValidationMessage.SEV_LOW);
-        }
-        else
-        {
-          nestedmess.setSeverity(ValidationMessage.SEV_NORMAL);
-        }
-
+        nestedmess.setSeverity(validationErrorSeverity);
+        
         ValidationMessage container = (ValidationMessage) nestedMessages.get(nesteduri);
         if(container == null)
         {
@@ -212,6 +233,35 @@ public class ValidationInfo implements ValidationReport
     return successfullyAdded;
   }
   
+  private IScopeContext[] getPreferenceScopes() {
+	  if( sameFilePreferenceContext == null ) {
+		  sameFilePreferenceContext = createPreferenceScopes(validating_file_url);
+	  }
+	  return sameFilePreferenceContext;
+  }
+  
+  private IScopeContext[] createPreferenceScopes(URL url) {
+	  IProject p = null;
+	  try {
+		  URI uri = url.toURI();
+		  IFile[] matching = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
+		  if( matching != null && matching.length > 0 ) {
+			  p = matching[0].getProject();
+		  }
+	  } catch(URISyntaxException urie) {
+		  // shouldn't happen, but ignore
+	  }
+	  return createPreferenceScopesFromProject(p);
+  }
+  private IScopeContext[] createPreferenceScopesFromProject(IProject project) {
+	  if (project != null && project.isAccessible()) {
+		  final ProjectScope projectScope = new ProjectScope(project);
+		  if (projectScope.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(XMLCorePreferenceNames.USE_PROJECT_SETTINGS, false))
+			return new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+	  }
+	  return new IScopeContext[]{ InstanceScope.INSTANCE, DefaultScope.INSTANCE};
+  }
+
   
   /**
    * Add a nested message to the validation information.
