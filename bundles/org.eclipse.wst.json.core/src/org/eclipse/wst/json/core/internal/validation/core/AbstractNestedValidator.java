@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.validation.core;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,6 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.wst.json.core.internal.Logger;
 import org.eclipse.wst.json.core.validation.AnnotationMsg;
 import org.eclipse.wst.validation.AbstractValidator;
 import org.eclipse.wst.validation.ValidationResult;
@@ -92,7 +94,27 @@ public abstract class AbstractNestedValidator extends AbstractValidator
 			} else {
 				nestedcontext.setProject(file.getProject());
 			}
-			validate(file, null, result, reporter, nestedcontext);
+			InputStream inputStream = null;
+			try {
+				inputStream = file.getContents();
+				validate(file, inputStream, result, reporter, nestedcontext);
+				List messages = reporter.getMessages();
+				for (Object object : messages) {
+					if (object instanceof IMessage) {
+						IMessage message = (IMessage) object;
+						message.setLineNo(message.getLineNumber() + 1);
+					}
+				}
+			} catch (CoreException e) {
+				Logger.logException(e);
+			} finally {
+				if (inputStream != null) {
+					try {
+						inputStream.close();
+					} catch (IOException e) {
+					}
+				}
+			}
 
 			if (teardownRequired)
 				teardownValidation(nestedcontext);
