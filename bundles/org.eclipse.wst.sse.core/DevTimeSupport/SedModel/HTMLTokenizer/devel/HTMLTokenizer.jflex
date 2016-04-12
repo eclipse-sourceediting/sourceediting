@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xml.core.internal.parser;
+package org.eclipse.wst.html.core.internal.parser;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.html.core.internal.contenttype.IntStack;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -355,11 +356,11 @@ public final ITextRegion getNextToken() throws IOException {
 	return fRegionFactory.createToken(context, start, textLength, length, null, fCurrentTagName);
 }
 /* user method */
-public XMLTokenizer(){
+public HTMLTokenizer(){
 	super();
 }
 /* user method */
-public XMLTokenizer(char[] charArray){
+public HTMLTokenizer(char[] charArray){
 		this(new CharArrayReader(charArray));
 }
 /* user method */
@@ -414,9 +415,6 @@ public void reset(java.io.Reader in, int newOffset) {
 	/* the textposition at the last accepting state */
 	yy_markedPos = 0;
 
-	/* the textposition at the last state to be included in yytext */
-	//yy_pushbackPos = 0;
-
 	/* the current text position in the buffer */
 	yy_currentPos = 0;
 
@@ -462,7 +460,7 @@ public void reset(java.io.Reader in, int newOffset) {
 	 *
 	 */
 	public BlockTokenizer newInstance() {
-		XMLTokenizer newInstance = new XMLTokenizer();
+		HTMLTokenizer newInstance = new HTMLTokenizer();
 		// global tagmarkers can be shared; they have no state and 
 		// are never destroyed (e.g. 'release')
 		for(int i = 0; i < fBlockMarkers.size(); i++) {
@@ -487,7 +485,7 @@ private final String scanXMLCommentText() throws IOException {
 %eof}
 
 %public
-%class XMLTokenizer
+%class HTMLTokenizer
 %implements BlockTokenizer, DOMRegionContext
 %function primGetNextToken
 %type String
@@ -556,7 +554,7 @@ Char = [\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]
 S = [\x20\x09\x0D\x0A]+
 
 // [4] NameChar ::= Letter | Digit | '.' | '-' | '_' | ':' | CombiningChar | Extender
-NameChar = ({Letter} | {Digit} | \. | \- | _ | : | {CombiningChar} | {Extender})
+NameChar = ({Letter} | {Digit} | \. | \- | _ | : | {CombiningChar} | {Extender} | \[ | \] | \( | \) | \*)
 
 // [5] Name ::= (Letter | '_' | ':') NameChar*
 //Name = ({NameChar}{NameChar}*)
@@ -941,7 +939,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
         return XML_TAG_NAME;
 }
 /* another attribute name was found, resume looking for the equals sign */
-<ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> {Name} {
+<ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> ({Letter} | _ | : | \[ | \] | \( | \) | \*){NameChar}* {
 	if(Debug.debugTokenizer)
 		dump("attr name");//$NON-NLS-1$
         yybegin(ST_XML_EQUALS);

@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.wst.html.core.tests.parser.AttrTest;
 import org.eclipse.wst.html.core.tests.parser.AttrTest2;
+import org.eclipse.wst.html.core.tests.parser.AttrTest4;
 import org.eclipse.wst.html.core.tests.parser.AttrValueTest;
 import org.eclipse.wst.html.core.tests.parser.CDATASectionTest;
 import org.eclipse.wst.html.core.tests.parser.CDATASectionTest2;
@@ -69,6 +67,9 @@ import org.eclipse.wst.html.core.tests.parser.UpdaterTest7;
 import org.eclipse.wst.html.core.tests.parser.UpdaterTest8;
 import org.eclipse.wst.html.core.tests.parser.UpdaterTest9;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 
 
 public class ModelParserTests extends TestSuite {
@@ -117,6 +118,7 @@ public class ModelParserTests extends TestSuite {
 		addTest(new TestSuite(EmptyTextTest3.class, "EmptyTextTest3"));
 		addTest(new TestSuite(AttrTest.class, "AttrTest"));
 		addTest(new TestSuite(AttrTest2.class, "AttrTest2"));
+		addTest(new TestSuite(AttrTest4.class, "AttrTest4"));
 		addTest(new TestSuite(AttrValueTest.class, "AttrValueTest"));
 		addTest(new TestSuite(EntityTest.class, "EntityTest"));
 		addTest(new TestSuite(EntityTest2.class, "EntityTest2"));

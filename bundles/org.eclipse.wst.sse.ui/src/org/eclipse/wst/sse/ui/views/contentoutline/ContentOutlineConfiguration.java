@@ -156,7 +156,8 @@ public abstract class ContentOutlineConfiguration {
 	 * 
 	 * @param viewer
 	 *            the TreeViewer associated with this configuration
-	 * @return the ILabelProvider for items within the viewer
+	 * @return the ILabelProvider, possibly also implementing
+	 *         IStyledLabelProvider, for items within the viewer
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (fLabelProvider == null)

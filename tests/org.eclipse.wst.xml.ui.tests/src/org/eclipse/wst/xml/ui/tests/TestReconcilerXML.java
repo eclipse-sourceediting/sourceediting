@@ -170,14 +170,17 @@ public class TestReconcilerXML extends TestCase {
 			Thread.sleep(5000);
 			boolean errorFound = false;
 			Iterator iter = annoModel.getAnnotationIterator();
+			StringBuffer buffer = new StringBuffer();
 			while (iter.hasNext()) {
 				Annotation anno = (Annotation) iter.next();
 				String annoType = anno.getType();
+				buffer.append("\n");
+				buffer.append(anno.getText());
 				if ((annotationAccess.isSubtype(annoType, ANNOTATION_ERROR)) || (annotationAccess.isSubtype(annoType, ANNOTATION_WARNING))) {
 					errorFound = true;
 				}
 			}
-			assertTrue("testReconciler: Did not find expected errors in: " + doc.get(), errorFound);
+			assertTrue("testReconciler: Did not find expected errors in: " + doc.get() + buffer.toString(), errorFound);
 		}
 		catch (BadLocationException e) {
 			e.printStackTrace();
@@ -204,14 +207,17 @@ public class TestReconcilerXML extends TestCase {
 			Thread.sleep(5000);
 			boolean errorFound = false;
 			Iterator iter = annoModel.getAnnotationIterator();
+			StringBuffer buffer = new StringBuffer();
 			while (iter.hasNext()) {
 				Annotation anno = (Annotation) iter.next();
 				String annoType = anno.getType();
+				buffer.append("\n");
+				buffer.append(anno.getText());
 				if ((annotationAccess.isSubtype(annoType, ANNOTATION_ERROR)) || (annotationAccess.isSubtype(annoType, ANNOTATION_WARNING))) {
 					errorFound = true;
 				}
 			}
-			assertTrue("testReconciler: Did not find expected errors in: " + doc.get(), errorFound);
+			assertTrue("testReconciler: Did not find expected errors in: " + doc.get() + buffer, errorFound);
 		}
 		catch (BadLocationException e) {
 			e.printStackTrace();

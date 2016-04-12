@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.wst.html.core.internal.document.HTMLModelParserAdapterFactory
 import org.eclipse.wst.html.core.internal.htmlcss.HTMLStyleSelectorAdapterFactory;
 import org.eclipse.wst.html.core.internal.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.internal.modelquery.ModelQueryAdapterFactoryForHTML;
+import org.eclipse.wst.html.core.internal.parser.HTMLSourceParser;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
@@ -92,7 +93,7 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 	 * @see IModelLoader#getParser()
 	 */
 	public RegionParser getParser() {
-		XMLSourceParser parser = new XMLSourceParser();
+		HTMLSourceParser parser = new HTMLSourceParser();
 		// for the "static HTML" case, we need to initialize
 		// Blocktags here.
 		addHTMLishTag(parser, "script"); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,10 @@
 package org.eclipse.wst.html.core.internal.document;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetListAdapter;
+import org.eclipse.wst.html.core.internal.parser.NameValidator;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
+import org.eclipse.wst.xml.core.internal.document.JSPTag;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.DOMException;
@@ -54,6 +56,19 @@ public class DocumentStyleImpl extends DocumentImpl implements IDOMDocument, Doc
 		return ((IStyleSheetListAdapter) adapter).getStyleSheets();
 	}
 
+	protected boolean isValidName(String name) {
+		if (name == null || name.length() == 0)
+			return false;
+		if (NameValidator.isValid(name))
+			return true;
+		// special for invalid declaration
+		if (name.length() == 1 && name.charAt(0) == '!')
+			return true;
+		// special for JSP tag in tag name
+		if (name.startsWith(JSPTag.TAG_OPEN))
+			return true;
+		return name.indexOf('=') < 0;
+	}
 	protected void releaseStyleSheets() {
 		INodeAdapter adapter = getExistingAdapter(IStyleSheetListAdapter.class);
 		if (adapter == null)

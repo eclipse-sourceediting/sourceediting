@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,6 @@ package org.eclipse.wst.sse.ui.tests;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -55,6 +53,8 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
+
+import junit.framework.TestCase;
 
 public class TestStructuredTextEditor extends TestCase {
 	private final String PROJECT_NAME = "TestStructuredTextEditor";
@@ -253,7 +253,7 @@ public class TestStructuredTextEditor extends TestCase {
 	 * @throws Exception
 	 */
 	public void testManyNonUIThreadsUpdatingEditorDocument() throws Exception {
-		final int numberOfJobs = 50;
+		final int numberOfJobs = 30;
 		/**
 		 * 15 minute timeout before we stop waiting for the change jobs to
 		 * complete
@@ -271,8 +271,9 @@ public class TestStructuredTextEditor extends TestCase {
 		textFileBuffer.commit(new NullProgressMonitor(), true);
 
 		final int insertionPoint = document.getLength();
+		final char names[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 		// numberOfJobs Jobs, inserting 26 tags, each 4 characters long
-		int testLength = insertionPoint + numberOfJobs * 4 * 26;
+		int expectedLength = insertionPoint + numberOfJobs * 4 * names.length;
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		activePage.showView(IPageLayout.ID_PROGRESS_VIEW);
 		IEditorPart openedEditor = IDE.openEditor(activePage, file);
@@ -283,7 +284,6 @@ public class TestStructuredTextEditor extends TestCase {
 			changers[i] = new Job("Text Changer " + Integer.toString(i)) {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
-						char names[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 						for (int j = 0; j < names.length; j++) {
 							document.replace(insertionPoint + 4 * j, 0, "<" + names[j] + "/>");
 						}
@@ -308,13 +308,13 @@ public class TestStructuredTextEditor extends TestCase {
 		while (finished[0] > 0 && (runtime = System.currentTimeMillis()) - startTime < timeout) {
 			openedEditor.getSite().getShell().getDisplay().readAndDispatch();
 		}
-		assertTrue("Test timed out", runtime - startTime < timeout);
+		assertTrue("Test timed out: ("+timeout+" was allowed)", runtime - startTime < timeout);
 
 		int finalLength = document.getLength();
 		textFileBuffer.commit(new NullProgressMonitor(), true);
 		textFileBufferManager.disconnect(file.getFullPath(), LocationKind.IFILE, new NullProgressMonitor());
 		activePage.closeEditor(openedEditor, false);
-		assertEquals("Some non-UI changes did not apply", testLength, finalLength);
+		assertEquals("Some non-UI changes did not apply", expectedLength, finalLength);
 	}
 
 	/**

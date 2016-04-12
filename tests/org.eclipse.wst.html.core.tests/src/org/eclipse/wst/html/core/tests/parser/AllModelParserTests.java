@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -118,6 +118,7 @@ public class AllModelParserTests {
 		testSuite.addTestSuite(EmptyTextTest3.class);
 		testSuite.addTestSuite(AttrTest.class);
 		testSuite.addTestSuite(AttrTest2.class);
+		testSuite.addTest(new TestSuite(AttrTest4.class));
 		testSuite.addTestSuite(EntityTest.class);
 		testSuite.addTestSuite(EntityTest2.class);
 		testSuite.addTestSuite(EntityTest3.class);
