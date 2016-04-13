@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -242,8 +242,9 @@ public class NewXMLGenerator {
 	public void createNamespaceInfoList() {
 		List result = new Vector();
 		if (cmDocument != null) {
-			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/completeNamespaceInfo"); //$NON-NLS-1$
-			if (result != null) {
+			List result2 = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/completeNamespaceInfo"); //$NON-NLS-1$
+			if (result2 != null) {
+                result = result2;
 				int size = result.size();
 				for (int i = 0; i < size; i++) {
 					NamespaceInfo info = (NamespaceInfo) result.get(i);
