@@ -25,13 +25,13 @@
    
    <!-- Custom completion for dependency key/value for 
    		"dependencies" and "devDependencies" JSON node of bower.json-->
-	<extension
+	<!-- extension
 	       point="org.eclipse.wst.json.ui.completionProposalCollectors">
 	    <completionProposalCollector 
 	    	paths="$.dependencies,$.devDependencies"
 	    	targets="key,value"
 	    	class="org.eclipse.wst.json.bower.ui.internal.contentassist.BowerDependencyCompletionProposalCollector"
 	    	contentTypeId="org.eclipse.wst.json.bower.core.bowersource" />	    		   
-	</extension>
+	</extension -->
 	   
 </plugin>
