@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.css.core.format.FormatProcessorCSS
- *                                           modified in order to process JSON Objects.               
+ *                                           modified in order to process JSON Objects.
  *******************************************************************************/
 package org.eclipse.wst.json.core.format;
 
@@ -18,14 +18,16 @@ import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.json.core.document.IJSONDocument;
 import org.eclipse.wst.json.core.document.IJSONModel;
-import org.eclipse.wst.json.core.internal.format.JSONFormatUtil;
+import org.eclipse.wst.json.core.document.IJSONPair;
 import org.eclipse.wst.json.core.internal.format.IJSONSourceFormatter;
+import org.eclipse.wst.json.core.internal.format.JSONFormatUtil;
 import org.eclipse.wst.json.core.internal.format.JSONSourceFormatterFactory;
+import org.eclipse.wst.json.core.regions.JSONRegionContexts;
 import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.w3c.dom.Node;
 
@@ -40,10 +42,12 @@ public class FormatProcessorJSON extends AbstractStructuredFormatProcessor {
 	 */
 	private final int MAX_SMALL_FORMAT_SIZE = 1000;
 
+	@Override
 	protected String getFileExtension() {
 		return "json"; //$NON-NLS-1$
 	}
 
+	@Override
 	public void formatModel(IStructuredModel structuredModel, int start,
 			int length) {
 		JSONFormatUtil formatUtil = JSONFormatUtil.getInstance();
@@ -65,22 +69,28 @@ public class FormatProcessorJSON extends AbstractStructuredFormatProcessor {
 
 				IJSONDocument doc = ((IJSONModel) structuredModel)
 						.getDocument();
-				IStructuredDocumentRegion startRegion = structuredModel
-						.getStructuredDocument().getRegionAtCharacterOffset(
-								start);
-				IStructuredDocumentRegion endRegion = structuredModel
-						.getStructuredDocument().getRegionAtCharacterOffset(
-								start + length);
+				IndexedRegion startRegion = ((IJSONModel) structuredModel).getIndexedRegion(start);
+				IndexedRegion endRegion = ((IJSONModel) structuredModel).getIndexedRegion(start + length);
 				if (startRegion != null && endRegion != null) {
-					start = startRegion.getStart();
+					start = startRegion.getStartOffset();
+					int offset;
+					if (endRegion instanceof IJSONPair) {
+						offset = endRegion.getEndOffset();
+						IStructuredDocumentRegion nextRegion = structuredModel.getStructuredDocument()
+								.getRegionAtCharacterOffset(offset + 1);
+						if (nextRegion.getType() == JSONRegionContexts.JSON_COMMA) {
+							offset = nextRegion.getEndOffset();
+						}
+					} else {
+						offset = endRegion.getEndOffset();
+					}
+					int end = offset - start;
 					IJSONSourceFormatter formatter = JSONSourceFormatterFactory
 							.getInstance().getSourceFormatter(
-									(INodeNotifier) doc);
-					StringBuilder buf = formatter.format(doc, new Region(start,
-							(endRegion.getEnd() - start)));
+									doc);
+					StringBuilder buf = formatter.format(doc, new Region(start, end));
 					if (buf != null) {
-						formatUtil.replaceSource(doc.getModel(), start,
-								endRegion.getEnd() - start, buf.toString());
+						formatUtil.replaceSource(doc.getModel(), start, end, buf.toString());
 					}
 				}
 			} finally {
@@ -95,10 +105,12 @@ public class FormatProcessorJSON extends AbstractStructuredFormatProcessor {
 		return null;
 	}
 
+	@Override
 	protected IStructuredFormatter getFormatter(Node node) {
 		return null;
 	}
 
+	@Override
 	protected void refreshFormatPreferences() {
 	}
 }

@@ -1,14 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.css.core.internal.formatter.AbstractCSSSourceFormatter
- *                                           modified in order to process JSON Objects.     
+ *                                           modified in order to process JSON Objects.
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.format;
 
@@ -22,43 +22,33 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.wst.json.core.JSONCorePlugin;
 import org.eclipse.wst.json.core.cleanup.IJSONCleanupStrategy;
 import org.eclipse.wst.json.core.cleanup.JSONCleanupStrategyImpl;
+import org.eclipse.wst.json.core.document.IJSONArray;
 import org.eclipse.wst.json.core.document.IJSONDocument;
 import org.eclipse.wst.json.core.document.IJSONModel;
 import org.eclipse.wst.json.core.document.IJSONNode;
-import org.eclipse.wst.json.core.document.IJSONPair;
+import org.eclipse.wst.json.core.document.IJSONObject;
 import org.eclipse.wst.json.core.internal.util.RegionIterator;
 import org.eclipse.wst.json.core.preferences.JSONCorePreferenceNames;
 import org.eclipse.wst.json.core.regions.JSONRegionContexts;
-import org.eclipse.wst.json.core.util.JSONUtil;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.core.internal.util.Assert;
 
-/**
- * 
- */
 public abstract class AbstractJSONSourceFormatter implements
-		IJSONSourceGenerator {
+		IJSONSourceFormatter {
 
 	protected final static short GENERATE = 0;
 	protected final static short FORMAT = 1;
 	protected final static short CLEANUP = 2;
 	protected static short strategy;
 
-	/**
-	 * 
-	 */
 	AbstractJSONSourceFormatter() {
 		super();
 	}
 
-	/**
-	 * 
-	 */
 	protected void appendDelimBefore(IJSONNode node, CompoundRegion toAppend,
 			StringBuilder source) {
 		if (node == null || source == null)
@@ -75,7 +65,7 @@ public abstract class AbstractJSONSourceFormatter implements
 				source.append(getIndentString());
 		} else {
 			String type = toAppend.getType();
-			/*if (type == JSONRegionContexts.JSON_COMMENT) {
+			if (type == JSONRegionContexts.JSON_COMMENT) {
 				RegionIterator it = new RegionIterator(
 						toAppend.getDocumentRegion(), toAppend.getTextRegion());
 				it.prev();
@@ -126,7 +116,7 @@ public abstract class AbstractJSONSourceFormatter implements
 						 * also appended along with next line delimiter , we
 						 * need to remove that.
 						 */
-						/*if (source.toString().endsWith(getIndentString())) {
+						if (source.toString().endsWith(getIndentString())) {
 							source.delete((source.length() - getIndentString()
 									.length()), source.length());
 						}
@@ -134,8 +124,7 @@ public abstract class AbstractJSONSourceFormatter implements
 				} else {
 					appendSpaceBefore(node, toAppend.getText(), source);
 				}
-			} else if (type == JSONRegionContexts.JSON_DELIMITER
-					|| type == JSONRegionContexts.JSON_DECLARATION_DELIMITER) {
+			} else if (type == JSONRegionContexts.JSON_COMMA) {
 				RegionIterator it = new RegionIterator(
 						toAppend.getDocumentRegion(), toAppend.getTextRegion());
 				it.prev();
@@ -156,7 +145,7 @@ public abstract class AbstractJSONSourceFormatter implements
 						.getInt(JSONCorePreferenceNames.LINE_WIDTH) > 0
 						&& (!preferences
 								.getBoolean(JSONCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node
-								.getOwnerDocument().getNodeType() != IJSONNode.STYLEDECLARATION_NODE)) {
+										.getOwnerDocument().getNodeType() != IJSONNode.PAIR_NODE)) {
 					int length = getLastLineLength(node, source);
 					int append = 1;
 					if (length + append > preferences
@@ -167,8 +156,7 @@ public abstract class AbstractJSONSourceFormatter implements
 							source.append(getIndentString());
 					}
 				}
-			} else 
-			*/	
+			} else
 				if (type == JSONRegionContexts.JSON_OBJECT_OPEN
 						|| type == JSONRegionContexts.JSON_OBJECT_CLOSE
 					|| type == JSONRegionContexts.JSON_ARRAY_OPEN
@@ -184,9 +172,6 @@ public abstract class AbstractJSONSourceFormatter implements
 		}
 	}
 
-	/**
-	 * 
-	 */
 	protected void appendSpaceBefore(IJSONNode node, CompoundRegion toAppend,
 			StringBuilder source) {
 		if (node == null || toAppend == null || source == null)
@@ -225,7 +210,7 @@ public abstract class AbstractJSONSourceFormatter implements
 			} else {
 				appendSpaceBefore(node, toAppend.getText(), source);
 			}
-		}*/ 
+		}*/
 		if ((type == JSONRegionContexts.JSON_OBJECT_OPEN || type == JSONRegionContexts.JSON_ARRAY_OPEN)
 				&& preferences
 						.getBoolean(JSONCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE)) {
@@ -266,9 +251,6 @@ public abstract class AbstractJSONSourceFormatter implements
 			appendSpaceBefore(node, toAppend.getText(), source);
 	}
 
-	/**
-	 * 
-	 */
 	protected void appendSpaceBefore(IJSONNode node, String toAppend,
 			StringBuilder source) {
 		if (node == null || source == null)
@@ -286,7 +268,7 @@ public abstract class AbstractJSONSourceFormatter implements
 		} else if (/* ! mgr.isOnePropertyPerLine() && */preferences
 				.getInt(JSONCorePreferenceNames.LINE_WIDTH) > 0
 				&& (!preferences
-						.getBoolean(JSONCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) 
+						.getBoolean(JSONCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR)
 						/*|| node
 						.getOwnerDocument().getNodeType() != IJSONNode.STYLEDECLARATION_NODE*/)) {
 			int n = getLastLineLength(node, source);
@@ -313,9 +295,7 @@ public abstract class AbstractJSONSourceFormatter implements
 		}
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	public final StringBuilder cleanup(IJSONNode node) {
 		short oldStrategy = strategy;
 		strategy = CLEANUP;
@@ -324,9 +304,7 @@ public abstract class AbstractJSONSourceFormatter implements
 		return source;
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	public final StringBuilder cleanup(IJSONNode node, IRegion region) {
 		short oldStrategy = strategy;
 		strategy = CLEANUP;
@@ -336,9 +314,6 @@ public abstract class AbstractJSONSourceFormatter implements
 		return source;
 	}
 
-	/**
-	 * 
-	 */
 	protected String decoratedIdentRegion(CompoundRegion region,
 			IJSONCleanupStrategy stgy) {
 		if (isFormat())
@@ -374,9 +349,6 @@ public abstract class AbstractJSONSourceFormatter implements
 			return text.toLowerCase();
 	}
 
-	/**
-	 * 
-	 */
 	protected String decoratedPropNameRegion(CompoundRegion region,
 			IJSONCleanupStrategy stgy) {
 		if (isFormat())
@@ -395,7 +367,7 @@ public abstract class AbstractJSONSourceFormatter implements
 			/*if (stgy.getPropNameCase() == JSONCleanupStrategy.ASIS
 					|| region.getType() != JSONRegionContexts.JSON_DECLARATION_PROPERTY)
 				return text;
-			else*/ 
+			else*/
 				if (stgy.getPropNameCase() == IJSONCleanupStrategy.UPPER)
 				return text.toUpperCase();
 			else
@@ -406,16 +378,13 @@ public abstract class AbstractJSONSourceFormatter implements
 
 //		if (region.getType() != JSONRegionContexts.JSON_DECLARATION_PROPERTY)
 //			return text;
-		//else 
+		//else
 			if (preferences.getInt(JSONCorePreferenceNames.CASE_PROPERTY_NAME) == JSONCorePreferenceNames.UPPER)
 			return text.toUpperCase();
 		else
 			return text.toLowerCase();
 	}
 
-	/**
-	 * 
-	 */
 	protected String decoratedPropValueRegion(CompoundRegion region,
 			IJSONCleanupStrategy stgy) {
 		if (isFormat())
@@ -446,9 +415,6 @@ public abstract class AbstractJSONSourceFormatter implements
 		return text;
 	}
 
-	/**
-	 * 
-	 */
 	protected String decoratedRegion(CompoundRegion region, int type,
 			IJSONCleanupStrategy stgy) {
 		if (isFormat())
@@ -462,65 +428,10 @@ public abstract class AbstractJSONSourceFormatter implements
 			text = region.getFullText();
 		else
 			text = region.getText();
-//
-//		String regionType = region.getType();
-//		if (regionType == JSONRegionContexts.JSON_URI
-//				|| regionType == JSONRegionContexts.JSON_DECLARATION_VALUE_URI) {
-//			String uri = JSONLinkConverter.stripFunc(text);
-//
-//			boolean prefIsUpper = preferences
-//					.getInt(JSONCorePreferenceNames.CASE_IDENTIFIER) == JSONCorePreferenceNames.UPPER;
-//			boolean upper = (type == 0) ? prefIsUpper
-//					: ((type == 1) ? preferences
-//							.getInt(JSONCorePreferenceNames.CASE_PROPERTY_NAME) == JSONCorePreferenceNames.UPPER
-//							: preferences
-//									.getInt(JSONCorePreferenceNames.CASE_PROPERTY_VALUE) == JSONCorePreferenceNames.UPPER);
-//			String func = text.substring(0, 4);
-//			if (isCleanup()) {
-//				upper = ((type == 0) ? stgy.getIdentCase()
-//						: ((type == 1) ? stgy.getPropNameCase() : stgy
-//								.getPropValueCase())) == JSONCleanupStrategy.UPPER;
-//				func = ((type == 0) ? stgy.getIdentCase() : ((type == 1) ? stgy
-//						.getPropNameCase() : stgy.getPropValueCase())) == JSONCleanupStrategy.ASIS ? text
-//						.substring(0, 4) : (upper ? "URL(" : "url(");//$NON-NLS-2$//$NON-NLS-1$
-//			}
-//			if ((!isCleanup() && preferences
-//					.getBoolean(JSONCorePreferenceNames.FORMAT_QUOTE_IN_URI))
-//					|| (isCleanup() && stgy.isQuoteValues())) {
-//				String quote = preferences
-//						.getString(JSONCorePreferenceNames.FORMAT_QUOTE);
-//				quote = JSONUtil.detectQuote(uri, quote);
-//				text = func + quote + uri + quote + ")";//$NON-NLS-1$
-//			} else if (isCleanup() && !stgy.isQuoteValues()) {
-//				text = func + JSONLinkConverter.removeFunc(text) + ")";//$NON-NLS-1$
-//			} else {
-//				text = func + uri + ")";//$NON-NLS-1$
-//			}
-//		} else if (region.getType() == JSONRegionContexts.WHITE_SPACETRING
-//				&& (!isCleanup() || stgy.isQuoteValues())) {
-//			String quote = preferences
-//					.getString(JSONCorePreferenceNames.FORMAT_QUOTE);
-//			// begginning
-//			if (!text.startsWith(quote)) {
-//				if (text.startsWith("\"") || text.startsWith("\'")) //$NON-NLS-1$ //$NON-NLS-2$
-//					text = quote + text.substring(1);
-//				else
-//					text = quote + text;
-//			}
-//			// ending
-//			if (!text.endsWith(quote)) {
-//				if (text.endsWith("\"") || text.endsWith("\'")) //$NON-NLS-1$ //$NON-NLS-2$
-//					text = text.substring(0, text.length() - 1) + quote;
-//				else
-//					text = text + quote;
-//			}
-//		}
 		return text;
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	public final StringBuilder format(IJSONNode node) {
 		short oldStrategy = strategy;
 		strategy = FORMAT;
@@ -530,137 +441,52 @@ public abstract class AbstractJSONSourceFormatter implements
 		return source;
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	public final StringBuilder format(IJSONNode node, IRegion region) {
 		short oldStrategy = strategy;
 		strategy = FORMAT;
 		StringBuilder source = formatProc(node, region);
 		strategy = oldStrategy;
-
 		return source;
 	}
 
-	/**
-	 * 
-	 */
-//	public StringBuilder formatAttrChanged(IJSONNode node, IJSONAttr attr,
-//			boolean insert, AttrChangeContext context) {
-//		return new StringBuilder(insert && (attr != null) ? attr.getValue()
-//				: "");//$NON-NLS-1$
-//	}
-
-	/**
-	 * Generate or format source between children('child' and its previous
-	 * sibling) and append to string buffer
-	 */
-	abstract protected void formatBefore(IJSONNode node, IJSONNode child,
-			String toAppend, StringBuilder source, IRegion exceptFor);
-
-	/**
-	 * Generate or format source between children('child' and its previous
-	 * sibling) and append to string buffer
-	 */
-	public final StringBuilder formatBefore(IJSONNode node, IJSONNode child,
-			IRegion exceptFor) {
-		Assert.isTrue(child == null || child.getParentNode() == node);
-		StringBuilder buf = new StringBuilder();
-		formatBefore(node, child, /* (child != null) ? (child.getCssText()) : */
-				"", buf, exceptFor);//$NON-NLS-1$
-		return buf;
-	}
-
-	/**
-	 * Generate or format source between children('child' and its previous
-	 * sibling) and append to string buffer
-	 */
-	protected abstract void formatBefore(IJSONNode node, IJSONNode child,
-			IRegion region, String toAppend, StringBuilder source);
-
-	/**
-	 * 
-	 */
-	protected final void formatChildren(IJSONNode node, StringBuilder source) {
+	protected void formatChildren(IJSONNode node, StringBuilder source) {
 		IJSONNode child = node.getFirstChild();
 		IJSONNode last = null;
-		boolean first = true;
 		while (child != null) {
 			// append child
 			IJSONSourceFormatter formatter = (IJSONSourceFormatter) ((INodeNotifier) child)
 					.getAdapterFor(IJSONSourceFormatter.class);
 			if (formatter == null) {
 				formatter = JSONSourceFormatterFactory.getInstance()
-						.getSourceFormatter((INodeNotifier) child);
+						.getSourceFormatter(child);
 			}
 			StringBuilder childSource = ((AbstractJSONSourceFormatter) formatter)
 					.formatProc(child);
-			if (!first) {
-				formatBefore(node, child, new String(childSource), source, null);
-			}
 			source.append(childSource);
 			last = child;
-			// append between children
 			child = child.getNextSibling();
-			first = false;
 		}
-
-		// This handles the case where the last child doesn't align with the end
-		// of the parent node, likely malformed content
-		/*if (node instanceof IndexedRegion
-				&& last instanceof IndexedRegion
-				&& (node.getOwnerDocument().getNodeType() == IJSONNode.STYLEDECLARATION_NODE)) {
-			IndexedRegion parent = (IndexedRegion) node;
-			IndexedRegion lastChild = (IndexedRegion) last;
-			if (lastChild.getEndOffset() < parent.getEndOffset()) {
-				// Find the region at the end offset of the last child
-				IStructuredDocumentRegion region = node.getOwnerDocument()
-						.getModel().getStructuredDocument()
-						.getRegionAtCharacterOffset(lastChild.getEndOffset());
-				ITextRegionList regions = region != null ? region.getRegions()
-						: null;
-				if (regions != null) {
-					Iterator it = regions.iterator();
-					while (it.hasNext()) {
-						ITextRegion token = (ITextRegion) it.next();
-						if (token.getType() == JSONRegionContexts.JSON_UNKNOWN) {
-							// Found something that won't be consumed. Append
-							// the regions that remain in the node to the source
-							do {
-								source.append(region.getFullText());
-							} while ((region = region.getNext()) != null
-									&& region.getEndOffset() <= parent
-											.getEndOffset());
-							break;
-						}
-					}
-				}
-			}
-		}*/
 	}
 
-	/**
-	 * 
-	 */
-	protected final void formatChildren(IJSONNode node, IRegion region,
+	protected void formatChildren(IJSONNode node, IRegion region,
 			StringBuilder source) {
 		IJSONNode child = node.getFirstChild();
 		int start = region.getOffset();
 		int end = region.getOffset() + region.getLength();
-		boolean first = true;
 		while (child != null) {
-			int curEnd = ((IndexedRegion) child).getEndOffset();
+			int curEnd = child.getEndOffset();
 			StringBuilder childSource = null;
 			boolean toFinish = false;
 			if (start < curEnd) {
-				int curStart = ((IndexedRegion) child).getStartOffset();
+				int curStart = child.getStartOffset();
 				if (curStart < end) {
 					// append child
 					IJSONSourceFormatter formatter = (IJSONSourceFormatter) ((INodeNotifier) child)
 							.getAdapterFor(IJSONSourceFormatter.class);
 					if (formatter == null) {
 						formatter = JSONSourceFormatterFactory.getInstance()
-								.getSourceFormatter((INodeNotifier) child);
+								.getSourceFormatter(child);
 					}
 					if (includes(region, curStart, curEnd))
 						childSource = ((AbstractJSONSourceFormatter) formatter)
@@ -674,30 +500,9 @@ public abstract class AbstractJSONSourceFormatter implements
 				} else
 					toFinish = true;
 			}
-			// append between children
-			if (!first) {
-				curEnd = ((IndexedRegion) child).getStartOffset(); // change
-				// only
-				// start
-				if (start < curEnd) {
-					int curStart = ((IndexedRegion) child.getPreviousSibling())
-							.getEndOffset();
-					if (curStart < end) {
-						String toAppend = (childSource != null) ? new String(
-								childSource) : "";//$NON-NLS-1$
-						if (includes(region, curStart, curEnd))
-							formatBefore(node, child, toAppend, source, null);
-						else
-							formatBefore(node, child,
-									overlappedRegion(region, curStart, curEnd),
-									toAppend, source);
-					}
-				}
-			}
 			if (childSource != null) {
 				source.append(childSource);
 			}
-			first = false;
 			if (toFinish)
 				break;
 			child = child.getNextSibling();
@@ -731,7 +536,7 @@ public abstract class AbstractJSONSourceFormatter implements
 			StringBuilder source);
 
 	/**
-	 * 
+	 *
 	 * @return java.lang.StringBuilder
 	 * @param node
 	 *            org.eclipse.wst.css.core.model.interfaces.IJSONNode
@@ -745,76 +550,77 @@ public abstract class AbstractJSONSourceFormatter implements
 	}
 
 	/**
-	 * 
+	 *
 	 * @return java.lang.StringBuilder
 	 * @param node
 	 *            org.eclipse.wst.css.core.model.interfaces.IJSONNode
 	 * @param region
 	 *            org.eclipse.jface.text.IRegion
 	 */
-	protected final StringBuilder formatProc(IJSONNode node, IRegion region) {
+	protected StringBuilder formatProc(IJSONNode node, IRegion region) {
 		StringBuilder source = new StringBuilder();
-		int curStart = ((IndexedRegion) node).getStartOffset();
-		int curEnd = ((IndexedRegion) node).getEndOffset();
-		if (node.hasChildNodes()) {//getChildNodes().getLength() > 0) {
-			curEnd = ((IndexedRegion) node.getFirstChild()).getStartOffset();
+		int curStart = node.getStartOffset();
+		int curEnd = node.getEndOffset();
+		if (node.hasChildNodes()) {
+			curEnd = node.getFirstChild().getStartOffset();
 			if (overlaps(region, curStart, curEnd)) {
 				if (includes(region, curStart, curEnd))
 					formatPre(node, source);
 				else
-					formatPre(node, overlappedRegion(region, curStart, curEnd),
-							source);
+					formatPre(node, overlappedRegion(region, curStart, curEnd), source);
 			}
 			curStart = curEnd;
-			curEnd = ((IndexedRegion) node.getLastChild()).getEndOffset();
+			curEnd = node.getLastChild().getEndOffset();
 			if (overlaps(region, curStart, curEnd)) {
 				if (includes(region, curStart, curEnd))
 					formatChildren(node, source);
 				else
-					formatChildren(node,
-							overlappedRegion(region, curStart, curEnd), source);
+					formatChildren(node, overlappedRegion(region, curStart, curEnd), source);
 			}
 			curStart = curEnd;
-			curEnd = ((IndexedRegion) node).getEndOffset();
+			curEnd = node.getEndOffset();
 			if (overlaps(region, curStart, curEnd)) {
 				if (includes(region, curStart, curEnd))
 					formatPost(node, source);
 				else
-					formatPost(node,
-							overlappedRegion(region, curStart, curEnd), source);
+					formatPost(node, overlappedRegion(region, curStart, curEnd), source);
+			}
+		} else if (node instanceof IJSONArray || node instanceof IJSONObject) {
+			curStart = node.getStartOffset();
+			curEnd = node.getEndOffset();
+			if (overlaps(region, curStart, curEnd)) {
+				if (includes(region, curStart, curEnd)) {
+					formatPre(node, source);
+					formatPost(node, source);
+				} else {
+					formatPre(node, overlappedRegion(region, curStart, curEnd), source);
+					formatPost(node, overlappedRegion(region, curStart, curEnd), source);
+				}
 			}
 		} else {
-			curEnd = getChildInsertPos(node);
+			// curEnd = getChildInsertPos(node);
+			curEnd = node.getEndOffset() > 0 ? node.getEndOffset() : -1;
 			if (overlaps(region, curStart, curEnd)) {
 				if (includes(region, curStart, curEnd))
 					formatPre(node, source);
 				else
-					formatPre(node, overlappedRegion(region, curStart, curEnd),
-							source);
+					formatPre(node, overlappedRegion(region, curStart, curEnd), source);
 			}
 			curStart = curEnd;
-			curEnd = ((IndexedRegion) node).getEndOffset();
+			curEnd = node.getEndOffset();
 			if (overlaps(region, curStart, curEnd)) {
 				if (includes(region, curStart, curEnd))
 					formatPost(node, source);
 				else
-					formatPost(node,
-							overlappedRegion(region, curStart, curEnd), source);
+					formatPost(node, overlappedRegion(region, curStart, curEnd), source);
 			}
 		}
 		return source;
 	}
 
 	/**
-	 * 
-	 */
-	public int getAttrInsertPos(IJSONNode node, String attrName) {
-		return -1;
-	}
-
-	/**
 	 * Insert the method's description here.
-	 * 
+	 *
 	 * @return org.eclipse.wst.css.core.internal.cleanup.JSONCleanupStrategy
 	 * @param node
 	 *            org.eclipse.wst.css.core.model.interfaces.IJSONNode
@@ -831,29 +637,16 @@ public abstract class AbstractJSONSourceFormatter implements
 		return currentStrategy;
 	}
 
-	/**
-	 * 
-	 */
 	protected String getIndent(IJSONNode node) {
 		if (node == null)
 			return "";//$NON-NLS-1$
 		IJSONNode parent = node.getParentNode();
-		if (node instanceof IJSONPair)
-			parent = ((IJSONPair) node).getOwnerObject();
-		if (parent == null)
-			return "";//$NON-NLS-1$		
-
+		if (parent == null || parent instanceof IJSONDocument)
+			return "";//$NON-NLS-1$
 		String parentIndent = getIndent(parent);
-		/*if (parent instanceof org.w3c.dom.css.JSONRule)
-			return parentIndent + getIndentString();
-		if (node.getParentNode() instanceof IJSONStyleDeclaration)
-			return parentIndent + getIndentString();*/
-		return parentIndent;
+		return parentIndent + getIndentString();
 	}
 
-	/**
-	 * 
-	 */
 	protected int getLastLineLength(IJSONNode node, StringBuilder source) {
 		if (node == null || source == null)
 			return 0;
@@ -866,104 +659,6 @@ public abstract class AbstractJSONSourceFormatter implements
 		return str.length() - n - delim.length();
 	}
 
-	/**
-	 * 
-	 * @return int
-	 * @param node
-	 *            org.eclipse.wst.css.core.model.interfaces.IJSONNode
-	 * @param insertPos
-	 *            int
-	 */
-	public int getLengthToReformatAfter(IJSONNode node, int insertPos) {
-		if (node == null)
-			return 0;
-		IndexedRegion nnode = (IndexedRegion) node;
-		if (insertPos < 0 || !nnode.contains(insertPos))
-			return 0;
-
-		IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel()
-				.getStructuredDocument().getRegionAtCharacterOffset(insertPos);
-		if (flatNode == null)
-			return 0;
-		ITextRegion region = flatNode.getRegionAtCharacterOffset(insertPos);
-		if (region == null)
-			return 0;
-		RegionIterator it = new RegionIterator(flatNode, region);
-		boolean found = false;
-		while (it.hasNext()) {
-			region = it.next();
-			// if (region.getType() != JSONRegionContexts.WHITE_SPACE &&
-			// region.getType() != JSONRegionContexts.JSON_DELIMITER &&
-			// region.getType() !=
-			// JSONRegionContexts.JSON_DECLARATION_DELIMITER) {
-			if (region.getType() != JSONRegionContexts.WHITE_SPACE) {
-				found = true;
-				break;
-			}
-		}
-		int pos = (found ? it.getStructuredDocumentRegion().getStartOffset(
-				region) : it.getStructuredDocumentRegion().getTextEndOffset(
-				region))
-				- insertPos;
-		return (pos >= 0) ? pos : 0;
-	}
-
-	/**
-	 * 
-	 * @return int
-	 * @param node
-	 *            org.eclipse.wst.css.core.model.interfaces.IJSONNode
-	 * @param insertPos
-	 *            int
-	 */
-	public int getLengthToReformatBefore(IJSONNode node, int insertPos) {
-		if (node == null)
-			return 0;
-		IndexedRegion nnode = (IndexedRegion) node;
-		if (insertPos <= 0 || !nnode.contains(insertPos - 1))
-			return 0;
-
-		IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel()
-				.getStructuredDocument()
-				.getRegionAtCharacterOffset(insertPos - 1);
-		if (flatNode == null)
-			return 0;
-		ITextRegion region = flatNode.getRegionAtCharacterOffset(insertPos - 1);
-		if (region == null)
-			return 0;
-		RegionIterator it = new RegionIterator(flatNode, region);
-		boolean found = false;
-		while (it.hasPrev()) {
-			region = it.prev();
-			// if (region.getType() != JSONRegionContexts.WHITE_SPACE &&
-			// region.getType() != JSONRegionContexts.JSON_DELIMITER &&
-			// region.getType() !=
-			// JSONRegionContexts.JSON_DECLARATION_DELIMITER) {
-			if (region.getType() != JSONRegionContexts.WHITE_SPACE) {
-				found = true;
-				break;
-			}
-		}
-		int pos = insertPos
-				- (found ? it.getStructuredDocumentRegion().getTextEndOffset(
-						region) : it.getStructuredDocumentRegion()
-						.getStartOffset(region));
-		// flatNode = it.getStructuredDocumentRegion();
-		// if (found) {
-		// if (region.getLength() != region.getTextLength()) {
-		// pos = insertPos - flatNode.getTextEndOffset(region);
-		// } else {
-		// pos = insertPos - flatNode.getEndOffset(region);
-		// }
-		// } else {
-		// pos = insertPos - flatNode.getStartOffset(region);
-		// }
-		return (pos >= 0) ? pos : 0;
-	}
-
-	/**
-	 * 
-	 */
 	String getLineDelimiter(IJSONNode node) {
 		IJSONModel model = (node != null) ? node.getOwnerDocument().getModel()
 				: null;
@@ -974,9 +669,6 @@ public abstract class AbstractJSONSourceFormatter implements
 		// model.getStructuredDocument().getLineDelimiter()
 	}
 
-	/**
-	 * 
-	 */
 	protected CompoundRegion[] getOutsideRegions(IStructuredDocument model,
 			IRegion reg) {
 		CompoundRegion[] ret = new CompoundRegion[2];
@@ -1002,25 +694,20 @@ public abstract class AbstractJSONSourceFormatter implements
 		return ret;
 	}
 
-	/**
-	 */
-	protected IJSONSourceGenerator getParentFormatter(IJSONNode node) {
+	protected IJSONSourceFormatter getParentFormatter(IJSONNode node) {
 		IJSONNode parent = node.getParentNode();
 		if (parent != null) {
-			IJSONSourceGenerator formatter = (IJSONSourceGenerator) ((INodeNotifier) parent)
+			IJSONSourceFormatter formatter = (IJSONSourceFormatter) ((INodeNotifier) parent)
 					.getAdapterFor(IJSONSourceFormatter.class);
 			if (formatter == null) {
 				formatter = JSONSourceFormatterFactory.getInstance()
-						.getSourceFormatter((INodeNotifier) parent);
+						.getSourceFormatter(parent);
 			}
 			return formatter;
 		}
 		return null;
 	}
 
-	/**
-	 * 
-	 */
 	protected CompoundRegion[] getRegions(IStructuredDocument model,
 			IRegion reg, IRegion exceptFor, String pickupType) {
 		int start = reg.getOffset();
@@ -1049,7 +736,7 @@ public abstract class AbstractJSONSourceFormatter implements
 //						|| region.getType() == JSONRegionContexts.JSON_CDC
 //						|| region.getType() == JSONRegionContexts.JSON_CDO)
 //					list.add(new CompoundRegion(flatNode, region));
-//				else 
+//				else
 				if (!pickuped && region.getType() == pickupType) {
 					list.add(new CompoundRegion(flatNode, region));
 					pickuped = true;
@@ -1065,9 +752,6 @@ public abstract class AbstractJSONSourceFormatter implements
 		return new CompoundRegion[0];
 	}
 
-	/**
-	 * 
-	 */
 	protected CompoundRegion[] getRegionsWithoutWhiteSpaces(
 			IStructuredDocument model, IRegion reg, IJSONCleanupStrategy stgy) {
 		int start = reg.getOffset();
@@ -1104,9 +788,6 @@ public abstract class AbstractJSONSourceFormatter implements
 		return new CompoundRegion[0];
 	}
 
-	/**
-	 * 
-	 */
 	public static boolean includes(IRegion region, int start, int end) {
 		if (region == null)
 			return false;
@@ -1116,7 +797,7 @@ public abstract class AbstractJSONSourceFormatter implements
 	}
 
 	/**
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected static boolean isCleanup() {
@@ -1124,32 +805,23 @@ public abstract class AbstractJSONSourceFormatter implements
 	}
 
 	/**
-	 * 
+	 *
 	 * @return boolean
 	 */
 	protected static boolean isFormat() {
 		return strategy == FORMAT;
 	}
 
-	/**
-	 * 
-	 */
 	protected boolean isIncludesPreEnd(IJSONNode node, IRegion region) {
 		return (node.getFirstChild() != null && ((IndexedRegion) node
 				.getFirstChild()).getStartOffset() == (region.getOffset() + region
 				.getLength()));
 	}
 
-	/**
-	 * 
-	 */
 	static protected boolean needS(CompoundRegion region) {
 		return (region != null && region.getType() != JSONRegionContexts.WHITE_SPACE);
 	}
 
-	/**
-	 * 
-	 */
 	public static IRegion overlappedRegion(IRegion region, int start, int end) {
 		if (overlaps(region, start, end)) {
 			int offset = (region.getOffset() <= start) ? start : region
@@ -1162,9 +834,6 @@ public abstract class AbstractJSONSourceFormatter implements
 		return null;
 	}
 
-	/**
-	 * 
-	 */
 	public static boolean overlaps(IRegion region, int start, int end) {
 		if (region == null)
 			return false;
@@ -1173,7 +842,7 @@ public abstract class AbstractJSONSourceFormatter implements
 				&& (region.getOffset() < end);
 	}
 
-	private String getIndentString() {
+	protected String getIndentString() {
 		StringBuilder indent = new StringBuilder();
 
 		Preferences preferences = JSONCorePlugin.getDefault()
@@ -1194,4 +863,39 @@ public abstract class AbstractJSONSourceFormatter implements
 		}
 		return indent.toString();
 	}
+
+	protected void formatValue(IJSONNode node, StringBuilder source, IJSONNode value) {
+		IJSONCleanupStrategy stgy = getCleanupStrategy(node);
+		IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
+		int start = node.getStartOffset();
+		int end = node.getEndOffset();
+		CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument,
+				new FormatRegion(start, end - start), stgy);
+		if (regions.length > 2) {
+			for (int i = 2; i < regions.length; i++) {
+				source.append(decoratedRegion(regions[i], 0, stgy));
+			}
+		}
+	}
+
+	protected void formatObject(IJSONNode node, StringBuilder source, IJSONNode jsonObject) {
+		IJSONCleanupStrategy stgy = getCleanupStrategy(node);
+		IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
+		IStructuredDocumentRegion[] structuredRegions = structuredDocument
+				.getStructuredDocumentRegions(node.getStartOffset(), node.getEndOffset());
+		if (structuredRegions.length >= 2) {
+			int start = structuredRegions[1].getStartOffset();
+			int end = node.getEndOffset();
+			IJSONSourceFormatter formatter = (IJSONSourceFormatter) ((INodeNotifier) jsonObject)
+					.getAdapterFor(IJSONSourceFormatter.class);
+			if (formatter == null) {
+				formatter = JSONSourceFormatterFactory.getInstance().getSourceFormatter(jsonObject);
+			}
+			StringBuilder objectSource = formatter.format(jsonObject, new FormatRegion(start, end - start));
+			if (objectSource != null) {
+				source.append(objectSource);
+			}
+		}
+	}
+
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.css.core.internal.formatter.CompoundRegion
- *                                           modified in order to process JSON Objects.          
+ *                                           modified in order to process JSON Objects.
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.format;
 
@@ -38,7 +38,7 @@ class CompoundRegion {
 	String getText() {
 		return fDocumentRegion.getText(fTextRegion);
 	}
-	
+
 	// Bug 218993: Added to get text with whitespace for cleanup
 	// without formatting
 	String getFullText() {

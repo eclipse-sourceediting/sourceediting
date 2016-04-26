@@ -36,11 +36,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Text;
 
 /**
  * NodeImpl class
@@ -100,6 +96,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * @param offset
 	 *            int
 	 */
+	@Override
 	public boolean contains(int offset) {
 		return (offset >= getStartOffset() && offset < getEndOffset());
 	}
@@ -172,6 +169,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * 
 	 * @return int
 	 */
+	@Override
 	public int getEndOffset() {
 		IJSONNode node = this;
 		while (node != null) {
@@ -221,12 +219,14 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 		return 0;
 	}
 
+	@Override
 	public IStructuredDocumentRegion getEndStructuredDocumentRegion() {
 		return null;
 	}
 
 	/**
 	 */
+	@Override
 	public FactoryRegistry getFactoryRegistry() {
 		IJSONModel model = getModel();
 		if (model != null) {
@@ -246,6 +246,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * getFirstStructuredDocumentRegion method
 	 * 
 	 */
+	@Override
 	public IStructuredDocumentRegion getFirstStructuredDocumentRegion() {
 		return StructuredDocumentRegionUtil
 				.getStructuredDocumentRegion(this.flatNode);
@@ -267,6 +268,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 		return -1; // error
 	}
 
+	@Override
 	public IJSONNode getLastChild() {
 		return null;
 	}
@@ -275,6 +277,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * getLastStructuredDocumentRegion method
 	 * 
 	 */
+	@Override
 	public IStructuredDocumentRegion getLastStructuredDocumentRegion() {
 		return StructuredDocumentRegionUtil
 				.getStructuredDocumentRegion(this.flatNode);
@@ -289,6 +292,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	/**
 	 * the default implementation can just refer to the owning document
 	 */
+	@Override
 	public IJSONModel getModel() {
 		if (this.ownerDocument == null)
 			return null;
@@ -322,13 +326,13 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 */
 	IJSONNode getNodeAt(int offset) {
 		IJSONNode parent = this;
-		IJSONNode child = (IJSONNode) getFirstChild();
+		IJSONNode child = getFirstChild();
 		while (child != null) {
 			if (child.getEndOffset() == offset) {
 				return child;
 			}
 			if (child.getEndOffset() <= offset) {
-				child = (IJSONNode) child.getNextSibling();
+				child = child.getNextSibling();
 				continue;
 			}
 			if (child.getStartOffset() > offset) {
@@ -352,7 +356,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 					parent = value;
 				}
 			}
-			child = (IJSONNode) parent.getFirstChild();
+			child = parent.getFirstChild();
 		}
 
 		return parent;
@@ -392,6 +396,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * 
 	 * @return int
 	 */
+	@Override
 	public int getStartOffset() {
 		if (this.flatNode != null)
 			return this.flatNode.getStart();
@@ -417,6 +422,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 		return 0;
 	}
 
+	@Override
 	public IStructuredDocumentRegion getStartStructuredDocumentRegion() {
 		return getFirstStructuredDocumentRegion();
 	}
@@ -424,6 +430,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	/**
 	 * Every node (indirectly) knows its structuredDocument
 	 */
+	@Override
 	public IStructuredDocument getStructuredDocument() {
 		return getModel().getStructuredDocument();
 	}
@@ -462,6 +469,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * 
 	 * @see org.w3c.dom.Node#hasChildNodes()
 	 */
+	@Override
 	public boolean hasChildNodes() {
 		return false;
 	}
@@ -484,6 +492,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * @param refChild
 	 *            org.w3c.dom.Node
 	 */
+	@Override
 	public IJSONNode insertBefore(IJSONNode newChild, IJSONNode refChild)
 			throws JSONException {
 		// throw new JSONException(JSONException.HIERARCHY_REQUEST_ERR,
@@ -620,6 +629,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * @param oldChild
 	 *            org.w3c.dom.Node
 	 */
+	@Override
 	public IJSONNode removeChild(IJSONNode oldChild) throws JSONException {
 		throw new JSONException();
 		// throw new JSONException(JSONException.NOT_FOUND_ERR,
@@ -722,6 +732,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	 * @param nodeValue
 	 *            java.lang.String
 	 */
+	@Override
 	public void setNodeValue(String nodeValue) {
 	}
 
@@ -789,15 +800,7 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 	// }
 	// }
 
-	/**
-	 * toString method
-	 * 
-	 * @return java.lang.String
-	 */
-	public String toString() {
-		return getNodeName();
-	}
-
+	@Override
 	public int getLength() {
 		int result = -1;
 		int start = getStartOffset();

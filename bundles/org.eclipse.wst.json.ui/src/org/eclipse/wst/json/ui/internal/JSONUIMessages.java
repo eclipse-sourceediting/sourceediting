@@ -28,7 +28,7 @@ public class JSONUIMessages extends NLS {
 	// Validation
 	public static String Not_an_integer;
 	public static String Missing_integer;
-	
+
 	// Outline
 	public static String refreshoutline_0;
 	public static String SortAction_0;
@@ -51,7 +51,7 @@ public class JSONUIMessages extends NLS {
 	public static String VALUE_NUMBER_UI_;
 	public static String VALUE_STRING_UI_;
 	public static String COMMENT_UI_;
-	
+
 	// Validation preferences page
 	public static String SyntaxValidation_files;
 	public static String SyntaxValidation_files_label;
@@ -62,19 +62,19 @@ public class JSONUIMessages extends NLS {
 	public static String Missing_end_object;
 	public static String Missing_start_array;
 	public static String Missing_end_array;
-	
+
 	// Preferences
 	public static String EmptyFilePreferencePage_0;
 	public static String EncodingSettings_0;
 	public static String EncodingSettings_1;
-	
+
 	// JSONFilesPreferencePage preferences
 	public static String Creating_files;
 	public static String Encoding_desc;
 	public static String Encoding;
 	public static String JSONFilesPreferencePage_ExtensionLabel;
 	public static String JSONFilesPreferencePage_ExtensionError;
-	
+
 	// JSONContentAssistPreferencePage
 	public static String JSONContentAssistPreferencePage_Auto_Activation_UI_;
 	public static String Automatically_make_suggest_UI_;
@@ -86,11 +86,20 @@ public class JSONUIMessages extends NLS {
 	public static String Group_label_Insertion;
 	public static String Insert_single_proposals;
 	public static String JSONContentAssistPreferencePage_Cycling_UI_;
-	
+
 	// Content assist
 	public static String Content_Assist_not_availab_UI_;
-	
-	
+
+	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
+	public static String Formatting_UI_;
+	public static String Line_width__UI_;
+	public static String Indent_using_tabs_;
+	public static String Indent_using_spaces;
+	public static String Indentation_size;
+	public static String Indentation_size_tip;
+	public static String PrefsLabel_WrappingWithoutAttr;
+	public static String PrefsLabel_WrappingInsertLineBreak;
+	public static String PrefsLabel_SelectorWhitespace;
 
 
 	static {

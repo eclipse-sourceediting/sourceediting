@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.css.core.internal.formatter.UnknownRuleFormatter
- *                                           modified in order to process JSON Objects.      
+ *                                           modified in order to process JSON Objects.
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.format;
 
@@ -19,22 +19,17 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
- * 
+ *
  */
 public class UnknownRuleFormatter extends DefaultJSONSourceFormatter {
 
 	private static UnknownRuleFormatter instance;
 
-	/**
-	 * 
-	 */
 	UnknownRuleFormatter() {
 		super();
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	protected void formatPre(IJSONNode node, StringBuilder source) {
 		IJSONCleanupStrategy stgy = getCleanupStrategy(node);
 
@@ -51,16 +46,14 @@ public class UnknownRuleFormatter extends DefaultJSONSourceFormatter {
 					appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedPropValueRegion(regions[i], stgy));
 			}
-		} 
+		}
 //		else { // generate source
 //			JSONUnknownRule rule = (JSONUnknownRule) node;
 //			source.append(rule.getCssText());
 //		}
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	protected void formatPre(IJSONNode node, IRegion region, StringBuilder source) {
 		IJSONCleanupStrategy stgy = getCleanupStrategy(node);
 
@@ -78,9 +71,6 @@ public class UnknownRuleFormatter extends DefaultJSONSourceFormatter {
 			appendSpaceBefore(node, outside[1], source);
 	}
 
-	/**
-	 * 
-	 */
 	public synchronized static UnknownRuleFormatter getInstance() {
 		if (instance == null)
 			instance = new UnknownRuleFormatter();

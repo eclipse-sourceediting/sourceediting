@@ -119,6 +119,7 @@
 			id="org.eclipse.wst.sse.ui.preferences.json.contentassist">
          	<keywordReference id="org.eclipse.wst.json.ui.contentassist"/>
 		</page>
+		<!--
 		<page
 			name="%JSON_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.json.source"
@@ -126,6 +127,7 @@
 			id="org.eclipse.wst.sse.ui.preferences.json.templates">
          	<keywordReference id="org.eclipse.wst.json.ui.templates"/>
 		</page>
+		-->
 		<page
 			name="%JSON_Syntax_Coloring"
 			category="org.eclipse.wst.sse.ui.preferences.json.source"
@@ -139,13 +141,13 @@
 			class="org.eclipse.wst.json.ui.internal.catalog.JSONCatalogPreferencePage"
 			id="org.eclipse.wst.json.core.ui.JSONCatalogPreferencePage">
          	<keywordReference id="org.eclipse.wst.json.ui.jsoncatalog"/>
-		</page>-->
+		</page>
 		<page
 			name="%JSON_Typing"
 			category="org.eclipse.wst.sse.ui.preferences.json.source"
 			class="org.eclipse.wst.json.ui.internal.preferences.JSONTypingPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.json.typing">
-		</page>
+		</page>-->
     	<page
             name="%JSON_Validator.name"
             category="org.eclipse.wst.json.ui.preferences.json.json"
