@@ -693,8 +693,18 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 			/* workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=486860 */
 //			this.refresh = true;
 //			handleRefresh();
-
-			parser.replaceRegions(flatNode, newRegions, oldRegions);
+			boolean reloadModel = false;
+			// Check if the insertion is between two previously existing JSON Nodes, in that case
+			// the model is reloaded completely.
+			if (flatNode.getType().equals(JSONRegionContexts.JSON_COMMA) && flatNode.getNext() != null) {
+				reloadModel = true;
+			}
+			if(reloadModel) {
+				this.refresh = true;
+				handleRefresh();
+			} else {
+				parser.replaceRegions(flatNode, newRegions, oldRegions);
+			}
 		} catch (Exception ex) {
 			Logger.logException(ex);
 			this.refresh = true;

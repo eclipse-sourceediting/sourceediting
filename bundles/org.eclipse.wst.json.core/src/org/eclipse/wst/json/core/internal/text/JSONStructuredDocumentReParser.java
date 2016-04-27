@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.css.core.internal.text.CSSStructuredDocumentReParser
- *                                           modified in order to process JSON Objects.                           
+ *                                           modified in order to process JSON Objects.
+ *     Alina Marin <alina@mx.ibm.com> - added a workaround while we fix the JSON lexical analyzer.                         
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.text;
 
@@ -261,21 +262,20 @@ public class JSONStructuredDocumentReParser extends StructuredDocumentReParser {
 
 	private IStructuredDocumentRegion findRuleStart(
 			IStructuredDocumentRegion startRegion) {
-		IStructuredDocumentRegion region = startRegion;
 		// find '{'
-		while (region != null
-				&& (region.getType() != JSONRegionContexts.JSON_OBJECT_OPEN && region
-						.getType() != JSONRegionContexts.JSON_ARRAY_OPEN)) {
-			region = region.getPrevious();
-		}
-		// if (region == startRegion) {
-		// return null;
-		// } else
+//		while (region != null
+//				&& (region.getType() != JSONRegionContexts.JSON_OBJECT_OPEN && region
+//						.getType() != JSONRegionContexts.JSON_ARRAY_OPEN)) {
+//			region = region.getPrevious();
+//		}
+		/*
+		 * Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=491944
+		 * Look for the parent object to make JSONTokenizer get the right tokens
+		 * for the JSONSourceParser, this change doesn't affect the performance
+		 * or the regions that the JSONModelParser will take
+		 */
+		IStructuredDocumentRegion region = startRegion.getParentDocument().getFirstStructuredDocumentRegion();
 		if (region != null) { // '{' is found
-		// region = region.getPrevious();
-		// if (isLeadingDeclarationType(region.getType())) {
-		// return region;
-		// }
 			return region;
 		}
 		return null;
