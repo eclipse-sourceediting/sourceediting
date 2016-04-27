@@ -48,4 +48,17 @@
     <module>org.eclipse.wst.xsd.ui.tests</module>
     <module>org.eclipse.wst.xsd.validation.tests</module>
   </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <showEclipseLog>true</showEclipseLog>
+          <argLine>-Dorg.osgi.framework.bundle.parent=ext</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
