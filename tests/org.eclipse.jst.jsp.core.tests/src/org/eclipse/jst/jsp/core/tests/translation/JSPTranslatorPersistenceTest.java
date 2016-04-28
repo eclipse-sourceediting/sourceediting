@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +11,12 @@
 package org.eclipse.jst.jsp.core.tests.translation;
 
 import java.io.Externalizable;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -37,6 +33,11 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * 
@@ -96,6 +97,7 @@ public class JSPTranslatorPersistenceTest extends TestCase {
 			
 		assertEquals("The original translation should be the same as the restored externalized translation",
 				originalTranslation.toString(), externalizedTranslation.toString());
+		new File(outFileName).delete();
 	}
 	
 	public void testTranslationsDeepEqual() throws Exception {
@@ -117,35 +119,43 @@ public class JSPTranslatorPersistenceTest extends TestCase {
 	public void testCreateTranslationAdapter() throws Exception {
 		String outFileName = "testCreateTranslationAdapter.obj";
 
-		IStructuredModel structModel = getModelForRead("Test1.jsp");
-		
-		//verify there is not already an existing translation adapter
-		IDOMDocument domDoc = ((IDOMModel)structModel).getDocument();
-		INodeAdapter existingAdapter = domDoc.getAdapterFor(IJSPTranslation.class);
-		assertNull("There should be no existing adapter for IJSPTranslation", existingAdapter);
-		
-		//create a translator and externalize it, then load the externalized translator
-		JSPTranslator originalTranslator = writeTranslator(structModel, outFileName);
-		JSPTranslator externalizedTranslator = (JSPTranslator)readObject(outFileName);
-		
-		//create an adaptr from the loaded externalized translator and add it to the doc
-		JSPTranslationAdapter restoredAdapter = new JSPTranslationAdapter((IDOMModel)structModel, externalizedTranslator);
-		domDoc.addAdapter(restoredAdapter);
-		
-		//verify we can retrieve the adapter we just set
-		existingAdapter = domDoc.getAdapterFor(IJSPTranslation.class);
-		assertNotNull("There should now be an existing adapter for IJSPTranslation", existingAdapter);
-		assertTrue("Expected " + existingAdapter + " to be an instance of JSPTranslationAdapter",
-				existingAdapter instanceof JSPTranslationAdapter);
-		JSPTranslationAdapter retrievedAdapter = (JSPTranslationAdapter)existingAdapter;
-		JSPTranslationExtension jspTranslationExtension = retrievedAdapter.getJSPTranslation();
-		
-		/* verify that the original translation is equal to that of the
-		 * retrieved adapter created from the previously externalized translator
-		 */
-		assertEquals("The original translation should be the same as the restored externalized translation",
-				originalTranslator.getTranslation().toString(), jspTranslationExtension.getJavaText());
-		
+		IStructuredModel structModel = null;
+		try {
+			structModel = getModelForRead("Test1.jsp");
+
+			//verify there is not already an existing translation adapter
+			IDOMDocument domDoc = ((IDOMModel)structModel).getDocument();
+			INodeAdapter existingAdapter = domDoc.getAdapterFor(IJSPTranslation.class);
+			assertNull("There should be no existing adapter for IJSPTranslation", existingAdapter);
+
+			//create a translator and externalize it, then load the externalized translator
+			JSPTranslator originalTranslator = writeTranslator(structModel, outFileName);
+			JSPTranslator externalizedTranslator = (JSPTranslator)readObject(outFileName);
+
+			//create an adaptr from the loaded externalized translator and add it to the doc
+			JSPTranslationAdapter restoredAdapter = new JSPTranslationAdapter((IDOMModel)structModel, externalizedTranslator);
+			domDoc.addAdapter(restoredAdapter);
+
+			//verify we can retrieve the adapter we just set
+			existingAdapter = domDoc.getAdapterFor(IJSPTranslation.class);
+			assertNotNull("There should now be an existing adapter for IJSPTranslation", existingAdapter);
+			assertTrue("Expected " + existingAdapter + " to be an instance of JSPTranslationAdapter",
+					existingAdapter instanceof JSPTranslationAdapter);
+			JSPTranslationAdapter retrievedAdapter = (JSPTranslationAdapter)existingAdapter;
+			JSPTranslationExtension jspTranslationExtension = retrievedAdapter.getJSPTranslation();
+
+			/* verify that the original translation is equal to that of the
+			 * retrieved adapter created from the previously externalized translator
+			 */
+			assertEquals("The original translation should be the same as the restored externalized translation",
+					originalTranslator.getTranslation().toString(), jspTranslationExtension.getJavaText());
+			new File(outFileName).delete();
+		}
+		finally {
+			if (structModel != null) {
+				structModel.releaseFromRead();
+			}
+		}
 		
 	}
 	

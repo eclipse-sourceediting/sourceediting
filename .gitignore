@@ -33,6 +33,7 @@ temp.folder
 src.zip
 .fbwarnings
 javaCompiler...args
+.vagrant/
 
 # maven
 target/

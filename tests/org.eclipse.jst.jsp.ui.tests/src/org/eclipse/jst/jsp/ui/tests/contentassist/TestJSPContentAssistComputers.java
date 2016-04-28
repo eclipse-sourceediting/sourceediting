@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 IBM Corporation and others.
+ * Copyright (c) 2010, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -287,15 +287,20 @@ public class TestJSPContentAssistComputers extends TestCase {
 	 */
 	private static void verifyProposalCounts(ICompletionProposal[][] pages, int[] expectedProposalCounts) {
 		StringBuffer error = new StringBuffer();
-		for(int page = 0; page < expectedProposalCounts.length; ++page) {
-			if(expectedProposalCounts[page] > pages[page].length) {
+		for (int page = 0; page < expectedProposalCounts.length; ++page) {
+			if (expectedProposalCounts[page] > pages[page].length) {
 				error.append("\nProposal page " + page + " did not have the expected number of proposals: was " +
-						pages[page].length + " expected " + expectedProposalCounts[page]);
+					pages[page].length + " expected " + expectedProposalCounts[page]);
+				for (int proposal = 0; proposal < pages[page].length; proposal++) {
+					error.append("\n  ");
+					error.append(pages[page][proposal].getDisplayString());
+				}
+				error.append("\n");
 			}
 		}
 		
 		//if errors report them
-		if(error.length() > 0) {
+		if (error.length() > 0) {
 			Assert.fail(error.toString());
 		}
 	}
