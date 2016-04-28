@@ -11,7 +11,6 @@
 package org.eclipse.jst.jsp.core.tests.translation;
 
 import java.io.Externalizable;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -97,7 +96,6 @@ public class JSPTranslatorPersistenceTest extends TestCase {
 			
 		assertEquals("The original translation should be the same as the restored externalized translation",
 				originalTranslation.toString(), externalizedTranslation.toString());
-		new File(outFileName).delete();
 	}
 	
 	public void testTranslationsDeepEqual() throws Exception {
@@ -149,7 +147,6 @@ public class JSPTranslatorPersistenceTest extends TestCase {
 			 */
 			assertEquals("The original translation should be the same as the restored externalized translation",
 					originalTranslator.getTranslation().toString(), jspTranslationExtension.getJavaText());
-			new File(outFileName).delete();
 		}
 		finally {
 			if (structModel != null) {

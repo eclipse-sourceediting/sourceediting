@@ -12,9 +12,6 @@
 
 package org.eclipse.wst.sse.unittests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -28,9 +25,6 @@ import org.eclipse.wst.dtd.core.tests.DTDCoreTestSuite;
 import org.eclipse.wst.dtd.ui.tests.DTDUITestSuite;
 import org.eclipse.wst.html.core.tests.HTMLCoreTestSuite;
 import org.eclipse.wst.html.ui.tests.HTMLUITestSuite;
-import org.eclipse.wst.jsdt.core.tests.RunJSDTCoreTests;
-import org.eclipse.wst.jsdt.core.tests.compiler.JSDTCompilerTests;
-import org.eclipse.wst.jsdt.ui.tests.JSDTUITests;
 import org.eclipse.wst.jsdt.web.core.tests.AllWebCoreTests;
 import org.eclipse.wst.jsdt.web.ui.tests.AllWebUITests;
 import org.eclipse.wst.sse.core.tests.SSEModelTestSuite;
@@ -38,6 +32,9 @@ import org.eclipse.wst.sse.ui.tests.SSEUITestSuite;
 import org.eclipse.wst.xml.core.tests.SSEModelXMLTestSuite;
 import org.eclipse.wst.xml.ui.tests.XMLUITestSuite;
 import org.eclipse.wst.xsd.core.tests.internal.AllXSDCoreTests;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 public class MasterListTestSuite extends TestSuite {
 	private static final String CLASS = "class";
@@ -73,9 +70,9 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(HTMLUITestSuite.suite());
 		addTest(JSPUITestSuite.suite());
 		
-		addTest(RunJSDTCoreTests.suite());
-		addTest(JSDTCompilerTests.suite());
-		addTest(JSDTUITests.suite());
+//		addTest(RunJSDTCoreTests.suite());
+//		addTest(JSDTCompilerTests.suite());
+//		addTest(JSDTUITests.suite());
 		addTest(AllWebCoreTests.suite());
 		addTest(AllWebUITests.suite());
 		
