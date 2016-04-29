@@ -243,7 +243,7 @@ public class ValidationInfo implements ValidationReport
   private IScopeContext[] createPreferenceScopes(URL url) {
 	  IProject p = null;
 	  try {
-		  URI uri = url.toURI();
+		  URI uri = new URI(url.toString());
 		  IFile[] matching = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
 		  if( matching != null && matching.length > 0 ) {
 			  p = matching[0].getProject();
