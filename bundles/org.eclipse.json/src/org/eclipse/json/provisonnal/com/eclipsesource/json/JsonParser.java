@@ -13,6 +13,8 @@ package org.eclipse.json.provisonnal.com.eclipsesource.json;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 
 class JsonParser {
@@ -123,9 +125,15 @@ class JsonParser {
     if( readChar( '}' ) ) {
       return object;
     }
+    List<String> names = new ArrayList<String>();
     do {
       skipWhiteSpace();
       String name = readName();
+      if (names.contains(name)) {
+          throw error("Duplicate key '" + name + "'");
+      } else {
+          names.add(name);
+      }
       skipWhiteSpace();
       if( !readChar( ':' ) ) {
         throw expected( "':'" );
