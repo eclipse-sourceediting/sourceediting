@@ -71,7 +71,7 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 				node);
 
 		// Fix completion region in case of JSON_OBJECT_CLOSE
-		if (completionRegion.getType() == JSONRegionContexts.JSON_OBJECT_CLOSE && documentPosition > 0) {
+		if (completionRegion != null && completionRegion.getType() == JSONRegionContexts.JSON_OBJECT_CLOSE && documentPosition > 0) {
 			completionRegion = getCompletionRegion(documentPosition - 1, node);
 		}
 		

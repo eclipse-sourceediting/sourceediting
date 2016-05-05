@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -101,6 +101,7 @@ public class JSONUIMessages extends NLS {
 	public static String PrefsLabel_WrappingInsertLineBreak;
 	public static String PrefsLabel_SelectorWhitespace;
 
+	public static String Creating_files_encoding;
 
 	static {
 		// load message values from bundle file

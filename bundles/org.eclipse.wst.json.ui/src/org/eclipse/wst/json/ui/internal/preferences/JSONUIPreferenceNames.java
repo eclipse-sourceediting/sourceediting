@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,18 +8,27 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Angelo Zerr <angelo.zerr@gmail.com> - copied from org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames
- *                                           modified in order to process JSON Objects.                         
+ *                                           modified in order to process JSON Objects.
  *******************************************************************************/
 package org.eclipse.wst.json.ui.internal.preferences;
 
+
 public class JSONUIPreferenceNames {
+
+	/**
+	 * The key to store customized templates.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String TEMPLATES_KEY = "org.eclipse.wst.json.ui.custom_templates"; //$NON-NLS-1$
 
 	/**
 	 * <p>
 	 * preference key used for saving which categories should not display on the
 	 * default page
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Value is of type {@link String} consisting of
 	 * <tt>org.eclipse.wst.sse.ui.completionProposal/proposalCategory/@id</tt>s
@@ -33,7 +42,7 @@ public class JSONUIPreferenceNames {
 	 * preference key used for saving which categories should not display on
 	 * their own page
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Value is of type {@link String} consisting of
 	 * <tt>org.eclipse.wst.sse.ui.completionProposal/proposalCategory/@id</tt>s
@@ -47,7 +56,7 @@ public class JSONUIPreferenceNames {
 	 * preference key for saving the sort order of the categories when
 	 * displaying them on their own page
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Value is of type {@link String} consisting of
 	 * <tt>org.eclipse.wst.sse.ui.completionProposal/proposalCategory/@id</tt>s
@@ -61,7 +70,7 @@ public class JSONUIPreferenceNames {
 	 * preference key for saving the sort order of the categories when
 	 * displaying them on the default page
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Value is of type {@link String} consisting of
 	 * <tt>org.eclipse.wst.sse.ui.completionProposal/proposalCategory/@id</tt>s

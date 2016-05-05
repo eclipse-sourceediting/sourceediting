@@ -10,6 +10,8 @@
  */
 package org.eclipse.wst.json.ui.internal.editor;
 
+import org.eclipse.json.schema.JSONSchemaType;
+
 public class JSONEditorPluginImages {
 
 	public static final String IMG_OBJ_OBJECT = "icons/full/obj16/json-object.png";
@@ -18,7 +20,8 @@ public class JSONEditorPluginImages {
 	public static final String IMG_OBJ_VALUE_NUMBER = "icons/full/obj16/json-number.png";
 	public static final String IMG_OBJ_VALUE_NULL = "icons/full/obj16/json-null.png";
 	public static final String IMG_OBJ_VALUE_STRING = "icons/full/obj16/json-string.png";
-	
+	public static final String IMG_OBJ_TEMPLATE = "icons/full/obj16/tag-template.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_SORT = "icons/full/obj16/sort.gif";
+	
 
 }

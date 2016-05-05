@@ -13,5 +13,25 @@
  *******************************************************************************/
  -->
 <templates>
-<template name="%Templates.newobject.name" description="%Templates.newobject.desc" id="org.eclipse.wst.json.ui.internal.templates.newobject" context="json_new" enabled="true">{"${key}": ${value}}</template>
+<template name="%Templates.newobject.name" description="%Templates.newobject.desc" id="org.eclipse.wst.json.ui.internal.templates.newobject" 
+	context="json_all" enabled="true">{"${key}": "${value}"}</template>
+<template name="%Templates.newarray.name" description="%Templates.newarray.desc" id="org.eclipse.wst.json.ui.internal.templates.newarray" 
+	context="json_all" enabled="true">"${key}": [] </template>
+<template name="%Templates.newpair.name" description="%Templates.newpair.desc" id="org.eclipse.wst.json.ui.internal.templates.newpair" 
+	context="json_all" enabled="true">"${key}": "${value}"</template>
+<template name="%Templates.packagejson.name" description="%Templates.packagejson.desc" id="org.eclipse.wst.json.ui.internal.templates.packagejson" 
+	context="json_all" enabled="true">{
+  "name": "",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "${user}",
+  "license": "EPL",
+  "dependencies": {},
+  "devDependencies": {}
+}
+</template>
+	
 </templates>

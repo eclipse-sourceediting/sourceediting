@@ -119,7 +119,6 @@
 			id="org.eclipse.wst.sse.ui.preferences.json.contentassist">
          	<keywordReference id="org.eclipse.wst.json.ui.contentassist"/>
 		</page>
-		<!--
 		<page
 			name="%JSON_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.json.source"
@@ -127,7 +126,6 @@
 			id="org.eclipse.wst.sse.ui.preferences.json.templates">
          	<keywordReference id="org.eclipse.wst.json.ui.templates"/>
 		</page>
-		-->
 		<page
 			name="%JSON_Syntax_Coloring"
 			category="org.eclipse.wst.sse.ui.preferences.json.source"
@@ -283,7 +281,7 @@
 			id="json_new">
 		</contextType>
 		<include
-			file="templates/jsondefault-templates.json"
+			file="templates/jsondefault-templates.xml"
 			translations="$nl$/templates/jsondefault-templates.properties">
 		</include>
 	</extension>
