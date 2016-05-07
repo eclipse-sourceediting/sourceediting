@@ -2793,7 +2793,7 @@ public class StructuredTextEditor extends TextEditor {
 		fProjectionSupport.addSummarizableAnnotationType("org.eclipse.ui.workbench.texteditor.warning"); //$NON-NLS-1$
 		fProjectionSupport.setHoverControlCreator(new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent);
+				return new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString());
 			}
 		});
 		fProjectionSupport.install();
