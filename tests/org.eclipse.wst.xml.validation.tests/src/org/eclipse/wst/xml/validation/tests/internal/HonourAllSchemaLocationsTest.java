@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,11 @@ package org.eclipse.wst.xml.validation.tests.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidationConfiguration;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 
 
 /**
@@ -57,11 +61,34 @@ public class HonourAllSchemaLocationsTest extends BaseTestCase
     List keys = new ArrayList();
     keys.add(null);
     keys.add("cvc-complex-type.2.4.d"); //$NON-NLS-1$
-    int numErrors = 2;
+    int numErrors = 1;
     int numWarnings = 0;
 
     runTest(testFile, keys, numErrors, numWarnings);
   }
+
+	public void testCanTurnOnReferencedFileErrors() {
+		String qualifier = XMLCorePlugin.getDefault().getBundle().getSymbolicName();
+		InstanceScope.INSTANCE.getNode(qualifier).putInt(XMLCorePreferenceNames.INDICATE_REFERENCED_FILE_CONTAINS_ERRORS, ValidationMessage.SEV_NORMAL);
+		try {
+			try {
+				configuration.setFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, false);
+			} catch (Exception e) {
+				fail();
+			}
+
+			String testFile = getTestFile();
+			List keys = new ArrayList();
+			keys.add(null);
+			keys.add("cvc-complex-type.2.4.d"); //$NON-NLS-1$
+			int numErrors = 2;
+			int numWarnings = 0;
+
+			runTest(testFile, keys, numErrors, numWarnings);
+		} finally {
+			InstanceScope.INSTANCE.getNode(qualifier).remove(XMLCorePreferenceNames.INDICATE_REFERENCED_FILE_CONTAINS_ERRORS);
+		}
+	}
 
   private String getTestFile()
   {
