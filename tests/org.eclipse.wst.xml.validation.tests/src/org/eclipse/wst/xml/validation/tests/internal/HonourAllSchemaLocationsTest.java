@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidationConfiguration;
-import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 
 
 /**
@@ -61,15 +60,15 @@ public class HonourAllSchemaLocationsTest extends BaseTestCase
     List keys = new ArrayList();
     keys.add(null);
     keys.add("cvc-complex-type.2.4.d"); //$NON-NLS-1$
-    int numErrors = 1;
+    int numErrors = 2;
     int numWarnings = 0;
 
     runTest(testFile, keys, numErrors, numWarnings);
   }
 
-	public void testCanTurnOnReferencedFileErrors() {
+	public void testCanTurnOffReferencedFileErrors() {
 		String qualifier = XMLCorePlugin.getDefault().getBundle().getSymbolicName();
-		InstanceScope.INSTANCE.getNode(qualifier).putInt(XMLCorePreferenceNames.INDICATE_REFERENCED_FILE_CONTAINS_ERRORS, ValidationMessage.SEV_NORMAL);
+		InstanceScope.INSTANCE.getNode(qualifier).putInt(XMLCorePreferenceNames.INDICATE_REFERENCED_FILE_CONTAINS_ERRORS, 0);
 		try {
 			try {
 				configuration.setFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, false);
@@ -81,7 +80,7 @@ public class HonourAllSchemaLocationsTest extends BaseTestCase
 			List keys = new ArrayList();
 			keys.add(null);
 			keys.add("cvc-complex-type.2.4.d"); //$NON-NLS-1$
-			int numErrors = 2;
+			int numErrors = 1;
 			int numWarnings = 0;
 
 			runTest(testFile, keys, numErrors, numWarnings);
