@@ -38,7 +38,7 @@ public class JSONPairImpl extends JSONStructureImpl implements IJSONPair {
 		name = name.substring(1, name.length() - 1); // remove start/end quote
 		String oldName = this.name;
 		this.name = name;
-		notify(CHANGE, null, oldName, name, getStartOffset());
+		notify(CHANGE, this, oldName, name, getStartOffset());
 	}
 
 	@Override
@@ -162,6 +162,7 @@ public class JSONPairImpl extends JSONStructureImpl implements IJSONPair {
 		((JSONValueImpl) value).setParentNode(ownerObject);
 		((JSONValueImpl) value).setOwnerPairNode(this);
 		this.value = value;
+		notify(CHANGE, this, null, this.value, getStartOffset());
 	}
 	
 	public void updateValue(IJSONValue value) {
