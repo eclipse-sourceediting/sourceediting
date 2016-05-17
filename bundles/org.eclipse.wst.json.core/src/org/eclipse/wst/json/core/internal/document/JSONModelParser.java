@@ -68,6 +68,11 @@ public class JSONModelParser {
 		JSONPairImpl pair = (JSONPairImpl) node;
 		String name = flatNode.getText(region); 
 		pair.setName(name);
+		JSONObjectImpl parentObj = (JSONObjectImpl) node.getParentNode();
+		if (parentObj != null && parentObj.getParentOrPairNode() instanceof JSONPairImpl) {
+			JSONPairImpl parentPair = (JSONPairImpl) parentObj.getParentOrPairNode();
+			parentPair.setValue(parentObj);
+		}
 	}
 	
 	private void changeAttrValue(IStructuredDocumentRegion flatNode,
@@ -89,6 +94,20 @@ public class JSONModelParser {
 		} else if (isJSONValue(node.getFirstStructuredDocumentRegion().getType())) {
 			JSONValueImpl oldValue = (JSONValueImpl) node;
 			oldValue.updateValue(value);
+		} else if (node instanceof JSONArrayImpl) {
+			if (value.getValueRegionType().equals(JSONRegionContexts.JSON_VALUE_BOOLEAN)
+					|| value.getValueRegionType().equals(JSONRegionContexts.JSON_VALUE_NULL)) {
+				// If the parent is a JSONArray insert the new JSONValue at
+				// the end of the structure
+				JSONArrayImpl array = (JSONArrayImpl) node;
+				node.insertBefore(value, null);
+				array.add(value);
+				JSONPairImpl ownerPair = (JSONPairImpl) array.getParentOrPairNode();
+				if (ownerPair.getValue() == null)
+					ownerPair.setValue(array);
+				else
+					ownerPair.updateValue(array);
+			}
 		}
 	}
 
@@ -872,12 +891,21 @@ public class JSONModelParser {
 							&& structure.getLastChild().getNodeType() == IJSONNode.PAIR_NODE) {
 						((JSONPairImpl) structure.getLastChild()).setValue(value);
 					}
+					if(structure.getParentOrPairNode() instanceof JSONPairImpl) {
+						JSONPairImpl parentPair = (JSONPairImpl) structure.getParentOrPairNode();
+						parentPair.setValue(structure);
+					}
 				} else if (structure.getNodeType() == IJSONNode.ARRAY_NODE) {
 					// If the parent is a JSONArray insert the new JSONValue at
 					// the end of the structure
 					JSONArrayImpl array = (JSONArrayImpl) structure;
 					structure.insertBefore(value, null);
 					array.add(value);
+					JSONPairImpl ownerPair = (JSONPairImpl) array.getParentOrPairNode();
+					if(ownerPair.getValue() == null)
+						ownerPair.setValue(array);
+					else
+						ownerPair.updateValue(array);
 				} else {
 					insertNode(structure, value, null);
 				}
@@ -982,6 +1010,10 @@ public class JSONModelParser {
 				if (this.context.getCurrentNode() != null
 						&& this.context.getCurrentNode().getStartOffset() == pair.getStartOffset())
 					this.context.setCurrentNode(pair);
+				if(object.getParentOrPairNode() instanceof JSONPairImpl) {
+					JSONPairImpl parentPair = (JSONPairImpl) object.getParentOrPairNode();
+					parentPair.setValue(object);
+				}
 			} else if (region.getType() == JSONRegionContexts.JSON_COLON) {
 				pair.setEqualRegion(region);
 			} else if (region.getType() == JSONRegionContexts.JSON_VALUE_BOOLEAN) {

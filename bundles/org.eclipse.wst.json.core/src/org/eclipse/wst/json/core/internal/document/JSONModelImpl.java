@@ -570,11 +570,18 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 			// the model is reloaded completely.
 			if (newStructuredDocumentRegions != null) {
 				int newCount = newStructuredDocumentRegions.getLength();
-				for (int i = 0; i < newCount; i++) {
-					if (newStructuredDocumentRegions.item(i).getType().equals(JSONRegionContexts.JSON_COMMA)
-							&& newStructuredDocumentRegions.item(i).getNext() != null) {
-						reloadModel = true;
-						break;
+				for (int i = 0; i < newCount -1; i++) {
+					if (newStructuredDocumentRegions.item(i).getType().equals(JSONRegionContexts.JSON_COMMA)) {
+						IStructuredDocumentRegion nextNode = newStructuredDocumentRegions.item(i).getNext();
+						while (nextNode != null) {
+							if (nextNode.getType().equals(JSONRegionContexts.JSON_OBJECT_KEY)
+									|| nextNode.getType().equals(JSONRegionContexts.JSON_OBJECT_OPEN)
+									|| nextNode.getType().equals(JSONRegionContexts.JSON_ARRAY_OPEN)) {
+								reloadModel = true;
+								break;
+							}	
+							nextNode = nextNode.getNext();
+						}
 					}
 				}
 			}
@@ -718,8 +725,16 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 			boolean reloadModel = false;
 			// Check if the insertion is between two previously existing JSON Nodes, in that case
 			// the model is reloaded completely.
-			if (flatNode.getType().equals(JSONRegionContexts.JSON_COMMA) && flatNode.getNext() != null) {
-				reloadModel = true;
+			
+			if (flatNode.getType().equals(JSONRegionContexts.JSON_COMMA)) {
+				IStructuredDocumentRegion nextNode = flatNode.getNext();
+				while (nextNode != null) {
+					if (nextNode.getType().equals(JSONRegionContexts.JSON_OBJECT_KEY)
+							|| nextNode.getType().equals(JSONRegionContexts.JSON_OBJECT_OPEN)
+							|| nextNode.getType().equals(JSONRegionContexts.JSON_ARRAY_OPEN))
+						reloadModel = true;
+					nextNode = nextNode.getNext();
+				}
 			}
 			if(reloadModel) {
 				this.refresh = true;
