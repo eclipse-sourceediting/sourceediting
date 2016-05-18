@@ -22,12 +22,18 @@
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.document;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.json.schema.IJSONPath;
+import org.eclipse.json.jsonpath.IJSONPath;
+import org.eclipse.json.jsonpath.JSONPath;
 import org.eclipse.wst.json.core.document.IJSONDocument;
 import org.eclipse.wst.json.core.document.IJSONModel;
 import org.eclipse.wst.json.core.document.IJSONNode;
+import org.eclipse.wst.json.core.document.IJSONPair;
 import org.eclipse.wst.json.core.document.IJSONValue;
 import org.eclipse.wst.json.core.document.JSONException;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
@@ -818,6 +824,21 @@ public abstract class JSONNodeImpl extends AbstractNotifier implements
 
 	@Override
 	public IJSONPath getPath() {
-		return null;
+		List<String> names = new LinkedList<String>();
+		getNames(names, this);
+		List<String> copy = names.subList(0, names.size());
+		Collections.reverse(copy);
+		String[] segments = copy.toArray(new String[0]);
+		return new JSONPath(segments);
+	}
+
+	private void getNames(List<String> names, IJSONNode node) {
+		if (node == null) {
+			return;
+		}
+		if (node instanceof IJSONPair) {
+			names.add(((IJSONPair)node).getName());
+		}
+		getNames(names, node.getParentOrPairNode());
 	}
 }

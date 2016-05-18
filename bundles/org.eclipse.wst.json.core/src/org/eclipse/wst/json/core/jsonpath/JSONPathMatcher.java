@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -10,12 +10,13 @@
  */
 package org.eclipse.wst.json.core.jsonpath;
 
+import org.eclipse.json.jsonpath.IJSONPath;
 import org.eclipse.wst.json.core.document.IJSONNode;
 import org.eclipse.wst.json.core.document.IJSONPair;
 
 public class JSONPathMatcher {
 
-	public static boolean isMatch(IJSONNode node, JSONPath path) {
+	public static boolean isMatch(IJSONNode node, IJSONPath path) {
 		String name = null;
 		String segment = null;
 		String[] segments = path.getSegments();
@@ -33,7 +34,7 @@ public class JSONPathMatcher {
 		return true;
 	}
 
-	private static String getName(IJSONNode node) {
+	public static String getName(IJSONNode node) {
 		if (node == null) {
 			return null;
 		}

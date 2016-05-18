@@ -10,6 +10,7 @@
  */
 package org.eclipse.json.schema;
 
+import org.eclipse.json.jsonpath.IJSONPath;
 
 public interface IJSONSchemaDocument extends IJSONSchemaNode, IJSONSchemaProperty {
 

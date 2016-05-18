@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -12,11 +12,14 @@ package org.eclipse.wst.json.ui.internal.contentassist;
 
 import java.io.IOException;
 
+import org.eclipse.json.jsonpath.IJSONPath;
+import org.eclipse.json.jsonpath.JSONPath;
 import org.eclipse.json.schema.IJSONSchemaDocument;
 import org.eclipse.json.schema.IJSONSchemaProperty;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.json.core.JSONCorePlugin;
 import org.eclipse.wst.json.core.document.IJSONNode;
+import org.eclipse.wst.json.core.document.IJSONObject;
 import org.eclipse.wst.json.ui.contentassist.AbstractJSONCompletionProposalComputer;
 import org.eclipse.wst.json.ui.contentassist.ContentAssistHelper;
 import org.eclipse.wst.json.ui.contentassist.ContentAssistRequest;
@@ -80,8 +83,16 @@ public class JSONCompletionProposalComputer extends
 					matchString = matchString.substring(1);
 				}
 				// Loop for each properties of the JSON Schema.
+				IJSONPath path = node.getPath();
+				if ( !(node instanceof IJSONObject && node.getOwnerPairNode() != null) ) {
+					if (path.getSegments().length > 0) {
+						String[] segments = new String[path.getSegments().length - 1];
+						System.arraycopy(path.getSegments(), 0, segments, 0, path.getSegments().length-1);
+						path = new JSONPath(segments);
+					}
+				}
 				IJSONSchemaProperty parentProperty = schemaDocument
-						.getProperty(node.getPath());
+						.getProperty(path);
 				if (parentProperty != null) {
 					for (IJSONSchemaProperty property : parentProperty
 							.getProperties()) {

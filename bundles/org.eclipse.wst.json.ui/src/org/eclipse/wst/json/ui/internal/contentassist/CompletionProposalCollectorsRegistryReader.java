@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -20,9 +20,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.json.schema.IJSONSchemaProcessor;
+import org.eclipse.json.jsonpath.JSONPath;
 import org.eclipse.wst.json.core.document.IJSONNode;
-import org.eclipse.wst.json.core.jsonpath.JSONPath;
 import org.eclipse.wst.json.ui.contentassist.ContentAssistRequest;
 import org.eclipse.wst.json.ui.contentassist.ICompletionProposalCollector;
 import org.eclipse.wst.json.ui.contentassist.ICompletionProposalCollector.TargetType;

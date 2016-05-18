@@ -287,8 +287,18 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 				IStructuredDocumentRegion endStructuredDocumentRegion = child
 						.getEndStructuredDocumentRegion();
 				if (endStructuredDocumentRegion != null) {
-					if (endStructuredDocumentRegion.getStart() <= offset)
+					if (endStructuredDocumentRegion.getStart() <= offset) {
+						if (child instanceof IJSONPair) {
+							IJSONValue value = ((IJSONPair)child).getValue();
+							if (value instanceof IJSONObject) {
+								if (value.getStartOffset() < offset) {
+									child = value;
+									continue;
+								}
+							}
+						}
 						return child;
+					}
 				}
 				// dig more
 				parent = child;
@@ -320,8 +330,18 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 				IStructuredDocumentRegion endStructuredDocumentRegion = child
 						.getEndStructuredDocumentRegion();
 				if (endStructuredDocumentRegion != null) {
-					if (endStructuredDocumentRegion.getStart() <= offset)
+					if (endStructuredDocumentRegion.getStart() <= offset) {
+						if (child instanceof IJSONPair) {
+							IJSONValue value = ((IJSONPair)child).getValue();
+							if (value instanceof IJSONObject) {
+								if (value.getStartOffset() < offset) {
+									child = value;
+									continue;
+								}
+							}
+						}
 						return child;
+					}
 				}
 				// dig more
 				parent = child;

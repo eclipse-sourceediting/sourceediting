@@ -12,6 +12,8 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.json,
  org.eclipse.json.http,
  org.eclipse.json.impl.schema,
+ org.eclipse.json.internal,
+ org.eclipse.json.jsonpath,
  org.eclipse.json.provisonnal.com.eclipsesource.json,
  org.eclipse.json.schema
 Import-Package: org.apache.http,
