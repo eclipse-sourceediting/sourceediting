@@ -2,16 +2,25 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-	<extension point="org.eclipse.ui.editors">
-		<editor
-			name="%ESlint_Editor.name"
-			icon="$nl$/icons/full/obj16/json-16.png"
-			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
-			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
-			id="org.eclipse.json.wst.eslint.ui.ESLintEditor">
-			<contentTypeBinding
-				contentTypeId="org.eclipse.wst.json.eslint.core.eslintsource" />
-		</editor>
+	<extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            icon="$nl$/icons/full/obj16/json-16.png"
+            id="org.eclipse.wst.json.eslint.ui.ESLint"
+            label="%ESLint_File_decorator"
+            lightweight="true"
+            location="TOP_RIGHT"
+            state="true">
+         <enablement>
+         <and>
+            <objectClass
+                  name="org.eclipse.core.resources.IFile">
+            </objectClass>
+            <objectState name="contentTypeId"
+                 value="org.eclipse.wst.json.eslint.core.eslintsource"/>
+         </and>
+      </enablement>
+      </decorator>
 	</extension>
-   
+
 </plugin>

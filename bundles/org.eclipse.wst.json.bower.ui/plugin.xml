@@ -2,25 +2,46 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-	<extension point="org.eclipse.ui.editors">		
-		<editor
-			name="%Bower_Editor.name"
-			icon="$nl$/icons/full/obj16/bower-16.png"
-			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
-			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
-			id="org.eclipse.wst.json.bower.ui.BowerEditor">
-			<contentTypeBinding
-				contentTypeId="org.eclipse.wst.json.bower.core.bowersource" />
-		</editor>		
-		<editor
-			name="%Bowerrc_Editor.name"
-			icon="$nl$/icons/full/obj16/bower-16.png"
-			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
-			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
-			id="org.eclipse.wst.json.bower.ui.BowerrcEditor">
-			<contentTypeBinding
-				contentTypeId="org.eclipse.wst.json.bower.core.bowerrcsource" />
-		</editor>				
+	<extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            icon="$nl$/icons/full/obj16/bower-16.png"
+            id="org.eclipse.wst.json.bower.ui.bower"
+            label="%Bower_File_decorator"
+            lightweight="true"
+            location="TOP_RIGHT"
+            state="true">
+         <enablement>
+         <and>
+            <objectClass
+                  name="org.eclipse.core.resources.IFile">
+            </objectClass>
+            <objectState name="contentTypeId"
+                 value="org.eclipse.wst.json.bower.core.bowersource"/>
+         </and>
+      </enablement>
+      </decorator>
+	</extension>
+
+    <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            icon="$nl$/icons/full/obj16/bower-16.png"
+            id="org.eclipse.wst.json.bower.ui.bowerrc"
+            label="%Bowerrc_File_decorator"
+            lightweight="true"
+            location="TOP_RIGHT"
+            state="true">
+         <enablement>
+         <and>
+            <objectClass
+                  name="org.eclipse.core.resources.IFile">
+            </objectClass>
+            <objectState name="contentTypeId"
+                 value="org.eclipse.wst.json.bower.core.bowerrcsource"/>
+         </and>
+      </enablement>
+      </decorator>
 	</extension>
    
    <!-- Custom completion for dependency key/value for 
