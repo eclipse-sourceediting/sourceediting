@@ -386,6 +386,8 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
+		getTreeViewer().setUseHashlookup(true);
+		
 		ColumnViewerToolTipSupport.enableFor(getTreeViewer());
 
 		IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
