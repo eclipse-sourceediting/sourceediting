@@ -10,9 +10,26 @@
  */
 package org.eclipse.json.schema;
 
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.json.provisonnal.com.eclipsesource.json.JsonObject;
+
 public interface IJSONSchemaNode {
 
 	IJSONSchemaNode getParent();
 
-	IJSONSchemaProperty[] getProperties();
+	IJSONSchemaProperty[] getPropertyValues();
+
+	List<String> getReferences();
+
+	Map<String, IJSONSchemaProperty> getProperties();
+
+	String getReference();
+
+	void setJsonObject(JsonObject jsonObject);
+
+	JsonObject getJsonObject();
+
+	void addProperty(IJSONSchemaProperty property);
 }

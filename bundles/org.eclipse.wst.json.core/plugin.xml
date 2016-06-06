@@ -107,7 +107,7 @@
          			description="NPM configuration file"
          			fileMatch="package.json"
          			url="http://json.schemastore.org/package"
-         			uri="schemastore/package" />          			         			
+					uri="schemastore/package-schema.json" />
          </schemaCatalogContribution>
    </extension>
    

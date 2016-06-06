@@ -20,6 +20,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.json.core.JSONCorePlugin;
 import org.eclipse.wst.json.core.document.IJSONNode;
 import org.eclipse.wst.json.core.document.IJSONObject;
+import org.eclipse.wst.json.core.document.IJSONPair;
+import org.eclipse.wst.json.core.regions.JSONRegionContexts;
 import org.eclipse.wst.json.ui.contentassist.AbstractJSONCompletionProposalComputer;
 import org.eclipse.wst.json.ui.contentassist.ContentAssistHelper;
 import org.eclipse.wst.json.ui.contentassist.ContentAssistRequest;
@@ -95,7 +97,7 @@ public class JSONCompletionProposalComputer extends
 						.getProperty(path);
 				if (parentProperty != null) {
 					for (IJSONSchemaProperty property : parentProperty
-							.getProperties()) {
+							.getPropertyValues()) {
 						boolean showProperty = beginsWith(property.getName(),
 								matchString.trim());
 						if (showProperty) {
@@ -106,13 +108,14 @@ public class JSONCompletionProposalComputer extends
 							Image icon = JSONEditorPluginImageHelper
 									.getInstance().getImage(
 											property.getFirstType());
+							String displayString = property.getName();
 							JSONKeyCompletionProposal proposal = new JSONKeyCompletionProposal(
 									replacementString,
 									contentAssistRequest
 											.getReplacementBeginPosition(),
 									contentAssistRequest.getReplacementLength(),
 									replacementString.length() - 2, icon,
-									property.getName(), null,
+									displayString, null,
 									additionalProposalInfo,
 									JSONRelevanceConstants.R_OBJECT_KEY);
 							contentAssistRequest.addProposal(proposal);
