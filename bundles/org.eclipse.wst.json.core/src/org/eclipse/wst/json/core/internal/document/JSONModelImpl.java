@@ -15,6 +15,7 @@
 package org.eclipse.wst.json.core.internal.document;
 
 import org.eclipse.wst.json.core.contenttype.ContentTypeIdForJSON;
+import org.eclipse.wst.json.core.document.IJSONArray;
 import org.eclipse.wst.json.core.document.IJSONDocument;
 import org.eclipse.wst.json.core.document.IJSONModel;
 import org.eclipse.wst.json.core.document.IJSONNode;
@@ -290,7 +291,7 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 					if (endStructuredDocumentRegion.getStart() <= offset) {
 						if (child instanceof IJSONPair) {
 							IJSONValue value = ((IJSONPair)child).getValue();
-							if (value instanceof IJSONObject) {
+							if (value instanceof IJSONObject || value instanceof IJSONArray) {
 								if (value.getStartOffset() < offset) {
 									child = value;
 									continue;
@@ -333,7 +334,7 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 					if (endStructuredDocumentRegion.getStart() <= offset) {
 						if (child instanceof IJSONPair) {
 							IJSONValue value = ((IJSONPair)child).getValue();
-							if (value instanceof IJSONObject) {
+							if (value instanceof IJSONObject || value instanceof IJSONArray) {
 								if (value.getStartOffset() < offset) {
 									child = value;
 									continue;

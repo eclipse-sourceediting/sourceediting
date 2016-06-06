@@ -148,6 +148,7 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 				if (treeNode.getNodeType() == IJSONNode.OBJECT_NODE) {
 					if (regionType == JSONRegionContexts.JSON_OBJECT_OPEN
 							|| regionType == JSONRegionContexts.JSON_OBJECT_CLOSE
+							|| regionType == JSONRegionContexts.JSON_OBJECT_KEY
 							|| regionType == JSONRegionContexts.JSON_COMMA) {
 						contentAssistRequest = computeObjectKeyProposals(matchString,
 								completionRegion, treeNode, xmlnode, context);
@@ -155,6 +156,9 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 				} else if ((treeNode.getNodeType() == IJSONNode.PAIR_NODE)) {
 					if (regionType == JSONRegionContexts.JSON_OBJECT_KEY
 							|| regionType == JSONRegionContexts.JSON_OBJECT_OPEN
+							|| regionType == JSONRegionContexts.JSON_OBJECT_CLOSE
+							|| regionType == JSONRegionContexts.JSON_ARRAY_OPEN
+							|| regionType == JSONRegionContexts.JSON_ARRAY_CLOSE
 							|| regionType == JSONRegionContexts.JSON_COMMA) {
 						contentAssistRequest = computeObjectKeyProposals(matchString,
 								completionRegion, treeNode, xmlnode, context);

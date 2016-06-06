@@ -12,6 +12,11 @@ package org.eclipse.json.impl.schema;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.json.IValidationReporter;
 import org.eclipse.json.jsonpath.IJSONPath;
@@ -21,11 +26,75 @@ import org.eclipse.json.schema.IJSONSchemaDocument;
 import org.eclipse.json.schema.IJSONSchemaProperty;
 import org.eclipse.json.schema.JSONSchemaType;
 
+@SuppressWarnings("serial")
 public class JSONSchemaDocument extends JSONSchemaNode implements
 		IJSONSchemaDocument {
+	private static final String DEFINITIONS = "#/definitions/"; //$NON-NLS-1$
+	private final Map<String, IJSONSchemaProperty> definitions;
 
 	public JSONSchemaDocument(Reader reader) throws IOException {
 		super(JsonObject.readFrom(reader), null);
+		this.definitions = new HashMap<String, IJSONSchemaProperty>();
+		addDefinitions(getJsonObject());
+		resolveReferences();
+	}
+
+	private void resolveReferences() {
+		resolveReference(this);
+		for (IJSONSchemaProperty definition : definitions.values()) {
+			resolveReference(definition);
+		}
+		Collection<IJSONSchemaProperty> props = getProperties().values();
+		for (IJSONSchemaProperty property:props) {
+			resolveReference(property);
+		}
+	}
+
+	private void resolveReference(IJSONSchemaProperty node) {
+		String reference = node.getReference();
+		if (reference != null) {
+			String ref = reference.substring(DEFINITIONS.length());
+			IJSONSchemaProperty property = definitions.get(ref);
+			if (property != null) {
+				for (IJSONSchemaProperty p : property.getProperties().values()) {
+					node.addProperty(p);
+				}
+				Collection<IJSONSchemaProperty> props = property.getProperties().values();
+				for (IJSONSchemaProperty p : props) {
+					resolveReference(p);
+				}
+			}
+		}
+		Collection<IJSONSchemaProperty> props = node.getProperties().values();
+		for (IJSONSchemaProperty p:props) {
+			resolveReference(p);
+		}
+		List<String> references = node.getReferences();
+		for (String ref:references) {
+			String r = ref.substring(DEFINITIONS.length());
+			IJSONSchemaProperty property = definitions.get(r);
+			if (property != null) {
+				for (IJSONSchemaProperty p:property.getProperties().values()) {
+					node.addProperty(p);
+				}
+			}
+		}
+	}
+
+	private void addDefinitions(JsonObject json) {
+		Member member = null;
+		JsonObject definitions = (JsonObject) json.get("definitions");
+		if (definitions != null) {
+			Iterator<Member> members = definitions.iterator();
+			while (members.hasNext()) {
+				member = members.next();
+				addDefinition(new JSONSchemaProperty(member.getName(),
+						(JsonObject) member.getValue(), this));
+			}
+		}
+	}
+	private void addDefinition(IJSONSchemaProperty property) {
+		definitions.put(property.getName(), property);
 	}
 
 	@Override
@@ -38,11 +107,9 @@ public class JSONSchemaDocument extends JSONSchemaNode implements
 		if (segment == null) {
 			return null;
 		}
-		IJSONSchemaProperty[] props = getProperties();
-		for(IJSONSchemaProperty property:props) {
-			if (segment.equals(property.getName())) {
-				return getProperty(property, segments, 1);
-			}
+		IJSONSchemaProperty property = getProperties().get(segment);
+		if (property != null) {
+			return getProperty(property, segments, 1);
 		}
 		return null;
 	}
@@ -52,7 +119,7 @@ public class JSONSchemaDocument extends JSONSchemaNode implements
 			return node;
 		}
 		String segment = segments[level];
-		IJSONSchemaProperty[] props = node.getProperties();
+		Collection<IJSONSchemaProperty> props = node.getProperties().values();
 		for (IJSONSchemaProperty property : props) {
 			if (segment.equals(property.getName())) {
 				return getProperty(property, segments, level + 1);
