@@ -20,7 +20,7 @@
 <template name="%Templates.newpair.name" description="%Templates.newpair.desc" id="org.eclipse.wst.json.ui.internal.templates.newpair" 
 	context="json_all" enabled="true">"${key}": "${value}"</template>
 <template name="%Templates.packagejson.name" description="%Templates.packagejson.desc" id="org.eclipse.wst.json.ui.internal.templates.packagejson" 
-	context="json_all" enabled="true">{
+	context="json_package" enabled="true">{
   "name": "",
   "version": "1.0.0",
   "description": "",

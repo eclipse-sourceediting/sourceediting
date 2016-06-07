@@ -280,6 +280,11 @@
 			class="org.eclipse.wst.json.ui.internal.templates.TemplateContextTypeJSON"
 			id="json_new">
 		</contextType>
+		<contextType
+			name="%JSON_Package_context_type_Extension_Element.name"
+			class="org.eclipse.wst.json.ui.internal.templates.TemplateContextTypeJSON"
+			id="json_package">
+		</contextType>
 		<include
 			file="templates/jsondefault-templates.xml"
 			translations="$nl$/templates/jsondefault-templates.properties">
@@ -681,6 +686,15 @@
           id="org.eclipse.wst.json.ui.proposalComputer.jsonTemplates">
        <contentType
              id="org.eclipse.wst.json.core.jsonsource">
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.json.ui.proposalCategory.jsonTemplates"
+          class="org.eclipse.wst.json.ui.internal.contentassist.JSONPackageTemplatesCompletionProposalComputer"
+          id="org.eclipse.wst.json.ui.proposalComputer.jsonPackageTemplates">
+       <contentType
+             id="org.eclipse.wst.json.npm.core.npmsource">
        </contentType>
     </proposalComputer>
  </extension>

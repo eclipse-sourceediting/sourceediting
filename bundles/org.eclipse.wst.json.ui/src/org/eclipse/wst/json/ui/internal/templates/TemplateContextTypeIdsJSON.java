@@ -17,4 +17,6 @@ public class TemplateContextTypeIdsJSON {
 	public static final String ALL = "json_all"; //$NON-NLS-1$
 
 	public static final String NEW = "json_new"; //$NON-NLS-1$
+
+	public static final String PACKAGE = "json_package"; //$NON-NLS-1$
 }
