@@ -84,7 +84,7 @@ public class JSONUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the template store for the css editor templates.
+	 * Returns the template store for the JSON editor templates.
 	 *
 	 * @return the template store for the JSON editor templates
 	 */
@@ -112,7 +112,7 @@ public class JSONUIPlugin extends AbstractUIPlugin {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 			registry.addContextType(TemplateContextTypeIdsJSON.ALL);
 			registry.addContextType(TemplateContextTypeIdsJSON.NEW);
-
+			registry.addContextType(TemplateContextTypeIdsJSON.PACKAGE);
 			fContextTypeRegistry = registry;
 		}
 
