@@ -19,7 +19,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.internal.text.html.HTMLPrinter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.json.jsonpath.IJSONPath;
+import org.eclipse.json.schema.IJSONSchemaDocument;
+import org.eclipse.json.schema.IJSONSchemaProperty;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.wst.json.core.JSONCorePlugin;
 import org.eclipse.wst.json.core.document.IJSONNode;
 import org.eclipse.wst.json.core.document.IJSONPair;
 import org.eclipse.wst.json.core.document.IJSONValue;
@@ -51,7 +55,27 @@ public class HTMLJSONPrinter {
 
 		startPage(buffer, getTitleKey(value), descriptor);
 		startDefinitionList(buffer);
-		addDefinitionListItem(buffer, "Key", pair.getName());
+				StringBuffer buff = new StringBuffer();
+				buff.append(pair.getName());
+				try {
+					IJSONSchemaDocument schemaDocument = JSONCorePlugin.getDefault()
+							.getSchemaDocument(pair);
+					if (schemaDocument != null) {
+						IJSONPath path = pair.getPath();
+						IJSONSchemaProperty property = schemaDocument
+							.getProperty(path);
+						if (property != null) {
+							String description = property.getDescription();
+							if (description != null) {
+								buff.append(" - ");
+								buff.append(description);
+							}
+						}
+					}
+				} catch (IOException e) {
+					Logger.logException(e);
+				}
+				addDefinitionListItem(buffer, "Key", buff.toString());
 		addDefinitionListItem(buffer, "Type", getValueType(pair.getValue()));
 		endDefinitionList(buffer);
 		endPage(buffer);
