@@ -15,4 +15,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.json
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.wst.json.schemaprocessor,
+ org.eclipse.wst.json.schemaprocessor.internal
 

@@ -23,6 +23,20 @@ public class JSONUIMessages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.wst.json.ui.internal.JSONUIMessages";//$NON-NLS-1$
 
+	public static String Invalid_URL;
+	public static String The_name_field_is_required;
+	public static String The_entry_already_exists;
+	public static String The_url_field_is_required;
+	public static String Browse;
+	public static String URL;
+	public static String FileMatch;
+	public static String Add_Catalog_Entry;
+	public static String Edit_Catalog_Entry;
+	public static String Remove;
+	public static String Edit;
+	public static String Add;
+	public static String JSON_Catalog_Entries;
+
 	private static ResourceBundle fResourceBundle;
 
 	// Validation

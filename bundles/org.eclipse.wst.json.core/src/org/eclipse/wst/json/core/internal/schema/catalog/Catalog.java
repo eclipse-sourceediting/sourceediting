@@ -11,7 +11,6 @@
 package org.eclipse.wst.json.core.internal.schema.catalog;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -287,6 +286,7 @@ public class Catalog implements ICatalog {
 		public void load() {
 			new CatalogContributorRegistryReader(Catalog.this).readRegistry();
 
+			new CatalogSchemastoreReader(Catalog.this).readSchemastore();
 			/*
 			 * Here we save the file in order to 'reflect' the catalog that
 			 * we've created from plugin extensions to disk. The 'system'
@@ -298,34 +298,9 @@ public class Catalog implements ICatalog {
 
 	class UserCatalogLS extends CatalogLS {
 		public void load() {
-			InputStream inputStream = null;
-			try {
-				if (location != null && location.length() > 0) {
-					URL url = new URL(location);
-					inputStream = url.openStream();
-					boolean oldNotificationEnabled = isNotificationEnabled();
-					setNotificationEnabled(false);
-					clear();
-					try {
-						// CatalogReader.read(Catalog.this, inputStream);
-					} finally {
-						setNotificationEnabled(oldNotificationEnabled);
-					}
-				} else {
-					clear();
-				}
-				notifyChanged();
-			} catch (Exception e) {
-				// This is OK since the catalog may not exist before we create
-				// it
-			} finally {
-				if (inputStream != null) {
-					try {
-						inputStream.close();
-					} catch (Exception e) {
-					}
-				}
-			}
+			new CatalogUserCatalogReader(Catalog.this).readCatalog();
+			
+			save();
 		}
 	}
 
@@ -369,7 +344,11 @@ public class Catalog implements ICatalog {
 
 	public void addCatalogElement(ICatalogElement element) {
 		synchronized (catalogElements) {
-			catalogElements.add(element);
+			if (!catalogElements.contains(element)) {
+				catalogElements.add(element);
+			} else {
+				return;
+			}
 		}
 		element.setOwnerCatalog(this);
 		internalResolver = null;

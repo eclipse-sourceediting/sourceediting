@@ -10,27 +10,43 @@
  */
 package org.eclipse.wst.json.schemaprocessor.internal;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.eclipse.json.impl.schema.JSONSchemaDocument;
 import org.eclipse.json.schema.IJSONSchemaDocument;
 import org.eclipse.json.schema.IJSONSchemaProcessor;
-import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
+import org.eclipse.wst.json.core.internal.download.HttpClientProvider;
 
 public class JSONSchemaProcessor implements IJSONSchemaProcessor {
 
+	private static final int MAP_SIZE = 10;
+	private static Map<String,IJSONSchemaDocument> schemaDocuments = new LinkedHashMap<String, IJSONSchemaDocument>();
+	
 	@Override
 	public IJSONSchemaDocument getSchema(String uriString) throws IOException {
-		String physicalLocation = URIResolverPlugin.createResolver()
-				.resolvePhysicalLocation("", "", uriString);
-		URL url = new URL(physicalLocation);
-		return new JSONSchemaDocument(new InputStreamReader(url.openStream()));
+		IJSONSchemaDocument schemaDocument = schemaDocuments.get(uriString);
+		if (schemaDocument != null) {
+			return schemaDocument;
+		}
+		int size = schemaDocuments.size();
+		if (size > MAP_SIZE) {
+			String key = schemaDocuments.keySet().iterator().next();
+			schemaDocuments.remove(key);
+		}
+		File f = HttpClientProvider.getFile(new URL(uriString));
+		schemaDocument = new JSONSchemaDocument(new InputStreamReader(new FileInputStream(f)));
+		schemaDocuments.put(uriString, schemaDocument);
+		return schemaDocument;
 	}
-	// @Override
-	// public IJSONProperty findProperty(IJSONPath path, IJSONSchema schema) {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
+	
+	public static void clearCache() {
+		schemaDocuments.clear();
+	}
+
 }
