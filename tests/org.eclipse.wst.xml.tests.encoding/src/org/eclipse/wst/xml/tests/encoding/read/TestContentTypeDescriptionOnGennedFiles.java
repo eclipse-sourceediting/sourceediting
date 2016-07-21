@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Patrik Suzzi <psuzzi@gmail.com> - Bug 498268
  *******************************************************************************/
 package org.eclipse.wst.xml.tests.encoding.read;
 
@@ -19,7 +20,6 @@ import org.eclipse.wst.xml.tests.encoding.GenerateFiles;
 
 
 public class TestContentTypeDescriptionOnGennedFiles extends TestContentDescription {
-	private static int notRan = 0;
 	private static final boolean DEBUG = false;
 
 	protected void doGenTest(String charsetName) throws CoreException, IOException {
@@ -37,7 +37,6 @@ public class TestContentTypeDescriptionOnGennedFiles extends TestContentDescript
 		// bring used. (Could be improved in future to avoid counting as a
 		// test) - this check in here for initial debugging only
 		if (file == null) {
-			notRan++;
 			if (DEBUG) {
 				System.out.println();
 				System.out.println("test not ran since charset not supported by VM: " + filePath);
