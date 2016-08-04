@@ -16,6 +16,7 @@ import org.eclipse.json.jsonpath.IJSONPath;
 import org.eclipse.json.jsonpath.JSONPath;
 import org.eclipse.json.schema.IJSONSchemaDocument;
 import org.eclipse.json.schema.IJSONSchemaProperty;
+import org.eclipse.json.schema.JSONSchemaType;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.json.core.JSONCorePlugin;
 import org.eclipse.wst.json.core.document.IJSONNode;
@@ -30,10 +31,15 @@ import org.eclipse.wst.json.ui.contentassist.JSONKeyCompletionProposal;
 import org.eclipse.wst.json.ui.contentassist.JSONRelevanceConstants;
 import org.eclipse.wst.json.ui.internal.Logger;
 import org.eclipse.wst.json.ui.internal.editor.JSONEditorPluginImageHelper;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 
 public class JSONCompletionProposalComputer extends
 		AbstractJSONCompletionProposalComputer {
+
+	private static final String QUOTE = "\""; //$NON-NLS-1$
+	private static final String TRUE = "true"; //$NON-NLS-1$
+	private static final String FALSE = "false"; //$NON-NLS-1$
 
 	@Override
 	public void sessionStarted() {
@@ -81,11 +87,41 @@ public class JSONCompletionProposalComputer extends
 					matchString = ""; //$NON-NLS-1$
 				}
 				if ((matchString.length() > 0)
-						&& (matchString.startsWith("\""))) { //$NON-NLS-1$ //$NON-NLS-2$
+						&& (matchString.startsWith(QUOTE))) {
 					matchString = matchString.substring(1);
 				}
 				// Loop for each properties of the JSON Schema.
 				IJSONPath path = node.getPath();
+				if (node instanceof IJSONPair) {
+					IJSONSchemaProperty thisProperty = schemaDocument.getProperty(path);
+					ITextRegion region = contentAssistRequest.getRegion();
+					boolean isValue = isPairValue(context, node);
+					if (thisProperty != null && isValue) {
+						if (thisProperty.getFirstType() == JSONSchemaType.Boolean) {
+							boolean showProperty = beginsWith(FALSE, matchString.trim())
+									|| beginsWith(TRUE, matchString.trim());
+							if (showProperty) {
+								addStringProposal(contentAssistRequest, TRUE, false);
+								addStringProposal(contentAssistRequest, FALSE, false);
+							}
+							return;
+						}
+						if (thisProperty.getFirstType() == JSONSchemaType.String) {
+							if (thisProperty.getEnumList() != null && thisProperty.getEnumList().size() > 0) {
+								for (String prop : thisProperty.getEnumList()) {
+									addStringProposal(contentAssistRequest, prop,
+											!(region.getType() == JSONRegionContexts.JSON_VALUE_STRING));
+								}
+							} else {
+								if (thisProperty.getDefaultValue() != null) {
+									addStringProposal(contentAssistRequest, thisProperty.getDefaultValue(),
+											!(region.getType() == JSONRegionContexts.JSON_VALUE_STRING));
+								}
+							}
+							return;
+						}
+					}
+				}
 				if ( !(node instanceof IJSONObject && node.getOwnerPairNode() != null) ) {
 					if (path.getSegments().length > 0) {
 						String[] segments = new String[path.getSegments().length - 1];
@@ -126,6 +162,29 @@ public class JSONCompletionProposalComputer extends
 		} catch (IOException e) {
 			Logger.logException(e);
 		}
+	}
+
+	private void addStringProposal(ContentAssistRequest contentAssistRequest, String replacementString, boolean addQuote) {
+		String additionalProposalInfo = null;
+		Image icon = null;
+		String displayString = replacementString;
+		if (addQuote) {
+			replacementString = QUOTE + replacementString + QUOTE;
+		}
+		String matchString = contentAssistRequest.getMatchString();
+		if (matchString != null) {
+			matchString = matchString.replaceAll(QUOTE, ""); //$NON-NLS-1$
+		}
+		JSONKeyCompletionProposal proposal = new JSONKeyCompletionProposal(
+				replacementString,
+				contentAssistRequest
+						.getReplacementBeginPosition() - matchString.length(),
+				contentAssistRequest.getReplacementLength(),
+				replacementString.length() - 2, icon,
+				displayString, null,
+				additionalProposalInfo,
+				JSONRelevanceConstants.R_OBJECT_KEY);
+		contentAssistRequest.addProposal(proposal);
 	}
 
 	@Override

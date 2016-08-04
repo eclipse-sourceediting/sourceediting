@@ -14,6 +14,7 @@
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.document;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.json.core.contenttype.ContentTypeIdForJSON;
 import org.eclipse.wst.json.core.document.IJSONArray;
 import org.eclipse.wst.json.core.document.IJSONDocument;

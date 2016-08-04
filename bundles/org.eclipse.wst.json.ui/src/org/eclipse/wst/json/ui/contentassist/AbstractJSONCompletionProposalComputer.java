@@ -18,9 +18,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.json.core.document.IJSONNode;
+import org.eclipse.wst.json.core.document.IJSONPair;
 import org.eclipse.wst.json.core.regions.JSONRegionContexts;
 import org.eclipse.wst.json.ui.internal.JSONUIMessages;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -35,6 +37,8 @@ import org.w3c.dom.Node;
 public abstract class AbstractJSONCompletionProposalComputer implements
 		ICompletionProposalComputer {
 
+	private static final String BLANK = ""; //$NON-NLS-1$
+	private static final String COLON = ":"; //$NON-NLS-1$
 	private String fErrorMessage;
 	private ITextViewer fTextViewer;
 
@@ -56,7 +60,7 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 		fTextViewer = textViewer;
 
 		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer,
-				documentPosition);
+				documentPosition <= 0 ? 0 : documentPosition - 1);
 
 		IJSONNode node = (IJSONNode) treeNode;
 		while ((node != null) && (node.getNodeType() == Node.TEXT_NODE)
@@ -72,11 +76,28 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 
 		// Fix completion region in case of JSON_OBJECT_CLOSE
 		if (completionRegion != null && completionRegion.getType() == JSONRegionContexts.JSON_OBJECT_CLOSE && documentPosition > 0) {
-			completionRegion = getCompletionRegion(documentPosition - 1, node);
+			completionRegion = getCompletionRegion(documentPosition, node);
 		}
-		
-		String matchString = getMatchString(sdRegion, completionRegion,
-				documentPosition);
+		String matchString = BLANK; //$NON-NLS-1$
+		if (completionRegion != null) {
+			if (isPairValue(context, node)) {
+				try {
+					String nodeText = node.getStructuredDocument().get(node.getStartOffset(), node.getEndOffset() - node.getStartOffset());
+					int colonIndex  = nodeText.indexOf(COLON);
+					if (colonIndex >= 0) {
+						String str = nodeText.substring(colonIndex);
+						str = str.replaceAll(",", BLANK).trim();
+						str = str.replaceAll(COLON, BLANK).trim();
+						str = str.trim();
+						matchString = str;
+					}
+				} catch (BadLocationException e) {
+					// ignore
+				}
+			} else {
+				matchString = getMatchString(sdRegion, completionRegion, documentPosition);
+			}
+		}
 
 		// compute normal proposals
 		contentAssistRequest = computeCompletionProposals(matchString,
@@ -84,7 +105,7 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 		if (contentAssistRequest == null) {
 			contentAssistRequest = new ContentAssistRequest(
 					(IJSONNode) treeNode, node != null ? node.getParentNode() : null, sdRegion,
-					completionRegion, documentPosition, 0, ""); //$NON-NLS-1$
+					completionRegion, documentPosition, 0, BLANK);
 			setErrorMessage(JSONUIMessages.Content_Assist_not_availab_UI_);
 		}
 
@@ -139,7 +160,7 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 		int documentPosition = context.getInvocationOffset();
 
 		ContentAssistRequest contentAssistRequest = null;
-		String regionType = completionRegion!= null ? completionRegion.getType() : "";
+		String regionType = completionRegion!= null ? completionRegion.getType() : BLANK;
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
 
 		// Handle the most common and best supported cases
@@ -149,7 +170,8 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 					if (regionType == JSONRegionContexts.JSON_OBJECT_OPEN
 							|| regionType == JSONRegionContexts.JSON_OBJECT_CLOSE
 							|| regionType == JSONRegionContexts.JSON_OBJECT_KEY
-							|| regionType == JSONRegionContexts.JSON_COMMA) {
+							|| regionType == JSONRegionContexts.JSON_COMMA
+							|| regionType == JSONRegionContexts.JSON_UNKNOWN) {
 						contentAssistRequest = computeObjectKeyProposals(matchString,
 								completionRegion, treeNode, xmlnode, context);
 					}
@@ -159,7 +181,11 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 							|| regionType == JSONRegionContexts.JSON_OBJECT_CLOSE
 							|| regionType == JSONRegionContexts.JSON_ARRAY_OPEN
 							|| regionType == JSONRegionContexts.JSON_ARRAY_CLOSE
-							|| regionType == JSONRegionContexts.JSON_COMMA) {
+							|| regionType == JSONRegionContexts.JSON_COMMA
+							|| regionType == JSONRegionContexts.JSON_VALUE_BOOLEAN
+							|| regionType == JSONRegionContexts.JSON_UNKNOWN
+							|| regionType == JSONRegionContexts.JSON_COLON
+							|| regionType == JSONRegionContexts.JSON_VALUE_STRING) {
 						contentAssistRequest = computeObjectKeyProposals(matchString,
 								completionRegion, treeNode, xmlnode, context);
 					}
@@ -178,7 +204,7 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 
 		int replaceLength = 0;
 		int begin = documentPosition;
-		if (completionRegion.getType() == JSONRegionContexts.JSON_OBJECT_KEY) {
+		if (completionRegion.getType() == JSONRegionContexts.JSON_OBJECT_KEY || completionRegion.getType() == JSONRegionContexts.JSON_UNKNOWN) {
 			replaceLength = completionRegion.getTextLength();
 			// if container region, be sure replace length is only the attribute
 			// value region not the entire container
@@ -366,18 +392,18 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 	private String getMatchString(IStructuredDocumentRegion parent,
 			ITextRegion aRegion, int offset) {
 		if (aRegion == null) {
-			return "";
+			return BLANK;
 		}
 		String regionType = aRegion.getType();
 		if (regionType != JSONRegionContexts.JSON_OBJECT_KEY) {
-			return "";
+			return BLANK;
 		}
 		if ((parent.getText(aRegion).length() > 0)
 				&& (parent.getStartOffset(aRegion) < offset)) {
 			return parent.getText(aRegion).substring(0,
 					offset - parent.getStartOffset(aRegion));
 		}
-		return "";
+		return BLANK;
 	}
 
 	/**
@@ -404,6 +430,23 @@ public abstract class AbstractJSONCompletionProposalComputer implements
 
 		// no default context info
 		return Collections.EMPTY_LIST;
+	}
+
+	protected boolean isPairValue(CompletionProposalInvocationContext context, IJSONNode node) {
+		if ( !(node instanceof IJSONPair) ) {
+			return false;
+		}
+		int documentPosition = context.getInvocationOffset();
+		try {
+			String nodeText = node.getStructuredDocument().get(node.getStartOffset(), node.getEndOffset() - node.getStartOffset());
+			int colonIndex  = nodeText.indexOf(COLON); //$NON-NLS-1$
+			if (colonIndex >= 0) {
+				return documentPosition > node.getStartOffset() + colonIndex;
+			}
+		} catch (BadLocationException e) {
+			// ignore
+		}
+		return false;
 	}
 
 	/**

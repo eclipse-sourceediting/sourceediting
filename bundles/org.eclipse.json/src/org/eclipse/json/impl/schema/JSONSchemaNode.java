@@ -25,6 +25,8 @@ import org.eclipse.json.schema.IJSONSchemaProperty;
 @SuppressWarnings("serial")
 public class JSONSchemaNode extends JsonObject implements IJSONSchemaNode {
 
+	private static final String PROPERTIES = "properties"; //$NON-NLS-1$
+	private static final String REF = "$ref"; //$NON-NLS-1$
 	private final IJSONSchemaNode parent;
 	private final Map<String, IJSONSchemaProperty> properties;
 	private final String reference;
@@ -36,7 +38,7 @@ public class JSONSchemaNode extends JsonObject implements IJSONSchemaNode {
 		this.jsonObject = jsonObject;
 		this.properties = new HashMap<String, IJSONSchemaProperty>();
 		this.references = new ArrayList<String>();
-		this.reference = jsonObject.getString("$ref", null);
+		this.reference = jsonObject.getString(REF, null);
 		walk(jsonObject, this, true);
 	}
 
@@ -48,7 +50,7 @@ public class JSONSchemaNode extends JsonObject implements IJSONSchemaNode {
 			while (iter.hasNext()) {
 				JsonValue value = iter.next();
 				if (value != null) {
-					String ref = value.asObject().getString("$ref", null);
+					String ref = value.asObject().getString(REF, null);
 					if (ref != null) {
 						references.add(ref);
 					} else {
@@ -60,14 +62,14 @@ public class JSONSchemaNode extends JsonObject implements IJSONSchemaNode {
 	}
 
 	private void walk(JsonObject json, IJSONSchemaNode schemaNode, boolean add) {
-		JsonObject properties = (JsonObject) json.get("properties");
+		JsonObject properties = (JsonObject) json.get(PROPERTIES);
 		addProperties(schemaNode, properties, add);
 		if (properties == null) {
-			JsonObject items = (JsonObject) json.get("items");
+			JsonObject items = (JsonObject) json.get("items"); //$NON-NLS-1$
 			if (items != null) {
-				properties = (JsonObject) items.get("properties");
+				properties = (JsonObject) items.get(PROPERTIES);
 				addProperties(schemaNode, properties, add);
-				String ref = items.getString("$ref", null);
+				String ref = items.getString(REF, null);
 				if (ref != null) {
 					if (add) {
 						schemaNode.getReferences().add(ref);
@@ -79,10 +81,10 @@ public class JSONSchemaNode extends JsonObject implements IJSONSchemaNode {
 				}
 			}
 		}
-		add(json, schemaNode, "allOf");
-		add(json, schemaNode, "anyOf");
-		add(json, schemaNode, "oneOf");
-		JsonValue notMember = json.get("not");
+		add(json, schemaNode, "allOf"); //$NON-NLS-1$
+		add(json, schemaNode, "anyOf"); //$NON-NLS-1$
+		add(json, schemaNode, "oneOf"); //$NON-NLS-1$
+		JsonValue notMember = json.get("not"); //$NON-NLS-1$
 		if (notMember != null) {
 			walk(notMember.asObject(), schemaNode, false);
 		}

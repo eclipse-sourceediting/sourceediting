@@ -18,38 +18,57 @@ public class ContentAssistHelper {
 
 	public static String getRequiredName(IJSONNode parent,
 			IJSONSchemaProperty property) {
-		return getRequiredName(property.getName(), property.getFirstType());
+		String defaultValue = null;
+		if (property.getDefaultValue() != null) {
+			defaultValue = property.getDefaultValue();
+		} else if (property.getEnumList() != null && property.getEnumList().size() > 0) {
+			defaultValue = property.getEnumList().get(0);
+		}
+		return getRequiredName(property.getName(), property.getFirstType(), defaultValue);
 	}
 
-	public static String getRequiredName(String propertyName,
-			JSONSchemaType type) {
-		StringBuilder name = new StringBuilder("\"");
+	public static String getRequiredName(String propertyName, JSONSchemaType type, String defaultValue) {
+		StringBuilder name = new StringBuilder("\""); //$NON-NLS-1$
 		name.append(propertyName);
-		name.append("\"");
+		name.append("\""); //$NON-NLS-1$
 		if (type != null) {
-			name.append(":");
-			switch (type) {
-			case Array:
-				name.append("[");
-				name.append("]");
-				break;
-			case Boolean:
-				name.append("false");
-				break;
-			case Null:
-				name.append("null");
-				break;
-			case Object:
-				name.append("{");
-				name.append("}");
-				break;
-			case String:
-				name.append("\"\"");
-				break;
-			default:
-				break;
+			name.append(":"); //$NON-NLS-1$
+			if (defaultValue != null) {
+				if (type == JSONSchemaType.String) {
+					name.append("\""); //$NON-NLS-1$
+					name.append(defaultValue);
+					name.append("\""); //$NON-NLS-1$
+				} else {
+					name.append(defaultValue);
+				}
+			} else {
+				switch (type) {
+				case Array:
+					name.append("["); //$NON-NLS-1$
+					name.append("]"); //$NON-NLS-1$
+					break;
+				case Boolean:
+					name.append("false"); //$NON-NLS-1$
+					break;
+				case Null:
+					name.append("null"); //$NON-NLS-1$
+					break;
+				case Object:
+					name.append("{"); //$NON-NLS-1$
+					name.append("}"); //$NON-NLS-1$
+					break;
+				case String:
+					name.append("\"\""); //$NON-NLS-1$
+					break;
+				default:
+					break;
+				}
 			}
 		}
 		return name.toString();
+	}
+
+	public static String getRequiredName(String propertyName, JSONSchemaType type) {
+		return getRequiredName(propertyName, type, null);
 	}
 }
