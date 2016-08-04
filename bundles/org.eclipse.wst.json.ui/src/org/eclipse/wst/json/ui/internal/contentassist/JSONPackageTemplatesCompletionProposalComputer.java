@@ -19,6 +19,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.json.ui.internal.templates.TemplateContextTypeIdsJSON;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
 /**
  * <p>Completion computer for JSON templates</p>

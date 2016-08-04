@@ -153,4 +153,14 @@ public class JSONSchemaDocument extends JSONSchemaNode implements
 
 	}
 
+	@Override
+	public List<String> getEnumList() {
+		return null;
+	}
+
+	@Override
+	public String getDefaultValue() {
+		return null;
+	}
+
 }
