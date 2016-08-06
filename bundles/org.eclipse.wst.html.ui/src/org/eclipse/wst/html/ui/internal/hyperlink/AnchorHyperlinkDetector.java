@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2011 IBM Corporation and others.
+ * Copyright (c) 2008, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -432,12 +432,17 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 				Node currentNode = getCurrentNode(document, region.getOffset());
 				if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element) currentNode;
-						IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(region.getOffset());
-						ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(region.getOffset());
-						ITextRegion nameRegion = null;
-						ITextRegion valueRegion = null;
-						String name = null;
-						String value = null;
+					IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(region.getOffset());
+					ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(region.getOffset());
+					ITextRegion nameRegion = null;
+					ITextRegion valueRegion = null;
+					String name = null;
+					String value = null;
+					/*
+					 * http://bugs.eclipse.org/475680 - possible after last offset in the file or
+					 * by a faulty implementation
+					 */
+ 					if (textRegion != null) {
 						if (DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE.equals(textRegion.getType())) {
 							ITextRegionList regions = documentRegion.getRegions();
 							/*
@@ -463,28 +468,29 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 								value = StringUtils.strip(documentRegion.getText(valueRegion));
 							}
 						}
-						if (name != null && value != null) {
-							int idx = -1;
-							if (HTML40Namespace.ATTR_NAME_HREF.equalsIgnoreCase(name) && (idx = value.indexOf("#")) >= 0) { //$NON-NLS-1$
-								String filename = value.substring(0, idx);
-								final String anchorName = idx < value.length() - 1? value.substring(idx + 1) : null;
-								if (anchorName != null) {
-									final IPath basePath = new Path(((IDOMNode) element).getModel().getBaseLocation());
-									if (basePath.segmentCount() > 1) {
-										if (filename.length() == 0) {
-											filename = basePath.lastSegment();
-										}
-										final IPath resolved = ModuleCoreSupport.resolve(basePath, filename);
-										final IFile targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(resolved);
-										if (targetFile.isAccessible())
-											return createHyperlinksToAnchorNamed(textViewer, createHyperlinkRegion(documentRegion, valueRegion), element, value, canShowMultipleHyperlinks);
+					}
+					if (name != null && value != null) {
+						int idx = -1;
+						if (HTML40Namespace.ATTR_NAME_HREF.equalsIgnoreCase(name) && (idx = value.indexOf("#")) >= 0) { //$NON-NLS-1$
+							String filename = value.substring(0, idx);
+							final String anchorName = idx < value.length() - 1? value.substring(idx + 1) : null;
+							if (anchorName != null) {
+								final IPath basePath = new Path(((IDOMNode) element).getModel().getBaseLocation());
+								if (basePath.segmentCount() > 1) {
+									if (filename.length() == 0) {
+										filename = basePath.lastSegment();
 									}
+									final IPath resolved = ModuleCoreSupport.resolve(basePath, filename);
+									final IFile targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(resolved);
+									if (targetFile.isAccessible())
+										return createHyperlinksToAnchorNamed(textViewer, createHyperlinkRegion(documentRegion, valueRegion), element, value, canShowMultipleHyperlinks);
 								}
 							}
-							if (HTML40Namespace.ATTR_NAME_NAME.equalsIgnoreCase(name)||HTML40Namespace.ATTR_NAME_ID.equalsIgnoreCase(name)) {
-								return createReferrerHyperlinks(textViewer, createHyperlinkRegion(documentRegion, valueRegion), element, value, canShowMultipleHyperlinks);
-							}
 						}
+						if (HTML40Namespace.ATTR_NAME_NAME.equalsIgnoreCase(name)||HTML40Namespace.ATTR_NAME_ID.equalsIgnoreCase(name)) {
+							return createReferrerHyperlinks(textViewer, createHyperlinkRegion(documentRegion, valueRegion), element, value, canShowMultipleHyperlinks);
+						}
+					}
 				}
 			}
 		}
