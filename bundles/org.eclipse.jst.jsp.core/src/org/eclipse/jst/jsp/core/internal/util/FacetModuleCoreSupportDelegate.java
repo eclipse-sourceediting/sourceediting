@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 IBM Corporation and others.
+ * Copyright (c) 2007, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
@@ -321,9 +321,9 @@ final class FacetModuleCoreSupportDelegate {
 						 * See Servlet 3.0, section 4.6 ; this is the only
 						 * referenced module/component type we support
 						 */
-						IPath resources = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES);
-						if (resources != null && component.getProject().findMember(resources.removeFirstSegments(1)) != null) {
-							paths.add(resources);
+						IPath resourcesPath = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES);
+						if (resourcesPath != null && component.getProject().findMember(resourcesPath.removeFirstSegments(1)) != null) {
+							paths.add(resourcesPath);
 						}
 					}
 				}
@@ -331,7 +331,7 @@ final class FacetModuleCoreSupportDelegate {
 
 		}
 		else {
-			paths.add(new IPath[]{project.getFullPath()});
+			paths.add(project.getFullPath());
 		}
 		return (IPath[]) paths.toArray(new IPath[paths.size()]);
 	}
