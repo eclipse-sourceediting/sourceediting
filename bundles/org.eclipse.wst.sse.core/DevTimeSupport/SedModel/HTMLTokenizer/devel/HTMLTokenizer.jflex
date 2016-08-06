@@ -554,11 +554,11 @@ Char = [\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]
 S = [\x20\x09\x0D\x0A]+
 
 // [4] NameChar ::= Letter | Digit | '.' | '-' | '_' | ':' | CombiningChar | Extender
-NameChar = ({Letter} | {Digit} | \. | \- | _ | : | {CombiningChar} | {Extender} | \[ | \] | \( | \) | \*)
+NameChar = ({Letter} | {Digit} | \. | \- | _ | : | {CombiningChar} | {Extender} | \[ | \] | \( | \) | # | \*)
 
 // [5] Name ::= (Letter | '_' | ':') NameChar*
 //Name = ({NameChar}{NameChar}*)
-Name = ({Letter} | _ | :){NameChar}*
+Name = ({Letter} | _ | : | # | \*){NameChar}*
 
 // [6] Names ::= {Name} ({S} {Name})*
 Names = ({Name} ({S} {Name})*)
@@ -939,7 +939,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
         return XML_TAG_NAME;
 }
 /* another attribute name was found, resume looking for the equals sign */
-<ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> ({Letter} | _ | : | \[ | \] | \( | \) | \*){NameChar}* {
+<ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> ({Letter} | _ | : | \[ | \] | \( | \) | \* | #){NameChar}* {
 	if(Debug.debugTokenizer)
 		dump("attr name");//$NON-NLS-1$
         yybegin(ST_XML_EQUALS);
