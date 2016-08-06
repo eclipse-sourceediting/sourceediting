@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 IBM Corporation and others.
+ * Copyright (c) 2007, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
@@ -142,7 +142,7 @@ final class FacetModuleCoreSupportDelegate {
 
 		}
 		else {
-			paths.add(new IPath[]{project.getFullPath()});
+			paths.add(project.getFullPath());
 		}
 		return (IPath[]) paths.toArray(new IPath[paths.size()]);
 	}
