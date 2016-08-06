@@ -94,8 +94,8 @@ public class AttrTest4 extends TestCase {
 			structuredDocument.setText(this, "<a href=''>text</a>");
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 11] (<a href=''>)\n[11, 15] (text)\n[15, 19] (</a>)\nTree :\n#document\n--a/a@[0, 11] (<a href&#61;''>)@[15, 19] (</a>)\n----#text(text)@[11, 15] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "href", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "href", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "href", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "href", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -110,8 +110,8 @@ public class AttrTest4 extends TestCase {
 			structuredDocument.setText(this, "<a [(*ngFor)]=''>text</a>");
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 17] (<a [(*ngFor)]=''>)\n[17, 21] (text)\n[21, 25] (</a>)\nTree :\n#document\n--a/a@[0, 17] (<a [(*ngFor)]&#61;''>)@[21, 25] (</a>)\n----#text(text)@[17, 21] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "[(*ngFor)]", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "[(*ngFor)]", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "[(*ngFor)]", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "[(*ngFor)]", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -126,8 +126,8 @@ public class AttrTest4 extends TestCase {
 			structuredDocument.setText(this, "<a [href]=''>text</a>");
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 13] (<a [href]=''>)\n[13, 17] (text)\n[17, 21] (</a>)\nTree :\n#document\n--a/a@[0, 13] (<a [href]&#61;''>)@[17, 21] (</a>)\n----#text(text)@[13, 17] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "[href]", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "[href]", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "[href]", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "[href]", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -142,8 +142,8 @@ public class AttrTest4 extends TestCase {
 			structuredDocument.setText(this, "<a #ngFor=''>text</a>");
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 13] (<a #ngFor=''>)\n[13, 17] (text)\n[17, 21] (</a>)\nTree :\n#document\n--a/a@[0, 13] (<a #ngFor&#61;''>)@[17, 21] (</a>)\n----#text(text)@[13, 17] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "#ngFor", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "#ngFor", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "#ngFor", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "#ngFor", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -158,8 +158,8 @@ public class AttrTest4 extends TestCase {
 			structuredDocument.setText(this, "<a (click)=''>text</a>");
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 14] (<a (click)=''>)\n[14, 18] (text)\n[18, 22] (</a>)\nTree :\n#document\n--a/a@[0, 14] (<a (click)&#61;''>)@[18, 22] (</a>)\n----#text(text)@[14, 18] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "(click)", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "(click)", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "(click)", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "(click)", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -174,8 +174,8 @@ public class AttrTest4 extends TestCase {
 			structuredDocument.setText(this, "<a *ngFor=''>text</a>");
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 13] (<a *ngFor=''>)\n[13, 17] (text)\n[17, 21] (</a>)\nTree :\n#document\n--a/a@[0, 13] (<a *ngFor&#61;''>)@[17, 21] (</a>)\n----#text(text)@[13, 17] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "*ngFor", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "*ngFor", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "*ngFor", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "*ngFor", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -190,8 +190,8 @@ public class AttrTest4 extends TestCase {
 			structuredDocument.setText(this, "<a ngFor#=''>text</a>");
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 13] (<a ngFor#=''>)\n[13, 17] (text)\n[17, 21] (</a>)\nTree :\n#document\n--a/a@[0, 13] (<a ngFor#&#61;''>)@[17, 21] (</a>)\n----#text(text)@[13, 17] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "ngFor#", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "ngFor#", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "ngFor#", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "ngFor#", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -209,8 +209,8 @@ public class AttrTest4 extends TestCase {
 			document.appendChild(anchor);
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 17] (<a [(*ngFor)]=\"\">)\n[17, 21] (text)\n[21, 25] (</a>)\nTree :\n#document\n--a/a@[0, 17] (<a [(*ngFor)]&#61;\"\">)@[21, 25] (</a>)\n----#text(text)@[17, 21] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "[(*ngFor)]", model.getStructuredDocument().getFirstStructuredDocumentRegion().getText(model.getStructuredDocument().getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "[(*ngFor)]", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "[(*ngFor)]", model.getStructuredDocument().getFirstStructuredDocumentRegion().getText(model.getStructuredDocument().getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "[(*ngFor)]", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -228,8 +228,8 @@ public class AttrTest4 extends TestCase {
 			document.appendChild(anchor);
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 13] (<a [href]=\"\">)\n[13, 17] (text)\n[17, 21] (</a>)\nTree :\n#document\n--a/a@[0, 13] (<a [href]&#61;\"\">)@[17, 21] (</a>)\n----#text(text)@[13, 17] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "[href]", model.getStructuredDocument().getFirstStructuredDocumentRegion().getText(model.getStructuredDocument().getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "[href]", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "[href]", model.getStructuredDocument().getFirstStructuredDocumentRegion().getText(model.getStructuredDocument().getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "[href]", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
@@ -248,8 +248,8 @@ public class AttrTest4 extends TestCase {
 			document.appendChild(anchor);
 			printDOMDocument(model);
 			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 13] (<a *ngFor=\"\">)\n[13, 17] (text)\n[17, 21] (</a>)\nTree :\n#document\n--a/a@[0, 13] (<a *ngFor&#61;\"\">)@[17, 21] (</a>)\n----#text(text)@[13, 17] (text)\n", fOutputWriter.toString());
-			assertEquals("Wrote attribute name", "*ngFor", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
-			assertEquals("Wrote attribute name", "*ngFor", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+			assertEquals("Wrong attribute name", "*ngFor", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "*ngFor", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
 		}
 		finally {
 			model.releaseFromEdit();
