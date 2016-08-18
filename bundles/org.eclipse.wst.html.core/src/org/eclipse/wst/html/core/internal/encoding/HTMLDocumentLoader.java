@@ -98,6 +98,8 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 		// Blocktags here.
 		addHTMLishTag(parser, "script"); //$NON-NLS-1$
 		addHTMLishTag(parser, "style"); //$NON-NLS-1$
+		addHTMLishTag(parser, "textarea"); //$NON-NLS-1$
+		addHTMLishTag(parser, "option"); //$NON-NLS-1$
 		return parser;
 	}
 
