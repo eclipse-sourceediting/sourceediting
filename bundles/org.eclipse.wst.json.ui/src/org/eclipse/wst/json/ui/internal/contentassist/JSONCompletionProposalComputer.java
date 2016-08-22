@@ -11,6 +11,8 @@
 package org.eclipse.wst.json.ui.internal.contentassist;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.json.jsonpath.IJSONPath;
 import org.eclipse.json.jsonpath.JSONPath;
@@ -36,10 +38,6 @@ import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 
 public class JSONCompletionProposalComputer extends
 		AbstractJSONCompletionProposalComputer {
-
-	private static final String QUOTE = "\""; //$NON-NLS-1$
-	private static final String TRUE = "true"; //$NON-NLS-1$
-	private static final String FALSE = "false"; //$NON-NLS-1$
 
 	@Override
 	public void sessionStarted() {
@@ -98,24 +96,30 @@ public class JSONCompletionProposalComputer extends
 					boolean isValue = isPairValue(context, node);
 					if (thisProperty != null && isValue) {
 						if (thisProperty.getFirstType() == JSONSchemaType.Boolean) {
-							boolean showProperty = beginsWith(FALSE, matchString.trim())
-									|| beginsWith(TRUE, matchString.trim());
-							if (showProperty) {
-								addStringProposal(contentAssistRequest, TRUE, false);
+							if (beginsWith(FALSE, matchString.trim())) {
 								addStringProposal(contentAssistRequest, FALSE, false);
+							}
+							if (beginsWith(TRUE, matchString.trim())) {
+								addStringProposal(contentAssistRequest, TRUE, false);
 							}
 							return;
 						}
 						if (thisProperty.getFirstType() == JSONSchemaType.String) {
 							if (thisProperty.getEnumList() != null && thisProperty.getEnumList().size() > 0) {
 								for (String prop : thisProperty.getEnumList()) {
-									addStringProposal(contentAssistRequest, prop,
-											!(region.getType() == JSONRegionContexts.JSON_VALUE_STRING));
+									boolean showProperty = beginsWith(prop, matchString.trim());
+									if (showProperty) {
+										addStringProposal(contentAssistRequest, prop,
+												!(region.getType() == JSONRegionContexts.JSON_VALUE_STRING));
+									}
 								}
 							} else {
 								if (thisProperty.getDefaultValue() != null) {
-									addStringProposal(contentAssistRequest, thisProperty.getDefaultValue(),
-											!(region.getType() == JSONRegionContexts.JSON_VALUE_STRING));
+									boolean showProperty = beginsWith(thisProperty.getDefaultValue(), matchString.trim());
+									if (showProperty) {
+										addStringProposal(contentAssistRequest, thisProperty.getDefaultValue(),
+												!(region.getType() == JSONRegionContexts.JSON_VALUE_STRING));
+									}
 								}
 							}
 							return;
@@ -131,14 +135,30 @@ public class JSONCompletionProposalComputer extends
 				}
 				IJSONSchemaProperty parentProperty = schemaDocument
 						.getProperty(path);
+				Set<String> existing = new HashSet<String>();
+				boolean addComma = false;
+				if (node instanceof IJSONObject) {
+					addExisting(existing, node);
+					addComma = addComma(context, node);
+				} else if (node instanceof IJSONPair && node.getParentNode() instanceof IJSONObject) {
+					addExisting(existing, node.getParentNode());
+				}
 				if (parentProperty != null) {
 					for (IJSONSchemaProperty property : parentProperty
 							.getPropertyValues()) {
-						boolean showProperty = beginsWith(property.getName(),
+						boolean showProperty = !existing.contains(property.getName()) && beginsWith(property.getName(),
 								matchString.trim());
 						if (showProperty) {
-							String replacementString = ContentAssistHelper
+							String replacementString;
+							if (node instanceof IJSONPair) {
+								replacementString = property.getName();
+							} else {
+								replacementString = ContentAssistHelper
 									.getRequiredName(node, property);
+								if (addComma) {
+									replacementString = replacementString + ",";
+								}
+							}
 							String additionalProposalInfo = property
 									.getDescription();
 							Image icon = JSONEditorPluginImageHelper
@@ -164,6 +184,32 @@ public class JSONCompletionProposalComputer extends
 		}
 	}
 
+	private boolean addComma(CompletionProposalInvocationContext context, IJSONNode node) {
+		IJSONNode child = node.getFirstChild();
+		int documentPosition = context.getInvocationOffset();
+		while (child != null) {
+			if (documentPosition > child.getStartOffset()) {
+				child = child.getNextSibling();
+			} else {
+				break;
+			}
+		}
+		return child != null;
+	}
+
+	private void addExisting(Set<String> existing, IJSONNode node) {
+		IJSONNode child = node.getFirstChild();
+		while (child != null) {
+			if (child instanceof IJSONPair) {
+				String name = ((IJSONPair) child).getName();
+				if (name != null && !name.isEmpty()) {
+					existing.add(name);
+				}
+			}
+			child = child.getNextSibling();
+		}
+	}
+
 	private void addStringProposal(ContentAssistRequest contentAssistRequest, String replacementString, boolean addQuote) {
 		String additionalProposalInfo = null;
 		Image icon = null;
@@ -178,7 +224,7 @@ public class JSONCompletionProposalComputer extends
 		JSONKeyCompletionProposal proposal = new JSONKeyCompletionProposal(
 				replacementString,
 				contentAssistRequest
-						.getReplacementBeginPosition() - matchString.length(),
+						.getReplacementBeginPosition(),
 				contentAssistRequest.getReplacementLength(),
 				replacementString.length() - 2, icon,
 				displayString, null,
