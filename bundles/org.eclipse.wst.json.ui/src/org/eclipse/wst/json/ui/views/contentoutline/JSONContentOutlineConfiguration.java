@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  */
 package org.eclipse.wst.json.ui.views.contentoutline;
 
-import org.eclipse.wst.json.core.util.JSONUtil;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -19,7 +18,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.wst.json.core.document.IJSONArray;
 import org.eclipse.wst.json.core.document.IJSONNode;
+import org.eclipse.wst.json.core.document.IJSONPair;
+import org.eclipse.wst.json.core.document.IJSONValue;
 import org.eclipse.wst.json.ui.internal.JSONUIPlugin;
 import org.eclipse.wst.json.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.json.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -78,7 +80,11 @@ public class JSONContentOutlineConfiguration extends
 		if (o instanceof IJSONNode) {
 			node = (IJSONNode) o;
 			if (node.getOwnerPairNode() != null) {
-				return node.getOwnerPairNode();
+				IJSONPair owner = node.getOwnerPairNode();
+				IJSONValue value = owner.getValue();
+				if (!(value instanceof IJSONArray)) {
+					return node.getOwnerPairNode();
+				}
 			}
 			/*
 			 * short nodeType = node.getNodeType(); if (node instanceof
