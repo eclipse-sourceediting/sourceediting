@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2012 IBM Corporation and others.
+ * Copyright (c) 2008, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.json.core.document.IJSONDocument;
 import org.eclipse.wst.json.core.document.IJSONModel;
 import org.eclipse.wst.json.core.document.IJSONNode;
+import org.eclipse.wst.json.core.document.IJSONObject;
 import org.eclipse.wst.json.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -98,11 +99,7 @@ public class JSONSelectionConvertorFactory implements IAdapterFactory {
 			if (model != null) {
 				IndexedRegion region = model.getIndexedRegion(start);
 
-				/*
-				 * in JSON docs whitespace is owned by the style sheet this is
-				 * to find the first none whitespace region
-				 */
-				if (region instanceof IJSONDocument) {
+				if (region instanceof IJSONObject || region instanceof IJSONDocument) {
 					try {
 						String selection = model.getStructuredDocument().get(
 								start, end);
