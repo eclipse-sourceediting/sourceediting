@@ -13,6 +13,7 @@ package org.eclipse.wst.json.schemaprocessor.internal;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.LinkedHashMap;
@@ -39,8 +40,21 @@ public class JSONSchemaProcessor implements IJSONSchemaProcessor {
 			String key = schemaDocuments.keySet().iterator().next();
 			schemaDocuments.remove(key);
 		}
-		File f = HttpClientProvider.getFile(new URL(uriString));
-		schemaDocument = new JSONSchemaDocument(new InputStreamReader(new FileInputStream(f)));
+		URL url = new URL(uriString);
+		InputStream is = null;
+		try {
+			if ("jar".equals(url.getProtocol())) {
+				is = url.openStream();
+			} else {
+				File f = HttpClientProvider.getFile(url);
+				is = new FileInputStream(f);
+			}
+			schemaDocument = new JSONSchemaDocument(new InputStreamReader(is));
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+		}
 		schemaDocuments.put(uriString, schemaDocument);
 		return schemaDocument;
 	}
