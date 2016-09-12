@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,78 +28,31 @@ import org.eclipse.wst.json.core.schema.catalog.ICatalog;
  * Common Extensible URI Resolver. This class is referenced in the JSON Catalog
  * plugin's plugin.xml file.
  */
-public class JSONCatalogURIResolverExtension implements URIResolverExtension
-{
-  public String resolve(IFile file, String baseLocation, String publicId, String systemId)
-  {
-    // if we have catalog in a project we may add it
-    // to the catalog manager first
-    ICatalog catalog = JSONCorePlugin.getDefault().getDefaultJSONCatalog();
-    if (catalog == null)
-    {
-      Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_null_catalog);
-      return null;
-    }
-    if (publicId != null || systemId != null) {
-    	return null;
-    }
-    try
-    {
-      return catalog.resolveSchema(file.getName());      
-    }
-    catch (MalformedURLException me)
-    {
-      Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_malformed_url);
-      return null;
-    }
-    catch (IOException ie)
-    {
-      Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_io_exception);
-      return null;
-    }
-    
-//    String resolved = null;
-//    if (systemId != null)
-//    {
-//      
-//    }
-//    if (resolved == null)
-//    {
-//      if (publicId != null)
-//      {
-//        // CS : this is a temporary workaround for bug 96772
-//        //
-//        // For schemas we always use locations where available and only use
-//        // namespace when no location is specified.  For JSON entities (such as DOCTYPE) 
-//        // default always utilize the public catalog entry.
-//        //
-//        // This lame test below roughly discriminate between schema and JSON entities.
-//        // TODO (bug 103243) remove this lame test once we move to the new URIResolver API
-//        // since the new API is explicit about namespace and publicId
-//        // 
-//        if (!(systemId != null && systemId.endsWith(".xsd"))) //$NON-NLS-1$
-//        {
-//          try
-//          {
-//            resolved = catalog.resolveSchema(publicId, systemId);
-//            if (resolved == null)
-//            {
-//              resolved = catalog.resolveURI(publicId);
-//            }
-//          }
-//          catch (MalformedURLException me)
-//          {
-//            Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_malformed_url);
-//            resolved = null;
-//          }
-//          catch (IOException ie)
-//          {
-//            Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_io_exception);
-//            resolved = null;
-//          }
-//        }
-//      }
-//    }
-//    return resolved;
-  }
+public class JSONCatalogURIResolverExtension implements URIResolverExtension {
+	public String resolve(IFile file, String baseLocation, String publicId, String systemId) {
+		if (publicId != null || systemId != null) {
+			return null;
+		}
+		if (file == null) { // Cannot resolve schema with no file
+			Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_malformed_url);
+			return null;
+		}
+
+		// if we have catalog in a project we may add it
+		// to the catalog manager first
+		ICatalog catalog = JSONCorePlugin.getDefault().getDefaultJSONCatalog();
+		if (catalog == null) {
+			Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_null_catalog);
+			return null;
+		}
+
+		try {
+			return catalog.resolveSchema(file.getName());
+		} catch (MalformedURLException me) {
+			Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_malformed_url);
+		} catch (IOException ie) {
+			Logger.log(Logger.ERROR_DEBUG, JSONCoreMessages.Catalog_resolution_io_exception);
+		}
+		return null;
+	}
 }
