@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -23,7 +23,8 @@ import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 public class CSSCorePreferenceInitializer extends AbstractPreferenceInitializer {
 
 	public void initializeDefaultPreferences() {
-		IEclipsePreferences node = new DefaultScope().getNode(CSSCorePlugin.getDefault().getBundle().getSymbolicName());
+		IEclipsePreferences node = DefaultScope.INSTANCE
+				.getNode(CSSCorePlugin.getDefault().getBundle().getSymbolicName());
 
 		// formatting preferences
 		node.putInt(CSSCorePreferenceNames.LINE_WIDTH, 72);
@@ -59,7 +60,7 @@ public class CSSCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE, true);
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR, true);
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE, false);
-		node.putInt(CSSCorePreferenceNames.CASE_IDENTIFIER, CSSCorePreferenceNames.UPPER);
+		node.putInt(CSSCorePreferenceNames.CASE_IDENTIFIER, CSSCorePreferenceNames.LOWER);
 		node.putInt(CSSCorePreferenceNames.CASE_SELECTOR, CSSCorePreferenceNames.LOWER);
 		node.putInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME, CSSCorePreferenceNames.LOWER);
 		node.putInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE, CSSCorePreferenceNames.LOWER);

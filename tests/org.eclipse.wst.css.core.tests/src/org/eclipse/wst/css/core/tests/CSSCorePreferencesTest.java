@@ -7,11 +7,9 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
+ *
  *******************************************************************************/
 package org.eclipse.wst.css.core.tests;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -29,10 +27,12 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.service.prefs.Preferences;
 
+import junit.framework.TestCase;
+
 /**
  * The purpose of this test is to verify the validity of the XML Source editor
  * preferences. Tests include setting/getting preferences.
- * 
+ *
  * NOTE: This test should be preformed on a clean workspace. If performed on
  * an existing workspace, this test will manipulate preferences in the
  * workspace, though attempts will be made to restore original values after
@@ -71,14 +71,14 @@ public class CSSCorePreferencesTest extends TestCase {
 
 	/**
 	 * Tests default values of preferences.
-	 * 
+	 *
 	 * NOTE: Expected default values are hard-coded, so if default values do
 	 * get changed, assertions need to be updated as well
 	 */
 	public void testPluginGetDefaultPreferences() {
 		IEclipsePreferences node = new DefaultScope().getNode(CSSCorePlugin.getDefault().getBundle().getSymbolicName());
 
-		pluginGetDefaultPreference(node, CSSCorePreferenceNames.CASE_IDENTIFIER, "2");
+		pluginGetDefaultPreference(node, CSSCorePreferenceNames.CASE_IDENTIFIER, "1");
 		pluginGetDefaultPreference(node, CSSCorePreferenceNames.INDENTATION_CHAR, CSSCorePreferenceNames.TAB);
 	}
 
