@@ -106,6 +106,9 @@
 		<pseudo-class name="only-of-type"/>
 		<pseudo-class name="root"/>
 		<pseudo-class name="target"/>
+		<property name="align-content"/>
+		<property name="align-items"/>
+		<property name="align-self"/>
 		<property name="azimuth"/>
 		<property name="background"/>
 		<property name="background-attachment"/>
@@ -171,6 +174,13 @@
 		<property name="display"/>
 		<property name="elevation"/>
 		<property name="empty-cells"/>
+		<property name="flex"/>
+		<property name="flex-basis"/>
+		<property name="flex-direction"/>
+		<property name="flex-flow"/>
+		<property name="flex-grow"/>
+		<property name="flex-shrink"/>
+		<property name="flex-wrap"/>
 		<property name="float"/>
 		<property name="font"/>
 		<property name="font-family"/>
@@ -181,6 +191,7 @@
 		<property name="font-variant"/>
 		<property name="font-weight"/>
 		<property name="height"/>
+		<property name="justify-content"/>
 		<property name="left"/>
 		<property name="letter-spacing"/>
 		<property name="line-height"/>
@@ -200,6 +211,7 @@
 		<property name="min-height"/>
 		<property name="min-width"/>
 		<property name="opacity"/>
+		<property name="order"/>
 		<property name="orphans"/>
 		<property name="outline"/>
 		<property name="outline-color"/>
@@ -368,6 +380,41 @@
         <keyword name="leftwards"/>
         <keyword name="rightwards"/>
         <keyword name="inherit"/>
+    </property-def>
+    <property-def name="align-content" 
+    	inherited="no" mediagroup="visual" category="visual" version="3">
+    	<keyword name="flex-start"/>
+    	<keyword name="flex-end"/>
+    	<keyword name="center"/>
+    	<keyword name="space-between"/>
+    	<keyword name="space-around"/>
+    	<keyword name="stretch"/>
+    	<keyword name="inherit"/>
+    	<keyword name="initial"/>
+    	<keyword name="unset"/>
+    </property-def>
+    <property-def name="align-items" 
+    	inherited="no" mediagroup="visual" category="visual" version="3">
+    	<keyword name="flex-start"/>
+    	<keyword name="flex-end"/>
+    	<keyword name="center"/>
+    	<keyword name="baseline"/>
+    	<keyword name="stretch"/>
+    	<keyword name="inherit"/>
+    	<keyword name="initial"/>
+    	<keyword name="unset"/>
+    </property-def>
+    <property-def name="align-self" 
+    	inherited="no" mediagroup="visual" category="visual" version="3">
+    	<keyword name="auto"/>
+    	<keyword name="flex-start"/>
+    	<keyword name="flex-end"/>
+    	<keyword name="center"/>
+    	<keyword name="baseline"/>
+    	<keyword name="stretch"/>
+    	<keyword name="inherit"/>
+    	<keyword name="initial"/>
+    	<keyword name="unset"/>
     </property-def>
     <property-def name="background"
 		inherited="no" mediagroup="visual" category="colorandbackground">
@@ -771,6 +818,7 @@
 		<keyword name="inline-block"/>
 		<keyword name="block"/>
 		<keyword name="list-item"/>
+		<keyword name="inline-list-item"/>
 		<keyword name="run-in"/>
 		<keyword name="compact"/>
 		<keyword name="marker"/>
@@ -784,8 +832,12 @@
 		<keyword name="table-column"/>
 		<keyword name="table-cell"/>
 		<keyword name="table-caption"/>
+		<keyword name="flex"/>
+		<keyword name="inline-flex"/>
 		<keyword name="none"/>
 		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
 	</property-def>
 	<property-def name="elevation"
 		inherited="yes" mediagroup="aural" category="aural">
@@ -802,6 +854,68 @@
 		<keyword name="show"/>
 		<keyword name="hide"/>
 		<keyword name="inherit"/>
+	</property-def>
+	<property-def name="flex" 
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<number name="number"/>
+		<number name="length"/>
+		<keyword name="none"/>
+		<keyword name="auto"/>
+		<keyword name="content"/>
+		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
+	</property-def>
+	<property-def name="flex-basis"
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<number name="length"/>
+		<keyword name="auto"/>
+		<keyword name="fill"/>
+		<keyword name="max-content"/>
+		<keyword name="min-content"/>
+		<keyword name="fit-content"/>
+		<keyword name="content"/>
+		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
+	</property-def>
+	<property-def name="flex-direction"
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<keyword name="row"/>
+		<keyword name="row-reverse"/>
+		<keyword name="column"/>
+		<keyword name="column-reverse"/>
+		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
+	</property-def>
+	<property-def name="flex-flow"
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<property name="flex-direction" />
+		<property name="flex-wrap" />
+	</property-def>
+	<property-def name="flex-grow"
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<number name="number"/>
+		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
+	</property-def>
+	<property-def name="flex-shrink"
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<number name="number"/>
+		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
+	</property-def>
+	<property-def name="flex-wrap"
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<keyword name="nowrap"/>
+		<keyword name="wrap"/>
+		<keyword name="wrap-reverse"/>
+		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
 	</property-def>
 	<property-def name="float"
 		inherited="no" mediagroup="visual" category="visual">
@@ -899,6 +1013,17 @@
 		<number name="percentage"/>
 		<keyword name="auto"/>
 		<keyword name="inherit"/>
+	</property-def>
+	<property-def name="justify-content"
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<keyword name="flex-start"/>
+		<keyword name="flex-end"/>
+		<keyword name="center"/>
+		<keyword name="space-between"/>
+		<keyword name="space-around"/>
+		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
 	</property-def>
 	<property-def name="left"
 		inherited="no" mediagroup="visual" category="visual">
@@ -1043,6 +1168,13 @@
 		inherited="yes" mediagroup="visual" category="visual" version="3">
 		<number name="number"/>
 		<keyword name="inherit"/>
+	</property-def>
+	<property-def name="order"
+		inherited="no" mediagroup="visual" category="visual" version="3">
+		<number name="integer"/>
+		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
 	</property-def>
 	<property-def name="orphans"
 		inherited="yes" mediagroup="visual,paged" category="page">
@@ -1932,6 +2064,12 @@
     <keyword-def name="collapse">
         <keyword-value>collapse</keyword-value>
     </keyword-def>
+    <keyword-def name="column">
+        <keyword-value>column</keyword-value>
+    </keyword-def>
+    <keyword-def name="column-reverse">
+        <keyword-value>column-reverse</keyword-value>
+    </keyword-def>
     <keyword-def name="compact">
         <keyword-value>compact</keyword-value>
     </keyword-def>
@@ -1940,6 +2078,9 @@
     </keyword-def>
     <keyword-def name="contain" version="3">
     	<keyword-value>contain</keyword-value>
+    </keyword-def>
+    <keyword-def name="content" version="3">
+    	<keyword-value>content</keyword-value>
     </keyword-def>
     <keyword-def name="content-box" version="3">
     	<keyword-value>content-box</keyword-value>
@@ -2022,8 +2163,23 @@
     <keyword-def name="female">
         <keyword-value>female</keyword-value>
     </keyword-def>
+    <keyword-def name="fill">
+        <keyword-value>fill</keyword-value>
+    </keyword-def>
+    <keyword-def name="fit-content">
+        <keyword-value>fit-content</keyword-value>
+    </keyword-def>
     <keyword-def name="fixed">
         <keyword-value>fixed</keyword-value>
+    </keyword-def>
+    <keyword-def name="flex">
+        <keyword-value>flex</keyword-value>
+    </keyword-def>
+    <keyword-def name="flex-start">
+        <keyword-value>flex-start</keyword-value>
+    </keyword-def>
+    <keyword-def name="flex-end">
+        <keyword-value>flex-end</keyword-value>
     </keyword-def>
     <keyword-def name="fuchsia">
         <keyword-value>fuchsia</keyword-value>
@@ -2105,6 +2261,9 @@
     </keyword-def>
     <keyword-def name="inline-block">
         <keyword-value>inline-block</keyword-value>
+    </keyword-def>
+    <keyword-def name="inline-flex">
+        <keyword-value>inline-flex</keyword-value>
     </keyword-def>
     <keyword-def name="inline-table">
         <keyword-value>inline-table</keyword-value>
@@ -2202,6 +2361,9 @@
     <keyword-def name="maroon">
         <keyword-value>maroon</keyword-value>
     </keyword-def>
+    <keyword-def name="max-content">
+        <keyword-value>max-content</keyword-value>
+    </keyword-def>
     <keyword-def name="medium">
         <keyword-value>medium</keyword-value>
     </keyword-def>
@@ -2216,6 +2378,9 @@
     </keyword-def>
     <keyword-def name="middle">
         <keyword-value>middle</keyword-value>
+    </keyword-def>
+    <keyword-def name="min-content">
+        <keyword-value>min-content</keyword-value>
     </keyword-def>
     <keyword-def name="mix">
         <keyword-value>mix</keyword-value>
@@ -2337,6 +2502,12 @@
     <keyword-def name="round" version="3">
         <keyword-value>round</keyword-value>
     </keyword-def>
+    <keyword-def name="row">
+        <keyword-value>row</keyword-value>
+    </keyword-def>
+    <keyword-def name="row-reverse">
+        <keyword-value>row-reverse</keyword-value>
+    </keyword-def>
     <keyword-def name="rtl">
         <keyword-value>rtl</keyword-value>
     </keyword-def>
@@ -2406,6 +2577,12 @@
     <keyword-def name="space" version="3">
         <keyword-value>space</keyword-value>
     </keyword-def>
+    <keyword-def name="space-around">
+        <keyword-value>space-around</keyword-value>
+    </keyword-def>
+    <keyword-def name="space-between">
+        <keyword-value>space-between</keyword-value>
+    </keyword-def>
     <keyword-def name="spell-out">
         <keyword-value>spell-out</keyword-value>
     </keyword-def>
@@ -2417,6 +2594,9 @@
     </keyword-def>
     <keyword-def name="status-bar">
         <keyword-value>status-bar</keyword-value>
+    </keyword-def>
+    <keyword-def name="stretch">
+    	<keyword-value>stretch</keyword-value>
     </keyword-def>
     <keyword-def name="sub">
         <keyword-value>sub</keyword-value>
@@ -2543,6 +2723,12 @@
     </keyword-def>
     <keyword-def name="WindowText">
         <keyword-value>WindowText</keyword-value>
+    </keyword-def>
+    <keyword-def name="wrap">
+        <keyword-value>wrap</keyword-value>
+    </keyword-def>
+    <keyword-def name="wrap-reverse">
+        <keyword-value>wrap-reverse</keyword-value>
     </keyword-def>
     <keyword-def name="x-fast">
         <keyword-value>x-fast</keyword-value>
