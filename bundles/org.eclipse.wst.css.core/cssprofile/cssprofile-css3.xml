@@ -1009,6 +1009,8 @@
 		<number name="percentage"/>
 		<keyword name="none"/>
 		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>	
 	</property-def>
 	<property-def name="max-width"
 		inherited="no" mediagroup="visual" category="visual">
@@ -1016,20 +1018,26 @@
 		<number name="percentage"/>
 		<keyword name="none"/>
 		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>	
 	</property-def>
 	<property-def name="min-height"
 		inherited="no" mediagroup="visual" category="visual">
 		<number name="length"/>
 		<number name="percentage"/>
-		<keyword name="none"/>
+		<keyword name="auto"/>
 		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
 	</property-def>
 	<property-def name="min-width"
 		inherited="no" mediagroup="visual" category="visual">
 		<number name="length"/>
 		<number name="percentage"/>
-		<keyword name="none"/>
+		<keyword name="auto"/>
 		<keyword name="inherit"/>
+		<keyword name="initial"/>
+		<keyword name="unset"/>
 	</property-def>
 	<property-def name="opacity"
 		inherited="yes" mediagroup="visual" category="visual" version="3">
@@ -2089,6 +2097,9 @@
     <keyword-def name="inherit">
         <keyword-value>inherit</keyword-value>
     </keyword-def>
+    <keyword-def name="initial">
+        <keyword-value>initial</keyword-value>
+    </keyword-def>
     <keyword-def name="inline">
         <keyword-value>inline</keyword-value>
     </keyword-def>
@@ -2490,6 +2501,9 @@
     </keyword-def>
     <keyword-def name="underline">
         <keyword-value>underline</keyword-value>
+    </keyword-def>
+    <keyword-def name="unset">
+        <keyword-value>unset</keyword-value>
     </keyword-def>
     <keyword-def name="upper-alpha">
         <keyword-value>upper-alpha</keyword-value>
