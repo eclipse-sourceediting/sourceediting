@@ -12,5 +12,5 @@
  *******************************************************************************/
  -->
 <templates>
-<template name="%Templates.newcss.name" description="%Templates.newcss.desc" id="org.eclipse.wst.css.ui.internal.templates.newcss" context="css_new" enabled="true">@CHARSET "${encoding}";</template>
+<template name="%Templates.newcss.name" description="%Templates.newcss.desc" id="org.eclipse.wst.css.ui.internal.templates.newcss" context="css_new" enabled="true">@charset "${encoding}";</template>
 </templates>
