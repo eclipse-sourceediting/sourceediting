@@ -660,13 +660,15 @@ public abstract class AbstractJSONSourceFormatter implements
 	}
 
 	String getLineDelimiter(IJSONNode node) {
-		IJSONModel model = (node != null) ? node.getOwnerDocument().getModel()
-				: null;
-		return (model != null) ? model.getStructuredDocument()
-				.getLineDelimiter() : "\n"; //$NON-NLS-1$
-
-		// TODO : check whether to use model.getLineDelimiter() or
-		// model.getStructuredDocument().getLineDelimiter()
+		IJSONModel model = node != null ? 
+				node.getOwnerDocument().getModel() :
+					null;
+		IStructuredDocument structuredDocument = model != null ? 
+				model.getStructuredDocument() :
+					null;
+		return structuredDocument != null ?
+				structuredDocument.getLineDelimiter() :
+					"\n"; //$NON-NLS-1$
 	}
 
 	protected CompoundRegion[] getOutsideRegions(IStructuredDocument model,
