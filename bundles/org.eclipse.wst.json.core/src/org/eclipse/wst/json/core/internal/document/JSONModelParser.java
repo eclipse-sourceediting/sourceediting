@@ -71,7 +71,9 @@ public class JSONModelParser {
 		JSONObjectImpl parentObj = (JSONObjectImpl) node.getParentNode();
 		if (parentObj != null && parentObj.getParentOrPairNode() instanceof JSONPairImpl) {
 			JSONPairImpl parentPair = (JSONPairImpl) parentObj.getParentOrPairNode();
-			parentPair.setValue(parentObj);
+			if (parentPair.getValue() != parentObj.getParentNode()) {
+				parentPair.setValue(parentObj);
+			}
 		}
 	}
 	
@@ -893,7 +895,9 @@ public class JSONModelParser {
 					}
 					if(structure.getParentOrPairNode() instanceof JSONPairImpl) {
 						JSONPairImpl parentPair = (JSONPairImpl) structure.getParentOrPairNode();
-						parentPair.setValue(structure);
+						if (structure.getParentNode() != parentPair.getValue()) {
+							parentPair.setValue(structure);
+						}
 					}
 				} else if (structure.getNodeType() == IJSONNode.ARRAY_NODE) {
 					// If the parent is a JSONArray insert the new JSONValue at
@@ -1012,7 +1016,9 @@ public class JSONModelParser {
 					this.context.setCurrentNode(pair);
 				if(object.getParentOrPairNode() instanceof JSONPairImpl) {
 					JSONPairImpl parentPair = (JSONPairImpl) object.getParentOrPairNode();
-					parentPair.setValue(object);
+					if (object.getParentNode() != parentPair.getValue()) {
+						parentPair.setValue(object);
+					}
 				}
 			} else if (region.getType() == JSONRegionContexts.JSON_COLON) {
 				pair.setEqualRegion(region);
