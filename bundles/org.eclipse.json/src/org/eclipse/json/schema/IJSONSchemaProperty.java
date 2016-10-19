@@ -10,22 +10,10 @@
  */
 package org.eclipse.json.schema;
 
-import java.util.List;
-
 public interface IJSONSchemaProperty extends IJSONSchemaNode {
 
 	IJSONSchemaProperty[] EMPTY_PROPERTY = new IJSONSchemaProperty[0];
-
+	
 	String getName();
-
-	String getDescription();
-
-	JSONSchemaType[] getType();
-
-	JSONSchemaType getFirstType();
-	
-	List<String> getEnumList();
-	
-	public String getDefaultValue();
 
 }

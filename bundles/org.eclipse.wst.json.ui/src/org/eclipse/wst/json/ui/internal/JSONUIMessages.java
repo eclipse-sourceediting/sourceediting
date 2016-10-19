@@ -23,6 +23,8 @@ public class JSONUIMessages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.wst.json.ui.internal.JSONUIMessages";//$NON-NLS-1$
 
+	public static String EnableSchemaValidation;
+
 	public static String Invalid_URL;
 	public static String The_name_field_is_required;
 	public static String The_entry_already_exists;

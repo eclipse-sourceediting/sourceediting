@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -14,6 +14,8 @@ package org.eclipse.wst.json.core.util;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.wst.json.core.document.IJSONNode;
 import org.eclipse.wst.json.core.internal.Logger;
 import org.eclipse.wst.json.core.regions.JSONRegionContexts;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -22,6 +24,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 public class JSONUtil {
+
+	public static final String QUOTE = "\""; //$NON-NLS-1$
 
 	public static void debugOut(String str) {
 		Logger.log(Logger.WARNING, "json warning: " + str); //$NON-NLS-1$
@@ -272,5 +276,30 @@ public class JSONUtil {
 
 	public static boolean isEndJSONStructure(String regionType) {
 		return (regionType == JSONRegionContexts.JSON_ARRAY_CLOSE || regionType == JSONRegionContexts.JSON_OBJECT_CLOSE);
+	}
+
+	public static String getString(IJSONNode node) {
+		String value;
+		try {
+			value = node.getModel().getStructuredDocument().get(node.getStartOffset(), node.getEndOffset()-node.getStartOffset());
+		} catch (BadLocationException e) {
+			// ignore
+			return null;
+		}
+		value = removeQuote(value);
+		return value;
+	}
+
+	public static String removeQuote(String value) {
+		if (value != null) {
+			value = value.trim();
+			if (value.startsWith(QUOTE)) {
+				value = value.substring(1);
+			}
+			if (value.endsWith(QUOTE)) {
+				value = value.substring(0, value.length() - 1);
+			}
+		}
+		return value;
 	}
 }

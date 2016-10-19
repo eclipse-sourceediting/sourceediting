@@ -30,6 +30,7 @@ public class JSONCorePreferenceInitializer extends
 
 		// Validation preferences
 		node.putBoolean(JSONCorePreferenceNames.SYNTAX_VALIDATION, false);
+		node.putBoolean(JSONCorePreferenceNames.SCHEMA_VALIDATION, false);
 		node.putInt(JSONCorePreferenceNames.MISSING_BRACKET, 2);
 		
 		// formatting preferences
