@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013, 2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
 package org.eclipse.wst.json.core.internal.schema;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -22,9 +24,13 @@ import org.eclipse.json.schema.IJSONSchemaProcessor;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.json.core.JSONCorePlugin;
+import org.eclipse.wst.json.core.document.IJSONDocument;
 import org.eclipse.wst.json.core.document.IJSONModel;
 import org.eclipse.wst.json.core.document.IJSONNode;
+import org.eclipse.wst.json.core.document.IJSONPair;
+import org.eclipse.wst.json.core.document.IJSONValue;
 import org.eclipse.wst.json.core.internal.Logger;
+import org.eclipse.wst.json.core.util.JSONUtil;
 
 public class SchemaProcessorRegistryReader {
 
@@ -57,6 +63,30 @@ public class SchemaProcessorRegistryReader {
 		IJSONSchemaProcessor processor = getDefaultProcessor();
 		if (processor == null) {
 			return null;
+		}
+		IJSONDocument document = model.getDocument();
+		IJSONNode jsonObject = document.getFirstChild();
+		if (jsonObject != null) {
+			IJSONNode child = jsonObject.getFirstChild();
+			while (child != null) {
+				if (child instanceof IJSONPair) {
+					IJSONPair pair = (IJSONPair) child;
+					String name = pair.getName();
+					IJSONValue valueNode = pair.getValue();
+					if (valueNode != null && "$schema".equals(name)) { //$NON-NLS-1$
+						String schema = JSONUtil.getString(valueNode);
+						try {
+							if (schema != null) {
+								schema = URIHelper.addImpliedFileProtocol(schema);
+								new URL(schema);
+								return processor.getSchema(schema);
+							}
+						} catch (MalformedURLException e) {
+						}
+					}
+				}
+				child = child.getNextSibling();
+			}
 		}
 		String base = model == null || model.getResolver() == null ?
 				null : model.getResolver().getFileBaseLocation();

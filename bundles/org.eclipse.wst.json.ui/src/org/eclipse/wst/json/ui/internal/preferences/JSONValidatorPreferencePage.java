@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.ControlEnableState;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
@@ -38,6 +39,7 @@ import org.eclipse.wst.json.ui.internal.JSONUIMessages;
 import org.eclipse.wst.json.ui.internal.JSONUIPlugin;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractValidationSettingsPage;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage {
 	private static final String SETTINGS_SECTION_NAME = "JSONValidationSeverities";//$NON-NLS-1$
@@ -74,6 +76,10 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 
 	private Group fSyntaxValidationGroup;
 	private ControlEnableState fSyntaxState;
+
+	private boolean fOriginalUseSchemaValidation;
+
+	private Button fSchemaValidation;
 
 	private static final int[] JSON_SEVERITIES = { ValidationMessage.WARNING,
 			ValidationMessage.ERROR, ValidationMessage.IGNORE };
@@ -122,6 +128,13 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 			}
 		});
 
+		fOriginalUseSchemaValidation = getBooleanPreference(
+				JSONCorePreferenceNames.SCHEMA_VALIDATION, false, contexts);
+		fSchemaValidation = createCheckBox(parent,
+				JSONUIMessages.EnableSchemaValidation);
+		((GridData) fSchemaValidation.getLayoutData()).horizontalSpan = 2;
+		fSchemaValidation
+				.setSelection(fOriginalUseSchemaValidation);
 		fSyntaxValidationGroup = createGroup(parent, 3);
 		((GridLayout) fSyntaxValidationGroup.getLayout()).makeColumnsEqualWidth = false;
 		fSyntaxValidationGroup
@@ -219,6 +232,12 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 		boolean useExtendedSyntaxValidation = modelPreferences.getBoolean(
 				JSONCorePreferenceNames.SYNTAX_VALIDATION, false);
 
+		boolean useSchemaValidation = modelPreferences.getBoolean(
+				JSONCorePreferenceNames.SCHEMA_VALIDATION, false);
+		if (fSchemaValidation != null) {
+			fSchemaValidation.setSelection(useSchemaValidation);
+		}
+
 		if (fExtendedSyntaxValidation != null) {
 			if (fExtendedSyntaxValidation.getSelection() != useExtendedSyntaxValidation) {
 				handleSyntaxSeveritySelection(useExtendedSyntaxValidation);
@@ -250,6 +269,11 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 			contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(
 					JSONCorePreferenceNames.SYNTAX_VALIDATION,
 					extendedSyntaxValidation);
+		}
+		if (fSchemaValidation != null) {
+			contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(
+					JSONCorePreferenceNames.SCHEMA_VALIDATION,
+					fSchemaValidation.getSelection());
 		}
 	}
 
@@ -367,8 +391,9 @@ public class JSONValidatorPreferencePage extends AbstractValidationSettingsPage 
 
 	@Override
 	protected boolean shouldRevalidateOnSettingsChange() {
-		return fOriginalUseExtendedSyntaxValidation != fExtendedSyntaxValidation
-				.getSelection()
+		return fOriginalUseSchemaValidation != fSchemaValidation.getSelection()
+				|| fOriginalUseExtendedSyntaxValidation != fExtendedSyntaxValidation.getSelection()
 				|| super.shouldRevalidateOnSettingsChange();
 	}
+
 }

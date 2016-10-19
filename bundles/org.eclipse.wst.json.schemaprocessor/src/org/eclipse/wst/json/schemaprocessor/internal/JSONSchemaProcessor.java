@@ -47,15 +47,21 @@ public class JSONSchemaProcessor implements IJSONSchemaProcessor {
 				is = url.openStream();
 			} else {
 				File f = HttpClientProvider.getFile(url);
-				is = new FileInputStream(f);
+				if (f != null) {
+					is = new FileInputStream(f);
+				}
 			}
-			schemaDocument = new JSONSchemaDocument(new InputStreamReader(is));
+			if (is != null) {
+				schemaDocument = new JSONSchemaDocument(new InputStreamReader(is));
+			}
 		} finally {
 			if (is != null) {
 				is.close();
 			}
 		}
-		schemaDocuments.put(uriString, schemaDocument);
+		if (schemaDocument != null) {
+			schemaDocuments.put(uriString, schemaDocument);
+		}
 		return schemaDocument;
 	}
 	
