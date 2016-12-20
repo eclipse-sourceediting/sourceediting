@@ -69,11 +69,13 @@ public class HttpClientProvider {
 			long lastModified = file.lastModified();
 			if (urlLastModified > lastModified) {
 				file = download(file, url);
-				file.setLastModified(urlLastModified);
+				if (file != null) {
+					file.setLastModified(urlLastModified);
+				}
 			}
 		} else {
 			file = download(file, url);
-			if (urlLastModified > -1) {
+			if (file != null && urlLastModified > -1) {
 				file.setLastModified(urlLastModified);
 			}
 		}
