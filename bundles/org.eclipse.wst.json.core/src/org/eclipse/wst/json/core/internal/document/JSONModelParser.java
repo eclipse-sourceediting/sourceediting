@@ -93,7 +93,7 @@ public class JSONModelParser {
 		if(node.getNodeType() == IJSONNode.PAIR_NODE) {
 			JSONPairImpl pair = (JSONPairImpl) node;
 			pair.updateValue(value);
-		} else if (isJSONValue(node.getFirstStructuredDocumentRegion().getType())) {
+		} else if (node.getFirstStructuredDocumentRegion() != null && isJSONValue(node.getFirstStructuredDocumentRegion().getType())) {
 			JSONValueImpl oldValue = (JSONValueImpl) node;
 			oldValue.updateValue(value);
 		} else if (node instanceof JSONArrayImpl) {
@@ -1765,7 +1765,7 @@ public class JSONModelParser {
 			}
 		}
 		
-		if(node instanceof JSONPairImpl && ((JSONPairImpl) node).getValue() == null) {
+		if(node instanceof JSONPairImpl && ((JSONPairImpl) node).getValue() != null) {
 			if(isJSONValue(startStructuredDocumentRegion.getType())) {
 				// This is a JSONPair and the flatNode might be the pair value
 				this.context.setCurrentNode(node);
