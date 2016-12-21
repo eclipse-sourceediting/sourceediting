@@ -14,8 +14,6 @@
  *******************************************************************************/
 package org.eclipse.wst.json.core.internal.document;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.wst.json.core.contenttype.ContentTypeIdForJSON;
 import org.eclipse.wst.json.core.document.IJSONArray;
 import org.eclipse.wst.json.core.document.IJSONDocument;
 import org.eclipse.wst.json.core.document.IJSONModel;
@@ -25,7 +23,6 @@ import org.eclipse.wst.json.core.document.IJSONPair;
 import org.eclipse.wst.json.core.document.IJSONValue;
 import org.eclipse.wst.json.core.internal.Logger;
 import org.eclipse.wst.json.core.regions.JSONRegionContexts;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
@@ -586,13 +583,21 @@ public class JSONModelImpl extends AbstractStructuredModel implements
 				}
 			}
 			if (!reloadModel && oldStructuredDocumentRegions != null && oldStructuredDocumentRegions.getLength() > 0) {
-				// Reload all the model when the first region that will be
-				// replaced is a JSONObject or if more than 3 regions are
-				// replaced in the model (a JSONPair is composed by 3 regions,
-				// this means more that one JSON Pair are replaced in the model)
-				if (oldStructuredDocumentRegions.item(0).getType().equals(JSONRegionContexts.JSON_OBJECT_OPEN)
-						|| oldStructuredDocumentRegions.getLength() > 3)
+				if (oldStructuredDocumentRegions.getLength() > 3 || oldStructuredDocumentRegions.item(0).getType().equals(JSONRegionContexts.JSON_OBJECT_OPEN)) {
+					// Reload all the model when the first region that will be
+					// replaced is a JSONObject or if more than 3 regions are
+					// replaced in the model (a JSONPair is composed by 3 regions,
+					// this means more that one JSON Pair are replaced in the model)
+					
 					reloadModel = true;
+				} else {
+					// also, always reload the model in case of removing at least one UNDEFINED region
+					for (int i = 0; !reloadModel && i < oldStructuredDocumentRegions.getLength(); i++) {
+						if (oldStructuredDocumentRegions.item(i).getType().equals(JSONRegionContexts.UNDEFINED)) {
+							reloadModel = true;
+						}
+					}
+				}
 			}
 			if(reloadModel) {
 				this.refresh = true;

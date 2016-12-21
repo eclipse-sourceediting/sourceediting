@@ -15,8 +15,8 @@
 package org.eclipse.wst.json.core.internal.document;
 
 import org.eclipse.wst.json.core.document.IJSONDocument;
-import org.eclipse.wst.json.core.document.IJSONStructure;
 import org.eclipse.wst.json.core.document.IJSONNode;
+import org.eclipse.wst.json.core.document.IJSONStructure;
 import org.eclipse.wst.json.core.document.JSONException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
@@ -381,7 +381,7 @@ public abstract class JSONStructureImpl extends JSONValueImpl implements
 	public IJSONNode removeChild(IJSONNode oldChild) throws JSONException {
 		if (oldChild == null)
 			return null;
-		if (oldChild.getParentNode() != this) {
+		if (oldChild.getParentNode() != null && oldChild.getParentNode() != this) {
 			// throw new JSONException(JSONException.NOT_FOUND_ERR,
 			// JSONMessages.NOT_FOUND_ERR);
 			throw new JSONException();
@@ -400,19 +400,22 @@ public abstract class JSONStructureImpl extends JSONValueImpl implements
 		}
 
 		JSONNodeImpl child = (JSONNodeImpl) oldChild;
-		JSONNodeImpl prev = (JSONNodeImpl) child.getPreviousSibling();
-		JSONNodeImpl next = (JSONNodeImpl) child.getNextSibling();
-
-		// child.setEditable(true, true); // clear ReadOnly flags
-
-		if (prev == null)
-			this.firstChild = next;
-		else
-			prev.setNextSibling(next);
-		if (next == null)
-			this.lastChild = prev;
-		else
-			next.setPreviousSibling(prev);
+		if (oldChild.getParentNode() == this) {
+			JSONNodeImpl prev = (JSONNodeImpl) child.getPreviousSibling();
+			JSONNodeImpl next = (JSONNodeImpl) child.getNextSibling();
+	
+			// child.setEditable(true, true); // clear ReadOnly flags
+	
+			if (prev == null)
+				this.firstChild = next;
+			else
+				prev.setNextSibling(next);
+			if (next == null)
+				this.lastChild = prev;
+			else
+				next.setPreviousSibling(prev);
+		}
+		
 		child.setPreviousSibling(null);
 		child.setNextSibling(null);
 		child.setParentNode(null);
