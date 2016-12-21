@@ -58,7 +58,8 @@ public class SchemaProcessorRegistryReader {
 		if (processor == null) {
 			return null;
 		}
-		String base = model.getResolver().getFileBaseLocation();
+		String base = model == null || model.getResolver() == null ?
+				null : model.getResolver().getFileBaseLocation();
 		/**
 		 * We shouldn't assert a failure because the catalog does not require a
 		 * base location to operate and it will be called from non-file-based
