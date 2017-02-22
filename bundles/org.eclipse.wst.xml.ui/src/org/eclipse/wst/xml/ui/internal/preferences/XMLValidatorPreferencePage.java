@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2016 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.ControlEnableState;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
@@ -45,6 +46,8 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 
 	boolean fOriginalUseHonourAllButtonSelected;
 
+	boolean fOriginalUseResolveExternalEntities;
+
 	boolean fOriginalUseExtendedMarkupValidation;
 
 	private Combo fIndicateNoGrammar = null;
@@ -54,6 +57,8 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 	private Combo fIndicateNoDocumentElement = null;
 
 	private Button fHonourAllSchemaLocations = null;
+
+	private Button fResolveExternalEntities = null;
 
 	private Button fUseXinclude = null;
 
@@ -112,6 +117,11 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 			((GridData) fHonourAllSchemaLocations.getLayoutData()).horizontalSpan = 2;
 		}
 
+		if (getProject() == null && fResolveExternalEntities == null) {
+			fResolveExternalEntities = createCheckBox(validatingGroup, XMLUIMessages.Resolve_external_entities);
+			((GridData) fResolveExternalEntities.getLayoutData()).horizontalSpan = 2;
+		}
+
 		IScopeContext[] contexts = createPreferenceScopes();
 		fOriginalUseXIncludeButtonSelected = getBooleanPreference(XMLCorePreferenceNames.USE_XINCLUDE, false, contexts);
 
@@ -121,6 +131,9 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 		fOriginalUseHonourAllButtonSelected = getBooleanPreference(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true, contexts);
 		if (fHonourAllSchemaLocations != null) {
 			fHonourAllSchemaLocations.setSelection(fOriginalUseHonourAllButtonSelected);
+		}
+		if (fResolveExternalEntities != null) {
+			fResolveExternalEntities.setSelection(fOriginalUseResolveExternalEntities = InstanceScope.INSTANCE.getNode(getPreferenceNodeQualifier()).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false));
 		}
 
 	}
@@ -191,7 +204,7 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 	}
 
 	protected void performDefaultsForValidatingGroup() {
-		IEclipsePreferences modelPreferences = new DefaultScope().getNode(getPreferenceNodeQualifier());
+		IEclipsePreferences modelPreferences = DefaultScope.INSTANCE.getNode(getPreferenceNodeQualifier());
 		boolean useXIncludeButtonSelected = modelPreferences.getBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
 
 		if (fUseXinclude != null) {
@@ -200,6 +213,9 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 		boolean useHonourAllButtonSelected = modelPreferences.getBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
 		if (fHonourAllSchemaLocations != null) {
 			fHonourAllSchemaLocations.setSelection(useHonourAllButtonSelected);
+		}
+		if (fResolveExternalEntities != null) {
+			fResolveExternalEntities.setSelection(DefaultScope.INSTANCE.getNode(getPreferenceNodeQualifier()).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false));
 		}
 	}
 
@@ -223,6 +239,9 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 		if (fHonourAllSchemaLocations != null) {
 			boolean honourAllButtonSelected = fHonourAllSchemaLocations.getSelection();
 			contexts[0].getNode(getPreferenceNodeQualifier()).putBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, honourAllButtonSelected);
+		}
+		if (getProject() == null && fResolveExternalEntities != null) {
+			InstanceScope.INSTANCE.getNode(getPreferenceNodeQualifier()).putBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, fResolveExternalEntities.getSelection());
 		}
 	}
 
@@ -336,6 +355,6 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 	}
 
 	protected boolean shouldRevalidateOnSettingsChange() {
-		return fOriginalUseExtendedMarkupValidation != fExtendedMarkupValidation.getSelection() || fOriginalUseXIncludeButtonSelected != fUseXinclude.getSelection() || fOriginalUseHonourAllButtonSelected != fHonourAllSchemaLocations.getSelection() || super.shouldRevalidateOnSettingsChange();
+		return fOriginalUseExtendedMarkupValidation != fExtendedMarkupValidation.getSelection() || fOriginalUseXIncludeButtonSelected != fUseXinclude.getSelection() || fOriginalUseHonourAllButtonSelected != fHonourAllSchemaLocations.getSelection() || (fResolveExternalEntities != null && fOriginalUseResolveExternalEntities != fResolveExternalEntities.getSelection()) || super.shouldRevalidateOnSettingsChange();
 	}
 }

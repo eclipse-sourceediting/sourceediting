@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,10 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -38,7 +41,14 @@ public class CommonXML {
 	public synchronized static DocumentBuilder getDocumentBuilder() {
 		DocumentBuilder result = null;
 		try {
-			result = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+			String xmlCoreId = XMLCorePlugin.getDefault().getBundle().getSymbolicName();
+			boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(xmlCoreId).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
+			documentBuilderFactory.setFeature("http://xml.org/sax/features/external-general-entities", resolveExternalEntities);
+			documentBuilderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", resolveExternalEntities);
+
+			result = documentBuilderFactory.newDocumentBuilder();
 			result.setEntityResolver(getEntityResolver());
 		}
 		catch (ParserConfigurationException e) {
@@ -51,12 +61,19 @@ public class CommonXML {
 		DocumentBuilder result = null;
 		try {
 			DocumentBuilderFactory instance = DocumentBuilderFactory.newInstance();
+
+			String xmlCoreId = XMLCorePlugin.getDefault().getBundle().getSymbolicName();
+			boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(xmlCoreId).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
+			instance.setFeature("http://xml.org/sax/features/external-general-entities", resolveExternalEntities);
+			instance.setFeature("http://xml.org/sax/features/external-parameter-entities", resolveExternalEntities);
+
 			instance.setValidating(validating);
 			instance.setExpandEntityReferences(false);
 			instance.setCoalescing(true);
 			result = instance.newDocumentBuilder();
-			if (!validating)
+			if (!validating) {
 				result.setEntityResolver(getEntityResolver());
+			}
 		}
 		catch (ParserConfigurationException e) {
 			Logger.logException(e);

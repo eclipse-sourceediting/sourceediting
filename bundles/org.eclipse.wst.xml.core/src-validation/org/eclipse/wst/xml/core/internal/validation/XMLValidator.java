@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2014 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import java.util.TreeSet;
 import org.apache.xerces.impl.XMLErrorReporter;
 import org.apache.xerces.impl.msg.XMLMessageFormatter;
 import org.apache.xerces.parsers.XIncludeAwareParserConfiguration;
+import org.apache.xerces.parsers.XML11Configuration;
 import org.apache.xerces.xni.Augmentations;
 import org.apache.xerces.xni.NamespaceContext;
 import org.apache.xerces.xni.QName;
@@ -51,6 +52,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.URIUtil;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
@@ -74,10 +76,11 @@ import org.xml.sax.ext.DeclHandler;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * This class performs validation using a xerces sax parser.  
- * Here's a quick overview of the details : 
+ * This class performs validation using a Xerces SAX parser.
+ * Here's a quick overview of the details :
  *   - an ErrorHandler is used to collect errors into a list (so they may be displayed by the UI)
- *   - an EntityResolver is used along with the xerces "external-schemaLocation" property to implement XML Catalog support
+ *   - an EntityResolver is used along with the Xerces "external-schemaLocation" property to implement XML Catalog support
+ *   - drops support for external general and parameter entities is disabled in the Xerces entity manager - http://bugs.eclipse.org/508083
  */
 public class XMLValidator
 {
@@ -90,13 +93,13 @@ public class XMLValidator
   protected static final String PREMATURE_EOF = "PrematureEOF"; //$NON-NLS-1$
   protected static final String ROOT_ELEMENT_TYPE_MUST_MATCH_DOCTYPEDECL = "RootElementTypeMustMatchDoctypedecl"; //$NON-NLS-1$
   protected static final String MSG_ELEMENT_NOT_DECLARED = "MSG_ELEMENT_NOT_DECLARED"; //$NON-NLS-1$
-  
+
   // WTP XML validator specific key.
   protected static final String NO_GRAMMAR_FOUND = "NO_GRAMMAR_FOUND"; //$NON-NLS-1$
   protected static final String NO_DOCUMENT_ELEMENT_FOUND = "NO_DOCUMENT_ELEMENT_FOUND"; //$NON-NLS-1$
-  
+
   private static final String FILE_NOT_FOUND_KEY = "FILE_NOT_FOUND"; //$NON-NLS-1$
-   
+
   private StreamingMarkupValidator val = new StreamingMarkupValidator();
   
   private final String ANNOTATIONMSG = AnnotationMsg.class.getName();
@@ -106,13 +109,12 @@ public class XMLValidator
    * Constructor.
    */
   public XMLValidator()
-  {                          
-    // Here we add some error keys that we need to filter out when we're validation 
-    // against a DTD without any element declarations.       
+  {
+    // Here we add some error keys that we need to filter out when we're validating
+    // against a DTD without any element declarations.
     ingoredErrorKeyTable.put(PREMATURE_EOF, IGNORE_ALWAYS);
     ingoredErrorKeyTable.put(ROOT_ELEMENT_TYPE_MUST_MATCH_DOCTYPEDECL, IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL);
     ingoredErrorKeyTable.put(MSG_ELEMENT_NOT_DECLARED, IGNORE_IF_DTD_WITHOUT_ELEMENT_DECL);
-    
     // Here we add some error keys that we need to adjust the location information for.
     // The location information will be adjusted to place the message on the line of the starting
     // element instead of on the line of the closing element.
@@ -156,7 +158,7 @@ public class XMLValidator
         /* (non-Javadoc)
          * @see org.apache.xerces.parsers.AbstractSAXParser#startDocument(org.apache.xerces.xni.XMLLocator, java.lang.String, org.apache.xerces.xni.NamespaceContext, org.apache.xerces.xni.Augmentations)
          */
-        public void startDocument(org.apache.xerces.xni.XMLLocator theLocator, java.lang.String encoding, NamespaceContext nscontext, org.apache.xerces.xni.Augmentations augs) 
+        public void startDocument(org.apache.xerces.xni.XMLLocator theLocator, java.lang.String encoding, NamespaceContext nscontext, org.apache.xerces.xni.Augmentations augs)
         {
           locator = theLocator;
           valinfo.setXMLLocator(theLocator);
@@ -166,17 +168,17 @@ public class XMLValidator
         /* (non-Javadoc)
          * @see org.apache.xerces.parsers.AbstractSAXParser#startElement(org.apache.xerces.xni.QName, org.apache.xerces.xni.XMLAttributes, org.apache.xerces.xni.Augmentations)
          */
-        public void startElement(QName arg0, XMLAttributes arg1, Augmentations arg2) throws XNIException 
+        public void startElement(QName element, XMLAttributes attributes, Augmentations augs) throws XNIException
         {
           valinfo.getStartElementLocations().push(new LocationCoordinate(locator.getLineNumber(), locator.getColumnNumber()));
-		  super.startElement(arg0, arg1, arg2);
+		  super.startElement(element, attributes, augs);
 		}
         
 		/* (non-Javadoc)
 		 * @see org.apache.xerces.parsers.AbstractSAXParser#endElement(org.apache.xerces.xni.QName, org.apache.xerces.xni.Augmentations)
 		 */
-		public void endElement(QName arg0, Augmentations arg1) throws XNIException {
-			super.endElement(arg0, arg1);
+		public void endElement(QName element, Augmentations augs) throws XNIException {
+			super.endElement(element, augs);
 			valinfo.getStartElementLocations().pop();
 		}
       };
@@ -830,8 +832,14 @@ public class XMLValidator
   	 */
   	public MyStandardParserConfiguration(XMLValidationInfo valinfo)
   	{
-  	  this.valinfo = valinfo;
-  	  
+      this.valinfo = valinfo;
+
+      String xmlCoreId = XMLCorePlugin.getDefault().getBundle().getSymbolicName();
+      boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(xmlCoreId).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
+      setFeature(XML11Configuration.EXTERNAL_GENERAL_ENTITIES, resolveExternalEntities );
+      setFeature(XML11Configuration.EXTERNAL_PARAMETER_ENTITIES, resolveExternalEntities);
+      resetCommon();
+
   	  XMLErrorReporter errorReporter = createErrorReporter();
       if (errorReporter.getMessageFormatter(XMLMessageFormatter.XML_DOMAIN) == null) {
           XMLMessageFormatter xmft = new XMLMessageFormatter();
@@ -851,11 +859,11 @@ public class XMLValidator
     {
     	return new XMLErrorReporter()
 		{
-    		/* (non-Javadoc)
-    		 * @see org.apache.xerces.impl.XMLErrorReporter#reportError(java.lang.String, java.lang.String, java.lang.Object[], short)
-    		 */
-    		public void reportError(String domain, String key, Object[] arguments, short severity) throws XNIException 
-    	    {                    
+            /* (non-Javadoc)
+             * @see org.apache.xerces.impl.XMLErrorReporter#reportError(java.lang.String, java.lang.String, java.lang.Object[], short)
+             */
+            public void reportError(String domain, String key, Object[] arguments, short severity) throws XNIException
+            {
 		      boolean reportError = true;
               valinfo.setCurrentErrorKey(key);  
 			  valinfo.setMessageArguments(arguments);

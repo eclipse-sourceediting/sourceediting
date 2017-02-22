@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,6 +66,7 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
 		node.putBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
 		node.putBoolean(XMLCorePreferenceNames.CMDOCUMENT_GLOBAL_CACHE_ENABLED, true);
+		node.putBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
 		
 		node.putBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION, false);
 		node.putInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE, 2);

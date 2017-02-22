@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,10 +19,13 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -81,6 +84,14 @@ public class ValidatorHelper
     reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true); //$NON-NLS-1$
     reader.setFeature("http://xml.org/sax/features/namespaces", false); //$NON-NLS-1$
     reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
+
+    // http://bugs.eclipse.org/508083
+    String xmlCoreId = XMLCorePlugin.getDefault().getBundle().getSymbolicName();
+    boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(xmlCoreId).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
+
+    reader.setFeature("http://xml.org/sax/features/external-general-entities", resolveExternalEntities); //$NON-NLS-1$
+    reader.setFeature("http://xml.org/sax/features/external-parameter-entities", resolveExternalEntities); //$NON-NLS-1$
+
     reader.setContentHandler(new MyContentHandler(uri));
     reader.setErrorHandler(new InternalErrorHandler());
 
