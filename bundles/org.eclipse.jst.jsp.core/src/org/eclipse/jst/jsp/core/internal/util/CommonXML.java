@@ -27,10 +27,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -42,11 +39,7 @@ public class CommonXML {
 		DocumentBuilder result = null;
 		try {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-
-			String xmlCoreId = XMLCorePlugin.getDefault().getBundle().getSymbolicName();
-			boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(xmlCoreId).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
-			documentBuilderFactory.setFeature("http://xml.org/sax/features/external-general-entities", resolveExternalEntities);
-			documentBuilderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", resolveExternalEntities);
+			documentBuilderFactory.setExpandEntityReferences(false);
 
 			result = documentBuilderFactory.newDocumentBuilder();
 			result.setEntityResolver(getEntityResolver());
@@ -61,11 +54,6 @@ public class CommonXML {
 		DocumentBuilder result = null;
 		try {
 			DocumentBuilderFactory instance = DocumentBuilderFactory.newInstance();
-
-			String xmlCoreId = XMLCorePlugin.getDefault().getBundle().getSymbolicName();
-			boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(xmlCoreId).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
-			instance.setFeature("http://xml.org/sax/features/external-general-entities", resolveExternalEntities);
-			instance.setFeature("http://xml.org/sax/features/external-parameter-entities", resolveExternalEntities);
 
 			instance.setValidating(validating);
 			instance.setExpandEntityReferences(false);
