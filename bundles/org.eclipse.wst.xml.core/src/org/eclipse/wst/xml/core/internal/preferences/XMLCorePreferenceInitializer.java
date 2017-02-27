@@ -66,7 +66,7 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
 		node.putBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
 		node.putBoolean(XMLCorePreferenceNames.CMDOCUMENT_GLOBAL_CACHE_ENABLED, true);
-		node.putBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
+		node.putBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, Boolean.valueOf(System.getProperty("xmlvalidation.resolve-external-entities")).booleanValue());
 		
 		node.putBoolean(XMLCorePreferenceNames.MARKUP_VALIDATION, false);
 		node.putInt(XMLCorePreferenceNames.ATTRIBUTE_HAS_NO_VALUE, 2);
