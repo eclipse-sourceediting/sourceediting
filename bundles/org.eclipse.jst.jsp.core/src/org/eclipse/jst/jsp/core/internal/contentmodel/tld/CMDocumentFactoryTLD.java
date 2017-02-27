@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 IBM Corporation and others.
+ * Copyright (c) 2004, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -392,24 +393,33 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	}
 
 	private IPath getExportedTagPath(IFile file, String path) {
-		final IJavaProject javaProject = JavaCore.create(file.getProject());
-		// http://bugs.eclipse.org/433619
-		if (javaProject != null && javaProject.exists()) {
-			IWorkspaceRoot root = file.getWorkspace().getRoot();
-			try {
-				final IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
-				for (int i = 0; i < packageFragmentRoots.length; i++) {
-					if (!packageFragmentRoots[i].isArchive() && !packageFragmentRoots[i].isExternal()) {
-						IPath ipath = packageFragmentRoots[i].getPath().append(new Path(path));
-						if (root.getFile(ipath).isAccessible()) {
-							return ipath;
+		IProject project = file.getProject();
+		try {
+			// http://bugs.eclipse.org/433619
+			if (!project.hasNature(JavaCore.NATURE_ID)) {
+				return null;
+			}
+			final IJavaProject javaProject = JavaCore.create(project);
+			if (javaProject != null && javaProject.exists()) {
+				IWorkspaceRoot root = file.getWorkspace().getRoot();
+				try {
+					final IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
+					for (int i = 0; i < packageFragmentRoots.length; i++) {
+						if (!packageFragmentRoots[i].isArchive() && !packageFragmentRoots[i].isExternal()) {
+							IPath ipath = packageFragmentRoots[i].getPath().append(new Path(path));
+							if (root.getFile(ipath).isAccessible()) {
+								return ipath;
+							}
 						}
 					}
 				}
+				catch (JavaModelException e) {
+					Logger.logException(e);
+				}
 			}
-			catch (JavaModelException e) {
-				Logger.logException(e);
-			}
+		}
+		catch (CoreException e1) {
+			Logger.logException(e1);
 		}
 		return null;
 	}
