@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,6 +81,13 @@ public class ValidatorHelper
     reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true); //$NON-NLS-1$
     reader.setFeature("http://xml.org/sax/features/namespaces", false); //$NON-NLS-1$
     reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //$NON-NLS-1$
+
+    // http://bugs.eclipse.org/508083
+    if (!Boolean.valueOf(System.getProperty("xmlvalidation.resolve-external-entities")).booleanValue()) {//$NON-NLS-1$
+	    reader.setFeature("http://xml.org/sax/features/external-general-entities", false); //$NON-NLS-1$
+	    reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false); //$NON-NLS-1$
+    }
+
     reader.setContentHandler(new MyContentHandler(uri));
     reader.setErrorHandler(new InternalErrorHandler());
 

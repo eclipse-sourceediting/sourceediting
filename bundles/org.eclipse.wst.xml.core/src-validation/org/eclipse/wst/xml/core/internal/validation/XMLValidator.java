@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2014 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import java.util.TreeSet;
 import org.apache.xerces.impl.XMLErrorReporter;
 import org.apache.xerces.impl.msg.XMLMessageFormatter;
 import org.apache.xerces.parsers.XIncludeAwareParserConfiguration;
+import org.apache.xerces.parsers.XML11Configuration;
 import org.apache.xerces.xni.Augmentations;
 import org.apache.xerces.xni.NamespaceContext;
 import org.apache.xerces.xni.QName;
@@ -830,8 +831,16 @@ public class XMLValidator
   	 */
   	public MyStandardParserConfiguration(XMLValidationInfo valinfo)
   	{
-  	  this.valinfo = valinfo;
-  	  
+      this.valinfo = valinfo;
+
+      // http://bugs.eclipse.org/508083
+      if (!Boolean.valueOf(System.getProperty("xmlvalidation.resolve-external-entities")).booleanValue()) //$NON-NLS-1$
+      {
+        setFeature(XML11Configuration.EXTERNAL_GENERAL_ENTITIES, false);
+        setFeature(XML11Configuration.EXTERNAL_PARAMETER_ENTITIES, false);
+        resetCommon();
+      }
+
   	  XMLErrorReporter errorReporter = createErrorReporter();
       if (errorReporter.getMessageFormatter(XMLMessageFormatter.XML_DOMAIN) == null) {
           XMLMessageFormatter xmft = new XMLMessageFormatter();
