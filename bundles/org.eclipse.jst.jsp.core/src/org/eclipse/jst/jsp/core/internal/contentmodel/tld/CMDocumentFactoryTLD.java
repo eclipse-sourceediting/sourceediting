@@ -396,7 +396,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		IProject project = file.getProject();
 		try {
 			// http://bugs.eclipse.org/433619
-			if (!project.hasNature(JavaCore.NATURE_ID)) {
+			if (!project.isAccessible() || !project.hasNature(JavaCore.NATURE_ID)) {
 				return null;
 			}
 			final IJavaProject javaProject = JavaCore.create(project);

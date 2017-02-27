@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,23 +89,25 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 			else if (searchType == ATTRIBUTE)
 				declarations = model.getDocument().getElementsByTagName(JSP11TLDNames.ATTRIBUTE);
 		}
-		for (int i = 0; i < declarations.getLength(); i++) {
-			NodeList names = model.getDocument().getElementsByTagName(JSP11TLDNames.NAME);
-			for (int j = 0; j < names.getLength(); j++) {
-				String name = getContainedText(names.item(j));
-				if (searchName.compareTo(name) == 0) {
-					int start = -1;
-					int end = -1;
-					Node caret = names.item(j).getFirstChild();
-					if (caret != null) {
-						start = ((IDOMNode) caret).getStartOffset();
-					}
-					while (caret != null) {
-						end = ((IDOMNode) caret).getEndOffset();
-						caret = caret.getNextSibling();
-					}
-					if (start > 0) {
-						return new Region(start, end - start);
+		if (declarations != null) {
+			for (int i = 0; i < declarations.getLength(); i++) {
+				NodeList names = model.getDocument().getElementsByTagName(JSP11TLDNames.NAME);
+				for (int j = 0; j < names.getLength(); j++) {
+					String name = getContainedText(names.item(j));
+					if (searchName.compareTo(name) == 0) {
+						int start = -1;
+						int end = -1;
+						Node caret = names.item(j).getFirstChild();
+						if (caret != null) {
+							start = ((IDOMNode) caret).getStartOffset();
+						}
+						while (caret != null) {
+							end = ((IDOMNode) caret).getEndOffset();
+							caret = caret.getNextSibling();
+						}
+						if (start > 0) {
+							return new Region(start, end - start);
+						}
 					}
 				}
 			}
