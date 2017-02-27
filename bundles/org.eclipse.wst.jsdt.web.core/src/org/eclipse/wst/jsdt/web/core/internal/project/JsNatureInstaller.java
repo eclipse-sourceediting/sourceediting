@@ -50,7 +50,7 @@ public class JsNatureInstaller implements IDelegate {
 			jsNature.configure();
 			monitor.worked(40);
 			
-			new ConvertJob(project, false, true).schedule(1000);
+			new ConvertJob(project, false).schedule(1000);
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, JsCorePlugin.PLUGIN_ID, IStatus.OK, Messages.getString("JsNatureInstaller.3"), e)); //$NON-NLS-1$
 		}

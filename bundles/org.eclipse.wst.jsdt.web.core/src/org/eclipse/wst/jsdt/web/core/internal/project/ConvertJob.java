@@ -39,6 +39,14 @@ class ConvertJob extends WorkspaceJob {
 	private boolean fInstall = true;
 	private boolean fUseExplicitWorkingCopy = false;
 
+	ConvertJob(IProject project, boolean install) {
+		this(project, install, false);
+	}
+
+	/**
+	 * Unless required, recommended {@code useExplicitWorkingCopy = false} due to
+	 * {@link https://bugs.eclipse.org/bugs/show_bug.cgi?id=510377 bug 510377}.
+	 */
 	ConvertJob(IProject project, boolean install, boolean useExplicitWorkingCopy) {
 		super(Messages.converter_ConfiguringForJavaScript);
 		fProject = project;

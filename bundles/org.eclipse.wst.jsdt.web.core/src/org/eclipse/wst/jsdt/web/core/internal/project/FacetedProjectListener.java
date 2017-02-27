@@ -39,7 +39,7 @@ public class FacetedProjectListener implements IFacetedProjectListener {
 		if (event.getType() == IFacetedProjectEvent.Type.POST_INSTALL) {
 			IProjectFacetActionEvent actionEvent = (IProjectFacetActionEvent) event;
 			if (INTERESTING_FACETS.contains(actionEvent.getProjectFacet().getId())) {
-				new ConvertJob(event.getProject().getProject(), true, true).schedule(1000);
+				new ConvertJob(event.getProject().getProject(), true).schedule(1000);
 			}
 		}
 	}
