@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.ListenerList;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.widgets.Event;
@@ -58,7 +58,7 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
     private boolean set_p_helpListener;
     private boolean p_enabled = true; // should be same as what is done in
     private boolean set_p_enabled;
-    private ListenerList p_listeners = new ListenerList(3);
+    private ListenerList p_listeners = new ListenerList(ListenerList.IDENTITY);
     private boolean set_p_listeners;
     private boolean p_checked;
     private boolean set_p_checked;
