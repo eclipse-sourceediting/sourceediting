@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2013 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2017 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -1070,16 +1070,17 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	 * @see org.eclipse.ui.part.MultiPageEditorPart#pageChange(int)
 	 */
 	protected void pageChange(int newPageIndex) {
-		if (newPageIndex == fSourcePageIndex) {
+		if (newPageIndex == fSourcePageIndex && fDesignViewer != null) {
 			ISelectionProvider provider = fDesignViewer.getSelectionProvider();
 			if (provider != null) {
 				getTextEditor().getSelectionProvider().setSelection(provider.getSelection());
 			}
 		}
+
 		super.pageChange(newPageIndex);
 		saveLastActivePageIndex(newPageIndex);
 
-		if (newPageIndex == fDesignPageIndex) {
+		if (newPageIndex == fDesignPageIndex && fDesignViewer != null) {
 			// design page isn't an IEditorPart, therefore we have to send
 			// selection changes ourselves
 			ISelectionProvider selectionProvider = fDesignViewer.getSelectionProvider();
