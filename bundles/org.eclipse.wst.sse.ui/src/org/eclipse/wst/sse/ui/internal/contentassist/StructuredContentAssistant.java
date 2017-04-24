@@ -40,6 +40,17 @@ public class StructuredContentAssistant extends ContentAssistant {
 	 * <p>Construct the assistant</p>
 	 */
 	public StructuredContentAssistant() {
+		this(false);
+	}
+
+	/**
+	 * 
+	 * @param asynchronous
+	 *            <true> if this content assistant should present the proposals
+	 *            asynchronously, <code>false</code> otherwise
+	 */
+	public StructuredContentAssistant(boolean asynchronous) {
+		super(asynchronous);
 		this.fIsInitalized = false;
 		this.fReleasableProcessors = new ArrayList();
 	}
