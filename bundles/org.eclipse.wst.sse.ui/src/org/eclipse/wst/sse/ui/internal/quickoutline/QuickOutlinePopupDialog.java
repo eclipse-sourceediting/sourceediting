@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,11 +63,11 @@ import org.eclipse.wst.sse.ui.quickoutline.AbstractQuickOutlineConfiguration;
 /**
  * Popup dialog that contains the filtering input and the outline
  * view of the editor's input.
- * 
+ *
  * <p>
  * Based on {@link org.eclipse.jdt.internal.ui.text.AbstractInformationControl}
  * </p>
- * 
+ *
  */
 public class QuickOutlinePopupDialog extends PopupDialog implements IInformationControl, IInformationControlExtension, IInformationControlExtension2, DisposeListener {
 
@@ -89,7 +89,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 	private IContentSelectionProvider fSelectionProvider;
 
 	private StringPatternFilter fFilter;
-	
+
 	public QuickOutlinePopupDialog(Shell parent, int shellStyle, IStructuredModel model, AbstractQuickOutlineConfiguration configuration) {
 		super(parent, shellStyle, true, true, true, true, true, null, null);
 		fContentProvider = configuration.getContentProvider();
@@ -208,7 +208,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 				if (result != null)
 					return result;
 			}
-				
+
 		}
 		return result;
 	}
@@ -224,9 +224,12 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 	private void gotoSelectedElement() {
 		Object element = getSelectedElement();
 		dispose();
-		ITextEditor editor = getActiveTextEditor();
-		if (editor != null) {
-			editor.selectAndReveal(((IndexedRegion) element).getStartOffset(), ((IndexedRegion) element).getEndOffset() - ((IndexedRegion) element).getStartOffset());
+		if (element != null) {
+			ITextEditor editor = getActiveTextEditor();
+			if (editor != null) {
+				editor.selectAndReveal(((IndexedRegion) element).getStartOffset(),
+						((IndexedRegion) element).getEndOffset() - ((IndexedRegion) element).getStartOffset());
+			}
 		}
 	}
 
