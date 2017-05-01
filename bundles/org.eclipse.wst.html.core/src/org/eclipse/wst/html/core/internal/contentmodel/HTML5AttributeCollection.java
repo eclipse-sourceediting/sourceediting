@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2014 IBM Corporation and others.
+ * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -635,11 +635,12 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attributes.putNamedItem(ATTR_NAME_ALT, attr);
 			
 			
-			// (type %autocomeplete; ) ... should be defined locally.
-			// NOTE: %autocomeplete is ENUM;
+			// (type %autocomplete; ) ... should be defined locally.
+			// NOTE: %autocomplete is ENUM, but which enums can differ;
+			// http://w3c.github.io/html/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute
 			// (on | off)
-			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
-			String[] autoCompleteValues = {ATTR_VALUE_ON, ATTR_VALUE_OFF};
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			String[] autoCompleteValues = ATTR_AUTOFILL_DETAIL_TOKENS;
 			atype.setEnumValues(autoCompleteValues);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_AUTOCOMPLETE, atype, CMAttributeDeclaration.OPTIONAL);
 			attributes.putNamedItem(ATTR_NAME_AUTOCOMPLETE, attr);
@@ -1032,6 +1033,18 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype.setEnumValues(requiredValues);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_REQUIRED, atype, CMAttributeDeclaration.OPTIONAL);
 			attributes.putNamedItem(ATTR_NAME_REQUIRED, attr);
+
+			// (type %autocomplete; ) ... should be defined locally.
+			// NOTE: %autocomplete is ENUM, but which enums can differ;
+			// http://w3c.github.io/html/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute
+			// (on | off)
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] autoCompleteValues = new String[ATTR_AUTOFILL_DETAIL_TOKENS.length + ATTR_AUTOFILL_MULTILINE_DETAIL_TOKENS.length];
+			System.arraycopy(ATTR_AUTOFILL_DETAIL_TOKENS, 0, autoCompleteValues, 0, ATTR_AUTOFILL_DETAIL_TOKENS.length);
+			System.arraycopy(ATTR_AUTOFILL_MULTILINE_DETAIL_TOKENS, 0, autoCompleteValues, ATTR_AUTOFILL_DETAIL_TOKENS.length, ATTR_AUTOFILL_MULTILINE_DETAIL_TOKENS.length);
+			atype.setEnumValues(autoCompleteValues);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_AUTOCOMPLETE, atype, CMAttributeDeclaration.OPTIONAL);
+			attributes.putNamedItem(ATTR_NAME_AUTOCOMPLETE, attr);
 		}
 		/*
 		 * (charset %Charset; #IMPLIED)
@@ -1170,11 +1183,10 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			HTMLAttrDeclImpl attr = new HTMLAttrDeclImpl(ATTR_NAME_REVERSED, atype, CMAttributeDeclaration.OPTIONAL);
 			attributes.putNamedItem(ATTR_NAME_REVERSED, attr);
 			
-			//discouraged 
-			// (type %OLStyle; #IMPLIED) ... should be defined locally.
-			atype = new HTMLCMDataTypeImpl(HTMLCMDataType.OL_STYLE);
+			// (type ENUM #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			atype.setEnumValues(new String[] {"1", "A", "a", "I", "i"});
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_TYPE, atype, CMAttributeDeclaration.OPTIONAL);
-			attr.obsolete(true);
 			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
 			
 			// (compact (compact) #IMPLIED)

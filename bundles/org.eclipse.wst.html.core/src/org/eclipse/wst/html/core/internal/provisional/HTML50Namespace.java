@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2014 IBM Corporation and others.
+ * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -202,5 +202,70 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_VALUE_CONTEXT = "context"; //menu type //$NON-NLS-1$
 	String ATTR_VALUE_TOOLBAR = "toolbar"; //menu type //$NON-NLS-1$
 	String ATTR_VALUE_LIST = "list"; //menu type //$NON-NLS-1$
+	
+	// http://w3c.github.io/html/sec-forms.html#autofilling-form-controls-the-autocomplete-attribute
+	String[] ATTR_AUTOFILL_MULTILINE_DETAIL_TOKENS = new String[] {	"street-address" };
+	String[] ATTR_AUTOFILL_DETAIL_TOKENS = new String[] {
+	"name",
+	"honorific-prefix",
+	"given-name",
+	"additional-name",
+	"family-name",
+	"honorific-suffix",
+	"nickname",
+	"username",
+	"new-password",
+	"current-password",
+	"organization-title",
+	"organization",
+	"address-line1",
+	"address-line2",
+	"address-line3",
+	"address-level4",
+	"address-level3",
+	"address-level2",
+	"address-level1",
+	"country",
+	"country-name",
+	"postal-code",
+	"cc-name",
+	"cc-given-name",
+	"cc-additional-name",
+	"cc-family-name",
+	"cc-number",
+	"cc-exp",
+	"cc-exp-month",
+	"cc-exp-year",
+	"cc-csc",
+	"cc-type",
+	"transaction-currency",
+	"transaction-amount",
+	"language",
+	"bday",
+	"bday-day",
+	"bday-month",
+	"bday-year",
+	"sex",
+	"url",
+	"photo",
+	"shipping",
+	"billing",
+	"home",
+	"work",
+	"mobile",
+	"fax",
+	"pager",
+	"tel",
+	"tel-country-code",
+	"tel-national",
+	"tel-area-code",
+	"tel-local",
+	"tel-local-prefix",
+	"tel-local-suffix",
+	"tel-extension",
+	"email",
+	"impp",
+	"on",
+	"off"};
 		
 }
