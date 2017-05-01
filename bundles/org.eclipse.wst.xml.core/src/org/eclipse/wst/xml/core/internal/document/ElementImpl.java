@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ package org.eclipse.wst.xml.core.internal.document;
 import java.util.Iterator;
 import java.util.Stack;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -743,13 +744,13 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (newChild == null)
 			return null;
 		if (!isContainer()) { // never be container
-			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, DOMMessages.HIERARCHY_REQUEST_ERR);
+			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NLS.bind(DOMMessages.HIERARCHY_REQUEST_ERR_WITH_DETAILS, new String[] {newChild.getNodeName(), (refChild != null ? refChild.getNodeName() : "<null>") })); //$NON-NLS-1$
 		}
 		if (newChild.getNodeType() != TEXT_NODE && newChild.getNodeType() != CDATA_SECTION_NODE) {
 			if (isJSPContainer() || isCDATAContainer()) { // accepts only
 				// Text
 				// child
-				throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, DOMMessages.HIERARCHY_REQUEST_ERR);
+				throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NLS.bind(DOMMessages.HIERARCHY_REQUEST_ERR_WITH_DETAILS, new String[] {newChild.getNodeName(), (refChild != null ? refChild.getNodeName() : "<null>") })); //$NON-NLS-1$
 			}
 		}
 		return super.insertBefore(newChild, refChild);

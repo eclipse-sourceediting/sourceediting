@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ class DOMMessages extends NLS {
 
 	public static String DOMSTRING_SIZE_ERR;
 	public static String HIERARCHY_REQUEST_ERR;
+	public static String HIERARCHY_REQUEST_ERR_WITH_DETAILS;
 	public static String INDEX_SIZE_ERR;
 	public static String INUSE_ATTRIBUTE_ERR;
 	public static String INVALID_ACCESS_ERR;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@
 package org.eclipse.wst.xml.core.internal.document;
 
 
-
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.DOMException;
@@ -254,7 +254,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 			return newChild; // nothing to do
 		//new child can not be a parent of this, would cause cycle
 		if(isParent(newChild)) {
-			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, DOMMessages.HIERARCHY_REQUEST_ERR);
+			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, NLS.bind(DOMMessages.HIERARCHY_REQUEST_ERR_WITH_DETAILS, new String[] {newChild.getNodeName(), (refChild != null ? refChild.getNodeName() : "<null>") })); //$NON-NLS-1$
 		}
 
 		if (newChild.getNodeType() == DOCUMENT_FRAGMENT_NODE) {
