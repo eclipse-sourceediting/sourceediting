@@ -137,7 +137,9 @@
             <uri
                 name="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200802"
                 uri="xsd/ws-securitypolicy.xsd" />
-
+            <uri
+                name="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"
+                uri="xsd/xmldsig-core-schema.xsd"/>
 
             <!-- these are removed from the catalog, since they are -not- 
             the same as those in the xsd.ui plugin, which 
