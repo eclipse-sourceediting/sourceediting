@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,12 +16,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -60,7 +59,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
@@ -284,15 +282,6 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			annotationsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 			final TableViewer annotationsTable = new TableViewer(annotationsComposite, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-			annotationsTable.setComparator(new ViewerComparator(new Comparator() {
-				public int compare(Object o1, Object o2) {
-					Annotation annotation1 = (Annotation) o1;
-					Annotation annotation2 = (Annotation) o2;
-					String line1 = getLineNumber(annotation1);
-					String line2 = getLineNumber(annotation2);
-					return Integer.parseInt(line1) - Integer.parseInt(line2);
-				}
-			}));
 			annotationsTable.setContentProvider(new ArrayContentProvider());
 			annotationsTable.getTable().setHeaderVisible(true);
 			annotationsTable.getTable().setLinesVisible(true);
@@ -398,7 +387,16 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					}
 				}
 			}
-			annotationsTable.setSorter(new ViewerSorter());
+//			annotationsTable.setSorter(new ViewerSorter());
+			Collections.sort(matchingAnnotations, new Comparator() {
+				public int compare(Object o1, Object o2) {
+					Annotation annotation1 = (Annotation) o1;
+					Annotation annotation2 = (Annotation) o2;
+					String line1 = getLineNumber(annotation1);
+					String line2 = getLineNumber(annotation2);
+					return Integer.parseInt(line1) - Integer.parseInt(line2);
+				}
+			});
 			annotationsTable.setInput(matchingAnnotations);
 
 			final Sash sash = new Sash(annotationsComposite, SWT.HORIZONTAL);
@@ -472,18 +470,21 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			gd.horizontalSpan = 2;
 			documentTypeLabel.setLayoutData(gd);
 			documentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_6 + fDocument.getClass().getName()); //$NON-NLS-1$
+			documentTypeLabel.setBackground(composite.getBackground());
 
 			Text documentProviderLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
 			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gd.horizontalSpan = 2;
 			documentProviderLabel.setLayoutData(gd);
 			documentProviderLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_7 + fTextEditor.getDocumentProvider().getClass().getName()); //$NON-NLS-1$
+			documentProviderLabel.setBackground(composite.getBackground());
 
 			Text editorInputLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
 			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gd.horizontalSpan = 2;
 			editorInputLabel.setLayoutData(gd);
 			editorInputLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_12 + fTextEditor.getEditorInput().getClass().getName()); //$NON-NLS-1$
+			editorInputLabel.setBackground(composite.getBackground());
 
 			final Text bomLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
 			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
@@ -491,6 +492,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			bomLabel.setLayoutData(gd);
 			bomLabel.setEnabled(false);
 			bomLabel.setText("Byte Order Mark: ");
+			bomLabel.setBackground(composite.getBackground());
 
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (model != null) {
@@ -499,24 +501,28 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				gd.horizontalSpan = 2;
 				modelIdLabel.setLayoutData(gd);
 				modelIdLabel.setText("ID: " + model.getId()); //$NON-NLS-1$
+				modelIdLabel.setBackground(composite.getBackground());
 
 				Text modelBaseLocationLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;
 				modelBaseLocationLabel.setLayoutData(gd);
 				modelBaseLocationLabel.setText("Base Location: " + model.getBaseLocation()); //$NON-NLS-1$
+				modelBaseLocationLabel.setBackground(composite.getBackground());
 
 				Text modelContentTypeLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;
 				modelContentTypeLabel.setLayoutData(gd);
 				modelContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_4 + model.getContentTypeIdentifier()); //$NON-NLS-1$
+				modelContentTypeLabel.setBackground(composite.getBackground());
 
 				Text modelHandlerContentTypeLabel = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;
 				modelHandlerContentTypeLabel.setLayoutData(gd);
 				modelHandlerContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_5 + model.getModelHandler().getAssociatedContentTypeId() + " (" + model.getModelHandler() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				modelHandlerContentTypeLabel.setBackground(composite.getBackground());
 
 				final Text counts = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
@@ -524,6 +530,8 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				counts.setLayoutData(gd);
 				counts.setText("Counting...");
 				counts.setEnabled(false);
+				counts.setBackground(composite.getBackground());
+
 				final IStructuredModel finalModel = model;
 				final Display display = Display.getCurrent();
 				Job counter = new Job("Counting regions") {
@@ -674,14 +682,14 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		}
 
 		private List getIndexedRegions(ITextSelection textSelection) {
-			Set overlappingIndexedRegions = new HashSet(2);
+			List overlappingIndexedRegions = new ArrayList(2);
 			int start = textSelection.getOffset();
 			int end = start + textSelection.getLength();
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (model != null) {
 				for (int i = start; i <= end; i++) {
 					IndexedRegion r = model.getIndexedRegion(i);
-					if (r != null) {
+					if (r != null && !overlappingIndexedRegions.contains(r)) {
 						overlappingIndexedRegions.add(r);
 					}
 				}
@@ -989,7 +997,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 			structuredSelectionTable.getTable().setHeaderVisible(true);
 			structuredSelectionTable.getTable().setLinesVisible(true);
-			structuredSelectionTable.setSorter(new ViewerSorter() {
+			structuredSelectionTable.setComparator(new ViewerComparator() {
 				public int category(Object element) {
 					if (element instanceof IndexedRegion)
 						return ((IndexedRegion) element).getStartOffset();
