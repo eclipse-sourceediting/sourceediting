@@ -21,7 +21,7 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.jst.jsp.ui.tests</artifactId>
-  <version>1.0.800-SNAPSHOT</version>
+  <version>1.0.801-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
 
   <properties>
