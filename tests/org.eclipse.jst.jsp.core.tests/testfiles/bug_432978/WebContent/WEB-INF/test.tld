@@ -7,12 +7,12 @@
 	<display-name>Test Library</display-name>
 	<tlib-version>1.0</tlib-version>
 	<short-name>test</short-name>
-	<uri>http://eclipse.org/test</uri>
+	<uri>http://eclipse.org/testbug_432978</uri>
 
 	<tag>
 		<name>atbegin</name>
-		<tag-class>test.AtBeginTag</tag-class>
-		<tei-class>test.AtBeginTei</tei-class>
+		<tag-class>test432978.AtBeginTag</tag-class>
+		<tei-class>test432978.AtBeginTei</tei-class>
 		<body-content>JSP</body-content>
 	</tag>
 </taglib>

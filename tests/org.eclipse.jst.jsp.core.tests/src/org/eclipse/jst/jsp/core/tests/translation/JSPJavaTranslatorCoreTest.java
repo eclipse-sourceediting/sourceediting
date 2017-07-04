@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2015 IBM Corporation and others.
+ * Copyright (c) 2006, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,8 @@ import org.eclipse.jst.jsp.core.internal.taglib.CustomTag;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
 import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
+import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
+import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.jst.jsp.core.tests.validation.ReporterForTest;
@@ -742,6 +744,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		}
 	}
 
+	// http://bugs.eclipse.org/432978
 	public void test_432978() throws Exception {
         String testName = "bug_432978";
         // Create new project
@@ -750,28 +753,33 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
         BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 
         waitForBuildAndValidation(project);
+        project.getWorkspace().checkpoint(true);
 
-        IFile file = project.getFile("/WebContent/test.jsp");
+        IFile file1 = project.getFile("/WebContent/test.jsp");
         IFile file2= project.getFile("/WebContent/test2.jsp");
-        IDOMModel structuredModel = null;
+        IDOMModel structuredModel1 = null;
         IDOMModel structuredModel2 = null;
-        try {
-            structuredModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file);
+		try {
+			ITaglibRecord tld = TaglibIndex.resolve(file1.getFullPath().toString(), "http://eclipse.org/testbug_432978", false);
+			structuredModel1 = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file1);
 
-            ModelHandlerForJSP.ensureTranslationAdapterFactory(structuredModel);
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(structuredModel1);
 
-            JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) structuredModel.getDocument().getAdapterFor(IJSPTranslation.class);
+			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) structuredModel1.getDocument().getAdapterFor(IJSPTranslation.class);
 
-            final String translation = translationAdapter.getJSPTranslation().getJavaText();
+			final String translation = translationAdapter.getJSPTranslation().getJavaText();
 
-            assertTrue( translation.indexOf( "extra" ) != -1 );
+			assertTrue("The 'extra' integer declared by a TEI class was not found, taglib was: " + tld, translation.indexOf("java.lang.Integer extra") > 0);
 
-            // the extra variable should only be declared once in the translated text
-            assertEquals( 2, translation.split( "java.lang.Integer extra" ).length );
+			/*
+			 * the extra variable should only be declared once in the
+			 * translated text
+			 */
+			assertEquals(2, translation.split("java.lang.Integer extra").length);
 
-            structuredModel2 = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file2);
+			structuredModel2 = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file2);
 
-            ModelHandlerForJSP.ensureTranslationAdapterFactory(structuredModel2);
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(structuredModel2);
 
             JSPTranslationAdapter translationAdapter2 = (JSPTranslationAdapter) structuredModel2.getDocument().getAdapterFor(IJSPTranslation.class);
 
@@ -783,11 +791,43 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
             assertEquals( 3, translation2.split( "java.lang.Integer extra" ).length );
         }
         finally {
-            if (structuredModel != null)
-                structuredModel.releaseFromRead();
+            if (structuredModel1 != null)
+                structuredModel1.releaseFromRead();
 
             if (structuredModel2 != null)
                 structuredModel2.releaseFromRead();
+        }
+	}
+
+	// http://bugs.eclipse.org/518987
+	public void test_518987() throws Exception {
+        String testName = "bug_518987";
+        // Create new project
+        IProject project = BundleResourceUtil.createJavaWebProject(testName);
+        assertTrue(project.exists());
+        BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+
+        waitForBuildAndValidation(project);
+        project.getWorkspace().checkpoint(true);
+
+        IFile file1 = project.getFile("/WebContent/test1.jsp");
+        IDOMModel structuredModel1 = null;
+		try {
+			structuredModel1 = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file1);
+
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(structuredModel1);
+
+			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) structuredModel1.getDocument().getAdapterFor(IJSPTranslation.class);
+
+			final String translation = translationAdapter.getJSPTranslation().getJavaText();
+
+			assertFalse("The unprocessed custom action's attribute value pair should not be in the translated source, was the custom tag not parsed?", translation.indexOf("insert=") > 0);
+			assertTrue("The 'insert' integer declared by a TEI class was not found, was the custom tag not parsed?", translation.indexOf("java.lang.Integer insert") > 0);
+
+        }
+        finally {
+            if (structuredModel1 != null)
+                structuredModel1.releaseFromRead();
         }
 	}
 }
