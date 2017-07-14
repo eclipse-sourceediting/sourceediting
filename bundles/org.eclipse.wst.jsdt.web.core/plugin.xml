@@ -83,6 +83,7 @@
 		name="%javascript.validator"
 		point="org.eclipse.wst.validation.validatorV2">
       <validator
+            description="%javascript.validator.description"
             build="false"
 			class="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator"
             manual="false"
