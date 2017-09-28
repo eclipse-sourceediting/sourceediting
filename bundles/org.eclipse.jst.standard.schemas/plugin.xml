@@ -41,6 +41,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd"
                 uri="dtdsAndSchemas/application_7.xsd" />
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/application_8.xsd"
+                uri="dtdsAndSchemas/application_8.xsd" />
 
 
             <public
@@ -72,6 +75,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/application-client_7.xsd"
                 uri="dtdsAndSchemas/application-client_7.xsd" />
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd"
+                uri="dtdsAndSchemas/application-client_8.xsd" />
 
 		    <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/batchXML_1_0.xsd"
@@ -175,7 +181,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/javaee_7.xsd"
                 uri="dtdsAndSchemas/javaee_7.xsd" />
-
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/javaee_8.xsd"
+                uri="dtdsAndSchemas/javaee_8.xsd" />
 
             <uri
                 name="http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd"
@@ -344,7 +352,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
                 uri="dtdsAndSchemas/web-app_3_1.xsd" />
-
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+                uri="dtdsAndSchemas/web-app_4_0.xsd" />
                 
             <uri
                 name="http://java.sun.com/xml/ns/javaee/web-common_3_0.xsd"
@@ -355,7 +365,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-common_3_1.xsd"
                 uri="dtdsAndSchemas/web-common_3_1.xsd" />
-
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/web-common_4_0.xsd"
+                uri="dtdsAndSchemas/web-common_4_0.xsd" />
 
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
@@ -369,7 +381,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibrary_2_2.xsd"
                 uri="dtdsAndSchemas/web-facelettaglibrary_2_2.xsd"/>
-                
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibrary_2_3.xsd"
+                uri="dtdsAndSchemas/web-facelettaglibrary_2_3.xsd"/>  
                 
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
@@ -394,6 +408,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
                 uri="dtdsAndSchemas/web-facesconfig_2_2.xsd"/>
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
+                uri="dtdsAndSchemas/web-facesconfig_2_3.xsd"/>
 
 
             <uri
@@ -413,6 +430,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-fragment_3_1.xsd"
                 uri="dtdsAndSchemas/web-fragment_3_1.xsd" />
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/web-fragment_4_0.xsd"
+                uri="dtdsAndSchemas/web-fragment_4_0.xsd" />
 
 
             <public
@@ -446,7 +466,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-partialresponse_2_2.xsd"
                 uri="dtdsAndSchemas/web-partialresponse_2_2.xsd"/>
-
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/web-partialresponse_2_3.xsd"
+                uri="dtdsAndSchemas/web-partialresponse_2_3.xsd"/>
 
         </catalogContribution>
 
