@@ -159,7 +159,7 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 					if (editor instanceof ITextEditor)
 						textEditor = (ITextEditor) editor;
 					else
-						textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+						textEditor = editor.getAdapter(ITextEditor.class);
 				}
 			}
 		}

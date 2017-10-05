@@ -208,9 +208,9 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 
 
 	protected IResource getEditorInputResource(IEditorInput input) {
-		IResource resource = (IResource) input.getAdapter(IFile.class);
+		IResource resource = input.getAdapter(IFile.class);
 		if (resource == null) {
-			resource = (IResource) input.getAdapter(IResource.class);
+			resource =  input.getAdapter(IResource.class);
 		}
 		return resource;
 	}
