@@ -191,6 +191,15 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 		return delegateElement.isValid();
 	}
 
+	/**
+	 * @return 
+	 */
+	public int getHandleId() {
+		if( delegateElement == null )
+			return -1;
+		return delegateElement.getHandleId();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
