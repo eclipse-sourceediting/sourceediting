@@ -384,7 +384,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 	 * <p>
 	 * Invoked after the user has clicked the "Finish" button of the wizard. The default
 	 * implementation will attempt to update the final perspective to the value specified by
-	 * {@link #getFinalPerspectiveID() }
+	 * { @link #getFinalPerspectiveID() }
 	 * </p>
 	 * 
 	 * @throws InvocationTargetException
