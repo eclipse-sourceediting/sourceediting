@@ -18,7 +18,11 @@
    <license url="license.html">
       %license
    </license>
-
+   <requires>
+      <import feature="org.eclipse.wst.jsdt_sdk.feature"/>
+      <import feature="org.eclipse.wst.server_sdk.feature"/>
+      <import feature="org.eclipse.wst.common_sdk.feature"/>
+   </requires>
    <includes
          id="org.eclipse.wst.web_ui.feature"
          version="0.0.0"/>
@@ -28,15 +32,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.wst.jsdt_sdk.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.wst.xml_sdk.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.server_sdk.feature"
          version="0.0.0"/>
 
    <includes
