@@ -368,12 +368,12 @@ public abstract class ComponentDeployable extends ProjectModule {
 		final String archiveName2 = reference.getArchiveName();
 		final String archiveName = new Path(archiveName2).lastSegment();
 		final IVirtualComponent virtualComp = reference.getReferencedComponent();
-		IFile ifile = (IFile)virtualComp.getAdapter(IFile.class);
+		IFile ifile = virtualComp.getAdapter(IFile.class);
 		if (ifile != null) { //In Workspace
 			String name = null != archiveName ? archiveName : ifile.getName();
 			mf = new ModuleFile(ifile, name, runtimePath.makeRelative());
 		} else {
-			File extFile = (File)virtualComp.getAdapter(File.class);
+			File extFile = virtualComp.getAdapter(File.class);
 			String name = null != archiveName ? archiveName : extFile.getName();
 			mf = new ModuleFile(extFile, name, runtimePath.makeRelative());
 		}

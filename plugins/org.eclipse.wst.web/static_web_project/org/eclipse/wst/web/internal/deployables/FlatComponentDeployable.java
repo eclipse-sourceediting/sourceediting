@@ -230,8 +230,8 @@ public abstract class FlatComponentDeployable extends ProjectModule implements I
 	}
 
 	protected IModuleResource[] LEGACY_binaryMembers() {
-		IFile ifile = (IFile)component.getAdapter(IFile.class);
-		File file = (File)component.getAdapter(File.class);
+		IFile ifile = component.getAdapter(IFile.class);
+		File file = component.getAdapter(File.class);
 		ModuleFile mf = ifile != null ? new ModuleFile(ifile, ifile.getName(), new Path(""))  //$NON-NLS-1$
 		 		: new ModuleFile(file, file.getName(), new Path("")); //$NON-NLS-1$
 		return new IModuleResource[]{mf};
