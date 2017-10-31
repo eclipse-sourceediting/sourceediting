@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation and others.
+ * Copyright (c) 2012, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ public class TestHTMLResourceEncodingDetector extends TestCase {
 	private static final String XMLDeclContent_UTF8= "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
 	private static final String XMLDeclContent_ISO= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>";
 	private static final String XHTMLContent_HTML_AS_ROOTELEMENT = "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+	private static final String XHTMLContent_NOXHTMLNS = "<?xml version=\"1.0\" encoding=\"UTF-16\" ?><lorem ipsum=\"hami\">";
 	private static final String XHTMLContent_NOT_HTML_AS_ROOTELEMENT= "<ui:composition attribut=43 xmlns=\"http://www.w3.org/1999/xhtml\">";
 	private static final String METAContent = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />";
 	
@@ -75,7 +76,6 @@ public class TestHTMLResourceEncodingDetector extends TestCase {
 		contentType = getContentType(XHTMLContent_NOT_HTML_AS_ROOTELEMENT+METAContent);
 		assertEquals("ISO-8859-1", contentType);
 	}
-
 	
 	public void testXHTML() throws IOException{
 		String contentType = getContentType(XHTMLContent_HTML_AS_ROOTELEMENT);
@@ -83,5 +83,8 @@ public class TestHTMLResourceEncodingDetector extends TestCase {
 		
 		contentType = getContentType(XHTMLContent_NOT_HTML_AS_ROOTELEMENT);
 		assertEquals("UTF-8", contentType);
+
+		contentType = getContentType(XHTMLContent_NOXHTMLNS);
+		assertEquals("The XML declaration encoding value was ignored", "UTF-16", contentType);
 	}		
 }
