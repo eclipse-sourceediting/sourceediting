@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -153,6 +153,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 		return new HeadParserToken(context, start, text);
 	}
 	
+	/* Is this file XHTML, for the purposes of its description (encoding, etc.) */
     public boolean isXHTML() {
        return isXHTML;
     }
@@ -248,7 +249,7 @@ BeginAttributeValueUTF = {S_UTF}* \= {S_UTF}*
 <ST_XMLDecl> 
 {
 	//"version" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
-	({Z}e{Z}n{Z}c{Z}o{Z}d{Z}i{Z}n{Z}g{Z}) {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
+	({Z}e{Z}n{Z}c{Z}o{Z}d{Z}i{Z}n{Z}g{Z}) {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); this.isXHTML = true; return XMLHeadTokenizerConstants.XMLDelEncoding;}
 	// note this "forced end" once end of XML Declaration found
 	({Z}\?{Z}>{Z})    {yybegin(YYINITIAL);  return XMLHeadTokenizerConstants.XMLDeclEnd;}
 }	
