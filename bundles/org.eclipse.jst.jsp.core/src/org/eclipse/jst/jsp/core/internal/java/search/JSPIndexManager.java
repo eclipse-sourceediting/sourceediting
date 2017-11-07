@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2014 IBM Corporation and others.
+ * Copyright (c) 2004, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,10 +16,9 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
@@ -28,37 +27,52 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslatorPersister;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.sse.core.indexing.AbstractIndexManager;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
- * <p>Index manger used to update the JDT index with the Java translations
+ * <p>Index manager used to update the JDT index with the Java translations
  * of JSPs.</p>
  * 
  * <p>Also keeps JSP persistence up to date</p>
  * 
  * <p>Any action that needs the JDT index to have all of the latest JSP changes processed
- * should wait for this manger to report that it is consistent,
+ * should wait for this manager to report that it is consistent,
  * {@link #waitForConsistent(org.eclipse.core.runtime.IProgressMonitor)}.  Such actions
  * include but are not limited to searching and refactoring JSPs.</p>
  */
 public class JSPIndexManager extends AbstractIndexManager {
 	/** the singleton instance of the {@link JSPIndexManager} */
 	private static JSPIndexManager INSTANCE;
-		
+
+	private static final String INDEX_VERSION = "JSP Index Manager v3.9.2_20171107_01"; //$NON-NLS-1$
+
 	/** the location to store state */
 	private IPath fWorkingLocation;
-	
+
 	/**
-	 * <p>Private singleton constructor</p>
+	 * <p>
+	 * Private singleton constructor
+	 * </p>
 	 */
-	private JSPIndexManager() {
+	protected JSPIndexManager() {
 		super(JSPCoreMessages.JSPIndexManager);
 	}
-	
+
 	/**
 	 * @return the singleton instance of the {@link JSPIndexManager}
 	 */
 	public static JSPIndexManager getDefault() {
 		return INSTANCE != null ? INSTANCE : (INSTANCE = new JSPIndexManager());
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.indexing.AbstractIndexManager#isForcedFullReIndexNeeded()
+	 * Add a versioning check so we can force a re-index if needed
+	 */
+	protected boolean isForcedFullReIndexNeeded() {
+		IEclipsePreferences node = InstanceScope.INSTANCE.getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
+		String stored = node.get(JSPIndexManager.class.getName(), null);
+		return !INDEX_VERSION.equals(stored) || super.isForcedFullReIndexNeeded();
 	}
 
 	/*
@@ -66,50 +80,8 @@ public class JSPIndexManager extends AbstractIndexManager {
 	 */
 	protected boolean isResourceToIndex(int type, IPath path) {
 		String name = path.lastSegment();
-		if (name.startsWith(".")) {
-			return false;
-		}
-		switch (type) {
-			case IResource.PROJECT : {
-				// true for Java projects
-				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
-				try {
-					return project.isAccessible() && project.hasNature(JavaCore.NATURE_ID);
-				}
-				catch (CoreException e) {
-					Logger.logException(e);
-					return false;
-				}
-			}
-			case IResource.FOLDER : {
-				// false for Java Build Path output folders
-				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
-				try {
-					if (project.isAccessible() && project.hasNature(JavaCore.NATURE_ID)) {
-						IJavaProject javaProject = JavaCore.create(project);
-						if (javaProject.getOutputLocation().isPrefixOf(path)) {
-							return false;
-						}
-						IClasspathEntry[] rawClasspath = javaProject.getRawClasspath();
-						for (int i = 0; i < rawClasspath.length; i++) {
-							IPath specificOutput = rawClasspath[i].getOutputLocation();
-							if (specificOutput != null && specificOutput.isPrefixOf(path)) {
-								return false;
-							}
-						}
-					}
-				}
-				catch (CoreException e) {
-					Logger.logException(e);
-					return false;
-				}
-			}
-			case IResource.FILE : {
-				// true for file extensions from the JSP content types
-				return ContentTypeIdForJSP.indexOfJSPExtension(path.lastSegment()) >= 0;
-			}
-		}
-		return true;
+		
+		return type == IResource.PROJECT || (type == IResource.FOLDER && !name.equals("bin") && !name.startsWith(".")) || ContentTypeIdForJSP.indexOfJSPExtension(path.lastSegment()) >= 0;//$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -186,8 +158,23 @@ public class JSPIndexManager extends AbstractIndexManager {
 			}
 			catch (Exception e) {
 				String filename = file != null ? file.getFullPath().toString() : ""; //$NON-NLS-1$
-				Logger.logException("JPSIndexManger: problem indexing:" + filename, e); //$NON-NLS-1$
+				Logger.logException("JPSIndexManager: problem indexing:" + filename, e); //$NON-NLS-1$
 			}
 		}
+	}
+	
+	/**
+	 * Save index version
+	 */
+	public void doStop() {
+		IEclipsePreferences node = InstanceScope.INSTANCE.getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
+		node.put(JSPIndexManager.class.getName(), INDEX_VERSION);
+		try {
+			node.flush();
+		}
+		catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
+		super.doStop();
 	}
 }

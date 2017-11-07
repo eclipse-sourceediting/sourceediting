@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -244,11 +244,11 @@ public abstract class AbstractIndexManager {
 					this.fResourceChangeListener.start();
 
 					// check to see if a full re-index is required
-					boolean forcedFullReIndexNeeded = this.isForcedFullReIndexNeeded();
+					boolean forcedFullReIndexNeeded = isForcedFullReIndexNeeded();
 
 					/*
-					 * start the indexing job only loading preserved state if
-					 * not doing full index if failed loading preserved state
+					 * start the indexing job only loading preserved state, if
+					 * not doing full index. if failed loading preserved state,
 					 * then force full re-index
 					 */
 					forcedFullReIndexNeeded = !this.fResourceEventProcessingJob.start(!forcedFullReIndexNeeded, progress.newChild(1));
@@ -359,10 +359,16 @@ public abstract class AbstractIndexManager {
 					this.forceFullReIndexNextStart();
 				}
 
+				doStop();
+
 				// update status
 				this.fState = STATE_DISABLED;
 			}
 		}
+	}
+
+	protected void doStop() {
+		// any stop logic
 	}
 
 	/**
@@ -600,8 +606,9 @@ public abstract class AbstractIndexManager {
 	 *         {@link #forceFullReIndexNextStart()}, <code>false</code>
 	 *         otherwise
 	 */
-	private boolean isForcedFullReIndexNeeded() {
+	private boolean _isForcedFullReIndexNeeded() {
 		boolean forcedFullReIndexNeeded = false;
+
 		IPath reIndexPath = AbstractIndexManager.this.getWorkingLocation().append(RE_PROCESS_FILE_NAME);
 		File file = new File(reIndexPath.toOSString());
 		if (file.exists()) {
@@ -612,6 +619,15 @@ public abstract class AbstractIndexManager {
 		return forcedFullReIndexNeeded;
 	}
 
+	/**
+	 * @return <code>true</code> if a full workspace index is needed as
+	 *         dictated by this indexer, <code>false</code>
+	 *         otherwise
+	 *         @since 1.2.1001
+	 */
+	protected boolean isForcedFullReIndexNeeded() {
+		return _isForcedFullReIndexNeeded();
+	}
 	/**
 	 * <p>
 	 * A system {@link Job} used to visit all of the files in the workspace
