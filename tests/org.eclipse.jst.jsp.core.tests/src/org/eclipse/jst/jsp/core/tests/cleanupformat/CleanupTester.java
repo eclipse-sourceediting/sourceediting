@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -334,7 +334,9 @@ public class CleanupTester extends TestCase {
 	}
 
 	protected void compare(String testcaseName, String expected, String cleaned) {
-		assertTrue("Cleaned up document differs from the expected.\nExpected Contents:\n" + expected + "\nActual Contents:\n" + cleaned, fStringCompareUtil.equalsIgnoreLineSeperator(expected, cleaned));
+		if (fStringCompareUtil.equalsIgnoreLineSeperator(expected, cleaned)) {
+			assertEquals("Cleaned up document differs from the expected.", expected, cleaned);
+		}
 
 //		String expected2 = StringUtils.replace(expected, "\r\n", "\r");
 //		expected2 = StringUtils.replace(expected2, "\r", "\n");

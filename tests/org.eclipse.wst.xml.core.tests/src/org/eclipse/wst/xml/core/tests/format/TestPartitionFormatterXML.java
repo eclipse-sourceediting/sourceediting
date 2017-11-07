@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -163,8 +163,10 @@ public class TestPartitionFormatterXML extends TestCase {
 			expectedContents = StringUtils.replace(expectedContents, "\r", "\n");
 			actualContents = StringUtils.replace(actualContents, "\r\n", "\n");
 			actualContents = StringUtils.replace(actualContents, "\r", "\n");
-			
-			assertTrue("Formatted document differs from the expected.\nExpected Contents:\n" + expectedContents + "\nActual Contents:\n" + actualContents, fStringCompareUtil.equalsIgnoreLineSeperator(expectedContents, actualContents));
+
+			if (!fStringCompareUtil.equalsIgnoreLineSeperator(expectedContents, actualContents)) {
+				assertEquals("Formatted document differs from the expected.", expectedContents, actualContents);
+			}
 		}
 		finally {
 			if (beforeModel != null)
