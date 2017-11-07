@@ -133,6 +133,7 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_AUTOPLAY = "autoplay"; // %mediaElement; //$NON-NLS-1$
 	String ATTR_NAME_LOOP = "loop"; // %mediaElement; //$NON-NLS-1$
 	String ATTR_NAME_CONTROLS = "controls"; // %mediaElement; //$NON-NLS-1$
+	String ATTR_NAME_MUTED = "muted"; // %mediaElement; //$NON-NLS-1$
 	String ATTR_NAME_POSTER = "poster"; // %video; //$NON-NLS-1$
 	String ATTR_NAME_OPEN = "open"; // details //$NON-NLS-1$
 	String ATTR_NAME_PUBDATE = "pubdate"; //time //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,7 @@ class HedMediaElement extends HTMLElemDeclImpl {
 	 * (autoplay %ENUM; #IMPLIED) 
 	 * (loop %ENUM; #IMPLIED)
 	 * (controls %MediaType; #IMPLIED)
+	 * (muted %MediaType; #IMPLIED)
 	 * Global attributes
 	 */
 	protected void createAttributeDeclarations() {
@@ -87,7 +88,13 @@ class HedMediaElement extends HTMLElemDeclImpl {
 		attr = new HTMLAttrDeclImpl(HTML50Namespace.ATTR_NAME_CONTROLS, atype, CMAttributeDeclaration.OPTIONAL);
 		attributes.putNamedItem(HTML50Namespace.ATTR_NAME_CONTROLS, attr);
 
-		
+		// (muted (boolean) #IMPLIED)
+		atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+		String[] mutedValues = {HTML50Namespace.ATTR_NAME_MUTED};
+		atype.setEnumValues(mutedValues);
+		attr = new HTMLAttrDeclImpl(HTML50Namespace.ATTR_NAME_MUTED, atype, CMAttributeDeclaration.OPTIONAL);
+		attributes.putNamedItem(HTML50Namespace.ATTR_NAME_MUTED, attr);
+
 		// global attributes
 		attributeCollection.getAttrs(attributes);
 	}
