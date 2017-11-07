@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -389,14 +389,14 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	protected void processUseBean(IStructuredDocumentRegion sdRegion) {
 		if (fTagname != null && isUseBean(fTagname)) {
 
-			String beanClass, beanType, beanId, beanDecl = ""; //$NON-NLS-1$
-			beanClass = getAttributeValue("class", sdRegion); //$NON-NLS-1$
-			beanType = getAttributeValue("type", sdRegion); //$NON-NLS-1$
-			beanId = getAttributeValue("id", sdRegion); //$NON-NLS-1$
+			String beanDecl = null;
+			String beanClass = getAttributeValue("class", sdRegion); //$NON-NLS-1$
+			String beanType = getAttributeValue("type", sdRegion); //$NON-NLS-1$
+			String beanId = getAttributeValue("id", sdRegion); //$NON-NLS-1$
 
 			if (beanId != null && (beanType != null || beanClass != null)) {
 				String prefix = null;
-				if (beanType.length() != 0) {
+				if (beanType != null && beanType.length() > 0) {
 					/* a type was specified */
 					prefix = beanType + " " + beanId + " = "; //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -410,7 +410,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				 */
 				String suffix = "null;\n"; //$NON-NLS-1$
 				// 186771 - JSP Validator problem with included useBean
-				if (beanClass.length() > 0) {
+				if (beanClass != null && beanClass.length() > 0) {
 					suffix = "new " + beanClass + "();\n"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				beanDecl = prefix + suffix;
