@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2013 IBM Corporation and others.
+ * Copyright (c) 2002, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -176,7 +176,9 @@ public class CMDocumentLoader
 				  if (locations != null && !locations.isEmpty()) {
 					  // Use the externalSchemaLocation
 					  if (namespaceTable != null && namespaceTable.isNamespaceEncountered()) {
-						  final String location = locations.get(IExternalSchemaLocationProvider.SCHEMA_LOCATION).toString();
+						Object schemaLocation = locations.get(IExternalSchemaLocationProvider.SCHEMA_LOCATION);
+						if (schemaLocation != null) {
+						  final String location = schemaLocation.toString();
 						  if (location != null) {
 							  final String[] ids = StringUtils.asArray(location);
 							  // namespace : location pairs
@@ -189,11 +191,21 @@ public class CMDocumentLoader
 								  }
 							  }
 						  }
+						  else {
+							  Logger.log(Logger.ERROR_DEBUG, "External schema location provider did not return an external schema location for IExternalSchemaLocationProvider.SCHEMA_LOCATION: " + providers[i].getClass().getName()); //$NON-NLS-1$
+						  }
+						}
 					  }
 					  else { // noNamespace
-						  handleGrammar(uri.toString(), locations.get(IExternalSchemaLocationProvider.NO_NAMESPACE_SCHEMA_LOCATION).toString(), "XSD"); //$NON-NLS-1$
-						  externalSchemaLoaded = true;
-						  break;
+						  Object schemaLocation = locations.get(IExternalSchemaLocationProvider.NO_NAMESPACE_SCHEMA_LOCATION);
+						  if (schemaLocation != null) {
+						    handleGrammar(uri.toString(), schemaLocation.toString(), "XSD"); //$NON-NLS-1$
+						    externalSchemaLoaded = true;
+						    break;
+						  }
+						  else {
+						    Logger.log(Logger.ERROR_DEBUG, "External schema location provider did not return an external schema location for IExternalSchemaLocationProvider.NO_NAMESPACE_SCHEMA_LOCATION: " + providers[i].getClass().getName()); //$NON-NLS-1$
+						  }
 					  }
 				  }
 			  }
