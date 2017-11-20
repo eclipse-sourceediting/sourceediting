@@ -21,22 +21,22 @@
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
-  <artifactId>sourceediting.web.tests</artifactId>
+  <artifactId>sourceediting.json.bundles</artifactId>
   <version>3.10.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.eclipse.jst.jsp.core.tests</module>
-    <module>org.eclipse.jst.jsp.tests.encoding</module>
-    <module>org.eclipse.jst.jsp.ui.tests</module>
-    <module>org.eclipse.wst.css.core.tests</module>
-    <module>org.eclipse.wst.css.tests.encoding</module>
-    <module>org.eclipse.wst.css.ui.tests</module>
-    <module>org.eclipse.wst.html.core.tests</module>
-    <module>org.eclipse.wst.html.tests.encoding</module>
-    <module>org.eclipse.wst.html.ui.tests</module>
-    <module>org.eclipse.wst.jsdt.web.core.tests</module>
-    <module>org.eclipse.wst.jsdt.web.ui.tests</module>
-    <module>org.eclipse.wst.sse.unittests</module>
+    <module>org.eclipse.json</module>
+    <module>org.eclipse.wst.json.bower.core</module>
+    <module>org.eclipse.wst.json.bower.ui</module>
+    <module>org.eclipse.wst.json.core</module>
+    <module>org.eclipse.wst.json.eslint.core</module>
+    <module>org.eclipse.wst.json.eslint.ui</module>
+    <module>org.eclipse.wst.json.jshint.core</module>
+    <module>org.eclipse.wst.json.jshint.ui</module>
+    <module>org.eclipse.wst.json.npm.core</module>
+    <module>org.eclipse.wst.json.npm.ui</module>
+    <module>org.eclipse.wst.json.schemaprocessor</module>
+    <module>org.eclipse.wst.json.ui</module>
   </modules>
 </project>

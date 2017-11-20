@@ -21,22 +21,22 @@
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
-  <artifactId>sourceediting.web.tests</artifactId>
+  <artifactId>sourceediting.xsl.bundles</artifactId>
   <version>3.10.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.eclipse.jst.jsp.core.tests</module>
-    <module>org.eclipse.jst.jsp.tests.encoding</module>
-    <module>org.eclipse.jst.jsp.ui.tests</module>
-    <module>org.eclipse.wst.css.core.tests</module>
-    <module>org.eclipse.wst.css.tests.encoding</module>
-    <module>org.eclipse.wst.css.ui.tests</module>
-    <module>org.eclipse.wst.html.core.tests</module>
-    <module>org.eclipse.wst.html.tests.encoding</module>
-    <module>org.eclipse.wst.html.ui.tests</module>
-    <module>org.eclipse.wst.jsdt.web.core.tests</module>
-    <module>org.eclipse.wst.jsdt.web.ui.tests</module>
-    <module>org.eclipse.wst.sse.unittests</module>
+    <module>org.eclipse.wst.xsl</module>
+    <module>org.eclipse.wst.xsl.core</module>
+    <module>org.eclipse.wst.xsl.debug.ui</module>
+    <module>org.eclipse.wst.xsl.exslt.core</module>
+    <module>org.eclipse.wst.xsl.exslt.ui</module>
+    <module>org.eclipse.wst.xsl.jaxp.debug</module>
+    <module>org.eclipse.wst.xsl.jaxp.debug.ui</module>
+    <module>org.eclipse.wst.xsl.jaxp.launching</module>
+    <module>org.eclipse.wst.xsl.launching</module>
+    <module>org.eclipse.wst.xsl.saxon</module>
+    <module>org.eclipse.wst.xsl.ui</module>
+    <module>org.eclipse.wst.xsl.xalan</module>
   </modules>
 </project>

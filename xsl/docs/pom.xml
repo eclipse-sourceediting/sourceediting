@@ -21,22 +21,12 @@
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
-  <artifactId>sourceediting.web.tests</artifactId>
+  <artifactId>sourceediting.xsl.docs</artifactId>
   <version>3.10.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.eclipse.jst.jsp.core.tests</module>
-    <module>org.eclipse.jst.jsp.tests.encoding</module>
-    <module>org.eclipse.jst.jsp.ui.tests</module>
-    <module>org.eclipse.wst.css.core.tests</module>
-    <module>org.eclipse.wst.css.tests.encoding</module>
-    <module>org.eclipse.wst.css.ui.tests</module>
-    <module>org.eclipse.wst.html.core.tests</module>
-    <module>org.eclipse.wst.html.tests.encoding</module>
-    <module>org.eclipse.wst.html.ui.tests</module>
-    <module>org.eclipse.wst.jsdt.web.core.tests</module>
-    <module>org.eclipse.wst.jsdt.web.ui.tests</module>
-    <module>org.eclipse.wst.sse.unittests</module>
+    <module>org.eclipse.wst.xsl.doc</module>
+    <module>org.eclipse.wst.xsl.sdk.documentation</module>
   </modules>
 </project>

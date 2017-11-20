@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) 2014 Red Hat Inc.
+  Copyright (c) 2017 Eclipse Foundation and others.
   All rights reserved. This program and the accompanying materials
   are made available under the terms of the Eclipse Distribution License v1.0
   which accompanies this distribution, and is available at
   http://www.eclipse.org/org/documents/edl-v10.php
  
   Contributors:
-    Mickael Istria (Red Hat Inc.) - initial implementation
+    Nick Boldt (Red Hat) - initial implementation
+    Rob Stryker (Red Hat) - initial implementation
 -->
-
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.eclipse.webtools.sourceediting</groupId>
     <artifactId>sourceediting-parent</artifactId>
     <version>3.6.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>features</artifactId>
+  <groupId>org.eclipse.webtools.sourceediting</groupId>
+  <artifactId>sourceediting.web.features</artifactId>
+  <version>3.10.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
     <module>org.eclipse.wst.web_core.feature</module>
+    <module>org.eclipse.wst.web_core.feature.patch</module>
     <module>org.eclipse.wst.web_sdk.feature</module>
-    <module>org.eclipse.wst.web_ui.feature</module>
-    <module>org.eclipse.wst.web_userdoc.feature</module>
-    <module>org.eclipse.wst.xml_core.feature</module>
-    <module>org.eclipse.wst.xml_sdk.feature</module>
-    <module>org.eclipse.wst.xml_ui.feature</module>
-    <module>org.eclipse.wst.xml_userdoc.feature</module>
     <module>org.eclipse.wst.web_tests.feature</module>
-    <module>org.eclipse.wst.xml_tests.feature</module>
-    <module>org.eclipse.wst.json_core.feature</module>
-    <module>org.eclipse.wst.json_sdk.feature</module>
-    <module>org.eclipse.wst.json_ui.feature</module>
-    <module>org.eclipse.wst.json_tests.feature</module>
+    <module>org.eclipse.wst.web_ui.feature</module>
+    <module>org.eclipse.wst.web_ui.feature.patch</module>
+    <module>org.eclipse.wst.web_userdoc.feature</module>
   </modules>
 </project>
