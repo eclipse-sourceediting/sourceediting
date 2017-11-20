@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="runtimePresetMappings" name="Runtime Preset Mappings Extension" schema="schema/runtimePresetMappings.exsd"/> 
+   <extension
+         point="org.eclipse.wst.server.core.moduleFactories">
+      <moduleFactory
+            projects="true"
+            class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableFactory"
+            id="org.eclipse.wst.web.internal.deployables.static">
+         <moduleType
+               versions="1.0, 1.2, 1.3, 1.4"
+               types="wst.web">
+         </moduleType>
+      </moduleFactory>
+     </extension>
+     
+    <extension
+         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
+       <moduleArtifactAdapter
+            id="org.eclipse.jst.web.server.webstatic1"
+            class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableObjectAdapter">
+         <enablement>
+           <with variable="selection">
+             <adapt type="org.eclipse.core.resources.IProject">
+             <test forcePluginActivation="true"
+							property="org.eclipse.wst.common.project.facet.core.projectFacet"
+							value="wst.web" />
+			 </adapt>
+           </with>
+         </enablement>
+       </moduleArtifactAdapter>
+       <moduleArtifactAdapter
+            id="org.eclipse.jst.web.server.webstatic2"
+            class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableObjectAdapter">
+         <enablement>
+           <with variable="selection">
+             <adapt type="org.eclipse.core.resources.IFile">
+             <test forcePluginActivation="true"
+							property="org.eclipse.wst.common.project.facet.core.projectFacet"
+							value="wst.web" />
+			 </adapt>
+           </with>
+         </enablement>
+      </moduleArtifactAdapter>   
+   </extension>
+   <extension point="org.eclipse.core.runtime.adapters">
+         <factory
+             class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableObjectAdapter"
+             adaptableType="org.eclipse.core.resources.IProject">
+            <adapter type="org.eclipse.wst.web.internal.deployables.IStaticWebModuleArtifact"/>
+        </factory>    
+   </extension> 
+   
+    <!--============================-->
+   <!-- Builder Provider registrations-->
+   <!--============================-->
+	<extension
+         point="org.eclipse.wst.common.frameworks.DataModelProviderExtension">
+     	<ProviderDefinesType
+      		providerType="wst.web.builder"
+      		providerID="org.eclipse.wst.common.componentcore.internal.builder.WorkbenchComponentBuilderDataModelProvider"/>
+		<DataModelProvider
+            class="org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider"
+            id="org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider"/>
+	</extension>
+	
+  <!-- Project Facets -->
+	<extension point="org.eclipse.wst.common.project.facet.core.facets">
+
+    <project-facet id="wst.web">
+      <label>%SIMPLE_WEB_LABEL</label>
+      <description>%SIMPLE_WEB_DESCRIPTION</description>
+      <property name="hide.version" value="true"/>
+    </project-facet>
+
+    <project-facet-version facet="wst.web" version="1.0">
+      <action type="install" id="wst.web.install">
+        <delegate class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDelegate"/>
+        <config-factory class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider"/>
+      </action>
+      <action type="uninstall" id="wst.web.uninstall">
+        <delegate class="org.eclipse.wst.project.facet.SimpleWebFacetUninstallDelegate"/>
+        <config-factory class="org.eclipse.wst.project.facet.SimpleWebFacetInstallDataModelProvider"/>
+      </action>
+      <constraint>
+        <conflicts group="modules"/>
+      </constraint>
+      <group-member id="modules"/>
+    </project-facet-version>
+        
+    <template id="template.wst.web">
+      <label>%SIMPLE_WEB_TEMPLATE</label>
+      <fixed facet="wst.web"/>
+    </template>
+
+  </extension>	
+</plugin>

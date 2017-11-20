@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <!-- static web project wizard -->
+   <extension
+       point="org.eclipse.ui.newWizards">
+      <category
+            name="%web.category_ui_"
+            id="org.eclipse.wst.web.ui">
+      </category>
+      <wizard
+            name="%StaticWebProject.name"
+            icon="icons/full/ctool16/newwebprj_wiz.gif"
+            category="org.eclipse.wst.web.ui"
+            class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard"
+            project="true"
+            finalPerspective="org.eclipse.wst.web.ui.webDevPerspective"
+            id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard">
+         <description>
+            %StaticWebProject.description
+         </description>
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+      </wizard>
+   </extension> -->
+   
+   <!-- the following 2 are needed to add an image for SWPs into the "Add/Remove Project" dialog -->
+	<extension point="org.eclipse.wst.server.core.moduleTypes">
+		<moduleType
+			id="web.static"
+			name="%StaticWebModule.name"/>
+	</extension>
+	<extension point="org.eclipse.wst.server.ui.serverImages">
+		<image
+			id="org.eclipse.wst.web.static"
+			typeIds="web.static"
+			icon="icons/full/obj16/web_application.gif"/>
+	</extension>
+	
+	
+<!-- ====================================================== -->
+<!-- Extension point: org.eclipse.ui.projectNatureImages    -->
+<!-- Purpose: Attach icon overlays for J2EE project natures -->
+<!-- ====================================================== -->
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/full/ovr16/web_module_ovr.gif"
+            natureId="org.eclipse.wst.web.StaticWebNature"
+            id="org.eclipse.ui.simpleWebProjectNatureImage">
+      </image>
+   </extension>
+   
+  <extension point="org.eclipse.wst.common.project.facet.ui.wizardPages">
+    <wizard-pages action="wst.web.install">
+      <page class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebFacetInstallPage"/>
+    </wizard-pages>
+  </extension>
+  
+	<extension
+    point="org.eclipse.ui.ide.markerResolution">
+	<markerResolutionGenerator
+      markerType="org.eclipse.wst.common.modulecore.ModuleCoreValidatorMarker"
+      class="org.eclipse.wst.web.ui.internal.ModuleCoreValidatorMarkerResolutions">
+    </markerResolutionGenerator>
+  </extension>
+
+	<extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="%perspective.name"
+            icon="icons/full/cview16/web_perspective.gif"
+            class="org.eclipse.wst.web.ui.internal.WebDevelopmentPerspective"
+            id="org.eclipse.wst.web.ui.webDevPerspective">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions"> 
+        <perspectiveExtension targetID="org.eclipse.wst.web.ui.webDevPerspective">
+        	
+        	<actionSet id="org.eclipse.debug.ui.launchActionSet"/>
+        	<actionSet id="org.eclipse.wst.web.ui.wizardsActionSet" />
+        	<actionSet id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet"/>
+        	<actionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
+         
+            <newWizardShortcut id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard"/>
+            <newWizardShortcut id="org.eclipse.jst.servlet.ui.project.facet.WebProjectWizard"/>
+            <newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"/>
+            <newWizardShortcut id="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"/>
+            <newWizardShortcut id="org.eclipse.wst.jsdt.ui.NewJSWizard"/>
+            <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+            <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
+            
+            <viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/> 
+            <viewShortcut id="org.eclipse.ui.views.ContentOutline"/> 
+            <viewShortcut id="org.eclipse.ui.views.PropertySheet"/> 
+            <viewShortcut id="org.eclipse.ui.views.ProblemView"/> 
+            <viewShortcut id="org.eclipse.wst.server.ui.ServersView"/>
+
+            <perspectiveShortcut id="org.eclipse.jdt.ui.JavaPerspective"/>
+        </perspectiveExtension> 
+    </extension>
+
+	<!-- Toolbar action set for web project and HTML, JS and CSS files -->
+	<extension point="org.eclipse.ui.actionSets">
+		<actionSet
+				id="org.eclipse.wst.web.ui.wizardsActionSet"
+				label="%webActionSet.label">
+			<action
+					class="org.eclipse.wst.web.ui.internal.actions.OpenCSSWizardAction"
+					icon="platform:/plugin/org.eclipse.wst.css.ui/icons/full/etool16/newcss_wiz.gif"
+					id="org.eclipse.wst.web.ui.actions.newCSSFile"
+					label="%action.label.CSS"
+					style="push"
+					toolbarPath="Normal/webActions"
+					tooltip="%action.tooltip.CSS" />
+			<action
+					class="org.eclipse.wst.web.ui.internal.actions.OpenJSWizardAction"
+					icon="platform:/plugin/org.eclipse.wst.jsdt.ui/icons/full/etool16/newjscript_wiz.gif"
+					id="org.eclipse.wst.web.ui.actions.newJSFile"
+					label="%action.label.JS"
+					style="push"
+					toolbarPath="Normal/webActions"
+					tooltip="%action.tooltip.JS" />
+			<action
+					class="org.eclipse.wst.web.ui.internal.actions.OpenHTMLWizardAction"
+					icon="platform:/plugin/org.eclipse.wst.html.ui/icons/full/etool16/newhtml_wiz.gif"
+					id="org.eclipse.wst.web.ui.actions.newHTMLFile"
+					label="%action.label.HTML"
+					style="push"
+					toolbarPath="Normal/webActions"
+					tooltip="%action.tooltip.HTML" />
+		</actionSet>
+	</extension>
+	 <extension
+	       point="org.eclipse.ui.navigator.navigatorContent">
+			<commonWizard
+				menuGroupId="org.eclipse.jst.j2ee.ui.newProjects" 
+				type="new"
+				wizardId="org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard">
+				<enablement>
+					<or>
+						<instanceof
+							value="org.eclipse.core.resources.IWorkspaceRoot" />
+						<and>
+							<adapt
+								type="org.eclipse.core.resources.IProject">
+								<or>
+									<test forcePluginActivation="true"
+										property="org.eclipse.wst.common.project.facet.core.projectFacet"
+										value="jst.ear" />
+								</or>
+							</adapt>
+						</and>
+					    <and>
+						  <instanceof value="java.util.Collection"/>
+						  <count value="0" />
+						</and>
+					</or>
+				</enablement>
+			</commonWizard>    
+	 </extension>
+
+</plugin>
