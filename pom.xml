@@ -31,10 +31,13 @@
   </properties>
 
   <modules>
-    <module>bundles</module>
-    <module>docs</module>
-    <module>tests</module>
-    <module>features</module>
+    <module>core</module>
+    <module>json</module>
+    <module>xml</module>
+    <module>xpath</module>
+    <module>xsl</module>
+    <module>web</module>
+    <module>site</module>
   </modules>
   
   <profiles>
