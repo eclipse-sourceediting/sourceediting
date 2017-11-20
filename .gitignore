@@ -1,39 +1,41 @@
-# copied from eclipse.platform.debug/.gitignore
-bin/
-*/*/bin/
-/*/*/bin/
-*~
-*.rej
-*.bak
-javacore.*
-heapdump.*
-core.*
-Snap.*
 
-# suggested by github
-*.log
-*.sql
-*.sqlite
+._*
+*~
+*.bak
+/*/*/bin/
+*/*/bin/
+bin/
+build.xml
+bundles/org.eclipse.wst.xml.xpath2.processor/JavaCUP-dump.txt
+bundles/org.eclipse.wst.xml.xpath2.processor/lib/javacup10.jar
+bundles/org.eclipse.wst.xml.xpath2.processor/lib/JFlex.jar
+# copied from eclipse.platform.debug/.gitignore
+core.*
+desktop.ini
+@dot
 .DS_Store
 .DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-#Icon? was causing new icons to be ignored
-#Icon?
 ehthumbs.db
-Thumbs.db
-desktop.ini
-*.stackdump
-
-#from many .cvsignore files
-build.xml
-temp.folder
-@dot
-src.zip
 .fbwarnings
+#from many .cvsignore files
+heapdump.*
+#Icon?
+Icon?
+#Icon? was causing new icons to be ignored
 javaCompiler...args
-.vagrant/
-
+javacore.*
+*.log
 # maven
+*.rej
+Snap.*
+.Spotlight-V100
+*.sql
+*.sqlite
+src.zip
+*.stackdump
+# suggested by github
 target/
+temp.folder
+Thumbs.db
+.Trashes
+.vagrant/
