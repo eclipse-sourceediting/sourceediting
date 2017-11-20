@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!--
   Copyright (c) 2012, 2013 Eclipse Foundation and others.
   All rights reserved. This program and the accompanying materials
@@ -9,9 +9,7 @@
   Contributors:
     Thanh Ha (Eclipse Foundation) - initial implementation
 -->
-
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -28,6 +26,7 @@
 
   <properties>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/sourceediting/webtools.sourceediting.git</tycho.scmUrl>
+  <webtools_common_site>http://download.eclipse.org/webtools/downloads/drops/R3.9.0/I-latest/repository/</webtools_common_site>
   </properties>
 
   <modules>
@@ -79,5 +78,6 @@
       <name>Webtools Repository - Snapshots</name>
       <url>https://repo.eclipse.org/content/repositories/webtools-snapshots/</url>
     </repository>
+  <repository><id>webtools_common_site</id><layout>p2</layout><url>${webtools_common_site}</url></repository>
   </repositories>
 </project>
