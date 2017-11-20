@@ -27,11 +27,9 @@
 
   <modules>
     <module>org.eclipse.wst.web_core.feature</module>
-    <module>org.eclipse.wst.web_core.feature.patch</module>
     <module>org.eclipse.wst.web_sdk.feature</module>
     <module>org.eclipse.wst.web_tests.feature</module>
     <module>org.eclipse.wst.web_ui.feature</module>
-    <module>org.eclipse.wst.web_ui.feature.patch</module>
     <module>org.eclipse.wst.web_userdoc.feature</module>
   </modules>
 </project>

@@ -27,11 +27,9 @@
 
   <modules>
     <module>org.eclipse.wst.xml_core.feature</module>
-    <module>org.eclipse.wst.xml_core.feature.patch</module>
     <module>org.eclipse.wst.xml_sdk.feature</module>
     <module>org.eclipse.wst.xml_tests.feature</module>
     <module>org.eclipse.wst.xml_ui.feature</module>
-    <module>org.eclipse.wst.xml_ui.feature.patch</module>
     <module>org.eclipse.wst.xml_userdoc.feature</module>
   </modules>
 </project>
