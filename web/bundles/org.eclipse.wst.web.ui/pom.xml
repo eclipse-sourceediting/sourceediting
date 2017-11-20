@@ -14,10 +14,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.eclipse.webtools.javaee</groupId>
-    <artifactId>org.eclipse.webtools.javaee</artifactId>
-    <version>3.6.0-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
+    <groupId>org.eclipse.webtools.sourceediting</groupId>
+    <artifactId>sourceediting.web.bundles</artifactId>
+    <version>3.10.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.eclipse.webtools.javaee</groupId>

@@ -17,9 +17,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.eclipse.webtools.sourceediting</groupId>
-    <artifactId>org.eclipse.webtools.sourceediting.xpath.tests</artifactId>
-    <version>3.6.0-SNAPSHOT</version>
-    <relativePath>../../</relativePath>
+    <artifactId>sourceediting.xpath.tests</artifactId>
+    <version>3.10.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
