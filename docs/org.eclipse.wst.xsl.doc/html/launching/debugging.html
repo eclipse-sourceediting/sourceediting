@@ -1,0 +1,21 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>XSLT Debugging</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="launching.html" title="XSL Launching and Debugging"><link rel="prev" href="launching.html" title="XSL Launching and Debugging"><link rel="next" href="debugging_common.html" title="Common Debugging Operations"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="XSLDebug"></a>XSLT Debugging</h2></div></div></div><p> XSL Tools provides a framework for XSLT processors to provide
+			debugging support. The support provided is highly dependent on the
+			processors. XSL Tools comes with built in support for the Xalan 2.7.1
+			processor. Debugging is only available for those processors that
+			support the feature and plug into the extension point. The XSL Tools
+			debugger leverages the existing eclipse platform Debug View</p><div class="figure"><a name="fig_XSLDebug"></a><p class="title"><b>Figure&nbsp;15.&nbsp;XSLT Debugging</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="../images/launching/XSLDebugging.png" align="middle" alt="XSLT Debugging"></div></div></div><br class="figure-break"><p>
+			How the debugger acts will depend on the processor being used. Not
+			all XSLT processors pass the same type of information to the
+			debugger. These differences will be noted in the
+			<a class="xref" href="debugging_processors.html" title="XSLT Processor Specific Support">the section called &ldquo;XSLT Processor Specific Support&rdquo;</a>
+			section.
+		</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="DebugGettingStarted"></a>Starting a Debug Session</h3></div></div></div><p> Debugging is started the same way as launching an XSL
+				Tranformation is done. Except that the debug configuration is used
+				instead of the normal launch configuration. If a debugging session
+				is started on a processor that does not support debugging, a dialog
+				will ask if you want to switch to one of the supported debuggers.
+			</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Default JRE</h3><p> The default JRE does not have built in support for debugging,
+					even though it is based on Apache Xalan. It is recommended to use
+					Xalan or another processor provided by an adopter to do your
+					transformations. The default processor is known to have some issues
+					that Xalan and other processors do not have.</p></div></div></div></body></html>

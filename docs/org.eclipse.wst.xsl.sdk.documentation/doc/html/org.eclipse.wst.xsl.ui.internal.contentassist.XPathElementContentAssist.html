@@ -1,0 +1,41 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.contentassist</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.contentassist</strong></font><br>
+               Class XPathElementContentAssist</h2><br><hr><pre>public class <strong>XPathElementContentAssist</strong>
+extends org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXMLElementContentAssistRequest</pre>This class provides XML Element proposals within XPath related items like
+ select, test, and match attributes.  This will leverage an ContentModel that
+ has been loaded and try to provide all available XML elements that could be used.
+ It should be enhanced to know the elements to be used based on information from
+ the XPath.<p></p><p></p><hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_XPathElementContentAssist">XPathElementContentAssist</a></strong>(org.w3c.dom.Node node
+         ,
+      IStructuredDocumentRegion documentRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      int begin
+         ,
+      int length
+         ,
+      java.lang.String filter
+         ,
+      ITextViewer textViewer)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.ArrayList</code></td><td width="" align="left"><code><a href="#method_getCompletionProposals">getCompletionProposals</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Provides a list of possible proposals for the XML Elements within the current
+ scope.  This leverages the ContentModel that was loaded by the XML Catalog, 
+ Custom Resolver, or the inferred grammar.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_XPathElementContentAssist">XPathElementContentAssist</a></h2><p><code>public <strong>XPathElementContentAssist</strong>(org.w3c.dom.Node node
+         ,
+      IStructuredDocumentRegion documentRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      int begin
+         ,
+      int length
+         ,
+      java.lang.String filter
+         ,
+      ITextViewer textViewer)</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getCompletionProposals">getCompletionProposals</a></h2><p><code>public java.util.ArrayList <strong>getCompletionProposals</strong>()</code></p><p>Provides a list of possible proposals for the XML Elements within the current
+ scope.  This leverages the ContentModel that was loaded by the XML Catalog, 
+ Custom Resolver, or the inferred grammar.</p><h3>Returns</h3><p><code>java.util.ArrayList</code></p><hr></body></html>

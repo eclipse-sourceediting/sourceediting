@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>XSL Content Assistance</title>
+<style type="text/css">@import url("../../book.css");</style>
+<style type="text/css">@import url("../../schema.css");</style>
+</HEAD>
+<BODY>
+<H1 style="text-align:center">XSL Content Assistance</H1>
+<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Identifier: </h6>org.eclipse.wst.xsl.ui.contentAssistProcessor<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Since: </h6>1.1
+<p></p>
+
+<h6 class="CaptionFigColumn SchemaHeader">Description: </h6>XSL Content Asisstance processor extension point, allows for the contribution of adopter defined XSL processor extensions.<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Configuration Markup:</h6>
+<p></p>
+<p class="code SchemaDtd">&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.processor">processor</a>+)&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST extension</p>
+<p class="code SchemaDtdAttlist">point&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED</p><p class="code SchemaDtdAttlist">name&nbsp;&nbsp;CDATA #IMPLIED</p>&gt;</p>
+<p></p>
+<ul class="ConfigMarkupAttlistDesc">
+<li><b>point</b> - A unique ID for this extension point</li>
+<li><b>name</b> - Extension point name</li>
+</ul>
+<br><p class="code SchemaDtd">&lt;!ELEMENT <a name="e.processor">processor</a> EMPTY&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST processor</p>
+<p class="code SchemaDtdAttlist">class&nbsp;CDATA #REQUIRED</p>&gt;</p>
+<p></p>
+<p class="ConfigMarkupElementDesc">
+Processor that provides content assistance</p>
+<br>
+<ul class="ConfigMarkupAttlistDesc">
+<li><b>class</b> - The class that implements the content assistant processor.</li>
+</ul>
+<br><h6 class="CaptionFigColumn SchemaHeader">Examples: </h6><p>&lt;extension
+       point="org.eclipse.wst.xsl.ui.contentAssistProcessor"></p>
+<p>&#160;&#160;&#160;&lt;processor
+          class="org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor"></p>
+<p>&#160;&#160;&#160;&lt;/processor></p>
+<p>&lt;/extension></p>
+<p></p>
+
+<br>
+<p class="note SchemaCopyright">
+*******************************************************************************
+ * Copyright (c) 2009 Standards for Technology in Automotive Retail and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver (STAR) - initial API and implementation
+ ******************************************************************************
+
+</p>
+</BODY>
+</HTML>

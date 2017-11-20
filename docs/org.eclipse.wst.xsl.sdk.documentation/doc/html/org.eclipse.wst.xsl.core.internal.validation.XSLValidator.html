@@ -1,0 +1,27 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.core.internal.validation</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.core.internal.validation</strong></font><br>
+               Class XSLValidator</h2><br><hr><pre>public class <strong>XSLValidator</strong>
+extends java.lang.Object</pre>The XSL validator for workspace XSL files.<p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public static org.eclipse.wst.xsl.core.internal.validation.XSLValidator</code></td><td width="" align="left"><code><a href="#method_getInstance">getInstance</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the singleton XSLValidator instance.</td></tr><tr valign="top"><td width="20%" align="right"><code>public ValidationReport</code></td><td width="" align="left"><code><a href="#method_validate">validate</a>(IFile xslFile
+         ,
+      boolean forceBuild)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Validate the given XSL file. Same as
+ <code>validate(xslFile,report,forceBuild)</code> except a new report is
+ created and returned.</td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_validate">validate</a>(IFile xslFile
+         ,
+      org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport report
+         ,
+      boolean forceBuild)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Validate the given XSL file using the specified report.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getInstance">getInstance</a></h2><p><code>public org.eclipse.wst.xsl.core.internal.validation.XSLValidator <strong>getInstance</strong>()</code></p><p>Get the singleton XSLValidator instance.</p><h3>Returns</h3><p><code>org.eclipse.wst.xsl.core.internal.validation.XSLValidator</code> - the singleton XSLValidator instance</p><hr><h2><a name="method_validate">validate</a></h2><p><code>public ValidationReport <strong>validate</strong>(IFile xslFile
+         ,
+      boolean forceBuild)</code></p><p>Validate the given XSL file. Same as
+ <code>validate(xslFile,report,forceBuild)</code> except a new report is
+ created and returned.</p><h3>Parameters</h3><p><code>xslFile</code> - the XSL file</p><p><code>forceBuild</code> - true if build should always be forced</p><h3>Returns</h3><p><code>ValidationReport</code> - the validation report</p><h3>Throws:</h3><p><code>CoreException - if any exception occurs while validating</code></p><hr><h2><a name="method_validate">validate</a></h2><p><code>public void <strong>validate</strong>(IFile xslFile
+         ,
+      org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport report
+         ,
+      boolean forceBuild)</code></p><p>Validate the given XSL file using the specified report.</p><h3>Parameters</h3><p><code>xslFile</code> - the XSL file</p><p><code>report</code> - the report to use for reporting validation errors</p><p><code>forceBuild</code> - true if build should always be forced</p><h3>Throws:</h3><p><code>CoreException - if any exception occurs while validating</code></p><hr></body></html>

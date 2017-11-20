@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+	<?dbhtml filename="general/general.html" ?>
+	<title>General</title>
+	<para>This section covers topics that don't have any other particular place to go.</para>
+	<section id="XInclude">
+	    <?dbhtml filename="general/xinclude.html" ?>
+		<title>XInclude</title>
+		<para>
+      	XInclude allows a user to import or include other XML files into one xml file.
+        It is used primarily with documentation file formats like Docbook and DITA.  It
+        allows for separating out large xml documents into more manageable chunks of information.
+      </para>
+		<para>
+      	The XSL Tools project includes an ANT task that can be run with in eclipse, eclipse
+      	headless, and without eclipse at all.   If running outside of eclipse, you will need
+      	to make sure that the jar file xinclude.jar in the org.eclipse.wst.xsl.core.jar file
+      	is made avaiable on your class path.
+      </para>
+		<mediaobject>
+			<objectinfo id="Xinclude">
+				<title>XInclude Task</title>
+			</objectinfo>
+			<imageobject>
+				<imagedata align="center" fileref="../images/general/xinclude.png"
+					format="PNG" />
+			</imageobject>
+		</mediaobject>
+		<para>
+      	The following parameters are available on the xsl.xinclude ANT task:
+      </para>
+		<itemizedlist>
+			<listitem>
+				<para>
+      			<emphasis role="bold">
+					in
+				</emphasis> - The full path to the input file that contains
+      			the file with the XIncludes.   If the files that it includes have includes, then
+      			those will be brought in an expanded as well.
+      		</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">out</emphasis> - The full path to the output file 
+					to be written with all includes expanded.  This is typically used as the
+					input to a stylesheet transformation process.
+				</para>
+			</listitem>
+		</itemizedlist>
+	    <example>
+	    	<title>XInclude Example</title>
+	    	<programlisting xml:space="preserve">
+&lt;target name="merge">
+    &lt;xsl.xinclude in="${docbooksource}/xslhelp.dbk"
+                  out="${docbooksource}/xslhelpcombined.dbk"/>
+&lt;/target>	    		    	
+	    	</programlisting>
+	    </example>
+	</section>
+</chapter>

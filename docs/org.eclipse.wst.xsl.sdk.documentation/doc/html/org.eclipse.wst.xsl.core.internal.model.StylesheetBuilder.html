@@ -1,0 +1,23 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.core.internal.model</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.core.internal.model</strong></font><br>
+               Class StylesheetBuilder</h2><br><hr><pre>public class <strong>StylesheetBuilder</strong>
+extends java.lang.Object</pre>A builder that creates and maintains a cache of <code>Stylesheet</code>'s.<p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public static org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder</code></td><td width="" align="left"><code><a href="#method_getInstance">getInstance</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the singleton <code>StylesheetBuilder</code> instance.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xsl.core.model.Stylesheet</code></td><td width="" align="left"><code><a href="#method_getStylesheet">getStylesheet</a>(IFile file
+         ,
+      boolean force)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the <code>Stylesheet</code> associated with the given file. If either
+ the <code>Stylesheet</code> has not yet been created or
+ <code>force</code> is specified then the <code>Stylesheet</code> is
+ built.</td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_release">release</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Releases all the cached stylesheets.</td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_release">release</a>(IFile file)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getInstance">getInstance</a></h2><p><code>public org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder <strong>getInstance</strong>()</code></p><p>Get the singleton <code>StylesheetBuilder</code> instance.</p><h3>Returns</h3><p><code>org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder</code> - the <code>StylesheetBuilder</code> instance</p><hr><h2><a name="method_getStylesheet">getStylesheet</a></h2><p><code>public org.eclipse.wst.xsl.core.model.Stylesheet <strong>getStylesheet</strong>(IFile file
+         ,
+      boolean force)</code></p><p>Get the <code>Stylesheet</code> associated with the given file. If either
+ the <code>Stylesheet</code> has not yet been created or
+ <code>force</code> is specified then the <code>Stylesheet</code> is
+ built.</p><h3>Parameters</h3><p><code>file</code> - the XSL file</p><p><code>force</code> - <code>true</code> to force a parse of the file</p><h3>Returns</h3><p><code>org.eclipse.wst.xsl.core.model.Stylesheet</code> - the <code>Stylesheet</code></p><hr><h2><a name="method_release">release</a></h2><p><code>public void <strong>release</strong>()</code></p><p>Releases all the cached stylesheets.</p><hr><h2><a name="method_release">release</a></h2><p><code>public void <strong>release</strong>(IFile file)</code></p><p></p><h3>Parameters</h3><p><code>file</code></p><hr></body></html>

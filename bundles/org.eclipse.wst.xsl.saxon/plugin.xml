@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.wst.xsl.jaxp.launching.processorType">
+      <processorType
+            attributeProperties="SaxonAttributes.properties"
+            id="org.eclipse.wst.xsl.saxon_1_0.processorType"
+            label="%processorType.label.1"
+            outputProperties="SaxonOutputProperties.properties">
+         <transformerFactory
+               factoryClass="com.icl.saxon.TransformerFactoryImpl"
+               name="%transformerFactorySaxon6">
+         </transformerFactory>
+      </processorType>
+      <processorType
+            attributeProperties="SaxonAttributes.properties"
+            id="org.eclipse.wst.xsl.saxon.processorType"
+            label="%processorType.label.0"
+            outputProperties="SaxonOutputProperties.properties">
+         <transformerFactory
+               factoryClass="net.sf.saxon.TransformerFactoryImpl"
+               name="%transformerSaxonXSLT2">
+         </transformerFactory>
+      </processorType>
+   </extension>
+
+</plugin>

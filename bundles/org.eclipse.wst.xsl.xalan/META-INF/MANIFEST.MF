@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.eclipse.wst.xsl.xalan;singleton:=true
+Bundle-Version: 1.0.100.qualifier
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-Localization: plugin
+Bundle-Vendor: %Bundle-Vendor.0
+Export-Package: org.eclipse.wst.xsl.xalan.debugger;
+  uses:="org.eclipse.wst.xsl.debugger,
+   org.apache.xpath,
+   org.apache.xalan.trace,
+   javax.xml.transform,
+   org.apache.xalan.templates"
+Require-Bundle: org.apache.xalan;bundle-version="[2.7.0,2.8.0)",
+ org.apache.xml.serializer;bundle-version="[2.7.0,2.8.0)",
+ org.eclipse.wst.xsl.jaxp.debug;bundle-version="[1.0.0,2.0.0)";resolution:=optional

@@ -1,0 +1,27 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Select, Test, and Match Attributes</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="xsleditor_contentassist.html" title="Content Assist"><link rel="prev" href="xsleditor_contentassist.html" title="Content Assist"><link rel="next" href="xsleditor_contentassist_exclude.html" title="Exclude-Result-Prefixes"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="SelectTest"></a>Select, Test, and Match Attributes</h3></div></div></div><p>
+                Where ever an xsl element supports a
+                <span class="emphasis"><em>select</em></span>
+                ,
+                <span class="emphasis"><em>test</em></span>
+                , or
+                <span class="emphasis"><em>match</em></span>
+                attribute, content assistance is available. This includes support for the
+                following:
+            </p><div class="itemizedlist"><p class="title"><b>Select, Match and Test Assistance</b></p><ul type="disc"><li><p>
+                        <span class="emphasis"><em>Variables</em></span>
+                        - both local and global variables are supported within the current
+                        stylesheet. Any local or global variable will be added to the list
+                        and the name is prefixed with a dollar sign $ symbol.
+                    </p></li><li><p>
+                        <span class="emphasis"><em>XPath 1.0</em></span>
+                        - XPath 1.0 is supported through the use of templates. All of the
+                        XPath 1.0 and XSLT xpath extension functions are available, as
+                        well as
+                        <span class="emphasis"><em>axis</em></span>
+                        operations. Currently XPath 2.0 is not supported directly, but
+                        will be added in the future.
+                    </p></li></ul></div><p>Content assistance for the select and test attributes is
+                intelligent enough to know that it is within an XPath expression, and will
+                try to determine and provide content assistance based on the current
+                cursor position. If a word has been partially typed it will filter the
+                available assistance.</p></div></body></html>

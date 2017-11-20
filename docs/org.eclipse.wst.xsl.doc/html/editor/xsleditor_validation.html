@@ -1,0 +1,36 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Content Assist</title><meta content="DocBook XSL Stylesheets V1.73.2" name="generator"><link rel="start" href="../index.html" title="XSL Tooling User Documentation"><link rel="up" href="xsleditor.html" title="Chapter&nbsp;2.&nbsp;XSL Editing"><link rel="prev" href="xsleditor.html" title="Chapter&nbsp;2.&nbsp;XSL Editing"><link rel="next" href="xsleditor_templates.html" title="Templates"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N10056"></a>Content Assist</h2></div></div></div><p>
+		    XSL Tooling extends the existing content assistance support of the XML
+		    Editor to provide content assistance for several XSL namespace attributes.
+		    The content assistance provided covers the available XPath statements as
+		    defined in the <span class="emphasis"><em>XPath Templates</em></span> preference page.
+		</p><p>
+			The elements and attributes that have content assist available are as follows:
+		</p><div class="itemizedlist"><ul type="disc"><li><p>
+				    <span class="bold"><strong>template</strong></span> - The template element has several content assist
+				    options available for the <span class="emphasis"><em>match</em></span>, <span class="emphasis"><em>name</em></span>, and 
+				    <span class="emphasis"><em>mode</em></span> attributes.
+				</p><p>
+					Add image showing template completion.
+				</p></li><li><p>
+					<span class="bold"><strong>variable</strong></span> and <span class="bold"><strong>param</strong></span> - The variable and param elements have content assist
+					for xpath, axis, parmaters and variables that have already been predefined when using the optional
+					<span class="emphasis"><em>select</em></span> attribute.
+				</p><p>
+					Add image showing variable completion.
+				</p></li><li><p>
+					<span class="bold"><strong>if</strong></span> and <span class="bold"><strong>when</strong></span> - The
+					if and when elements have content assist for the <span class="emphasis"><em>test</em></span> attribute.
+					This content assistance is available for all paramaters and variables that are in
+					scope, as well as any available xpath or axis statement.
+				</p><p>
+					Add image showing test completion.
+				</p></li><li><p>
+			    	<span class="bold"><strong>apply-template</strong></span> - The apply template has content
+			    	assistance for both the <span class="emphasis"><em>mode</em></span> and <span class="emphasis"><em>select</em></span>
+			    	attributes. 
+			    </p><p>
+					Add image showing apply-template completion.
+				</p></li></ul></div><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">XPath 2.0 Support</h3><p>
+				Currently XPath 2.0 is not supported directly.  However, a user can add this support if they need it by
+				adding the missing XPath functions to the XPath Templates.
+			</p></div></div></body></html>

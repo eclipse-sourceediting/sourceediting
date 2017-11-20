@@ -1,0 +1,95 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.core</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.core</strong></font><br>
+               Class ValidationPreferences</h2><br><hr><pre>public class <strong>ValidationPreferences</strong>
+extends java.lang.Object</pre>Preference constants specific to the XSL validator.<p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_CALL_TEMPLATES">CALL_TEMPLATES</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which an unresolved called template is reported. 
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_CIRCULAR_REF">CIRCULAR_REF</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which an include/import circular references is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_DUPLICATE_PARAMETER">DUPLICATE_PARAMETER</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which a duplicate parameter is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_EMPTY_PARAM">EMPTY_PARAM</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which a parameter that does not have a default value and does not specify a value is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_MAX_ERRORS">MAX_ERRORS</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The maximum number of errors allowed per XSL file.
+ &lt;p&gt;
+ Value is of type &lt;code&gt;Integer&lt;/code&gt;.
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_MISSING_INCLUDE">MISSING_INCLUDE</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which an unresolved import or included is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_MISSING_PARAM">MISSING_PARAM</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which a missing parameter is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_NAME_ATTRIBUTE_EMPTY">NAME_ATTRIBUTE_EMPTY</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which a parameter with an empty name attribute is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_NAME_ATTRIBUTE_MISSING">NAME_ATTRIBUTE_MISSING</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which a parameter without a name attribute is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_TEMPLATE_CONFLICT">TEMPLATE_CONFLICT</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which a template conflict is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_XPATHS">XPATHS</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The level at which an invalid XPath is reported.
+ &lt;p&gt;
+ Value is one of &lt;code&gt;IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO&lt;/code&gt;
+ &lt;/p&gt;</td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_ValidationPreferences">ValidationPreferences</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_CALL_TEMPLATES">CALL_TEMPLATES</a></h2><p><code>public static  java.lang.String <strong>CALL_TEMPLATES</strong></code></p><table><tr><td>The level at which an unresolved called template is reported. 
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_CIRCULAR_REF">CIRCULAR_REF</a></h2><p><code>public static  java.lang.String <strong>CIRCULAR_REF</strong></code></p><table><tr><td>The level at which an include/import circular references is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_DUPLICATE_PARAMETER">DUPLICATE_PARAMETER</a></h2><p><code>public static  java.lang.String <strong>DUPLICATE_PARAMETER</strong></code></p><table><tr><td>The level at which a duplicate parameter is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_EMPTY_PARAM">EMPTY_PARAM</a></h2><p><code>public static  java.lang.String <strong>EMPTY_PARAM</strong></code></p><table><tr><td>The level at which a parameter that does not have a default value and does not specify a value is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_MAX_ERRORS">MAX_ERRORS</a></h2><p><code>public static  java.lang.String <strong>MAX_ERRORS</strong></code></p><table><tr><td>The maximum number of errors allowed per XSL file.
+ <p>
+ Value is of type <code>Integer</code>.
+ </p></td></tr></table><hr><h2><a name="field_MISSING_INCLUDE">MISSING_INCLUDE</a></h2><p><code>public static  java.lang.String <strong>MISSING_INCLUDE</strong></code></p><table><tr><td>The level at which an unresolved import or included is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_MISSING_PARAM">MISSING_PARAM</a></h2><p><code>public static  java.lang.String <strong>MISSING_PARAM</strong></code></p><table><tr><td>The level at which a missing parameter is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_NAME_ATTRIBUTE_EMPTY">NAME_ATTRIBUTE_EMPTY</a></h2><p><code>public static  java.lang.String <strong>NAME_ATTRIBUTE_EMPTY</strong></code></p><table><tr><td>The level at which a parameter with an empty name attribute is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_NAME_ATTRIBUTE_MISSING">NAME_ATTRIBUTE_MISSING</a></h2><p><code>public static  java.lang.String <strong>NAME_ATTRIBUTE_MISSING</strong></code></p><table><tr><td>The level at which a parameter without a name attribute is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_TEMPLATE_CONFLICT">TEMPLATE_CONFLICT</a></h2><p><code>public static  java.lang.String <strong>TEMPLATE_CONFLICT</strong></code></p><table><tr><td>The level at which a template conflict is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><h2><a name="field_XPATHS">XPATHS</a></h2><p><code>public static  java.lang.String <strong>XPATHS</strong></code></p><table><tr><td>The level at which an invalid XPath is reported.
+ <p>
+ Value is one of <code>IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO</code>
+ </p></td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_ValidationPreferences">ValidationPreferences</a></h2><p><code>public <strong>ValidationPreferences</strong>()</code></p><p></p><hr></body></html>

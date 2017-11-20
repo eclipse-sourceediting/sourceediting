@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+   <?dbhtml filename="introduction/gettingstarted.html" ?>
+   <title>Getting Started</title>
+   <para>  
+      XSLT stands for the eXtensible Stylesheet Language Transformations. It is
+      part of the XSL specification which includes the transformation and formatting objects
+      (XSL-FO).   XSL Tools primarily deals with the editing, launching, and debugging
+      of XSL Style sheets.
+   </para>
+   <itemizedlist>
+   		<title>Getting Started</title>
+   		<listitem>
+   			<para><ulink url="../concepts/concepts.html">Rescuing XSLT From Niche Status</ulink> - gives a basic introduction to XSLT from the point of view of creating HTML output.</para>
+   		</listitem>
+   		<listitem>
+   			<para><ulink url="http://www.mulberrytech.com/quickref/">XSLT and XPath Quick Reference Cards</ulink> - a set of PDF files that can be printed to provide quick references to the XSLT and XPath commands.</para>
+   		</listitem>
+   </itemizedlist>
+</chapter>

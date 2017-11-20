@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension
+			targetID="org.eclipse.wst.xml.perspective">
+			<actionSet id="org.eclipse.debug.ui.debugActionSet" />
+			<actionSet id="org.eclipse.debug.ui.launchActionSet" />
+			<actionSet id="org.eclipse.debug.ui.breakpointActionSet" />
+			<actionSet id="org.eclipse.debug.ui.profileActionSet" />
+		</perspectiveExtension>
+	</extension>
+	
+	<extension
+		point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage icon="icons/xslt_launch.gif"
+			configTypeID="org.eclipse.wst.xsl.launching.launchConfigurationType"
+			id="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTypeImage" />
+	</extension>
+
+	<extension
+		point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			class="org.eclipse.wst.xsl.internal.debug.ui.XSLTTabGroup"
+			id="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTabGroup.xslt"
+			type="org.eclipse.wst.xsl.launching.launchConfigurationType">
+			<launchMode description="%launchMode.description.0"
+				mode="debug" perspective="org.eclipse.debug.ui.DebugPerspective" />
+			<launchMode description="%launchMode.description.1"
+				mode="run" perspective="org.eclipse.wst.xml.perspective" />
+		</launchConfigurationTabGroup>
+	</extension>
+
+	<extension point="org.eclipse.ui.commands">
+		<command
+			name="%launchMode.name.0"
+				description="%launchMode.description.0"
+				categoryId="org.eclipse.debug.ui.category.run"
+				id="org.eclipse.wst.xsl.debug.ui.launchshortcut.debug">
+		</command>
+		<command
+				name="%launchMode.name.1"
+				description="%launchMode.description.0"
+				categoryId="org.eclipse.debug.ui.category.run"
+				id="org.eclipse.wst.xsl.debug.ui.launchshortcut.run">
+		</command>
+	</extension>
+
+	<extension point="org.eclipse.ui.bindings">
+		<key
+			sequence="M2+M3+X X"
+			commandId="org.eclipse.wst.xsl.debug.ui.launchshortcut.run"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M2+M3+X X"
+			platform="carbon"
+
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M1+M3+X X"
+			platform="carbon"
+
+			commandId="org.eclipse.wst.xsl.debug.ui.launchshortcut.run"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+
+		<key
+			sequence="M2+M3+D X"
+			commandId="org.eclipse.wst.xsl.debug.ui.launchshortcut.debug"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M2+M3+D X"
+			platform="carbon"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M1+M3+D X"
+			platform="carbon"
+			commandId="org.eclipse.wst.xsl.debug.ui.launchshortcut.debug"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+	</extension>
+	
+	<extension point="org.eclipse.ui.contexts">
+		<context description="%context.description.0"
+			id="org.eclipse.wst.xsl.debug.ui.context" name="%context.name.0"
+			parentId="org.eclipse.debug.ui.debugging">
+		</context>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.debugModelPresentations">
+		<debugModelPresentation
+			class="org.eclipse.wst.xsl.internal.debug.ui.model.XSLModelPresentation"
+			id="org.eclipse.wst.xsl.launching.XSLDebugModel">
+		</debugModelPresentation>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchShortcuts">
+		<shortcut
+        class="org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchShortcut"
+        icon="icons/xslt_launch.gif"
+        id="org.eclipse.wst.xsl.debug.ui.launchshortcut"
+        label="%shortcut.label.0"
+        modes="run, debug, profile">
+			<contextualLaunch>
+				<enablement>
+					<with variable="selection">
+						<iterate>
+							<adapt
+								type="org.eclipse.core.resources.IFile">
+								<or>
+									<test
+										property="org.eclipse.core.resources.contentTypeId"
+										value="org.eclipse.core.runtime.xml" />
+									<test
+										property="org.eclipse.core.resources.contentTypeId"
+										value="org.eclipse.wst.xml.core.xmlsource" />
+									<test
+										property="org.eclipse.core.resources.contentTypeId"
+										value="org.eclipse.wst.xml.core.xslsource" />
+									<test
+										property="org.eclipse.core.resources.contentTypeId"
+										value="org.eclipse.wst.xsd.core.xsdsource" />
+								</or>
+							</adapt>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+		   <description
+		         description="%description.description.0"
+		         mode="run">
+		   </description>
+		   <description
+		         description="%description.description.1"
+		         mode="debug">
+		   </description>
+		   <description
+		         description="%description.description.2"
+		         mode="profile">
+		   </description>
+		</shortcut>
+	</extension>
+	
+	<extension point="org.eclipse.debug.ui.debugModelContextBindings">
+		<modelContextBinding
+			contextId="org.eclipse.wst.xsl.debug.ui.context"
+			debugModelId="org.eclipse.wst.xsl.launching.XSLDebugModel">
+		</modelContextBinding>
+	</extension>
+	
+	<extension point="org.eclipse.wst.sse.ui.breakpoint">
+		<breakpointContribution
+			id="org.eclipse.wst.xsl.debug.ui.providers">		
+			<provider contentTypes="org.eclipse.wst.xml.core.xslsource"
+				class="org.eclipse.wst.xsl.internal.debug.ui.breakpoint.XSLBreakpointProvider:*xsl,*xslt"
+				id="org.eclipse.wst.xsl.debug.ui.XSLBreakpointProvider" />
+			<!-- TODO add this back in when we can do something with breakpoints on XML files
+			<provider contentTypes="org.eclipse.wst.xml.core.xslsource,org.eclipse.wst.xml.core.xmlsource,org.eclipse.core.runtime.xml"
+				class="org.eclipse.wst.xsl.internal.debug.ui.breakpoint.XSLBreakpointProvider:*xsl,*xslt,*xml"
+				id="org.eclipse.wst.xsl.debug.ui.XSLBreakpointProvider" />  -->
+		</breakpointContribution>
+	</extension>
+
+</plugin>

@@ -1,0 +1,25 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>XSLT Processor Specific Support</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="debugging.html" title="XSLT Debugging"><link rel="prev" href="debugging_variablesview.html" title="Variables View"><link rel="next" href="../preferences/xslpreferences.html" title="XSL Tools Preferences"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="XSLDebugProcessorSpecific"></a>XSLT Processor Specific Support</h3></div></div></div><p> Various XSLT processors provide various levels of debugging
+				support. Many do not provide support for debugging of stylesheets,
+				and thus can't be used for debugging. XSL Tools provides basic
+				support for Xalan, and can be used as a guide for adopters on how to
+				implement their own specific debugging support for other processors.
+			</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="XSLDebugXalan"></a>XSL Debugging with Xalan</h4></div></div></div><p> Xalan provides general stylesheet execution and evalation
+					functionality. However there are a few things that Xalan does not
+					suppor that other processors do.</p><div class="orderedlist"><p class="title"><b>Xalan Debugging Issues</b></p><ol type="1"><li><p>
+							<span class="emphasis"><em>Breakpoints</em></span>
+							- Xalan does not support stopping at Global Variables or
+							Parameters when a debugging session is started. It will
+							automatically start at the first template. Break points must be
+							placed in templates to be honored. The reason for this is that
+							Xalan lazily initializes the variables only when they are first
+							used.
+						</p></li><li><p>
+							<span class="emphasis"><em>XSLT Text elements</em></span>
+							- Xalan does not send notifications of xsl:text elements. These
+							are skipped over when debugging.
+						</p></li><li><p>
+							<span class="emphasis"><em>Built In Templates</em></span>
+							- Xalan does provide notification when the built in templates are
+							called, but currently the debugger does not support or display
+							stepping into these templates.
+						</p></li></ol></div></div></div></body></html>

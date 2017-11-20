@@ -1,0 +1,22 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Common Debugging Operations</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="debugging.html" title="XSLT Debugging"><link rel="prev" href="debugging.html" title="XSLT Debugging"><link rel="next" href="debugging_variablesview.html" title="Variables View"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="XSLDebugCommon"></a>Common Debugging Operations</h3></div></div></div><p>
+				XSLT debugging is handled by the eclipse platforms debugging
+				framework support as outlined in the
+				<a class="ulink" href="/help/topic/org.eclipse.platform.doc.isv/guide/debug_debug.htm" target="_top">"Program Debug and Launch Support"</a>
+				. Common operations like stepping into (F5), stepping over (F6),
+				pausing, running to a breakpoint, and relaunching are supported. In
+				addition to the standard Variable and Breakpoint views provided by
+				the platform, there are some XSLT specific views and functionality
+				as well. All of these are common regardless of the particular XSLT
+				debugger being used.
+			</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Introduction to Eclipse Debugging</h3><p>
+					<a class="ulink" href="http://www.mcs.vuw.ac.nz/courses/COMP205/2007T1/tools/eclipse/debugging/basics.shtml" target="_top">Basic Debugging in Eclipse</a>
+					contains a good general introduction to the basic features provided
+					by the Eclipse Debug view. XSL Tools leverages many of these
+					features and the same concepts apply to the XSL Tools debugger.
+				</p></div><p> In addition to the standard features and functionality, the
+				XSL Tools debugging support adds the following additional items:
+			</p><div class="itemizedlist"><ul type="disc"><li><p> Result View</p></li><li><p>XSLT specific Variables</p></li><li><p>XSLT Processor Specific Functionality</p></li></ul></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="XSLDebugResultView"></a>Result View</h4></div></div></div><p> The XSLT Debugger has a result view. This will show the
+					output that the stylesheet has generated to the current break point
+					or since the last step command was issued.</p><div class="mediaobject" align="center"><img src="../images/launching/resultView.png" align="middle"></div><p> The result view is updated throughout the debugging process,
+					and is useful to help see what output is generated at specific
+					points during a transformation.</p></div></div></body></html>

@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+	<?dbhtml filename="launching/launching.html" ?>
+	<title>XSL Launching and Debugging</title>
+	<para> XSL Tools adds support for XSL Launch and Debugging
+		configurations. These allow you to setup XSL configurations for
+		various jobs, and to also debug xsl stylsheet transformations.</para>
+	<section
+		id="XSLLaunch">
+		<?dbhtml filename="launching/launching.html" ?>
+		<title>XSL Launching</title>
+		<para>
+			In the Project Explorer, simply select the input XML file and the
+			stylesheet(s) to transform it, and then right-click and select
+			<emphasis>Run As > XSL Transformation</emphasis>
+			.
+		</para>
+		<figure
+			id="fig_XSLRun">
+			<title>XSLT Run/Debug</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata
+						align="center"
+						format="PNG"
+						fileref="../images/launching/launchShortct.png" />
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<note>
+			<title>Selecting only the XSL Stylesheet</title>
+			<para>
+				If only the XSL Stylesheet is selected then a dialog box will prompt you for the input file to use.
+			</para>
+		</note>
+		<para>
+			Launch can also be done through the Launch Configurations pages that are used for both debugging and normal transformations.
+			These configurations can be accessed through <emphasis>Run->Run Configurations</emphasis> menu bar option.
+		</para>
+		<section
+			id="XSLLaunchConfig">
+			<title>Launch Configuration</title>
+			<para>
+				Currently, XSL Tools only supports the launching of java based
+				processors through the Run and Debug framework. To this point, it
+				leverages and extends some of the support provided by the Java
+				launch configurations. XSL Tools does add it's own specific features
+				for launching.
+			</para>
+			<figure
+				id="fig_XSLLaunchConfig">
+				<title>Java XSLT Launch Configuration</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							align="center"
+							format="PNG"
+							fileref="../images/launching/XSLRunDebugConfigurations.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>
+				The tabs Main, Output, and Processor control specifics for the XSLT processor and files to be run through
+				the transformation.
+			</para>
+			<note>
+				<title>XSLT Extensions</title>
+				<para>If the transformation needs or makes use of extension
+					functions then those jar files should be added to the Classpath tab
+					so that they are picked up during the transformation. Otherwise the
+					transformation will fail.</para>
+			</note>
+			<section id="XSLLaunch_Main">
+				<title>Main Tab</title>
+				<para>
+					As shown in <xref linkend="fig_XSLLaunchConfig"/>, the Main Tab is where the input XML file is specified.  If a particular
+					XML file is not shown in the available list when browsing the Workspace, make sure that it is added to under the XML Content
+					Type in the General preference page.  Standard eclipse launching variables can be used to specify the location of the input file.
+				</para>
+				<para>
+					A run configuration can also use a simple pipeline transformation.  Meaning that the output from one stylesheet is used as input
+					to the next stylesheet.   The Stylesheet input box can have one to many stylesheets specified.  At least one stylesheet is required
+					for a transformation.
+				</para>
+				<para>
+					The last optional item are parameters.   Stylesheets can have parameters passed into them to setup configuration information.  An
+					example would be the numerous parameters that can be set for a DocBook stylesheet transformation.   If the parameters are not
+					specified the defaults that are defined in the stylesheet will take precedence. 
+				</para>
+			</section>
+			<section id="XSLLaunch_Output">
+				<title>Output Tab</title>
+				<para>
+					The Output Tab allows the specification of where the transformation should store the information.
+					This can be relative to the workspace or a physical location outside the workspace.
+				</para>
+			<figure
+				id="fig_XSLOutputTab">
+				<title>Java XSLT Launch Configuration</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							align="center"
+							format="PNG"
+							fileref="../images/launching/XSLOutputTab.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+				
+			</section>
+			<section id="XSLLaunch_Processor">
+				<title>Processor Tab</title>
+				<para>
+					The particular XSLT processor that will be used can be choosen from this tab. The
+					default is to use the system default processor or what ever processor you have
+					set as the default processor in the preference pages.
+				</para>
+				<figure
+					id="fig_XSLProcessorTab">
+					<title>Java XSLT Launch Configuration</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata
+								align="center"
+								format="PNG"
+								fileref="../images/launching/XSLProcessorTab.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				
+				<note>
+					<title>XSLT Debugging</title>
+					<para>
+						If you are setting up a launch configuration for debugging, do not choose
+						the JRE Default processor, you should choose either Xalan or another adopters
+						processor that supports debugging.
+					</para>
+				</note>
+				<para>
+					In addition, every processor has their own configuration options that can be specified.
+					This controls such items as indentation, handling of white space, etc.  Refer to your
+					processors documentation for the specific options available.
+				</para>
+			</section>
+		</section>
+	</section>
+	<section
+		id="XSLDebug">
+	    <?dbhtml filename="launching/debugging.html" ?>
+		<title>XSLT Debugging</title>
+		<para> XSL Tools provides a framework for XSLT processors to provide
+			debugging support. The support provided is highly dependent on the
+			processors. XSL Tools comes with built in support for the Xalan 2.7.1
+			processor. Debugging is only available for those processors that
+			support the feature and plug into the extension point. The XSL Tools
+			debugger leverages the existing eclipse platform Debug View</para>
+		<figure id="fig_XSLDebug">
+			<title>XSLT Debugging</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							align="center"
+							format="PNG"
+							fileref="../images/launching/XSLDebugging.png" />
+					</imageobject>
+				</mediaobject>
+		</figure>
+		<para>
+			How the debugger acts will depend on the processor being used. Not
+			all XSLT processors pass the same type of information to the
+			debugger. These differences will be noted in the
+			<xref
+				linkend="XSLDebugProcessorSpecific" />
+			section.
+		</para>
+		<section
+			id="DebugGettingStarted">
+			<?dbhtml filename="launching/debugging_gettingStarted.html" ?>
+			<title>Starting a Debug Session</title>
+			<para> Debugging is started the same way as launching an XSL
+				Tranformation is done. Except that the debug configuration is used
+				instead of the normal launch configuration. If a debugging session
+				is started on a processor that does not support debugging, a dialog
+				will ask if you want to switch to one of the supported debuggers.
+			</para>
+			<note>
+				<title>Default JRE</title>
+				<para> The default JRE does not have built in support for debugging,
+					even though it is based on Apache Xalan. It is recommended to use
+					Xalan or another processor provided by an adopter to do your
+					transformations. The default processor is known to have some issues
+					that Xalan and other processors do not have.</para>
+			</note>
+		</section>
+		<section
+			id="XSLDebugCommon">
+		<?dbhtml filename="launching/debugging_common.html" ?>
+			<title>Common Debugging Operations</title>
+			<para>
+				XSLT debugging is handled by the eclipse platforms debugging
+				framework support as outlined in the
+				<ulink
+					url="/help/topic/org.eclipse.platform.doc.isv/guide/debug_debug.htm">"Program Debug and Launch Support"</ulink>
+				. Common operations like stepping into (F5), stepping over (F6),
+				pausing, running to a breakpoint, and relaunching are supported. In
+				addition to the standard Variable and Breakpoint views provided by
+				the platform, there are some XSLT specific views and functionality
+				as well. All of these are common regardless of the particular XSLT
+				debugger being used.
+			</para>
+			<tip>
+				<title>Introduction to Eclipse Debugging</title>
+				<para>
+					<ulink
+						url="http://www.mcs.vuw.ac.nz/courses/COMP205/2007T1/tools/eclipse/debugging/basics.shtml">Basic Debugging in Eclipse</ulink>
+					contains a good general introduction to the basic features provided
+					by the Eclipse Debug view. XSL Tools leverages many of these
+					features and the same concepts apply to the XSL Tools debugger.
+				</para>
+			</tip>
+			<para> In addition to the standard features and functionality, the
+				XSL Tools debugging support adds the following additional items:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para> Result View</para>
+				</listitem>
+				<listitem>
+					<para>XSLT specific Variables</para>
+				</listitem>
+				<listitem>
+					<para>XSLT Processor Specific Functionality</para>
+				</listitem>
+			</itemizedlist>
+			<section
+				id="XSLDebugResultView">
+			<?dbhtml filename="launching/debugging_resultview.html" ?>
+				<title>Result View</title>
+				<para> The XSLT Debugger has a result view. This will show the
+					output that the stylesheet has generated to the current break point
+					or since the last step command was issued.</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							align="center"
+							format="PNG"
+							fileref="../images/launching/resultView.png" />
+					</imageobject>
+				</mediaobject>
+				<para> The result view is updated throughout the debugging process,
+					and is useful to help see what output is generated at specific
+					points during a transformation.</para>
+			</section>
+			<section
+				id="XSLDebugVariables">
+			<?dbhtml filename="launching/debugging_variablesview.html" ?>
+				<title>Variables View</title>
+				<para> The variables view will show all the local and global
+					variables and params that are currently in scope. There are two
+					types of variables that can be views.</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata
+							align="center"
+							format="PNG"
+							fileref="../images/launching/nodesetVariable.png" />
+					</imageobject>
+				</mediaobject>
+				<itemizedlist>
+					<title>Variable Types</title>
+					<listitem>
+						<para>
+							<emphasis>String</emphasis>
+							- These contain text values. This could be strings of text,
+							numbers, or other characters.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis>Nodesets</emphasis>
+							- Nodesets are represented in the variables view as expandable
+							variables. They contain sequences of nodes. The type of nodes are
+							represented by icons for elements, attributes, text, comments or
+							processing instructions.
+						</para>
+					</listitem>
+				</itemizedlist>
+				<note>
+					<title>Can I change the value of variables?</title>
+					<para> Currently the XSLT Debugger does not support changing the
+						values or contents of a variable. All XSLT variables are read
+						only.</para>
+				</note>
+			</section>
+		</section>
+		<section
+			id="XSLDebugProcessorSpecific">
+			<?dbhtml filename="launching/debugging_processors.html" ?>
+			<title>XSLT Processor Specific Support</title>
+			<para> Various XSLT processors provide various levels of debugging
+				support. Many do not provide support for debugging of stylesheets,
+				and thus can't be used for debugging. XSL Tools provides basic
+				support for Xalan, and can be used as a guide for adopters on how to
+				implement their own specific debugging support for other processors.
+			</para>
+			<section
+				id="XSLDebugXalan">
+				<title>XSL Debugging with Xalan</title>
+				<para> Xalan provides general stylesheet execution and evalation
+					functionality. However there are a few things that Xalan does not
+					suppor that other processors do.</para>
+				<orderedlist>
+					<title>Xalan Debugging Issues</title>
+					<listitem>
+						<para>
+							<emphasis>Breakpoints</emphasis>
+							- Xalan does not support stopping at Global Variables or
+							Parameters when a debugging session is started. It will
+							automatically start at the first template. Break points must be
+							placed in templates to be honored. The reason for this is that
+							Xalan lazily initializes the variables only when they are first
+							used.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis>XSLT Text elements</emphasis>
+							- Xalan does not send notifications of xsl:text elements. These
+							are skipped over when debugging.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							<emphasis>Built In Templates</emphasis>
+							- Xalan does provide notification when the built in templates are
+							called, but currently the debugger does not support or display
+							stepping into these templates.
+						</para>
+					</listitem>
+				</orderedlist>
+			</section>
+		</section>
+	</section>
+</chapter>

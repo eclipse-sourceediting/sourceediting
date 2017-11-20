@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>XSLT Processor Type</title>
+<style type="text/css">@import url("../../book.css");</style>
+<style type="text/css">@import url("../../schema.css");</style>
+</HEAD>
+<BODY>
+<H1 style="text-align:center">XSLT Processor Type</H1>
+<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Identifier: </h6>org.eclipse.wst.xsl.launching.jaxp.processorType<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Description: </h6>Contribute a Java XSLT processor type (e.g. Xalan, Saxon). The processor type defines which JAXP attributes and output properies are supported, and also the transformer factory classes it contains.<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Configuration Markup:</h6>
+<p></p>
+<p class="code SchemaDtd">&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.processorType">processorType</a>+)&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST extension</p>
+<p class="code SchemaDtdAttlist">point&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED</p><p class="code SchemaDtdAttlist">name&nbsp;&nbsp;CDATA #IMPLIED</p>&gt;</p>
+<p></p>
+<ul class="ConfigMarkupAttlistDesc">
+</ul>
+<br><p class="code SchemaDtd">&lt;!ELEMENT <a name="e.processorType">processorType</a> (<a href="#e.transformerFactory">transformerFactory</a>*)&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST processorType</p>
+<p class="code SchemaDtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">label&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">outputProperties&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED</p><p class="code SchemaDtdAttlist">attributeProperties&nbsp;CDATA #IMPLIED</p>&gt;</p>
+<p></p>
+<ul class="ConfigMarkupAttlistDesc">
+<li><b>id</b> - Unique id for the processor type</li>
+<li><b>label</b> - Name for display in the UI</li>
+<li><b>outputProperties</b> - Location of a properties file containing the list of the processors output properties. Must be a path relative to the root of the bundle.</li>
+<li><b>attributeProperties</b> - Location of a properties file containing the list of the attributes supported by this processor. Must be a path relative to the root of the bundle.</li>
+</ul>
+<br><p class="code SchemaDtd">&lt;!ELEMENT <a name="e.transformerFactory">transformerFactory</a> EMPTY&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST transformerFactory</p>
+<p class="code SchemaDtdAttlist">factoryClass&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED</p>&gt;</p>
+<p></p>
+<p class="ConfigMarkupElementDesc">
+A TransformerFactory for this type</p>
+<br>
+<ul class="ConfigMarkupAttlistDesc">
+<li><b>factoryClass</b> - The fully-qualified transformer factory class</li>
+<li><b>name</b> - A name for this transformer factory to be displayed in the UI</li>
+</ul>
+<br><h6 class="CaptionFigColumn SchemaHeader">Examples: </h6><pre class="Example"><span class="code SchemaTag">
+   &lt;extension
+         point=</span><span class="code SchemaCstring">&quot;org.eclipse.wst.xsl.jaxp.launching.processorType&quot;</span><span class="code SchemaTag">&gt;
+      &lt;processorType
+            attributeProperties=</span><span class="code SchemaCstring">&quot;XalanAttributes.properties&quot;</span><span class="code SchemaTag">
+            id=</span><span class="code SchemaCstring">&quot;org.eclipse.wst.xsl.xalan.processorType&quot;</span><span class="code SchemaTag">
+            label=</span><span class="code SchemaCstring">&quot;%processorType.label.0&quot;</span><span class="code SchemaTag">
+            outputProperties=</span><span class="code SchemaCstring">&quot;XalanOutputProperties.properties&quot;</span><span class="code SchemaTag">&gt;
+         &lt;transformerFactory
+               factoryClass=</span><span class="code SchemaCstring">&quot;org.apache.xalan.processor.TransformerFactoryImpl&quot;</span><span class="code SchemaTag">
+               name=</span><span class="code SchemaCstring">&quot;Interpretive&quot;</span><span class="code SchemaTag">&gt;
+         &lt;/transformerFactory&gt;
+         &lt;transformerFactory
+               factoryClass=</span><span class="code SchemaCstring">&quot;org.apache.xalan.xsltc.trax.TransformerFactoryImpl&quot;</span><span class="code SchemaTag">
+               name=</span><span class="code SchemaCstring">&quot;Compiling&quot;</span><span class="code SchemaTag">&gt;
+         &lt;/transformerFactory&gt;
+      &lt;/processorType&gt;
+   &lt;/extension&gt;
+</span></pre>
+<p></p>
+
+<br>
+<p class="note SchemaCopyright">
+Copyright (c) 2007 Chase Technology Ltd - <a href="http://www.chasetechnology.co.uk">http://www.chasetechnology.co.uk</a>.<br>
+All rights reserved. This program and the accompanying materials are made 
+available under the terms of the Eclipse Public License v1.0 which accompanies 
+this distribution, and is available at <a
+href="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</a>
+
+</p>
+</BODY>
+</HTML>

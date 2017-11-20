@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>XSLT Processor</title>
+<style type="text/css">@import url("../../book.css");</style>
+<style type="text/css">@import url("../../schema.css");</style>
+</HEAD>
+<BODY>
+<H1 style="text-align:center">XSLT Processor</H1>
+<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Identifier: </h6>org.eclipse.wst.xsl.launching.jaxp.processor<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Description: </h6>Contribute a Java XSLT processor instance (e.g. Xalan 2.7.0). The extension point primarily defines the classpath to be used when launching an XSLT transformation.<p></p>
+<h6 class="CaptionFigColumn SchemaHeader">Configuration Markup:</h6>
+<p></p>
+<p class="code SchemaDtd">&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.processor">processor</a>+)&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST extension</p>
+<p class="code SchemaDtdAttlist">point&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED</p><p class="code SchemaDtdAttlist">name&nbsp;&nbsp;CDATA #IMPLIED</p>&gt;</p>
+<p></p>
+<ul class="ConfigMarkupAttlistDesc">
+</ul>
+<br><p class="code SchemaDtd">&lt;!ELEMENT <a name="e.processor">processor</a> EMPTY&gt;</p>
+<p class="code SchemaDtd">&lt;!ATTLIST processor</p>
+<p class="code SchemaDtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">label&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">processorTypeId&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">classpath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED</p><p class="code SchemaDtdAttlist">debuggerId&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED</p><p class="code SchemaDtdAttlist">supports&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED</p>&gt;</p>
+<p></p>
+<p class="ConfigMarkupElementDesc">
+An instance of a JAXP-compliant XSLT processor</p>
+<br>
+<ul class="ConfigMarkupAttlistDesc">
+<li><b>id</b> - A unique id for this processor instance</li>
+<li><b>label</b> - A label for this instance to be displayed in the UI</li>
+<li><b>processorTypeId</b> - The id for the processor type</li>
+<li><b>classpath</b> - The classpath to use when this processor is launched</li>
+<li><b>debuggerId</b> - The id of a debugger to associate with the processor</li>
+<li><b>supports</b> - A comma-separated list of supported XSLT versions e.g. 1.0,2.0</li>
+</ul>
+<br><h6 class="CaptionFigColumn SchemaHeader">Examples: </h6><pre class="Example"><span class="code SchemaTag">
+   &lt;extension
+         point=</span><span class="code SchemaCstring">&quot;org.eclipse.wst.xsl.jaxp.launching.processor&quot;</span><span class="code SchemaTag">&gt;
+      &lt;!-- An adopter can specify the ${eclipse_orbit: } variable to indicate which eclipse
+           bundle should be added to the class path. --&gt;
+      &lt;processor
+      classpath=</span><span class="code SchemaCstring">&quot;${eclipse_orbit:org.apache.xalan};${eclipse_orbit:org.apache.xml.serializer};${eclipse_orbit:org.apache.bcel};${eclipse_orbit:java_cup.runtime}&quot;</span><span class="code SchemaTag">
+            id=</span><span class="code SchemaCstring">&quot;org.eclipse.wst.xsl.launching.xalan.processor&quot;</span><span class="code SchemaTag">
+            label=</span><span class="code SchemaCstring">&quot;%processor.label.1&quot;</span><span class="code SchemaTag">
+            processorTypeId=</span><span class="code SchemaCstring">&quot;org.eclipse.wst.xsl.xalan.processorType&quot;</span><span class="code SchemaTag">
+            debuggerId=</span><span class="code SchemaCstring">&quot;org.eclipse.wst.xsl.xalan.debugger&quot;</span><span class="code SchemaTag">
+            supports=</span><span class="code SchemaCstring">&quot;1.0&quot;</span><span class="code SchemaTag">&gt;
+      &lt;/processor&gt;
+   &lt;/extension&gt;
+</span></pre>
+<p></p>
+
+<br>
+<p class="note SchemaCopyright">
+Copyright (c) 2007 Chase Technology Ltd - <a href="http://www.chasetechnology.co.uk">http://www.chasetechnology.co.uk</a>.<br>
+All rights reserved. This program and the accompanying materials are made 
+available under the terms of the Eclipse Public License v1.0 which accompanies 
+this distribution, and is available at <a
+href="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</a>
+
+</p>
+</BODY>
+</HTML>

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project default="create-doc" basedir=".">
+
+	<property name="current-loc" location="." />
+	<property name="workspace" location=".." />
+	<property name="htmldir" value="${current-loc}/html" />
+	<property name="docbookdir" value="${workspace}/CommonUtilities/docbook-xsl/eclipse" />
+	<property name="docbooksource" value="${current-loc}/docbook"/>
+	<property name="xalan" value="org.apache.xalan.processor.TransformerFactoryImpl" />
+
+    
+	<!-- XSLT Chunking Properties -->
+	<property name="base.dir" value="${htmldir}"/>
+	
+	<taskdef name="xsl.include" classname="org.eclipse.wst.xsl.core.internal.ant.XIncludeTask"/>
+	
+	<target name="merge">
+		<xsl.xinclude in="${docbooksource}/xslhelp.dbk"
+		              out="${docbooksource}/xslhelpcombined.dbk"/>
+	</target>
+
+	<target name="create-doc" depends="merge">
+
+		<xslt force="true" style="${docbookdir}/eclipse33.xsl" in="${docbooksource}/xslhelpcombined.dbk" out="test.xml">
+			<factory name="${xalan}" />
+			<param name="manifest" expression="1"/>
+			<param name="base.dir" expression="${htmldir}/"/>
+			<param name="create.plugin.xml" expression="0"/>
+			<param name="chunker.output.indent" expression="yes"/>
+			<param name="navig.showtitles" expression="0"/>
+			<param name="suppress.navigation" expression="1"/>
+            <param name="generate.toc" expression="book      toc,title
+chapter   toc,title
+section   title" />
+			<param name="chapter.autolabel" expression="0"/>
+			<param name="section.autolabel" expression="0"/>
+			<param name="html.stylesheet" expression="book.css ../book.css"/>
+			<param name="chunk.section.depth" expression="3"/>
+			<param name="toc.section.depth" expression="5"/>
+			<param name="toc.list.type" expression="ul"/>
+		</xslt>
+		
+		<replace file="${current-loc}/toc.xml" token="${current-loc}/" value=""/>
+	</target>
+
+</project>

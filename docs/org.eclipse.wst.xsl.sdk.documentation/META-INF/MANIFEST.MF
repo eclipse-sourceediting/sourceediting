@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.wst.xsl.sdk.documentation; singleton:=true
+Bundle-Version: 1.0.100.qualifier
+Bundle-Activator: org.eclipse.wst.xsl.sdk.documentation.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.help
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: org.eclipse.wst.xsl.sdk.documentation

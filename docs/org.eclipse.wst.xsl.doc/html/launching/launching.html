@@ -1,0 +1,52 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>XSL Launching and Debugging</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="../index.html" title="XSL Tools User Documentation"><link rel="prev" href="../editor/xsleditor_debugging.html" title="Navigation"><link rel="next" href="debugging.html" title="XSLT Debugging"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="N1024A"></a>XSL Launching and Debugging</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><ul><li><span class="section"><a href="launching.html#XSLLaunch">XSL Launching</a></span><ul><li><span class="section"><a href="launching.html#XSLLaunchConfig">Launch Configuration</a></span><ul><li><span class="section"><a href="launching.html#XSLLaunch_Main">Main Tab</a></span></li><li><span class="section"><a href="launching.html#XSLLaunch_Output">Output Tab</a></span></li><li><span class="section"><a href="launching.html#XSLLaunch_Processor">Processor Tab</a></span></li></ul></li></ul></li><li><span class="section"><a href="debugging.html">XSLT Debugging</a></span><ul><li><span class="section"><a href="debugging.html#DebugGettingStarted">Starting a Debug Session</a></span></li><li><span class="section"><a href="debugging_common.html">Common Debugging Operations</a></span><ul><li><span class="section"><a href="debugging_common.html#XSLDebugResultView">Result View</a></span></li><li><span class="section"><a href="debugging_variablesview.html">Variables View</a></span></li></ul></li><li><span class="section"><a href="debugging_processors.html">XSLT Processor Specific Support</a></span><ul><li><span class="section"><a href="debugging_processors.html#XSLDebugXalan">XSL Debugging with Xalan</a></span></li></ul></li></ul></li></ul></div><p> XSL Tools adds support for XSL Launch and Debugging
+		configurations. These allow you to setup XSL configurations for
+		various jobs, and to also debug xsl stylsheet transformations.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="XSLLaunch"></a>XSL Launching</h2></div></div></div><p>
+			In the Project Explorer, simply select the input XML file and the
+			stylesheet(s) to transform it, and then right-click and select
+			<span class="emphasis"><em>Run As &gt; XSL Transformation</em></span>
+			.
+		</p><div class="figure"><a name="fig_XSLRun"></a><p class="title"><b>Figure&nbsp;11.&nbsp;XSLT Run/Debug</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="../images/launching/launchShortct.png" align="middle" alt="XSLT Run/Debug"></div></div></div><br class="figure-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Selecting only the XSL Stylesheet</h3><p>
+				If only the XSL Stylesheet is selected then a dialog box will prompt you for the input file to use.
+			</p></div><p>
+			Launch can also be done through the Launch Configurations pages that are used for both debugging and normal transformations.
+			These configurations can be accessed through <span class="emphasis"><em>Run-&gt;Run Configurations</em></span> menu bar option.
+		</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="XSLLaunchConfig"></a>Launch Configuration</h3></div></div></div><p>
+				Currently, XSL Tools only supports the launching of java based
+				processors through the Run and Debug framework. To this point, it
+				leverages and extends some of the support provided by the Java
+				launch configurations. XSL Tools does add it's own specific features
+				for launching.
+			</p><div class="figure"><a name="fig_XSLLaunchConfig"></a><p class="title"><b>Figure&nbsp;12.&nbsp;Java XSLT Launch Configuration</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="../images/launching/XSLRunDebugConfigurations.png" align="middle" alt="Java XSLT Launch Configuration"></div></div></div><br class="figure-break"><p>
+				The tabs Main, Output, and Processor control specifics for the XSLT processor and files to be run through
+				the transformation.
+			</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">XSLT Extensions</h3><p>If the transformation needs or makes use of extension
+					functions then those jar files should be added to the Classpath tab
+					so that they are picked up during the transformation. Otherwise the
+					transformation will fail.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="XSLLaunch_Main"></a>Main Tab</h4></div></div></div><p>
+					As shown in <a class="xref" href="launching.html#fig_XSLLaunchConfig" title="Figure&nbsp;12.&nbsp;Java XSLT Launch Configuration">Figure&nbsp;12, &ldquo;Java XSLT Launch Configuration&rdquo;</a>, the Main Tab is where the input XML file is specified.  If a particular
+					XML file is not shown in the available list when browsing the Workspace, make sure that it is added to under the XML Content
+					Type in the General preference page.  Standard eclipse launching variables can be used to specify the location of the input file.
+				</p><p>
+					A run configuration can also use a simple pipeline transformation.  Meaning that the output from one stylesheet is used as input
+					to the next stylesheet.   The Stylesheet input box can have one to many stylesheets specified.  At least one stylesheet is required
+					for a transformation.
+				</p><p>
+					The last optional item are parameters.   Stylesheets can have parameters passed into them to setup configuration information.  An
+					example would be the numerous parameters that can be set for a DocBook stylesheet transformation.   If the parameters are not
+					specified the defaults that are defined in the stylesheet will take precedence. 
+				</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="XSLLaunch_Output"></a>Output Tab</h4></div></div></div><p>
+					The Output Tab allows the specification of where the transformation should store the information.
+					This can be relative to the workspace or a physical location outside the workspace.
+				</p><div class="figure"><a name="fig_XSLOutputTab"></a><p class="title"><b>Figure&nbsp;13.&nbsp;Java XSLT Launch Configuration</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="../images/launching/XSLOutputTab.png" align="middle" alt="Java XSLT Launch Configuration"></div></div></div><br class="figure-break"></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="XSLLaunch_Processor"></a>Processor Tab</h4></div></div></div><p>
+					The particular XSLT processor that will be used can be choosen from this tab. The
+					default is to use the system default processor or what ever processor you have
+					set as the default processor in the preference pages.
+				</p><div class="figure"><a name="fig_XSLProcessorTab"></a><p class="title"><b>Figure&nbsp;14.&nbsp;Java XSLT Launch Configuration</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="../images/launching/XSLProcessorTab.png" align="middle" alt="Java XSLT Launch Configuration"></div></div></div><br class="figure-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">XSLT Debugging</h3><p>
+						If you are setting up a launch configuration for debugging, do not choose
+						the JRE Default processor, you should choose either Xalan or another adopters
+						processor that supports debugging.
+					</p></div><p>
+					In addition, every processor has their own configuration options that can be specified.
+					This controls such items as indentation, handling of white space, etc.  Refer to your
+					processors documentation for the specific options available.
+				</p></div></div></div></div></body></html>

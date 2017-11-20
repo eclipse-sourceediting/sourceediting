@@ -1,0 +1,382 @@
+<?xml version='1.0'?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+	<?dbhtml filename="editor/xsleditor.html" ?>
+    <title>XSL Editing</title>
+    <para>The XSL Tools plugins extend the ability of the Web Standard Tools XML
+        editor. This extension adds specific support and functionality for working with
+        and debugging XSL files.</para>
+    <section id="Validation">
+  <?dbhtml filename="editor/xsleditor_validation.html" ?>
+        <title>Validation</title>
+        <para>The XSL extensions for the eclipse XML editor include as you type
+            validation for XSL specific features. This includes not only the ability to
+            syntax check the grammar, but to also to validate specific XSL specification
+            rules. Grammar validation will be triggered based on the version attribute for
+            the style sheet that is being edited. Valid version numbers are 1.0, and 2.0.
+        </para>
+    </section>
+    <section id="ContentAssist">
+<?dbhtml filename="editor/xsleditor_contentassist.html" ?>
+        <title>Content Assist</title>
+        <para>
+            XSL Tools extends the existing content assistance support of the XML Editor to
+            provide content assistance for several XSL namespace attributes. The content
+            assistance provided covers the available XPath statements as defined in the
+            <emphasis>XPath Templates</emphasis>
+            preference page.
+        </para>
+        <important>
+            <title>XPath 2.0 Support</title>
+            <para>Currently XPath 2.0 is not supported directly. However, a user
+                can add this support if they need it by adding the missing XPath functions
+                to the XPath Templates.</para>
+        </important>
+        <para>To initiate content assistance press CTRL + SPACE or CMD + SPACE. This
+            will bring up a dialog that will contain any proposals that are available. If
+            no proposals are available an message will be displayed in the status bar.
+        </para>
+        <section id="ed_XSLProposals">
+<?dbhtml filename="editor/xsleditor_contentassist_xsl.html" ?>
+        
+            <title>XSLT Element Proposals</title>
+            <para>
+                Since XSLT is a templating language, it's elements must be able to be
+                added to the various markup it includes. The XSLT Editor will provide
+                content assistance and proposals for XSLT elements that are available to
+                be used within non-XSLT namespaced elements. This is depicted in
+                <xref linkend="fig_XSLProposals"/>
+                .
+            </para>
+            <figure id="fig_XSLProposals">
+                <title>XSLT Proposals within Non-XSLT elements</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center" fileref="../images/editor/xslproposals.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+        <section id="SelectTest">
+<?dbhtml filename="editor/xsleditor_contentassist_selecttest.html" ?>
+            <title>Select, Test, and Match Attributes</title>
+            <para>
+                Where ever an xsl element supports a
+                <emphasis>select</emphasis>
+                ,
+                <emphasis>test</emphasis>
+                , or
+                <emphasis>match</emphasis>
+                attribute, content assistance is available. This includes support for the
+                following:
+            </para>
+            <itemizedlist>
+                <title>Select, Match and Test Assistance</title>
+                <listitem>
+                    <para>
+                        <emphasis>Variables</emphasis>
+                        - both local and global variables are supported within the current
+                        stylesheet. Any local or global variable will be added to the list
+                        and the name is prefixed with a dollar sign $ symbol.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>XPath 1.0</emphasis>
+                        - XPath 1.0 is supported through the use of templates. All of the
+                        XPath 1.0 and XSLT xpath extension functions are available, as
+                        well as
+                        <emphasis>axis</emphasis>
+                        operations. Currently XPath 2.0 is not supported directly, but
+                        will be added in the future.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            <para>Content assistance for the select and test attributes is
+                intelligent enough to know that it is within an XPath expression, and will
+                try to determine and provide content assistance based on the current
+                cursor position. If a word has been partially typed it will filter the
+                available assistance.</para>
+        </section>
+        <section id="ExcludeResultPrefixesContentAssist">
+<?dbhtml filename="editor/xsleditor_contentassist_exclude.html" ?>
+        
+            <title>Exclude-Result-Prefixes</title>
+            <para>
+                The
+                <emphasis>exclude-result-prefixes</emphasis>
+                attribute in both XSLT 1.0 and XSLT 2.0 allows for the exclusion of
+                certain namespace declarations in the output document. The content
+                assistance populates a list of available namespaces that have been defined
+                in the stylseheet and provides them as proposals as shown in
+                <xref linkend="fig_ExcludeResultPrefixesContentAssist1"/>
+                .
+            </para>
+            <figure id="fig_ExcludeResultPrefixesContentAssist1">
+                <title>Exclude-result-prefixes Content Assistance
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center"
+                            fileref="../images/editor/ExcludeContentAssist1.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>
+                If the attribute has no values defined, then the
+                <emphasis>#all</emphasis>
+                value will be available in the list. If #all is already in the attributes
+                value, then no content assistance will be available.
+            </para>
+            <figure id="fig_ExcludeResultPrefixesContentAssist2">
+                <title>Filtered exclude-result-prefixes proposals</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center"
+                            fileref="../images/editor/ExcludeContentAssist2.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>Content assistance is intelligent enough to know when a namespace
+                prefix is already in the list of excluded namespaces. In this case it will
+                not show the namespace in the proposal list.</para>
+            <note>
+                <title> Why isn't the XSL Namespace prefix in the proposals?</title>
+                <para>Currently the xsl prefix or any prefix that uses the XSL
+                    namespace is excluded from the list. This may be changed at a future
+                    date. This will depend on user feedback.</para>
+            </note>
+        </section>
+        <section id="ed_ModeAssist">
+<?dbhtml filename="editor/xsleditor_contentassist_modeassist.html" ?>
+        
+            <title>Mode attribute assistance</title>
+            <para>
+                Content assistance is available for those xsl elements that support the
+                mode attribute. For XSLT 1.0 these elements are
+                <emphasis>template</emphasis>
+                ,
+                <emphasis>apply-templates</emphasis>
+                , and
+                <emphasis>apply-imports</emphasis>
+                .
+            </para>
+            <figure id="fig_ModeAssistance">
+                <title>Mode attribute assistance</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center" fileref="../images/editor/modeAssistance.png"
+                            format="PNG"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>
+                The proposal list is populated by those modes defined on templates in the
+                current stylesheet, and any of the templates that are
+                <emphasis>included</emphasis>
+                or
+                <emphasis>imported</emphasis>
+                .
+            </para>
+        </section>
+        <section id="ed_NamedTemplateAssist">
+<?dbhtml filename="editor/xsleditor_contentassist_namedtemplate.html" ?>
+        
+            <title>Named Template Assistance</title>
+            <para>
+                Call Named templates have content assistance available for their
+                <emphasis>name</emphasis>
+                attributes. This will provide a list of called-templates that have been
+                used, but have not yet been defined or overridden within the current
+                stylesheet.
+            </para>
+            <figure id="fig_NamedTemplates">
+                <title>Named Template Assistance</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center" fileref="../images/editor/namedTemplate.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+        <section id="ed_CallTemplateAssist">
+<?dbhtml filename="editor/xsleditor_contentassist_calltemplate.html" ?>
+        
+            <title>Call-Template Assistance</title>
+            <para>
+                Any
+                <emphasis>call-template</emphasis>
+                xslt element has content assistance available for it's name attribute.
+                This will provide a list of possible XSLT named templates that can be
+                called from the current stylesheet. This takes into effect all included
+                and imported stylesheets as well as those defined in the current
+                stylesheet.
+            </para>
+            <figure id="fig_CallTemplateAssist">
+                <title>Call-Template Assistance</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center" fileref="../images/editor/calltemplate.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+        <section id="ed_href">
+<?dbhtml filename="editor/xsleditor_contentassist_include.html" ?>
+        
+            <title>
+                Include and Import
+                <emphasis>href</emphasis>
+                Assistance
+            </title>
+            <para>XSLT stylesheets have the ability to import and include other
+                stylesheets. This allows for a modular structure for the templates to be
+                created. It also allows for easier maintenance. However, if one is working
+                with a large project like the DocBook Projects stylesheets it can be
+                difficult to remember the names and locations of all the stylesheets.
+            </para>
+            <para>
+                To this end, the XSLT editor provides content assistance for the
+                <emphasis>href</emphasis>
+                attribute. The scope of the assistance is restricted to the project that
+                the current stylesheet that is being editted resides.
+            </para>
+            <figure id="fig_HREFAssistance">
+                <title>Include/Import href Assistance</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center" fileref="../images/editor/hrefAssistance.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+    </section>
+    <section id="XSLEditorTemplates">
+<?dbhtml filename="editor/xsleditor_templates.html" ?>
+        <title>Templates</title>
+        <para>Specific XSL code completion templates can be added to the XML
+            editor's Templates. This allows a user to define specific markup completion
+            templates that are commonly used. In addition, the XPath Templates page can be
+            enhanced to allow commonly used XPath templates to be included, in addition to
+            those installed by default. This allows a user the ability to add custom
+            extension functions for XSLT that may be processor specific. Adopters may also
+            use the standard template extension point to add additional functionality.
+        </para>
+        <section>
+            <title>XPath Templates</title>
+            <para>The XSL XPath Templates preference page allows for a user or adopter
+                to add specific xpath extensions so that they show up in the content
+                assistance. See the XPath Templates documentation for more information.
+            </para>
+        </section>
+    </section>
+    <section id="xsltSyntaxColoring">
+<?dbhtml filename="editor/xsleditor_coloring.html" ?>
+        <title>XSLT Syntax Coloring</title>
+        <para>
+            XSL Tools Editor can have syntax coloring that is specific just for the the
+            XSLT Namespace as showing in
+            <xref linkend="fig_editorSyntaxColoring"/>
+            .
+        </para>
+        <figure id="fig_editorSyntaxColoring">
+            <title>XSLT Specific Syntax Coloring</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata align="center" fileref="../images/editor/syntaxColoring.png"
+                        format="PNG"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+        <para>
+            The default coloring shown is to make all XSLT elements and attributes bold.
+            The settings are controled in
+            <xref linkend="XSLPreferences"/>
+            .
+        </para>
+    </section>
+    <section id="xsltMarkers">
+<?dbhtml filename="editor/xsleditor_markers.html" ?>
+        <title>XSLT Markers and Annotations</title>
+        <para>The XSL editor supports the ability to annotate or provide markers. These
+            annotations provide additional information about the templates and XSLT
+            elements in the stylesheet.</para>
+        <section id="xsltOverRide">
+<?dbhtml filename="editor/xsleditor_contentassist_xsltOverride.html" ?>
+        
+            <title>Template Override</title>
+            <para>The XSLT editor will mark templates that have overriden an imported
+                template of the same name.</para>
+            <figure id="fig_OverRide1">
+                <title>Overriden Template</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center" fileref="../images/editor/override1.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>
+                In
+                <xref linkend="fig_OverRide1"/>
+                , the template
+                <emphasis>TempB</emphasis>
+                overrides an imported template. By moving the mouse pointer over the
+                triangle icon in the rule bar, information about which file the original
+                template resides.
+            </para>
+            <figure id="fig_OverRide2">
+                <title>Overriden Template Information</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata align="center" fileref="../images/editor/override2.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+    </section>
+    <section id="XSLEditorDebugging">
+<?dbhtml filename="editor/xsleditor_debugging.html" ?>
+        <title>XSL Debugging</title>
+        <para>The XSL Editor supports the ability to specify break points within an XSL
+            File. If the file is included or imported and the break point is encountered
+            during a transformation scenario it will be respected. A break point may be
+            set at any valid XSL element or other xml element within the XSLT stylesheet.
+            See the Launching and Debugging section for more information on debugging XSLT
+            stylesheets.</para>
+    </section>
+    <section>
+<?dbhtml filename="editor/xsleditor_debugging.html" ?>
+        <title>Navigation</title>
+        <para>
+            Many of the variables, imports/includes, and templates can be navigated to
+            using the
+            <emphasis>Open Declaration (F3)</emphasis>
+            popup menu option. They can also be navigated to directly by CTRL-Clicking on
+            the name of the variable, import/include, or template. Items that currently
+            have hyperlinking navigation are:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>Called-Templates</para>
+            </listitem>
+            <listitem>
+                <para>hrefs for Import and Includes</para>
+            </listitem>
+            <listitem>
+                <para>With-Param variables</para>
+            </listitem>
+        </itemizedlist>
+        <tip>
+            <title>Navigation to a Named Template in an included/imported
+                stylsheet</title>
+            <para> The hyperlinking ability will navigate you to where ever the first
+                definition of the template is defined. So if the template is defined
+                within the current stylesheet it will navigate to that definition. However
+                if it is defined in an imported or included stylesheet, or any of those
+                imported or included stylesheets it will take you to that definition. Use
+                the standard navigation errors to move back and forth during this
+                hyperlinking.</para>
+        </tip>
+    </section>
+</chapter>

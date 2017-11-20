@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+	<?dbhtml filename="samples/samples.html" ?>
+	<title>XSL Tooling Samples</title>
+	<para>This section contains several samples and references to sample projects.</para>
+	<section id="EclipseHelp">
+		<?dbhtml filename="samples/eclipsehelp.html" ?>
+		<title>Eclipse Help</title>
+		<para></para>
+		<section id="DocbookEclipseHelp">
+			<?dbhtml filename="samples/docbookhelp.html" ?>
+			<title>Creating Eclipse Help with Docbook and XSL Tools</title>
+			<para>
+				This tutorial assumes that you have knowledge of Docbook, ANT, and the
+				ability to setup ANT build scripts.
+			</para>
+			<para>
+				To Do write up the rest of the tutorial.
+			</para>
+		</section>
+		<section id="DITAEclipseHelp">
+			<?dbhtml filename="samples/ditahelp.html" ?>
+			<title>Creating Eclipse Help with DITA and XSL Tools</title>
+			<para>
+				This tutorial assumes that you have knowledge of DITA, ANT, and the
+				ability to setup ANT build scripts.
+			</para>
+			<para>
+				To Do write up the rest of the tutorial.
+			</para>
+		</section>
+	</section>
+</chapter>

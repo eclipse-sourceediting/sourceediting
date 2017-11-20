@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="contentAssistProcessor" name="%XSLContentAssistExtension" schema="/schema/contentAssistProcessor.exsd"/>
+
+	<extension point="org.eclipse.ui.editors">
+		<editor name="%editorName" 
+			icon="$nl$/icons/full/xslt_file.gif"
+			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.SourcePageActionContributor"
+			class="org.eclipse.wst.xsl.ui.internal.editor.XSLEditor"
+			extensions="xsl,xslt"
+			id="org.eclipse.wst.xsl.ui.XSLEditor">
+			<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xslsource" />
+		</editor>
+	</extension>
+	
+    <!-- Editor actionsets -->
+	<extension point="org.eclipse.ui.actionSetPartAssociations">
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+			<part id="org.eclipse.wst.xsl.ui.XSLEditor" />
+		</actionSetPartAssociation>
+		<actionSetPartAssociation targetID="org.eclipse.ui.NavigateActionSet">
+			<part id="org.eclipse.wst.xsl.ui.XSLEditor" />
+		</actionSetPartAssociation>
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<sourceViewerConfiguration
+			class="org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL"
+			target="org.eclipse.wst.xml.core.xslsource">
+		</sourceViewerConfiguration>
+		<contentOutlineConfiguration
+        class="org.eclipse.wst.xsl.ui.internal.contentoutline.XSLContentOutlineConfiguration"
+        target="org.eclipse.wst.xml.core.xslsource">
+		</contentOutlineConfiguration>
+		<quickOutlineConfiguration
+			class="org.eclipse.wst.xml.ui.internal.quickoutline.XMLQuickOutlineConfiguration"
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource, org.eclipse.wst.core.xslsource" />
+	    <doubleClickStrategy
+           class="org.eclipse.wst.xsl.ui.internal.doubleclick.XSLDoubleClickStrategy"
+           target="org.eclipse.wst.xsl.XSL_XPATH">
+	    </doubleClickStrategy>
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.cleanup, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection, org.eclipse.wst.xml.dependencies, org.eclipse.wst.xml.grammar, org.eclipse.wst.xml.expand, org.eclipse.wst.xml.occurrences"
+        	target="org.eclipse.core.runtime.xml" />
+        <provisionalDefinition
+            type="preferencepages"
+            value="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage, org.eclipse.wst.xsl.ui.template.preferencePage, org.eclipse.wst.xsl.ui.preferences.Validation, org.eclipse.wst.xml.xpath.ui.XPathPreferencePage, org.eclipse.wst.xsl.ui.XPath"
+            target="org.eclipse.wst.xml.core.xslsource"/>
+	</extension>
+	
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard category="org.eclipse.wst.XMLCategory"
+			class="org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileWizard"
+			finalPerspective="org.eclipse.wst.xsl.ui.perspective" 
+			icon="$nl$/icons/full/xslt_file.gif"
+			id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"
+			name="%wizardNameXSL" 
+			preferredPerspectives="org.eclipse.wst.xsl.ui.perspective">
+			<description>%wizardDescriptionXSL</description>
+			<selection class="org.eclipse.core.resources.IResource">
+			</selection>
+		</wizard>
+	</extension>
+	
+	<!-- XSL templates -->
+	<extension point="org.eclipse.ui.editors.templates">
+		<contextType
+			class="org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeXSL"
+			id="xsl_new" name="%contextTypeNewXSL">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeXSL"
+			id="xsl_tag" name="%contextTypeXSLTag">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeXSL"
+			id="xsl_attr" name="%contextTypeXSLAttr">
+		</contextType>
+		
+		<include file="templates/file_templates.xml" />
+	</extension>
+
+ <extension point="org.eclipse.ui.perspectiveExtensions">
+	<perspectiveExtension targetID="org.eclipse.wst.xml.ui.perspective">
+		<newWizardShortcut id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"/>
+	</perspectiveExtension>
+ </extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.eclipse.wst.xml.ui.preferences.xml"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.MainPreferencePage"
+			id="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage" 
+			name="%page.name.0" />
+		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLTemplatePreferencePage"
+			id="org.eclipse.wst.xsl.ui.template.preferencePage" 
+			name="%pageNameTemplates">
+		</page>
+
+		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLValidationPreferencePage"
+			id="org.eclipse.wst.xsl.ui.preferences.Validation" 
+			name="%pageNameValidation">
+			<keywordReference id="org.eclipse.wst.xsl.ui.severity"/>
+			<keywordReference id="org.eclipse.wst.xsl.ui.xpath"/>
+		</page>
+		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+		    class="org.eclipse.wst.xsl.ui.internal.preferences.XSLSyntaxColoringPage"
+		    id="org.eclipse.wst.xsl.ui.preferences.SyntaxColoring"
+		    name="%pageSyntaxColoring"/>
+	</extension>
+	
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator scope="total"
+			class="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL"
+			id="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL">
+			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xslsource">
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xsl.XSL_XPATH"/>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator scope="partial"
+			class="org.eclipse.wst.xsl.ui.internal.validation.XSLMarkupValidator"
+			id="org.eclipse.wst.xsl.ui.internal.validator.markupvalidator">
+			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xslsource">
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT" />
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT" />
+				<partitionType id="org.eclipse.wst.xsl.XSL_XPATH" />
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+	
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.eclipse.wst.xsl.ui.internal.handlers.OpenDeclarationHandler"
+           commandId="org.eclipse.wst.sse.ui.open.file.from.source">
+     </handler>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="popup:org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext?before=additions">
+        <command
+              commandId="org.eclipse.wst.sse.ui.open.file.from.source"
+              id="openSelection"
+              label="%commandOpenSelection"
+              style="push"
+              tooltip="%commandTooltipOpenSelection">
+           <visibleWhen
+                 checkEnabled="false">
+           </visibleWhen>
+        </command>
+     </menuContribution>
+  </extension>
+  <extension
+        point="org.eclipse.ui.views">
+     <view
+           category="org.eclipse.wst.xml"
+           class="org.eclipse.wst.xsl.ui.internal.views.stylesheet.StylesheetModelView"
+           icon="icons/full/hierarchy.gif"
+           id="org.eclipse.wst.xsl.ui.view.outline"
+           name="%viewNameStylesheet"
+           restorable="true">
+     </view>
+  </extension>
+  <extension point="org.eclipse.core.runtime.adapters">		
+		<factory 
+            class="org.eclipse.wst.xsl.ui.internal.views.stylesheet.XSLModelAdapterFactory" 
+            adaptableType="org.eclipse.wst.xsl.core.model.XSLModelObject">
+            <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+		</factory>
+   </extension>     	
+   
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type
+			name="org.eclipse.wst.xsl.ui.override">
+		</type>
+	</extension>
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+	  <specification
+            annotationType="org.eclipse.wst.xsl.ui.override"
+            label="%specification.label.0"
+            icon="$nl$/icons/full/over_co.gif"
+			annotationImageProvider ="org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicatorImageProvider"
+            textPreferenceKey="overrideIndicator"
+            textPreferenceValue="false"
+            highlightPreferenceKey="overrideIndicatorHighlighting"
+            highlightPreferenceValue="false"
+            contributesToHeader="false"
+            overviewRulerPreferenceKey="overrideIndicatorInOverviewRuler"
+            overviewRulerPreferenceValue="false"
+            verticalRulerPreferenceKey="overrideIndicatorInVerticalRuler"
+            verticalRulerPreferenceValue="true"
+            colorPreferenceKey="overrideIndicatorColor"
+            colorPreferenceValue="180,207,205"
+            presentationLayer="3"
+            showInNextPrevDropdownToolbarActionKey="showoverrideIndicatorInNextPrevDropdownToolbarAction"
+            showInNextPrevDropdownToolbarAction="false"
+            isGoToNextNavigationTargetKey="isOverrideIndicatorGoToNextNavigationTarget"
+	        isGoToNextNavigationTarget="false"
+            isGoToPreviousNavigationTargetKey="isOverrideIndicatorGoToPreviousNavigationTarget"
+	        isGoToPreviousNavigationTarget="false"
+            textStylePreferenceKey="overrideIndicatorTextStyle"
+            textStylePreferenceValue="SQUIGGLES">
+	  </specification>
+	</extension>
+	
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLUIPreferenceInitializer" />
+	</extension>
+	
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			name="%XSL_Property_validation"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLValidationPreferencePage"
+			id="org.eclipse.wst.xsl.ui.propertyPage.project.validation"
+			category="ValidationPropertiesPage">
+-			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+					
+				</adapt>
+			</enabledWhen>
+		</page>		
+	</extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.eclipse.wst.xsl.ui.internal.PreferenceInitializer">
+    </initializer>
+ </extension>
+	
+   <!-- extension
+         point="org.eclipse.wst.sse.ui.quickFixProcessor">
+      <quickFixProcessor
+            class="org.eclipse.wst.xsl.ui.internal.quickassist.OverrideQuickAssist"
+            problemType="org.eclipse.wst.xsl.ui.override">
+      </quickFixProcessor>
+   </extension -->
+	
+ <extension point="org.eclipse.ui.menus">
+	<menuContribution locationURI="toolbar:org.eclipse.wst.xml.ui.perspective.NewFileToolBar">
+        <command
+              commandId="org.eclipse.ui.newWizard"
+              icon="$nl$/icons/full/xslt_file.gif"
+              id="org.eclipse.wst.xsl.ui.newXSLFile"
+              style="push"
+              tooltip="%commandTooltipNewXSLFile">
+             <parameter name="newWizardId" value="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"/>
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+				<equals value="org.eclipse.wst.xml.ui.perspective"/>
+			</with>
+           </visibleWhen>         
+        </command>
+     </menuContribution>
+  </extension>
+
+ <extension point="org.eclipse.ui.navigator.navigatorContent" >
+	<commonWizard type="new" wizardId="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"  menuGroupId="org.eclipse.wst.xml.new.menuGroup">
+		<enablement>
+			<instanceof value="org.eclipse.core.resources.IResource"/>
+			<with variable="activeWorkbenchWindow.activePerspective">
+			   <equals value="org.eclipse.wst.xml.ui.perspective"/>
+			</with>
+		</enablement>
+	</commonWizard>
+ </extension>
+ <extension
+       point="org.eclipse.wst.xsl.ui.contentAssistProcessor">
+    <processor
+          class="org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor"/>
+    <processor
+          class="org.eclipse.wst.xsl.ui.internal.contentassist.XSLTemplateContentAssistProcessor"/>
+    <processor
+          class="org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor"/>
+ </extension>
+	<extension
+		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
+		<adapterFactoryDescription
+			class="org.eclipse.wst.xsl.ui.internal.registry.AdapterFactoryProviderForXSL">
+			<contentType id="org.eclipse.wst.xml.core.xslsource" />
+		</adapterFactoryDescription>
+	</extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+    <highlighting
+          class="org.eclipse.wst.xsl.ui.internal.style.XSLTagNameSemanticHighlighting"
+          target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xslsource"
+          styleStringKey="xsltagName">
+    </highlighting>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+    <highlighting
+          class="org.eclipse.wst.xsl.ui.internal.style.XSLAttrNameSemanticHighlighting"
+          target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xslsource"
+          styleStringKey="xsltagAttributeName">
+    </highlighting>
+ </extension>
+<extension
+       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+    <highlighting
+          class="org.eclipse.wst.xsl.ui.internal.style.XSLAttrValueSemanticHighlighting"
+          target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xslsource"
+          styleStringKey="xsltagAttributeValue">
+    </highlighting>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+    <highlighting
+          class="org.eclipse.wst.xsl.ui.internal.style.XSLTagDelimsSemanticHighlighting"
+          target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xslsource"
+          styleStringKey="xsltagBorder">
+    </highlighting>
+ </extension>
+  
+	<extension point="org.eclipse.ui.keywords">
+		<keyword
+			label="%preferenceKeywords.severity"
+			id="org.eclipse.wst.xsl.ui.severity"/>
+		<keyword
+			label="%preferenceKeywords.xpath"
+			id="org.eclipse.wst.xsl.ui.xpath"/>
+ </extension>
+</plugin>

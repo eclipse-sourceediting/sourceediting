@@ -1,0 +1,42 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.contentoutline</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.contentoutline</strong></font><br>
+               Class XSLContentOutlineConfiguration</h2><br><hr><pre>public class <strong>XSLContentOutlineConfiguration</strong>
+extends XMLContentOutlineConfiguration</pre>More advanced Outline Configuration for XML support.  Expects that the viewer's
+ input will be the DOM Model.<p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>package-private static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_ATTR_ID">ATTR_ID</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private static  java.lang.String</code></td><td width="80%" align="left"><code><a href="#field_ATTR_NAME">ATTR_NAME</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>package-private boolean</code></td><td width="80%" align="left"><code><a href="#field_fShowAttributes">fShowAttributes</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><br><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_XSLContentOutlineConfiguration">XSLContentOutlineConfiguration</a></strong>()</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>protected IContributionItem[]</code></td><td width="" align="left"><code><a href="#method_createMenuContributions">createMenuContributions</a>(TreeViewer viewer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>protected void</code></td><td width="" align="left"><code><a href="#method_enableShowAttributes">enableShowAttributes</a>(boolean showAttributes
+         ,
+      TreeViewer treeViewer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Notifies this configuration that the flag that indicates whether or not
+ to show attribute values in the tree viewer has changed. The tree
+ viewer is automatically refreshed afterwards to update the labels.
+ 
+ Clients should not call this method, but rather should react to it.</td></tr><tr valign="top"><td width="20%" align="right"><code>public IContentProvider</code></td><td width="" align="left"><code><a href="#method_getContentProvider">getContentProvider</a>(TreeViewer viewer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public ILabelProvider</code></td><td width="" align="left"><code><a href="#method_getLabelProvider">getLabelProvider</a>(TreeViewer viewer)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public ISelection</code></td><td width="" align="left"><code><a href="#method_getSelection">getSelection</a>(TreeViewer viewer
+         ,
+      ISelection selection)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_ATTR_ID">ATTR_ID</a></h2><p><code>package-private static  java.lang.String <strong>ATTR_ID</strong></code></p><hr><h2><a name="field_ATTR_NAME">ATTR_NAME</a></h2><p><code>package-private static  java.lang.String <strong>ATTR_NAME</strong></code></p><hr><h2><a name="field_fShowAttributes">fShowAttributes</a></h2><p><code>package-private boolean <strong>fShowAttributes</strong></code></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_XSLContentOutlineConfiguration">XSLContentOutlineConfiguration</a></h2><p><code>public <strong>XSLContentOutlineConfiguration</strong>()</code></p><p>Create new instance of XMLContentOutlineConfiguration</p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_createMenuContributions">createMenuContributions</a></h2><p><code>protected IContributionItem[] <strong>createMenuContributions</strong>(TreeViewer viewer)</code></p><p></p><h3>Parameters</h3><p><code>viewer</code></p><h3>Returns</h3><p><code>IContributionItem[]</code></p><hr><h2><a name="method_enableShowAttributes">enableShowAttributes</a></h2><p><code>protected void <strong>enableShowAttributes</strong>(boolean showAttributes
+         ,
+      TreeViewer treeViewer)</code></p><p>Notifies this configuration that the flag that indicates whether or not
+ to show attribute values in the tree viewer has changed. The tree
+ viewer is automatically refreshed afterwards to update the labels.
+ 
+ Clients should not call this method, but rather should react to it.</p><h3>Parameters</h3><p><code>showAttributes</code> - flag indicating whether or not to show attribute values in             the tree viewer</p><p><code>treeViewer</code> - the TreeViewer associated with this configuration</p><hr><h2><a name="method_getContentProvider">getContentProvider</a></h2><p><code>public IContentProvider <strong>getContentProvider</strong>(TreeViewer viewer)</code></p><p></p><h3>Parameters</h3><p><code>viewer</code></p><h3>Returns</h3><p><code>IContentProvider</code></p><hr><h2><a name="method_getLabelProvider">getLabelProvider</a></h2><p><code>public ILabelProvider <strong>getLabelProvider</strong>(TreeViewer viewer)</code></p><p></p><h3>Parameters</h3><p><code>viewer</code></p><h3>Returns</h3><p><code>ILabelProvider</code></p><hr><h2><a name="method_getSelection">getSelection</a></h2><p><code>public ISelection <strong>getSelection</strong>(TreeViewer viewer
+         ,
+      ISelection selection)</code></p><p></p><h3>Parameters</h3><p><code>viewer</code></p><p><code>selection</code></p><h3>Returns</h3><p><code>ISelection</code></p><hr></body></html>

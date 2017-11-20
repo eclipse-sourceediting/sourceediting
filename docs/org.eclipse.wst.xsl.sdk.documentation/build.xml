@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jul 21, 2008 6:46:02 PM                                                        
+
+     SDK Documentation    
+     Builds SDK TOC Documentation using JELDoclet.
+                   
+     dcarver                                                                
+     ====================================================================== -->
+<project name="SDK Documentation" default="default">
+    <description>
+            Builds SDK TOC Documentation using JELDoclet.
+    </description>
+	
+	<property name="workspace" location="."/>
+	<property name="workspaceloc" location=".."/>
+
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="default" description="Builds SDK TOC Documentation using JELDoclet.">
+
+  	  <javadoc destdir="doc" package="true" docletpath="${workspace}/lib/jeldoclet.jar">
+  	  	 <fileset dir="${workspaceloc}">
+  	  	 	<include name="org.eclipse.wst.xsl.core/src/**/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.core/src_sse/**/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.ui/src/**/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.jaxp.debug/src-debugger/**/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.jaxp.debug/src-invoker/**/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/**/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/**/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/**/*.java"/>
+  	  	 </fileset>
+  	     <doclet name="com.jeldoclet.JELDoclet"/>
+  	  </javadoc>
+    	
+     <xslt basedir="." style="doc/jeltohtml.xsl" in="doc/jel.xml" out="doc/html/deleteme.html">
+  		<factory name="org.apache.xalan.processor.TransformerFactoryImpl">
+  			<attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+  		</factory>
+     </xslt>
+    	
+    	
+     <xslt style="doc/jeltotoc.xsl" in="doc/jel.xml" out="toc.xml" destdir=".">
+  		<factory name="org.apache.xalan.processor.TransformerFactoryImpl">
+  			<attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+  		</factory>
+     	<param name="sdkname" expression="XSL Tools SDK Documentation"/>
+     </xslt>
+    	
+    </target>
+	
+	<target name="DocCheck">
+	  	  <javadoc destdir="doc/doccheck" package="true" docletpath="${workspace}/lib/doccheck.jar">
+	  	  	 <fileset dir="${workspaceloc}">
+	  	  	 	<include name="org.eclipse.wst.xsl.core/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xsl.debug/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xsl.debug.ui/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xsl.launching/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xsl.saxon/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xsl.ui/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/*.java"/>
+	  	  	 </fileset>
+	  	     <doclet name="com.sun.tools.doclets.doccheck.DocCheck">
+	  	     	<param name="-execDepth" value="2"/>
+	  	  	 </doclet>
+	  	  </javadoc>
+	</target>
+	
+	<target name="ExtensionPointDoc">
+		<pde.convertSchemaToHTML manifest="../org.eclipse.wst.xsl.jaxp.launching/plugin.xml"
+			                     destination="${workspace}/doc/html/extension_point"
+		/>
+		<pde.convertSchemaToHTML manifest="../org.eclipse.wst.xsl.ui/plugin.xml"
+			                     destination="${workspace}/doc/html/extension_point"
+		/>
+	</target>
+
+</project>

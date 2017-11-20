@@ -1,0 +1,39 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.core.internal.validation</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.core.internal.validation</strong></font><br>
+               Class XSLValidationReport</h2><br><hr><pre>public class <strong>XSLValidationReport</strong>
+extends java.lang.Object</pre>A validation report for the XSL validator.<p></p><p></p><hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_XSLValidationReport">XSLValidationReport</a></strong>(java.lang.String uri)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public ValidationMessage</code></td><td width="" align="left"><code><a href="#method_addError">addError</a>(org.eclipse.wst.xsl.core.model.XSLNode node
+         ,
+      java.lang.String message)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Add an error message for the given XSL node.</td></tr><tr valign="top"><td width="20%" align="right"><code>public ValidationMessage</code></td><td width="" align="left"><code><a href="#method_addInfo">addInfo</a>(org.eclipse.wst.xsl.core.model.XSLNode node
+         ,
+      java.lang.String message)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Add an info message for the given XSL node.</td></tr><tr valign="top"><td width="20%" align="right"><code>public ValidationMessage</code></td><td width="" align="left"><code><a href="#method_addWarning">addWarning</a>(org.eclipse.wst.xsl.core.model.XSLNode node
+         ,
+      java.lang.String message)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Add an warning message for the given XSL node.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getErrors">getErrors</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the validation messages.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.String</code></td><td width="" align="left"><code><a href="#method_getFileURI">getFileURI</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the URI that this report applies to.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getInfos">getInfos</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the validation messages.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.HashMap</code></td><td width="" align="left"><code><a href="#method_getNestedMessages">getNestedMessages</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public ValidationMessage[]</code></td><td width="" align="left"><code><a href="#method_getValidationMessages">getValidationMessages</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns an array of validation messages.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getWarnings">getWarnings</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the validation messages.</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_isValid">isValid</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns whether the file is valid. The file may have warnings associated with it.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_XSLValidationReport">XSLValidationReport</a></h2><p><code>public <strong>XSLValidationReport</strong>(java.lang.String uri)</code></p><p>Create a new instance of this.</p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_addError">addError</a></h2><p><code>public ValidationMessage <strong>addError</strong>(org.eclipse.wst.xsl.core.model.XSLNode node
+         ,
+      java.lang.String message)</code></p><p>Add an error message for the given XSL node.</p><h3>Parameters</h3><p><code>node</code> - the node the warning applies to</p><p><code>message</code> - the message to associate with the node</p><h3>Returns</h3><p><code>ValidationMessage</code> - the validation message created</p><hr><h2><a name="method_addInfo">addInfo</a></h2><p><code>public ValidationMessage <strong>addInfo</strong>(org.eclipse.wst.xsl.core.model.XSLNode node
+         ,
+      java.lang.String message)</code></p><p>Add an info message for the given XSL node.</p><h3>Parameters</h3><p><code>node</code> - the node the warning applies to</p><p><code>message</code> - the message to associate with the node</p><h3>Returns</h3><p><code>ValidationMessage</code> - the validation message created</p><hr><h2><a name="method_addWarning">addWarning</a></h2><p><code>public ValidationMessage <strong>addWarning</strong>(org.eclipse.wst.xsl.core.model.XSLNode node
+         ,
+      java.lang.String message)</code></p><p>Add an warning message for the given XSL node.</p><h3>Parameters</h3><p><code>node</code> - the node the warning applies to</p><p><code>message</code> - the message to associate with the node</p><h3>Returns</h3><p><code>ValidationMessage</code> - the validation message created</p><hr><h2><a name="method_getErrors">getErrors</a></h2><p><code>public java.util.List <strong>getErrors</strong>()</code></p><p>Get the validation messages.</p><h3>Returns</h3><p><code>java.util.List</code> - validation messages</p><hr><h2><a name="method_getFileURI">getFileURI</a></h2><p><code>public java.lang.String <strong>getFileURI</strong>()</code></p><p>Get the URI that this report applies to.</p><h3>Returns</h3><p><code>java.lang.String</code> - the URI</p><hr><h2><a name="method_getInfos">getInfos</a></h2><p><code>public java.util.List <strong>getInfos</strong>()</code></p><p>Get the validation messages.</p><h3>Returns</h3><p><code>java.util.List</code> - validation messages</p><hr><h2><a name="method_getNestedMessages">getNestedMessages</a></h2><p><code>public java.util.HashMap <strong>getNestedMessages</strong>()</code></p><p></p><h3>Returns</h3><p><code>java.util.HashMap</code> - null</p><hr><h2><a name="method_getValidationMessages">getValidationMessages</a></h2><p><code>public ValidationMessage[] <strong>getValidationMessages</strong>()</code></p><p>Returns an array of validation messages.</p><h3>Returns</h3><p><code>ValidationMessage[]</code> - An array of validation messages.</p><hr><h2><a name="method_getWarnings">getWarnings</a></h2><p><code>public java.util.List <strong>getWarnings</strong>()</code></p><p>Get the validation messages.</p><h3>Returns</h3><p><code>java.util.List</code> - validation messages</p><hr><h2><a name="method_isValid">isValid</a></h2><p><code>public boolean <strong>isValid</strong>()</code></p><p>Returns whether the file is valid. The file may have warnings associated with it.</p><h3>Returns</h3><p><code>boolean</code> - True if the file is valid, false otherwise.</p><hr></body></html>

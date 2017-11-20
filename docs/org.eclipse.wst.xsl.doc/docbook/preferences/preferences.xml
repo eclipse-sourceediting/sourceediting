@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="XSLPreferences">
+	<?dbhtml filename="preferences/xslpreferences.html" ?>
+    <title>XSL Tools Preferences</title>
+    <para> The XSL Preference pages has several sub sections. Each of these allow for
+        configuration of various aspects of the preferences. From the controlling of the
+        default XSL processor to be used during transformations. To extending the content
+        assist support of the XPath functions available in the XML editor.</para>
+    <figure id="fig_XSLPreferences">
+        <title>XSL Tools Preferences</title>
+        <mediaobject>
+            <imageobject>
+                <imagedata align="center" fileref="../images/preferences/xslpreferences.png"
+                    format="PNG"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+    <section id="XSLFeatures">
+		<?dbhtml filename="preferences/xslfeatures.html" ?>
+        <title>Features</title>
+        <para> The XSL Features preference page allows for the configuration of features
+            for a particular processor. XSL Tools comes with Xalan 2.7.0 by default.
+            Adopters can extend and include their own specific features for their own
+            procesoors. An adopter could extend the tooling to support XSLT 2.0
+            transformations, and features particular to that parser.</para>
+        <mediaobject>
+            <imageobject>
+                <imagedata align="center" format="PNG"
+                    fileref="../images/preferences/xslfeatures.png"/>
+            </imageobject>
+        </mediaobject>
+        <para>
+            The
+            <emphasis role="bold">Processor Type</emphasis>
+            allows you to set features for a specific processor. In this case this is for
+            the processor that is being installed. XSL Tools comes with Xalan 2.7.0, and
+            it is the only available processor type by default.
+        </para>
+        <para> The feature table lists the features that are specific to the processor
+            that was selected. As you select each of the features, information regarding
+            that feature and it's abilities is displayed in the description box. By
+            clicking in the value column, next to the feature you want to set the value
+            for, the user can set the feature.</para>
+    </section>
+    <section id="XSLProcessors">
+		<?dbhtml filename="preferences/xslprocessors.html" ?>
+        <title>Installed Processors</title>
+        <para> The installed processors page lets you pick which of the installed XSLT
+            processors will be used by default. The default is the System Default
+            Procesoor, but you can select any of the available processors to be used as
+            the default processor.</para>
+        <mediaobject>
+            <imageobject>
+                <imagedata align="center"
+                    fileref="../images/preferences/xsl_InstalledProcessors.png" format="PNG"/>
+            </imageobject>
+        </mediaobject>
+    </section>
+    <section id="XSLOutputProperties">
+		<?dbhtml filename="preferences/xsloutputproperties.html" ?>
+        <title>Output Properties</title>
+        <para> The various xsl processors support a wide variety of processor specific
+            tweaks. However there are several Standard processor features that all XSLT
+            processors support. These options can be set and will act as the defaults for
+            all transformations unless they are specifically overriden by the stylesheet
+            or the launch configuration.</para>
+        <mediaobject>
+            <imageobject>
+                <imagedata align="center"
+                    fileref="../images/preferences/xsl_outputproperties.png" format="PNG"/>
+            </imageobject>
+        </mediaobject>
+        <para> In addition to the Standard Output Properties, each XSLT processor can have
+            processors specific features.</para>
+    </section>
+    <section id="XPathTemplates">
+		<?dbhtml filename="preferences/xpathtemplates.html" ?>
+        <title>XPath Templates</title>
+        <para> XPath template proposal is supported by the XSL Tooling project through the
+            built in template functionality of eclipse. Users and Adopters can add their
+            own specific xpath extensions for processor specific extensions. An example
+            would be to add the EXSLT extensions for proposal support.</para>
+        <mediaobject>
+            <imageobject>
+                <objectinfo>
+                    <title>XPath Templates</title>
+                </objectinfo>
+                <imagedata align="center" fileref="../images/preferences/XPathTemplates.png"
+                    format="PNG"/>
+            </imageobject>
+        </mediaobject>
+        <para> The following content types are available:</para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <emphasis role="bold">axis</emphasis>
+                    - an XPath navigation axis statement.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis role="bold">exslt</emphasis>
+                    - An XPath statement that is defined by the
+                    <ulink url="http://www.exslt.org/">EXSLT</ulink>
+                    library. Xalan and most other processors have built in support for the
+                    EXSLT library.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis role="bold">xpath</emphasis>
+                    - Represents an XPATH 1.0 function. These are functions as defined by
+                    the XPath 1.0 specification.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis role="bold">xpath 2.0</emphasis>
+                    - Represents an XPath 2.0 function.
+                    <emphasis>Note: That currently XSL Tools only ships with
+                        templates defined for XPath 1.0 .</emphasis>
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis role="bold">operator</emphasis>
+                    - An xpath logical operator like AND, OR, etc.
+                </para>
+            </listitem>
+        </itemizedlist>
+        <section id="XPathTemplateNew">
+		   <?dbhtml filename="preferences/xpathtemplatenew.html" ?>
+            <title>Creating New Templates</title>
+            <!-- TODO: Create Additional information on creating new templates-->
+            <para> Add documentation about creating new templates.</para>
+        </section>
+        <section id="XPathImport">
+		   <?dbhtml filename="preferences/xpathimport.html" ?>
+            <title>Import XPath Templates</title>
+            <para> Add documentation about importing new templates.</para>
+        </section>
+        <section id="XPathExport">
+		   <?dbhtml filename="preferences/xpathexport.html" ?>
+            <title>Import XPath Templates</title>
+            <para> Add documentation about importing new templates.</para>
+        </section>
+    </section>
+    <section id="pref_ProjectValidationPreferences">
+        <?dbhtml filename="preferences/validation.html" ?>
+        <title>Project Validation Preferences</title>
+        <para>
+            XSL Tools has the ability to set both workspace wide preferences for
+            validation as well as project level preferences. These preferences, as shown
+            in
+            <xref linkend="fig_ProjectLevelPreferences"/>
+            allow for the fine grain control of what the validator will consider to be an
+            syntax error.
+        </para>
+        <figure id="fig_ProjectLevelPreferences">
+            <title>Project Level Validation Preferences</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata align="center"
+                        fileref="../images/preferences/projectLevelValidation.png" format="PNG"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+        <para> These preferences are accessed via the Projects properties dialog.</para>
+    </section>
+    <section id="pref_SyntaxColoring">
+        <?dbhtml filename="preferences/syntaxColoring.html" ?>
+        <title>XSLT Syntax Coloring</title>
+        <para>
+            XSL Tools also has the ability to syntax color the XSLT namespace items a different
+            color than the rest of the XML syntax included.   The default is for all XSL syntax to be
+            <emphasis role="bold">bold</emphasis>.
+        </para>
+        <figure id="fig_XSLSyntaxColoringPreference">
+            <title>XSL Tools Syntax Coloring Preference</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata align="center"
+                        fileref="../images/preferences/xslSyntaxColoring.png" format="PNG"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+        <note>
+            <title>XML Colors</title>
+            <para>
+                The color for standard XML is still handled by the XML Files syntax coloring
+                preference page.   Changes made there are reflected in the XSL editor as well.
+            </para>
+        </note>
+    </section>
+</chapter>

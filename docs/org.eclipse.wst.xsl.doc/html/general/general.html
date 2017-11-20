@@ -1,0 +1,27 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>General</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="../index.html" title="XSL Tools User Documentation"><link rel="prev" href="../preferences/syntaxColoring.html" title="XSLT Syntax Coloring"><link rel="next" href="../samples/samples.html" title="XSL Tooling Samples"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="N1041E"></a>General</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><ul><li><span class="section"><a href="general.html#XInclude">XInclude</a></span></li></ul></div><p>This section covers topics that don't have any other particular place to go.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="XInclude"></a>XInclude</h2></div></div></div><p>
+      	XInclude allows a user to import or include other XML files into one xml file.
+        It is used primarily with documentation file formats like Docbook and DITA.  It
+        allows for separating out large xml documents into more manageable chunks of information.
+      </p><p>
+      	The XSL Tools project includes an ANT task that can be run with in eclipse, eclipse
+      	headless, and without eclipse at all.   If running outside of eclipse, you will need
+      	to make sure that the jar file xinclude.jar in the org.eclipse.wst.xsl.core.jar file
+      	is made avaiable on your class path.
+      </p><div class="mediaobject" align="center"><img src="../images/general/xinclude.png" align="middle"></div><p>
+      	The following parameters are available on the xsl.xinclude ANT task:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>
+      			<span class="bold"><strong>
+					in
+				</strong></span> - The full path to the input file that contains
+      			the file with the XIncludes.   If the files that it includes have includes, then
+      			those will be brought in an expanded as well.
+      		</p></li><li><p>
+					<span class="bold"><strong>out</strong></span> - The full path to the output file 
+					to be written with all includes expanded.  This is typically used as the
+					input to a stylesheet transformation process.
+				</p></li></ul></div><div class="example"><a name="N10449"></a><p class="title"><b>Example&nbsp;1.&nbsp;XInclude Example</b></p><div class="example-contents"><pre class="programlisting">
+&lt;target name="merge"&gt;
+    &lt;xsl.xinclude in="${docbooksource}/xslhelp.dbk"
+                  out="${docbooksource}/xslhelpcombined.dbk"/&gt;
+&lt;/target&gt;	    		    	
+	    	</pre></div></div><br class="example-break"></div></div></body></html>

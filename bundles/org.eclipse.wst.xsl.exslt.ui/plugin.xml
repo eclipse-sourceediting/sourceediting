@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.wst.xsl.ui.contentAssistProcessor">
+      <processor
+            class="org.eclipse.wst.xsl.exslt.ui.internal.contentassist.EXSLTCommonContentAssistProcessor">
+      </processor>
+   </extension>
+
+</plugin>

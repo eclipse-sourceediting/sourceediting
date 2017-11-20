@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+	<!-- Team provider info -->
+
+	<extension point="org.eclipse.team.core.fileTypes">
+		<fileTypes type="text" extension="xsl" />
+		<fileTypes type="text" extension="xslt" />
+	</extension>
+
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+	  <content-type
+	        base-type="org.eclipse.core.runtime.xml"
+	        file-extensions="dita,ditamap"
+	        id="org.eclipse.wst.xsl.core.content-type.ditasource"
+	        name="%DITA_Content_Type_Extension_Element.name"
+	        priority="high">
+	  </content-type>
+	  <content-type
+	        base-type="org.eclipse.core.runtime.xml"
+	        file-extensions="dbk"
+	        id="org.eclipse.wst.xsl.core.content-type.docbooksource"
+	        name="%Docbook_Content_Type_Extension_Element.name"
+	        priority="high">
+	  </content-type>
+	</extension>
+	
+	<!-- The magic which detects XSLT 1.0 or 2.0 stylesheets and supplies the correct XSD -->	
+ 	<extension
+       	point="org.eclipse.wst.common.uriresolver.resolverExtensions">
+    	<resolverExtension
+          	class="org.eclipse.wst.xsl.core.resolver.ResolverExtension"
+        	  stage="prenormalization">
+    	</resolverExtension>
+	</extension>
+
+   <extension
+         id="problem"
+         name="%XSLProblem"
+         point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.wst.xml.core.validationMarker"/>
+		<persistent value="true"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.eclipse.wst.xsl.core.internal.ant.XIncludeTask"
+            headless="true"
+            library="lib/xinclude.jar"
+            name="xsl.xinclude">
+      </antTask>
+   </extension>
+   <!-- Extra Classpath -->
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/xinclude.jar">
+      </extraClasspathEntry>
+   </extension>
+
+   <extension id="xsl" name="%XSL.Validator.Name" point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="true"
+            class="org.eclipse.wst.xsl.core.internal.validation.eclipse.Validator"
+            sourceid="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL"
+            manual="true"
+            markerId="org.eclipse.wst.xsl.core.problem"
+            version="2">
+         <include>
+            <rules>
+               <fileext caseSensitive="false" ext="xsl"/>
+ 				<contentType id="org.eclipse.wst.xml.core.xslsource"/>
+            </rules>
+         </include>
+      </validator>
+   </extension>
+   
+   
+	<extension
+		point="org.eclipse.core.filebuffers.documentCreation"
+		id="org.eclipse.wst.xml.core.documentfactories"
+		name="%Structured_XML_Document_Factory_Extension.name">
+		<factory
+			contentTypeId="org.eclipse.wst.xml.core.xslsource"
+			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+	</extension>
+ 	<extension
+         point="org.eclipse.wst.sse.core.modelHandler">
+      <modelHandler
+            default="true"
+            class="org.eclipse.wst.xsl.core.internal.modelhandler.ModelHandlerForXSL"
+            associatedContentTypeId="org.eclipse.wst.xml.core.xslsource"
+            id="org.eclipse.wst.xsl.core.handler">
+      </modelHandler>
+    </extension>
+  <extension
+        point="org.eclipse.wst.xml.core.catalogContributions">
+     <catalogContribution>
+        <uri
+              id="org.w3c.xinclude"
+              name="http://www.w3.org/2001/XInclude"
+              uri="xslt-schemas/xinclude.xsd">
+        </uri>
+     </catalogContribution>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer
+           class="org.eclipse.wst.xsl.core.internal.preferences.PreferenceInitializer">
+     </initializer>
+  </extension>	
+   
+
+</plugin>

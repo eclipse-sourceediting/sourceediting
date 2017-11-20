@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabs">
+		<tab
+			class="org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.XSLProcessorTab2"
+			group="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTabGroup.xslt"
+			id="org.eclipse.wst.xsl.debug.ui.jaxp.tabs.processor" name="Processor">
+			<associatedDelegate
+				delegate="org.eclipse.wst.xsl.launching.internal.jaxp.JAXPLaunchConfigurationDelegate">
+			</associatedDelegate>
+			<placement after="org.eclipse.wst.xsl.internal.debug.ui.tabs.output">
+			</placement>
+		</tab>
+		<tab class="org.eclipse.jdt.debug.ui.launchConfigurations.JavaJRETab"
+			group="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTabGroup.xslt"
+			id="org.eclipse.jdt.debug.ui.javaJRETab" name="JRE">
+			<associatedDelegate
+				delegate="org.eclipse.wst.xsl.launching.internal.jaxp.JAXPLaunchConfigurationDelegate">
+			</associatedDelegate>
+			<placement after="org.eclipse.wst.xsl.debug.ui.jaxp.tabs.processor">
+			</placement>
+		</tab>
+		<tab class="org.eclipse.jdt.debug.ui.launchConfigurations.JavaClasspathTab"
+			group="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTabGroup.xslt"
+			id="org.eclipse.jdt.debug.ui.javaClasspathTab" name="Classpath">
+			<associatedDelegate
+				delegate="org.eclipse.wst.xsl.launching.internal.jaxp.JAXPLaunchConfigurationDelegate">
+			</associatedDelegate>
+			<placement after="org.eclipse.jdt.debug.ui.javaJRETab">
+			</placement>
+		</tab>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			class="org.eclipse.wst.xsl.jaxp.debug.ui.internal.preferences.ProcessorsPreferencePage"
+			id="org.eclipse.wst.xsl.ui.preferences.java" name="%pageNameJavaProcessors">
+		</page>
+	</extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <view
+          class="org.eclipse.wst.xsl.jaxp.debug.ui.internal.views.ResultView"
+          id="org.eclipse.wst.xsl.jaxp.debug.ui.resultview"
+          name="%viewNameResult"
+          category="org.eclipse.wst.xml">
+    </view>
+ </extension>
+  <extension
+        point="org.eclipse.ui.perspectiveExtensions">
+     <perspectiveExtension
+           targetID="org.eclipse.debug.ui.DebugPerspective">
+        <view
+              id="org.eclipse.wst.xsl.jaxp.debug.ui.view1"
+              minimized="false"
+              relationship="stack"
+              relative="org.eclipse.ui.console.ConsoleView"
+              visible="false">
+        </view>
+     </perspectiveExtension>
+  </extension>
+ 
+ 	<extension point="org.eclipse.debug.ui.contextViewBindings">
+		<contextViewBinding
+			contextId="org.eclipse.wst.xsl.debug.ui.context"
+			viewId="org.eclipse.wst.xsl.jaxp.debug.ui.resultview">
+		</contextViewBinding>
+	</extension>
+ 
+</plugin>

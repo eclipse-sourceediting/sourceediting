@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension
+		point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+            sourceLocatorId="org.eclipse.wst.xsl.launching.sourceLookupDirector"
+            sourcePathComputerId="org.eclipse.wst.xsl.launching.sourcePathComputer"
+			id="org.eclipse.wst.xsl.launching.launchConfigurationType"
+			name="%launchConfigurationType.name.0" />
+	</extension>
+	
+   <extension
+         point="org.eclipse.debug.core.sourceLocators">
+      <sourceLocator
+            name="%sourceLocator.name.0"
+            class="org.eclipse.wst.xsl.internal.launching.XSLTSourceLookupDirector"
+            id="org.eclipse.wst.xsl.launching.sourceLookupDirector">
+      </sourceLocator>
+   </extension>
+   
+   <extension
+         point="org.eclipse.debug.core.sourcePathComputers">
+      <sourcePathComputer
+            class="org.eclipse.wst.xsl.internal.launching.XSLTSourcePathComputerDelegate"
+            id="org.eclipse.wst.xsl.launching.sourcePathComputer">
+      </sourcePathComputer>
+   </extension>
+	
+   <extension
+         point="org.eclipse.debug.core.breakpoints">
+      <breakpoint
+      		id="xslLineBreakpoint"
+            markerType="org.eclipse.wst.xsl.launching.xslLineBreakpointMarker"
+            class="org.eclipse.wst.xsl.launching.model.XSLLineBreakpoint">
+      </breakpoint>
+   </extension>
+
+   <extension
+         id="xslLineBreakpointMarker"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.debug.core.lineBreakpointMarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+	
+</plugin>

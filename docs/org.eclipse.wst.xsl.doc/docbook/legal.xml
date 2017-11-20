@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+	<?dbhtml filename="legal.html" ?>
+	<title>Notices</title>
+	<para>
+      The material in this guide is Copyright (c) Doug Satchwell (<ulink url="http://www.chasetechnology.co.uk">Chase Technology Ltd</ulink>), 
+      David Carver (<ulink url="http://www.starstandard.org">Standards for Technology in Automotive Retail</ulink>)
+      and others 2008.
+    </para>
+    <para>
+		This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies 
+		this distribution, and is available at 
+		<ulink url="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</ulink>.
+    </para>
+	<para>
+		<ulink url="about.html">Terms and conditions regarding the use of this guide.</ulink>.
+	</para>
+</chapter>

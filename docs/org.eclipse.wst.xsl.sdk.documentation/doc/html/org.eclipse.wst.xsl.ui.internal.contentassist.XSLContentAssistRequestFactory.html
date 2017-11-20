@@ -1,0 +1,40 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xsl.ui.internal.contentassist</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xsl.ui.internal.contentassist</strong></font><br>
+               Class XSLContentAssistRequestFactory</h2><br><hr><pre>public class <strong>XSLContentAssistRequestFactory</strong>
+extends java.lang.Object</pre>A Factory that determines which Content Assist Request class is needed and
+ returns the appropriate class.<p></p><p></p><hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_XSLContentAssistRequestFactory">XSLContentAssistRequestFactory</a></strong>(ITextViewer textViewer
+         ,
+      int documentPosition
+         ,
+      IDOMNode xmlNode
+         ,
+      IStructuredDocumentRegion sdRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      java.lang.String matchString)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest</code></td><td width="" align="left"><code><a href="#method_getContentAssistRequest">getContentAssistRequest</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get the appropriate content assist request class for the XSL request.</td></tr><tr valign="top"><td width="20%" align="right"><code>protected boolean</code></td><td width="" align="left"><code><a href="#method_hasAttributeAtTextRegion">hasAttributeAtTextRegion</a>(java.lang.String attrName
+         ,
+      org.w3c.dom.NamedNodeMap nodeMap
+         ,
+      ITextRegion aRegion)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_XSLContentAssistRequestFactory">XSLContentAssistRequestFactory</a></h2><p><code>public <strong>XSLContentAssistRequestFactory</strong>(ITextViewer textViewer
+         ,
+      int documentPosition
+         ,
+      IDOMNode xmlNode
+         ,
+      IStructuredDocumentRegion sdRegion
+         ,
+      ITextRegion completionRegion
+         ,
+      java.lang.String matchString)</code></p><p></p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getContentAssistRequest">getContentAssistRequest</a></h2><p><code>public org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest <strong>getContentAssistRequest</strong>()</code></p><p>Get the appropriate content assist request class for the XSL request.</p><h3>Returns</h3><p><code>org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest</code></p><hr><h2><a name="method_hasAttributeAtTextRegion">hasAttributeAtTextRegion</a></h2><p><code>protected boolean <strong>hasAttributeAtTextRegion</strong>(java.lang.String attrName
+         ,
+      org.w3c.dom.NamedNodeMap nodeMap
+         ,
+      ITextRegion aRegion)</code></p><p></p><h3>Parameters</h3><p><code>attrName</code></p><p><code>nodeMap</code></p><p><code>aRegion</code></p><h3>Returns</h3><p><code>boolean</code></p><hr></body></html>

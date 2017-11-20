@@ -1,0 +1,411 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>XSLT Concepts</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="../index.html" title="XSL Tools User Documentation"><link rel="prev" href="../introduction/gettingstarted.html" title="Getting Started"><link rel="next" href="resources.html" title="Resources"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="N10028"></a>XSLT Concepts</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><ul><li><span class="section"><a href="concepts.html#ResucingXSLT">Rescuing XSLT From Niche Status</a></span><ul><li><span class="section"><a href="concepts.html#N10043">The Problem</a></span></li><li><span class="section"><a href="concepts.html#N10069">The Solution</a></span></li><li><span class="section"><a href="concepts.html#N10090">Queries</a></span><ul><li><span class="section"><a href="concepts.html#N1009E">xsl:for-each</a></span></li><li><span class="section"><a href="concepts.html#N100AA">xsl:if</a></span></li><li><span class="section"><a href="concepts.html#N100B4">xsl:choose</a></span></li></ul></li><li><span class="section"><a href="concepts.html#N100BE">Conclusion</a></span></li></ul></li><li><span class="section"><a href="resources.html">Resources</a></span></li></ul></div><p>
+         If you are new to XSLT or just need a refresher then this section may
+         help get you going.
+   </p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ResucingXSLT"></a>Rescuing XSLT From Niche Status</h2></div><div><h3 class="subtitle">A Gentle Introduction to XSLT through HTML Templates</h3></div></div></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+         <span class="emphasis"><em>
+            Editors Note: This originally appeared at
+            <a class="ulink" href="http://www.xfront.com/rescuing-xslt.html" target="_top">XFront.com</a>
+            , and is republished here with permission. The article is written by David Jacobs.
+         </em></span>
+      </p></div><div class="abstract"><p class="title"><b>Abstract</b></p><p>
+         XSLT is one of the most exciting technologies to come out of the XML family. Unfortunately, its incredible
+         power and associated complexity can be overwhelming to new users preventing many from experimenting with it or
+         causing them to quickly give up in disgust. In fact, unless the method of teaching and the common style of use
+         for XSLT is radically changed to make it more accessible, XSLT will be relegated to niche status like SGML and
+         other powerful technologies.
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10043"></a>The Problem</h3></div></div></div><p>
+         The 1990&rsquo;s saw an incredible proliferation of new web related languages. Looking back we can see what
+         features separated the winners and losers. The biggest key has been having a very low barrier to entry. Many
+         languages accomplished this by following the following rules.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>
+               Leverage as much existing knowledge as possible.
+            </p></li><li><p>
+               Make it easy to get started with "hello world" style example.
+            </p></li><li><p>
+               The most common and useful language constructs should be easily conveyed with a few small examples.
+            </p></li><li><p>
+               Complex programming constructs should only be required when what is trying to be accomplished is
+               complex.            
+            </p></li></ul></div><p>
+         From these rules we can see why embedded web scripting languages like Active Server Pages (ASPs), Cold
+         Fusion, PHP and
+         Java Server Pages (JSPs) are so popular. They all leverage a user&rsquo;s knowledge of HTML. They also
+         allow the
+         minimum amount of scripting to be added to accomplish the dynamic feature a developer is looking for.
+         This has
+         allowed numerous web developers to start off with very small projects and then through continuos
+         enhancement
+         and learning, find themselves using the full power of a complex programming language. Furthermore,
+         because of
+         the very incremental nature of that learning the developer was never scared off.         
+      </p><p>
+         HTML has also fostered the technique of learning by example. When a web author sees another site with a
+         feature they
+         like, they immediately bring up the source to see how it was implemented. In this way many web
+         authors were
+         able to learn complex HTML tricks with no formal training. While server-side scripts are not as
+         easy to come
+         by, there are still numerous sites that house thousands of example scripts for a blossoming
+         developer to
+         examine.         
+      </p><p>
+         Traditionally XSLT has been presented as a programming language for translating XML documents into another
+         format, often for presentation. This frames the problem, such that for each element, the programmer has the
+         task of figuring out how that element needs to be translated. As long as there are one to one mappings or one
+         to zero mappings this is straightforward. For example, if every occurrence of a 
+         &lt;name&gt;
+         element is going to
+         become an HTML header. It is a simple matter to write a matching template to accomplish
+         this.
+      </p><a name="pl_NameTemplate"></a><pre class="programlisting">
+
+&lt;xsl:template match="name"&gt;
+  &lt;h1&gt;&lt;xsl:apply-templates/&gt;&lt;/h1&gt;
+&lt;/xsl:template&gt;
+      
+      </pre><p>
+         However when adding one to many mappings (i.e. when an element&rsquo;s contents will appear multiple times in the
+         target document with different formatting), keeping track of all the relationships quickly grows in complexity
+         and becomes confusing. For example, if, after writing the previous template, the programmer discovers that the
+         name also needs to be placed in the title the programmer might add the template
+      </p><a name="pl_valueOf"></a><pre class="programlisting">
+
+&lt;xsl:template match="/"&gt;
+  &lt;title&gt;&lt;xsl:value-of select="name"/&gt;&lt;/title&gt;
+&lt;/xsl:template&gt;
+      
+      </pre><p>
+         Notice the use of the &lt;xsl:value-of&gt;
+         function in this template because using &lt;apply-templates select="name"&gt;
+         would have caused a triggering of the previous template adding undesired header tags to my content. This means
+         before adding a translation to an element the programmer must first be aware of all the existing translations
+         (ugh!). Of course if the programmer became aware of the
+         &lt;title&gt;
+         requirement first, the contents of these templates could have been reversed. One can quickly see how
+         the
+         arbitrary decisions of development and discovery of requirements can lead to a set of templates that are
+         no
+         longer intuitive.
+      </p><p>
+         As a programmer with more than 20 years experience with over a dozen languages, XSLT templates and default
+         rules were
+         not obvious to me. Over the past year or two I had looked at numerous examples trying to discern how
+         they
+         worked. While I could understand the general gist of what was occurring, there was too much implied
+         behavior
+         that I did not pick up. It was not until going through formal XSLT training that I fully understood how
+         XSLT
+         worked. Clearly, if the barrier to entry is that high for an experienced programmer, the average web
+         developer
+         was not going to find this technology very useful.          
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10069"></a>The Solution</h3></div></div></div><p>
+         So how do we solve this problem and help deliver XSLT&rsquo;s promise to the masses? For XSLT to be successful it
+         must be
+         presented and used in a way that adopts those attributes discussed earlier (reuse of knowledge, fast
+         start, and
+         gradualism). This tutorial will attempt to ease XSLT&rsquo;s introduction by focusing on these attributes.
+         First, it
+         is only going to focus on the generation of HTML documents and users who are familiar with HTML. If
+         your goal
+         is to immediately start transforming one XML document into another XML document this tutorial is not
+         for you.
+      </p><p>
+         The second is to reframe the problem so the XSLT solutions programmers write are more naturally extensible
+         and
+         intuitive. Instead of trying to translate an XML source document into an HTML presentation document, the
+         programmer should see the XML document as a complex data structure with XSLT providing powerful tools for
+         extracting that information into their HTML documents. This allows us to leverage the experience most people
+         have with using an HTML templating language (e.g. ASP, PHP, JSP, Cold Fusion, Web Macro, etc). These templating
+         languages are all based on the basic premise that HTML comes first and all enhancements are then embedded in
+         special tags.         
+      </p><p>
+         With some caveats, this tutorial will show how XSLT can be used in this same way. The benefit of this
+         approach is it
+         allows the quick use of many of XSLT&rsquo;s powerful functions while letting you learn its more
+         esoteric
+         capabilities as the need arises. In addition the resulting XSLT files are more intuitive and
+         maintainable.
+      </p><pre class="programlisting">
+<span class="bold"><strong>&lt;xsl:value-of&gt; and {}</strong></span>         
+      </pre><p>
+         On to an example. Here is a very simple welcome page.         
+      </p><pre class="programlisting">
+
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Welcome&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    Welcome!
+  &lt;/body&gt;
+&lt;/html&gt;
+         
+      </pre><p>
+         And here is an XML document with information on member.      
+      </p><pre class="programlisting">
+
+&lt;?xml version="1.0"?&gt;
+&lt;member level="platinum"&gt;
+  &lt;name&gt;Jeff&lt;/name&gt;
+  &lt;phone type="home"&gt;555-1234&lt;/phone&gt;
+  &lt;phone type="work"&gt;555-4321&lt;/phone&gt;
+  &lt;favoriteColor&gt;blue&lt;/favoriteColor&gt;
+&lt;/member&gt;      
+      </pre><p>
+         There are a couple of things that need to be pointed out right away. First this is a well-formed XML
+         document. This mean all HTML used must conform to the XHTML specification (i.e. all tags must be closed and
+         lowercase).
+      </p><p>
+         The lines before the &lt;html&gt;
+         tag and after the &lt;/html&gt;
+         tag will be seen in all the examples. For now, other than realizing that they are required in any style sheet
+         created, just go ahead and forget they are there. You don&rsquo;t NEED to understand them right now to get useful
+         work out of XSLT.
+      </p><p>
+         Notice the HTML is identical to the original except for the introduction of a new tag
+         &lt;xsl:value-of&gt;.
+         This tag is the key to extracting any piece of information out an XML document. It has a "select"
+         attribute that
+         provides the path through the XML document to the information we seek. In this case
+            &lt;member&gt;
+         is the outer most tag and
+         &lt;name&gt;
+         is the tag underneath it. Slash characters ("/") are used to designate parent/child relationships
+         between tags.
+         If you are used to navigating around a Unix file system this should feel familiar.
+      </p><p>
+         Now let&rsquo;s consider further customizing this page by making the welcome in the person&rsquo;s favorite color using the
+         &lt;font&gt;
+         tag with the "bgcolor" attribute. Because
+            &lt;xsl:value-of&gt;
+         is an XML tag it is not valid to insert it in an HTML attribute value. So another mechanism
+         is needed to insert
+         information from our XML file there.
+      </p><pre class="programlisting">
+
+&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;Welcome&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        &lt;font bgcolor="{member/favoriteColor}"&gt;
+          Welcome &lt;xsl:value-of select="member/name"/&gt;!
+        &lt;/font&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+
+      </pre><p>
+         Notice the use of the curly brackets ("{}"). When used within an attribute assignment "{path}" has the exact
+         same effect as
+         &lt;xsl:value-of select="path" /&gt;
+         used outside of attribute assignments.
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10090"></a>Queries</h3></div></div></div><p>
+         Not all paths lead to a single node. For example, what if we wanted to put a person&rsquo;s home phone number on the
+         page? Notice that the XML document contains two phone entries. If we simply used
+         &lt;xsl:value-of select="member/phone" /&gt;
+         both entries would be returned. We obviously need a way to be more specific. Luckily, XSLT allows the full
+         power of XPath to describe the value(s) of interest. XPath allows conditions on any attribute or tag to be
+         placed in square brackets ("[]") which are then used to restrict the values returned.
+      </p><p>
+         So to retrieve the home phone number we would use the path "member/phone[@type=&rsquo;home&rsquo;]". Notice the "@"
+         symbol in front
+         of "type". The "@" symbol signifies that we are referring to an attribute. So our new HTML
+         template looks like:
+      </p><pre class="programlisting">
+      
+&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;Welcome&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        &lt;font bgcolor="{member/favoriteColor}"&gt;
+          Welcome &lt;xsl:value-of select="member/name"/&gt;!
+          &lt;br/&gt;
+          Your home phone number is:
+          <span class="bold"><strong>&lt;xsl:value-of select="member/phone[@type=&rsquo;home&rsquo;]"/&gt;</strong></span>
+        &lt;/font&gt;
+      &lt;/body
+    &lt;/html
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+
+      </pre><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N1009E"></a>xsl:for-each</h4></div></div></div><p>
+            The previous example brings up another issue. What if this
+            &lt;member&gt;
+            entry had numerous phone numbers and we wanted to print them all on the web page. We could simply use
+               &lt;xsl:value-of select="member/phone" /&gt;
+            but this would not enable us to format the phone number into a nice list that describes the type of each
+            number.
+         </p><p>
+            To accomplish this requires the introduction of the
+            &lt;xsl:for-each&gt;
+            tag which allows us to loop through each of the elements that match a given path. So to
+            create a table that
+            contains the phone number type in the first column and the phone number in the second
+            column, the following
+            stylesheet could be used.
+         </p><pre class="programlisting">
+
+&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;Welcome&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        &lt;font bgcolor="{member/favoriteColor}"&gt;
+          Welcome &lt;xsl:value-of select="member/name"/&gt;!
+        &lt;/font&gt;
+        &lt;table&gt;
+          &lt;tr&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Number&lt;/th&gt;&lt;/tr&gt;
+          &lt;xsl:for-each select="member/phone"&gt;
+            &lt;tr&gt;
+              &lt;td&gt;&lt;xsl:value-of select="@type"/&gt;&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="."/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/xsl:for-each&gt;
+        &lt;/table&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+         
+         </pre><p>
+            This example brings up a number of issues. First, while in the loop, all
+            &lt;xsl:value-of /&gt;
+            accesses are relative to the current element being iterated over (in this case
+            &lt;phone&gt;).
+            Notice the use of the period ("."), which like in a Unix file system means the current element.
+            So in this
+            case the period (".") refers to each phone element as the loop iterates. Also like in a file
+            system you can
+            address a parent element using a double period ("..") and can access any element in the
+            document by starting
+            over at the root element using a slash ("/").
+         </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N100AA"></a>xsl:if</h4></div></div></div><p>
+            As a last enhancement to our page let&rsquo;s add a special offer to "platinum" level members. To do this requires
+            the use of a new tag
+            &lt;xsl:if&gt;
+            which allows us to insert content based on a condition of the data in the XML document.
+         </p><pre class="programlisting">
+
+&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;Welcome&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        &lt;font bgcolor="{member/favoriteColor}"&gt;
+          Welcome &lt;xsl:value-of select="member/name"/&gt;!
+        &lt;/font&gt;
+        &lt;xsl:if test="member[@level='platinum']"&gt;
+          Our special offer to platinum members today is something great
+        &lt;/xsl:if&gt;
+        &lt;table&gt;
+          &lt;tr&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Number&lt;/th&gt;&lt;/tr&gt;
+          &lt;xsl:for-each select="member/phone"&gt;
+            &lt;tr&gt;
+              &lt;td&gt;&lt;xsl:value-of select="@type"/&gt;&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="."/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/xsl:for-each&gt;
+        &lt;/table&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+         
+         </pre><p>
+            Within the "test" attribute the full array of Boolean and relative operators are available. The only caveat
+            is that since this is an XML document less than and greater than ("&lt;",
+            "&gt;") signs must be escaped as "&amp;lt;" and "&amp;gt;".
+         </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N100B4"></a>xsl:choose</h4></div></div></div><p>
+            One nuance of the
+            &lt;xsl:if&gt;
+            tag that is not always obvious at first glance is the lack of an "else" statement. This means to have an
+            else statement requires two ifs. The first one saying "if condition" and the second one saying &ldquo;if not
+            condition&rdquo;. This scheme quickly becomes unworkable with embedded if then else logic. Luckily XSLT
+            supports an
+            additional test operator called
+            &lt;xsl:choose&gt;
+            which works like a switch/case statement.
+         </p><pre class="programlisting">
+
+&lt;?xml version="1.0"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="1.0"&gt;
+  &lt;xsl:template match="/"&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+        &lt;title&gt;Welcome&lt;/title&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+        &lt;font bgcolor="{member/favoriteColor}"&gt;
+          Welcome &lt;xsl:value-of select="member/name"/&gt;!
+        &lt;/font&gt;
+        &lt;xsl:choose&gt;
+          &lt;xsl:when test="member[@level='platinum']"&gt;
+            Our special offer to platinum members today is something great
+          &lt;/xsl:when&gt;
+          &lt;xsl:otherwise&gt;
+            Become a platinum member today!
+          &lt;/xsl:otherwise&gt;
+        &lt;/xsl:choose&gt;
+        &lt;table&gt;
+          &lt;tr&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Number&lt;/th&gt;&lt;/tr&gt;
+          &lt;xsl:for-each select="member/phone"&gt;
+            &lt;tr&gt;
+              &lt;td&gt;&lt;xsl:value-of select="@type"/&gt;&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="."/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/xsl:for-each&gt;
+        &lt;/table&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+         
+         </pre><p>
+            The &ldquo;test&rdquo; attribute has the same capabilities/ constraints as the &ldquo;test&rdquo; attribute in the
+            &lt;xsl:if&gt;
+            tag. Multiple
+            &lt;xsl:when&gt;
+            blocks are allowed. As soon as one &ldquo;when test&rdquo; is mached, it will not evaluate any further &ldquo;xsl:when
+            tests&rdquo;
+            in the
+            &lt;xsl:choose&gt;
+            block.
+         </p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N100BE"></a>Conclusion</h3></div></div></div><p>
+         With just these few commands (an admittedly small subset of XSLT) and a strong background in HTML (DHTML and
+         JavaScript
+         included), I believe web developers could meet the majority of their presentation needs. Obviously
+         there will
+         be cases where greater flexibility is required, but the advantage of this technique is that only
+         then, does the
+         developer need to learn those constructs.         
+      </p><p>
+         As a further benefit, this technique minimized the interdependence of one XLST construct on another. Local
+         changes stay
+         local thereby reducing the brittleness of solutions. The developer also no longer has to remember
+         and account
+         for XSLT&rsquo;s default behaviors.         
+      </p><p>
+         I hope from these few examples, I have opened a few eyes to the power of XSLT and how a small change in how
+         XSLT is framed can make a huge difference in its understandability and accessibility to web developers. If
+         nothing else, I hope to encourage some good discussions. 
+      </p></div></div></div></body></html>

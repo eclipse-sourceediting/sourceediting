@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+<template id="org.eclipse.wst.xslt.templates.xsl_basic"
+       name="Basic stylesheet - XSLT 1.0"
+       context="xsl_new"
+       autoinsert="true"
+       deleted="false"
+       enabled="true"
+       description="Matches the root of the input"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+<xsl:stylesheet version="${xsl_version}" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="/">
+		<!-- TODO: Auto-generated template -->${cursor}
+	</xsl:template>
+</xsl:stylesheet>]]></template>
+<template id="org.eclipse.wst.xslt.templates.xsl_basic.xslt2"
+       name="Basic stylesheet - XSLT 2.0"
+       context="xsl_new"
+       autoinsert="true"
+       deleted="false"
+       enabled="true"
+       description="XSLT 2.0 - Matches the root of the input"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="/">
+		<!-- TODO: Auto-generated template -->${cursor}
+	</xsl:template>
+</xsl:stylesheet>]]></template>
+
+<template id="org.eclipse.wst.xslt.templates.xsl_copy"
+     name="Copy stylesheet - XSLT 1.0"
+     context="xsl_new"
+     autoinsert="true"
+     deleted="false"
+     enabled="true"
+     description="Makes a copy of the input"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+<xsl:stylesheet version="${xsl_version}" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="${cursor}">
+		<!-- TODO: Auto-generated template -->
+	</xsl:template>
+	<!-- standard copy template -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:apply-templates/>
+		</xsl:copy>
+	</xsl:template>	
+</xsl:stylesheet>]]></template>
+<template id="org.eclipse.wst.xslt.templates.xsl_copy.xslt2"
+     name="Copy stylesheet - XSLT 2.0"
+     context="xsl_new"
+     autoinsert="true"
+     deleted="false"
+     enabled="true"
+     description="Makes a copy of the input"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="${cursor}">
+		<!-- TODO: Auto-generated template -->
+	</xsl:template>
+	<!-- standard copy template -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:apply-templates/>
+		</xsl:copy>
+	</xsl:template>	
+</xsl:stylesheet>]]></template>
+</templates>

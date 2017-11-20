@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book id="XSLUser" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <bookinfo>
+      <title>XSL Tools User Documentation</title>
+      <author>
+         <firstname>David</firstname>
+         <surname>Carver</surname>
+      </author>
+      <copyright>
+         <year>2008</year>
+         <holder>Eclipse Foundation and others</holder>
+      </copyright>
+   </bookinfo>
+   <xi:include href="concepts/gettingstarted.xml"/>
+   <xi:include href="concepts/concepts.xml"/>
+   <xi:include href="editor/editor.xml"/>
+   <xi:include href="launching/launching.xml"/>
+   <xi:include href="preferences/preferences.xml"/>
+   <xi:include href="general/general.xml"/>
+   <xi:include href="samples/samples.xml"/>
+   <xi:include href="legal.xml"/>
+</book>
+

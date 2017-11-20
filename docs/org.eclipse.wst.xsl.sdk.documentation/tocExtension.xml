@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="Extension Points.">
+   <topic label="JAXP Debugger">
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_debugger.html" label="org.eclipse.wst.xsl.jaxp.launching.debugger">
+      </topic>
+   </topic>
+   <topic label="JAXP Launching">
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_invoke.html" label="org.eclipse.wst.xsl.jaxp.launching.invoke">
+      </topic>
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_processor.html" label="org.eclipse.wst.xsl.jaxp.launching.processor">
+      </topic>
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_jaxp_launching_processorType.html" label="org.eclipse.wst.xsl.jaxp.processorType">
+      </topic>
+   </topic>
+   <topic label="XSLT Editor">
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_ui_contentAssistProcessor.html" label="org.eclipse.wst.xsl.ui.contentAssistProcessor">
+      </topic>
+   </topic>
+</toc>

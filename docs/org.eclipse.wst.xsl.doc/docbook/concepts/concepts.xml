@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+   <?dbhtml filename="concepts/concepts.html" ?>
+   <title>XSLT Concepts</title>
+   <para>
+         If you are new to XSLT or just need a refresher then this section may
+         help get you going.
+   </para>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="RescuingXSLTfromNicheStatus.xml"/>
+   <section id="concepts_Resources">
+      <?dbhtml filename="concepts/resources.html" ?>
+      <title>Resources</title>
+      <itemizedlist>
+         <listitem>
+            <para>
+               <ulink url="http://www.w3.org/TR/xslt">XSLT 1.0 Specification</ulink> - The official W3C XSLT 1.0 Specification.
+            </para>
+         </listitem>
+         <listitem>
+            <para>
+               <ulink url="http://www.dpawson.co.uk/xsl/index.html">XSLT FAQ</ulink> - maintained by Dave Pawson.
+            </para>
+         </listitem>
+         <listitem>
+            <para><ulink url="http://www.xfront.com/rescuing-xslt.html">Rescuing XSLT from Niche Status</ulink> - by David Jacobs.</para>
+         </listitem>
+         <listitem>
+            <para><ulink url="http://www.xml.com/pub/a/2003/11/26/learnXSLT.html">Five XSLT Basics</ulink> - by Michael Fitzgerald author of Learning XSLT.</para>
+         </listitem>
+         <listitem>
+            <para><ulink url="http://www.xfront.com/files/tutorials.html">XFront Tutorials</ulink> - provides several tutorials include XSLT 1.0.</para>
+         </listitem>
+         <listitem>
+            <para><ulink url="http://www.cafeconleche.org/books/bible2/chapters/ch17.html">XSL Transformations</ulink> - Chapter 17 of the XML Bible 2nd Edition.</para>
+         </listitem>
+      </itemizedlist>
+   </section>
+   
+</chapter>

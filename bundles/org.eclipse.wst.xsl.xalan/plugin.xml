@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.wst.xsl.jaxp.launching.processorType">
+      <processorType
+            attributeProperties="XalanAttributes.properties"
+            id="org.eclipse.wst.xsl.xalan.processorType"
+            label="%processorType.label.0"
+            outputProperties="XalanOutputProperties.properties">
+         <transformerFactory
+               factoryClass="org.apache.xalan.processor.TransformerFactoryImpl"
+               name="%transformerFactoryNameXalan">
+         </transformerFactory>
+         <transformerFactory
+               factoryClass="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"
+               name="%transformerFactoryNameXalanXSLTC">
+         </transformerFactory>
+      </processorType>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xsl.jaxp.launching.debugger">
+      <debugger
+            className="org.eclipse.wst.xsl.xalan.debugger.XalanDebugger"
+            classpath="${eclipse_orbit:org.eclipse.wst.xsl.xalan}"
+            id="org.eclipse.wst.xsl.xalan.debugger"
+            name="Xalan 2.5.1 or greater"
+            processorTypeId="org.eclipse.wst.xsl.xalan.processorType"
+            transformerFactoryClass="org.apache.xalan.processor.TransformerFactoryImpl">
+      </debugger>
+   </extension>
+   <extension
+         point="org.eclipse.wst.xsl.jaxp.launching.processor">
+      <!-- An adopter can specify the ${eclipse_orbit: } variable to indicate which eclipse
+           bundle should be added to the class path. -->
+      <processor
+            classpath="${eclipse_orbit:org.apache.xalan};${eclipse_orbit:org.apache.xml.serializer};${eclipse_orbit:org.apache.bcel};${eclipse_orbit:java_cup.runtime}"
+            id="org.eclipse.wst.xsl.launching.xalan.processor"
+            label="%processor.label.1"
+            processorTypeId="org.eclipse.wst.xsl.xalan.processorType"
+            debuggerId="org.eclipse.wst.xsl.xalan.debugger"
+            supports="1.0">
+      </processor>
+   </extension>
+</plugin>
