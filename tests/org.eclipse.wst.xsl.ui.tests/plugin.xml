@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         id="org.eclipse.wst.xsl.test.xhtml"
+         name="XHTML Grammar Testing"
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution>
+         <uri
+               name="http://www.w3.org/1999/xhtml"
+               uri="http://www.w3.org/2002/08/xhtml/xhtml1-strict.xsd">
+         </uri>
+      </catalogContribution>
+   </extension>
+
+</plugin>

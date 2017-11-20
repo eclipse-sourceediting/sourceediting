@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.wst.xsl.launching.launchConfigurationType">
+<stringAttribute key="org.eclipse.wst.xsl.jaxp.launching.ATTR_ATTRIBUTES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;Attributes/&gt;&#10;"/>
+<stringAttribute key="org.eclipse.wst.xsl.jaxp.launching.ATTR_OUTPUT_PROPERTIES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;Properties/&gt;&#10;"/>
+<stringAttribute key="org.eclipse.wst.xsl.jaxp.launching.ATTR_PROCESSOR" value="org.eclipse.wst.xsl.launching.xalan.processor"/>
+<stringAttribute key="org.eclipse.wst.xsl.jaxp.launching.ATTR_TRANSFORMER_FACTORY" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
+<booleanAttribute key="org.eclipse.wst.xsl.jaxp.launching.ATTR_USE_DEFAULT_PROCESSOR" value="false"/>
+<stringAttribute key="org.eclipse.wst.xsl.jaxp.launching.INVOKER_DESCRIPTOR" value="org.eclipse.wst.xsl.launching.jaxp.invoke"/>
+<booleanAttribute key="org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE" value="false"/>
+<stringAttribute key="org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE" value="${workspace_loc:/XSLTestProject/testCommentInput.xml}"/>
+<booleanAttribute key="org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE" value="true"/>
+<stringAttribute key="org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILENAME" value="testCommentInput.out.xml"/>
+<stringAttribute key="org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER" value="${workspace_loc:/XSLTestProject}"/>
+<stringAttribute key="org.eclipse.wst.xsl.launching.ATTR_PIPELINE" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;Pipeline&gt;&#10;&lt;OutputProperties/&gt;&#10;&lt;Transform path=&quot;/XSLTestProject/testComments.xsl&quot; pathType=&quot;resource&quot; uriResolver=&quot;&quot;&gt;&#10;&lt;Parameters/&gt;&#10;&lt;/Transform&gt;&#10;&lt;/Pipeline&gt;&#10;"/>
+<booleanAttribute key="org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE" value="true"/>
+</launchConfiguration>
