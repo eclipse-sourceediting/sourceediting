@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Aug 15, 2009 2:27:05 AM                                                        
+
+     XPath 2.0 Processor Documentation Generator    
+     This will take a snapshot of the files on the wiki, that are in wiki text and generate the
+     docbook documents 
+                   
+     dcarver                                                                
+     ====================================================================== -->
+<project name="XPath 2.0 Processor Documentation Generator" default="getwikitext">
+	<description>
+            This will take a snapshot of the files on the wiki, that are in wiki text and generate the 
+    </description>
+	
+	<property name="current-loc" location="." />
+	<property name="workspace" location=".." />
+	<property name="htmldir" value="${current-loc}/html" />
+	<property name="docbookdir" value="${workspace}/DocBookXSL/eclipse" />
+	<property name="docbooksource" value="${current-loc}/docbook"/>
+	<property name="xalan" value="org.apache.xalan.processor.TransformerFactoryImpl" />
+
+	<!-- XSLT Chunking Properties -->
+	<property name="base.dir" value="${htmldir}"/>
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="getwikitext">
+		<get dest="mediawiki/usermanual/usermanual.mediawiki" src="http://wiki.eclipse.org/index.php?title=PsychoPathXPathProcessor/UserManual&amp;action=raw" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="convert" depends="getwikitext">
+		<property name="wikitext.standalone" location="lib/plugins" />
+		<!-- path to wikitext standalone package -->
+
+		<path id="wikitext.classpath">
+			<fileset dir="${wikitext.standalone}">
+				<include name="org.eclipse.mylyn.wikitext.*core*.jar" />
+			</fileset>
+		</path>
+
+		<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/wikitext-tasks.properties" />
+
+		<wikitext-to-docbook markupLanguage="MediaWiki">
+			<fileset dir="mediawiki">
+				<include name="**/*.mediawiki" />
+			</fileset>
+		</wikitext-to-docbook>
+
+<!--		<wikitext-to-eclipse-help markupLanguage="MediaWiki" 
+			multipleOutputFiles="true"
+			navigationImages="true"
+			helpPrefix="html">
+			<fileset dir="${basedir}">
+    				<include name="mediawiki/**/*.mediawiki"/>
+			</fileset>
+			<stylesheet url="styles/help.css"/>
+			<stylesheet url="styles/main.css"/>
+		</wikitext-to-eclipse-help>
+-->		
+
+	</target>
+
+	<target name="create-doc">
+
+		<xslt force="true" style="${docbookdir}/eclipse33.xsl" in="${docbooksource}/usermanual.xml" out="test.xml">
+			<factory name="${xalan}" />
+			<param name="manifest" expression="1"/>
+			<param name="base.dir" expression="${htmldir}/"/>
+			<param name="create.plugin.xml" expression="0"/>
+			<param name="chunker.output.indent" expression="yes"/>
+			<param name="navig.showtitles" expression="0"/>
+			<param name="suppress.navigation" expression="1"/>
+            <param name="generate.toc" expression="book      toc,title
+chapter   toc,title
+section   title" />
+			<param name="chapter.autolabel" expression="0"/>
+			<param name="section.autolabel" expression="0"/>
+			<param name="html.stylesheet" expression="book.css ../book.css"/>
+			<param name="chunk.section.depth" expression="3"/>
+			<param name="toc.section.depth" expression="5"/>
+			<param name="toc.list.type" expression="ul"/>
+		</xslt>
+		
+		<replace file="${current-loc}/toc.xml" token="${current-loc}/" value=""/>
+	</target>
+	
+</project>

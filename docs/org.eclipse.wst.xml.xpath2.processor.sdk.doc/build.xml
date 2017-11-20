@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jul 21, 2008 6:46:02 PM                                                        
+
+     SDK Documentation    
+     Builds SDK TOC Documentation using JELDoclet.
+                   
+     dcarver                                                                
+     ====================================================================== -->
+<project name="SDK Documentation" default="default">
+    <description>
+            Builds SDK TOC Documentation using JELDoclet.
+    </description>
+	
+	<property name="workspace" location="."/>
+	<property name="workspaceloc" location=".."/>
+
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="default" description="Builds SDK TOC Documentation using JELDoclet.">
+
+  	  <javadoc destdir="doc" package="true" failonerror="no" docletpath="${workspace}/lib/jeldoclet.jar">
+  	  	 <fileset dir="${workspaceloc}">
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/api/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/api/typesystem/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/ast/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/ast/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/function/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/types/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/types/builtin/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/functions/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/types/userdefined/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath2.processor/src/org/eclipse/wst/xml/xpath2/processor/internal/utils/*.java"/>
+  	  	 </fileset>
+  	     <doclet name="com.jeldoclet.JELDoclet"/>
+  	  </javadoc>
+    	
+     <xslt basedir="." style="doc/jeltohtml.xsl" in="doc/jel.xml" out="doc/html/deleteme.html">
+  		<factory name="org.apache.xalan.processor.TransformerFactoryImpl">
+  			<attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+  			
+  		</factory>
+     </xslt>
+    	
+    	
+     <xslt style="doc/jeltotoc.xsl" in="doc/jel.xml" out="toc.xml" destdir=".">
+  		<factory name="org.apache.xalan.processor.TransformerFactoryImpl">
+  			<attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+  		</factory>
+     	<param name="sdkname" expression="XSL Tools SDK Documentation"/>
+     </xslt>
+    	
+    </target>
+
+</project>

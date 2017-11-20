@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+
+ <!-- Addition to the XML perspective -->
+ <extension point="org.eclipse.ui.perspectiveExtensions">
+	<perspectiveExtension targetID="org.eclipse.wst.xml.ui.perspective">
+		<!-- ProjectExplorer on the left, XPath on the "bottom left" -->
+		<view id="org.eclipse.wst.xml.views.XPathView" relative="org.eclipse.ui.navigator.ProjectExplorer" relationship="bottom" ratio="0.55" />
+		<viewShortcut id="org.eclipse.wst.xml.views.XPathView"/>
+	</perspectiveExtension>
+ </extension>
+
+   	<!-- XPath templates -->
+	<extension point="org.eclipse.ui.editors.templates">
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_axis" name="%contextType.axis">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="exslt_function" name="%contextType.exslt">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xsl_xpath" name="%contextType.xpath">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_2" name="%contextType.xpath2o">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_operator" name="%contextType.operator">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="extension_function" name="%contextType.custom">
+		</contextType>
+		<include file="templates/xpath_templates.xml"/>
+		<include file="templates/xpath_operator_templates.xml"/>
+		<include file="templates/xpath_axis_templates.xml"/>
+	</extension>
+   
+	<extension point="org.eclipse.ui.preferencePages">
+	  <page
+	        category="org.eclipse.wst.xml.ui.preferences.xml"
+	        class="org.eclipse.wst.xml.xpath.ui.internal.preferences.XPathPrefencePage"
+	        id="org.eclipse.wst.xml.xpath.ui.XPathPreferencePage"
+	        name="%pageNameXpath">
+	  </page>
+		<page category="org.eclipse.wst.xml.xpath.ui.XPathPreferencePage"
+			class="org.eclipse.wst.xml.xpath.ui.internal.preferences.XPathTemplatePreferencePage"
+			id="org.eclipse.wst.xsl.ui.XPath" 
+			name="%pagenameXPathTemplates">
+		</page>	
+	</extension>
+
+   <extension
+         point="org.eclipse.ui.views">
+    <view
+          category="org.eclipse.wst.xml"
+          class="org.eclipse.wst.xml.xpath.ui.internal.views.XPathView"
+          icon="$nl$/icons/full/xpath.gif"
+          id="org.eclipse.wst.xml.views.XPathView"
+          name="%xpathViewName"/>
+ </extension>
+	    
+<extension point="org.eclipse.ui.commands">
+    <category id="org.eclipse.wst.xml.views.XPathView"
+            name="%xpathViewName">
+    </category>
+    <command categoryId="org.eclipse.wst.xml.views.XPathView"
+            id="org.eclipse.wst.xml.views.XPathView.prefixes"
+            name="%xpathView.editnamespace">
+    </command>
+    <command categoryId="org.eclipse.wst.xml.views.XPathView"
+            id="org.eclipse.wst.xml.views.XPathView.processor.xpathprocessor"
+            name="XPath Processor"
+            defaultHandler="org.eclipse.wst.xml.xpath.ui.internal.handler.XPathProcessorHandler">
+           
+	   <commandParameter
+	         id="org.eclipse.ui.commands.radioStateParameter"
+	         name="State"
+	         optional="false">
+	   </commandParameter> 
+	   <state
+	         class="org.eclipse.ui.handlers.RadioState:xpath10"
+	         id="org.eclipse.ui.commands.radioState">
+	   </state>
+    </command>
+</extension>
+
+<extension point="org.eclipse.ui.handlers">
+	<handler commandId="org.eclipse.wst.xml.views.XPathView.prefixes"
+		class="org.eclipse.wst.xml.xpath.ui.internal.handler.PrefixHandler">
+		<activeWhen>
+			<with variable="activePartId">
+				<equals value="org.eclipse.wst.xml.views.XPathView"/>
+			</with>
+		</activeWhen>
+		<enabledWhen>
+			<with variable="activeEditorId">
+     			<or>
+             		<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"/>
+             		<equals value="org.eclipse.wst.xsl.ui.XSLEditor"/>
+             		<equals value="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor"/>
+				</or>         		
+     		</with>
+		</enabledWhen>
+		
+    </handler>
+</extension>
+
+<extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="menu:org.eclipse.wst.xml.views.XPathView">
+		<command
+        commandId="org.eclipse.wst.xml.views.XPathView.prefixes"
+        style="push">
+		</command>
+		<separator name="additions" visible="true" />
+	  <menu label="%xpathview.xpathprocessor">
+	     <command
+	           commandId="org.eclipse.wst.xml.views.XPathView.processor.xpathprocessor"
+	           label="%xpathview.xpathprocessor.name"
+	           style="radio">
+	         <parameter
+	               name="org.eclipse.ui.commands.radioStateParameter"
+	               value="xpath10">
+	         </parameter> 	           
+	     </command>
+	     <command
+	           commandId="org.eclipse.wst.xml.views.XPathView.processor.xpathprocessor"
+	           label="%xpathview.xpath2processor.name"
+	           style="radio">
+	         <parameter
+	               name="org.eclipse.ui.commands.radioStateParameter"
+	               value="xpath2">
+	         </parameter> 	           
+	     </command>
+	  </menu>
+	</menuContribution>
+</extension>
+</plugin>

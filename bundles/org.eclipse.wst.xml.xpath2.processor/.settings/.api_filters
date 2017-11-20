@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.wst.xml.xpath2.processor" version="2">
+    <resource path="src/org/eclipse/wst/xml/xpath2/processor/DefaultDynamicContext.java" type="org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext">
+        <filter id="338792546">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext"/>
+                <message_argument value="node_position(Node)"/>
+            </message_arguments>
+        </filter>
+        <filter id="338792546">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext"/>
+                <message_argument value="tz()"/>
+            </message_arguments>
+        </filter>
+        <filter id="338792546">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext"/>
+                <message_argument value="get_doc(String)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/xml/xpath2/processor/DynamicContext.java" type="org.eclipse.wst.xml.xpath2.processor.DynamicContext">
+        <filter id="403767336">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="CODEPOINT_COLLATION"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="get_collation(String)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="tz()"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="current_date_time()"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="get_doc(URI)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="evaluate_function(QName, Collection)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="set_variable(QName, AnyType)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="default_collation_name()"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="resolve_uri(String)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="get_variable(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="getVariable(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="get_variable(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="set_variable(QName, AnyType)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="tz()"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="evaluate_function(QName, Collection)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="node_position(Node)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="get_doc(String)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/xml/xpath2/processor/StaticContext.java" type="org.eclipse.wst.xml.xpath2.processor.StaticContext">
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="derives_from(NodeType, XSTypeDefinition)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="del_variable(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="variable_in_scope(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="make_atomic(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="attribute_type_definition(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="element_declared(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="get_collections()"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="set_collections(Map)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="expand_elem_type_qname(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="set_collections(Map&lt;String,List&lt;Document&gt;&gt;)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="derives_from(NodeType, QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="set_base_uri(String)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="variable_exists(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="add_variable(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="type_defined(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="attribute_declared(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="element_type_definition(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="set_collections(Map&lt;String,List&gt;)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="expand_qname(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="expand_function_qname(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="function_exists(QName, int)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="variable_exists(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="del_variable(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="expand_elem_type_qname(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="add_variable(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="function_exists(QName, int)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="element_type_definition(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="element_declared(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="expand_qname(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="make_atomic(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="expand_function_qname(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="variable_in_scope(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="attribute_type_definition(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="attribute_declared(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="derives_from(NodeType, XSTypeDefinition)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="derives_from(NodeType, QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="type_defined(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="643846161">
+            <message_arguments>
+                <message_argument value="QName"/>
+                <message_argument value="StaticContext"/>
+                <message_argument value="del_variable(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="643846161">
+            <message_arguments>
+                <message_argument value="QName"/>
+                <message_argument value="StaticContext"/>
+                <message_argument value="type_defined(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="set_collections(Map)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="expand_qname(QName)"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="element_type_definition(QName)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/wst/xml/xpath2/processor/function/FnFunctionLibrary.java" type="org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary">
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary"/>
+                <message_argument value="XPATH_FUNCTIONS_NS"/>
+                <message_argument value="http://www.w3.org/2004/10/xpath-functions"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

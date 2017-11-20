@@ -1,0 +1,73 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.api</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.api</strong></font><br>
+               Class EvaluationContext</h2><br><hr><pre>public class <strong>EvaluationContext</strong>
+extends </pre><p></p><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.Item</code></td><td width="" align="left"><code><a href="#method_getContextItem">getContextItem</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Definition: The context item is the item currently being processed. An
+ item is either an atomic value or a node.
+ Definition: When the context
+ item is a node, it can also be referred to as the context node.
+ 
+ The
+ context item is returned by an expression consisting of a single dot
+ (.). When an expression E1/E2 or E1[E2] is evaluated, each item in the
+ sequence obtained by evaluating E1 becomes the context item in the
+ inner focus for an evaluation of E2.</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_getContextPosition">getContextPosition</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: The context position
+ is the position of the context item within the sequence of items
+ currently being processed.] It changes whenever the context item
+ changes. When the focus is defined, the value of the context position
+ is an integer greater than zero. The context position is returned by
+ the expression fn:position(). When an expression E1/E2 or E1[E2] is
+ evaluated, the context position in the inner focus for an evaluation of
+ E2 is the position of the context item in the sequence obtained by
+ evaluating E1. The position of the first item in a sequence is always 1
+ (one). The context position is always less than or equal to the context
+ size.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.DynamicContext</code></td><td width="" align="left"><code><a href="#method_getDynamicContext">getDynamicContext</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_getLastPosition">getLastPosition</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: The context size is the number of items in the
+ sequence of items currently being processed.] Its value is always an
+ integer greater than zero. The context size is returned by the
+ expression fn:last(). When an expression E1/E2 or E1[E2] is evaluated,
+ the context size in the inner focus for an evaluation of E2 is the
+ number of items in the sequence obtained by evaluating E1. [Definition:
+ Variable values. This is a set of (expanded QName, value) pairs. It
+ contains the same expanded QNames as the in-scope variables in the
+ static context for the expression. The expanded QName is the name of
+ the variable and the value is the dynamic value of the variable, which
+ includes its dynamic type.]</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.StaticContext</code></td><td width="" align="left"><code><a href="#method_getStaticContext">getStaticContext</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               </td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getContextItem">getContextItem</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.Item <strong>getContextItem</strong>()</code></p><p>Definition: The context item is the item currently being processed. An
+ item is either an atomic value or a node.
+ Definition: When the context
+ item is a node, it can also be referred to as the context node.
+ 
+ The
+ context item is returned by an expression consisting of a single dot
+ (.). When an expression E1/E2 or E1[E2] is evaluated, each item in the
+ sequence obtained by evaluating E1 becomes the context item in the
+ inner focus for an evaluation of E2.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.Item</code></p><hr><h2><a name="method_getContextPosition">getContextPosition</a></h2><p><code>public int <strong>getContextPosition</strong>()</code></p><p>[Definition: The context position
+ is the position of the context item within the sequence of items
+ currently being processed.] It changes whenever the context item
+ changes. When the focus is defined, the value of the context position
+ is an integer greater than zero. The context position is returned by
+ the expression fn:position(). When an expression E1/E2 or E1[E2] is
+ evaluated, the context position in the inner focus for an evaluation of
+ E2 is the position of the context item in the sequence obtained by
+ evaluating E1. The position of the first item in a sequence is always 1
+ (one). The context position is always less than or equal to the context
+ size.</p><h3>Returns</h3><p><code>int</code></p><hr><h2><a name="method_getDynamicContext">getDynamicContext</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.DynamicContext <strong>getDynamicContext</strong>()</code></p><p></p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.DynamicContext</code> - The current dynamic context in effect.</p><hr><h2><a name="method_getLastPosition">getLastPosition</a></h2><p><code>public int <strong>getLastPosition</strong>()</code></p><p>[Definition: The context size is the number of items in the
+ sequence of items currently being processed.] Its value is always an
+ integer greater than zero. The context size is returned by the
+ expression fn:last(). When an expression E1/E2 or E1[E2] is evaluated,
+ the context size in the inner focus for an evaluation of E2 is the
+ number of items in the sequence obtained by evaluating E1. [Definition:
+ Variable values. This is a set of (expanded QName, value) pairs. It
+ contains the same expanded QNames as the in-scope variables in the
+ static context for the expression. The expanded QName is the name of
+ the variable and the value is the dynamic value of the variable, which
+ includes its dynamic type.]</p><h3>Returns</h3><p><code>int</code></p><hr><h2><a name="method_getStaticContext">getStaticContext</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.StaticContext <strong>getStaticContext</strong>()</code></p><p></p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.StaticContext</code> - The current static context in effect.</p><hr></body></html>

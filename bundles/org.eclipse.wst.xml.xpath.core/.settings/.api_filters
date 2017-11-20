@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.wst.xml.xpath.core" version="2">
+    <resource path="src/org/eclipse/wst/xml/xpath/core/util/NodeListImpl.java" type="org.eclipse.wst.xml.xpath.core.util.NodeListImpl">
+        <filter comment="Removed since it wasn't used externally" id="338722907">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath.core.util.NodeListImpl"/>
+                <message_argument value="NodeListImpl(ResultSequence)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+	<template id="org.eclipse.wst.xslt.templates.xpath.axis.child"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The child axis contains the children of the context node"
+	          enabled="true" name="child::">child::${cursor}</template>
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.descendant"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The descendant axis contains the descendants of the context node; a descendant is a child or a child of a child and so on; thus the descendant axis never contains attribute or namespace nodes"
+	          enabled="true" name="descendant::">descendant::${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.parent"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The parent axis contains the parent of the context node, if there is one."
+	          enabled="true" name="parent::">parent::${cursor}</template>
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.parentshortcut"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description=".. is a shortcut for the parent:: axis. The parent axis contains the parent of the context node, if there is one."
+	          enabled="true" name="..">../${cursor}</template>	          
+	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.ancestor"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The ancestor axis contains the ancestors of the context node; the ancestors of the context node consist of the parent of context node and the parent's parent and so on; thus, the ancestor axis will always include the root node, unless the context node is the root node."
+	          enabled="true" name="ancestor::">ancestor::${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.followingsibling"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The following-sibling axis contains all the following siblings of the context node; if the context node is an attribute node or namespace node, the following-sibling axis is empty"
+	          enabled="true" name="following-sibling::">following-sibling::${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.preceding-sibling"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The preceding-sibling axis contains all the preceding siblings of the context node; if the context node is an attribute node or namespace node, the preceding-sibling axis is empty."
+	          enabled="true" name="preceding-sibling::">preceding-sibling::${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.following"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The following axis contains all nodes in the same document as the context node that are after the context node in document order, excluding any descendants and excluding attribute nodes and namespace nodes."
+	          enabled="true" name="following::">following::${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.preceding"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The preceding axis contains all nodes in the same document as the context node that are before the context node in document order, excluding any ancestors and excluding attribute nodes and namespace nodes."
+	          enabled="true" name="preceding::">preceding::${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.attribute"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The attribute axis contains the attributes of the context node; the axis will be empty unless the context node is an element."
+	          enabled="true" name="attribute::">attribute::${cursor}</template>
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.attributeshortcut"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="@ is a short cut for the attribute:: axis. The attribute axis contains the attributes of the context node; the axis will be empty unless the context node is an element."
+	          enabled="true" name="@">@${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.namespace"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The namespace axis contains the namespace nodes of the context node; the axis will be empty unless the context node is an element."
+	          enabled="true" name="namespace::">attribute::${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.self"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The self axis contains just the context node itself."
+	          enabled="true" name="self::">self::${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.axis.selfshortcut"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description=". is a short cut for the self:: axis. The self axis contains just the context node itself."
+	          enabled="true" name=".">.${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.descendantorself"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="The descendant-or-self axis contains the context node and the descendants of the context node."
+	          enabled="true" name="descendant-or-self::">descendant-or-self::${cursor}</template>	          
+   	<template id="org.eclipse.wst.xslt.templates.xpath.axis.ancestororself"
+	          autoinsert="true" context="xpath_axis" deleted="false"
+	          description="the ancestor-or-self axis contains the context node and the ancestors of the context node; thus, the ancestor axis will always include the root node."
+	          enabled="true" name="ancestor-or-self::">ancestor-or-self::${cursor}</template>	          
+	          	          
+</templates>

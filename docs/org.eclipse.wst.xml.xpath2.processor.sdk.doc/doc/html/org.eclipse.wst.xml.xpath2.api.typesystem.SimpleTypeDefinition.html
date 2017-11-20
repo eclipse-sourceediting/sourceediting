@@ -1,0 +1,53 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.api.typesystem</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.api.typesystem</strong></font><br>
+               Class SimpleTypeDefinition</h2><br><hr><pre>public class <strong>SimpleTypeDefinition</strong>
+extends </pre><p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Field Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_VARIETY_ABSENT">VARIETY_ABSENT</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               The variety is absent for the anySimpleType definition.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_VARIETY_ATOMIC">VARIETY_ATOMIC</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               &lt;code&gt;Atomic&lt;/code&gt; type.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_VARIETY_LIST">VARIETY_LIST</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               &lt;code&gt;List&lt;/code&gt; type.</td></tr><tr valign="top"><td width="20%" align="right"><code>public static  short</code></td><td width="80%" align="left"><code><a href="#field_VARIETY_UNION">VARIETY_UNION</a></code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               &lt;code&gt;Union&lt;/code&gt; type.</td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_getBounded">getBounded</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Fundamental Facet: bounded.</td></tr><tr valign="top"><td width="20%" align="right"><code>public short</code></td><td width="" align="left"><code><a href="#method_getBuiltInKind">getBuiltInKind</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns the closest built-in type category this type represents or 
+ derived from. For example, if this simple type is a built-in derived 
+ type integer the <code>INTEGER_DV</code> is returned.
+ 
+ KILL!</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_getFinite">getFinite</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Fundamental Facet: cardinality.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></td><td width="" align="left"><code><a href="#method_getItemType">getItemType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               If variety is <code>list</code> the item type definition (an atomic or 
+ union simple type definition) is available, otherwise 
+ <code>null</code>.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getMemberTypes">getMemberTypes</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               If variety is <code>union</code> the list of member type definitions (a 
+ non-empty sequence of simple type definitions) is available, 
+ otherwise an empty <code>XSObjectList</code>.</td></tr><tr valign="top"><td width="20%" align="right"><code>public boolean</code></td><td width="" align="left"><code><a href="#method_getNumeric">getNumeric</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Fundamental Facet: numeric.</td></tr><tr valign="top"><td width="20%" align="right"><code>public short</code></td><td width="" align="left"><code><a href="#method_getOrdered">getOrdered</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Fundamental Facet: ordered.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition</code></td><td width="" align="left"><code><a href="#method_getPrimitiveType">getPrimitiveType</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               If variety is <code>atomic</code> the primitive type definition (a 
+ built-in primitive datatype definition or the simple ur-type 
+ definition) is available, otherwise <code>null</code>.</td></tr><tr valign="top"><td width="20%" align="right"><code>public short</code></td><td width="" align="left"><code><a href="#method_getVariety">getVariety</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [variety]: one of {atomic, list, union} or absent.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Field Detail
+               </h2></td></tr></table><h2><a name="field_VARIETY_ABSENT">VARIETY_ABSENT</a></h2><p><code>public static  short <strong>VARIETY_ABSENT</strong></code></p><table><tr><td>The variety is absent for the anySimpleType definition.</td></tr></table><hr><h2><a name="field_VARIETY_ATOMIC">VARIETY_ATOMIC</a></h2><p><code>public static  short <strong>VARIETY_ATOMIC</strong></code></p><table><tr><td><code>Atomic</code> type.</td></tr></table><hr><h2><a name="field_VARIETY_LIST">VARIETY_LIST</a></h2><p><code>public static  short <strong>VARIETY_LIST</strong></code></p><table><tr><td><code>List</code> type.</td></tr></table><hr><h2><a name="field_VARIETY_UNION">VARIETY_UNION</a></h2><p><code>public static  short <strong>VARIETY_UNION</strong></code></p><table><tr><td><code>Union</code> type.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getBounded">getBounded</a></h2><p><code>public boolean <strong>getBounded</strong>()</code></p><p>Fundamental Facet: bounded.</p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_getBuiltInKind">getBuiltInKind</a></h2><p><code>public short <strong>getBuiltInKind</strong>()</code></p><p>Returns the closest built-in type category this type represents or 
+ derived from. For example, if this simple type is a built-in derived 
+ type integer the <code>INTEGER_DV</code> is returned.
+ 
+ KILL!</p><h3>Returns</h3><p><code>short</code></p><hr><h2><a name="method_getFinite">getFinite</a></h2><p><code>public boolean <strong>getFinite</strong>()</code></p><p>Fundamental Facet: cardinality.</p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_getItemType">getItemType</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition <strong>getItemType</strong>()</code></p><p>If variety is <code>list</code> the item type definition (an atomic or 
+ union simple type definition) is available, otherwise 
+ <code>null</code>.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.TypeDefinition</code></p><hr><h2><a name="method_getMemberTypes">getMemberTypes</a></h2><p><code>public java.util.List <strong>getMemberTypes</strong>()</code></p><p>If variety is <code>union</code> the list of member type definitions (a 
+ non-empty sequence of simple type definitions) is available, 
+ otherwise an empty <code>XSObjectList</code>.</p><h3>Returns</h3><p><code>java.util.List</code></p><hr><h2><a name="method_getNumeric">getNumeric</a></h2><p><code>public boolean <strong>getNumeric</strong>()</code></p><p>Fundamental Facet: numeric.</p><h3>Returns</h3><p><code>boolean</code></p><hr><h2><a name="method_getOrdered">getOrdered</a></h2><p><code>public short <strong>getOrdered</strong>()</code></p><p>Fundamental Facet: ordered.</p><h3>Returns</h3><p><code>short</code></p><hr><h2><a name="method_getPrimitiveType">getPrimitiveType</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition <strong>getPrimitiveType</strong>()</code></p><p>If variety is <code>atomic</code> the primitive type definition (a 
+ built-in primitive datatype definition or the simple ur-type 
+ definition) is available, otherwise <code>null</code>.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.typesystem.SimpleTypeDefinition</code></p><hr><h2><a name="method_getVariety">getVariety</a></h2><p><code>public short <strong>getVariety</strong>()</code></p><p>[variety]: one of {atomic, list, union} or absent.</p><h3>Returns</h3><p><code>short</code></p><hr></body></html>

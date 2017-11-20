@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Descriptions for the XPath functions come from the XPath 1.0 specification
+  maintained by the Word Wide Web Consortium.  The specification can be found
+  at:
+  
+  http://www.w3.org/TR/xpath
+ -->
+<templates>
+	<template id="org.eclipse.wst.xslt.templates.xpath.last"
+		autoinsert="true" context="xsl_xpath" deleted="false"
+		description="The last function returns a number equal to the context size from the expression evaluation context."
+		enabled="true" name="last()">last()</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.postion"
+		autoinsert="true" context="xsl_xpath" deleted="false"
+		description="The position function returns a number equal to the context position from the expression evaluation context."
+		enabled="true" name="position()">position()</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.count"
+	          autoinsert="true" context="xml_xpath" deleted="false"
+	          description=""
+	          enabled="true" name="count(node-set)">count(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.id"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The id function selects elements by their unique ID. When the argument to id is of type node-set, then the result is the union of the result of applying id to the string-value of each of the nodes in the argument node-set. When the argument to id is of any other type, the argument is converted to a string as if by a call to the string function; the string is split into a whitespace-separated list of tokens (whitespace is any sequence of characters matching the production S); the result is a node-set containing the elements in the same document as the context node that have a unique ID equal to any of the tokens in the list."
+	          enabled="true" name="id(node-set)">id(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.local_name"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The local-name function returns the local part of the expanded-name of the node in the argument node-set that is first in document order. If the argument node-set is empty or the first node has no expanded-name, an empty string is returned. If the argument is omitted, it defaults to a node-set with the context node as its only member."
+	          enabled="true" name="local-name(node-set)">local-name(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.namespace_uri"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The namespace-uri function returns the namespace URI of the expanded-name of the node in the argument node-set that is first in document order. If the argument node-set is empty, the first node has no expanded-name, or the namespace URI of the expanded-name is null, an empty string is returned. If the argument is omitted, it defaults to a node-set with the context node as its only member."
+	          enabled="true" name="namespace_uri(node-set)">namespace_uri(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.name"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The name function returns a string containing a QName representing the expanded-name of the node in the argument node-set that is first in document order. The QName must represent the expanded-name with respect to the namespace declarations in effect on the node whose expanded-name is being represented. Typically, this will be the QName that occurred in the XML source. This need not be the case if there are namespace declarations in effect on the node that associate multiple prefixes with the same namespace. However, an implementation may include information about the original prefix in its representation of nodes; in this case, an implementation can ensure that the returned string is always the same as the QName used in the XML source. If the argument node-set is empty or the first node has no expanded-name, an empty string is returned. If the argument it omitted, it defaults to a node-set with the context node as its only member."
+	          enabled="true" name="name(node-set)">name(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.string"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="Returns the string value of the argument. The argument could be a number, boolean, or node-set"
+	          enabled="true" name="string(arg)">string(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.concat"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The concat function returns the concatenation of its arguments."
+	          enabled="true" name="concat(string, string, string*)">concat(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.startswith"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The starts-with function returns true if the first argument string starts with the second argument string, and otherwise returns false."
+	          enabled="true" name="starts-with(arg, arg)">starts-with(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.contains"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The contains function returns true if the first argument string contains the second argument string, and otherwise returns false."
+	          enabled="true" name="contains(string, string)">contains(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.substringbefore"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The substring-before function returns the substring of the first argument string that precedes the first occurrence of the second argument string in the first argument string, or the empty string if the first argument string does not contain the second argument string. For example, substring-before("1999/04/01","/") returns 1999.'
+	          enabled="true" name="substring-before(string, string)">substring-before(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.substringafter"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The substring-after function returns the substring of the first argument string that follows the first occurrence of the second argument string in the first argument string, or the empty string if the first argument string does not contain the second argument string. For example, substring-after("1999/04/01","/") returns 04/01, and substring-after("1999/04/01","19") returns 99/04/01.'
+	          enabled="true" name="substring-after(string, string)">substring-after(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.substring"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The substring function returns the substring of the first argument starting at the position specified in the second argument with length specified in the third argument. For example, substring("12345",2,3) returns "234". If the third argument is not specified, it returns the substring starting at the position specified in the second argument and continuing to the end of the string. For example, substring("12345",2) returns "2345".'
+	          enabled="true" name="substring(string, number, number?)">substring(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.stringlength"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The string-length returns the number of characters in the string. If the argument is omitted, it defaults to the context node converted to a string, in other words the string-value of the context node.'
+	          enabled="true" name="string-length(string?)">string-length(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.normalizespace"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The normalize-space function returns the argument string with whitespace normalized by stripping leading and trailing whitespace and replacing sequences of whitespace characters by a single space. Whitespace characters are the same as those allowed by the S production in XML. If the argument is omitted, it defaults to the context node converted to a string, in other words the string-value of the context node.'
+	          enabled="true" name="normalize-space(string?)">normalize-space(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.translate"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The translate function returns the first argument string with occurrences of characters in the second argument string replaced by the character at the corresponding position in the third argument string.'
+	          enabled="true" name="translate(string, string, string)">translate(${cursor}, , )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.boolean"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='Returns a boolean value for a number, string, or node-set'
+	          enabled="true" name="boolean(arg)">boolean(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.not"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The not function returns true if its argument is false, and false otherwise.'
+	          enabled="true" name="not(boolean)">not(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.true"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='Returns a boolean true value.'
+	          enabled="true" name="true()">true()${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.false"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='Returns a boolean false value.'
+	          enabled="true" name="false()">false()${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.lang"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The lang function returns true or false depending on whether the language of the context node as specified by xml:lang attributes is the same as or is a sublanguage of the language specified by the argument string. The language of the context node is determined by the value of the xml:lang attribute on the context node, or, if the context node has no xml:lang attribute, by the value of the xml:lang attribute on the nearest ancestor of the context node that has an xml:lang attribute. If there is no such attribute, then lang returns false. If there is such an attribute, then lang returns true if the attribute value is equal to the argument ignoring case, or if there is some suffix starting with - such that the attribute value is equal to the argument ignoring that suffix of the attribute value and ignoring case.'
+	          enabled="true" name="lang(string)">lang(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.number"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='Returns a boolean false value.'
+	          enabled="true" name="number(arg)">number(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.number"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='Returns the numeric value of the argument. The argument could be a boolean, string, or node-set.'
+	          enabled="true" name="number(arg)">number(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.sum"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The sum function returns the sum, for each node in the argument node-set, of the result of converting the string-values of the node to a number.'
+	          enabled="true" name="sum(node-set)">sum(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.floor"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The floor function returns the largest (closest to positive infinity) number that is not greater than the argument and that is an integer.'
+	          enabled="true" name="floor(number)">floor(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.ceiling"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The ceiling function returns the smallest (closest to negative infinity) number that is not less than the argument and that is an integer.'
+	          enabled="true" name="ceiling(number)">ceiling(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.round"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The round function returns the number that is closest to the argument and that is an integer. If there are two such numbers, then the one that is closest to positive infinity is returned. If the argument is NaN, then NaN is returned. If the argument is positive infinity, then positive infinity is returned. If the argument is negative infinity, then negative infinity is returned. If the argument is positive zero, then positive zero is returned. If the argument is negative zero, then negative zero is returned. If the argument is less than zero, but greater than or equal to -0.5, then negative zero is returned.'
+	          enabled="true" name="round(number)">round(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.round"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The round function returns the number that is closest to the argument and that is an integer. If there are two such numbers, then the one that is closest to positive infinity is returned. If the argument is NaN, then NaN is returned. If the argument is positive infinity, then positive infinity is returned. If the argument is negative infinity, then negative infinity is returned. If the argument is positive zero, then positive zero is returned. If the argument is negative zero, then negative zero is returned. If the argument is less than zero, but greater than or equal to -0.5, then negative zero is returned.'
+	          enabled="true" name="round(number)">round(${cursor})</template>
+	          
+	<!-- XSL XPath Extensions -->
+	<template id="org.eclipse.wst.xslt.templates.xpath.xslkey"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function: The key function does for keys what the id function does for IDs. The first argument specifies the name of the key. The value of the argument must be a QName, which is expanded as described in [2.4 Qualified Names]. When the second argument to the key function is of type node-set, then the result is the union of the result of applying the key function to the string value of each of the nodes in the argument node-set. When the second argument to key is of any other type, the argument is converted to a string as if by a call to the string function; it returns a node-set containing the nodes in the same document as the context node that have a value for the named key equal to this string. '
+	          enabled="true" name="key(string, arg)">key(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.xsldocument"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function:The document function allows access to XML documents other than the main source document.'
+	          enabled="true" name="document(arg, node-set?)">document(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.xslformatnumber"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function: The format-number function converts its first argument to a string using the format pattern string specified by the second argument and the decimal-format named by the third argument, or the default decimal-format, if there is no third argument.'
+	          enabled="true" name="format-number(number, string, string?)">format-number(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.xslcurrent"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function: The current function returns a node-set that has the current node as its only member. For an outermost expression (an expression not occurring within another expression), the current node is always the same as the context node.'
+	          enabled="true" name="current()">current() ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.xslunparseentityuri"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function: The unparsed-entity-uri returns the URI of the unparsed entity with the specified name in the same document as the context node (see [3.3 Unparsed Entities]). It returns the empty string if there is no such entity.'
+	          enabled="true" name="unparsed-entity-uri(string)">unparsed-entity-uri(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.xslgenerateid"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function: The generate-id function returns a string that uniquely identifies the node in the argument node-set that is first in document order. The unique identifier must consist of ASCII alphanumeric characters and must start with an alphabetic character. Thus, the string is syntactically an XML name. An implementation is free to generate an identifier in any convenient way provided that it always generates the same identifier for the same node and that different identifiers are always generated from different nodes. An implementation is under no obligation to generate the same identifiers each time a document is transformed. There is no guarantee that a generated unique identifier will be distinct from any unique IDs specified in the source document. If the argument node-set is empty, the empty string is returned. If the argument is omitted, it defaults to the context node.'
+	          enabled="true" name="generate-id(node-set?)">generate-id(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.xslsystemproperty"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function: The argument must evaluate to a string that is a QName. The QName is expanded into a name using the namespace declarations in scope for the expression. The system-property function returns an object representing the value of the system property identified by the name. If there is no such system property, the empty string should be returned.'	
+	          enabled="true" name="system-property(string)">system-property(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.xslelementavailable"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function: The argument must evaluate to a string that is a QName. The QName is expanded into an expanded-name using the namespace declarations in scope for the expression. The element-available function returns true if and only if the expanded-name is the name of an instruction. If the expanded-name has a namespace URI equal to the XSLT namespace URI, then it refers to an element defined by XSLT. Otherwise, it refers to an extension element. If the expanded-name has a null namespace URI, the element-available function will return false. '	
+	          enabled="true" name="element-available(string)">element-available(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.xslfunctionavailable"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='XSL XPath Extension Function: The argument must evaluate to a string that is a QName. The QName is expanded into an expanded-name using the namespace declarations in scope for the expression. The function-available function returns true if and only if the expanded-name is the name of a function in the function library. If the expanded-name has a non-null namespace URI, then it refers to an extension function; otherwise, it refers to a function defined by XPath or XSLT.'	
+	          enabled="true" name="function-available(string)">function-available(${cursor})</template>
+  
+</templates>

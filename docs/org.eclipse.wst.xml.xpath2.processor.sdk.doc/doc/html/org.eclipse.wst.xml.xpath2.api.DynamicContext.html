@@ -1,0 +1,124 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.api</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.api</strong></font><br>
+               Class DynamicContext</h2><br><hr><pre>public class <strong>DynamicContext</strong>
+extends </pre>Interface for dynamic context. This covers the Dynamic Context as defined by the XPath2 specification, EXCEPT for 
+ context item and size (handled in EvaluationContext)<p></p><hr><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.CollationProvider</code></td><td width="" align="left"><code><a href="#method_getCollationProvider">getCollationProvider</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Actual collation providers available for use dynamically. This could
+ differ from the collations available statically, but would give
+ unexpected results.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.Map</code></td><td width="" align="left"><code><a href="#method_getCollections">getCollections</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Available collections. This is a mapping of
+ strings onto sequences of nodes. The string represents the absolute URI
+ of a resource. The sequence of nodes represents the result of the
+ fn:collection function when that URI is supplied as the argument. ] The
+ set of available collections is not limited to the set of statically
+ known collections, and it may be empty. For every document node D that
+ is in the target of a mapping in available collections, or that is the
+ root of a tree containing such a node, the document-uri property of D
+ must either be absent, or must be a URI U such that available documents
+ contains a mapping from U to D." Note: This means that for any document
+ node $N retrieved using the fn:collection function, either directly or
+ by navigating to the root of a node that was returned, the result of
+ fn:doc(fn:document-uri($N)) is $N will always be True, unless
+ fn:document-uri($N) is an empty sequence. This implies a requirement
+ for the fn:doc and fn:collection functions to be consistent in their
+ effect. If the implementation uses catalogs or user-supplied URI
+ resolvers to dereference URIs supplied to the fn:doc function, the
+ implementation of the fn:collection function must take these mechanisms
+ into account. For example, an implementation might achieve this by
+ mapping the collection URI to a set of document URIs, which are then
+ resolved using the same catalog or URI resolver that is used by the
+ fn:doc function.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.GregorianCalendar</code></td><td width="" align="left"><code><a href="#method_getCurrentDateTime">getCurrentDateTime</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Current dateTime. This
+ information represents an implementation-dependent point in time during
+ the processing of an expression, and includes an explicit timezone. It
+ can be retrieved by the fn:current-dateTime function. If invoked
+ multiple times during the execution of an expression, this function
+ always returns the same result.]
+
+ Returns the current date time using the GregorianCalendar.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.List</code></td><td width="" align="left"><code><a href="#method_getDefaultCollection">getDefaultCollection</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Default collection. This is the sequence
+ of nodes that would result from calling the fn:collection function with
+ no arguments.] The value of default collection may be initialized by
+ the implementation.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.w3c.dom.Document</code></td><td width="" align="left"><code><a href="#method_getDocument">getDocument</a>(java.net.URI uri)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Available documents. This is a mapping of
+ strings onto document nodes. The string represents the absolute URI of
+ a resource. The document node is the root of a tree that represents
+ that resource using the data model. The document node is returned by
+ the fn:doc function when applied to that URI.] The set of available
+ documents is not limited to the set of statically known documents, and
+ it may be empty. If there are one or more URIs in available documents
+ that map to a document node D, then the document-uri property of D must
+ either be absent, or must be one of these URIs. Note: This means that
+ given a document node $N, the result of fn:doc(fn:document-uri($N)) is
+ $N will always be True, unless fn:document-uri($N) is an empty
+ sequence.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.w3c.dom.Node</code></td><td width="" align="left"><code><a href="#method_getLimitNode">getLimitNode</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Returns a "top" node which the XPath2 engine is not allowed to
+ leave</td></tr><tr valign="top"><td width="20%" align="right"><code>public javax.xml.datatype.Duration</code></td><td width="" align="left"><code><a href="#method_getTimezoneOffset">getTimezoneOffset</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               [Definition: Implicit timezone. This
+ is the timezone to be used when a date, time, or dateTime value that
+ does not have a timezone is used in a comparison or arithmetic
+ operation. The implicit timezone is an implementation-defined value of
+ type xs:dayTimeDuration. See [XML Schema] for the range of legal values
+ of a timezone.]</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.api.ResultSequence</code></td><td width="" align="left"><code><a href="#method_getVariable">getVariable</a>(javax.xml.namespace.QName name)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Get variable.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.net.URI</code></td><td width="" align="left"><code><a href="#method_resolveUri">resolveUri</a>(java.lang.String uri)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Resolve an URI</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_getCollationProvider">getCollationProvider</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.CollationProvider <strong>getCollationProvider</strong>()</code></p><p>Actual collation providers available for use dynamically. This could
+ differ from the collations available statically, but would give
+ unexpected results.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.CollationProvider</code></p><hr><h2><a name="method_getCollections">getCollections</a></h2><p><code>public java.util.Map <strong>getCollections</strong>()</code></p><p>[Definition: Available collections. This is a mapping of
+ strings onto sequences of nodes. The string represents the absolute URI
+ of a resource. The sequence of nodes represents the result of the
+ fn:collection function when that URI is supplied as the argument. ] The
+ set of available collections is not limited to the set of statically
+ known collections, and it may be empty. For every document node D that
+ is in the target of a mapping in available collections, or that is the
+ root of a tree containing such a node, the document-uri property of D
+ must either be absent, or must be a URI U such that available documents
+ contains a mapping from U to D." Note: This means that for any document
+ node $N retrieved using the fn:collection function, either directly or
+ by navigating to the root of a node that was returned, the result of
+ fn:doc(fn:document-uri($N)) is $N will always be True, unless
+ fn:document-uri($N) is an empty sequence. This implies a requirement
+ for the fn:doc and fn:collection functions to be consistent in their
+ effect. If the implementation uses catalogs or user-supplied URI
+ resolvers to dereference URIs supplied to the fn:doc function, the
+ implementation of the fn:collection function must take these mechanisms
+ into account. For example, an implementation might achieve this by
+ mapping the collection URI to a set of document URIs, which are then
+ resolved using the same catalog or URI resolver that is used by the
+ fn:doc function.</p><h3>Returns</h3><p><code>java.util.Map</code></p><hr><h2><a name="method_getCurrentDateTime">getCurrentDateTime</a></h2><p><code>public java.util.GregorianCalendar <strong>getCurrentDateTime</strong>()</code></p><p>[Definition: Current dateTime. This
+ information represents an implementation-dependent point in time during
+ the processing of an expression, and includes an explicit timezone. It
+ can be retrieved by the fn:current-dateTime function. If invoked
+ multiple times during the execution of an expression, this function
+ always returns the same result.]
+
+ Returns the current date time using the GregorianCalendar.</p><h3>Returns</h3><p><code>java.util.GregorianCalendar</code> - The current date and time, which will always be same for the dynamic context.</p><hr><h2><a name="method_getDefaultCollection">getDefaultCollection</a></h2><p><code>public java.util.List <strong>getDefaultCollection</strong>()</code></p><p>[Definition: Default collection. This is the sequence
+ of nodes that would result from calling the fn:collection function with
+ no arguments.] The value of default collection may be initialized by
+ the implementation.</p><h3>Returns</h3><p><code>java.util.List</code></p><hr><h2><a name="method_getDocument">getDocument</a></h2><p><code>public org.w3c.dom.Document <strong>getDocument</strong>(java.net.URI uri)</code></p><p>[Definition: Available documents. This is a mapping of
+ strings onto document nodes. The string represents the absolute URI of
+ a resource. The document node is the root of a tree that represents
+ that resource using the data model. The document node is returned by
+ the fn:doc function when applied to that URI.] The set of available
+ documents is not limited to the set of statically known documents, and
+ it may be empty. If there are one or more URIs in available documents
+ that map to a document node D, then the document-uri property of D must
+ either be absent, or must be one of these URIs. Note: This means that
+ given a document node $N, the result of fn:doc(fn:document-uri($N)) is
+ $N will always be True, unless fn:document-uri($N) is an empty
+ sequence.</p><h3>Parameters</h3><p><code>uri</code> - is the URI of the document.</p><h3>Returns</h3><p><code>org.w3c.dom.Document</code> - document.</p><hr><h2><a name="method_getLimitNode">getLimitNode</a></h2><p><code>public org.w3c.dom.Node <strong>getLimitNode</strong>()</code></p><p>Returns a "top" node which the XPath2 engine is not allowed to
+ leave</p><h3>Returns</h3><p><code>org.w3c.dom.Node</code> - DOM node which limits axis navigation.</p><hr><h2><a name="method_getTimezoneOffset">getTimezoneOffset</a></h2><p><code>public javax.xml.datatype.Duration <strong>getTimezoneOffset</strong>()</code></p><p>[Definition: Implicit timezone. This
+ is the timezone to be used when a date, time, or dateTime value that
+ does not have a timezone is used in a comparison or arithmetic
+ operation. The implicit timezone is an implementation-defined value of
+ type xs:dayTimeDuration. See [XML Schema] for the range of legal values
+ of a timezone.]</p><h3>Returns</h3><p><code>javax.xml.datatype.Duration</code> - current date time and implicit timezone.</p><hr><h2><a name="method_getVariable">getVariable</a></h2><p><code>public org.eclipse.wst.xml.xpath2.api.ResultSequence <strong>getVariable</strong>(javax.xml.namespace.QName name)</code></p><p>Get variable.</p><h3>Parameters</h3><p><code>name</code> - is the name of the variable.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.api.ResultSequence</code> - variable.</p><hr><h2><a name="method_resolveUri">resolveUri</a></h2><p><code>public java.net.URI <strong>resolveUri</strong>(java.lang.String uri)</code></p><p>Resolve an URI</p><h3>Parameters</h3><p><code>uri</code> - is the possibly relative URI to resolve</p><h3>Returns</h3><p><code>java.net.URI</code> - the absolutized, resolved URI.</p><hr></body></html>

@@ -1,0 +1,23 @@
+<html><body><p><font size="+1"><strong>Package org.eclipse.wst.xml.xpath2.processor.internal.ast</strong></font></p><hr><h2><font size="-1"><strong>org.eclipse.wst.xml.xpath2.processor.internal.ast</strong></font><br>
+               Class AxisStep</h2><br><hr><pre>public class <strong>AxisStep</strong>
+extends org.eclipse.wst.xml.xpath2.processor.internal.ast.StepExpr</pre>Class for AxisStep, this generates a sequence of zero or more nodes. These
+ nodes are always returned in Document Order. This can be Forward Step or
+ Reverse Step.<hr><table width="100%" border="1"><tr bgcolor="#CCCCFF"><td width="100%"><h2>Constructor Summary</h2></td></tr><tr><td><code><strong><a href="#con_AxisStep">AxisStep</a></strong>(org.eclipse.wst.xml.xpath2.processor.internal.ast.Step step
+         ,
+      java.util.Collection exprs)</code></td></tr></table><br><table width="100%" border="1"><tr cols="2" bgcolor="#CCCCFF"><td colspan="2" width="100%"><h2>Method Summary</h2></td></tr><tr valign="top"><td width="20%" align="right"><code>public java.lang.Object</code></td><td width="" align="left"><code><a href="#method_accept">accept</a>(org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor v)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Support for Visitor interface.</td></tr><tr valign="top"><td width="20%" align="right"><code>public java.util.Iterator</code></td><td width="" align="left"><code><a href="#method_iterator">iterator</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Interator.</td></tr><tr valign="top"><td width="20%" align="right"><code>public int</code></td><td width="" align="left"><code><a href="#method_predicate_count">predicate_count</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Determines size of expressions.</td></tr><tr valign="top"><td width="20%" align="right"><code>public void</code></td><td width="" align="left"><code><a href="#method_set_step">set_step</a>(org.eclipse.wst.xml.xpath2.processor.internal.ast.Step s)</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Set the step direction.</td></tr><tr valign="top"><td width="20%" align="right"><code>public org.eclipse.wst.xml.xpath2.processor.internal.ast.Step</code></td><td width="" align="left"><code><a href="#method_step">step</a>()</code><br>
+               &nbsp;&nbsp;&nbsp;&nbsp;
+               Advances to next step.</td></tr></table><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Constructor Detail
+               </h2></td></tr></table><h2><a name="con_AxisStep">AxisStep</a></h2><p><code>public <strong>AxisStep</strong>(org.eclipse.wst.xml.xpath2.processor.internal.ast.Step step
+         ,
+      java.util.Collection exprs)</code></p><p>Constructor for AxisStep.</p><hr><table cols="2" width="100%" border="1"><tr colspan="2" width="100%" bgcolor="#CCCCFF" align="left"><td><h2>
+                  Methods Detail
+               </h2></td></tr></table><h2><a name="method_accept">accept</a></h2><p><code>public java.lang.Object <strong>accept</strong>(org.eclipse.wst.xml.xpath2.processor.internal.ast.XPathVisitor v)</code></p><p>Support for Visitor interface.</p><h3>Parameters</h3><p><code>v</code></p><h3>Returns</h3><p><code>java.lang.Object</code> - Result of Visitor operation.</p><hr><h2><a name="method_iterator">iterator</a></h2><p><code>public java.util.Iterator <strong>iterator</strong>()</code></p><p>Interator.</p><h3>Returns</h3><p><code>java.util.Iterator</code> - Iterated expressions.</p><hr><h2><a name="method_predicate_count">predicate_count</a></h2><p><code>public int <strong>predicate_count</strong>()</code></p><p>Determines size of expressions.</p><h3>Returns</h3><p><code>int</code> - Size of expressions.</p><hr><h2><a name="method_set_step">set_step</a></h2><p><code>public void <strong>set_step</strong>(org.eclipse.wst.xml.xpath2.processor.internal.ast.Step s)</code></p><p>Set the step direction.</p><h3>Parameters</h3><p><code>s</code></p><hr><h2><a name="method_step">step</a></h2><p><code>public org.eclipse.wst.xml.xpath2.processor.internal.ast.Step <strong>step</strong>()</code></p><p>Advances to next step.</p><h3>Returns</h3><p><code>org.eclipse.wst.xml.xpath2.processor.internal.ast.Step</code> - Previous step.</p><hr></body></html>
