@@ -30,5 +30,6 @@
     <module>org.eclipse.wst.doc.user</module>
     <module>org.eclipse.wst.html.ui.infopop</module>
     <module>org.eclipse.wst.webtools.doc.user</module>
+    <module>org.eclipse.wst.web.ui.infopop</module>
   </modules>
 </project>
