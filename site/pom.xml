@@ -20,6 +20,6 @@
   </parent>
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
-  <artifactId>site</artifactId>
+  <artifactId>org.eclipse.webtools.sourceediting.site</artifactId>
   <packaging>eclipse-repository</packaging>
 </project>
