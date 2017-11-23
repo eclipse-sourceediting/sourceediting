@@ -1,0 +1,34 @@
+org.eclipse.wst.html.core.tests.parser.UpdaterTest7
+Source :
+<P><B></B></P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 6] (<B>)
+[6, 10] (</B>)
+[10, 14] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[10, 14] (</P>)
+----B/B@[3, 6] (<B>)@[6, 10] (</B>)
+
+Source :
+<P><B></B><B></B></P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 6] (<B>)
+[6, 10] (</B>)
+[10, 13] (<B>)
+[13, 17] (</B>)
+[17, 21] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[17, 21] (</P>)
+----B/B@[3, 6] (<B>)@[6, 10] (</B>)
+----B/B@[10, 13] (<B>)@[13, 17] (</B>)
+

@@ -1,0 +1,29 @@
+org.eclipse.wst.html.core.tests.parser.UpdaterTest4
+Source :
+<a>b</a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 4] (b)
+[4, 8] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[4, 8] (</a>)
+----#text(b)@[3, 4] (b)
+
+Source :
+<a>b</a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 4] (b)
+[4, 8] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[4, 8] (</a>)
+----#text(b)@[3, 4] (b)
+

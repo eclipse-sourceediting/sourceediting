@@ -1,0 +1,105 @@
+org.eclipse.wst.html.core.tests.parser.TableTest
+Source :
+<html></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 13] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[6, 13] (</html>)
+
+Source :
+<html><body></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 19] (</body>)
+[19, 26] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[19, 26] (</html>)
+----body/body@[6, 12] (<body>)@[12, 19] (</body>)
+
+Source :
+<html><body><table border="1"><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 30] (<table border="1">)
+[30, 34] (<tr>)
+[34, 38] (<td>)
+[38, 43] (</td>)
+[43, 47] (<td>)
+[47, 52] (</td>)
+[52, 57] (</tr>)
+[57, 61] (<tr>)
+[61, 65] (<td>)
+[65, 70] (</td>)
+[70, 74] (<td>)
+[74, 79] (</td>)
+[79, 84] (</tr>)
+[84, 92] (</table>)
+[92, 99] (</body>)
+[99, 106] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[99, 106] (</html>)
+----body/body@[6, 12] (<body>)@[92, 99] (</body>)
+------table/table@[12, 30] (<table border&#61;"1">)@[84, 92] (</table>)
+--------tr/tr@[30, 34] (<tr>)@[52, 57] (</tr>)
+----------td/td@[34, 38] (<td>)@[38, 43] (</td>)
+----------td/td@[43, 47] (<td>)@[47, 52] (</td>)
+--------tr/tr@[57, 61] (<tr>)@[79, 84] (</tr>)
+----------td/td@[61, 65] (<td>)@[65, 70] (</td>)
+----------td/td@[70, 74] (<td>)@[74, 79] (</td>)
+
+Source :
+<html><body><table border="1"><tr><td></td><td></td></tr><tr><td></td><td><font color="red">text</font></td></tr></table></body></html>
+
+
+StructuredDocument Regions :
+[0, 6] (<html>)
+[6, 12] (<body>)
+[12, 30] (<table border="1">)
+[30, 34] (<tr>)
+[34, 38] (<td>)
+[38, 43] (</td>)
+[43, 47] (<td>)
+[47, 52] (</td>)
+[52, 57] (</tr>)
+[57, 61] (<tr>)
+[61, 65] (<td>)
+[65, 70] (</td>)
+[70, 74] (<td>)
+[74, 92] (<font color="red">)
+[92, 96] (text)
+[96, 103] (</font>)
+[103, 108] (</td>)
+[108, 113] (</tr>)
+[113, 121] (</table>)
+[121, 128] (</body>)
+[128, 135] (</html>)
+
+Tree :
+#document
+--html/html@[0, 6] (<html>)@[128, 135] (</html>)
+----body/body@[6, 12] (<body>)@[121, 128] (</body>)
+------table/table@[12, 30] (<table border&#61;"1">)@[113, 121] (</table>)
+--------tr/tr@[30, 34] (<tr>)@[52, 57] (</tr>)
+----------td/td@[34, 38] (<td>)@[38, 43] (</td>)
+----------td/td@[43, 47] (<td>)@[47, 52] (</td>)
+--------tr/tr@[57, 61] (<tr>)@[108, 113] (</tr>)
+----------td/td@[61, 65] (<td>)@[65, 70] (</td>)
+----------td/td@[70, 74] (<td>)@[103, 108] (</td>)
+------------font/font@[74, 92] (<font color&#61;"red">)@[96, 103] (</font>)
+--------------#text(text)@[92, 96] (text)
+

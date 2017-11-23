@@ -1,0 +1,24 @@
+org.eclipse.wst.html.core.tests.parser.EmptyTextTest3
+Source :
+
+
+
+StructuredDocument Regions :
+
+Tree :
+#document
+--#text()
+
+Source :
+<a></a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 7] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[3, 7] (</a>)
+--#text()
+
