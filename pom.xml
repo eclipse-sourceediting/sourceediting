@@ -8,6 +8,7 @@
  
   Contributors:
     Thanh Ha (Eclipse Foundation) - initial implementation
+    Nick Boldt (Red Hat) - support building with Tycho 1.0 against upstream wtp repos
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -26,47 +27,27 @@
 
   <properties>
     <tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/sourceediting/webtools.sourceediting.git</tycho.scmUrl>
-  <webtools_common_site>http://download.eclipse.org/webtools/downloads/drops/R3.9.0/I-latest/repository/</webtools_common_site>
+    <tycho.version>1.0.0</tycho.version>
+    <tycho-extras.version>1.0.0</tycho-extras.version>
   </properties>
 
-  <modules>
-    <module>core</module>
-    <module>json</module>
-    <module>xml</module>
-    <module>xpath</module>
-    <module>xsl</module>
-    <module>web</module>
-    <module>site</module>
-  </modules>
-  
-  <profiles>
-    <profile>
-      <id>build-individual-bundles</id>
-      <modules>
-        <module>site</module>
-      </modules>
-    </profile>
-  </profiles>
+  <repositories>
+    <repository>
+      <id>webtools-common-site</id>
+      <layout>p2</layout>
+      <url>${webtools-common-site}</url>
+    </repository>
+    <repository>
+      <id>webtools-servertools-site</id>
+      <layout>p2</layout>
+      <url>${webtools-servertools-site}</url>
+    </repository>
+    <repository>
+      <id>webtools-jsdt-site</id>
+      <layout>p2</layout>
+      <url>${webtools-jsdt-site}</url>
+    </repository>
 
-  <!-- build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <testFailureIgnore>true</testFailureIgnore>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build -->
-    
-    <repositories>
-  	<!-- Additional dependencies -->
-  	<repository>
-  		<id>org.eclipse.e4.ui-snapshots</id>
-  		<url>http://download.eclipse.org/e4/snapshots/org.eclipse.e4.ui</url>
-  		<layout>p2</layout>
-  	</repository>
     <!-- To reference parent pom -->
     <repository>
       <id>Webtools Repository - Releases</id>
@@ -78,6 +59,15 @@
       <name>Webtools Repository - Snapshots</name>
       <url>https://repo.eclipse.org/content/repositories/webtools-snapshots/</url>
     </repository>
-  <repository><id>webtools_common_site</id><layout>p2</layout><url>${webtools_common_site}</url></repository>
   </repositories>
+
+  <modules>
+    <module>core</module>
+    <module>json</module>
+    <module>xml</module>
+    <module>xpath</module>
+    <module>xsl</module>
+    <module>web</module>
+    <module>site</module>
+  </modules>
 </project>
