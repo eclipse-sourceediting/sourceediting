@@ -98,7 +98,7 @@ public class ContextCurrentDateFuncTest extends AbstractPsychoPathTest {
         
 
    }
-
+/*
    //Evaluation of "fn:current-date" function as argument to month-from-date function.
    public void test_fn_current_date_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
@@ -170,6 +170,8 @@ public class ContextCurrentDateFuncTest extends AbstractPsychoPathTest {
         
 
    }
+*/
+
 
    //Evaluation of "fn:current-time" function as part of a subtraction operation.
    public void test_fn_current_date_5() throws Exception {

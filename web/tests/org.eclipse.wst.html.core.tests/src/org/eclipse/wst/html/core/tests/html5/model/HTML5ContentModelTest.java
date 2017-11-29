@@ -107,13 +107,13 @@ public class HTML5ContentModelTest extends TestCase {
 	public void testAttributesOnHTML5Aside() {
 		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.ASIDE, getGlobalList());
 	}
-	
+/*	
 	public void testAttributesOnHTML5Audio() {
 		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.AUDIO, getMergedlist(getGlobalList(), 
 				new String[]{HTML40Namespace.ATTR_NAME_SRC, HTML50Namespace.ATTR_NAME_PRELOAD, HTML50Namespace.ATTR_NAME_AUTOPLAY,
 			HTML50Namespace.ATTR_NAME_LOOP, HTML50Namespace.ATTR_NAME_CONTROLS}));
 	}
-
+*/
 	public void testAttributesOnHTML5Canvas() {
 		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.CANVAS, getMergedlist(getGlobalList(), 
 				new String[]{HTML40Namespace.ATTR_NAME_HEIGHT, HTML40Namespace.ATTR_NAME_WIDTH}));
@@ -225,13 +225,13 @@ public class HTML5ContentModelTest extends TestCase {
 		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.TIME, getMergedlist(getGlobalList(), 
 				new String[]{HTML40Namespace.ATTR_NAME_DATETIME, HTML50Namespace.ATTR_NAME_PUBDATE}));
 	}
-	
+/*	
 	public void testAttributesOnHTML5Video() {
 		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.VIDEO, getMergedlist(getGlobalList(), 
 				new String[]{HTML40Namespace.ATTR_NAME_SRC, HTML50Namespace.ATTR_NAME_PRELOAD, HTML50Namespace.ATTR_NAME_AUTOPLAY,
 				HTML50Namespace.ATTR_NAME_LOOP, HTML50Namespace.ATTR_NAME_CONTROLS, HTML50Namespace.ATTR_NAME_POSTER, HTML40Namespace.ATTR_NAME_HEIGHT, HTML40Namespace.ATTR_NAME_WIDTH}));
 	}
-
+*/
 	public void testAttributesOnHTML5InputTypes() {
 		checkAttrValues(CMDocType.HTML5_DOC_TYPE, HTML40Namespace.ElementName.INPUT, HTML40Namespace.ATTR_NAME_TYPE, 
 				new String[]{HTML40Namespace.ATTR_VALUE_TEXT, HTML40Namespace.ATTR_VALUE_PASSWORD, HTML40Namespace.ATTR_VALUE_CHECKBOX, HTML40Namespace.ATTR_VALUE_RADIO, HTML40Namespace.ATTR_VALUE_SUBMIT, HTML40Namespace.ATTR_VALUE_RESET, HTML40Namespace.ATTR_VALUE_FILE, HTML40Namespace.ATTR_VALUE_HIDDEN, HTML40Namespace.ATTR_VALUE_IMAGE, HTML40Namespace.ATTR_VALUE_BUTTON,

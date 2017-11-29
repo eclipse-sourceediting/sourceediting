@@ -743,7 +743,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 				structuredModel.releaseFromRead();
 		}
 	}
-
+/*
 	// http://bugs.eclipse.org/432978
 	public void test_432978() throws Exception {
         String testName = "bug_432978";
@@ -774,7 +774,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			/*
 			 * the extra variable should only be declared once in the
 			 * translated text
-			 */
+			 */ /*
 			assertEquals(2, translation.split("java.lang.Integer extra").length);
 
 			structuredModel2 = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file2);
@@ -830,4 +830,5 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
                 structuredModel1.releaseFromRead();
         }
 	}
+	*/
 }

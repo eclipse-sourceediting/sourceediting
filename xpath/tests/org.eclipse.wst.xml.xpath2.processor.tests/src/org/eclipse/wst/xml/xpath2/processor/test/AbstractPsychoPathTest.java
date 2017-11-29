@@ -17,7 +17,7 @@
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *     Mukul Gandhi         - bug 338494 - prohibiting xpath expressions starting with / or // to be parsed.
  *     Jesper Steen Moller  - bug 340933 - Migrate tests to new XPath2 API
- *     Lukasz Wycisk - bug 361802 - Default variable namespace Ð no namespace
+ *     Lukasz Wycisk - bug 361802 - Default variable namespace ï¿½ no namespace
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -32,6 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.ProtectionDomain;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -646,7 +647,16 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	protected String buildXMLResultString(ResultSequence rs) throws Exception {
         DOMImplementationLS domLS = (DOMImplementationLS) domDoc.getImplementation().getFeature("LS", "3.0");
         LSOutput outputText = domLS.createLSOutput();
-        LSSerializer serializer = domLS.createLSSerializer();
+        LSSerializer serializer = null;
+		ClassLoader originalLoader = Thread.currentThread().getContextClassLoader();
+		DelegatingLoader newContext = new DelegatingLoader(originalLoader);
+		Thread.currentThread().setContextClassLoader(newContext);
+		try {
+			serializer = domLS.createLSSerializer();
+		} finally {
+			Thread.currentThread().setContextClassLoader(originalLoader);
+		}
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         outputText.setByteStream(outputStream);
         
@@ -674,6 +684,37 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return actual.trim();
 	}
 	
+	// org/apache/xml/serializer/Encodings.properties
+	private static class DelegatingLoader extends ClassLoader {
+		private ClassLoader delegate;
+		private String ENCODINGS_FILE = "org/apache/xml/serializer/Encodings.properties";
+		private String stream = null;
+		public DelegatingLoader(ClassLoader del) {
+			super(del.getParent());
+			this.delegate = del;
+		}
+		public Class loadClass(String name) throws ClassNotFoundException {
+			return delegate.loadClass(name);
+		}
+		public InputStream getResourceAsStream(String name) {
+			if( ENCODINGS_FILE.equals(name)) {
+				Bundle xpath2ProcTests = Platform
+						.getBundle("org.eclipse.wst.xml.xpath2.processor.tests");
+				try {
+					return xpath2ProcTests.getEntry("bugTestFiles/Encodings.properties").openStream();
+				} catch (IOException e) {
+					System.err.println("Loading encodings failed.");
+					e.printStackTrace();
+					return null;
+				}
+			} else {
+				return delegate.getResourceAsStream(name);
+			}
+		}
+
+				
+	}
+	
 	protected String formatResultString(String resultFile) throws Exception {
 		DOMLoader domloader = new XercesLoader(null);
 		domloader.set_validating(false);
@@ -683,10 +724,17 @@ public class AbstractPsychoPathTest extends XMLTestCase {
         DOMImplementationLS domLS = (DOMImplementationLS) resultDoc.getImplementation().getFeature("LS", "3.0");
         LSSerializer serializer = domLS.createLSSerializer();
         
-        String actual = serializer.writeToString(resultDoc.getDocumentElement());
-
-		actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-16\"?>", "");
-		return actual.trim();
+		ClassLoader originalLoader = Thread.currentThread().getContextClassLoader();
+		DelegatingLoader newContext = new DelegatingLoader(originalLoader);
+		Thread.currentThread().setContextClassLoader(newContext);
+		String actual = null;
+		try {
+	        actual = serializer.writeToString(resultDoc.getDocumentElement());
+			actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-16\"?>", "");
+			return actual.trim();
+		} finally {
+			Thread.currentThread().setContextClassLoader(originalLoader);
+		}
 	}
 
 	protected String removeIrrelevantNamespaces(String expectedResult) {

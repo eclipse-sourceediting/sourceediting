@@ -61,18 +61,6 @@
                   <id>org.eclipse.wst.standard.schemas</id>
                   <versionRange>0.0.0</versionRange>
                 </requirement>
-                <requirement>
-                  <!-- A JSF template proposal is contributed and expected by the unit tests -->
-                  <type>eclipse-plugin</type>
-                  <id>org.eclipse.jst.jsf.ui</id>
-                  <versionRange>0.0.0</versionRange>
-                </requirement>
-                <requirement>
-                  <!-- This is needed after adding the jsf.ui dependency -->
-                  <type>eclipse-plugin</type>
-                  <id>org.eclipse.jst.jee.ejb</id>
-                  <versionRange>0.0.0</versionRange>
-                </requirement>
              </extraRequirements>
           </dependency-resolution>
         </configuration>

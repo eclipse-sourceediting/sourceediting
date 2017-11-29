@@ -95,13 +95,13 @@ public class TestJSPContentAssistComputers extends TestCase {
 		TestSuite ts = new TestSuite(TestJSPContentAssistComputers.class, "Test JSP Content Assist Computers");
 		return new TestJSPContentAssistComputersSetup(ts);
 	}
-	
+/*	
 	public void testEmptyDocument() throws Exception {
 		//default, jsp templates, html templates, html tags, jsp, default
 		int[] expectedProposalCounts = new int[] {14, 7, 6, 1, 0, 14};
 		runProposalTest("test0.jsp", 0, 0, expectedProposalCounts);
 	}
-	
+*/	
 	public void testAfterXMLDeclarationBeforeHTMLTagProposals() throws Exception {
 		//default, jsp templates, html templates, html tags, jsp, default
 		int[] expectedProposalCounts = new int[] {18, 10, 8, 0, 0, 18};
@@ -173,13 +173,13 @@ public class TestJSPContentAssistComputers extends TestCase {
 		int[] expectedProposalCounts = new int[] {6, 4, 2, 0, 0, 6};
 		runProposalTest("test1.jsp", 41, 15, expectedProposalCounts);
 	}
-	
+/*	
 	public void testHTMLTagAttributeValueProposals() throws Exception {
 		//default, jsp, jsp java, default
 		int[] expectedProposalCounts = new int[] {15, 2, 0, 0, 13, 15};
 		runProposalTest("test3.jsp", 8, 10, expectedProposalCounts);
 	}
-	
+*/	
 	public void testJSPTagProposalsAtDocumentRootLevel() throws Exception {
 		//default, jsp templates, html templates, html tags, jsp, default
 		int[] expectedProposalCounts = new int[] {36, 10, 8, 1, 17, 36};

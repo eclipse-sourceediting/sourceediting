@@ -16,10 +16,14 @@ import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -86,13 +90,36 @@ public class JSPUITestsPlugin extends AbstractUIPlugin {
 		return resolvedLocation;
 	}
 	
+    /**
+     * Find a file inside any bundle
+     * @param bundleId
+     * @param path
+     * @return
+     */
+    public static File getFileLocation(String bundleId, String path) throws CoreException {
+
+            Bundle bundle = Platform.getBundle(bundleId);
+            URL url1 = bundle.getEntry(path);
+            URL url = null;
+            try {
+                    url = FileLocator.toFileURL(url1);
+            } catch (IOException e) {
+                    String msg = "Cannot find file " + path + " in " + bundleId;
+                    IStatus status = new Status(IStatus.ERROR, bundleId, msg, e);
+                    throw new CoreException(status);
+            }
+            String location = url.getFile();
+            return new File(location);
+    }
+
+	
+	
 	public static File getTestFile(String filepath) {
-		URL installURL = getInstallLocation();
-		//String scheme = installURL.getProtocol();
-		String path = installURL.getPath();
-		String location = path + filepath;
-		File result = new File(location);
-		return result;
+		try {
+			return getFileLocation("org.eclipse.jst.jsp.ui.tests", filepath);
+		} catch(CoreException ce) {
+			throw new RuntimeException(ce);
+		}
 	}
 	
 	protected void initializeImageRegistry(ImageRegistry reg) {
