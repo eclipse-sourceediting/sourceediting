@@ -18,6 +18,12 @@
    <feature id="org.eclipse.wst.web_tests.feature"><category name="Web Tools Platform Tests (WTP Tests) @buildversionid@"/></feature>
    <feature id="org.eclipse.wst.xml_tests.feature"><category name="Web Tools Platform Tests (WTP Tests) @buildversionid@"/></feature>
 
+   <!-- include plugins which are not wrapped with features, but which are needed in downstream builds -->
+   <!-- org.eclipse.jst.web_core.feature includes org.eclipse.jst.jsp.core -->
+   <bundle id="org.eclipse.jst.jsp.core"><category name="Web Tools Platform (WTP) @buildversionid@"/></bundle>
+   <!-- org.eclipse.jst.web_ui.feature includes org.eclipse.jst.web_core.feature and org.eclipse.jst.jsp.ui -->
+   <bundle id="org.eclipse.jst.jsp.ui"><category name="Web Tools Platform (WTP) @buildversionid@"/></bundle>
+
    <category-def
         name="Web Tools Platform (WTP) @buildversionid@"
         label="Web Tools Platform (WTP) @buildversionid@">
