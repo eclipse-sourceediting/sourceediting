@@ -61,6 +61,20 @@
     </repository>
   </repositories>
 
+  <!-- Bug 526334, 528778 - ignore vestigial project settings which appear in Eclipse but are ignored by Tycho, like API access restrictions -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-compiler-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <useProjectSettings>false</useProjectSettings>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <modules>
     <module>core</module>
     <module>json</module>
