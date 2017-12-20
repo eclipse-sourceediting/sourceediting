@@ -874,18 +874,20 @@ public final class CodeAssistCyclingConfigurationBlock  {
 	}
 	
 	private class ModelViewerComparator extends ViewerComparator {
+		private Comparator c;
 		/**
 		 * 
 		 */
 		public ModelViewerComparator(Comparator comparator) {
 			super(comparator);
+			this.c = comparator;
 		}
 		
 		/**
 		 * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			return this.getComparator().compare(e1, e2);
+			return c.compare(e1, e2);
 		}
 	}
 }
