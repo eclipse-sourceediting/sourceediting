@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,7 +78,7 @@ public class ADTComboBoxCellEditor extends ComboBoxCellEditor
       if (l instanceof TypedListener)
       {
         TypedListener typedListener = (TypedListener)l;
-        String className = typedListener.getEventListener().getClass().getCanonicalName();
+        String className = typedListener.getEventListener().getClass().getName();
         // It's possible that there are other typed listeners added to the CCombo.
         // Currently there are none, but as an extra check, I want to ensure 
         // I'm removing the ones added from the inherited class.
