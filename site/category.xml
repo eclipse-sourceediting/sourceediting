@@ -24,6 +24,10 @@
    <!-- org.eclipse.jst.web_ui.feature includes org.eclipse.jst.web_core.feature and org.eclipse.jst.jsp.ui -->
    <bundle id="org.eclipse.jst.jsp.ui"><category name="Web Tools Platform (WTP) @buildversionid@"/></bundle>
 
+   <!-- add sources that might not be included in feature wrappers -->
+   <bundle id="org.eclipse.jst.jsp.core.source"><category name="Web Tools Platform SDK (WTP SDK) @buildversionid@"/></bundle>
+   <bundle id="org.eclipse.jst.jsp.ui.source"><category name="Web Tools Platform SDK (WTP SDK) @buildversionid@"/></bundle>
+
    <category-def
         name="Web Tools Platform (WTP) @buildversionid@"
         label="Web Tools Platform (WTP) @buildversionid@">
