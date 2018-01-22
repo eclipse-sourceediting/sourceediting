@@ -30,6 +30,10 @@
    <bundle id="org.eclipse.jst.jsp.core.source"><category name="Web Tools Platform SDK (WTP SDK) @buildversionid@"/></bundle>
    <bundle id="org.eclipse.jst.jsp.ui.source"><category name="Web Tools Platform SDK (WTP SDK) @buildversionid@"/></bundle>
 
+   <!-- add sources that might not be included in feature wrappers -->
+   <bundle id="org.eclipse.jst.jsp.core.source"/>
+   <bundle id="org.eclipse.jst.jsp.ui.source"/>
+
    <category-def
         name="Web Tools Platform (WTP)"
         label="Web Tools Platform (WTP)">
