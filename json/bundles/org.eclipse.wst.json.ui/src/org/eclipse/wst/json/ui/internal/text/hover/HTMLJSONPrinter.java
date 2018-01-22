@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2018 Angelo ZERR and others.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ public class HTMLJSONPrinter {
 	private static String fgStyleSheet;
 
 	public static String getAdditionalProposalInfo(IJSONPair pair) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		ImageDescriptor descriptor = null;
 		IJSONValue value = pair.getValue();
 		if (value != null) {
@@ -53,33 +53,33 @@ public class HTMLJSONPrinter {
 					.getImageDescriptor(value.getNodeType());
 		}
 
-		startPage(buffer, getTitleKey(value), descriptor);
-		startDefinitionList(buffer);
-				StringBuffer buff = new StringBuffer();
-				buff.append(pair.getName());
-				try {
-					IJSONSchemaDocument schemaDocument = JSONCorePlugin.getDefault()
-							.getSchemaDocument(pair);
-					if (schemaDocument != null) {
-						IJSONPath path = pair.getPath();
-						IJSONSchemaProperty property = schemaDocument
-							.getProperty(path);
-						if (property != null) {
-							String description = property.getDescription();
-							if (description != null) {
-								buff.append(" - ");
-								buff.append(description);
-							}
-						}
+		startPage(builder, getTitleKey(value), descriptor);
+		startDefinitionList(builder);
+		StringBuilder build = new StringBuilder();
+		build.append(pair.getName());
+		try {
+			IJSONSchemaDocument schemaDocument = JSONCorePlugin.getDefault()
+					.getSchemaDocument(pair);
+			if (schemaDocument != null) {
+				IJSONPath path = pair.getPath();
+				IJSONSchemaProperty property = schemaDocument
+					.getProperty(path);
+				if (property != null) {
+					String description = property.getDescription();
+					if (description != null) {
+						build.append(" - ");
+						build.append(description);
 					}
-				} catch (IOException e) {
-					Logger.logException(e);
 				}
-				addDefinitionListItem(buffer, "Key", buff.toString());
-		addDefinitionListItem(buffer, "Type", getValueType(pair.getValue()));
-		endDefinitionList(buffer);
-		endPage(buffer);
-		return buffer.toString();
+			}
+		} catch (IOException e) {
+			Logger.logException(e);
+		}
+		addDefinitionListItem(builder, "Key", build.toString());
+		addDefinitionListItem(builder, "Type", getValueType(pair.getValue()));
+		endDefinitionList(builder);
+		endPage(builder);
+		return builder.toString();
 	}
 
 	private static String getTitleKey(IJSONValue value) {
@@ -111,7 +111,7 @@ public class HTMLJSONPrinter {
 	}
 
 	public static String getAdditionalProposalInfo(IJSONValue value) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		ImageDescriptor descriptor = JSONEditorPluginImageHelper.getInstance()
 				.getImageDescriptor(value.getNodeType());
 		startPage(buffer, "<b>JSON Value</b>", descriptor);
@@ -130,23 +130,23 @@ public class HTMLJSONPrinter {
 		return title.toString();
 	}
 
-	public static void startDefinitionList(StringBuffer buffer) {
-		buffer.append("<dl>"); //$NON-NLS-1$
+	public static void startDefinitionList(StringBuilder builder) {
+		builder.append("<dl>"); //$NON-NLS-1$
 	}
 
-	public static void endDefinitionList(StringBuffer buffer) {
-		buffer.append("</dl>"); //$NON-NLS-1$
+	public static void endDefinitionList(StringBuilder builder) {
+		builder.append("</dl>"); //$NON-NLS-1$
 	}
 
-	public static void addDefinitionListItem(StringBuffer buffer, String name,
+	public static void addDefinitionListItem(StringBuilder builder, String name,
 			String value) {
 		if (value != null) {
-			buffer.append("<dt><b>");
-			buffer.append(name);
-			buffer.append(":</b></dt>");
-			buffer.append("<dd>");
-			buffer.append(value);
-			buffer.append("</dd>");
+			builder.append("<dt><b>");
+			builder.append(name);
+			builder.append(":</b></dt>");
+			builder.append("<dd>");
+			builder.append(value);
+			builder.append("</dd>");
 		}
 	}
 
@@ -188,17 +188,17 @@ public class HTMLJSONPrinter {
 		try {
 			reader = new BufferedReader(new InputStreamReader(
 					styleSheetURL.openStream()));
-			StringBuffer buffer = new StringBuffer(1500);
+			StringBuilder builder = new StringBuilder(1500);
 			String line = reader.readLine();
 			while (line != null) {
-				buffer.append(line);
-				buffer.append('\n');
+				builder.append(line);
+				builder.append('\n');
 				line = reader.readLine();
 			}
 
 			FontData fontData = JFaceResources.getFontRegistry().getFontData(
 					JFaceResources.DIALOG_FONT)[0];
-			return HTMLPrinter.convertTopLevelFont(buffer.toString(), fontData);
+			return HTMLPrinter.convertTopLevelFont(builder.toString(), fontData);
 		} catch (IOException ex) {
 			Logger.logException("Error while loading style sheets", ex);
 			return ""; //$NON-NLS-1$
@@ -212,7 +212,7 @@ public class HTMLJSONPrinter {
 		}
 	}
 
-	public static void startPage(StringBuffer buf, String title,
+	public static void startPage(StringBuilder builder, String title,
 			ImageDescriptor descriptor) {
 		int imageWidth = 16;
 		int imageHeight = 16;
@@ -220,23 +220,23 @@ public class HTMLJSONPrinter {
 		int labelTop = 2;
 
 		// buf.append("<p>");
-		buf.append("<div style='word-wrap: break-word; position: relative; "); //$NON-NLS-1$
+		builder.append("<div style='word-wrap: break-word; position: relative; "); //$NON-NLS-1$
 
 		String imageSrcPath = getImageURL(descriptor);
 		if (imageSrcPath != null) {
-			buf.append("margin-left: ").append(labelLeft).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
-			buf.append("padding-top: ").append(labelTop).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
+			builder.append("margin-left: ").append(labelLeft).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
+			builder.append("padding-top: ").append(labelTop).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		buf.append("'>"); //$NON-NLS-1$
+		builder.append("'>"); //$NON-NLS-1$
 		if (imageSrcPath != null) {
 
 			String uri = ""; // HoverLocationListener.TERN_DEFINITION_PROTOCOL;
-			buf.append("<a href=\"");
-			buf.append(uri);
-			buf.append("\" >");
+			builder.append("<a href=\"");
+			builder.append(uri);
+			builder.append("\" >");
 
-			StringBuffer imageStyle = new StringBuffer(
+			StringBuilder imageStyle = new StringBuilder(
 					"border:none; position: absolute; "); //$NON-NLS-1$
 			imageStyle.append("width: ").append(imageWidth).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 			imageStyle.append("height: ").append(imageHeight).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -244,28 +244,28 @@ public class HTMLJSONPrinter {
 
 			// hack for broken transparent PNG support in IE 6, see
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=223900 :
-			buf.append("<!--[if lte IE 6]><![if gte IE 5.5]>\n"); //$NON-NLS-1$
+			builder.append("<!--[if lte IE 6]><![if gte IE 5.5]>\n"); //$NON-NLS-1$
 			String tooltip = "alt='" + "" + "' "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			buf.append("<span ").append(tooltip).append("style=\"").append(imageStyle). //$NON-NLS-1$ //$NON-NLS-2$
+			builder.append("<span ").append(tooltip).append("style=\"").append(imageStyle). //$NON-NLS-1$ //$NON-NLS-2$
 					append("filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='").append(imageSrcPath).append("')\"></span>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			buf.append("<![endif]><![endif]-->\n"); //$NON-NLS-1$
+			builder.append("<![endif]><![endif]-->\n"); //$NON-NLS-1$
 
-			buf.append("<!--[if !IE]>-->\n"); //$NON-NLS-1$
-			buf.append("<img ").append(tooltip).append("style='").append(imageStyle).append("' src='").append(imageSrcPath).append("'/>\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			buf.append("<!--<![endif]-->\n"); //$NON-NLS-1$
-			buf.append("<!--[if gte IE 7]>\n"); //$NON-NLS-1$
-			buf.append("<img ").append(tooltip).append("style='").append(imageStyle).append("' src='").append(imageSrcPath).append("'/>\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			buf.append("<![endif]-->\n"); //$NON-NLS-1$
+			builder.append("<!--[if !IE]>-->\n"); //$NON-NLS-1$
+			builder.append("<img ").append(tooltip).append("style='").append(imageStyle).append("' src='").append(imageSrcPath).append("'/>\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			builder.append("<!--<![endif]-->\n"); //$NON-NLS-1$
+			builder.append("<!--[if gte IE 7]>\n"); //$NON-NLS-1$
+			builder.append("<img ").append(tooltip).append("style='").append(imageStyle).append("' src='").append(imageSrcPath).append("'/>\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			builder.append("<![endif]-->\n"); //$NON-NLS-1$
 			// if (element != null) {
 
-			buf.append("</a>"); //$NON-NLS-1$
+			builder.append("</a>"); //$NON-NLS-1$
 
 			// }
 		}
-		buf.append(title);
+		builder.append(title);
 
-		buf.append("</div>"); //$NON-NLS-1$
-		buf.append("<hr />");
+		builder.append("</div>"); //$NON-NLS-1$
+		builder.append("<hr />");
 	}
 
 	private static String getImageURL(ImageDescriptor descriptor) {
@@ -281,9 +281,9 @@ public class HTMLJSONPrinter {
 		return imageName;
 	}
 
-	public static void endPage(StringBuffer buffer) {
+	public static void endPage(StringBuilder builder) {
 		HTMLPrinter
-				.insertPageProlog(buffer, 0, HTMLJSONPrinter.getStyleSheet());
-		HTMLPrinter.addPageEpilog(buffer);
+				.insertPageProlog(builder, 0, HTMLJSONPrinter.getStyleSheet());
+		HTMLPrinter.addPageEpilog(builder);
 	}
 }

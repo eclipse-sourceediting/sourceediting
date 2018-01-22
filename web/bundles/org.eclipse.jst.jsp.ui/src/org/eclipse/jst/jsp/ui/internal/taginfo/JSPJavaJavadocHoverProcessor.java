@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 	private final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~JavaElementLabels.F_FULLY_QUALIFIED | JavaElementLabels.F_POST_QUALIFIED;
 
 	protected String getHoverInfo(IJavaElement[] result) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		int nResults = result.length;
 		if (nResults == 0)
 			return null;
@@ -48,11 +48,11 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 		if (nResults > 1) {
 
 			for (int i = 0; i < result.length; i++) {
-				HTMLPrinter.startBulletList(buffer);
+				HTMLPrinter.startBulletList(builder);
 				IJavaElement curr = result[i];
 				if (curr instanceof IMember || curr.getElementType() == IJavaElement.LOCAL_VARIABLE)
-					HTMLPrinter.addBullet(buffer, getInfoText(curr));
-				HTMLPrinter.endBulletList(buffer);
+					HTMLPrinter.addBullet(builder, getInfoText(curr));
+				HTMLPrinter.endBulletList(builder);
 			}
 
 		}
@@ -61,7 +61,7 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 			IJavaElement curr = result[0];
 			if (curr instanceof IMember) {
 				IMember member = (IMember) curr;
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(member));
+				HTMLPrinter.addSmallHeader(builder, getInfoText(member));
 				Reader reader;
 				try {
 					reader = JavadocContentAccess.getHTMLContentReader(member, true, true);
@@ -70,17 +70,17 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 					return null;
 				}
 				if (reader != null) {
-					HTMLPrinter.addParagraph(buffer, reader);
+					HTMLPrinter.addParagraph(builder, reader);
 				}
 			}
 			else if (curr.getElementType() == IJavaElement.LOCAL_VARIABLE || curr.getElementType() == IJavaElement.TYPE_PARAMETER)
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(curr));
+				HTMLPrinter.addSmallHeader(builder, getInfoText(curr));
 		}
 
-		if (buffer.length() > 0) {
-			HTMLPrinter.insertPageProlog(buffer, 0);
-			HTMLPrinter.addPageEpilog(buffer);
-			return buffer.toString();
+		if (builder.length() > 0) {
+			HTMLPrinter.insertPageProlog(builder, 0);
+			HTMLPrinter.addPageEpilog(builder);
+			return builder.toString();
 		}
 
 		return null;
@@ -127,7 +127,7 @@ public class JSPJavaJavadocHoverProcessor extends AbstractHoverProcessor {
 	private String getInfoText(IJavaElement member) {
 		long flags = member.getElementType() == IJavaElement.LOCAL_VARIABLE ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
 		String label = JavaElementLabels.getElementLabel(member, flags);
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < label.length(); i++) {
 			char ch = label.charAt(i);
 			if (ch == '<') {
