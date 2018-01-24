@@ -9,8 +9,8 @@
   <delegatePublic catalog="tom.xml" publicIdStartString="-//OASIS//"/>
   <delegateSystem catalog="fritz.xml" systemIdStartString="http:"/>
   <delegateURI catalog="garfield.xml" uriStartString="urn:x-foods:lasagna"/>
-  <systemSuffix systemIdSuffix="schemas/goof.xml" uri="file:///Users/jesper/Documents/workspace-helios/org.eclipse.wst.xml.catalog.tests/data/schemas/2009/goof-v2.xml"/>
-  <uriSuffix uri="file:///Users/jesper/Documents/workspace-helios/org.eclipse.wst.xml.catalog.tests/data/schemas/2009/fun-v2.xml" uriSuffix="schemas/goof.xml"/>
+  <systemSuffix systemIdSuffix="schemas/goof.xml" uri="file:///home/nboldt/4-eclipse.org/WTP/webtools.sourceediting/xml/tests/org.eclipse.wst.xml.catalog.tests/data/schemas/2009/goof-v2.xml"/>
+  <uriSuffix uri="file:///home/nboldt/4-eclipse.org/WTP/webtools.sourceediting/xml/tests/org.eclipse.wst.xml.catalog.tests/data/schemas/2009/fun-v2.xml" uriSuffix="schemas/goof.xml"/>
   <rewriteSystem rewritePrefix="http://cache.some-repository.com/schemes/" systemIdStartString="http://www.original-repository.com/schemes/"/>
   <rewriteURI rewritePrefix="urn:funny:" uriStartString="urn:x-funny:"/>
 </catalog>
