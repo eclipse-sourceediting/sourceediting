@@ -36,6 +36,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilerExtension;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
+import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
 /**
@@ -239,7 +240,7 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 	 */
 	private String fPartitioning;
 
-	Map fReconcilingStrategies = null;
+	Map<String, IReconcilingStrategy> fReconcilingStrategies = null;
 
 	/** for initial reconcile when document is opened */
 	private TextInputListener fTextInputListener = null;
@@ -265,7 +266,7 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 	public DirtyRegionProcessor() {
 		// init reconciler stuff
 		setDelay(UPDATE_DELAY);
-		fReconcilingStrategies = new HashMap();
+		fReconcilingStrategies = new HashMap<String, IReconcilingStrategy>();
 	}
 
 	/**
@@ -511,7 +512,7 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 	public IReconcilingStrategy getReconcilingStrategy(String partitionType) {
 		if (partitionType == null)
 			return null;
-		return (IReconcilingStrategy) fReconcilingStrategies.get(partitionType);
+		return fReconcilingStrategies.get(partitionType);
 	}
 
 	/**
@@ -715,7 +716,11 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 		}
 
 		fDocument = doc;
-
+		
+		for (IReconcilingStrategy strategy : fReconcilingStrategies.values()) {
+			strategy.setDocument(doc);
+		}
+		
 		if (fDocument != null) {
 			if (fDocument instanceof IDocumentExtension4) {
 				((IDocumentExtension4) fDocument).addDocumentRewriteSessionListener(fDocumentRewriteSessionListener);
@@ -725,12 +730,19 @@ public class DirtyRegionProcessor implements IReconciler, IReconcilerExtension, 
 
 			setEntireDocumentDirty(doc);
 		}
+		
+		
 	}
 
 	/**
 	 * This method is called before the initial reconciling of the document. 
 	 */
 	protected void initialReconcile() {
+		for (IReconcilingStrategy strategy : fReconcilingStrategies.values()) {
+			if (strategy instanceof IReconcilingStrategyExtension) {
+				((IReconcilingStrategyExtension) strategy).initialReconcile();
+			}
+		}
 	}
 
 	/**
