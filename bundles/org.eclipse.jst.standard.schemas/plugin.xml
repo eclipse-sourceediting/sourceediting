@@ -95,7 +95,9 @@
            <uri
                name="http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
                uri="dtdsAndSchemas/beans_1_1.xsd"/>
-
+           <uri
+               name="http://xmlns.jcp.org/xml/ns/javaee/beans_2_0.xsd"
+               uri="dtdsAndSchemas/beans_2_0.xsd"/>
 
            <uri
                name="http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd"
@@ -316,11 +318,17 @@
                 name="http://www.jboss.org/xml/ns/javax/validation/configuration/validation-configuration-1.1.xsd"
                 uri="dtdsAndSchemas/validation-configuration-1.1.xsd"/>
             <uri
+                name="http://xmlns.jcp.org/xml/ns/validation/configuration/validation-configuration-2.0.xsd"
+                uri="dtdsAndSchemas/validation-configuration-2.0.xsd"/>
+            <uri
                 name="http://www.jboss.org/xml/ns/javax/validation/mapping/validation-mapping-1.0.xsd"
                 uri="dtdsAndSchemas/validation-mapping-1.0.xsd"/>
             <uri
                 name="http://www.jboss.org/xml/ns/javax/validation/mapping/validation-mapping-1.1.xsd"
                 uri="dtdsAndSchemas/validation-mapping-1.1.xsd"/>
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/validation/mapping/validation-mapping-2.0.xsd"
+                uri="dtdsAndSchemas/validation-mapping-2.0.xsd"/>
 
 
             <public
