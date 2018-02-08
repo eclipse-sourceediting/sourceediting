@@ -20,12 +20,15 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.wst.xml.xpath2.processor.feature"
-         version="0.0.0"/>
-
    <requires>
+      <import feature="org.eclipse.wst.xml.xpath2.processor.feature" version="0.0.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.wst.xml_ui.feature" version="3.3.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.xalan" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.logging" version="1.0.4" match="greaterOrEqual"/>
+      <import plugin="org.apache.xml.serializer" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.bcel" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="java_cup.runtime" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.log4j" version="0.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -71,20 +74,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.xalan"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.logging"
-         download-size="0"
-         install-size="0"
-         version="1.0.4.qualifier"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.wst.xsl.doc"
          download-size="0"
          install-size="0"
@@ -93,27 +82,6 @@
 
    <plugin
          id="org.eclipse.wst.xml.xpath.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.xml.serializer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.bcel"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="java_cup.runtime"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -153,14 +121,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.apache.log4j"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
    <plugin
          id="org.eclipse.wst.xsl.exslt.core"
          download-size="0"

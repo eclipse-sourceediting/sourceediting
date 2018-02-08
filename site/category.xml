@@ -19,20 +19,35 @@
    <feature id="org.eclipse.wst.xml_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
 
    <!-- include plugins which are not wrapped with features, but which are needed in downstream builds -->
-   <!-- org.eclipse.jst.web_core.feature includes org.eclipse.jst.jsp.core -->
    <bundle id="org.eclipse.jst.jsp.core"><category name="Web Tools Platform (WTP)"/></bundle>
-   <!-- org.eclipse.jst.web_ui.feature includes org.eclipse.jst.web_core.feature and org.eclipse.jst.jsp.ui -->
    <bundle id="org.eclipse.jst.jsp.ui"><category name="Web Tools Platform (WTP)"/></bundle>
-   <!-- required by webservices javaee-web feature org.eclipse.jst.web_tests.feature --> 
-   <bundle id="org.eclipse.jst.jsp.core.tests"/>
+   <!-- <bundle id="org.eclipse.jst.jsp.core.tests"/> -->
+   <bundle id="org.eclipse.jst.jsp.tests.encoding"/>
 
-   <!-- add sources that might not be included in feature wrappers -->
-   <bundle id="org.eclipse.jst.jsp.core.source"><category name="Web Tools Platform SDK (WTP SDK) @buildversionid@"/></bundle>
-   <bundle id="org.eclipse.jst.jsp.ui.source"><category name="Web Tools Platform SDK (WTP SDK) @buildversionid@"/></bundle>
+   <!-- sources -->
 
-   <!-- add sources that might not be included in feature wrappers -->
+   <feature id="org.eclipse.wst.json_core.feature.source"/>
+   <feature id="org.eclipse.wst.json_ui.feature.source"/>
+   <feature id="org.eclipse.wst.web_core.feature.source"/>
+   <feature id="org.eclipse.wst.web_ui.feature.source"/>
+   <feature id="org.eclipse.wst.xml_core.feature.source"/>
+   <feature id="org.eclipse.wst.xml_ui.feature.source"/>
+
+   <feature id="org.eclipse.wst.web_userdoc.feature.source"/>
+   <feature id="org.eclipse.wst.xml_userdoc.feature.source"/>
+
+   <feature id="org.eclipse.wst.json_sdk.feature.source"/>
+   <feature id="org.eclipse.wst.web_sdk.feature.source"/>
+   <feature id="org.eclipse.wst.xml_sdk.feature.source"/>
+
+   <feature id="org.eclipse.wst.json_tests.feature.source"/>
+   <feature id="org.eclipse.wst.web_tests.feature.source"/>
+   <feature id="org.eclipse.wst.xml_tests.feature.source"/>
+
    <bundle id="org.eclipse.jst.jsp.core.source"/>
    <bundle id="org.eclipse.jst.jsp.ui.source"/>
+   <!-- <bundle id="org.eclipse.jst.jsp.core.tests.source"/> -->
+   <bundle id="org.eclipse.jst.jsp.tests.encoding.source"/>
 
    <category-def
         name="Web Tools Platform (WTP)"

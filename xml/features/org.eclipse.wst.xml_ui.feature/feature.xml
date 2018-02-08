@@ -20,17 +20,11 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.wst.common_ui.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.xml_userdoc.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.xml_core.feature"
-         version="0.0.0"/>
+   <requires>
+          <import feature="org.eclipse.wst.common_ui.feature" version="0.0.0" match="greaterOrEqual"/>
+          <import feature="org.eclipse.wst.xml_userdoc.feature" version="0.0.0" match="greaterOrEqual"/>
+          <import feature="org.eclipse.wst.xml_core.feature" version="0.0.0" match="greaterOrEqual"/>
+   </requires>
 
    <plugin
          id="org.eclipse.wst.dtd.ui"

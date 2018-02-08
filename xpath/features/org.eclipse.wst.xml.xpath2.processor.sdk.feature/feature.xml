@@ -4,7 +4,9 @@
       label="%featureName"
       version="2.0.100.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.wst.xml.xpath2">
+      plugin="org.eclipse.wst.xml.xpath2"
+      license-feature="org.eclipse.license"
+      license-feature-version="1.0.1.qualifier">
 
    <description>
       %description
@@ -18,8 +20,7 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.wst.xml.xpath2.processor.feature"
-         version="0.0.0"/>
-
+   <requires>
+          <import feature="org.eclipse.wst.xml.xpath2.processor.feature" version="0.0.0" match="greaterOrEqual"/>
+   </requires>
 </feature>
