@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Nick Boldt, Red Hat - update for Tycho 1.1
  *     
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests;
@@ -33,7 +34,7 @@ import org.osgi.service.prefs.Preferences;
  * The purpose of this test is to verify the validity of the JSP Source editor
  * preferences. Tests include setting/getting preferences.
  * 
- * NOTE: This test should be preformed on a clean workspace. If performed on
+ * NOTE: This test should be performed on a clean workspace. If performed on
  * an existing workspace, this test will manipulate preferences in the
  * workspace, though attempts will be made to restore original values after
  * testing.

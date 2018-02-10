@@ -24,6 +24,12 @@
    <!-- <bundle id="org.eclipse.jst.jsp.core.tests"/> -->
    <bundle id="org.eclipse.jst.jsp.tests.encoding"/>
 
+   <bundle id="org.eclipse.jst.standard.schemas"/>
+   <bundle id="org.eclipse.wst.jsdt.web.support.jsp"/>
+   <bundle id="org.eclipse.jst.jsp.ui.infopop"/>
+   <bundle id="org.eclipse.jst.jsp.core.tests"/>
+   <bundle id="org.eclipse.jst.jsp.ui.tests"/>
+
    <!-- sources -->
 
    <feature id="org.eclipse.wst.json_core.feature.source"/>

@@ -340,7 +340,7 @@ public class TestJSPContentAssistComputers extends TestCase {
 				IEditorPart editorPart = IDE.openEditor(page, file, true, true);
 				if(editorPart instanceof MultiPageEditorPart) {
 					MultiPageEditorPart xmlEditorPart = (MultiPageEditorPart)editorPart;
-					editor = (StructuredTextEditor)xmlEditorPart.getAdapter(StructuredTextEditor.class);
+					editor = (StructuredTextEditor) xmlEditorPart.getAdapter(StructuredTextEditor.class);
 				} else if(editorPart instanceof StructuredTextEditor) {
 					editor = ((StructuredTextEditor)editorPart);
 				} else {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -456,7 +456,7 @@ public class ViewerTestJSP extends ViewPart {
 			if (fHighlightRangeListener == null)
 				fHighlightRangeListener = new NodeRangeSelectionListener();
 
-			fContentOutlinePage = ((IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class));
+			fContentOutlinePage = (IContentOutlinePage) (editor.getAdapter(IContentOutlinePage.class));
 			if (fContentOutlinePage != null) {
 				fContentOutlinePage.addSelectionChangedListener(fHighlightRangeListener);
 

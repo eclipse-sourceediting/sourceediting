@@ -171,7 +171,7 @@ public class ThreadedModelReadEditTest extends TestCase {
 		try {
 			sModel = StructuredModelManager.getModelManager().getModelForEdit(file);
 			if(sModel != null) {
-				Document domDoc = (Document)sModel.getAdapter(Document.class );
+				Document domDoc = (Document) sModel.getAdapter(Document.class );
 				IndexedRegion r = sModel.getIndexedRegion(insertionPoint);
 				if(r instanceof Node) {
 					Element e = domDoc.createElement(tagName);

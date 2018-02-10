@@ -39,3 +39,6 @@ temp.folder
 Thumbs.db
 .Trashes
 .vagrant/
+.settings/
+.project
+.classpath

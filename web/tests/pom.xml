@@ -26,7 +26,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <!-- tests failing so comment out for now <module>org.eclipse.jst.jsp.core.tests</module> -->
+    <module>org.eclipse.jst.jsp.core.tests</module>
     <module>org.eclipse.jst.jsp.tests.encoding</module>
     <module>org.eclipse.jst.jsp.ui.tests</module>
     <module>org.eclipse.wst.css.core.tests</module>
