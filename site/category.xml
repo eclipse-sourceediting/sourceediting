@@ -6,6 +6,8 @@
    <feature id="org.eclipse.wst.web_ui.feature"><category name="Web Tools Platform (WTP)"/></feature>
    <feature id="org.eclipse.wst.xml_core.feature"><category name="Web Tools Platform (WTP)"/></feature>
    <feature id="org.eclipse.wst.xml_ui.feature"><category name="Web Tools Platform (WTP)"/></feature>
+   <feature id="org.eclipse.wst.xsl.feature"><category name="Web Tools Platform (WTP)"/></feature>
+   <feature id="org.eclipse.wst.xml.xpath2.processor.feature"><category name="Web Tools Platform (WTP)"/></feature>
 
    <feature id="org.eclipse.wst.web_userdoc.feature"><category name="Web Tools Platform (WTP)"/></feature>
    <feature id="org.eclipse.wst.xml_userdoc.feature"><category name="Web Tools Platform (WTP)"/></feature>
@@ -13,10 +15,13 @@
    <feature id="org.eclipse.wst.json_sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
    <feature id="org.eclipse.wst.web_sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
    <feature id="org.eclipse.wst.xml_sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
+   <feature id="org.eclipse.wst.xsl_sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
+   <feature id="org.eclipse.wst.xml.xpath2.processor.sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
 
    <feature id="org.eclipse.wst.json_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
    <feature id="org.eclipse.wst.web_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
    <feature id="org.eclipse.wst.xml_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
+   <feature id="org.eclipse.wst.xsl_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
 
    <!-- include plugins which are not wrapped with features, but which are needed in downstream builds -->
    <bundle id="org.eclipse.jst.jsp.core"><category name="Web Tools Platform (WTP)"/></bundle>
@@ -38,6 +43,7 @@
    <feature id="org.eclipse.wst.web_ui.feature.source"/>
    <feature id="org.eclipse.wst.xml_core.feature.source"/>
    <feature id="org.eclipse.wst.xml_ui.feature.source"/>
+   <feature id="org.eclipse.wst.xsl.feature.source"/>
 
    <feature id="org.eclipse.wst.web_userdoc.feature.source"/>
    <feature id="org.eclipse.wst.xml_userdoc.feature.source"/>
@@ -45,10 +51,13 @@
    <feature id="org.eclipse.wst.json_sdk.feature.source"/>
    <feature id="org.eclipse.wst.web_sdk.feature.source"/>
    <feature id="org.eclipse.wst.xml_sdk.feature.source"/>
+   <feature id="org.eclipse.wst.xsl_sdk.feature.source"/>
+   <feature id="org.eclipse.wst.xml.xpath2.processor.sdk.feature.source"/>
 
    <feature id="org.eclipse.wst.json_tests.feature.source"/>
    <feature id="org.eclipse.wst.web_tests.feature.source"/>
    <feature id="org.eclipse.wst.xml_tests.feature.source"/>
+   <feature id="org.eclipse.wst.xsl_tests.feature.source"/>
 
    <bundle id="org.eclipse.jst.jsp.core.source"/>
    <bundle id="org.eclipse.jst.jsp.ui.source"/>
