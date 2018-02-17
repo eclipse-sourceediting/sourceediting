@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorContextIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
@@ -66,26 +66,26 @@ public class TypeSection
     if (showNone)
     {
       noneRadio = ViewUtility.createRadioButton(client, XSDEditorPlugin.getXSDString("_UI_RADIO_NONE"));
-      WorkbenchHelp.setHelp(noneRadio, XSDEditorContextIds.XSDE_TYPE_HELPER_NONE);
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(noneRadio, XSDEditorContextIds.XSDE_TYPE_HELPER_NONE);
     }
 
     simpleType = ViewUtility.createRadioButton(client, XSDEditorPlugin.getXSDString("_UI_RADIO_BUILT_IN_SIMPLE_TYPE"));
-    WorkbenchHelp.setHelp(simpleType, XSDEditorContextIds.XSDE_TYPE_HELPER_BUILT_IN);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(simpleType, XSDEditorContextIds.XSDE_TYPE_HELPER_BUILT_IN);
 
     if (showUserSimpleType)
     {
       userSimpleType = ViewUtility.createRadioButton(client, XSDEditorPlugin.getXSDString("_UI_RADIO_USER_DEFINED_SIMPLE_TYPE"));
-      WorkbenchHelp.setHelp(userSimpleType, XSDEditorContextIds.XSDE_TYPE_HELPER_USER_DEFINED_SIMPLE);
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(userSimpleType, XSDEditorContextIds.XSDE_TYPE_HELPER_USER_DEFINED_SIMPLE);
     }
 
     if (showUserComplexType)
     {
       userComplexType = ViewUtility.createRadioButton(client, XSDEditorPlugin.getXSDString("_UI_RADIO_USER_DEFINED_COMPLEX_TYPE"));
-      WorkbenchHelp.setHelp(userComplexType, XSDEditorContextIds.XSDE_TYPE_HELPER_USER_DEFINED_COMPLEX);
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(userComplexType, XSDEditorContextIds.XSDE_TYPE_HELPER_USER_DEFINED_COMPLEX);
     }
 
     //	  typeList = utility.createComboBox(client);
-    //	  WorkbenchHelp.setHelp(typeList, XSDEditorContextIds.XSDE_TYPE_HELPER_TYPE);
+    //	  PlatformUI.getWorkbench().getHelpSystem()..setHelp(typeList, XSDEditorContextIds.XSDE_TYPE_HELPER_TYPE);
     //    utility.createHeadingLabel(client, "Type",null);
 
     if (showDerivedBy)
@@ -94,7 +94,7 @@ public class TypeSection
       ViewUtility.createLabel(derivedByComposite, XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY"));
       derivedByCombo = ViewUtility.createComboBox(derivedByComposite);
       populateDerivedByCombo();
-      WorkbenchHelp.setHelp(derivedByCombo, XSDEditorContextIds.XSDE_SIMPLE_CONTENT_DERIVED);
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(derivedByCombo, XSDEditorContextIds.XSDE_SIMPLE_CONTENT_DERIVED);
       derivedByCombo.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_DERIVED_BY"));
     }
     // Set the default selection

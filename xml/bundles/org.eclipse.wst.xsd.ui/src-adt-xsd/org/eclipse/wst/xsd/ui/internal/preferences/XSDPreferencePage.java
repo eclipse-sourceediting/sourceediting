@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorContextIds;
@@ -50,7 +49,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
    */
   protected Control createContents(final Composite parent)
   {
-    WorkbenchHelp.setHelp(parent, XSDEditorContextIds.XSDP_PREFERENCE_PAGE);
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, XSDEditorContextIds.XSDP_PREFERENCE_PAGE);
 
     Group group = createGroup(parent, 2);   
     group.setText(Messages._UI_TEXT_XSD_NAMESPACE_PREFIX);
