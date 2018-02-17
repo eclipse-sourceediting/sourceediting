@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,14 +32,17 @@ public abstract class DataModelFacetInstallPage extends DataModelWizardPage impl
 		return new GridData(GridData.FILL_HORIZONTAL);
 	}
 
+	@Override
 	public void setWizardContext(IWizardContext context) {
 		// Intentionally empty
 	}
 
+	@Override
 	public void transferStateToConfig() {
 		// Intentionally empty
 	}
 
+	@Override
 	public void setConfig(final Object config) {
 		model.removeListener(this);
 		synchHelper.dispose();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -181,7 +181,7 @@ public class StructuredTextCompoundCommandImpl extends CompoundCommand implement
 			cursorPosition = fRedoCursorPosition;
 		else if (!commandList.isEmpty()) {
 			int commandListSize = commandList.size();
-			Command lastCommand = (Command) commandList.get(commandListSize - 1);
+			Command lastCommand = commandList.get(commandListSize - 1);
 
 			if (lastCommand instanceof CommandCursorPosition)
 				cursorPosition = ((CommandCursorPosition) lastCommand).getRedoCursorPosition();
@@ -212,7 +212,7 @@ public class StructuredTextCompoundCommandImpl extends CompoundCommand implement
 		else if (!commandList.isEmpty()) {
 			// never used
 			//int commandListSize = commandList.size();
-			Command firstCommand = (Command) commandList.get(0);
+			Command firstCommand = commandList.get(0);
 
 			if (firstCommand instanceof CommandCursorPosition)
 				cursorPosition = ((CommandCursorPosition) firstCommand).getUndoCursorPosition();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2011 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -197,6 +197,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         );
         
         IFacetedProjectListener fpjwcListenerForPrimaryFacetCombo = new IFacetedProjectListener() {
+			@Override
 			public void handleEvent(IFacetedProjectEvent event) {
 				if(event.getType() == IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED){
 					//this block is to update the combo when the underlying facet version changes
@@ -210,6 +211,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 							foundComboVersion = true;
 							final IProjectFacetVersion selectedVersion = next;
 							Display.getDefault().asyncExec(new Runnable(){
+								@Override
 								public void run() {
 									String selectedText = primaryVersionCombo.getItem(primaryVersionCombo.getSelectionIndex());
 									if(!selectedText.equals(selectedVersion.getVersionString())){
@@ -229,6 +231,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 				} else if(event.getType() == IFacetedProjectEvent.Type.PRIMARY_RUNTIME_CHANGED){
 					//this block updates the items in the combo when the runtime changes
 					Display.getDefault().asyncExec(new Runnable(){
+						@Override
 						public void run() {
 							updatePrimaryVersions();
 						}
@@ -333,7 +336,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	}
 	
 	protected void createPresetPanel(Composite top) {
-		final IFacetedProjectWorkingCopy fpjwc
+		final IFacetedProjectWorkingCopy workingCopy
             = ( (ModifyFacetedProjectWizard) getWizard() ).getFacetedProjectWorkingCopy();
 		
 		final IFilter<IPreset> filter = new AbstractFilter<IPreset>()
@@ -341,16 +344,18 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		    {
 		    	IFacetedProjectListener fpjwcListenerForPreset = new IFacetedProjectListener()
 	            {
-                    public void handleEvent( final IFacetedProjectEvent event )
+                    @Override
+					public void handleEvent( final IFacetedProjectEvent event )
                     {
                         handleProjectFacetsChangedEvent( (IProjectFacetsChangedEvent) event );
                     }
 	            };
 	            facetedProjectListeners.add(fpjwcListenerForPreset);
-		        fpjwc.addListener(fpjwcListenerForPreset, IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED );
+		        workingCopy.addListener(fpjwcListenerForPreset, IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED );
 		    }
 		    
-            public boolean check( final IPreset preset )
+            @Override
+			public boolean check( final IPreset preset )
             {
                 final IProjectFacetVersion primaryFacetVersion = getPrimaryFacetVersion();
                 return preset.getProjectFacets().contains( primaryFacetVersion );
@@ -371,7 +376,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
             }
 		};
 
-        final PresetSelectionPanel ppanel = new PresetSelectionPanel( top, fpjwc, filter );
+        final PresetSelectionPanel ppanel = new PresetSelectionPanel( top, workingCopy, filter );
         
         ppanel.setLayoutData( gdhfill() );
 	}
@@ -393,7 +398,8 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		
 		final IDataModelListener listener = new IDataModelListener()
 		{
-            public void propertyChanged( final DataModelEvent event )
+            @Override
+			public void propertyChanged( final DataModelEvent event )
             {
                 if( event.getPropertyName().equals( FACET_RUNTIME ) &&
                     event.getFlag() == DataModelEvent.VALID_VALUES_CHG )
@@ -489,11 +495,13 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         
         this.fpjwcListener = new IFacetedProjectListener()
         {
-            public void handleEvent( final IFacetedProjectEvent event )
+            @Override
+			public void handleEvent( final IFacetedProjectEvent event )
             {
                 final Runnable runnable = new Runnable()
                 {
-                    public void run()
+                    @Override
+					public void run()
                     {
                         validatePage();
                     }

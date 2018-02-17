@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 IBM Corporation and others.
+ * Copyright (c) 2011, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ public class CustomFilterPropertyTester extends PropertyTester {
 		if (receiver instanceof IEditorPart) {
 			Object textEditor = ((IEditorPart) receiver).getAdapter(ITextEditor.class);
 			if (textEditor instanceof StructuredTextEditor) {
-				IContentOutlinePage outlinePage  = (IContentOutlinePage) ((IEditorPart) receiver).getAdapter(IContentOutlinePage.class);
+				IContentOutlinePage outlinePage  = ((IEditorPart) receiver).getAdapter(IContentOutlinePage.class);
 				return (outlinePage instanceof ConfigurableContentOutlinePage && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed());
 			}
 		}

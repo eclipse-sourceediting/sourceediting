@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 IBM Corporation and others.
+ * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -340,7 +340,7 @@ public class TestJSPContentAssistComputers extends TestCase {
 				IEditorPart editorPart = IDE.openEditor(page, file, true, true);
 				if(editorPart instanceof MultiPageEditorPart) {
 					MultiPageEditorPart xmlEditorPart = (MultiPageEditorPart)editorPart;
-					editor = (StructuredTextEditor) xmlEditorPart.getAdapter(StructuredTextEditor.class);
+					editor = xmlEditorPart.getAdapter(StructuredTextEditor.class);
 				} else if(editorPart instanceof StructuredTextEditor) {
 					editor = ((StructuredTextEditor)editorPart);
 				} else {

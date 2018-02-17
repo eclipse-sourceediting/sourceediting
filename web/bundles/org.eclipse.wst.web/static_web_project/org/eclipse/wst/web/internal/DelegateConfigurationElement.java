@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
+	@Override
 	public Object createExecutableExtension(String propertyName) throws CoreException {
 		if (delegateElement == null)
 			return null;
@@ -61,6 +62,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public String getAttribute(String name) throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return null;
@@ -72,6 +74,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public String getAttributeAsIs(String name) throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return null;
@@ -82,6 +85,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public String[] getAttributeNames() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return new String[0];
@@ -92,6 +96,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public IConfigurationElement[] getChildren() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return new IConfigurationElement[0];
@@ -103,6 +108,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public IConfigurationElement[] getChildren(String name) throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return new IConfigurationElement[0];
@@ -113,6 +119,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public IExtension getDeclaringExtension() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			throw new InvalidRegistryObjectException();
@@ -123,6 +130,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public String getName() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return DELEGATE_NAME;
@@ -133,6 +141,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public String getNamespace() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return DELEGATE_NAMESPACE;
@@ -143,6 +152,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public Object getParent() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return null;
@@ -153,6 +163,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public String getValue() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return null;
@@ -163,6 +174,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * @return
 	 * @throws org.eclipse.core.runtime.InvalidRegistryObjectException
 	 */
+	@Override
 	public String getValueAsIs() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return null;
@@ -184,6 +196,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	/**
 	 * @return
 	 */
+	@Override
 	public boolean isValid() {
 
 		if (delegateElement == null)
@@ -194,6 +207,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	/**
 	 * @return 
 	 */
+	@Override
 	public int getHandleId() {
 		if( delegateElement == null )
 			return -1;
@@ -216,12 +230,14 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 		return null;
 	}
 
+	@Override
 	public IContributor getContributor() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			throw new InvalidRegistryObjectException();
 		return delegateElement.getContributor();
 	}
 
+	@Override
 	public String getNamespaceIdentifier() throws InvalidRegistryObjectException {
 		if (delegateElement == null)
 			return DELEGATE_NAMESPACE;
@@ -229,12 +245,14 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	}
 
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=296122
+	@Override
 	public String getAttribute(String attrName, String locale) throws InvalidRegistryObjectException {
 		if (delegateElement == null) return null;
 		return delegateElement.getAttribute(attrName, locale);
 	}
 
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=296122
+	@Override
 	public String getValue(String locale) throws InvalidRegistryObjectException {
 		if (delegateElement == null) return null;
 		return delegateElement.getValue(locale);

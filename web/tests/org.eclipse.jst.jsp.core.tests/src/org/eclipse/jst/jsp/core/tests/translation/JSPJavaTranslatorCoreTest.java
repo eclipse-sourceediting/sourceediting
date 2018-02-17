@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2017 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -575,9 +575,9 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			assertNotNull("No Java translation found", translation);
 			translation.reconcileCompilationUnit();
 			translation.setProblemCollectingActive(false);
-			List problems = translation.getProblems();
+			List<IProblem> problems = translation.getProblems();
 			assertNotNull("Translation had a null problems list.", problems);
-			Iterator it = problems.iterator();
+			Iterator<IProblem> it = problems.iterator();
 			String javaText = translation.getJavaText();
 			int startOffset = javaText.indexOf("<plain:simple>");
 			assertTrue("<plan:simple> scope not found.", startOffset > 0);
@@ -585,7 +585,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			assertTrue("</plan:simple> scope not found.", endOffset > 0);
 			// Finds all errors caused by "continue cannot be used outside of a loop" - should only occur between <plain:simple></plain:simple>
 			while (it.hasNext()) {
-				IProblem problem = (IProblem) it.next();
+				IProblem problem = it.next();
 				if (problem.isError()) {
 					if ("continue cannot be used outside of a loop".equals(problem.getMessage())) {
 						assertTrue("'continue cannot be used outside of a loop' outside of iteration tag: ", problem.getSourceStart() > startOffset && problem.getSourceEnd() < endOffset);

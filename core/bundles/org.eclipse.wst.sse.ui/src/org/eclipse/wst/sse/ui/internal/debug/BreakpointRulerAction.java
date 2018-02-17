@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,9 +96,9 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 		if (input instanceof IFileEditorInput)
 			resource = ((IFileEditorInput) input).getFile();
 		if (resource == null)
-			resource = (IResource) input.getAdapter(IFile.class);
+			resource = input.getAdapter(IFile.class);
 		if (resource == null)
-			resource = (IResource) input.getAdapter(IResource.class);
+			resource = input.getAdapter(IResource.class);
 
 		IEditorPart editorPart = null;
 		if (resource == null) {
@@ -119,7 +119,7 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 										textEditor = (ITextEditor) editorPart;
 									}
 									if (textEditor == null) {
-										textEditor = (ITextEditor) editorPart.getAdapter(ITextEditor.class);
+										textEditor = editorPart.getAdapter(ITextEditor.class);
 									}
 									if (textEditor != null) {
 										IDocument textDocument = textEditor.getDocumentProvider().getDocument(input);

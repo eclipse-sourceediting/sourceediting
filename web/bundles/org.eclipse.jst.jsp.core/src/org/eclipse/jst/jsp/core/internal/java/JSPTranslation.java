@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.WorkingCopyOwner;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.Logger;
 
@@ -83,13 +84,13 @@ public class JSPTranslation implements IJSPTranslation {
 	private String fJavaText = ""; //$NON-NLS-1$
 	private String fJspText = ""; //$NON-NLS-1$
 	
-	private ICompilationUnit fCompilationUnit = null;
+	ICompilationUnit fCompilationUnit = null;
 	private IProgressMonitor fProgressMonitor = null;
 	/** lock to synchronize access to the compilation unit **/
 	private byte[] fLock = null;
 	private String fMangledName;
 	private String fJspName;
-	private List fTranslationProblems;
+	private List<IProblem> fTranslationProblems;
 	private Collection fIncludedPaths;
 	
 	/** the {@link JSPTranslator} used by this {@link JSPTranslator} */
@@ -497,14 +498,14 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @return the List of problems collected during reconcile of the compilation unit
 	 */
 	public List getProblems() {
-		List problems = getProblemRequestor().getCollectedProblems();
+		List<IProblem> problems = getProblemRequestor().getCollectedProblems();
 		if (problems != null) {
 			if (fTranslationProblems.isEmpty()) {
 				return problems;
 			}
-			List combinedProblems = null;
+			List<IProblem> combinedProblems = null;
 			synchronized (problems) {
-				combinedProblems = new ArrayList(problems);
+				combinedProblems = new ArrayList<>(problems);
 			}
 			combinedProblems.addAll(fTranslationProblems);
 			return combinedProblems;

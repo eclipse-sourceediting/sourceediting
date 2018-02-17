@@ -30,17 +30,21 @@ public abstract class AbstractOpenWizardAction implements IWorkbenchWindowAction
 		super();
 	}
 
+	@Override
 	public void dispose()
 	{
 	}
 
+	@Override
 	public void init( IWorkbenchWindow window )
 	{
 		this.window = window;
 	}
 
+	@Override
 	abstract public void run( IAction action );
 
+	@Override
 	public void selectionChanged( IAction action, ISelection selection )
 	{
 	}

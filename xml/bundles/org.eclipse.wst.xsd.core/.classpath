@@ -1,41 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src-contentmodel" />
-	<classpathentry kind="src" path="src-validation" />
-	<classpathentry kind="src" path="src" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.4">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<accessrules>
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/impl/Constants" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/parsers/XMLGrammarPreparser" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/util/XMLGrammarPoolImpl" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/xni/XMLResourceIdentifier" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/xni/XNIException" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/xni/grammars/XMLGrammarDescription" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/xni/parser/XMLEntityResolver" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/xni/parser/XMLErrorHandler" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/xni/parser/XMLInputSource" />
-			<accessrule kind="accessible"
-				pattern="org/apache/xerces/xni/parser/XMLParseException" />
+			<accessrule kind="accessible" pattern="org/apache/xerces/impl/Constants"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/parsers/XMLGrammarPreparser"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/util/XMLGrammarPoolImpl"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/xni/XMLResourceIdentifier"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/xni/XNIException"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/xni/grammars/XMLGrammarDescription"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/xni/parser/XMLEntityResolver"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/xni/parser/XMLErrorHandler"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/xni/parser/XMLInputSource"/>
+			<accessrule kind="accessible" pattern="org/apache/xerces/xni/parser/XMLParseException"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="con"
-		path="org.eclipse.pde.core.requiredPlugins">
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
-			<accessrule kind="accessible"
-				pattern="org/eclipse/wst/validation/internal/provisional/core/IMessage" />
-			<accessrule kind="accessible"
-				pattern="org/eclipse/wst/validation/internal/delegates/DelegatingValidator" />
+			<accessrule kind="accessible" pattern="org/eclipse/wst/validation/internal/provisional/core/IMessage"/>
+			<accessrule kind="accessible" pattern="org/eclipse/wst/validation/internal/delegates/DelegatingValidator"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="output" path="bin" />
+	<classpathentry kind="src" path="src-contentmodel"/>
+	<classpathentry kind="src" path="src-validation"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

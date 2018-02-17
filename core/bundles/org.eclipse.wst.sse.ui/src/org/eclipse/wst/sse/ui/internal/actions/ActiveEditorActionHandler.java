@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -274,7 +274,7 @@ public class ActiveEditorActionHandler implements IAction {
 			if (part instanceof ITextEditor)
 				editor = (ITextEditor) part;
 			else
-				editor = (ITextEditor) (part != null ? part.getAdapter(ITextEditor.class) : null);
+				editor = part != null ? part.getAdapter(ITextEditor.class) : null;
 			if (editor != null) {
 				fTargetAction = editor.getAction(fActionId);
 			} else {

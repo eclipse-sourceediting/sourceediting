@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007, 2018 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,13 +38,13 @@ public class TestModelAdapters extends TestCase {
 		try {
 			boolean test = structuredModel.getId().equals(IModelManager.UNMANAGED_MODEL);
 			assertTrue(test);
-			ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) structuredModel.getAdapter(ModelQueryAdapter.class);
+			ModelQueryAdapter modelQueryAdapter = structuredModel.getAdapter(ModelQueryAdapter.class);
 			assertNotNull("initial modelQueryAdapter should not be null", modelQueryAdapter);
 			IStructuredModel newModel = structuredModel.newInstance();
 			// IDOMDocument newDocument = ((IDOMModel)
 			// newModel).getDocument();
 			// INodeNotifier notifier = newDocument;
-			ModelQueryAdapter result = (ModelQueryAdapter) newModel.getAdapter(ModelQueryAdapter.class);
+			ModelQueryAdapter result = newModel.getAdapter(ModelQueryAdapter.class);
 			assertNotNull("newInstance modelQueryAdapter should not be null", result);
 
 		}

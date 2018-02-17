@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -85,13 +85,13 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 		IBreakpointProvider[] providers = BreakpointProviderBuilder.getInstance().getBreakpointProviders(editor, contentType, getFileExtension(input));
 
 		int pos = -1;
-		ISourceEditingTextTools tools = (ISourceEditingTextTools) editor.getAdapter(ISourceEditingTextTools.class);
+		ISourceEditingTextTools tools = editor.getAdapter(ISourceEditingTextTools.class);
 		if (tools != null) {
 			pos = tools.getCaretOffset();
 		}
 
 		final int n = providers.length;
-		List errors = new ArrayList(0);
+		List<IStatus> errors = new ArrayList<>(0);
 		for (int i = 0; i < n; i++) {
 			try {
 				if (Debug.debugBreakpoints)
@@ -113,10 +113,10 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 		if (errors.size() > 0) {
 			Shell shell = editor.getSite().getShell();
 			if (errors.size() > 1) {
-				status = new MultiStatus(SSEUIPlugin.ID, IStatus.OK, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
+				status = new MultiStatus(SSEUIPlugin.ID, IStatus.OK, errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
 			}
 			else {
-				status = (IStatus) errors.get(0);
+				status = errors.get(0);
 			}
 			if ((status.getSeverity() > IStatus.INFO) || (Platform.inDebugMode() && !status.isOK())) {
 				Platform.getLog(SSEUIPlugin.getDefault().getBundle()).log(status);

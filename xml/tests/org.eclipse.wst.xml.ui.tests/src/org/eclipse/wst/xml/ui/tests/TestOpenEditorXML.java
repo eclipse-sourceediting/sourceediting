@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -120,7 +120,7 @@ public class TestOpenEditorXML extends TestCase {
 	 * Test setting text in document of open editor.
 	 */
 	public void testSetDocument() {
-		IDocument document = (IDocument) fEditor.getAdapter(IDocument.class);
+		IDocument document = fEditor.getAdapter(IDocument.class);
 		try {
 			document.set("<hello></hello>");
 		}
@@ -134,7 +134,7 @@ public class TestOpenEditorXML extends TestCase {
 	 * 
 	 */
 	public void testBug151069() {
-		IDocument doc = (IDocument) fEditor.getAdapter(IDocument.class);
+		IDocument doc = fEditor.getAdapter(IDocument.class);
 		doc.set("<html><body><h1>Title</h1></body></html>");
 		// set h1 to readonly
 		IModelManager modelManager = StructuredModelManager.getModelManager();

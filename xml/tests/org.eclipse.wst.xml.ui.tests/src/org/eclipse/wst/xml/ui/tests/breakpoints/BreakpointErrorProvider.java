@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,9 +47,9 @@ public class BreakpointErrorProvider implements IBreakpointProvider {
 	 * @see org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider#getResource(org.eclipse.ui.IEditorInput)
 	 */
 	public IResource getResource(IEditorInput input) {
-		IResource res = (IResource) input.getAdapter(IFile.class);
+		IResource res = input.getAdapter(IFile.class);
 		if (res == null)
-			res = (IResource) input.getAdapter(IResource.class);
+			res = input.getAdapter(IResource.class);
 		return res;
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -182,7 +182,7 @@ public class DebugTextEditor extends TextEditor {
 		// StructuredTextEditor Action - toggle breakpoints
 		IAction action = new ToggleBreakpointAction(this, getVerticalRuler()) {
 			protected String getContentType(IDocument document) {
-				ILocationProvider provider = (ILocationProvider) getEditorInput().getAdapter(ILocationProvider.class);
+				ILocationProvider provider = getEditorInput().getAdapter(ILocationProvider.class);
 				if (provider != null) {
 					IPath location = provider.getPath(getEditorInput());
 					return detectContentType(location).getId();
@@ -333,10 +333,10 @@ public class DebugTextEditor extends TextEditor {
 		IResource resource = null;
 
 		if (input.getAdapter(IFile.class) != null) {
-			resource = (IFile) input.getAdapter(IFile.class);
+			resource = input.getAdapter(IFile.class);
 		}
 		else if (input.getAdapter(IFile.class) != null) {
-			resource = (IResource) input.getAdapter(IResource.class);
+			resource = input.getAdapter(IResource.class);
 		}
 		if (resource.getType() == IResource.FILE && resource.isAccessible()) {
 			IContentDescription d = null;

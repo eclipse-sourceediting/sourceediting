@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ public class XMLEditorTester extends PropertyTester {
 			if (receiver instanceof ITextEditor)
 				editor = (ITextEditor) receiver;
 			else
-				editor = (ITextEditor) ((IEditorPart) receiver).getAdapter(ITextEditor.class);
+				editor = ((IEditorPart) receiver).getAdapter(ITextEditor.class);
 			if (editor != null) {
 				IEditorSite site = editor.getEditorSite();
 				if (site != null) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -52,7 +51,7 @@ class EditorExecutionContext implements IExecutionDelegate {
 		public void run() {
 			IWorkbenchPartSite site = editor.getEditorPart().getSite();
 			final IWorkbenchWindow workbenchWindow = (site == null) ? null : site.getWorkbenchWindow();
-			final IWorkbenchSiteProgressService jobService = (IWorkbenchSiteProgressService) ((site == null) ? null : site.getAdapter(IWorkbenchSiteProgressService.class));
+			final IWorkbenchSiteProgressService jobService = (site == null) ? null : site.getAdapter(IWorkbenchSiteProgressService.class);
 			/*
 			 * Try to use the progress service so the workbench can give more
 			 * feedback to the user (although editors seem to make less use of
@@ -65,7 +64,7 @@ class EditorExecutionContext implements IExecutionDelegate {
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=165180
 				 */
 				try {
-					jobService.runInUI(workbenchWindow, this, (ISchedulingRule) editor.getEditorPart().getEditorInput().getAdapter(IResource.class));
+					jobService.runInUI(workbenchWindow, this, editor.getEditorPart().getEditorInput().getAdapter(IResource.class));
 				}
 				catch (InvocationTargetException e) {
 					Logger.logException(e);

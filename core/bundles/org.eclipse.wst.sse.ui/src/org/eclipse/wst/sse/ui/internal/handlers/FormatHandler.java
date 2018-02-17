@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2018 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,7 +68,7 @@ public class FormatHandler extends AbstractHandler implements IHandler {
 				if (activePage != null) {
 					IWorkbenchPart activePart = activePage.getActivePart();
 					if (activePart != null) {
-						service = (IWorkbenchSiteProgressService) activePart.getSite().getAdapter(IWorkbenchSiteProgressService.class);
+						service = activePart.getSite().getAdapter(IWorkbenchSiteProgressService.class);
 					}
 				}
 			}

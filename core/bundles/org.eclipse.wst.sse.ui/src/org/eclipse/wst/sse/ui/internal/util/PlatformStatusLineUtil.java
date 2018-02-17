@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -126,7 +126,7 @@ public class PlatformStatusLineUtil {
 		IEditorPart editor = getActiveEditor();
 		boolean added = false;
 		if (editor != null) {
-			Control control = (Control) editor.getAdapter(Control.class);
+			Control control = editor.getAdapter(Control.class);
 			if (control instanceof StyledText) {
 				new OneTimeListener((StyledText) control, new ClearMessage());
 				added = true;
@@ -214,7 +214,7 @@ public class PlatformStatusLineUtil {
 		boolean messageShown = false;
 		IEditorPart editor = getActiveEditor();
 		if (editor != null) {
-			ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+			ITextEditor textEditor = editor.getAdapter(ITextEditor.class);
 			if (textEditor != null && textEditor instanceof StructuredTextEditor) {
 				if (((StructuredTextEditor) textEditor).getTextViewer() == viewer) {
 					IStatusLineManager statusLineManager = editor.getEditorSite().getActionBars().getStatusLineManager();

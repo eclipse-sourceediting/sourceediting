@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2015 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -307,7 +307,7 @@ public class StructuredTextEditor extends TextEditor {
 				// content type change)
 				((ITextViewerExtension) getSourceViewer()).setRedraw(true);
 				
-				IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService) getSite().getService(IWorkbenchSiteProgressService.class);
+				IWorkbenchSiteProgressService service = getSite().getService(IWorkbenchSiteProgressService.class);
 				if (service != null) {
 					service.warnOfContentChange();
 				}
@@ -1436,7 +1436,7 @@ public class StructuredTextEditor extends TextEditor {
 		computeAndSetDoubleClickAction();
 		
 		//add handlers to handler service
-		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		IHandlerService handlerService = getSite().getService(IHandlerService.class);
 		if (handlerService != null) {
 			
 			IHandler gotoHandler = new GotoMatchingBracketHandler();
@@ -1500,7 +1500,7 @@ public class StructuredTextEditor extends TextEditor {
 
 	protected void createModelDependentFields() {
 		if (fStructuredSelectionProvider != null) {
-			SelectionConvertor convertor = (SelectionConvertor) fStructuredModel.getAdapter(SelectionConvertor.class);
+			SelectionConvertor convertor = fStructuredModel.getAdapter(SelectionConvertor.class);
 			if (convertor != null)
 				fStructuredSelectionProvider.selectionConvertor = convertor;
 			else
@@ -1518,7 +1518,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
-		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
+		IContextService contextService = getSite().getService(IContextService.class);
 		if (contextService != null)
 			contextService.activateContext(EDITOR_KEYBINDING_SCOPE_ID);
 
@@ -2377,7 +2377,7 @@ public class StructuredTextEditor extends TextEditor {
 					}
 				});
 				if (fStructuredModel != null) {
-					SelectionConvertor convertor = (SelectionConvertor) fStructuredModel.getAdapter(SelectionConvertor.class);
+					SelectionConvertor convertor = fStructuredModel.getAdapter(SelectionConvertor.class);
 					if (convertor != null) {
 						fStructuredSelectionProvider.selectionConvertor = convertor;
 					}
@@ -3239,7 +3239,7 @@ public class StructuredTextEditor extends TextEditor {
 			updateHelpContextId(contentType + "_source_HelpId"); //$NON-NLS-1$
 			
 			/* Activate the contexts defined for this editor */
-			activateContexts((IContextService) getSite().getService(IContextService.class));
+			activateContexts(getSite().getService(IContextService.class));
 		}
 	}
 	

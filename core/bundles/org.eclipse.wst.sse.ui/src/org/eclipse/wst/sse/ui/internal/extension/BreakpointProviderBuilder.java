@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -322,7 +322,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 		int i = 0;
 		ISourceEditingTextTools tools = null;
 		if (editorpart != null && itr.hasNext())
-			tools = (ISourceEditingTextTools) editorpart.getAdapter(ISourceEditingTextTools.class);
+			tools = editorpart.getAdapter(ISourceEditingTextTools.class);
 		while (itr.hasNext()) {
 			providers[i] = (IBreakpointProvider) itr.next();
 			providers[i].setSourceEditingTextTools(tools);

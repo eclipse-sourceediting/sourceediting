@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,7 +83,7 @@ public class StringUtils {
 	 * @return the list of words
 	 */
 	public static String[] asArray(String value) {
-		ArrayList list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		StringTokenizer stok = new StringTokenizer(value);
 		while (stok.hasMoreTokens()) {
 			list.add(stok.nextToken());
@@ -116,7 +116,7 @@ public class StringUtils {
 	 * @return the list of words
 	 */
 	public static String[] asArray(String value, String delim, boolean returnTokens) {
-		ArrayList list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		StringTokenizer stok = new StringTokenizer(value, delim, returnTokens);
 		while (stok.hasMoreTokens()) {
 			list.add(stok.nextToken());
@@ -732,13 +732,13 @@ public class StringUtils {
 		if (s == null)
 			return new String[0];
 		StringTokenizer toker = new StringTokenizer(s, ","); //$NON-NLS-1$
-		List list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		while (toker.hasMoreTokens()) {
 			// since we're separating the values with ',', escape ',' in the
 			// values
 			list.add(StringUtils.replace(toker.nextToken(), "&comma;", ",").trim()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		return (String[]) list.toArray(new String[0]);
+		return list.toArray(new String[0]);
 	}
 
 	/**

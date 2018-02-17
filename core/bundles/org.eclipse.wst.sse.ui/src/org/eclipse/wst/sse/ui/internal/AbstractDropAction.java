@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ public abstract class AbstractDropAction implements IDropAction {
 		IDocument doc = null;
 		ISelection selection = null;
 
-		ISourceEditingTextTools tools = (ISourceEditingTextTools) targetEditor.getAdapter(ISourceEditingTextTools.class);
+		ISourceEditingTextTools tools = targetEditor.getAdapter(ISourceEditingTextTools.class);
 		if (tools != null) {
 			doc = tools.getDocument();
 			selection = tools.getSelection();
@@ -51,13 +51,13 @@ public abstract class AbstractDropAction implements IDropAction {
 			textEditor = (ITextEditor) targetEditor;
 		}
 		if (textEditor == null) {
-			textEditor = (ITextEditor) ((IAdaptable) targetEditor).getAdapter(ITextEditor.class);
+			textEditor = ((IAdaptable) targetEditor).getAdapter(ITextEditor.class);
 		}
 		if (textEditor == null && tools != null && tools.getEditorPart() instanceof ITextEditor) {
 			textEditor = (ITextEditor) tools.getEditorPart();
 		}
 		if (textEditor == null && tools != null && tools.getEditorPart() != null) {
-			textEditor = (ITextEditor) tools.getEditorPart().getAdapter(ITextEditor.class);
+			textEditor = tools.getEditorPart().getAdapter(ITextEditor.class);
 		}
 
 		if (selection == null && textEditor != null) {

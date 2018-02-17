@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2014 IBM Corporation and others.
+ * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -777,7 +777,7 @@ public class StructuredContentAssistProcessor implements IContentAssistProcessor
 	 * @return {@link KeySequence} used by user to iterate to the next page
 	 */
 	private KeySequence getIterationBinding() {
-	    final IBindingService bindingSvc= (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+	    final IBindingService bindingSvc= PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 		TriggerSequence binding= bindingSvc.getBestActiveBindingFor(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		if (binding instanceof KeySequence)
 			return (KeySequence) binding;

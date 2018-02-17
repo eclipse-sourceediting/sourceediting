@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2013 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -412,7 +412,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			 * this way so content type specific decisions can be made without
 			 * this plugin being aware of any content type specifics.
 			 */
-			ISpellcheckDelegate delegate = (ISpellcheckDelegate) Platform.getAdapterManager().getAdapter(structuredModel, ISpellcheckDelegate.class);
+			ISpellcheckDelegate delegate = Platform.getAdapterManager().getAdapter(structuredModel, ISpellcheckDelegate.class);
 			if (delegate != null) {
 				decision = delegate.shouldSpellcheck(offset, structuredModel);
 			}

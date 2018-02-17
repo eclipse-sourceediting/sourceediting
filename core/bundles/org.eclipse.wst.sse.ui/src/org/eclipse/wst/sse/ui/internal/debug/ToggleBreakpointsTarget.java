@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,9 +30,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-/**
- * @author nsd
- */
 public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 	static final IToggleBreakpointsTarget instance = new ToggleBreakpointsTarget();
 
@@ -54,7 +51,7 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public boolean canToggleLineBreakpoints(IWorkbenchPart part, ISelection selection) {
-		ITextEditor editor = (ITextEditor) part.getAdapter(ITextEditor.class);
+		ITextEditor editor = part.getAdapter(ITextEditor.class);
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
@@ -96,7 +93,7 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 	}
 
 	private IBreakpoint[] getBreakpoints(IResource resource, IDocument document, AbstractMarkerAnnotationModel model, int lineNumber) {
-		List markers = new ArrayList();
+		List<IMarker> markers = new ArrayList<>();
 		if (resource != null && model != null && resource.exists()) {
 			try {
 				IMarker[] allMarkers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
@@ -119,14 +116,14 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 			}
 		}
 		IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
-		List breakpoints = new ArrayList(markers.size());
+		List<IBreakpoint> breakpoints = new ArrayList<>(markers.size());
 		for (int i = 0; i < markers.size(); i++) {
-			IBreakpoint breakpoint = manager.getBreakpoint((IMarker) markers.get(i));
+			IBreakpoint breakpoint = manager.getBreakpoint(markers.get(i));
 			if (breakpoint != null) {
 				breakpoints.add(breakpoint);
 			}
 		}
-		return (IBreakpoint[]) breakpoints.toArray(new IBreakpoint[0]);
+		return breakpoints.toArray(new IBreakpoint[0]);
 	}
 
 	/*
@@ -136,7 +133,7 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException {
-		ITextEditor editor = (ITextEditor) part.getAdapter(ITextEditor.class);
+		ITextEditor editor = part.getAdapter(ITextEditor.class);
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());

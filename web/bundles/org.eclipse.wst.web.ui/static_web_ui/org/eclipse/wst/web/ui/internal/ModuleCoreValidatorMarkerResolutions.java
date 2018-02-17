@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 BEA Systems, Inc.
+ * Copyright (c) 2005, 2018 BEA Systems, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,8 @@ public final class ModuleCoreValidatorMarkerResolutions
     implements IMarkerResolutionGenerator
     
 {
-    public IMarkerResolution[] getResolutions( IMarker marker )
+    @Override
+	public IMarkerResolution[] getResolutions( IMarker marker )
     {
         return new IMarkerResolution[] 
         { 
@@ -56,14 +57,16 @@ public final class ModuleCoreValidatorMarkerResolutions
             this.theMarker = marker;
         }
         
-        public String getLabel()
+        @Override
+		public String getLabel()
         {
             return Resources.migrateMetaData;
         }
 
         
         
-        public void run( IMarker marker )
+        @Override
+		public void run( IMarker marker )
         {
             
             IProject proj = marker.getResource().getProject();
@@ -80,10 +83,12 @@ public final class ModuleCoreValidatorMarkerResolutions
             }
         }
 
+		@Override
 		public String getDescription() {
 			return Resources.migrateMetaData;
 		}
 
+		@Override
 		public Image getImage() {
 			return null;
 		}

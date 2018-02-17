@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2012 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2018 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,8 +73,8 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 					// Force a Refresh on this command so that the image can
 					// be
 					// updated.
-					ICommandService commandService = (ICommandService) HandlerUtil.getActiveWorkbenchWindow(event).getService(ICommandService.class);
-					Map filter = new HashMap();
+					ICommandService commandService = HandlerUtil.getActiveWorkbenchWindow(event).getService(ICommandService.class);
+					Map<String,IWorkbenchWindow> filter = new HashMap<>();
 					filter.put(IServiceScopes.WINDOW_SCOPE, HandlerUtil.getActiveWorkbenchWindow(event));
 					commandService.refreshElements(event.getCommand().getId(), filter);
 				}

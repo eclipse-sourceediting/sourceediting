@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Red Hat and others.
+ * Copyright (c) 2009, 2018 Red Hat and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,10 +57,12 @@ public abstract class FlatComponentDeployable extends ProjectModule implements I
 	 */
 	static {
 		Platform.getAdapterManager().registerAdapters(new IAdapterFactory() {
+			@Override
 			public Class[] getAdapterList() {
 				return new Class[] { IVirtualComponent.class };
 			}
 
+			@Override
 			public Object getAdapter(Object adaptableObject, Class adapterType) {
 				if (adaptableObject instanceof IModule) {
 					IModule module = (IModule) adaptableObject;
@@ -133,11 +135,13 @@ public abstract class FlatComponentDeployable extends ProjectModule implements I
 	 * 
 	 * @return
 	 */
+	@Override
 	public IFlattenParticipant[] getParticipants() {
 		String[] ids = getParticipantIds();
 		return getFlattenParticipants(ids);
 	}
 
+	@Override
 	public String[] getParticipantIds() {
 		// If file exists, load from file
 		String participants = component.getMetaProperties().getProperty(FLATTEN_PARTICIPANTS);
@@ -164,6 +168,7 @@ public abstract class FlatComponentDeployable extends ProjectModule implements I
 	}
 	
 	
+	@Override
 	public void addFlattenParticipant(String id, int position) {
 		String participants = component.getMetaProperties().getProperty(FLATTEN_PARTICIPANTS);
 		String[] split = participants == null ? getDefaultFlattenParticipantIDs() : participants.split(","); //$NON-NLS-1$
@@ -195,6 +200,7 @@ public abstract class FlatComponentDeployable extends ProjectModule implements I
 		return retval;
 	}
 	
+	@Override
 	public void removeFlattenParticipant(String id) {
 		String participants = component.getMetaProperties().getProperty(FLATTEN_PARTICIPANTS);
 		String[] split = participants == null ? getDefaultFlattenParticipantIDs() : participants.split(","); //$NON-NLS-1$
@@ -210,6 +216,7 @@ public abstract class FlatComponentDeployable extends ProjectModule implements I
 	 * Get a list of participant keys that are default for this project type
 	 * @return
 	 */
+	@Override
 	public String[] getDefaultFlattenParticipantIDs() {
 		return new String[0];
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2017 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -118,7 +118,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import com.ibm.icu.text.NumberFormat;
 
 /**
- * @author nsd A Status Line contribution intended to display the selected
+ * @author nsd Debugging aid. A Status Line contribution intended to display the selected
  *         offsets in an editor. Double-clicking shows information about
  *         partitions, document regions, annotations, and selection.
  */
@@ -640,7 +640,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		 * @return
 		 */
 		private String getBOMText(IEditorInput editorInput) {
-			IFile file = (IFile) editorInput.getAdapter(IFile.class);
+			IFile file = editorInput.getAdapter(IFile.class);
 			String detectedBOM = "none"; //$NON-NLS-1$
 			if (file != null) {
 				InputStream s = null;
@@ -1210,7 +1210,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			 * beneath it.
 			 */
 			super.run();
-			new InformationDialog(((Control) fTextEditor.getAdapter(Control.class)).getShell()).open();
+			new InformationDialog(fTextEditor.getAdapter(Control.class).getShell()).open();
 		}
 	}
 

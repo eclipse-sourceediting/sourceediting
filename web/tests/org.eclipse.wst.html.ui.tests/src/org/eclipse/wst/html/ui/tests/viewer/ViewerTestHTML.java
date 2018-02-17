@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,7 @@ public class ViewerTestHTML extends ViewPart {
 	private final String SSE_EDITOR_FONT = "org.eclipse.wst.sse.ui.textfont";
 	private final String DEFAULT_VIEWER_CONTENTS = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<HTML>\n	<HEAD>\n		<META http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n		<TITLE>place title here</TITLE>\n	</HEAD>\n	<BODY>\n		place content here	\n<script>\n\"text\";\n</SCRIPT>\n</BODY>\n</HTML>";
 
-	private StructuredTextViewer fSourceViewer = null;
+	StructuredTextViewer fSourceViewer = null;
 	private StructuredTextViewerConfiguration fConfig = null;
 	private IContentOutlinePage fContentOutlinePage = null;
 	private ISelectionChangedListener fHighlightRangeListener = null;
@@ -404,7 +404,7 @@ public class ViewerTestHTML extends ViewPart {
 	/**
 	 * Set up source viewer with a new document & configure it
 	 */
-	private void setupViewerForNew() {
+	void setupViewerForNew() {
 		stopFollowSelection(); // if was following selection, stop
 
 		IModelManager modelManager = StructuredModelManager.getModelManager();
@@ -421,13 +421,13 @@ public class ViewerTestHTML extends ViewPart {
 	 * 
 	 * @return ITextEditor
 	 */
-	private ITextEditor getActiveEditor() {
+	ITextEditor getActiveEditor() {
 		ITextEditor editor = null;
 		IEditorPart editorPart = getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
 		if (editorPart instanceof ITextEditor)
 			editor = (ITextEditor) editorPart;
 		if (editor == null && editorPart != null)
-			editor = (ITextEditor) editorPart.getAdapter(ITextEditor.class);
+			editor = editorPart.getAdapter(ITextEditor.class);
 		return editor;
 	}
 
@@ -437,7 +437,7 @@ public class ViewerTestHTML extends ViewPart {
 	 * @param ITextEditor
 	 *            editor - the editor to use *cannot to be null*
 	 */
-	private void setupViewerForEditor(ITextEditor editor) {
+	void setupViewerForEditor(ITextEditor editor) {
 		stopFollowSelection(); // if was following selection, stop
 		IDocument doc = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 		fSourceViewer.setDocument(doc);
@@ -449,14 +449,14 @@ public class ViewerTestHTML extends ViewPart {
 	/**
 	 * Hooks up the viewer to follow the selection made in the active editor
 	 */
-	private void followSelection() {
+	void followSelection() {
 		ITextEditor editor = getActiveEditor();
 		if (editor != null) {
 			setupViewerForEditor(editor);
 			if (fHighlightRangeListener == null)
 				fHighlightRangeListener = new NodeRangeSelectionListener();
 
-			fContentOutlinePage = ((IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class));
+			fContentOutlinePage = (editor.getAdapter(IContentOutlinePage.class));
 			if (fContentOutlinePage != null) {
 				fContentOutlinePage.addSelectionChangedListener(fHighlightRangeListener);
 
@@ -485,7 +485,7 @@ public class ViewerTestHTML extends ViewPart {
 	/**
 	 * Cease following the selection made in the editor
 	 */
-	private void stopFollowSelection() {
+	void stopFollowSelection() {
 		if (fContentOutlinePage != null) {
 			fContentOutlinePage.removeSelectionChangedListener(fHighlightRangeListener);
 			fSourceViewer.resetVisibleRegion();

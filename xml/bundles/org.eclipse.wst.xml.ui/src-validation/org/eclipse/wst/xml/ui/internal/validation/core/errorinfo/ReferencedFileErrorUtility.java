@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -102,7 +102,7 @@ public class ReferencedFileErrorUtility {
 
 	static void gotoError(IEditorPart editorPart, int line, int column) {
 		if (editorPart != null) {
-			TextEditor textEditor = (TextEditor) editorPart.getAdapter(TextEditor.class);
+			TextEditor textEditor = editorPart.getAdapter(TextEditor.class);
 			if (textEditor != null) {
 				try {
 					IDocumentProvider dp = textEditor.getDocumentProvider();

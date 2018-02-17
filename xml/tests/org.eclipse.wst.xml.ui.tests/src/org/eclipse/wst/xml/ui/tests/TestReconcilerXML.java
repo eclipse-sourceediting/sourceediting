@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -129,9 +129,9 @@ public class TestReconcilerXML extends TestCase {
 	 * xml.
 	 */
 	public void testWellFormed() {
-		IDocument doc = (IDocument) fEditor.getAdapter(IDocument.class);
+		IDocument doc = fEditor.getAdapter(IDocument.class);
 		doc.set("<html><body><h1>Title</h1></body></html>");
-		ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
+		ITextEditor textEditor = fEditor.getAdapter(ITextEditor.class);
 		IAnnotationModel annoModel = textEditor.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		DefaultMarkerAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 
@@ -158,9 +158,9 @@ public class TestReconcilerXML extends TestCase {
 	 * (missing close bracket)
 	 */
 	public void testIllFormedNoCloseBracket() {
-		IDocument doc = (IDocument) fEditor.getAdapter(IDocument.class);
+		IDocument doc = fEditor.getAdapter(IDocument.class);
 		doc.set("<html><body><h1>Title</h1></body></html>");
-		ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
+		ITextEditor textEditor = fEditor.getAdapter(ITextEditor.class);
 		IAnnotationModel annoModel = textEditor.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		DefaultMarkerAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 
@@ -195,9 +195,9 @@ public class TestReconcilerXML extends TestCase {
 	 * (missing attribute value)
 	 */
 	public void testIllFormedNoAttrValue() {
-		IDocument doc = (IDocument) fEditor.getAdapter(IDocument.class);
+		IDocument doc = fEditor.getAdapter(IDocument.class);
 		doc.set("<html><body><h1>Title</h1></body></html>");
-		ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
+		ITextEditor textEditor = fEditor.getAdapter(ITextEditor.class);
 		IAnnotationModel annoModel = textEditor.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		DefaultMarkerAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 

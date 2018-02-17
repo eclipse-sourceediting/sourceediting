@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -164,7 +164,7 @@ public class TestSourceValidationFramework extends TestCase {
 		IFile file = ensureFileIsAccessible(PROJECT_NAME + SEPARATOR + fileName, null);
 		IEditorPart editor = IDE.openEditor(page, file, TestStructuredTextEditor.class.getName(), true);
 
-		ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+		ITextEditor textEditor = editor.getAdapter(ITextEditor.class);
 		TestStructuredTextEditor testTextEditor = (TestStructuredTextEditor) textEditor;
 		IReconciler reconciler = testTextEditor.textViewerConfiguration.getReconciler(testTextEditor.getTextViewer());
 

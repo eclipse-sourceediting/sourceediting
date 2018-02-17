@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 IBM Corporation and others.
+ * Copyright (c) 2007, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,7 +69,7 @@ public final class DeploymentDescriptorPropertyCache {
 		PropertyGroup[] groups;
 		long modificationStamp;
 		StringMatcher[] urlPatterns;
-		Float version = new Float(defaultWebAppVersion);
+		Float version = new Float(DEFAULT_WEBAPP_VERSION);
 	}
 
 	/**
@@ -553,7 +553,9 @@ public final class DeploymentDescriptorPropertyCache {
 	private static final DeploymentDescriptorPropertyCache _instance = new DeploymentDescriptorPropertyCache();
 	private static final boolean _debugResolutionCache = false;
 
-	static final float defaultWebAppVersion = 3f;
+	// Java Servlet API version
+	static final float DEFAULT_WEBAPP_VERSION = 4f;
+
 	static final String EL_IGNORED = "el-ignored"; //$NON-NLS-1$
 	static final String ID = "id"; //$NON-NLS-1$
 	static final String INCLUDE_CODA = "include-coda"; //$NON-NLS-1$
@@ -702,6 +704,10 @@ public final class DeploymentDescriptorPropertyCache {
 	 */
 	private float convertSpecVersions(float version) {
 		if (version > 0) {
+			if (version == 4f)
+				return 2.3f;
+			if (version == 3.1f)
+				return 2.3f;
 			if (version == 3f)
 				return 2.2f;
 			if (version == 2.5f)
@@ -715,7 +721,7 @@ public final class DeploymentDescriptorPropertyCache {
 			else if (version == 2.1f)
 				return 1.0f;
 		}
-		return convertSpecVersions(defaultWebAppVersion);
+		return convertSpecVersions(DEFAULT_WEBAPP_VERSION);
 	}
 
 	void deploymentDescriptorChanged(final IPath fullPath) {
@@ -737,7 +743,7 @@ public final class DeploymentDescriptorPropertyCache {
 		IStructuredModel model = null;
 		List groupList = new ArrayList();
 		List urlPatterns = new ArrayList();
-		Float[] version = new Float[]{new Float(defaultWebAppVersion)};
+		Float[] version = new Float[]{new Float(DEFAULT_WEBAPP_VERSION)};
 		SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 2);
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
 		builder.setEntityResolver(getEntityResolver());
@@ -848,7 +854,7 @@ public final class DeploymentDescriptorPropertyCache {
 	 *         path. A value stated within a web.xml file takes priority.
 	 */
 	public float getJSPVersion(IPath fullPath) {
-		float version = defaultWebAppVersion;
+		float version = DEFAULT_WEBAPP_VERSION;
 		/* try applicable web.xml file first */
 		DeploymentDescriptor descriptor = getCachedDescriptor(fullPath);
 		if (descriptor != null && descriptor.version != null) {

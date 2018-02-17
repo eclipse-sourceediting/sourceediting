@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2003, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -126,7 +126,8 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
         (
             new IFacetedProjectListener()
             {
-                public void handleEvent( final IFacetedProjectEvent event )
+                @Override
+				public void handleEvent( final IFacetedProjectEvent event )
                 {
                     facetSelectionChangedEvent();
                 }
@@ -201,6 +202,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 		return pages;
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 
@@ -209,6 +211,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
         final Boolean[] suppressBackEvents = { Boolean.FALSE };
         
 		model.addListener(new IDataModelListener() {
+			@Override
 			public void propertyChanged(DataModelEvent event) {
 				if (IDataModel.VALUE_CHG == event.getFlag() || IDataModel.DEFAULT_CHG == event.getFlag()) {
 					if (FACET_RUNTIME.equals(event.getPropertyName())) {
@@ -225,7 +228,8 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
         ( 
             new IFacetedProjectListener()
             {
-                public void handleEvent( final IFacetedProjectEvent event )
+                @Override
+				public void handleEvent( final IFacetedProjectEvent event )
                 {
                     suppressBackEvents[ 0 ] = Boolean.TRUE;
                     model.setProperty(FACET_RUNTIME, getFacetedProjectWorkingCopy().getPrimaryRuntime());

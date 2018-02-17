@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -316,14 +316,14 @@ public class TestStructuredModel extends TestCase {
 
 	public void testGetModelResource() throws IOException, CoreException {
 		IStructuredModel model = getTestModel();
-		IResource resource = (IResource) model.getAdapter(IResource.class);
+		IResource resource = model.getAdapter(IResource.class);
 		assertNotNull("A resource wasn't obtained from the model", resource);
 		assertEquals("The resource doesn't correspond to the model's base location", new Path("/" + fProjectName + "/files/simple.xml"), resource.getFullPath());
 	}
 	
 	public void testUnmanagedModelResource() throws IOException, CoreException {
 		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
-		IResource resource = (IResource) model.getAdapter(IResource.class);
+		IResource resource = model.getAdapter(IResource.class);
 		assertNull("A resource was obtained from an unmanaged model", resource);
 	}
 
@@ -331,7 +331,7 @@ public class TestStructuredModel extends TestCase {
 		IStructuredModel model = getTestModel();
 		IndexedRegion region = model.getIndexedRegion(0);
 		assertTrue("The region is not adaptable", region instanceof IAdaptable);
-		IResource resource = (IResource) ((IAdaptable) region).getAdapter(IResource.class);
+		IResource resource = ((IAdaptable) region).getAdapter(IResource.class);
 		assertNotNull("A resource wasn't obtained from the model", resource);
 		assertEquals("The resource doesn't correspond to the model's base location", new Path("/" + fProjectName + "/files/simple.xml"), resource.getFullPath());
 	}

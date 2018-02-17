@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -131,9 +131,10 @@ public class ProductManager {
 		return Boolean.valueOf(value).booleanValue();
 	}
 
-	public static List/*<IRuntime>*/ getDefaultRuntimes() {
-		List theRuntimes = null;
-		Set runtimes = RuntimeManager.getRuntimes();
+	@SuppressWarnings("unchecked")
+	public static List<IRuntime> getDefaultRuntimes() {
+		List<IRuntime> theRuntimes = null;
+		Set<IRuntime> runtimes = RuntimeManager.getRuntimes();
 		if (!runtimes.isEmpty()) {
 			IRuntime defaultRuntime = null;
 			//	First check if defaults are defined
@@ -141,7 +142,7 @@ public class ProductManager {
 				defaultRuntime = getMatchingRuntime(DEFAULT_RUNTIME_KEYS[i], runtimes);
 				if (defaultRuntime != null) {
 					if (theRuntimes == null) {
-						theRuntimes = new ArrayList(DEFAULT_RUNTIME_KEYS.length);
+						theRuntimes = new ArrayList<>(DEFAULT_RUNTIME_KEYS.length);
 					}
 					theRuntimes.add(defaultRuntime);
 				}
@@ -153,7 +154,7 @@ public class ProductManager {
 		return theRuntimes;
 	}
 	
-	private static IRuntime getMatchingRuntime(String defaultProductRuntimeProperty, Set runtimes) {
+	private static IRuntime getMatchingRuntime(String defaultProductRuntimeProperty, Set<IRuntime> runtimes) {
 		String defaultProductRuntimeKey = getProperty(defaultProductRuntimeProperty);
 		if (defaultProductRuntimeKey == null || defaultProductRuntimeKey.length() == 0) {
 			return null;
@@ -168,12 +169,12 @@ public class ProductManager {
 		}
 		String defaultRuntimeID = defaultProductRuntimeKey.substring(0, seperatorIndex);
 		String defaultFacetVersion = defaultProductRuntimeKey.substring(seperatorIndex + 1);
-		for (Iterator runtimeIt = runtimes.iterator(); runtimeIt.hasNext();) {
-			IRuntime runtime = (IRuntime) runtimeIt.next();
-			List runtimeComps = runtime.getRuntimeComponents();
+		for (Iterator<IRuntime> runtimeIt = runtimes.iterator(); runtimeIt.hasNext();) {
+			IRuntime runtime = runtimeIt.next();
+			List<IRuntimeComponent> runtimeComps = runtime.getRuntimeComponents();
 			if (!runtimeComps.isEmpty()) {
-				for (Iterator compsIter = runtimeComps.iterator(); compsIter.hasNext();) {
-					IRuntimeComponent runtimeComp = (IRuntimeComponent) compsIter.next();
+				for (Iterator<IRuntimeComponent> compsIter = runtimeComps.iterator(); compsIter.hasNext();) {
+					IRuntimeComponent runtimeComp = compsIter.next();
 					if (defaultRuntimeID.equals(runtimeComp.getRuntimeComponentType().getId()) &&
 						(defaultFacetVersion.equals(runtimeComp.getRuntimeComponentVersion().getVersionString()))) {
 							return runtime;

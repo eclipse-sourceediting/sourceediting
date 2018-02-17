@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2015 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -759,7 +759,7 @@ public class ModelManagerImpl implements IModelManager {
 		// breaking change in behavior.
 
 		IProject project = file.getProject();
-		URIResolver resolver = (URIResolver) project.getAdapter(URIResolver.class);
+		URIResolver resolver = project.getAdapter(URIResolver.class);
 		if (resolver == null)
 			resolver = new ProjectResolver(project);
 		Object location = file.getLocation();

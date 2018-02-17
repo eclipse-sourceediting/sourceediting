@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -255,7 +255,7 @@ public final class CodeAssistCyclingConfigurationBlock  {
 	}
 
 	private void createDefaultPageLabel(Composite composite, int h_span) {
-	    final ICommandService commandSvc= (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
+	    final ICommandService commandSvc= PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 		final Command command= commandSvc.getCommand(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		ParameterizedCommand pCmd= new ParameterizedCommand(command, null);
 		String key= getKeyboardShortcut(pCmd);
@@ -543,7 +543,7 @@ public final class CodeAssistCyclingConfigurationBlock  {
 	private static BindingManager fgLocalBindingManager;
 	static {
 		fgLocalBindingManager= new BindingManager(new ContextManager(), new CommandManager());
-		final IBindingService bindingService= (IBindingService)PlatformUI.getWorkbench().getService(IBindingService.class);
+		final IBindingService bindingService= PlatformUI.getWorkbench().getService(IBindingService.class);
 		final Scheme[] definedSchemes= bindingService.getDefinedSchemes();
 		if (definedSchemes != null) {
 			try {
@@ -561,7 +561,7 @@ public final class CodeAssistCyclingConfigurationBlock  {
 	}
 
 	private static String getKeyboardShortcut(ParameterizedCommand command) {
-		IBindingService bindingService= (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+		IBindingService bindingService= PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 		fgLocalBindingManager.setBindings(bindingService.getBindings());
 		try {
 			Scheme activeScheme= bindingService.getActiveScheme();

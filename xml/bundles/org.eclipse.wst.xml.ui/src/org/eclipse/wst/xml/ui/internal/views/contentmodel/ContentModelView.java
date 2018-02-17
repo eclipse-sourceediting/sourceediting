@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2010, 2018 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,7 +78,7 @@ public class ContentModelView extends ViewPart implements ISelectionListener {
 	}
 
 	private boolean isLinkedWithEditor() {
-		ICommandService service = (ICommandService) PlatformUI.getWorkbench()
+		ICommandService service = PlatformUI.getWorkbench()
 				.getService(ICommandService.class);
 		Command command = service.getCommand("org.eclipse.wst.xml.ui.cmnd.contentmodel.sych"); //$NON-NLS-1$
 		State state = command.getState("org.eclipse.ui.commands.toggleState"); //$NON-NLS-1$
