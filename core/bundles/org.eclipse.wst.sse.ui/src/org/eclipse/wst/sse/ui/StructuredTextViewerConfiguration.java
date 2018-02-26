@@ -623,10 +623,12 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		if (sourceViewer != null) {
 			//Only create reconciler if sourceViewer is present
 			if (fReconciler == null && sourceViewer != null) {
-				StructuredRegionProcessor newReconciler = new StructuredRegionProcessor();
+				IReconciler newReconciler = createReconciler(sourceViewer);
 	
 				// reconciler configurations
-				newReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+				if (newReconciler instanceof StructuredRegionProcessor) {
+					((StructuredRegionProcessor)newReconciler).setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+				}
 	
 				fReconciler = newReconciler;
 			}
@@ -634,6 +636,18 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		}
 		
 		return reconciler;
+	}
+	
+	/**
+	 * Create IReconciler for this sourceViewer
+	 * 
+	 * @param sourceViewer the source viewer to be configured by this configuration
+	 * @return a reconciler
+	 * @since 3.10
+	 */
+	protected IReconciler createReconciler(ISourceViewer sourceViewer)
+	{
+		return new StructuredRegionProcessor();
 	}
 
 	/**
