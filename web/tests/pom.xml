@@ -37,5 +37,6 @@
     <module>org.eclipse.wst.html.ui.tests</module>
     <module>org.eclipse.wst.jsdt.web.core.tests</module>
     <module>org.eclipse.wst.jsdt.web.ui.tests</module>
+    <!-- test does not work: 198 failures / 1 error <module>org.eclipse.wst.sse.unittests</module> -->
   </modules>
 </project>

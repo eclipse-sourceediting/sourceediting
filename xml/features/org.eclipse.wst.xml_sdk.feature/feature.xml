@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xml_sdk.feature"
       label="%featureName"
-      version="3.9.2.qualifier"
+      version="3.9.3.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1.qualifier">
@@ -22,6 +22,5 @@
    <requires>
           <import feature="org.eclipse.wst.common_sdk.feature" version="0.0.0" match="greaterOrEqual"/>
           <import feature="org.eclipse.wst.xml_ui.feature" version="0.0.0" match="greaterOrEqual"/>
-          <import feature="org.eclipse.wst.xml_ui.feature.source" version="0.0.0" match="greaterOrEqual"/>
    </requires>
 </feature>

@@ -1,91 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature id="org.eclipse.wst.json_core.feature"><category name="Web Tools Platform (WTP)"/></feature>
-   <feature id="org.eclipse.wst.json_ui.feature"><category name="Web Tools Platform (WTP)"/></feature>
-   <feature id="org.eclipse.wst.web_core.feature"><category name="Web Tools Platform (WTP)"/></feature>
-   <feature id="org.eclipse.wst.web_ui.feature"><category name="Web Tools Platform (WTP)"/></feature>
-   <feature id="org.eclipse.wst.xml_core.feature"><category name="Web Tools Platform (WTP)"/></feature>
-   <feature id="org.eclipse.wst.xml_ui.feature"><category name="Web Tools Platform (WTP)"/></feature>
-   <feature id="org.eclipse.wst.xsl.feature"><category name="Web Tools Platform (WTP)"/></feature>
-   <feature id="org.eclipse.wst.xml.xpath2.processor.feature"><category name="Web Tools Platform (WTP)"/></feature>
+  <feature id="org.eclipse.wst.json_core.feature"><category name="wtp"/></feature>
+  <feature id="org.eclipse.wst.json_ui.feature"><category name="wtp"/></feature>
+  <feature id="org.eclipse.wst.web_core.feature"><category name="wtp"/></feature>
+  <feature id="org.eclipse.wst.web_ui.feature"><category name="wtp"/></feature>
+  <feature id="org.eclipse.wst.xml_core.feature"><category name="wtp"/></feature>
+  <feature id="org.eclipse.wst.xml_ui.feature"><category name="wtp"/></feature>
+  <feature id="org.eclipse.wst.xsl.feature"><category name="wtp"/></feature>
+  <feature id="org.eclipse.wst.xml.xpath2.processor.feature"><category name="wtp"/></feature>
 
-   <feature id="org.eclipse.wst.web_userdoc.feature"><category name="Web Tools Platform (WTP)"/></feature>
-   <feature id="org.eclipse.wst.xml_userdoc.feature"><category name="Web Tools Platform (WTP)"/></feature>
+  <feature id="org.eclipse.wst.web_userdoc.feature"><category name="wtp"/></feature>
+  <feature id="org.eclipse.wst.xml_userdoc.feature"><category name="wtp"/></feature>
 
-   <feature id="org.eclipse.wst.json_sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
-   <feature id="org.eclipse.wst.web_sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
-   <feature id="org.eclipse.wst.xml_sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
-   <feature id="org.eclipse.wst.xsl_sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
-   <feature id="org.eclipse.wst.xml.xpath2.processor.sdk.feature"><category name="Web Tools Platform SDK (WTP SDK)"/></feature>
+  <feature id="org.eclipse.wst.json_sdk.feature"><category name="wtp.sdk"/></feature>
+  <feature id="org.eclipse.wst.web_sdk.feature"><category name="wtp.sdk"/></feature>
+  <feature id="org.eclipse.wst.xml_sdk.feature"><category name="wtp.sdk"/></feature>
+  <feature id="org.eclipse.wst.xsl_sdk.feature"><category name="wtp.sdk"/></feature>
+  <feature id="org.eclipse.wst.xml.xpath2.processor.sdk.feature"><category name="wtp.sdk"/></feature>
+  <bundle id="org.eclipse.wst.xml.xpath2.processor.sdk.doc"><category name="wtp.bundles.sdk"/></bundle>
 
-   <feature id="org.eclipse.wst.json_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
-   <feature id="org.eclipse.wst.web_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
-   <feature id="org.eclipse.wst.xml_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
-   <feature id="org.eclipse.wst.xsl_tests.feature"><category name="Web Tools Platform Tests (WTP Tests)"/></feature>
+  <feature id="org.eclipse.wst.json_tests.feature"><category name="wtp.tests"/></feature>
+  <feature id="org.eclipse.wst.web_tests.feature"><category name="wtp.tests"/></feature>
+  <feature id="org.eclipse.wst.xml_tests.feature"><category name="wtp.tests"/></feature>
+  <feature id="org.eclipse.wst.xsl_tests.feature"><category name="wtp.tests"/></feature>
+  <bundle id="org.eclipse.wst.xml.xpath2.wtptypes.tests"><category name="wtp.tests"/></bundle>
 
-   <!-- include plugins which are not wrapped with features, but which are needed in downstream builds -->
-   <bundle id="org.eclipse.jst.jsp.core"><category name="Web Tools Platform (WTP)"/></bundle>
-   <bundle id="org.eclipse.jst.jsp.ui"><category name="Web Tools Platform (WTP)"/></bundle>
-   <!-- <bundle id="org.eclipse.jst.jsp.core.tests"/> -->
-   <bundle id="org.eclipse.jst.jsp.tests.encoding"/>
+  <bundle id="org.eclipse.jst.jsp.core"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.jst.jsp.ui"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.jst.jsp.tests.encoding"><category name="wtp.bundles"/></bundle>
 
-   <bundle id="org.eclipse.jst.standard.schemas"/>
-   <bundle id="org.eclipse.wst.jsdt.web.support.jsp"/>
-   <bundle id="org.eclipse.jst.jsp.ui.infopop"/>
-   <bundle id="org.eclipse.jst.jsp.core.tests"/>
-   <bundle id="org.eclipse.jst.jsp.ui.tests"/>
+  <bundle id="org.eclipse.jst.standard.schemas"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.wst.jsdt.web.support.jsp"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.jst.jsp.ui.infopop"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.jst.jsp.core.tests"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.jst.jsp.ui.tests"><category name="wtp.bundles"/></bundle>
 
-   <!-- sources -->
+  <bundle id="org.eclipse.wtp.javascript.capabilities"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.wtp.web.capabilities"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.wtp.xml.capabilities"><category name="wtp.bundles"/></bundle>
 
-   <feature id="org.eclipse.wst.json_core.feature.source"/>
-   <feature id="org.eclipse.wst.json_ui.feature.source"/>
-   <feature id="org.eclipse.wst.web_core.feature.source"/>
-   <feature id="org.eclipse.wst.web_ui.feature.source"/>
-   <feature id="org.eclipse.wst.xml_core.feature.source"/>
-   <feature id="org.eclipse.wst.xml_ui.feature.source"/>
-   <feature id="org.eclipse.wst.xsl.feature.source"/>
+  <!-- sources -->
 
-   <feature id="org.eclipse.wst.web_userdoc.feature.source"/>
-   <feature id="org.eclipse.wst.xml_userdoc.feature.source"/>
+  <feature id="org.eclipse.wst.json_core.feature.source"><category name="wtp.sources"/></feature>
+  <feature id="org.eclipse.wst.json_ui.feature.source"><category name="wtp.sources"/></feature>
+  <feature id="org.eclipse.wst.web_core.feature.source"><category name="wtp.sources"/></feature>
+  <feature id="org.eclipse.wst.web_ui.feature.source"><category name="wtp.sources"/></feature>
+  <feature id="org.eclipse.wst.xml_core.feature.source"><category name="wtp.sources"/></feature>
+  <feature id="org.eclipse.wst.xml_ui.feature.source"><category name="wtp.sources"/></feature>
+  <feature id="org.eclipse.wst.xsl.feature.source"><category name="wtp.sources"/></feature>
 
-   <feature id="org.eclipse.wst.json_sdk.feature.source"/>
-   <feature id="org.eclipse.wst.web_sdk.feature.source"/>
-   <feature id="org.eclipse.wst.xml_sdk.feature.source"/>
-   <feature id="org.eclipse.wst.xsl_sdk.feature.source"/>
-   <feature id="org.eclipse.wst.xml.xpath2.processor.sdk.feature.source"/>
+  <feature id="org.eclipse.wst.web_userdoc.feature.source"><category name="wtp.sources"/></feature>
+  <feature id="org.eclipse.wst.xml_userdoc.feature.source"><category name="wtp.sources"/></feature>
 
-   <feature id="org.eclipse.wst.json_tests.feature.source"/>
-   <feature id="org.eclipse.wst.web_tests.feature.source"/>
-   <feature id="org.eclipse.wst.xml_tests.feature.source"/>
-   <feature id="org.eclipse.wst.xsl_tests.feature.source"/>
+  <feature id="org.eclipse.wst.json_sdk.feature.source"><category name="wtp.sdk.sources"/></feature>
+  <feature id="org.eclipse.wst.web_sdk.feature.source"><category name="wtp.sdk.sources"/></feature>
+  <feature id="org.eclipse.wst.xml_sdk.feature.source"><category name="wtp.sdk.sources"/></feature>
+  <feature id="org.eclipse.wst.xsl_sdk.feature.source"><category name="wtp.sdk.sources"/></feature>
+  <feature id="org.eclipse.wst.xml.xpath2.processor.sdk.feature.source"><category name="wtp.sdk.sources"/></feature>
+  <bundle id="org.eclipse.wst.xml.xpath2.processor.sdk.doc.source"><category name="wtp.bundles.sdk.sources"/></bundle>
 
-   <bundle id="org.eclipse.jst.jsp.core.source"/>
-   <bundle id="org.eclipse.jst.jsp.ui.source"/>
-   <!-- <bundle id="org.eclipse.jst.jsp.core.tests.source"/> -->
-   <bundle id="org.eclipse.jst.jsp.tests.encoding.source"/>
+  <feature id="org.eclipse.wst.json_tests.feature.source"><category name="wtp.tests"/></feature>
+  <feature id="org.eclipse.wst.web_tests.feature.source"><category name="wtp.tests"/></feature>
+  <feature id="org.eclipse.wst.xml_tests.feature.source"><category name="wtp.tests"/></feature>
+  <feature id="org.eclipse.wst.xsl_tests.feature.source"><category name="wtp.tests"/></feature>
+  <bundle id="org.eclipse.wst.xml.xpath2.wtptypes.tests.source"><category name="wtp.tests"/></bundle>
 
-   <category-def
-        name="Web Tools Platform (WTP)"
-        label="Web Tools Platform (WTP)">
-        <description>
-            These features provide functionality with the executable code only and are recommended for most users.
-        </description>
-    </category-def>
-    <category-def
-        name="Web Tools Platform SDK (WTP SDK)"
-        label="Web Tools Platform SDK (WTP SDK)">
-        <description>
-            These features provide functionality with the executable code and the source code and are recommended for those
-            extending or debugging
-            WTP.
-        </description>
-    </category-def>
-    <category-def
-        name="Web Tools Platform Tests (WTP Tests)"
-        label="Web Tools Platform Tests (WTP Tests)">
-        <description>
-            These features provide Unit tests for WTP. WTP Committers, or others testing WTP, will need these in at least
-            their PDE Targets.
-        </description>
-    </category-def>
+  <bundle id="org.eclipse.jst.jsp.core.source"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.jst.jsp.ui.source"><category name="wtp.bundles"/></bundle>
+  <bundle id="org.eclipse.jst.jsp.tests.encoding.source"><category name="wtp.bundles"/></bundle>
+
+  <bundle id="org.eclipse.wtp.javascript.capabilities.source"><category name="wtp.bundles.sources"/></bundle>
+  <bundle id="org.eclipse.wtp.web.capabilities.source"><category name="wtp.bundles.sources"/></bundle>
+  <bundle id="org.eclipse.wtp.xml.capabilities.source"><category name="wtp.bundles.sources"/></bundle>
+
+  <category-def name="wtp" label="Web Tools Platform (WTP)"><description>These features provide functionality with the executable code only and are recommended for most users.</description></category-def>
+  <category-def name="wtp.sdk" label="Web Tools Platform SDK (WTP SDK)"><description>These features provide functionality with the executable code and the source code and are recommended for those extending or debugging WTP.</description></category-def>
+
+  <category-def name="wtp.sources" label="Web Tools Platform (WTP) Sources"><description>These features provide sources.</description></category-def>
+  <category-def name="wtp.sdk.sources" label="Web Tools Platform SDK (WTP SDK) Sources"><description>These features provide sources.</description></category-def>
+
+  <category-def name="wtp.bundles" label="Web Tools Platform (WTP) Bundles"><description>These bundles are most likely include in features, but are provided here for completeness.</description></category-def>
+  <category-def name="wtp.bundles.sdk" label="Web Tools Platform SDK (WTP SDK) Bundles"><description>These bundles are most likely include in features, but are provided here for completeness.</description></category-def>
+
+  <category-def name="wtp.bundles.sources" label="Web Tools Platform (WTP) Bundle Sources"><description>These bundles provide sources.</description></category-def>
+  <category-def name="wtp.bundles.sdk.sources" label="Web Tools Platform SDK (WTP SDK) Bundle Sources"><description>These bundles provide sources.</description></category-def>
+
 </site>
