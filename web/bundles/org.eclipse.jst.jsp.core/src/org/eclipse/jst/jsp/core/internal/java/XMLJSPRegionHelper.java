@@ -169,7 +169,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 
 	/*
-	 * listens to parser node parsed events adds to local scriplet,
+	 * listens to parser node parsed events adds to local scriptlet,
 	 * expression, declaration buffers determines which type of region the
 	 * cursor is in, and adjusts cursor offset accordingly
 	 */

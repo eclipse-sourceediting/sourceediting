@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests.validation;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -19,8 +17,12 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
 import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
+import org.eclipse.jst.jsp.core.tests.ProjectUtil;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
+
+import junit.framework.TestCase;
 
 /**
  * Tests JSP Java Validator
@@ -94,5 +96,37 @@ public class JSPJavaValidatorTest extends TestCase {
 			JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, validate);
 		}
 		assertTrue("jspf was validated when it should not have been", reporter.getMessages().isEmpty());
+	}
+
+	public void test_530968_ExpressionInCustomTagInComment1() throws Exception {
+		JSPJavaValidator validator = new JSPJavaValidator();
+		ProjectUtil.createProject("bug_530968", null, null);
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_530968", "/bug_530968");
+		IReporter reporter = new ReporterForTest();
+		ValidationContextForTest helper = new ValidationContextForTest();
+		String filePath = "/bug_530968/WebContent/bug530968.jsp";
+		helper.setURI(filePath);
+		validator.validate(helper, reporter);
+		String strings = "";
+		for (int i = 0; i < reporter.getMessages().size(); i++) {
+			strings = strings + ((IMessage) reporter.getMessages().get(i)).getText() + "\n";
+		}
+		assertTrue(strings, reporter.getMessages().isEmpty());
+	}
+
+	public void test_530968_ExpressionInCustomTagInComment2() throws Exception {
+		JSPJavaValidator validator = new JSPJavaValidator();
+		ProjectUtil.createProject("bug_530968-2", null, null);
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_530968-2", "/bug_530968-2");
+		IReporter reporter = new ReporterForTest();
+		ValidationContextForTest helper = new ValidationContextForTest();
+		String filePath = "/bug_530968-2/WebContent/bug530968-2.jsp";
+		helper.setURI(filePath);
+		validator.validate(helper, reporter);
+		String strings = "";
+		for (int i = 0; i < reporter.getMessages().size(); i++) {
+			strings = strings + ((IMessage) reporter.getMessages().get(i)).getText() + "\n";
+		}
+		assertTrue(strings, reporter.getMessages().isEmpty());
 	}
 }

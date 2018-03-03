@@ -31,6 +31,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.compiler.IProblem;
@@ -49,6 +50,7 @@ import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
 import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
+import org.eclipse.jst.jsp.core.tests.ProjectUtil;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.jst.jsp.core.tests.validation.ReporterForTest;
 import org.eclipse.jst.jsp.core.tests.validation.ValidationContextForTest;
@@ -56,6 +58,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.ValidationFramework;
+import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.operations.ValidatorManager;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
@@ -838,4 +841,19 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
         }
 	}
 	*/
+
+	public void test_530968_ExpressionInCustomTagInComment() throws Exception {
+		JSPJavaValidator validator = new JSPJavaValidator();
+		ProjectUtil.createProject("bug_530968", null, null);
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_530968", "/bug_530968");
+		String filePath = "/bug_530968/WebContent/bug530968.jsp";
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
+		assertTrue(file.exists());
+		IReporter reporter = new ReporterForTest();
+		ValidationContextForTest helper = new ValidationContextForTest();
+		helper.setURI(filePath);
+		validator.validate(helper, reporter);
+		String messageText = reporter.getMessages().isEmpty() ? "no error found" : ((Message) reporter.getMessages().get(0)).getText();
+		assertTrue(messageText, reporter.getMessages().isEmpty());
+	}
 }

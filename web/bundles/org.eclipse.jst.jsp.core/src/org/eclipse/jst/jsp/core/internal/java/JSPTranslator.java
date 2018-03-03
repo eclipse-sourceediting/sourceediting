@@ -54,6 +54,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.compiler.IProblem;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
@@ -1437,12 +1438,6 @@ public class JSPTranslator implements Externalizable {
 		}
 	}
 
-	/*
-	 * ////////////////////////////////////////////////////////////////////////////////// **
-	 * TEMP WORKAROUND FOR CMVC 241882 Takes a String and blocks out
-	 * jsp:scriptlet, jsp:expression, and jsp:declaration @param blockText
-	 * @return
-	 */
 	void decodeScriptBlock(String blockText, int startOfBlock) {
 		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this, false);
 		helper.addBlockMarker(new BlockMarker("jsp:scriptlet", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
@@ -1809,25 +1804,25 @@ public class JSPTranslator implements Externalizable {
 	}
 
 	/**
-	 * goes through comment regions, checks if any are an embedded JSP
-	 * container if it finds one, it's sends the container into the
-	 * translation routine
+	 * Reparse and translate the contents of this XML comment as if it
+	 * weren't.
 	 */
 	protected void translateXMLCommentNode(IStructuredDocumentRegion node) {
-		Iterator it = node.getRegions().iterator();
-		ITextRegion commentRegion = null;
-		while (it != null && it.hasNext()) {
-			commentRegion = (ITextRegion) it.next();
-			if (commentRegion instanceof ITextRegionContainer) {
-				translateRegionContainer((ITextRegionContainer) commentRegion, EMBEDDED_JSP); // it's
-				// embedded
-				// jsp...iterate
-				// regions...
+		if (node.getNumberOfRegions() > 1 && DOMRegionContext.XML_COMMENT_OPEN.equals(node.getFirstRegion().getType())) {
+			ITextRegionList regions = node.getRegions();
+			int startOffset = node.getStartOffset(regions.get(1));
+			/*
+			 * Make sure that an unclosed comment at the end of the file will
+			 * still have its contents processed
+			 */
+			int endOffset = DOMRegionContext.XML_COMMENT_CLOSE.equals(node.getLastRegion().getType()) ? node.getStartOffset(node.getLastRegion()) : node.getEndOffset(node.getLastRegion());
+			try {
+				String text = fStructuredDocument.get(startOffset, endOffset - startOffset);
+				decodeScriptBlock(text, startOffset);
 			}
-			else if (DOMRegionContext.XML_COMMENT_TEXT.equals(commentRegion.getType())) {
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=222215
-				// support custom tags hidden in a comment region
-				decodeScriptBlock(node.getFullText(commentRegion), node.getStartOffset(commentRegion));
+			catch (BadLocationException e) {
+				// Not sure *how* to recover from this...
+				Logger.logException(e);
 			}
 		}
 	}
