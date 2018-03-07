@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -150,6 +150,7 @@ public class JSPELContentAssistTest extends TestCase {
 			"The completed proposal " + inserted + " does not match the expected completion " + TEST_1_EXPECTED_PROPS[0],
 			TEST_1_EXPECTED_PROPS[0], inserted);
 		editor.getSite().getPage().saveEditor(editor, false);
+		editor.close(false);
 	}
 	
 	/**

@@ -49,6 +49,8 @@ import org.eclipse.jst.jsp.core.internal.taglib.CustomTag;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
 import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
+import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
+import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
 import org.eclipse.jst.jsp.core.tests.ProjectUtil;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
@@ -161,29 +163,21 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertTrue("found "+errors+" jsp java errors within html comments when there should be 3", (errors == 3));
 	}
 
-	// public void testMangling() {
-	// assertEquals("simple_tag", JSP2ServletNameUtil.mangle("simple.tag"));
-	// assertEquals("simple_jspf", JSP2ServletNameUtil.mangle("simple.jspf"));
-	// assertEquals("sim_005f_005fple_tagx",
-	// JSP2ServletNameUtil.mangle("sim__ple.tagx"));
-	// assertEquals(new Path("Project.folder.simple_tag"),
-	// JSP2ServletNameUtil.mangle(new Path("/Project/folder/simple.tag")));
-	// assertEquals(new Path("Project.fold_005fer.simple_jspx"),
-	// JSP2ServletNameUtil.mangle(new Path("/Project/fold_er/simple.jspx")));
-	// }
-	//
-	// public void testUnmangling() {
-	// assertEquals("simple.tag", JSP2ServletNameUtil.unmangle("simple_tag"));
-	// assertEquals("simple.jspf",
-	// JSP2ServletNameUtil.unmangle("simple_jspf"));
-	// assertEquals("sim__ple.tagx",
-	// JSP2ServletNameUtil.unmangle("sim_005f_005fple_tagx"));
-	// assertEquals(new Path("/Project/folder/simple.tag"),
-	// JSP2ServletNameUtil.unmangle(new Path("Project.folder.simple_tag")));
-	// assertEquals(new Path("/Project/fold_er/simple.jspx"),
-	// JSP2ServletNameUtil.unmangle(new
-	// Path("Project.fold_005fer.simple_jspx")));
-	// }
+//	public void testMangling() {
+//		assertEquals("_simple_2E_tag", JSP2ServletNameUtil.mangle("simple.tag"));
+//		assertEquals("_simple_2E_jspf", JSP2ServletNameUtil.mangle("simple.jspf"));
+//		assertEquals("sim_005f_005fple_tagx", JSP2ServletNameUtil.mangle("sim__ple.tagx"));
+//		assertEquals(new Path("Project.folder.simple_tag"), JSP2ServletNameUtil.mangle("/Project/folder/simple.tag"));
+//		assertEquals(new Path("Project.fold_005fer.simple_jspx"), JSP2ServletNameUtil.mangle("/Project/fold_er/simple.jspx"));
+//	}
+//
+//	public void testUnmangling() {
+//		assertEquals("simple.tag", JSP2ServletNameUtil.unmangle("simple_tag"));
+//		assertEquals("simple.jspf", JSP2ServletNameUtil.unmangle("simple_jspf"));
+//		assertEquals("sim__ple.tagx", JSP2ServletNameUtil.unmangle("sim_005f_005fple_tagx"));
+//		assertEquals(new Path("/Project/folder/simple.tag"), JSP2ServletNameUtil.unmangle("Project.folder.simple_tag"));
+//		assertEquals(new Path("/Project/fold_er/simple.jspx"), JSP2ServletNameUtil.unmangle("Project.fold_005fer.simple_jspx"));
+//	}
 	public void test_174042() throws Exception {
 		boolean doValidateSegments = JSPCorePlugin.getDefault().getPluginPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
 		String testName = "bug_174042";
@@ -753,7 +747,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 				structuredModel.releaseFromRead();
 		}
 	}
-/*
+
 	// http://bugs.eclipse.org/432978
 	public void test_432978() throws Exception {
         String testName = "bug_432978";
@@ -762,8 +756,10 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
         assertTrue(project.exists());
         BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 
-        waitForBuildAndValidation(project);
-        project.getWorkspace().checkpoint(true);
+        // TEI class needs to already be compiled
+//		waitForBuildAndValidation(project);
+//		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.jdt.internal.core.builder.JavaBuilder", null, null);
+		project.getWorkspace().checkpoint(true);
 
         IFile file1 = project.getFile("/WebContent/test.jsp");
         IFile file2= project.getFile("/WebContent/test2.jsp");
@@ -784,7 +780,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			/*
 			 * the extra variable should only be declared once in the
 			 * translated text
-			 */ /*
+			 */
 			assertEquals(2, translation.split("java.lang.Integer extra").length);
 
 			structuredModel2 = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(file2);
@@ -817,8 +813,10 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
         assertTrue(project.exists());
         BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
 
-        waitForBuildAndValidation(project);
-        project.getWorkspace().checkpoint(true);
+        // TEI class needs to already be compiled
+//		waitForBuildAndValidation(project);
+//		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.jdt.internal.core.builder.JavaBuilder", null, null);
+		project.getWorkspace().checkpoint(true);
 
         IFile file1 = project.getFile("/WebContent/test1.jsp");
         IDOMModel structuredModel1 = null;
@@ -832,7 +830,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			final String translation = translationAdapter.getJSPTranslation().getJavaText();
 
 			assertFalse("The unprocessed custom action's attribute value pair should not be in the translated source, was the custom tag not parsed?", translation.indexOf("insert=") > 0);
-			assertTrue("The 'insert' integer declared by a TEI class was not found, was the custom tag not parsed?", translation.indexOf("java.lang.Integer insert") > 0);
+			assertTrue("The 'insert' integer declared by a TEI class was not found, was the custom tag not parsed?\n\n" + translation, translation.indexOf("java.lang.Integer insert") > 0);
 
         }
         finally {
@@ -840,12 +838,14 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
                 structuredModel1.releaseFromRead();
         }
 	}
-	*/
 
 	public void test_530968_ExpressionInCustomTagInComment() throws Exception {
 		JSPJavaValidator validator = new JSPJavaValidator();
-		ProjectUtil.createProject("bug_530968", null, null);
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_530968", "/bug_530968");
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("bug_530968");
+		if (!project.exists()) {
+			ProjectUtil.createProject("bug_530968", null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_530968", "/bug_530968");
+		}
 		String filePath = "/bug_530968/WebContent/bug530968.jsp";
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
 		assertTrue(file.exists());

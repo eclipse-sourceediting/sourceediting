@@ -11,6 +11,7 @@
 package org.eclipse.jst.jsp.core.tests.validation;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
@@ -100,8 +101,12 @@ public class JSPJavaValidatorTest extends TestCase {
 
 	public void test_530968_ExpressionInCustomTagInComment1() throws Exception {
 		JSPJavaValidator validator = new JSPJavaValidator();
-		ProjectUtil.createProject("bug_530968", null, null);
-		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_530968", "/bug_530968");
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("bug_530968");
+		if (!project.exists()) {
+			ProjectUtil.createProject("bug_530968", null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug_530968", "/bug_530968");
+		}
+
 		IReporter reporter = new ReporterForTest();
 		ValidationContextForTest helper = new ValidationContextForTest();
 		String filePath = "/bug_530968/WebContent/bug530968.jsp";

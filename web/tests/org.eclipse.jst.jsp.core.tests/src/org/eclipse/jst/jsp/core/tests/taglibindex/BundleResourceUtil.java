@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2014 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -110,10 +110,10 @@ public class BundleResourceUtil {
 				catch (Exception e) {
 					throw new CoreException(new Status(IStatus.ERROR, JSPCoreTestsPlugin.getDefault().getBundle().getSymbolicName(), 0, null, e));
 				}
-				ResourcesPlugin.getWorkspace().checkpoint(true);
 			}
 		};
 		ResourcesPlugin.getWorkspace().run(runnable, new NullProgressMonitor());
+		ResourcesPlugin.getWorkspace().checkpoint(true);
 	}
 
 	public static IFile copyBundleEntryIntoWorkspace(final String entryname, final String fullPath) throws Exception {
@@ -301,7 +301,7 @@ public class BundleResourceUtil {
 			}
 		}
 		buildPath.add(JavaCore.newContainerEntry(new Path("org.eclipse.jst.jsp.core.tests.webContainerInitializer")));
-		buildPath.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6")));
+		buildPath.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8")));
 		javaProject.setRawClasspath((IClasspathEntry[]) buildPath.toArray(new IClasspathEntry[buildPath.size()]), new Path("/" + name + "/WebContent/WEB-INF/classes"), new NullProgressMonitor());
 		return project;
 	}
