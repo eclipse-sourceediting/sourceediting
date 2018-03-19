@@ -24,7 +24,9 @@ import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.PerformanceStats;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
+import org.eclipse.wst.sse.ui.contentassist.IAsyncCompletionProposalComputer;
 import org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -281,12 +283,19 @@ final class CompletionProposalComputerDescriptor {
 					try {
 						PerformanceStats stats= startMeter(context, computer);
 						//ask the computer for the proposals
-						List proposals = computer.computeCompletionProposals(context, monitor);
+						List proposals[] = new List[1];
+						if (computer instanceof IAsyncCompletionProposalComputer || Display.getCurrent() != null) {
+							proposals[0] = computer.computeCompletionProposals(context, monitor);
+						} else {
+							Display.getDefault().syncExec(()-> {
+								proposals[0] = computer.computeCompletionProposals(context, monitor);
+							});
+						}
 						stopMeter(stats, COMPUTE_COMPLETION_PROPOSALS);
 		
-						if (proposals != null) {
+						if (proposals[0] != null) {
 							fLastError = computer.getErrorMessage();
-							completionProposals = proposals;
+							completionProposals = proposals[0];
 						} else {
 							status = createAPIViolationStatus(COMPUTE_COMPLETION_PROPOSALS);
 						}
@@ -329,12 +338,20 @@ final class CompletionProposalComputerDescriptor {
 				ICompletionProposalComputer computer = getComputer(true);
 				if (computer != null) {
 					PerformanceStats stats= startMeter(context, computer);
-					List proposals= computer.computeContextInformation(context, monitor);
+					
+					final List proposals[]= new List[1];
+					if (computer instanceof IAsyncCompletionProposalComputer || Display.getCurrent() != null) {
+						proposals[0] = computer.computeContextInformation(context, monitor);
+					} else {
+						Display.getDefault().syncExec(()-> {
+							proposals[0] = computer.computeContextInformation(context, monitor);
+						}); 
+					}
 					stopMeter(stats, COMPUTE_CONTEXT_INFORMATION);
 		
-					if (proposals != null) {
+					if (proposals[0] != null) {
 						fLastError= computer.getErrorMessage();
-						contextInformation = proposals;
+						contextInformation = proposals[0];
 					} else {
 						status = createAPIViolationStatus(COMPUTE_CONTEXT_INFORMATION);
 					}
