@@ -916,5 +916,13 @@
              class="org.eclipse.wst.sse.ui.internal.format.FormattingDelegate">
        </delegate>
  </extension>
+
+   <!-- dark theme defaults -->
+   <extension
+      point="org.eclipse.e4.ui.css.swt.theme">
+      <stylesheet uri="css/dark/preferencestyle.css">
+         <themeid refid="org.eclipse.e4.ui.css.theme.e4_dark"></themeid>
+      </stylesheet>
+   </extension>
 </plugin>
 
