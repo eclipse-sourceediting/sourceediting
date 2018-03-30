@@ -56,6 +56,9 @@ public class JSONFoldingStrategy extends AbstractStructuredFoldingStrategy {
 			// else if the region is only an open tag or an open/close tag then
 			// don't fold it
 			if (startRegion != null && endRegion != null) {
+				if( startRegion.getEndOffset() == endRegion.getStartOffset() )
+					return null;
+				
 				if (endRegion.getEndOffset() >= startRegion.getStartOffset() && 
 						endRegion.getEndOffset() <= getDocument().getLength())
 					retPos = new JSONObjectFoldingPosition(startRegion,
