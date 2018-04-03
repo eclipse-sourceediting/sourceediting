@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.design.editparts;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
@@ -89,7 +90,15 @@ public class ModelGroupDefinitionReferenceEditPart extends ConnectableEditPart
 
     groupFigure.getIconFigure().setToolTipText(occurenceDescription);
     groupFigure.getIconFigure().repaint();
-
+    
+    List children = getChildren();
+    for (Iterator i = children.iterator(); i.hasNext(); ) {
+ 	   Object obj = i.next();
+ 	   if (obj instanceof BaseEditPart) {
+ 		  BaseEditPart base = (BaseEditPart)obj;
+		  base.refresh();
+ 	   }
+    }
   }
 
   protected List getModelChildren()

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -146,19 +146,19 @@ public class ModelGroupEditPart extends ConnectableEditPart
     modelGroupFigure.getIconFigure().repaint();
 
     refreshConnection();
+
+    List children = getChildren();
+    for (Iterator i = children.iterator(); i.hasNext(); ) {
+ 	   Object obj = i.next();
+ 	   if (obj instanceof BaseEditPart) {
+ 		  BaseEditPart base = (BaseEditPart)obj;
+		  base.refresh();
+ 	   }
+    }
   }
 
   protected List getModelChildren()
   {
-//    XSDModelGroupAdapter modelGroupAdapter = (XSDModelGroupAdapter)getModel();
-//    ArrayList ch = new ArrayList();
-//    ITreeElement [] tree = modelGroupAdapter.getChildren();
-//    int length = tree.length;
-//    for (int i = 0; i < length; i++)
-//    {
-//      ch.add(tree[i]);
-//    }
-
     List list = new ArrayList();
     XSDModelGroup xsdModelGroup = getXSDModelGroup();
     for (Iterator i = xsdModelGroup.getContents().iterator(); i.hasNext();)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.SectionEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Annotation;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
@@ -70,5 +71,18 @@ public class XSDGroupsForAnnotationEditPart extends SectionEditPart
     }
     
     return adapterList;
+  }
+  
+  protected void refreshVisuals()
+  {
+    super.refreshVisuals();
+    List children = getChildren();
+    for (Iterator i = children.iterator(); i.hasNext(); ) {
+ 	   Object obj = i.next();
+ 	   if (obj instanceof BaseEditPart) {
+ 		  BaseEditPart base = (BaseEditPart)obj;
+		  base.refresh();
+ 	   }
+    }
   }
 }
