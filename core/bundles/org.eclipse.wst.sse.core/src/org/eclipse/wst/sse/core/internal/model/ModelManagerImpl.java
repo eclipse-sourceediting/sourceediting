@@ -939,7 +939,7 @@ public class ModelManagerImpl implements IModelManager {
 	 */
 	public  IStructuredDocument createNewStructuredDocumentFor(IFile iFile) throws ResourceAlreadyExists, IOException, CoreException {
 		if (iFile.exists()) {
-			throw new ResourceAlreadyExists(iFile.getFullPath().toOSString());
+			throw new ResourceAlreadyExists(iFile.getFullPath().toString());
 		}
 		// Will reconsider in future version
 		// String id = calculateId(iFile);
@@ -965,7 +965,7 @@ public class ModelManagerImpl implements IModelManager {
 	 */
 	public  IStructuredDocument createStructuredDocumentFor(IFile iFile) throws IOException, CoreException {
 		if (!iFile.exists()) {
-			throw new FileNotFoundException(iFile.getFullPath().toOSString());
+			throw new FileNotFoundException(iFile.getFullPath().toString());
 		}
 		// Will reconsider in future version
 		// String id = calculateId(iFile);

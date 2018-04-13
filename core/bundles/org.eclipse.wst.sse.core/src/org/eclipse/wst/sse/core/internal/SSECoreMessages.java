@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2018 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -47,4 +47,5 @@ public class SSECoreMessages extends NLS {
 	public static String IndexManager_0_resources_to_go_1;
 	public static String IndexManager_Waiting_for_0;
 	public static String IndexManager_0_Processing_resource_events;
+	public static String IndexManager_Indexing01;
 }

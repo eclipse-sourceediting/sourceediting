@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2017 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,10 +44,13 @@ public class JSPIndexManager extends AbstractIndexManager {
 	/** the singleton instance of the {@link JSPIndexManager} */
 	private static JSPIndexManager INSTANCE;
 
-	private static final String INDEX_VERSION = "JSP Index Manager v3.9.2_20171107_01"; //$NON-NLS-1$
+	private static final String INDEX_VERSION = "JSP Index v3.10_20180412_01"; //$NON-NLS-1$
 
 	/** the location to store state */
 	private IPath fWorkingLocation;
+
+	/** whether that location had to be created during this session **/
+	private boolean fCreatedWorkingLocation;
 
 	/**
 	 * <p>
@@ -69,10 +72,17 @@ public class JSPIndexManager extends AbstractIndexManager {
 	 * @see org.eclipse.wst.sse.core.indexing.AbstractIndexManager#isForcedFullReIndexNeeded()
 	 * Add a versioning check so we can force a re-index if needed
 	 */
-	protected boolean isForcedFullReIndexNeeded() {
+	protected boolean isFullReIndexNeeded() {
 		IEclipsePreferences node = InstanceScope.INSTANCE.getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
 		String stored = node.get(JSPIndexManager.class.getName(), null);
-		return !INDEX_VERSION.equals(stored) || super.isForcedFullReIndexNeeded();
+
+		/*
+		 * it's clumsy to just call it, but the method was also creating the location
+		 * instead of just returning the IPath value
+		 */
+		getWorkingLocation();
+
+		return fCreatedWorkingLocation || !INDEX_VERSION.equals(stored) || super.isFullReIndexNeeded();
 	}
 
 	/*
@@ -88,24 +98,24 @@ public class JSPIndexManager extends AbstractIndexManager {
 	 * @see indexer.internal.indexing.AbstractIndexManager#getWorkingLocation()
 	 */
 	protected IPath getWorkingLocation() {
-		if(this.fWorkingLocation == null) {
-			//create path to working area
-    		IPath workingLocation =
-    			JSPCorePlugin.getDefault().getStateLocation().append("jspsearch"); //$NON-NLS-1$
+		if (this.fWorkingLocation == null) {
+			// create path to working area
+			IPath workingLocation = JSPCorePlugin.getDefault().getStateLocation().append("jspsearch"); //$NON-NLS-1$
 
-            // ensure that it exists on disk
-            File folder = new File(workingLocation.toOSString());
-    		if (!folder.isDirectory()) {
-    			try {
-    				folder.mkdir();
-    			}
+			// ensure that it exists on disk
+			File folder = workingLocation.toFile();
+			if (!folder.isDirectory()) {
+				try {
+					folder.mkdir();
+				}
     			catch (SecurityException e) {
     				Logger.logException(this.getName() +
     						": Error while creating state location: " + folder + //$NON-NLS-1$
     						" This renders the index manager irrevocably broken for this workspace session", //$NON-NLS-1$
     						e);
-    			}
-    		}
+				}
+				fCreatedWorkingLocation = true;
+			}
     		
     		this.fWorkingLocation = workingLocation;
     	}
@@ -116,26 +126,28 @@ public class JSPIndexManager extends AbstractIndexManager {
 	/**
 	 * @see indexer.internal.indexing.AbstractIndexManager#performAction(byte, byte, org.eclipse.core.resources.IResource, org.eclipse.core.runtime.IPath)
 	 */
-	protected void performAction(byte source, byte action, IResource resource,
-			IPath movePath) {
-		
-		//inform the persister of the action unless it come from a full workspace scan
-		if(JSPTranslatorPersister.ACTIVATED && source != AbstractIndexManager.SOURCE_WORKSPACE_SCAN) {
-			switch(action) {
-				case AbstractIndexManager.ACTION_ADD: {
+	protected void performAction(byte source, byte action, IResource resource, IPath movePath) {
+		/*
+		 * Inform the persister of the action unless it come from a full
+		 * workspace scan
+		 */
+		if (JSPTranslatorPersister.ACTIVATED && source != AbstractIndexManager.SOURCE_WORKSPACE_SCAN) {
+			switch (action) {
+				case AbstractIndexManager.ACTION_ADD : {
 					JSPTranslatorPersister.persistTranslation(resource);
 					break;
 				}
-				case AbstractIndexManager.ACTION_REMOVE: {
+				case AbstractIndexManager.ACTION_REMOVE : {
 					JSPTranslatorPersister.removePersistedTranslation(resource);
 					break;
 				}
-				case AbstractIndexManager.ACTION_ADD_MOVE_FROM: {
+				case AbstractIndexManager.ACTION_ADD_MOVE_FROM : {
 					JSPTranslatorPersister.movePersistedTranslation(resource, movePath);
 					break;
 				}
-				case AbstractIndexManager.ACTION_REMOVE_MOVE_TO: {
-					//do nothing, taken care of by AbstractIndexManager.ACTION_ADD_MOVE_FROM
+				case AbstractIndexManager.ACTION_REMOVE_MOVE_TO : {
+					// do nothing, taken care of by
+					// AbstractIndexManager.ACTION_ADD_MOVE_FROM
 					break;
 				}
 			}

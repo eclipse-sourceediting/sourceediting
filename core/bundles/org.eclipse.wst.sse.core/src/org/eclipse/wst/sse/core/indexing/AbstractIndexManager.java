@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2017 IBM Corporation and others.
+ * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -244,25 +245,24 @@ public abstract class AbstractIndexManager {
 					this.fResourceChangeListener.start();
 
 					// check to see if a full re-index is required
-					boolean forcedFullReIndexNeeded = isForcedFullReIndexNeeded();
+					boolean fullReindexNeeded = isFullReIndexNeeded();
 
 					/*
 					 * start the indexing job only loading preserved state, if
 					 * not doing full index. if failed loading preserved state,
 					 * then force full re-index
 					 */
-					forcedFullReIndexNeeded = !this.fResourceEventProcessingJob.start(!forcedFullReIndexNeeded, progress.newChild(1));
+					fullReindexNeeded |= !this.fResourceEventProcessingJob.start(!fullReindexNeeded, progress.newChild(1));
 					progress.setWorkRemaining(1);
 
 					// don't bother processing saved delta if forced full
 					// re-index is needed
-					if (!forcedFullReIndexNeeded) {
+					if (!fullReindexNeeded) {
 						/*
 						 * if there is a delta attempt to process it else need
 						 * to do a full workspace index
 						 */
 						if (savedStateDelta != null) {
-							forcedFullReIndexNeeded = false;
 							try {
 								// deal with reporting progress
 								SubMonitor savedStateProgress = progress.newChild(1, SubMonitor.SUPPRESS_NONE);
@@ -278,21 +278,24 @@ public abstract class AbstractIndexManager {
 								visitor.processBatchedResourceEvents();
 							}
 							catch (CoreException e) {
-								forcedFullReIndexNeeded = true;
+								fullReindexNeeded = true;
 								Logger.logException(this.fName + ": Could not process saved state. " + //$NON-NLS-1$
 											"Forced to do a full workspace re-index.", e); //$NON-NLS-1$
 							}
 						}
 						else {
-							forcedFullReIndexNeeded = true;
+							fullReindexNeeded = true;
 						}
+					}
+					else {
+						Logger.log(Logger.INFO, "Fully reindexing for " + getClass().getName());
 					}
 					progress.worked(1);
 
 					// if need to process the entire workspace do so in
 					// another job
-					if (forcedFullReIndexNeeded) {
-						this.fWorkspaceVisitorJob = new WorkspaceVisitorJob();
+					if (fullReindexNeeded) {
+						this.fWorkspaceVisitorJob = new ResourceVisitorJob();
 						this.fWorkspaceVisitorJob.schedule();
 					}
 
@@ -589,9 +592,9 @@ public abstract class AbstractIndexManager {
 	 * Next time the manager starts up force a full workspace index
 	 * </p>
 	 */
-	private void forceFullReIndexNextStart() {
-		IPath reIndexPath = AbstractIndexManager.this.getWorkingLocation().append(RE_PROCESS_FILE_NAME);
-		File file = new File(reIndexPath.toOSString());
+	protected void forceFullReIndexNextStart() {
+		IPath reIndexLocation = AbstractIndexManager.this.getWorkingLocation().append(RE_PROCESS_FILE_NAME);
+		File file = reIndexLocation.toFile();
 		try {
 			file.createNewFile();
 		}
@@ -609,8 +612,8 @@ public abstract class AbstractIndexManager {
 	private boolean _isForcedFullReIndexNeeded() {
 		boolean forcedFullReIndexNeeded = false;
 
-		IPath reIndexPath = AbstractIndexManager.this.getWorkingLocation().append(RE_PROCESS_FILE_NAME);
-		File file = new File(reIndexPath.toOSString());
+		IPath reindexLocation = AbstractIndexManager.this.getWorkingLocation().append(RE_PROCESS_FILE_NAME);
+		File file = reindexLocation.toFile();
 		if (file.exists()) {
 			forcedFullReIndexNeeded = true;
 			file.delete();
@@ -623,9 +626,9 @@ public abstract class AbstractIndexManager {
 	 * @return <code>true</code> if a full workspace index is needed as
 	 *         dictated by this indexer, <code>false</code>
 	 *         otherwise
-	 *         @since 1.2.1001
+	 *         @since 1.2.0
 	 */
-	protected boolean isForcedFullReIndexNeeded() {
+	protected boolean isFullReIndexNeeded() {
 		return _isForcedFullReIndexNeeded();
 	}
 	/**
@@ -640,13 +643,18 @@ public abstract class AbstractIndexManager {
 	 * workspace load then this will have to be done again.
 	 * </p>
 	 */
-	private class WorkspaceVisitorJob extends Job {
+	private class ResourceVisitorJob extends Job {
+		IResource fTarget = null;
 		/**
-		 * <p>
-		 * Default constructor that sets up this job as a system job
-		 * </p>
+		 * @param target - The root whose children may be visited. If not specified,
+		 *                 the workspace root will be used.
 		 */
-		protected WorkspaceVisitorJob() {
+		ResourceVisitorJob(IResource target) {
+			this();
+			fTarget = target;
+		}
+
+		protected ResourceVisitorJob() {
 			super(NLS.bind(SSECoreMessages.IndexManager_0_Processing_entire_workspace_for_the_first_time, AbstractIndexManager.this.fName));
 
 			this.setUser(false);
@@ -660,17 +668,21 @@ public abstract class AbstractIndexManager {
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 				// update status
-				monitor.beginTask(NLS.bind(SSECoreMessages.IndexManager_0_Processing_entire_workspace_for_the_first_time, AbstractIndexManager.this.fName), IProgressMonitor.UNKNOWN);
+				monitor.beginTask(NLS.bind(SSECoreMessages.IndexManager_Indexing01, AbstractIndexManager.this.fName, (fTarget != null? fTarget.getFullPath().makeRelative().toString() : "entire workspace")), IProgressMonitor.UNKNOWN);
 
 				// visit the workspace
-				WorkspaceVisitor visitor = new WorkspaceVisitor(monitor);
-				ResourcesPlugin.getWorkspace().getRoot().accept(visitor, IResource.NONE);
+				ResourceVisitor visitor = new ResourceVisitor(monitor);
+				if (fTarget != null) {
+					fTarget.accept(visitor, IResource.NONE);
+				} else {
+					ResourcesPlugin.getWorkspace().getRoot().accept(visitor, IResource.NONE);
+				}
 
 				// process any remaining batched up resources to index
 				visitor.processBatchedResourceEvents();
 			}
 			catch (CoreException e) {
-				Logger.logException(AbstractIndexManager.this.fName + ": Failed visiting entire workspace for initial index. " + AbstractIndexManager.LOG_ERROR_INDEX_INVALID, e); //$NON-NLS-1$
+				Logger.logException(AbstractIndexManager.this.fName + ": Failed visiting " + (fTarget != null? fTarget.getFullPath() : "entire workspace") + " for initial index. " + AbstractIndexManager.LOG_ERROR_INDEX_INVALID, e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 
 			IStatus status;
@@ -684,122 +696,121 @@ public abstract class AbstractIndexManager {
 			monitor.done();
 			return status;
 		}
+	}
+	/**
+	 * <p>
+	 * An {@link IResourceProxyVisitor} used to visit all of the files in
+	 * the workspace looking for files to add to the index.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>NOTE: </b>After this visitor is used
+	 * {@link ResourceVisitor#processBatchedResourceEvents() must be
+	 * called to flush out the last of the {@link ResourceEvent}s produced
+	 * by this visitor.
+	 * </p>
+	 */
+	private class ResourceVisitor implements IResourceProxyVisitor {
+		/**
+		 * {@link IProgressMonitor} used to report status and check for
+		 * cancellation
+		 */
+		private SubMonitor fProgress;
+
+		/**
+		 * {@link Map}&lt{@link IResource}, {@link ResourceEvent}&gt
+		 * <p>
+		 * Map of resources events created and batched up by this visitor.
+		 * These events are periodical be sent off to the
+		 * {@link ResourceEventProcessingJob} but need to be sent off one
+		 * final time after this visitor finishes it work.
+		 * </p>
+		 * 
+		 * @see #processBatchedResourceEvents()
+		 */
+		private Map fBatchedResourceEvents;
 
 		/**
 		 * <p>
-		 * An {@link IResourceProxyVisitor} used to visit all of the files in
-		 * the workspace looking for files to add to the index.
+		 * Default constructor
 		 * </p>
 		 * 
+		 * @param monitor
+		 *            used to report status and allow this visitor to be
+		 *            canceled
+		 */
+		protected ResourceVisitor(IProgressMonitor monitor) {
+			this.fProgress = SubMonitor.convert(monitor);
+			this.fBatchedResourceEvents = new LinkedHashMap(BATCH_UP_AMOUNT);
+		}
+
+		/**
 		 * <p>
-		 * <b>NOTE: </b>After this visitor is used
-		 * {@link WorkspaceVisitor#processBatchedResourceEvents() must be
-		 * called to flush out the last of the {@link ResourceEvent}s produced
-		 * by this visitor.
+		 * As long as the monitor is not canceled visit each file in the
+		 * workspace that should be visited.
+		 * </p>
+		 * 
+		 * @see org.eclipse.core.resources.IResourceProxyVisitor#visit(org.eclipse.core.resources.IResourceProxy)
+		 * @see AbstractIndexManager#shouldVisit(String)
+		 */
+		public boolean visit(IResourceProxy proxy) throws CoreException {
+			this.fProgress.subTask(proxy.getName());
+
+			boolean visitChildren = false;
+
+			/*
+			 * if not canceled or a hidden resource then process file else
+			 * don't visit children
+			 */
+			if (!this.fProgress.isCanceled()) {
+				if (proxy.isDerived()) {
+					/*
+					 * Do not include derived resources
+					 */
+					visitChildren = false;
+				}
+				else if (proxy.requestFullPath().isRoot()) {
+					visitChildren = true;
+				}
+				else if (isResourceToIndex(proxy.getType(), proxy.requestFullPath())) {
+					if (proxy.getType() == IResource.FILE) {
+						// add the file to be indexed
+						IFile file = (IFile) proxy.requestResource();
+						if (file.exists()) {
+							this.fBatchedResourceEvents.put(file, new ResourceEvent(AbstractIndexManager.SOURCE_WORKSPACE_SCAN, AbstractIndexManager.ACTION_ADD, null));
+						}
+					}
+					visitChildren = true;
+				}
+			}
+
+			// batch up resource changes before sending them out
+			if (this.fBatchedResourceEvents.size() >= BATCH_UP_AMOUNT) {
+				this.processBatchedResourceEvents();
+			}
+
+			return visitChildren;
+		}
+
+		/**
+		 * <p>
+		 * Sends any batched up resource events created by this visitor to
+		 * the {@link ResourceEventProcessingJob}.
+		 * <p>
+		 * 
+		 * <p>
+		 * <b>NOTE:</b> This will be called every so often as the visitor
+		 * is visiting resources but needs to be called a final time by
+		 * the user of this visitor to be sure the final events are sent
+		 * off
 		 * </p>
 		 */
-		private class WorkspaceVisitor implements IResourceProxyVisitor {
-			/**
-			 * {@link IProgressMonitor} used to report status and check for
-			 * cancellation
-			 */
-			private SubMonitor fProgress;
-
-			/**
-			 * {@link Map}&lt{@link IResource}, {@link ResourceEvent}&gt
-			 * <p>
-			 * Map of resources events created and batched up by this visitor.
-			 * These events are periodical be sent off to the
-			 * {@link ResourceEventProcessingJob} but need to be sent off one
-			 * final time after this visitor finishes it work.
-			 * </p>
-			 * 
-			 * @see #processBatchedResourceEvents()
-			 */
-			private Map fBatchedResourceEvents;
-
-			/**
-			 * <p>
-			 * Default constructor
-			 * </p>
-			 * 
-			 * @param monitor
-			 *            used to report status and allow this visitor to be
-			 *            canceled
-			 */
-			protected WorkspaceVisitor(IProgressMonitor monitor) {
-				this.fProgress = SubMonitor.convert(monitor);
-				this.fBatchedResourceEvents = new LinkedHashMap(BATCH_UP_AMOUNT);
-			}
-
-			/**
-			 * <p>
-			 * As long as the monitor is not canceled visit each file in the
-			 * workspace that should be visited.
-			 * </p>
-			 * 
-			 * @see org.eclipse.core.resources.IResourceProxyVisitor#visit(org.eclipse.core.resources.IResourceProxy)
-			 * @see AbstractIndexManager#shouldVisit(String)
-			 */
-			public boolean visit(IResourceProxy proxy) throws CoreException {
-				this.fProgress.subTask(proxy.getName());
-
-				boolean visitChildren = false;
-
-				/*
-				 * if not canceled or a hidden resource then process file else
-				 * don't visit children
-				 */
-				if (!this.fProgress.isCanceled()) {
-					if (proxy.isDerived()) {
-						/*
-						 * Do not include derived resources
-						 */
-						visitChildren = false;
-					}
-					else if (proxy.requestFullPath().isRoot()) {
-						visitChildren = true;
-					}
-					else if (isResourceToIndex(proxy.getType(), proxy.requestFullPath())) {
-						if (proxy.getType() == IResource.FILE) {
-							// add the file to be indexed
-							IFile file = (IFile) proxy.requestResource();
-							if (file.exists()) {
-								this.fBatchedResourceEvents.put(file, new ResourceEvent(AbstractIndexManager.SOURCE_WORKSPACE_SCAN, AbstractIndexManager.ACTION_ADD, null));
-							}
-						}
-						visitChildren = true;
-					}
-				}
-
-				// batch up resource changes before sending them out
-				if (this.fBatchedResourceEvents.size() >= BATCH_UP_AMOUNT) {
-					this.processBatchedResourceEvents();
-				}
-
-				return visitChildren;
-			}
-
-			/**
-			 * <p>
-			 * Sends any batched up resource events created by this visitor to
-			 * the {@link ResourceEventProcessingJob}.
-			 * <p>
-			 * 
-			 * <p>
-			 * <b>NOTE:</b> This will be called every so often as the visitor
-			 * is visiting resources but needs to be called a final time by
-			 * the user of this visitor to be sure the final events are sent
-			 * off
-			 * </p>
-			 */
-			protected void processBatchedResourceEvents() {
-				AbstractIndexManager.this.fResourceEventProcessingJob.addResourceEvents(this.fBatchedResourceEvents);
-				this.fBatchedResourceEvents.clear();
-			}
+		protected void processBatchedResourceEvents() {
+			AbstractIndexManager.this.fResourceEventProcessingJob.addResourceEvents(this.fBatchedResourceEvents);
+			this.fBatchedResourceEvents.clear();
 		}
 	}
-
+	
 	/**
 	 * <p>
 	 * Used to listen to resource change events in the workspace. These events
@@ -1124,8 +1135,10 @@ public abstract class AbstractIndexManager {
 			 * if root node always visit its children else ask manager
 			 * implementation if resource and its children should be visited
 			 */
-			if (delta.getResource().isDerived()) { // Do not include derived
-													// resources
+			if (delta.getResource().isDerived()) {
+				/*
+				 * Do not include ANY derived resources
+				 */
 				visitChildren = false;
 			}
 			else if (delta.getFullPath().isRoot()) { //$NON-NLS-1$
@@ -1180,6 +1193,12 @@ public abstract class AbstractIndexManager {
 							}
 						}
 					}// end is file
+					else if (resource.getType() == IResource.PROJECT) {
+						if ((delta.getFlags() & IResourceDelta.OPEN) != 0 && ((IProject) resource).isOpen()) {
+							Logger.log(Logger.INFO, "Indexing project " + resource.getName() + " for " + AbstractIndexManager.this.getName());
+							new ResourceVisitorJob(delta.getResource()).schedule();
+						}
+					}
 
 					visitChildren = true;
 				}
@@ -1316,28 +1335,24 @@ public abstract class AbstractIndexManager {
 		 * @param loadPreservedResourceEvents
 		 *            <code>true</code> if should load any preserved
 		 *            {@link ResourceEvent}s from the last time
-		 *            {@link #stop(boolean)} was invoked
+		 *            {@link #stop(boolean)} was invoked, <code>false</code>
+		 *            to discard them
 		 * 
-		 * @return <code>true</code> if either
-		 *         <code>loadPreservedResourceEvents</code> was false or there
-		 *         was success in loading the preserved {@link ResourceEvent}
-		 *         s. If <code>false</code> then some {@link ResourceEvent}s
-		 *         may have been loosed and to insure index consistency with
-		 *         the workspace a full workspace re-index is needed.
+		 * @return <code>true</code> if the preserved events were successfully loaded.
+		 *         if <code>false</code> is returned, a full workspace re-index is needed.
 		 * 
 		 * @see #stop(boolean)
 		 */
 		protected synchronized boolean start(boolean loadPreservedResourceEvents, SubMonitor progress) {
-
-			boolean successLoadingPreserved = true;
+			boolean successLoadingPreserved = false;
 
 			// attempt to load preserved resource events if requested
-			if (!loadPreservedResourceEvents) {
-				File preservedResourceEventsFile = this.getPreservedResourceEventsFile();
-				preservedResourceEventsFile.delete();
+			if (loadPreservedResourceEvents) {
+				successLoadingPreserved = this.loadPreservedReceivedResourceEvents(progress);
 			}
 			else {
-				successLoadingPreserved = this.loadPreservedReceivedResourceEvents(progress);
+				File preservedResourceEventsFile = this.getPreservedResourceEventsFile();
+				preservedResourceEventsFile.delete();
 			}
 
 			// start up the job
@@ -1907,8 +1922,8 @@ public abstract class AbstractIndexManager {
 		 * @see #loadPreservedReceivedResourceEvents(SubMonitor)
 		 */
 		private File getPreservedResourceEventsFile() {
-			IPath preservedResourcesToIndexPath = AbstractIndexManager.this.getWorkingLocation().append(PRESERVED_RESOURCE_EVENTS_TO_PROCESS_FILE_NAME);
-			return new File(preservedResourcesToIndexPath.toOSString());
+			IPath preservedResourcesToIndexLocation = AbstractIndexManager.this.getWorkingLocation().append(PRESERVED_RESOURCE_EVENTS_TO_PROCESS_FILE_NAME);
+			return preservedResourcesToIndexLocation.toFile();
 		}
 
 		/**

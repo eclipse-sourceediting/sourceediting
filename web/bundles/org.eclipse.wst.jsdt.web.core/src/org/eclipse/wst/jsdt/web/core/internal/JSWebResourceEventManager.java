@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2012 IBM Corporation and others.
+ * Copyright (c) 2011, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.core.ClasspathEntry;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
-import org.eclipse.wst.jsdt.internal.core.util.Messages;
 import org.eclipse.wst.jsdt.web.core.internal.project.ModuleSourcePathProvider;
 import org.eclipse.wst.sse.core.indexing.AbstractIndexManager;
 
@@ -58,8 +57,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 	 * <p>Private constructor for the resource event manager</p>
 	 */
 	private JSWebResourceEventManager() {
-		super(Messages.build_analyzingDeltas, Messages.build_analyzingDeltas,
-				Messages.javamodel_initialization, Messages.manager_filesToIndex);
+		super(JsCoreMessages.JavaScript_Indexer);
 	}
 	
 	/**
@@ -106,7 +104,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
     			JsCorePlugin.getDefault().getStateLocation().append("JSWebResourceEventManager"); //$NON-NLS-1$
 
             // ensure that it exists on disk
-            File folder = new File(workingLocation.toOSString());
+            File folder = workingLocation.toFile();
     		if (!folder.isDirectory()) {
     			try {
     				folder.mkdir();
