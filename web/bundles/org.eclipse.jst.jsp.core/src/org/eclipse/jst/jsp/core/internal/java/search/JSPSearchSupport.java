@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,7 +95,6 @@ public class JSPSearchSupport {
 
         // constructor w/ java element
         public SearchJob(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
-
             super(JSPCoreMessages.JSP_Search + element.getElementName());
             this.fElement = element;
             this.fScope = scope;
@@ -104,7 +103,6 @@ public class JSPSearchSupport {
 
         // constructor w/ search text
         public SearchJob(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
-
             super(JSPCoreMessages.JSP_Search + searchText);
             this.fSearchText = searchText;
             this.fScope = scope;
@@ -112,6 +110,11 @@ public class JSPSearchSupport {
             this.fLimitTo = limitTo;
             this.fMatchMode = matchMode;
             this.fRequestor = requestor;
+        }
+
+        @Override
+        public boolean belongsTo(Object family) {
+		return family == JSPSearchSupport.class;
         }
 
         public IStatus run(IProgressMonitor jobMonitor) {

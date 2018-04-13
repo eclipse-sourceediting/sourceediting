@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -210,8 +210,12 @@ class ProjectDescription {
 
 	class Indexer implements IResourceProxyVisitor {
 		public boolean visit(IResourceProxy proxy) throws CoreException {
+			if (proxy.isDerived()) {
+				return false;
+			}
+
 			boolean visitMembers = true;
-			if (proxy.getType() == IResource.FILE && !proxy.isDerived()) {
+			if (proxy.getType() == IResource.FILE) {
 				if (proxy.getName().endsWith(".tld")) { //$NON-NLS-1$
 					updateTLD(proxy.requestResource(), ITaglibIndexDelta.ADDED);
 				}

@@ -21,6 +21,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -29,6 +30,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentPropertiesManager;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.osgi.framework.BundleContext;
@@ -87,6 +89,8 @@ public class JSPCorePlugin extends Plugin {
 		JSPFContentPropertiesManager.startup();
 
 		DeploymentDescriptorPropertyCache.start();
+
+		Platform.getContentTypeManager().addContentTypeChangeListener(ContentTypeIdForJSP.getTypeChangeListener());
 	}
 
 	/*
@@ -95,6 +99,8 @@ public class JSPCorePlugin extends Plugin {
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		Platform.getContentTypeManager().removeContentTypeChangeListener(ContentTypeIdForJSP.getTypeChangeListener());
+
 		DeploymentDescriptorPropertyCache.stop();
 
 		// stop listening for resource changes to update content properties keys

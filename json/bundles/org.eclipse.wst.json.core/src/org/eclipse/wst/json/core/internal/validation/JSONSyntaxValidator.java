@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013, 2018 Angelo ZERR and others.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -195,6 +195,9 @@ public class JSONSyntaxValidator extends AbstractValidator implements
 	}
 
 	private boolean shouldValidate(IResourceProxy proxy) {
+		if (proxy.isDerived()) {
+			return false;
+		}
 		if (proxy.getType() == IResource.FILE) {
 			String name = proxy.getName();
 			if (name.toLowerCase(Locale.US).endsWith(".json")) { //$NON-NLS-1$

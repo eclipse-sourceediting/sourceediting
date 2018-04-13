@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,9 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.tests;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.jface.text.tests.JFaceTextTestSuite;
 import org.eclipse.jst.jsp.ui.tests.breakpointproviders.BreakpointProvidersTest;
@@ -30,9 +27,13 @@ import org.eclipse.jst.jsp.ui.tests.other.UnitTests;
 import org.eclipse.jst.jsp.ui.tests.pagedirective.TestPageDirective;
 import org.eclipse.jst.jsp.ui.tests.partitioning.TestStructuredPartitionerJSP;
 import org.eclipse.jst.jsp.ui.tests.registry.AdapterFactoryRegistryTest;
+import org.eclipse.jst.jsp.ui.tests.search.JSPSearchTests;
 import org.eclipse.jst.jsp.ui.tests.validation.JSPHTMLValidatorTest;
 import org.eclipse.jst.jsp.ui.tests.viewer.TestViewerConfigurationJSP;
 import org.eclipse.text.tests.EclipseTextTestSuite;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 
 
@@ -76,7 +77,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(BreakpointProvidersTest.class, "Additional JSP Breakpoint classes"));
 
 		// pa_TODO fix this test
-		//addTest(new TestSuite(JSPSearchTests.class));
+		addTest(new TestSuite(JSPSearchTests.class));
 
 		addTest(JFaceTextTestSuite.suite());
 		addTest(EclipseTextTestSuite.suite());

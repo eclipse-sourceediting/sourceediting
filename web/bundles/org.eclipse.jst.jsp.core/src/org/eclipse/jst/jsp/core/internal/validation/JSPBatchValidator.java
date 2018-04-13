@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,7 +74,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
 public final class JSPBatchValidator extends AbstractValidator implements IValidatorJob, IExecutableExtension {
 	class JSPFileVisitor implements IResourceProxyVisitor {
 
-		private List fFiles = new ArrayList();
+		private List<IFile> fFiles = new ArrayList<>();
 		private IReporter fReporter = null;
 
 		public JSPFileVisitor(IReporter reporter) {
@@ -82,13 +82,12 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 		}
 
 		final IFile[] getFiles() {
-			return (IFile[]) fFiles.toArray(new IFile[fFiles.size()]);
+			return fFiles.toArray(new IFile[fFiles.size()]);
 		}
 
 		public boolean visit(IResourceProxy proxy) throws CoreException {
-
 			// check validation
-			if (fReporter.isCancelled())
+			if (fReporter.isCancelled() || proxy.isDerived())
 				return false;
 
 			if (proxy.getType() == IResource.FILE) {
@@ -115,7 +114,7 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 	/**
 	 * List of IResources that the currently validating file depends upon
 	 */
-	private Collection fDependsOn;
+	Collection<IResource> fDependsOn;
 
 	/**
 	 * Gets current validation project configuration based on current project
@@ -164,8 +163,6 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 	}
 
 	String fAdditionalContentTypesIDs[] = null;
-
-	private IContentType[] fContentTypes = null;
 
 	private JSPDirectiveValidator fJSPDirectiveValidator = new JSPDirectiveValidator(this);
 
@@ -252,7 +249,7 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 	 * @return false if file is a fragment and it should not be validated,
 	 *         true otherwise
 	 */
-	private boolean fragmentCheck(IFile file) {
+	boolean fragmentCheck(IFile file) {
 		boolean shouldValidate = true;
 		// quick check to see if this is possibly a jsp fragment
 		if (getJSPFContentType().isAssociatedWith(file.getName())) {
@@ -293,29 +290,6 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 		 * For other kinds of validation, use no specific rule
 		 */
 		return null;
-	}
-
-	/**
-	 * Gets list of content types this visitor is interested in
-	 * 
-	 * @return All JSP-related content types
-	 */
-	private IContentType[] getValidContentTypes() {
-		if (fContentTypes == null) {
-			// currently "hard-coded" to be jsp & jspf
-			fContentTypes = new IContentType[]{Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP), Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT)};
-			if (fAdditionalContentTypesIDs != null) {
-				List allTypes = new ArrayList(Arrays.asList(fContentTypes));
-				for (int i = 0; i < fAdditionalContentTypesIDs.length; i++) {
-					IContentType type = Platform.getContentTypeManager().getContentType(fAdditionalContentTypesIDs[i]);
-					if (type != null) {
-						allTypes.add(type);
-					}
-				}
-				fContentTypes = (IContentType[]) allTypes.toArray(new IContentType[allTypes.size()]);
-			}
-		}
-		return fContentTypes;
 	}
 
 	/**
@@ -369,15 +343,8 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 	 * @param fileName
 	 * @return true if filename indicates some type of JSP, false otherwise
 	 */
-	private boolean isJSPType(String fileName) {
-		boolean valid = false;
-
-		IContentType[] types = getValidContentTypes();
-		int i = 0;
-		while (i < types.length && !valid) {
-			valid = types[i].isAssociatedWith(fileName);
-			++i;
-		}
+	boolean isJSPType(String fileName) {
+		boolean valid = (ContentTypeIdForJSP.indexOfJSPExtension(fileName) >= 0);
 		return valid;
 	}
 
@@ -412,8 +379,7 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 				return false;
 			}
 			resource = resource.getParent();
-		}
-		while ((resource.getType() & IResource.PROJECT) == 0);
+		} while ((resource.getType() & IResource.PROJECT) == 0);
 		return true;
 	}
 
@@ -486,10 +452,10 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 		final IReporter reporter = result.getReporter(monitor);
 		
 		if(result.getDependsOn() != null) {
-			fDependsOn = new HashSet(Arrays.asList(result.getDependsOn()));
+			fDependsOn = new HashSet<>(Arrays.asList(result.getDependsOn()));
 		}
 		else {
-			fDependsOn = new HashSet();
+			fDependsOn = new HashSet<>();
 		}
 		
 		// add web.xml as a dependency
@@ -514,7 +480,7 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 				if (fragmentCheck((IFile) resource)) {
 					validateFile((IFile) resource, reporter);
 				}
-				IResource[] resources = (IResource[]) fDependsOn.toArray(new IResource[fDependsOn.size()]);
+				IResource[] resources = fDependsOn.toArray(new IResource[fDependsOn.size()]);
 				result.setDependsOn(resources);
 				fDependsOn.clear();
 			}

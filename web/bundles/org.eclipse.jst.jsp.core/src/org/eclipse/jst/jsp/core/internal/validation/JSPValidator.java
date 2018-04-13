@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,9 +104,7 @@ public class JSPValidator extends AbstractValidator implements IValidatorJob {
 	}
 
 	protected class JSPFileVisitor implements IResourceProxyVisitor {
-
-		private List fFiles = new ArrayList();
-		private IContentType[] fContentTypes = null;
+		private List<IFile> fFiles = new ArrayList<>();
 		private IReporter fReporter = null;
 
 		public JSPFileVisitor(IReporter reporter) {
@@ -114,9 +112,8 @@ public class JSPValidator extends AbstractValidator implements IValidatorJob {
 		}
 
 		public boolean visit(IResourceProxy proxy) throws CoreException {
-
 			// check validation
-			if (fReporter.isCancelled())
+			if (fReporter.isCancelled() || proxy.isDerived())
 				return false;
 
 			if (proxy.getType() == IResource.FILE) {
@@ -138,20 +135,7 @@ public class JSPValidator extends AbstractValidator implements IValidatorJob {
 		}
 
 		public final IFile[] getFiles() {
-			return (IFile[]) fFiles.toArray(new IFile[fFiles.size()]);
-		}
-
-		/**
-		 * Gets list of content types this visitor is interested in
-		 * 
-		 * @return All JSP-related content types
-		 */
-		private IContentType[] getValidContentTypes() {
-			if (fContentTypes == null) {
-				// currently "hard-coded" to be jsp & jspf
-				fContentTypes = new IContentType[]{Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP), Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT)};
-			}
-			return fContentTypes;
+			return fFiles.toArray(new IFile[fFiles.size()]);
 		}
 
 		/**
@@ -162,14 +146,7 @@ public class JSPValidator extends AbstractValidator implements IValidatorJob {
 		 *         otherwise
 		 */
 		private boolean isJSPType(String fileName) {
-			boolean valid = false;
-
-			IContentType[] types = getValidContentTypes();
-			int i = 0;
-			while (i < types.length && !valid) {
-				valid = types[i].isAssociatedWith(fileName);
-				++i;
-			}
+			boolean valid = (ContentTypeIdForJSP.indexOfJSPExtension(fileName) >= 0);
 			return valid;
 		}
 	}

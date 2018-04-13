@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -288,12 +289,12 @@ public abstract class AbstractIndexManager {
 						}
 					}
 					else {
-						Logger.log(Logger.INFO, "Fully reindexing for " + getClass().getName());
+						Logger.log(Logger.INFO_DEBUG, "Fully reindexing for " + getClass().getName());
 					}
 					progress.worked(1);
 
-					// if need to process the entire workspace do so in
-					// another job
+					/* If need to process the entire workspace do so in
+					   another job */
 					if (fullReindexNeeded) {
 						this.fWorkspaceVisitorJob = new ResourceVisitorJob();
 						this.fWorkspaceVisitorJob.schedule();
@@ -728,7 +729,7 @@ public abstract class AbstractIndexManager {
 		 * 
 		 * @see #processBatchedResourceEvents()
 		 */
-		private Map fBatchedResourceEvents;
+		private Map<IResource, ResourceEvent> fBatchedResourceEvents;
 
 		/**
 		 * <p>
@@ -741,7 +742,7 @@ public abstract class AbstractIndexManager {
 		 */
 		protected ResourceVisitor(IProgressMonitor monitor) {
 			this.fProgress = SubMonitor.convert(monitor);
-			this.fBatchedResourceEvents = new LinkedHashMap(BATCH_UP_AMOUNT);
+			this.fBatchedResourceEvents = new LinkedHashMap<>(BATCH_UP_AMOUNT);
 		}
 
 		/**
@@ -773,12 +774,10 @@ public abstract class AbstractIndexManager {
 					visitChildren = true;
 				}
 				else if (isResourceToIndex(proxy.getType(), proxy.requestFullPath())) {
-					if (proxy.getType() == IResource.FILE) {
+					if (proxy.getType() == IResource.FILE && proxy.isAccessible()) {
 						// add the file to be indexed
 						IFile file = (IFile) proxy.requestResource();
-						if (file.exists()) {
-							this.fBatchedResourceEvents.put(file, new ResourceEvent(AbstractIndexManager.SOURCE_WORKSPACE_SCAN, AbstractIndexManager.ACTION_ADD, null));
-						}
+						this.fBatchedResourceEvents.put(file, new ResourceEvent(AbstractIndexManager.SOURCE_WORKSPACE_SCAN, AbstractIndexManager.ACTION_ADD, null));
 					}
 					visitChildren = true;
 				}
@@ -1057,7 +1056,7 @@ public abstract class AbstractIndexManager {
 		 * 
 		 * @see #processBatchedResourceEvents()
 		 */
-		private Map fBatchedResourceEvents;
+		private Map<IResource, ResourceEvent> fBatchedResourceEvents;
 
 		/**
 		 * <p>
@@ -1103,7 +1102,7 @@ public abstract class AbstractIndexManager {
 		protected ResourceDeltaVisitor(SubMonitor progress, byte source) {
 			this.fProgress = progress;
 			this.fSource = source;
-			this.fBatchedResourceEvents = new LinkedHashMap(BATCH_UP_AMOUNT);
+			this.fBatchedResourceEvents = new LinkedHashMap<>(BATCH_UP_AMOUNT);
 			this.fPredictedWorkRemaining = 1;
 		}
 
@@ -1195,7 +1194,7 @@ public abstract class AbstractIndexManager {
 					}// end is file
 					else if (resource.getType() == IResource.PROJECT) {
 						if ((delta.getFlags() & IResourceDelta.OPEN) != 0 && ((IProject) resource).isOpen()) {
-							Logger.log(Logger.INFO, "Indexing project " + resource.getName() + " for " + AbstractIndexManager.this.getName());
+							Logger.log(Logger.INFO_DEBUG, "Indexing project " + resource.getName() + " for " + AbstractIndexManager.this.getName());
 							new ResourceVisitorJob(delta.getResource()).schedule();
 						}
 					}
@@ -1289,7 +1288,7 @@ public abstract class AbstractIndexManager {
 		 * The list of resources events to be processed
 		 * </p>
 		 */
-		private Map fResourceEvents;
+		private Map<IResource, ResourceEvent> fResourceEvents;
 
 		/** Lock used when accessing {@link #fBatchedResourceEvents} */
 		private final Object fResourceEventsLock = new Object();
@@ -1317,7 +1316,7 @@ public abstract class AbstractIndexManager {
 			this.setPriority(Job.LONG);
 
 			this.fIsPaused = false;
-			this.fResourceEvents = new LinkedHashMap();
+			this.fResourceEvents = new LinkedHashMap<>();
 		}
 
 		/**
@@ -1473,11 +1472,12 @@ public abstract class AbstractIndexManager {
 		 * @see #addResourceEvent(ResourceEvent)
 		 * @see #unPause()
 		 */
-		protected void addResourceEvents(Map resourceEvents) {
-			Iterator iter = resourceEvents.keySet().iterator();
+		protected void addResourceEvents(Map<IResource, ResourceEvent> resourceEvents) {
+			Iterator<Map.Entry<IResource, ResourceEvent>> iter = resourceEvents.entrySet().iterator();
 			while (iter.hasNext()) {
-				IResource resource = (IResource) iter.next();
-				ResourceEvent resourceEvent = (ResourceEvent) resourceEvents.get(resource);
+				Entry<IResource, ResourceEvent> entry = iter.next();
+				IResource resource = entry.getKey();
+				ResourceEvent resourceEvent = entry.getValue();
 				addResourceEvent(resource, resourceEvent);
 			}
 
@@ -1542,8 +1542,8 @@ public abstract class AbstractIndexManager {
 					ResourceEvent resourceEvent = null;
 					IResource resource = null;
 					synchronized (this.fResourceEventsLock) {
-						resource = (IResource) this.fResourceEvents.keySet().iterator().next();
-						resourceEvent = (ResourceEvent) this.fResourceEvents.remove(resource);
+						resource = this.fResourceEvents.keySet().iterator().next();
+						resourceEvent = this.fResourceEvents.remove(resource);
 					}
 
 					// report status
@@ -1625,7 +1625,7 @@ public abstract class AbstractIndexManager {
 					this.fResourceEvents.put(resource, resourceEvent);
 				}
 				else if (resourceEvent.fSource == AbstractIndexManager.SOURCE_RESOURCE_CHANGE) {
-					((ResourceEvent) this.fResourceEvents.get(resource)).fAction = resourceEvent.fAction;
+					this.fResourceEvents.get(resource).fAction = resourceEvent.fAction;
 				}
 				else {
 					// Purposely ignoring all other resource events
@@ -1696,10 +1696,11 @@ public abstract class AbstractIndexManager {
 
 					// write out all the information needed to restore the
 					// resource events to process
-					Iterator iter = this.fResourceEvents.keySet().iterator();
+					Iterator<Map.Entry<IResource, ResourceEvent>> iter = this.fResourceEvents.entrySet().iterator();
 					while (iter.hasNext()) {
-						IResource resource = (IResource) iter.next();
-						ResourceEvent resourceEvent = (ResourceEvent) this.fResourceEvents.get(resource);
+						Map.Entry<IResource, ResourceEvent> entry = iter.next();
+						IResource resource = entry.getKey();
+						ResourceEvent resourceEvent = entry.getValue();
 
 						if (resourceEvent.fSource != AbstractIndexManager.SOURCE_WORKSPACE_SCAN) {
 							// write out information
@@ -1782,7 +1783,7 @@ public abstract class AbstractIndexManager {
 			File preservedResourceEventsFile = this.getPreservedResourceEventsFile();
 
 			if (preservedResourceEventsFile.exists()) {
-				Map preservedResourceEvents = null;
+				Map<IResource, ResourceEvent> preservedResourceEvents = null;
 
 				DataInputStream dis = null;
 				try {
@@ -1796,7 +1797,7 @@ public abstract class AbstractIndexManager {
 
 						// read each record
 						int numberOfRecords = dis.readInt();
-						preservedResourceEvents = new LinkedHashMap(numberOfRecords);
+						preservedResourceEvents = new LinkedHashMap<>(numberOfRecords);
 						progress.setWorkRemaining(numberOfRecords);
 						for (int i = 0; i < numberOfRecords; ++i) {
 							// action is first byte
@@ -1875,10 +1876,11 @@ public abstract class AbstractIndexManager {
 				// if success loading preserved then add to master list
 				if (success && preservedResourceEvents != null) {
 					synchronized (this.fResourceEventsLock) {
-						Iterator iter = preservedResourceEvents.keySet().iterator();
+						Iterator<Map.Entry<IResource, ResourceEvent>> iter = preservedResourceEvents.entrySet().iterator();
 						while (iter.hasNext()) {
-							IResource resource = (IResource) iter.next();
-							ResourceEvent event = (ResourceEvent) preservedResourceEvents.get(resource);
+							Entry<IResource, ResourceEvent> entry = iter.next();
+							IResource resource = entry.getKey();
+							ResourceEvent event = entry.getValue();
 							this.fResourceEvents.put(resource, event);
 						}
 					}
