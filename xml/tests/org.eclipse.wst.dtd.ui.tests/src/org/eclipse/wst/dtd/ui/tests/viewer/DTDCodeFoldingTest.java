@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -145,6 +145,7 @@ public class DTDCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 		expectedPositions.add(new Position(337, 159));
 		
 		waitForReconcileThenVerify(editor.getTextViewer(), expectedPositions);
+		editor.close(false);
 	}
 	
 	/**
@@ -208,6 +209,7 @@ public class DTDCodeFoldingTest extends TestCase implements ISourceReconcilingLi
 		} catch(BadLocationException e) {
 			fail("Test is broken, add location has become invalid.\n" + e.getMessage());
 		}
+		editor.close(false);
 	}
 	
 	/**

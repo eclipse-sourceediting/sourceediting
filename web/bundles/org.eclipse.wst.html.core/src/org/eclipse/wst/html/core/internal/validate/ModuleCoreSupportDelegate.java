@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 IBM Corporation and others.
+ * Copyright (c) 2007, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
  */
 final class ModuleCoreSupportDelegate {
 	private static final String SLASH = "/";
-	private static Map fResolvedMap = new HashMap();
+	private static Map<IPath, Map<String, Reference<IPath>>> fResolvedMap = new HashMap<IPath, Map<String, Reference<IPath>>>();
 
 	/**
 	 * @param path
@@ -104,15 +104,15 @@ final class ModuleCoreSupportDelegate {
 			 * cache the result.
 			 */
 			IPath resolved = null;
-			Map mapForBaseResource = null;
-			mapForBaseResource = (Map) fResolvedMap.get(basePath);
+			Map<String, Reference<IPath>> mapForBaseResource = null;
+			mapForBaseResource = fResolvedMap.get(basePath);
 			if (mapForBaseResource != null) {
-				Reference resolvedReference = (Reference) mapForBaseResource.get(reference);
+				Reference<IPath> resolvedReference = mapForBaseResource.get(reference);
 				if (resolvedReference != null)
-					resolved = (IPath) resolvedReference.get();
+					resolved = resolvedReference.get();
 			}
 			else {
-				mapForBaseResource = new HashMap();
+				mapForBaseResource = new HashMap<String, Reference<IPath>>();
 				fResolvedMap.put(basePath, mapForBaseResource);
 			}
 
@@ -133,7 +133,7 @@ final class ModuleCoreSupportDelegate {
 						IFile[] underlyingFiles = virtualFile.getUnderlyingFiles();
 						for (int j = 0; j < underlyingFiles.length; j++) {
 							if (underlyingFiles[j].getProject().equals(project) && underlyingFiles[j].exists()) {
-								mapForBaseResource.put(reference, new SoftReference(underlyingFiles[j].getFullPath()));
+								mapForBaseResource.put(reference, new SoftReference<IPath>(underlyingFiles[j].getFullPath()));
 								resolved = underlyingFiles[j].getFullPath();
 							}
 
@@ -168,22 +168,25 @@ final class ModuleCoreSupportDelegate {
 		return null;
 	}
 	private static IPath resolveInReferenced(IProject project, IPath runtimeReference) {
-		IVirtualReference[] references = ComponentCore.createComponent(project).getReferences();
-		if (references != null) {
-			for (int i = 0; i < references.length; i++) {
-				IVirtualComponent referencedComponent = references[i].getReferencedComponent();
-				if (referencedComponent == null)
-					continue;
-				IVirtualComponent component = referencedComponent.getComponent();
-				if (component == null)
-					continue;
-				IVirtualFolder rootFolder = component.getRootFolder();
-				if (rootFolder == null)
-					continue;
-				// overlay?
-				IVirtualResource member = rootFolder.findMember(runtimeReference);
-				if (member != null) {
-					return member.getWorkspaceRelativePath();
+		IVirtualComponent projectComponent = ComponentCore.createComponent(project);
+		if (projectComponent != null) {
+			IVirtualReference[] references = projectComponent.getReferences();
+			if (references != null) {
+				for (int i = 0; i < references.length; i++) {
+					IVirtualComponent referencedComponent = references[i].getReferencedComponent();
+					if (referencedComponent == null)
+						continue;
+					IVirtualComponent component = referencedComponent.getComponent();
+					if (component == null)
+						continue;
+					IVirtualFolder rootFolder = component.getRootFolder();
+					if (rootFolder == null)
+						continue;
+					// overlay?
+					IVirtualResource member = rootFolder.findMember(runtimeReference);
+					if (member != null) {
+						return member.getWorkspaceRelativePath();
+					}
 				}
 			}
 		}

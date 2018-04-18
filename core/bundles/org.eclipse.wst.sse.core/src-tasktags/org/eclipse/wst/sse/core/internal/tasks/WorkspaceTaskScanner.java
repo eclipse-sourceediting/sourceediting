@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2013 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,7 +62,7 @@ class WorkspaceTaskScanner {
 	}
 
 	static final String DEFAULT_MARKER_TYPE = IFileTaskScanner.TASK_MARKER_ID;
-	private List fActiveScanners = null;
+	private List<IFileTaskScanner> fActiveScanners = null;
 	private IContentType[] fCurrentIgnoreContentTypes = null;
 	private TaskTag[] fCurrentTaskTags = null;
 
@@ -76,7 +76,7 @@ class WorkspaceTaskScanner {
 	private WorkspaceTaskScanner() {
 		super();
 		registry = FileTaskScannerRegistryReader.getInstance();
-		fActiveScanners = new ArrayList();
+		fActiveScanners = new ArrayList<>();
 		fCurrentTaskTags = new TaskTag[0];
 		fCurrentIgnoreContentTypes = new IContentType[0];
 	}
@@ -100,9 +100,6 @@ class WorkspaceTaskScanner {
 					 * type check above
 					 */
 				}
-			}
-			if (types == null) {
-				types = Platform.getContentTypeManager().findContentTypesFor(resource.getName());
 			}
 			if (Logger.DEBUG_TASKSCONTENTTYPE) {
 				if (types.length > 0) {
@@ -250,7 +247,7 @@ class WorkspaceTaskScanner {
 		}
 	}
 
-	private void replaceTaskMarkers(final IFile file, final String[] markerTypes, final Map markerAttributeMaps[], IProgressMonitor monitor) {
+	private void replaceTaskMarkers(final IFile file, final String[] markerTypes, final Map<String, Object> markerAttributeMaps[], IProgressMonitor monitor) {
 		final IFile finalFile = file;
 		if (file.isAccessible()) {
 			try {
@@ -366,9 +363,9 @@ class WorkspaceTaskScanner {
 		monitor.beginTask("", 8);//$NON-NLS-1$
 		monitor.subTask(file.getFullPath().toString().substring(1));
 
-		final List markerAttributes = new ArrayList();
+		final List<Map<String, Object>> markerAttributes = new ArrayList<>();
 		IContentType[] types = detectContentTypes(file);
-		Set markerTypes = new HashSet(3);
+		Set<String> markerTypes = new HashSet<>(3);
 		// Always included for safety and migration
 		markerTypes.add(DEFAULT_MARKER_TYPE);
 		monitor.worked(1);
@@ -380,7 +377,7 @@ class WorkspaceTaskScanner {
 				fileScanners = registry.getFileTaskScanners(types);
 			}
 			else {
-				List validTypes = new ArrayList();
+				List<IContentType> validTypes = new ArrayList<>();
 				// obtain a filtered list of delegates
 				for (int i = 0; i < types.length; i++) {
 					boolean ignoreContentType = false;
@@ -394,7 +391,7 @@ class WorkspaceTaskScanner {
 						ignoredFileScanners = registry.getFileTaskScanners(new IContentType[] {types[i]});
 					}
 				}
-				fileScanners = registry.getFileTaskScanners((IContentType[]) validTypes.toArray(new IContentType[validTypes.size()]));
+				fileScanners = registry.getFileTaskScanners(validTypes.toArray(new IContentType[validTypes.size()]));
 			}
 			monitor.worked(1);
 			if (ignoredFileScanners != null && ignoredFileScanners.length > 0) {
@@ -414,7 +411,7 @@ class WorkspaceTaskScanner {
 							fActiveScanners.add(fileScanners[j]);
 						}
 						markerTypes.add(fileScanners[j].getMarkerType());
-						Map[] taskMarkerAttributes = fileScanners[j].scan(file, taskTags, new SubProgressMonitor(scannerMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
+						Map<String, Object>[] taskMarkerAttributes = fileScanners[j].scan(file, taskTags, new SubProgressMonitor(scannerMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 						/*
 						 * TODO: pool the marker results so there's only one
 						 * operation creating them
@@ -445,7 +442,7 @@ class WorkspaceTaskScanner {
 				ignoredFileScanners != null && ignoredFileScanners.length > 0) {
 			IProgressMonitor markerUpdateMonitor = new SubProgressMonitor(monitor, 3, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 			if (markerAttributes != null) {
-				replaceTaskMarkers(file, (String[]) markerTypes.toArray(new String[markerTypes.size()]), (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
+				replaceTaskMarkers(file, markerTypes.toArray(new String[markerTypes.size()]), markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
 			}
 		}
 		else {
@@ -457,12 +454,12 @@ class WorkspaceTaskScanner {
 	private void shutdownDelegates(IProject project) {
 		for (int j = 0; j < fActiveScanners.size(); j++) {
 			try {
-				((IFileTaskScanner) fActiveScanners.get(j)).shutdown(project);
+				fActiveScanners.get(j).shutdown(project);
 			}
 			catch (Exception e) {
 				Logger.logException(project.getFullPath().toString(), e);
 			}
 		}
-		fActiveScanners = new ArrayList(1);
+		fActiveScanners = new ArrayList<>(1);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,7 +66,7 @@ public class FileTaskScannerRegistryReader {
 	private IConfigurationElement[] fScannerElements;
 
 	// a mapping from content types to ScannerInfo instances
-	private Map fScannerInfos = null;
+	private Map<String, ScannerInfo[]> fScannerInfos = null;
 
 	private String NAME_SCANNER = "scanner"; //$NON-NLS-1$
 
@@ -81,10 +81,10 @@ public class FileTaskScannerRegistryReader {
 			readRegistry();
 		}
 
-		List scannerInfos = new ArrayList(1);
+		List<ScannerInfo> scannerInfos = new ArrayList<>(1);
 
 		for (int i = 0; i < contentTypes.length; i++) {
-			ScannerInfo[] scannerInfosForContentType = (ScannerInfo[]) fScannerInfos.get(contentTypes[i].getId());
+			ScannerInfo[] scannerInfosForContentType = fScannerInfos.get(contentTypes[i].getId());
 			if (scannerInfosForContentType == null) {
 				scannerInfosForContentType = loadScanners(contentTypes[i]);
 			}
@@ -97,7 +97,7 @@ public class FileTaskScannerRegistryReader {
 		}
 		IFileTaskScanner[] scanners = new IFileTaskScanner[scannerInfos.size()];
 		for (int i = 0; i < scanners.length; i++) {
-			scanners[i] = ((ScannerInfo) scannerInfos.get(i)).getScanner();
+			scanners[i] = scannerInfos.get(i).getScanner();
 		}
 		return scanners;
 	}
@@ -108,7 +108,7 @@ public class FileTaskScannerRegistryReader {
 		}
 
 		// find the relevant extensions
-		List types = new ArrayList(0);
+		List<String> types = new ArrayList<>(0);
 		IConfigurationElement[] scannerElements = fScannerElements;
 		for (int j = 0; j < scannerElements.length; j++) {
 			if (!scannerElements[j].getName().equals(NAME_SCANNER))
@@ -121,11 +121,11 @@ public class FileTaskScannerRegistryReader {
 			}
 		}
 
-		return (String[]) types.toArray(new String[types.size()]);
+		return types.toArray(new String[types.size()]);
 	}
 
 	private ScannerInfo[] loadScanners(IContentType contentType) {
-		List elements = new ArrayList(0);
+		List<IConfigurationElement> elements = new ArrayList<>(0);
 		ScannerInfo[] scannerInfos = null;
 		IConfigurationElement[] delegateElements = fScannerElements;
 		if (contentType != null) {
@@ -146,19 +146,19 @@ public class FileTaskScannerRegistryReader {
 				}
 			}
 			// instantiate and save the scanners
-			List scannerInfoList = new ArrayList(elements.size());
+			List<ScannerInfo> scannerInfoList = new ArrayList<>(elements.size());
 			for (int i = 0; i < elements.size(); i++) {
 				try {
-					IFileTaskScanner scanner = (IFileTaskScanner) ((IConfigurationElement) elements.get(i)).createExecutableExtension(ATT_CLASS);
+					IFileTaskScanner scanner = (IFileTaskScanner) elements.get(i).createExecutableExtension(ATT_CLASS);
 					if (scanner != null) {
-						scannerInfoList.add(new ScannerInfo(((IConfigurationElement) elements.get(i)).getAttribute(ATT_ID), scanner));
+						scannerInfoList.add(new ScannerInfo(elements.get(i).getAttribute(ATT_ID), scanner));
 					}
 				}
 				catch (CoreException e) {
 					Logger.logException("Non-fatal exception creating task scanner for " + contentType.getId(), e); //$NON-NLS-1$
 				}
 			}
-			scannerInfos = (ScannerInfo[]) scannerInfoList.toArray(new ScannerInfo[scannerInfoList.size()]);
+			scannerInfos = scannerInfoList.toArray(new ScannerInfo[scannerInfoList.size()]);
 			fScannerInfos.put(contentType.getId(), scannerInfos);
 			if (Logger.DEBUG_TASKSREGISTRY) {
 				System.out.println("Created " + scannerInfos.length + " task scanner for " + contentType.getId()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -168,8 +168,8 @@ public class FileTaskScannerRegistryReader {
 	}
 
 	private void readRegistry() {
-		fScannerInfos = new HashMap();
-		// Just remember the elements, so plugins don't have to be activated,
+		fScannerInfos = new HashMap<>();
+		// Just remember the elements, so plug-ins don't have to be activated,
 		// unless extension attributes match those of interest
 		IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(SCANNER_EXTENSION_POINT_ID);
 		if (point != null) {

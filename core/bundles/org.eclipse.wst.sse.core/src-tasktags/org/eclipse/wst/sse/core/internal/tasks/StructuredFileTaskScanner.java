@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,7 +57,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
  */
 public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IExecutableExtension {
 	// the list of attributes for the new tasks for the current file
-	protected List fNewMarkerAttributeMaps = null;
+	protected List<Map<String,Object>> fNewMarkerAttributeMaps = null;
 
 	List oldMarkers = null;
 	private long time0;
@@ -65,7 +65,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 
 	public StructuredFileTaskScanner() {
 		super();
-		fNewMarkerAttributeMaps = new ArrayList();
+		fNewMarkerAttributeMaps = new ArrayList<>();
 		if (Logger.DEBUG_TASKS) {
 			System.out.println(getClass().getName() + " instance created"); //$NON-NLS-1$
 		}
@@ -77,8 +77,8 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 	 * 
 	 * @return the initial marker attributes
 	 */
-	protected Map createInitialMarkerAttributes(String text, int documentLine, int startOffset, int length, int priority) {
-		Map attributes = new HashMap(6);
+	protected Map<String,Object> createInitialMarkerAttributes(String text, int documentLine, int startOffset, int length, int priority) {
+		Map<String,Object> attributes = new HashMap<>(6);
 		// marker line numbers are 1-based
 		attributes.put(IMarker.LINE_NUMBER, new Integer(documentLine + 1));
 		attributes.put(IMarker.TASK, getMarkerType());
@@ -245,7 +245,8 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 
 	protected abstract boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion);
 
-	public synchronized Map[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor) {
+	@SuppressWarnings("unchecked")
+	public synchronized Map<String,Object>[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor) {
 		fNewMarkerAttributeMaps.clear();
 		if (monitor.isCanceled() || !shouldScan(file)) {
 			return new Map[0];
@@ -259,7 +260,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 		if (Logger.DEBUG_TASKSPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		return (Map[]) fNewMarkerAttributeMaps.toArray(new Map[fNewMarkerAttributeMaps.size()]);
+		return fNewMarkerAttributeMaps.toArray(new Map[fNewMarkerAttributeMaps.size()]);
 	}
 
 	/**

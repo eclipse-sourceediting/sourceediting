@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,13 +69,13 @@ public class TaskScanningScheduler {
 
 	public static void refresh(IProject project) {
 		String[] projectNames = TaskScanningJob.getScannedProjects();
-		List freshProjectList = new ArrayList();
+		List<String> freshProjectList = new ArrayList<>();
 		for (int i = 0; i < projectNames.length; i++) {
 			if (!projectNames[i].equals(project.getName())) {
 				freshProjectList.add(projectNames[i]);
 			}
 		}
-		TaskScanningJob.setScannedProjects((String[]) freshProjectList.toArray(new String[freshProjectList.size()]));
+		TaskScanningJob.setScannedProjects(freshProjectList.toArray(new String[freshProjectList.size()]));
 
 		scheduler.enqueue(project);
 	}
