@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.web_core.feature"
       label="%featureName"
-      version="3.9.2.qualifier"
+      version="3.10.0.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.1.qualifier">
@@ -18,22 +18,11 @@
    <license url="%licenseURL">
       %license
    </license>
-   <requires>
-      <!-- these features are not in the sourceediting repo, so remove them from this feature
-      <import feature="org.eclipse.wst.jsdt.feature"/>
-      <import feature="org.eclipse.wst.common_core.feature"/>
-      -->
-   </requires>
+
    <includes
          id="org.eclipse.wst.xml_core.feature"
          version="0.0.0"/>
 
-   <!-- this is in servertools, so remove from this feature
-   <includes
-         id="org.eclipse.wst.server_core.feature"
-         version="0.0.0"/>
-   -->
-         
    <includes
          id="org.eclipse.wst.json_core.feature"
          version="0.0.0"/>

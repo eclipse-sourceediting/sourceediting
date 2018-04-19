@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.web_ui.feature"
       label="%featureName"
-      version="3.9.2.qualifier"
+      version="3.10.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.wst.web.ui"
       license-feature="org.eclipse.license"
@@ -19,11 +19,6 @@
    <license url="%licenseURL">
       %license
    </license>
-   <requires>
-      <import feature="org.eclipse.wst.jsdt.feature"/>
-      <import feature="org.eclipse.wst.common_ui.feature"/>
-      <import feature="org.eclipse.wst.server_ui.feature"/>
-   </requires>
 
    <includes
          id="org.eclipse.wst.web_userdoc.feature"
@@ -36,10 +31,16 @@
    <includes
          id="org.eclipse.wst.xml_ui.feature"
          version="0.0.0"/>
-         
+
    <includes
          id="org.eclipse.wst.json_ui.feature"
          version="0.0.0"/>
+
+   <requires>
+      <import feature="org.eclipse.wst.jsdt.feature"/>
+      <import feature="org.eclipse.wst.common_ui.feature"/>
+      <import feature="org.eclipse.wst.server_ui.feature"/>
+   </requires>
 
    <plugin
          id="org.eclipse.wst.jsdt.web.core"
