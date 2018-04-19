@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 IBM Corporation and others.
+ * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -153,6 +153,7 @@ public class TestCSSContentAssistComputers extends TestCase {
 				assertNotNull("CSSMMNode for Proposal Info should not be null", info);
 			}
 		}
+		editor.close(false);
 	}
 	/**
 	 * <p>Run a proposal test by opening the given file and invoking content assist for
@@ -178,6 +179,7 @@ public class TestCSSContentAssistComputers extends TestCase {
 		ICompletionProposal[][] pages = getProposals(viewer, offset, expectedProposalCounts.length);
 		
 		verifyProposalCounts(pages, expectedProposalCounts);
+		editor.close(false);
 	}
 	
 	/**
