@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2018 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchesListener2;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -60,8 +61,11 @@ public class XSLDebugUILaunchListener implements ILaunchesListener2 {
 	public void launchesTerminated(ILaunch[] launches) {
 		for (ILaunch launch : launches) {
 			ILaunchConfigurationType configType = null;
+			ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 			try {
-				configType = launch.getLaunchConfiguration().getType();
+				if ( launchConfiguration != null) {
+					configType = launchConfiguration.getType();
+				}
 			} catch (CoreException e) {
 				// do nothing
 			}
@@ -69,8 +73,7 @@ public class XSLDebugUILaunchListener implements ILaunchesListener2 {
 					&& XSL_LAUNCH_CONFIGURATION_TYPE.equals(configType
 							.getIdentifier())) {
 				try {
-					BaseLaunchHelper launchHelper = new BaseLaunchHelper(launch
-							.getLaunchConfiguration());
+					BaseLaunchHelper launchHelper = new BaseLaunchHelper(launchConfiguration);
 					File file = launchHelper.getTarget();
 					IFile ifile = ResourcesPlugin.getWorkspace().getRoot()
 							.getFileForLocation(
