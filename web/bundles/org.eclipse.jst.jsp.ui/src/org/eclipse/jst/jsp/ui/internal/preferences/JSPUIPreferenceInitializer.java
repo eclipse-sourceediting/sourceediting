@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2012 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,7 +75,7 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		 * Need to find template name that goes with default template id (name
 		 * may change for different language)
 		 */
-		store.setDefault(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_ID, "org.eclipse.jst.jsp.ui.templates.jsphtml"); //$NON-NLS-1$
+		store.setDefault(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_ID, "org.eclipse.jst.jsp.ui.templates.jsphtml5"); //$NON-NLS-1$
 		
 		// set default new jsp tag file template to use in new tag file wizard
 		store.setDefault(JSPUIPreferenceNames.NEW_TAG_FILE_TEMPLATE_ID, "org.eclipse.jst.jsp.ui.templates.simpletag"); //$NON-NLS-1$
