@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,6 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 
 	private void doTestCreate(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws CoreException, IOException {
 		IFile file = (IFile) fTestProject.findMember(filePath);
-		System.out.println(fTestProject.getLocation().toOSString());
 		assertNotNull("Test Case in error. Could not find file " + filePath, file);
 		IPath locationPath = file.getLocation();
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
