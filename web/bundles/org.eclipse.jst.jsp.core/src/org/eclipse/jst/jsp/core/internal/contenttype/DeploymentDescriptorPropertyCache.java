@@ -18,7 +18,6 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -229,6 +228,32 @@ public final class DeploymentDescriptorPropertyCache {
 		}
 	}
 
+	static class ResourceDeltaVisitor implements IResourceDeltaVisitor {
+		public boolean visit(IResourceDelta delta) {
+			IResource resource = delta.getResource();
+			if (resource.getType() == IResource.FILE) {
+				if (delta.getKind() == IResourceDelta.CHANGED && (delta.getFlags() == IResourceDelta.ENCODING || delta.getFlags() == IResourceDelta.MARKERS))
+					return false;
+
+				IPath path = resource.getFullPath();
+				int segmentCount = path.segmentCount();
+				if (segmentCount > 1 && path.lastSegment().equals(WEB_XML) && path.segment(segmentCount - 2).equals(WEB_INF)) {
+					getInstance().deploymentDescriptorChanged(path);
+				}
+			}
+			else if (resource.getType() == IResource.PROJECT) {
+				String name = resource.getName();
+				if (_debugResolutionCache) {
+					System.out.println("Removing DeploymentDescriptorPropertyCache resolution cache for project " + name); //$NON-NLS-1$
+				}
+				synchronized (LOCK) {
+					getInstance().resolvedMap.remove(name);
+				}
+			}
+			return true;
+		}
+	}
+
 	static class ResourceChangeListener implements IResourceChangeListener {
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
@@ -237,31 +262,7 @@ public final class DeploymentDescriptorPropertyCache {
 			if (delta.getKind() == IResourceDelta.CHANGED && (delta.getFlags() == IResourceDelta.ENCODING || delta.getFlags() == IResourceDelta.MARKERS))
 				return;
 
-			IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
-				public boolean visit(IResourceDelta delta) {
-					IResource resource = delta.getResource();
-					if (resource.getType() == IResource.FILE) {
-						if (delta.getKind() == IResourceDelta.CHANGED && (delta.getFlags() == IResourceDelta.ENCODING || delta.getFlags() == IResourceDelta.MARKERS))
-							return false;
-
-						IPath path = resource.getFullPath();
-						int segmentCount = path.segmentCount();
-						if (segmentCount > 1 && path.lastSegment().equals(WEB_XML) && path.segment(segmentCount - 2).equals(WEB_INF)) {
-							getInstance().deploymentDescriptorChanged(path);
-						}
-					}
-					else if (resource.getType() == IResource.PROJECT) {
-						String name = resource.getName();
-						if (_debugResolutionCache) {
-							System.out.println("Removing DeploymentDescriptorPropertyCache resolution cache for project " + name); //$NON-NLS-1$ 
-						}
-						synchronized (LOCK) {
-							getInstance().resolvedMap.remove(name);
-						}
-					}
-					return true;
-				}
-			};
+			IResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
 			try {
 				delta.accept(visitor);
 			}
@@ -454,7 +455,7 @@ public final class DeploymentDescriptorPropertyCache {
 				}
 			}
 
-			ArrayList temp = new ArrayList();
+			List<String> temp = new ArrayList<>();
 
 			int pos = 0;
 			StringBuffer buf = new StringBuffer();
@@ -506,7 +507,7 @@ public final class DeploymentDescriptorPropertyCache {
 				temp.add(buf.toString());
 				bound += buf.length();
 			}
-			segments = (String[]) temp.toArray(new String[temp.size()]);
+			segments = temp.toArray(new String[temp.size()]);
 		}
 
 		/**
@@ -554,7 +555,7 @@ public final class DeploymentDescriptorPropertyCache {
 	private static final boolean _debugResolutionCache = false;
 
 	// Java Servlet API version
-	static final float DEFAULT_WEBAPP_VERSION = 4f;
+	static final float DEFAULT_WEBAPP_VERSION = 4f; // Java EE 8
 
 	static final String EL_IGNORED = "el-ignored"; //$NON-NLS-1$
 	static final String ID = "id"; //$NON-NLS-1$
@@ -574,8 +575,6 @@ public final class DeploymentDescriptorPropertyCache {
 	private static final String WEB_APP_VERSION_NAME = "version"; //$NON-NLS-1$
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
-	// private static final String WEB_INF_WEB_XML = WEB_INF + IPath.SEPARATOR
-	// + WEB_XML;
 	private static final String SLASH_WEB_INF_WEB_XML = Path.ROOT.toString() + WEB_INF + IPath.SEPARATOR + WEB_XML;
 
 	static String getContainedText(Node parent) {
@@ -603,6 +602,15 @@ public final class DeploymentDescriptorPropertyCache {
 		return s.toString().trim();
 	}
 
+	static class NoEntityResolver implements EntityResolver {
+		public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
+			InputSource result = new InputSource(new ByteArrayInputStream(new byte[0]));
+			result.setPublicId(publicID);
+			result.setSystemId(systemID != null ? systemID : "/_" + getClass().getName()); //$NON-NLS-1$
+			return result;
+		}
+	}
+
 	public static DeploymentDescriptorPropertyCache getInstance() {
 		return _instance;
 	}
@@ -623,14 +631,18 @@ public final class DeploymentDescriptorPropertyCache {
 
 	private ResourceErrorHandler errorHandler;
 
-	private Map fDeploymentDescriptors = new Hashtable();
+	private Map<IPath, Reference<DeploymentDescriptor>> fDeploymentDescriptors = new HashMap<>();
 
 	private IResourceChangeListener fResourceChangeListener = new ResourceChangeListener();
 
 	// for use when reading TLDs
 	private EntityResolver resolver;
 
-	Map resolvedMap = new HashMap();
+	/**
+	 * Map of project names to a map of resource paths to a deployment
+	 * descriptor path. Mostly for caching.
+	 */
+	Map<String, Map<IPath, IPath>> resolvedMap = new HashMap<>();
 
 	final static Object LOCK = new Object();
 
@@ -638,7 +650,7 @@ public final class DeploymentDescriptorPropertyCache {
 		super();
 	}
 
-	private void _parseDocument(IPath path, Float[] version, List groupList, List urlPatterns, SubProgressMonitor subMonitor, Document document) {
+	private void _parseDocument(IPath path, Float[] version, List<PropertyGroup> groupList, List<StringMatcher> urlPatterns, SubProgressMonitor subMonitor, Document document) {
 		Element webapp = document.getDocumentElement();
 		if (webapp != null) {
 			if (webapp.getTagName().equals(WEB_APP_ELEMENT_NAME) || webapp.getNodeName().endsWith(WEB_APP_ELEMENT_LOCAL_NAME)) {
@@ -741,12 +753,12 @@ public final class DeploymentDescriptorPropertyCache {
 		PropertyGroup groups[] = null;
 
 		IStructuredModel model = null;
-		List groupList = new ArrayList();
-		List urlPatterns = new ArrayList();
+		List<PropertyGroup> propertyGroupList = new ArrayList<>();
+		List<StringMatcher> urlPatterns = new ArrayList<>();
 		Float[] version = new Float[]{new Float(DEFAULT_WEBAPP_VERSION)};
 		SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 2);
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
-		builder.setEntityResolver(getEntityResolver());
+		builder.setEntityResolver(getEntityNonResolver());
 		builder.setErrorHandler(getErrorHandler(path));
 		try {
 			InputSource inputSource = new InputSource();
@@ -755,7 +767,7 @@ public final class DeploymentDescriptorPropertyCache {
 				inputSource.setCharacterStream(new StringReader(s));
 				inputSource.setSystemId(path.toString());
 				Document document = builder.parse(inputSource);
-				_parseDocument(path, version, groupList, urlPatterns, subMonitor, document);
+				_parseDocument(path, version, propertyGroupList, urlPatterns, subMonitor, document);
 			}
 		}
 		catch (SAXException e1) {
@@ -770,7 +782,7 @@ public final class DeploymentDescriptorPropertyCache {
 				monitor.worked(1);
 				if (model instanceof IDOMModel) {
 					IDOMDocument document = ((IDOMModel) model).getDocument();
-					_parseDocument(path, version, groupList, urlPatterns, subMonitor, document);
+					_parseDocument(path, version, propertyGroupList, urlPatterns, subMonitor, document);
 				}
 			}
 			catch (Exception e) {
@@ -786,7 +798,7 @@ public final class DeploymentDescriptorPropertyCache {
 			/* file is unreadable, create no property groups */
 		}
 		finally {
-			groups = (PropertyGroup[]) groupList.toArray(new PropertyGroup[groupList.size()]);
+			groups = propertyGroupList.toArray(new PropertyGroup[propertyGroupList.size()]);
 			subMonitor.done();
 		}
 
@@ -797,15 +809,15 @@ public final class DeploymentDescriptorPropertyCache {
 		DeploymentDescriptor deploymentDescriptor = new DeploymentDescriptor();
 		deploymentDescriptor.modificationStamp = file.getModificationStamp();
 		deploymentDescriptor.groups = groups;
-		deploymentDescriptor.urlPatterns = ((StringMatcher[]) urlPatterns.toArray(new StringMatcher[urlPatterns.size()]));
+		deploymentDescriptor.urlPatterns = (urlPatterns.toArray(new StringMatcher[urlPatterns.size()]));
 		deploymentDescriptor.version = version[0];
 		monitor.done();
-		fDeploymentDescriptors.put(path, new SoftReference(deploymentDescriptor));
+		fDeploymentDescriptors.put(path, new SoftReference<>(deploymentDescriptor));
 		return deploymentDescriptor;
 	}
 
 	private DeploymentDescriptor getCachedDescriptor(IPath jspFilePath) {
-		IPath webxmlPath = getWebXMLPath(jspFilePath);
+		IPath webxmlPath = getRelevantWebXMLPath(jspFilePath);
 		if (webxmlPath == null)
 			return null;
 
@@ -813,25 +825,21 @@ public final class DeploymentDescriptorPropertyCache {
 		if (!webxmlFile.isAccessible())
 			return null;
 
-		Reference descriptorHolder = (Reference) fDeploymentDescriptors.get(webxmlPath);
+		Reference<DeploymentDescriptor> descriptorHolder = fDeploymentDescriptors.get(webxmlPath);
 		DeploymentDescriptor descriptor = null;
 
-		if (descriptorHolder == null || ((descriptor = (DeploymentDescriptor) descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
+		if (descriptorHolder == null || ((descriptor = descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
 			descriptor = fetchDescriptor(webxmlPath, new NullProgressMonitor());
 		}
 		return descriptor;
 	}
 
-	private EntityResolver getEntityResolver() {
+	/**
+	 * Returns an EntityResolver that will not retrieve external resources
+	 */
+	private EntityResolver getEntityNonResolver() {
 		if (resolver == null) {
-			resolver = new EntityResolver() {
-				public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
-					InputSource result = new InputSource(new ByteArrayInputStream(new byte[0]));
-					result.setPublicId(publicID);
-					result.setSystemId(systemID != null ? systemID : "/_" + getClass().getName()); //$NON-NLS-1$
-					return result;
-				}
-			};
+			resolver = new NoEntityResolver();
 		}
 		return resolver;
 	}
@@ -877,7 +885,7 @@ public final class DeploymentDescriptorPropertyCache {
 	 *         considered short-lived and not saved for later use.
 	 */
 	public PropertyGroup[] getPropertyGroups(IPath jspFilePath) {
-		List matchingGroups = new ArrayList(1);
+		List<PropertyGroup> matchingGroups = new ArrayList<>(1);
 		DeploymentDescriptor descriptor = getCachedDescriptor(jspFilePath);
 		if (descriptor == null)
 			return NO_PROPERTY_GROUPS;
@@ -894,20 +902,20 @@ public final class DeploymentDescriptorPropertyCache {
 				}
 			}
 		}
-		return (PropertyGroup[]) matchingGroups.toArray(new PropertyGroup[matchingGroups.size()]);
+		return matchingGroups.toArray(new PropertyGroup[matchingGroups.size()]);
 	}
 
 	/**
-	 * @param jspFilePath
-	 *            the path of the JSP file
+	 * @param fullPath
+	 *            the full path of the JSP file
 	 * @param reference
 	 *            a path reference to test for
 	 * @return a matching url-mapping value in the corresponding deployment
 	 *         descriptor for the given JSP file path, if a deployment
-	 *         descriptor could be found, null otherwise
+	 *         descriptor could be found, <code>null</code> otherwise
 	 */
-	public String getURLMapping(IPath jspFilePath, String reference) {
-		DeploymentDescriptor descriptor = getCachedDescriptor(jspFilePath);
+	public String getURLMapping(IPath fullPath, String reference) {
+		DeploymentDescriptor descriptor = getCachedDescriptor(fullPath);
 		if (descriptor == null)
 			return null;
 		StringMatcher[] mappings = descriptor.urlPatterns;
@@ -919,20 +927,16 @@ public final class DeploymentDescriptorPropertyCache {
 		return null;
 	}
 	
-	private IPath getWebXMLPath(IPath fullPath) {
-		/*
-		 * It can take the better part of a full second to do this, so cache
-		 * the result.
-		 */
+	private IPath getRelevantWebXMLPath(IPath fullPath) {
 		IPath resolved = null;
-		Map mapForProject = null;
+		Map<IPath, IPath> mapForProject = null;
 		synchronized (LOCK) {
-			mapForProject = (Map) resolvedMap.get(fullPath.segment(0));
+			mapForProject = resolvedMap.get(fullPath.segment(0));
 			if (mapForProject != null) {
-				resolved = (IPath) mapForProject.get(fullPath);
+				resolved = mapForProject.get(fullPath);
 			}
 			else {
-				mapForProject = new HashMap();
+				mapForProject = new HashMap<IPath, IPath>();
 				resolvedMap.put(fullPath.segment(0), mapForProject);
 			}
 		}
@@ -951,8 +955,18 @@ public final class DeploymentDescriptorPropertyCache {
 		return resolved;
 	}
 
-	public IFile getWebXML(IPath jspFilePath) {
-		IPath webxmlPath = getWebXMLPath(jspFilePath);
+	/**
+	 * Find the web.xml file that applies for the given path. It can take the
+	 * better part of a full second to calculate this depending on the project
+	 * layout and metamodels not under our control, so cache the result.
+	 *
+	 * @param fullPath
+	 *            - the full path of the resource
+	 * @return the IFile representing the relevant deployment descriptor, or
+	 *         <code>null</code> if there isn't one.
+	 */
+	public IFile getWebXML(IPath fullPath) {
+		IPath webxmlPath = getRelevantWebXMLPath(fullPath);
 		if (webxmlPath == null)
 			return null;
 
@@ -960,7 +974,7 @@ public final class DeploymentDescriptorPropertyCache {
 	}
 
 	private void updateCacheEntry(IPath fullPath) {
-		/* don't update right now; remove and wait for another query to update */
+		/* don't update right now; remove and wait for another query to do that work */
 		fDeploymentDescriptors.remove(fullPath);
 	}
 }
