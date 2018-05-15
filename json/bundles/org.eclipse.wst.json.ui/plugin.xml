@@ -296,24 +296,6 @@
 	</extension>
 
 	<extension
-		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
-		<target
-			id="org.eclipse.wst.json.core.jsonsource"
-			name="%JSON_source_target_name">
-		</target>
-	</extension>
-	
-	<extension
-		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
-		<hyperlinkDetector
-			class="org.eclipse.wst.json.ui.internal.hyperlink.JSONHyperlinkDetector"
-			id="org.eclipse.wst.json.ui.internal.hyperlink.JSONHyperlinkDetector"
-			name="%JSON_detector_name"
-			targetId="org.eclipse.wst.json.core.jsonsource">
-		</hyperlinkDetector>
-	</extension>
-
-	<extension
  		point="org.eclipse.ui.handlers">
 		<handler
 			class="org.eclipse.wst.json.ui.internal.handlers.CleanupDocumentHandler"
