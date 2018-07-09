@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,6 +49,7 @@ public interface ITextRegion {
 	 * at runtime.
 	 * 
 	 * For use by parsers and reparsers only.
+	 * @deprecated as of 1.5
 	 */
 	void adjustLength(int i);
 
@@ -59,6 +60,7 @@ public interface ITextRegion {
 	 * runtime.
 	 * 
 	 * For use by parsers and reparsers only.
+	 * @deprecated as of 1.5
 	 */
 	void adjustStart(int i);
 
@@ -70,14 +72,16 @@ public interface ITextRegion {
 	 * region, or an illegal argument acception may be thrown at runtime.
 	 * 
 	 * For use by parsers and reparsers only.
+	 * @deprecated as of 1.5
 	 */
 	void adjustTextLength(int i);
 
 	/**
 	 * Makes this regions start, length, and text length equal to the
-	 * paremter's start, length, and text length.
+	 * parameter's start, length, and text length.
 	 * 
 	 * @param region
+	 * @deprecated as of 1.5
 	 */
 	void equatePositions(ITextRegion region);
 

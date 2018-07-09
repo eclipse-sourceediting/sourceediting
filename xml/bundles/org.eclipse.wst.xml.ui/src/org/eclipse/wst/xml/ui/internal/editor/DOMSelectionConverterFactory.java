@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2012 IBM Corporation and others.
+ * Copyright (c) 2008, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor;
+import org.eclipse.wst.sse.ui.SelectionConverter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -26,13 +26,13 @@ import org.w3c.dom.NamedNodeMap;
  * @author nitin
  * 
  */
-public class DOMSelectionConvertorFactory implements IAdapterFactory {
+public class DOMSelectionConverterFactory implements IAdapterFactory {
 
-	private static final Class[] ADAPTER_LIST = new Class[]{SelectionConvertor.class};
+	private static final Class[] ADAPTER_LIST = new Class[]{SelectionConverter.class};
 
-	private static class XMLSelectionConvertor extends SelectionConvertor {
+	public static class XMLSelectionConverter extends SelectionConverter {
 		/* (non-Javadoc)
-		 * @see org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor#getElements(org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int, int)
+		 * @see org.eclipse.wst.sse.ui.SelectionConverter#getElements(org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int, int)
 		 */
 		public Object[] getElements(IStructuredModel model, int start, int end) {
 			Object[] localSelectedStructures = null;
@@ -44,7 +44,7 @@ public class DOMSelectionConvertorFactory implements IAdapterFactory {
 						localSelectedStructures = new Object[1];
 						localSelectedStructures[0] = region;
 					} else {
-						List structures = new ArrayList(2);
+						List<IDOMNode> structures = new ArrayList<>(2);
 
 						IDOMNode node = region;
 						while(node != null) {
@@ -89,12 +89,12 @@ public class DOMSelectionConvertorFactory implements IAdapterFactory {
 		}
 	}
 
-	private static final Object selectionConvertor = new XMLSelectionConvertor();
+	private static final Object selectionConverter = new XMLSelectionConverter();
 
 	/**
 	 * 
 	 */
-	public DOMSelectionConvertorFactory() {
+	public DOMSelectionConverterFactory() {
 	}
 
 	/*
@@ -105,8 +105,8 @@ public class DOMSelectionConvertorFactory implements IAdapterFactory {
 	 * java.lang.Class)
 	 */
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
-		if (adaptableObject instanceof IDOMModel && SelectionConvertor.class.equals(adapterType))
-			return selectionConvertor;
+		if (adaptableObject instanceof IDOMModel && SelectionConverter.class.equals(adapterType))
+			return selectionConverter;
 		return null;
 	}
 

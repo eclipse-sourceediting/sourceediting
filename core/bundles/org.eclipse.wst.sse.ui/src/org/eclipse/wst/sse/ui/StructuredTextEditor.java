@@ -165,9 +165,7 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -197,7 +195,6 @@ import org.eclipse.wst.sse.ui.internal.debug.ToggleBreakpointsTarget;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.wst.sse.ui.internal.editor.EditorModelUtil;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor;
 import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler;
@@ -244,7 +241,7 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  */
 public class StructuredTextEditor extends TextEditor {
 	private class GotoMatchingBracketHandler extends AbstractHandler {
-		public Object execute(ExecutionEvent arg0) throws ExecutionException {
+		public Object execute(ExecutionEvent event) throws ExecutionException {
 			gotoMatchingBracket();
 			return null;
 		}
@@ -358,23 +355,12 @@ public class StructuredTextEditor extends TextEditor {
 			if (event.getSelection() instanceof IStructuredSelection) {
 				ISelection currentSelection = getSelectionProvider().getSelection();
 				if (currentSelection instanceof IStructuredSelection) {
-					Object current = ((IStructuredSelection) currentSelection).toArray();
-					Object newSelection = ((IStructuredSelection) event.getSelection()).toArray();
-					if (!current.equals(newSelection)) {
-						IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-						Object o = selection.getFirstElement();
-						if (o instanceof IndexedRegion) {
-							start = ((IndexedRegion) o).getStartOffset();
-							length = ((IndexedRegion) o).getEndOffset() - start;
-						}
-						else if (o instanceof ITextRegion) {
-							start = ((ITextRegion) o).getStart();
-							length = ((ITextRegion) o).getEnd() - start;
-						}
-						else if (o instanceof IRegion) {
-							start = ((ITextRegion) o).getStart();
-							length = ((ITextRegion) o).getLength();
-						}
+					Object[] currentObjects = ((IStructuredSelection) currentSelection).toArray();
+					Object[] newObjects = ((IStructuredSelection) event.getSelection()).toArray();
+					if (!Arrays.equals(currentObjects, newObjects) && newObjects.length > 0) {
+						IRegion highlightRange = fStructuredSelectionProvider.selectionConverter.getRegion(newObjects[0]);
+						start = highlightRange.getOffset();
+						length = highlightRange.getLength();
 					}
 				}
 			}
@@ -408,48 +394,21 @@ public class StructuredTextEditor extends TextEditor {
 				if (event.getSelection() instanceof IStructuredSelection) {
 					ISelection current = getSelectionProvider().getSelection();
 					if (current instanceof IStructuredSelection) {
-						Object[] currentSelection = ((IStructuredSelection) current).toArray();
-						Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
-						if (!Arrays.equals(currentSelection, newSelection)) {
-							if (newSelection.length > 0) {
-								/*
-								 * No ordering is guaranteed for multiple
-								 * selection
-								 */
-								Object o = newSelection[0];
-								if (o instanceof IndexedRegion) {
-									start = ((IndexedRegion) o).getStartOffset();
-									int end = ((IndexedRegion) o).getEndOffset();
-									if (newSelection.length > 1) {
-										for (int i = 1; i < newSelection.length; i++) {
-											start = Math.min(start, ((IndexedRegion) newSelection[i]).getStartOffset());
-											end = Math.max(end, ((IndexedRegion) newSelection[i]).getEndOffset());
-										}
-										length = end - start;
-									}
+						Object[] currentObjects = ((IStructuredSelection) current).toArray();
+						Object[] newObjects = ((IStructuredSelection) event.getSelection()).toArray();
+						if (!Arrays.equals(currentObjects, newObjects) && newObjects.length > 0) {
+							// no ordering is guaranteed for multiple selection
+							Object o = newObjects[0];
+							IRegion region = fStructuredSelectionProvider.selectionConverter.getRegion(o);
+							start = region.getOffset();
+							int end = start + region.getLength();
+							if (newObjects.length > 1) {
+								for (int i = 1; i < newObjects.length; i++) {
+									region = fStructuredSelectionProvider.selectionConverter.getRegion(newObjects[i]);
+									start = Math.min(start, region.getOffset());
+									end = Math.max(end, region.getOffset() + region.getLength());
 								}
-								else if (o instanceof ITextRegion) {
-									start = ((ITextRegion) o).getStart();
-									int end = ((ITextRegion) o).getEnd();
-									if (newSelection.length > 1) {
-										for (int i = 1; i < newSelection.length; i++) {
-											start = Math.min(start, ((ITextRegion) newSelection[i]).getStart());
-											end = Math.max(end, ((ITextRegion) newSelection[i]).getEnd());
-										}
-										length = end - start;
-									}
-								}
-								else if (o instanceof IRegion) {
-									start = ((IRegion) o).getOffset();
-									int end = start + ((IRegion) o).getLength();
-									if (newSelection.length > 1) {
-										for (int i = 1; i < newSelection.length; i++) {
-											start = Math.min(start, ((IRegion) newSelection[i]).getOffset());
-											end = Math.max(end, ((IRegion) newSelection[i]).getOffset() + ((IRegion) newSelection[i]).getLength());
-										}
-										length = end - start;
-									}
-								}
+								length = end - start;
 							}
 						}
 					}
@@ -542,8 +501,8 @@ public class StructuredTextEditor extends TextEditor {
 		
 		private ISelectionProvider fParentProvider = null;
 		private boolean isFiringSelection = false;
-		private ListenerList listeners = new ListenerList();
-		private ListenerList postListeners = new ListenerList();
+		private ListenerList<ISelectionChangedListener> listeners = new ListenerList<>();
+		private ListenerList<ISelectionChangedListener> postListeners = new ListenerList<>();
 		private ISelection fLastSelection = null;
 		private ISelectionProvider fLastSelectionProvider = null;
 		private SelectionChangedEvent fLastUpdatedSelectionChangedEvent = null;
@@ -553,7 +512,7 @@ public class StructuredTextEditor extends TextEditor {
 		 * selection. Set/reset by the StructuredTextEditor based on a
 		 * per-model adapter on input.
 		 */
-		SelectionConvertor selectionConvertor = new SelectionConvertor();
+		SelectionConverter selectionConverter = new SelectionConverter();
 		
 		StructuredSelectionProvider(ISelectionProvider parentProvider, StructuredTextEditor structuredTextEditor) {
 			fParentProvider = parentProvider;
@@ -584,7 +543,7 @@ public class StructuredTextEditor extends TextEditor {
 			fEditor = null;
 			listeners.clear();
 			postListeners.clear();
-			selectionConvertor = null;
+			selectionConverter = null;
 		}
 
 		private void fireSelectionChanged(final SelectionChangedEvent event, ListenerList listenerList) {
@@ -632,9 +591,9 @@ public class StructuredTextEditor extends TextEditor {
 							 */
 							IBlockTextSelection blockSelection = (IBlockTextSelection) selection;
 							IRegion[] regions = blockSelection.getRegions();
-							Set blockObjects = new LinkedHashSet();
+							Set<Object> blockObjects = new LinkedHashSet<>();
 							for (int i = 0; i < regions.length; i++) {
-								Object[] objects = selectionConvertor.getElements(structuredModel, regions[i].getOffset(), regions[i].getLength());
+								Object[] objects = selectionConverter.getElements(structuredModel, regions[i].getOffset(), regions[i].getLength());
 								for (int j = 0; j < objects.length; j++) {
 									blockObjects.add(objects[j]);
 								}
@@ -644,12 +603,9 @@ public class StructuredTextEditor extends TextEditor {
 						else {
 							int start = ((ITextSelection) selection).getOffset();
 							int end = start + ((ITextSelection) selection).getLength();
-							selection = new StructuredTextSelection(getDocument(), (ITextSelection) selection, selectionConvertor.getElements(structuredModel, start, end));
+							selection = new StructuredTextSelection(getDocument(), (ITextSelection) selection, selectionConverter.getElements(structuredModel, start, end));
 						}
 					}
-				}
-				if (selection == null) {
-					selection = new StructuredTextSelection(getDocument(), (ITextSelection) selection, new Object[0]);
 				}
 			}
 			
@@ -753,12 +709,10 @@ public class StructuredTextEditor extends TextEditor {
 					structuredModel = localEditor.getInternalModel();
 					if (structuredModel != null) {
 						int start = ((ITextSelection) selection).getOffset();
-						int end = start + ((ITextSelection) selection).getLength();
-						selection = new StructuredTextSelection(getDocument(), (ITextSelection) event.getSelection(), selectionConvertor.getElements(structuredModel, start, end));
+						int end = ((ITextSelection) selection).getLength() + start;
+						selection = new StructuredTextSelection(getDocument(), (ITextSelection) event.getSelection(), selectionConverter.getElements(structuredModel, start, end));
 					}
 				}
-				if (selection == null)
-					selection = new StructuredTextSelection(getDocument(), (ITextSelection) event.getSelection(), new Object[0]);
 			}
 			SelectionChangedEvent newEvent = new SelectionChangedEvent(event.getSelectionProvider(), selection);
 			return newEvent;
@@ -780,27 +734,16 @@ public class StructuredTextEditor extends TextEditor {
 
 					// no ordering is guaranteed for multiple selection
 					Object o = selectedObjects[0];
-					if (o instanceof IndexedRegion) {
-						start = ((IndexedRegion) o).getStartOffset();
-						int end = ((IndexedRegion) o).getEndOffset();
-						if (selectedObjects.length > 1) {
-							for (int i = 1; i < selectedObjects.length; i++) {
-								start = Math.min(start, ((IndexedRegion) selectedObjects[i]).getStartOffset());
-								end = Math.max(end, ((IndexedRegion) selectedObjects[i]).getEndOffset());
-							}
-							length = end - start;
+					IRegion region = selectionConverter.getRegion(o);
+					start = region.getOffset();
+					int end = start + region.getLength();
+					if (selectedObjects.length > 1) {
+						for (int i = 1; i < selectedObjects.length; i++) {
+							region = selectionConverter.getRegion(selectedObjects[i]);
+							start = Math.min(start, region.getOffset());
+							end = Math.max(end, region.getOffset() + region.getLength());
 						}
-					}
-					else if (o instanceof ITextRegion) {
-						start = ((ITextRegion) o).getStart();
-						int end = ((ITextRegion) o).getEnd();
-						if (selectedObjects.length > 1) {
-							for (int i = 1; i < selectedObjects.length; i++) {
-								start = Math.min(start, ((ITextRegion) selectedObjects[i]).getStart());
-								end = Math.max(end, ((ITextRegion) selectedObjects[i]).getEnd());
-							}
-							length = end - start;
-						}
+						length = end - start;
 					}
 
 					if (start > -1) {
@@ -1500,11 +1443,11 @@ public class StructuredTextEditor extends TextEditor {
 
 	protected void createModelDependentFields() {
 		if (fStructuredSelectionProvider != null) {
-			SelectionConvertor convertor = fStructuredModel.getAdapter(SelectionConvertor.class);
+			SelectionConverter convertor = fStructuredModel.getAdapter(SelectionConverter.class);
 			if (convertor != null)
-				fStructuredSelectionProvider.selectionConvertor = convertor;
+				fStructuredSelectionProvider.selectionConverter = convertor;
 			else
-				fStructuredSelectionProvider.selectionConvertor = new SelectionConvertor();
+				fStructuredSelectionProvider.selectionConverter = new SelectionConverter();
 		}
 	}
 
@@ -1895,8 +1838,9 @@ public class StructuredTextEditor extends TextEditor {
 	 * here.
 	 */
 	private void disposeModelDependentFields() {
-		if(fStructuredSelectionProvider != null)
-			fStructuredSelectionProvider.selectionConvertor = new SelectionConvertor();
+		if(fStructuredSelectionProvider != null) {
+			fStructuredSelectionProvider.selectionConverter = new SelectionConverter();
+		}
 	}
 
 	/*
@@ -2377,9 +2321,9 @@ public class StructuredTextEditor extends TextEditor {
 					}
 				});
 				if (fStructuredModel != null) {
-					SelectionConvertor convertor = fStructuredModel.getAdapter(SelectionConvertor.class);
-					if (convertor != null) {
-						fStructuredSelectionProvider.selectionConvertor = convertor;
+					SelectionConverter converter = fStructuredModel.getAdapter(SelectionConverter.class);
+					if (converter != null) {
+						fStructuredSelectionProvider.selectionConverter = converter;
 					}
 				}
 			}
@@ -3421,13 +3365,17 @@ public class StructuredTextEditor extends TextEditor {
 		boolean rangeUpdated = false;
 		if (selection instanceof IStructuredSelection && !((IStructuredSelection) selection).isEmpty()) {
 			Object[] objects = ((IStructuredSelection) selection).toArray();
-			if (objects.length > 0 && objects[0] instanceof IndexedRegion) {
-				int start = ((IndexedRegion) objects[0]).getStartOffset();
-				int end = ((IndexedRegion) objects[0]).getEndOffset();
+			if (objects.length > 0 ) {
+				// no ordering is guaranteed for multiple selection
+				Object o = objects[0];
+				IRegion region = fStructuredSelectionProvider.selectionConverter.getRegion(o);
+				int start = region.getOffset();
+				int end = start + region.getLength();
 				if (objects.length > 1) {
 					for (int i = 1; i < objects.length; i++) {
-						start = Math.min(start, ((IndexedRegion) objects[i]).getStartOffset());
-						end = Math.max(end, ((IndexedRegion) objects[i]).getEndOffset());
+						region = fStructuredSelectionProvider.selectionConverter.getRegion(objects[i]);
+						start = Math.min(start, region.getOffset());
+						end = Math.max(end, region.getOffset() + region.getLength());
 					}
 				}
 				getSourceViewer().setRangeIndication(start, end - start, false);

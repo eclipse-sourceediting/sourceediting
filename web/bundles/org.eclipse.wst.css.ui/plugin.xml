@@ -189,7 +189,7 @@
 			adaptableType="org.eclipse.wst.css.core.internal.provisional.document.ICSSModel"
 			class="org.eclipse.wst.css.ui.internal.editor.CSSSelectionConverterFactory">
 			<adapter
-				type="org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor"/>
+				type="org.eclipse.wst.sse.ui.SelectionConverter"/>
 		</factory>
 	</extension>
 

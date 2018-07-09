@@ -467,9 +467,9 @@
 	<extension point="org.eclipse.core.runtime.adapters">
 		<factory
 			adaptableType="org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel"
-			class="org.eclipse.wst.xml.ui.internal.editor.DOMSelectionConvertorFactory">
+			class="org.eclipse.wst.xml.ui.internal.editor.DOMSelectionConverterFactory">
 			<adapter
-            	type="org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor"/>
+            	type="org.eclipse.wst.sse.ui.SelectionConverter"/>
 		</factory>
 		<factory
 			adaptableType="org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel"

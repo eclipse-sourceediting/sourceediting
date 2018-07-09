@@ -42,9 +42,11 @@ import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.ui.SelectionConverter;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.ui.internal.editor.DOMSelectionConverterFactory;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.w3c.dom.NodeList;
 
@@ -188,5 +190,26 @@ public class TestOpenEditorXML extends TestCase {
 		IEditorPart editor = IDE.openEditor(page, input, "org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart");
 		page.closeEditor(editor, false);
 		assertTrue("Unable to open structured text editor " + fEditor, (fEditor instanceof XMLMultiPageEditorPart) || (fEditor instanceof StructuredTextEditor));
+	}
+
+	public void testSelectionConverter() {
+		IDocument doc = fEditor.getAdapter(IDocument.class);
+		doc.set("<html><body><h1>Title</h1></body></html>");
+		// set h1 to readonly
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) modelManager.getExistingModelForEdit(doc);
+			if (model != null) {
+				String expected = DOMSelectionConverterFactory.XMLSelectionConverter.class.getName();
+				String actual = model.getAdapter(SelectionConverter.class).getClass().getName();
+				assertEquals("The selection convertor for basic XML was not the expected type!", expected, actual);
+			}
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
 	}
 }

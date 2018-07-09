@@ -110,6 +110,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.sse.ui.SelectionConverter;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
@@ -479,6 +480,12 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			documentProviderLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_7 + fTextEditor.getDocumentProvider().getClass().getName()); //$NON-NLS-1$
 			documentProviderLabel.setBackground(composite.getBackground());
 
+			Text selectionConverter = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.horizontalSpan = 2;
+			selectionConverter.setLayoutData(gd);
+			selectionConverter.setBackground(composite.getBackground());
+
 			Text editorInputLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
 			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gd.horizontalSpan = 2;
@@ -496,6 +503,8 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (model != null) {
+				selectionConverter.setText("Selection Converter class: " + model.getAdapter(SelectionConverter.class).getClass().getName());
+
 				Text modelIdLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;

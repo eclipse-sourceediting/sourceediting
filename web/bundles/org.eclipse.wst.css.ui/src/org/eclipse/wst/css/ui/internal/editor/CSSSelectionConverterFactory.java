@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,18 +22,18 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
 import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor;
+import org.eclipse.wst.sse.ui.SelectionConverter;
 
 /**
- * <p>Factory to adapt from {@link ICSSModel} to {@link SelectionConvertor}</p>
+ * <p>Factory to adapt from {@link ICSSModel} to {@link SelectionConverter}</p>
  */
 public class CSSSelectionConverterFactory implements IAdapterFactory {
 
 	/** the list of classes this factory can adapt to */
-	private static final Class[] ADAPTER_LIST = new Class[]{SelectionConvertor.class};
+	private static final Class[] ADAPTER_LIST = new Class[]{SelectionConverter.class};
 	
 	/** the adapted class */
-	private static final Object selectionConvertor = new CSSSelectionConverter();
+	private static final Object selectionConverter = new CSSSelectionConverter();
 	
 	/**
 	 * <p>Default constructor</p>
@@ -42,20 +42,20 @@ public class CSSSelectionConverterFactory implements IAdapterFactory {
 	}
 	
 	/**
-	 * <p>Adapts {@link ICSSModel} to {@link SelectionConvertor}</p>
+	 * <p>Adapts {@link ICSSModel} to {@link SelectionConverter}</p>
 	 * 
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
 	 */
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		Object adapter = null;
-		if (adaptableObject instanceof ICSSModel && SelectionConvertor.class.equals(adapterType)) {
-			adapter = selectionConvertor;
+		if (adaptableObject instanceof ICSSModel && SelectionConverter.class.equals(adapterType)) {
+			adapter = selectionConverter;
 		}
 		return adapter;
 	}
 
 	/**
-	 * <p>Adapts to {@link SelectionConvertor}</p>
+	 * <p>Adapts to {@link SelectionConverter}</p>
 	 * 
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
 	 */
@@ -64,9 +64,9 @@ public class CSSSelectionConverterFactory implements IAdapterFactory {
 	}
 	
 	/**
-	 * <p>{@link SelectionConvertor} specific to CSS</p>
+	 * <p>{@link SelectionConverter} specific to CSS</p>
 	 */
-	private static class CSSSelectionConverter extends SelectionConvertor {
+	public static class CSSSelectionConverter extends SelectionConverter {
 		/**
 		 * <p>Default constructor</p>
 		 */
@@ -74,7 +74,7 @@ public class CSSSelectionConverterFactory implements IAdapterFactory {
 		}
 		
 		/**
-		 * @see org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor#getElements(org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int, int)
+		 * @see org.eclipse.wst.sse.ui.SelectionConverter#getElements(org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int, int)
 		 */
 		public Object[] getElements(IStructuredModel model, int start, int end) {
 			Object[] localSelectedStructures = null;
@@ -105,7 +105,7 @@ public class CSSSelectionConverterFactory implements IAdapterFactory {
 					}
 					else {
 						int maxLength = model.getStructuredDocument().getLength();
-						Set structures = new HashSet();
+						Set<IndexedRegion> structures = new HashSet<>();
 						while (region != null && region.getEndOffset() <= end && region.getEndOffset() <= maxLength && !structures.contains(region)) {
 							structures.add(region);
 
