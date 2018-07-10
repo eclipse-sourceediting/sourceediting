@@ -129,7 +129,9 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
@@ -1181,12 +1183,23 @@ public class StructuredTextEditor extends TextEditor {
 		else {
 			if (getEditorPart() != null) {
 				Display display = getSite().getShell().getDisplay();
-				display.asyncExec(new Runnable() {
-
-					public void run() {
-						getSite().getPage().closeEditor(getEditorPart(), save);
-					}
-				});
+				if (!display.isDisposed()) {
+					display.asyncExec(new Runnable() {
+						/*
+						 * There's really no way to tell how much later this
+						 * might take place. Be paranoid.
+						 */
+						public void run() {
+							IWorkbenchPartSite site = getSite();
+							if (site != null) {
+								IWorkbenchPage page = site.getPage();
+								if (page != null) {
+									page.closeEditor(getEditorPart(), save);
+								}
+							}
+						}
+					});
+				}
 			}
 			else {
 				super.close(save);
