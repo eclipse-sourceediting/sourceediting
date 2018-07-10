@@ -509,6 +509,9 @@ public class StructuredTextEditor extends TextEditor {
 		private ISelectionProvider fLastSelectionProvider = null;
 		private SelectionChangedEvent fLastUpdatedSelectionChangedEvent = null;
 		private StructuredTextEditor fEditor;
+
+		private ISelectionChangedListener selectionChangedListener = null;
+		private ISelectionChangedListener postSelectionChangedListener = null;
 		/*
 		 * Responsible for finding the selected objects within a text
 		 * selection. Set/reset by the StructuredTextEditor based on a
@@ -519,17 +522,19 @@ public class StructuredTextEditor extends TextEditor {
 		StructuredSelectionProvider(ISelectionProvider parentProvider, StructuredTextEditor structuredTextEditor) {
 			fParentProvider = parentProvider;
 			fEditor = structuredTextEditor;
-			fParentProvider.addSelectionChangedListener(new ISelectionChangedListener() {
+			selectionChangedListener = new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
 					handleSelectionChanged(event);
 				}
-			});
+			};
+			fParentProvider.addSelectionChangedListener(selectionChangedListener);
 			if (fParentProvider instanceof IPostSelectionProvider) {
-				((IPostSelectionProvider) fParentProvider).addPostSelectionChangedListener(new ISelectionChangedListener() {
+				postSelectionChangedListener = new ISelectionChangedListener() {
 					public void selectionChanged(SelectionChangedEvent event) {
 						handlePostSelectionChanged(event);
 					}
-				});
+				};
+				((IPostSelectionProvider) fParentProvider).addPostSelectionChangedListener(postSelectionChangedListener);
 			}
 		}
 
@@ -542,6 +547,12 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		public void dispose() {
+			if (selectionChangedListener != null) {
+				fParentProvider.removeSelectionChangedListener(selectionChangedListener);
+			}
+			if (postSelectionChangedListener != null) {
+				((IPostSelectionProvider) fParentProvider).removePostSelectionChangedListener(postSelectionChangedListener);
+			}
 			fEditor = null;
 			listeners.clear();
 			postListeners.clear();

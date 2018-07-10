@@ -78,9 +78,8 @@ public class ExistenceTest extends TestCase {
 			if (model != null) {
 				model.releaseFromEdit();
 			}
+			page.closeEditor(editor, false);
 		}
-
-		page.closeAllEditors(false);
 	}
 
 	private IProject createProject(String projName) throws CoreException {

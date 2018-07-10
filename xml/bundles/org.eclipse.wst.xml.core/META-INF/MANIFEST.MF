@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xml.core; singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.2.100.qualifier
 Bundle-Activator: org.eclipse.wst.xml.core.internal.XMLCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -325,3 +325,4 @@ Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)";visibility:=ree
  org.eclipse.osgi.services;bundle-version="[3.7.0,4.0.0)"
 Bundle-ActivationPolicy: lazy; exclude:="org.eclipse.wst.xml.core.internal.contenttype"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.wst.xml.core
