@@ -1192,8 +1192,12 @@ public class StructuredTextEditor extends TextEditor {
 			shouldClose = true;
 		}
 		else {
-			if (getEditorPart() != null) {
-				Display display = getSite().getShell().getDisplay();
+			final IEditorPart editorPart = getEditorPart();
+			if (editorPart != null) {
+				Display display = Display.getCurrent();
+				if (display == null) {
+					display = PlatformUI.getWorkbench().getDisplay();
+				}
 				if (!display.isDisposed()) {
 					display.asyncExec(new Runnable() {
 						/*
@@ -1201,11 +1205,13 @@ public class StructuredTextEditor extends TextEditor {
 						 * might take place. Be paranoid.
 						 */
 						public void run() {
-							IWorkbenchPartSite site = getSite();
-							if (site != null) {
-								IWorkbenchPage page = site.getPage();
-								if (page != null) {
-									page.closeEditor(getEditorPart(), save);
+							if (!PlatformUI.getWorkbench().isClosing()) {
+								IWorkbenchPartSite site = editorPart.getSite();
+								if (site != null) {
+									IWorkbenchPage page = site.getPage();
+									if (page != null) {
+										page.closeEditor(editorPart, save);
+									}
 								}
 							}
 						}
