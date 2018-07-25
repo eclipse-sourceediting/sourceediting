@@ -243,6 +243,7 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  */
 public class StructuredTextEditor extends TextEditor {
 	private class GotoMatchingBracketHandler extends AbstractHandler {
+		@Override
 		public Object execute(ExecutionEvent event) throws ExecutionException {
 			gotoMatchingBracket();
 			return null;
@@ -250,12 +251,14 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	private class InternalModelStateListener implements IModelStateListener {
+		@Override
 		public void modelAboutToBeChanged(IStructuredModel model) {
 			if (getTextViewer() != null) {
 				// getTextViewer().setRedraw(false);
 			}
 		}
 
+		@Override
 		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
 			if (getTextViewer() != null) {
 				// getTextViewer().setRedraw(false);
@@ -264,6 +267,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
+		@Override
 		public void modelChanged(IStructuredModel model) {
 			if (getSourceViewer() != null) {
 				// getTextViewer().setRedraw(true);
@@ -275,6 +279,7 @@ public class StructuredTextEditor extends TextEditor {
 				// succession, so only need to do one.
 				if (!fUpdateMenuTextPending) {
 					runOnDisplayThreadIfNeededed(new Runnable() {
+						@Override
 						public void run() {
 							updateMenuText();
 							fUpdateMenuTextPending = false;
@@ -285,10 +290,12 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
+		@Override
 		public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
 			// do nothing
 		}
 
+		@Override
 		public void modelReinitialized(IStructuredModel structuredModel) {
 			try {
 				if (getSourceViewer() != null) {
@@ -316,10 +323,12 @@ public class StructuredTextEditor extends TextEditor {
 		// Note: this one should probably be used to
 		// control viewer
 		// instead of viewer having its own listener
+		@Override
 		public void modelResourceDeleted(IStructuredModel model) {
 			// do nothing
 		}
 
+		@Override
 		public void modelResourceMoved(IStructuredModel originalmodel, IStructuredModel movedmodel) {
 			// do nothing
 		}
@@ -348,6 +357,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * Listens to double-click and selection from the outline page
 	 */
 	private class OutlinePageListener implements IDoubleClickListener, ISelectionChangedListener {
+		@Override
 		public void doubleClick(DoubleClickEvent event) {
 			if (event.getSelection().isEmpty())
 				return;
@@ -357,9 +367,8 @@ public class StructuredTextEditor extends TextEditor {
 			if (event.getSelection() instanceof IStructuredSelection) {
 				ISelection currentSelection = getSelectionProvider().getSelection();
 				if (currentSelection instanceof IStructuredSelection) {
-					Object[] currentObjects = ((IStructuredSelection) currentSelection).toArray();
 					Object[] newObjects = ((IStructuredSelection) event.getSelection()).toArray();
-					if (!Arrays.equals(currentObjects, newObjects) && newObjects.length > 0) {
+					if (newObjects.length > 0) {
 						IRegion highlightRange = fStructuredSelectionProvider.selectionConverter.getRegion(newObjects[0]);
 						start = highlightRange.getOffset();
 						length = highlightRange.getLength();
@@ -376,6 +385,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			/*
 			 * Do not allow selection from other parts to affect selection in
@@ -393,6 +403,7 @@ public class StructuredTextEditor extends TextEditor {
 			if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && !getSourceViewer().getTextWidget().isFocusControl()) {
 				int start = -1;
 				int length = 0;
+				IRegion selectionRegion = null;
 				if (event.getSelection() instanceof IStructuredSelection) {
 					ISelection current = getSelectionProvider().getSelection();
 					if (current instanceof IStructuredSelection) {
@@ -413,6 +424,9 @@ public class StructuredTextEditor extends TextEditor {
 								length = end - start;
 							}
 						}
+						if (newObjects.length == 1) {
+							selectionRegion = fStructuredSelectionProvider.selectionConverter.getSelectionRegion(newObjects[0]);
+						}
 					}
 				}
 				else if (event.getSelection() instanceof ITextSelection) {
@@ -420,7 +434,12 @@ public class StructuredTextEditor extends TextEditor {
 				}
 				if (start > -1) {
 					updateRangeIndication(event.getSelection());
-					selectAndReveal(start, length);
+					if (selectionRegion != null) {
+						selectAndReveal(selectionRegion.getOffset(), selectionRegion.getLength());
+					}
+					else {
+						selectAndReveal(start, length);
+					}
 				}
 			}
 		}
@@ -435,6 +454,7 @@ public class StructuredTextEditor extends TextEditor {
 		 * @return the array of ID Strings that define the default show in
 		 *         targets for this editor.
 		 */
+		@Override
 		public String[] getShowInTargetIds() {
 			return fShowInTargetIds;
 		}
@@ -466,6 +486,7 @@ public class StructuredTextEditor extends TextEditor {
 				this(document, selection.getOffset(), selection.getLength(), selectedObjects);
 			}
 
+			@Override
 			public Object getFirstElement() {
 				Object[] selectedStructures = getSelectedStructures();
 				return selectedStructures.length > 0 ? selectedStructures[0] : null;
@@ -475,27 +496,33 @@ public class StructuredTextEditor extends TextEditor {
 				return (selectedStructured != null) ? selectedStructured : new Object[0];
 			}
 
+			@Override
 			public boolean isEmpty() {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=191327
 				return super.isEmpty() || getSelectedStructures().length == 0;
 			}
 
-			public Iterator iterator() {
+			@Override
+			public Iterator<?> iterator() {
 				return toList().iterator();
 			}
 
+			@Override
 			public int size() {
 				return (selectedStructured != null) ? selectedStructured.length : 0;
 			}
 
+			@Override
 			public Object[] toArray() {
 				return getSelectedStructures();
 			}
 
-			public List toList() {
+			@Override
+			public List<?> toList() {
 				return Arrays.asList(getSelectedStructures());
 			}
 
+			@Override
 			public String toString() {
 				return getOffset() + ":" + getLength() + "@" + getSelectedStructures(); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -523,6 +550,7 @@ public class StructuredTextEditor extends TextEditor {
 			fParentProvider = parentProvider;
 			fEditor = structuredTextEditor;
 			selectionChangedListener = new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					handleSelectionChanged(event);
 				}
@@ -530,6 +558,7 @@ public class StructuredTextEditor extends TextEditor {
 			fParentProvider.addSelectionChangedListener(selectionChangedListener);
 			if (fParentProvider instanceof IPostSelectionProvider) {
 				postSelectionChangedListener = new ISelectionChangedListener() {
+					@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						handlePostSelectionChanged(event);
 					}
@@ -538,10 +567,12 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
+		@Override
 		public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
 			postListeners.add(listener);
 		}
 
+		@Override
 		public void addSelectionChangedListener(ISelectionChangedListener listener) {
 			listeners.add(listener);
 		}
@@ -559,12 +590,13 @@ public class StructuredTextEditor extends TextEditor {
 			selectionConverter = null;
 		}
 
-		private void fireSelectionChanged(final SelectionChangedEvent event, ListenerList listenerList) {
+		private void fireSelectionChanged(final SelectionChangedEvent event, ListenerList<ISelectionChangedListener> listenerList) {
 			Object[] listeners = listenerList.getListeners();
 			isFiringSelection = true;
 			for (int i = 0; i < listeners.length; ++i) {
 				final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
 				SafeRunner.run(new SafeRunnable() {
+					@Override
 					public void run() {
 						l.selectionChanged(event);
 					}
@@ -577,6 +609,7 @@ public class StructuredTextEditor extends TextEditor {
 			return fParentProvider;
 		}
 
+		@Override
 		public ISelection getSelection() {
 			fLastSelection = null;
 			fLastSelectionProvider = null;
@@ -665,6 +698,7 @@ public class StructuredTextEditor extends TextEditor {
 			return isFiringSelection;
 		}
 
+		@Override
 		public boolean isValid(ISelection selection) {
 			// ISSUE: is not clear default behavior should be true?
 			// But not clear is this default would apply for our editor.
@@ -681,14 +715,17 @@ public class StructuredTextEditor extends TextEditor {
 			return result;
 		}
 
+		@Override
 		public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
 			postListeners.remove(listener);
 		}
 
+		@Override
 		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 			listeners.remove(listener);
 		}
 
+		@Override
 		public void setSelection(ISelection selection) {
 			if (isFiringSelection()) {
 				return;
@@ -769,9 +806,11 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	class TimeOutExpired extends TimerTask {
+		@Override
 		public void run() {
 			final byte[] result = new byte[1]; // Did the busy state end successfully?
 			getDisplay().syncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (getDisplay() != null && !getDisplay().isDisposed())
 						endBusyStateInternal(result);
@@ -812,14 +851,17 @@ public class StructuredTextEditor extends TextEditor {
 			if (viewer instanceof StructuredTextViewer) {
 				fCompletionListener = new ICompletionListener() {
 
+					@Override
 					public void assistSessionStarted(ContentAssistEvent event) {
 						fIsCompleting = true;
 					}
 
+					@Override
 					public void assistSessionEnded(ContentAssistEvent event) {
 						fIsCompleting = false;
 					}
 
+					@Override
 					public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
 					}
 					
@@ -835,9 +877,9 @@ public class StructuredTextEditor extends TextEditor {
 		 * @param pairing
 		 */
 		void addInserter(CharacterPairing pairing) {
-			List pairings = new ArrayList(Arrays.asList(fInserters));
+			List<CharacterPairing> pairings = new ArrayList<>(Arrays.asList(fInserters));
 			pairings.add(pairing);
-			fInserters = (CharacterPairing[]) pairings.toArray(new CharacterPairing[pairings.size()]);
+			fInserters = pairings.toArray(new CharacterPairing[pairings.size()]);
 		}
 
 		void prioritize() {
@@ -858,10 +900,12 @@ public class StructuredTextEditor extends TextEditor {
 			for (int i = 0; i < fInserters.length; i++) {
 				final AbstractCharacterPairInserter inserter = fInserters[i].inserter;
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void handleException(Throwable exception) {
 						// rely on default logging
 					}
 
+					@Override
 					public void run() throws Exception {
 						inserter.dispose();
 					}
@@ -869,6 +913,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
+		@Override
 		public void verifyKey(final VerifyEvent event) {
 			if (!event.doit || getInsertMode() != SMART_INSERT || fIsCompleting || isBlockSelectionModeEnabled() && isMultilineSelection())
 				return;
@@ -877,6 +922,7 @@ public class StructuredTextEditor extends TextEditor {
 				final CharacterPairing pairing = fInserters[i];
 				// use a SafeRunner -- this is a critical function (typing)
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void run() throws Exception {
 						final AbstractCharacterPairInserter inserter = pairing.inserter;
 						if (inserter.hasPair(event.character)) {
@@ -885,6 +931,7 @@ public class StructuredTextEditor extends TextEditor {
 						}
 					}
 
+					@Override
 					public void handleException(Throwable exception) {
 						// rely on default logging
 					}
@@ -894,7 +941,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
-		private boolean pair(VerifyEvent event, AbstractCharacterPairInserter inserter, Set partitions) {
+		private boolean pair(VerifyEvent event, AbstractCharacterPairInserter inserter, Set<String> partitions) {
 			final ISourceViewer viewer = getSourceViewer();
 			final IDocument document = getSourceViewer().getDocument();
 			if (document != null) {
@@ -930,14 +977,16 @@ public class StructuredTextEditor extends TextEditor {
 	 * its content type and how close it is to the content type of the file
 	 * in the editor.
 	 */
-	private class CharacterPairing implements Comparable {
+	private class CharacterPairing implements Comparable<CharacterPairing> {
 		int priority;
 		AbstractCharacterPairInserter inserter;
-		Set partitions;
-		public int compareTo(Object o) {
+		Set<String> partitions;
+
+		@Override
+		public int compareTo(CharacterPairing o) {
 			if (o == this)
 				return 0;
-			return this.priority - ((CharacterPairing) o).priority;
+			return this.priority - o.priority;
 		}
 	}
 	
@@ -949,6 +998,7 @@ public class StructuredTextEditor extends TextEditor {
 			fEditor = editor;
 		}
 
+		@Override
 		public void partActivated(IWorkbenchPart part) {
 			if (part.getAdapter(ITextEditor.class) == fEditor) {
 				SourceViewerConfiguration sourceViewerConfiguration = getSourceViewerConfiguration();
@@ -965,15 +1015,19 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partOpened(IWorkbenchPart part) {
 		}
 		
@@ -997,22 +1051,22 @@ public class StructuredTextEditor extends TextEditor {
 	/**
 	 * Not API. May be removed in the future.
 	 */
-	public static final String GROUP_NAME_ADDITIONS = IWorkbenchActionConstants.MB_ADDITIONS; //$NON-NLS-1$
+	public static final String GROUP_NAME_ADDITIONS = IWorkbenchActionConstants.MB_ADDITIONS; 
 
-	private static final String REDO_ACTION_DESC = SSEUIMessages.Redo___0___UI_; //$NON-NLS-1$ = "Redo: {0}."
-	private static final String REDO_ACTION_DESC_DEFAULT = SSEUIMessages.Redo_Text_Change__UI_; //$NON-NLS-1$ = "Redo Text Change."
-	private static final String REDO_ACTION_TEXT = SSEUIMessages._Redo__0___Ctrl_Y_UI_; //$NON-NLS-1$ = "&Redo {0} @Ctrl+Y"
-	private static final String REDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Redo_Text_Change__Ctrl_Y_UI_; //$NON-NLS-1$ = "&Redo Text Change @Ctrl+Y"
+	private static final String REDO_ACTION_DESC = SSEUIMessages.Redo___0___UI_; // = "Redo: {0}."
+	private static final String REDO_ACTION_DESC_DEFAULT = SSEUIMessages.Redo_Text_Change__UI_; // = "Redo Text Change."
+	private static final String REDO_ACTION_TEXT = SSEUIMessages._Redo__0___Ctrl_Y_UI_; // = "&Redo {0} @Ctrl+Y"
+	private static final String REDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Redo_Text_Change__Ctrl_Y_UI_; // = "&Redo Text Change @Ctrl+Y"
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.RulerContext"; //$NON-NLS-1$
 	private static final String RULER_CONTEXT_MENU_SUFFIX = ".source.RulerContext"; //$NON-NLS-1$
 
 	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
 	/** Translatable strings */
-	private static final String UNDO_ACTION_DESC = SSEUIMessages.Undo___0___UI_; //$NON-NLS-1$ = "Undo: {0}."
+	private static final String UNDO_ACTION_DESC = SSEUIMessages.Undo___0___UI_; // = "Undo: {0}."
 
-	private static final String UNDO_ACTION_DESC_DEFAULT = SSEUIMessages.Undo_Text_Change__UI_; //$NON-NLS-1$ = "Undo Text Change."
-	private static final String UNDO_ACTION_TEXT = SSEUIMessages._Undo__0___Ctrl_Z_UI_; //$NON-NLS-1$ = "&Undo {0} @Ctrl+Z"
-	private static final String UNDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Undo_Text_Change__Ctrl_Z_UI_; //$NON-NLS-1$ = "&Undo Text Change @Ctrl+Z"
+	private static final String UNDO_ACTION_DESC_DEFAULT = SSEUIMessages.Undo_Text_Change__UI_; // = "Undo Text Change."
+	private static final String UNDO_ACTION_TEXT = SSEUIMessages._Undo__0___Ctrl_Z_UI_; // = "&Undo {0} @Ctrl+Z"
+	private static final String UNDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Undo_Text_Change__Ctrl_Z_UI_; // = "&Undo Text Change @Ctrl+Z"
 
 	/*
 	 * The user will be prompted to associate the input's name with the
@@ -1180,6 +1234,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.ITextEditor#close(boolean)
 	 */
+	@Override
 	public void close(final boolean save) {
 		/*
 		 * Instead of us closing directly, we have to close with our
@@ -1204,6 +1259,7 @@ public class StructuredTextEditor extends TextEditor {
 						 * There's really no way to tell how much later this
 						 * might take place. Be paranoid.
 						 */
+						@Override
 						public void run() {
 							if (!PlatformUI.getWorkbench().isClosing()) {
 								IWorkbenchPartSite site = editorPart.getSite();
@@ -1261,8 +1317,9 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#collectContextMenuPreferencePages()
 	 */
+	@Override
 	protected String[] collectContextMenuPreferencePages() {
-		List allIds = new ArrayList(0);
+		List<String> allIds = new ArrayList<>(0);
 
 		// get contributed preference pages
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
@@ -1296,7 +1353,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
-		return (String[]) allIds.toArray(new String[0]);
+		return allIds.toArray(new String[0]);
 	}
 
 	/**
@@ -1316,6 +1373,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.ExtendedTextEditor#configureSourceViewerDecorationSupport(org.eclipse.ui.texteditor.SourceViewerDecorationSupport)
 	 */
+	@Override
 	protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support) {
 		support.setCharacterPairMatcher(createCharacterPairMatcher());
 		support.setMatchingCharacterPainterPreferenceKeys(EditorPreferenceNames.MATCHING_BRACKETS, EditorPreferenceNames.MATCHING_BRACKETS_COLOR);
@@ -1323,6 +1381,7 @@ public class StructuredTextEditor extends TextEditor {
 		super.configureSourceViewerDecorationSupport(support);
 	}
 
+	@Override
 	protected void createActions() {
 		super.createActions();
 		ResourceBundle resourceBundle = SSEUIMessages.getResourceBundle();
@@ -1432,6 +1491,7 @@ public class StructuredTextEditor extends TextEditor {
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
 	}
 
+	@Override
 	protected LineChangeHover createChangeHover() {
 		return super.createChangeHover(); //new StructuredLineChangeHover();
 	}
@@ -1490,6 +1550,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		IContextService contextService = getSite().getService(IContextService.class);
 		if (contextService != null)
@@ -1518,6 +1579,7 @@ public class StructuredTextEditor extends TextEditor {
 
 		// used for Show Tooltip Description
 		IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell shell) {
 				boolean cutDown = false;
 				int style = cutDown ? SWT.NONE : (SWT.V_SCROLL | SWT.H_SCROLL);
@@ -1574,7 +1636,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * @return
 	 */
 	private String[] createShowInTargetIds() {
-		List allIds = new ArrayList(0);
+		List<String> allIds = new ArrayList<>(0);
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] configurationIds = getConfigurationPoints();
 		for (int i = 0; i < configurationIds.length; i++) {
@@ -1603,7 +1665,7 @@ public class StructuredTextEditor extends TextEditor {
 		if (!allIds.contains(IPageLayout.ID_OUTLINE)) {
 			allIds.add(IPageLayout.ID_OUTLINE);
 		}
-		return (String[]) allIds.toArray(new String[0]);
+		return allIds.toArray(new String[0]);
 	}
 
 	/**
@@ -1620,7 +1682,7 @@ public class StructuredTextEditor extends TextEditor {
 			tools = NullSourceEditingTextTools.getInstance();
 			((NullSourceEditingTextTools) tools).setTextEditor(this);
 		}
-		Method method = null; //$NON-NLS-1$
+		Method method = null;
 		try {
 			method = tools.getClass().getMethod("setTextEditor", new Class[]{StructuredTextEditor.class}); //$NON-NLS-1$
 		}
@@ -1658,6 +1720,7 @@ public class StructuredTextEditor extends TextEditor {
 	/**
 	 * Creates the source viewer to be used by this editor
 	 */
+	@Override
 	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
 		fAnnotationAccess = createAnnotationAccess();
 		fOverviewRuler = createOverviewRuler(getSharedColors());
@@ -1687,6 +1750,7 @@ public class StructuredTextEditor extends TextEditor {
 		return new StructuredTextViewer(parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(), styles);
 	}
 
+	@Override
 	protected void createUndoRedoActions() {
 		// overridden to add icons to actions
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=111877
@@ -1707,6 +1771,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		Logger.trace("Source Editor", "StructuredTextEditor::dispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
@@ -1854,6 +1919,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#disposeDocumentProvider()
 	 */
+	@Override
 	protected void disposeDocumentProvider() {
 		if (fStructuredModel != null && !fisReleased && !(getDocumentProvider() instanceof IModelProvider)) {
 			fStructuredModel.releaseFromEdit();
@@ -1878,6 +1944,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.ITextEditor#doRevertToSaved()
 	 */
+	@Override
 	public void doRevertToSaved() {
 		super.doRevertToSaved();
 		if (fOutlinePage != null && fOutlinePage instanceof IUpdate) {
@@ -1898,6 +1965,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void doSave(IProgressMonitor progressMonitor) {
 		IStructuredModel model = null;
 		try {
@@ -1915,6 +1983,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSetInput(org.eclipse.ui.IEditorInput)
 	 */
+	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		IEditorInput oldInput = getEditorInput();
 		if (oldInput != null) {
@@ -2022,6 +2091,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * @param menu
 	 *            the menu
 	 */
+	@Override
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
 		/*
 		 * To be consistent with the Java Editor, we want to remove ShiftRight
@@ -2092,6 +2162,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
+	@Override
 	public Object getAdapter(Class required) {
 		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			startPerfTime = System.currentTimeMillis();
@@ -2206,6 +2277,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * added checks to overcome bug such that if we are shutting down in an
 	 * error condition, then viewer will have already been disposed.
 	 */
+	@Override
 	protected String getCursorPosition() {
 		String result = null;
 		// this may be too expensive in terms of
@@ -2268,12 +2340,13 @@ public class StructuredTextEditor extends TextEditor {
 	 *             providers ensure that the document maps to a shared
 	 *             structured model.
 	 */
+	@Deprecated
 	public IStructuredModel getModel() {
 		IDocumentProvider documentProvider = getDocumentProvider();
 		
 		if (documentProvider == null) {
 			// this indicated an error in startup sequence
-			Logger.trace(getClass().getName(), "Program Info Only: document provider was null when model requested"); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.trace(getClass().getName(), "Program Info Only: document provider was null when model requested"); //$NON-NLS-1$ 
 		}
 		
 		// Remember if we entered this method without a model existing
@@ -2330,6 +2403,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.part.IWorkbenchPartOrientation#getOrientation()
 	 */
+	@Override
 	public int getOrientation() {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88714
 		return SWT.LEFT_TO_RIGHT;
@@ -2340,12 +2414,14 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.ITextEditor#getSelectionProvider()
 	 */
+	@Override
 	public ISelectionProvider getSelectionProvider() {
 		if (fStructuredSelectionProvider == null) {
 			ISelectionProvider parentProvider = super.getSelectionProvider();
 			if (parentProvider != null) {
 				fStructuredSelectionProvider = new StructuredSelectionProvider(parentProvider, this);
 				fStructuredSelectionProvider.addPostSelectionChangedListener(new ISelectionChangedListener() {
+					@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						updateStatusLine(event.getSelection());
 					}
@@ -2369,6 +2445,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * Overridden to use the top-level editor part's status line
 	 */
+	@Override
 	protected IStatusLineManager getStatusLineManager() {
 		return getEditorPart().getEditorSite().getActionBars().getStatusLineManager();
 	}
@@ -2458,11 +2535,13 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#handleCursorPositionChanged()
 	 */
+	@Override
 	protected void handleCursorPositionChanged() {
 		super.handleCursorPositionChanged();
 		updateStatusField(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET);
 	}
 	
+	@Override
 	protected void handleElementContentReplaced() {
 		super.handleElementContentReplaced();
 
@@ -2500,6 +2579,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#handlePreferenceStoreChanged(org.eclipse.jface.util.PropertyChangeEvent)
 	 */
+	@Override
 	protected void handlePreferenceStoreChanged(PropertyChangeEvent event) {
 		String property = event.getProperty();
 
@@ -2614,6 +2694,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite,
 	 *      org.eclipse.ui.IEditorInput)
 	 */
+	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		// if we've gotten an error elsewhere, before
 		// we've actually opened, then don't open.
@@ -2646,6 +2727,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#initializeDragAndDrop(org.eclipse.jface.text.source.ISourceViewer)
 	 */
+	@Override
 	protected void initializeDragAndDrop(ISourceViewer viewer) {
 		IPreferenceStore store = getPreferenceStore();
 		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
@@ -2663,6 +2745,7 @@ public class StructuredTextEditor extends TextEditor {
 		fDropTarget.addDropListener(fDropAdapter);
 		fDropTarget.addDisposeListener(new DisposeListener() {
 			
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				fDropTarget.removeDropListener(fDropAdapter);
 				fDropTarget.removeDisposeListener(this);
@@ -2676,6 +2759,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#initializeEditor()
 	 */
+	@Override
 	protected void initializeEditor() {
 		super.initializeEditor();
 
@@ -2715,6 +2799,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.editors.text.TextEditor#initializeKeyBindingScopes()
 	 */
+	@Override
 	protected void initializeKeyBindingScopes() {
 		setKeyBindingScopes(new String[]{EDITOR_KEYBINDING_SCOPE_ID});
 	}
@@ -2741,6 +2826,7 @@ public class StructuredTextEditor extends TextEditor {
 		getSourceViewerDecorationSupport(sourceViewer);
 	}
 
+	@Override
 	protected void installTextDragAndDrop(ISourceViewer viewer) {
 		// do nothing
 	}
@@ -2750,6 +2836,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.editors.text.TextEditor#installEncodingSupport()
 	 */
+	@Override
 	protected void installEncodingSupport() {
 		fEncodingSupport = new EncodingSupport(getConfigurationPoints());
 		fEncodingSupport.initialize(this);
@@ -2766,6 +2853,7 @@ public class StructuredTextEditor extends TextEditor {
 		fProjectionSupport.addSummarizableAnnotationType("org.eclipse.ui.workbench.texteditor.error"); //$NON-NLS-1$
 		fProjectionSupport.addSummarizableAnnotationType("org.eclipse.ui.workbench.texteditor.warning"); //$NON-NLS-1$
 		fProjectionSupport.setHoverControlCreator(new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				return new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString());
 			}
@@ -2827,6 +2915,7 @@ public class StructuredTextEditor extends TextEditor {
 	/*
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#performRevert()
 	 */
+	@Override
 	protected void performRevert() {
 		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
 		projectionViewer.setRedraw(false);
@@ -2855,6 +2944,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * Not API. May be reduced to protected method in the future.
 	 * </p>
 	 */
+	@Override
 	public void rememberSelection() {
 		/*
 		 * This method was made public for use by editors that use
@@ -2881,6 +2971,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * Not API. May be reduced to protected method in the future.
 	 * </p>
 	 */
+	@Override
 	public void restoreSelection() {
 		/*
 		 * This method was made public for use by editors that use
@@ -2898,6 +2989,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#rulerContextMenuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
+	@Override
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
 		super.rulerContextMenuAboutToShow(menu);
 
@@ -2936,10 +3028,12 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#safelySanityCheckState(org.eclipse.ui.IEditorInput)
 	 */
+	@Override
 	public void safelySanityCheckState(IEditorInput input) {
 		super.safelySanityCheckState(input);
 	}
 	
+	@Override
 	protected void sanityCheckState(IEditorInput input) {
 		try {
 			++validateEditCount;
@@ -2964,6 +3058,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#setDocumentProvider(org.eclipse.ui.IEditorInput)
 	 */
+	@Override
 	protected void setDocumentProvider(IEditorInput input) {
 		if (input instanceof IStructuredModel) {
 			// largely untested
@@ -2995,6 +3090,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @deprecated - can eventually be eliminated
 	 */
+	@Deprecated
 	private void setModel(IStructuredModel newModel) {
 		Assert.isNotNull(getDocumentProvider(), "document provider can not be null when setting model"); //$NON-NLS-1$
 		if (fStructuredModel != null) {
@@ -3014,6 +3110,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * configure it's internal source viewer. This method was overwritten so
 	 * that viewer configuration could be set after editor part was created.
 	 */
+	@Override
 	protected void setSourceViewerConfiguration(SourceViewerConfiguration config) {
 		SourceViewerConfiguration oldSourceViewerConfiguration = getSourceViewerConfiguration();
 		super.setSourceViewerConfiguration(config);
@@ -3042,12 +3139,12 @@ public class StructuredTextEditor extends TextEditor {
 
 	private void addReconcilingListeners(SourceViewerConfiguration config, StructuredTextViewer stv) {
 		try {
-			List reconcilingListeners = new ArrayList(fReconcilingListeners.length);
+			List<ISourceReconcilingListener> reconcilingListeners = new ArrayList<>(fReconcilingListeners.length);
 			String[] ids = getConfigurationPoints();
 			for (int i = 0; i < ids.length; i++) {
 				reconcilingListeners.addAll(ExtendedConfigurationBuilder.getInstance().getConfigurations("sourceReconcilingListener", ids[i])); //$NON-NLS-1$
 			}
-			fReconcilingListeners = (ISourceReconcilingListener[]) reconcilingListeners.toArray(new ISourceReconcilingListener[reconcilingListeners.size()]);
+			fReconcilingListeners = reconcilingListeners.toArray(new ISourceReconcilingListener[reconcilingListeners.size()]);
 		}
 		catch (ClassCastException e) {
 			Logger.log(Logger.ERROR, "Configuration has a reconciling listener that does not implement ISourceReconcilingListener."); //$NON-NLS-1$
@@ -3065,6 +3162,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#showBusy(boolean)
 	 */
+	@Override
 	public void showBusy(boolean busy) {
 		// no-op
 		super.showBusy(busy);
@@ -3077,6 +3175,7 @@ public class StructuredTextEditor extends TextEditor {
 		fBusyTimer.schedule(new TimeOutExpired(), BUSY_STATE_DELAY);
 	}
 
+	@Override
 	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
 		// do nothing
 	}
@@ -3133,6 +3232,7 @@ public class StructuredTextEditor extends TextEditor {
 	/**
 	 * Updates all content dependent actions.
 	 */
+	@Override
 	protected void updateContentDependentActions() {
 		super.updateContentDependentActions();
 		// super.updateContentDependentActions only updates
@@ -3346,13 +3446,13 @@ public class StructuredTextEditor extends TextEditor {
 					if (undoCommand != null) {
 						String label = undoCommand.getLabel();
 						if (label != null) {
-							String customText = MessageFormat.format(UNDO_ACTION_TEXT, new String[]{label});
+							String customText = MessageFormat.format(UNDO_ACTION_TEXT, new Object[]{label});
 							updateActions = updateActions || customText == null || previousUndoText == null || !customText.equals(previousUndoText);
 							undoAction.setText(customText);
 						}
 						String desc = undoCommand.getDescription();
 						if (desc != null) {
-							String customDesc = MessageFormat.format(UNDO_ACTION_DESC, new String[]{desc});
+							String customDesc = MessageFormat.format(UNDO_ACTION_DESC, new Object[]{desc});
 							updateActions = updateActions || customDesc == null || previousRedoDesc == null || !customDesc.equals(previousUndoDesc);
 							undoAction.setDescription(customDesc);
 						}
@@ -3366,13 +3466,13 @@ public class StructuredTextEditor extends TextEditor {
 					if (redoCommand != null) {
 						String label = redoCommand.getLabel();
 						if (label != null) {
-							String customText = MessageFormat.format(REDO_ACTION_TEXT, new String[]{label});
+							String customText = MessageFormat.format(REDO_ACTION_TEXT, new Object[]{label});
 							updateActions = updateActions || customText == null || previousRedoText == null || !customText.equals(previousRedoText);
 							redoAction.setText(customText);
 						}
 						String desc = redoCommand.getDescription();
 						if (desc != null) {
-							String customDesc = MessageFormat.format(REDO_ACTION_DESC, new String[]{desc});
+							String customDesc = MessageFormat.format(REDO_ACTION_DESC, new Object[]{desc});
 							updateActions = updateActions || customDesc == null || previousRedoDesc == null || !customDesc.equals(previousRedoDesc);
 							redoAction.setDescription(customDesc);
 						}
@@ -3511,6 +3611,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	@Override
 	protected void updateStatusField(String category) {
 		super.updateStatusField(category);
 
@@ -3534,6 +3635,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 	
+	@Override
 	public Annotation gotoAnnotation(boolean forward) {
 		Annotation result = super.gotoAnnotation(forward);
 		if(result != null)
@@ -3593,6 +3695,7 @@ public class StructuredTextEditor extends TextEditor {
 		return new Region(selection.x, selection.y);
 	}
 
+	@Override
 	protected SourceViewerDecorationSupport getSourceViewerDecorationSupport(ISourceViewer viewer) {
 		/* Removed workaround for Bug [206913] source annotations are not painting in source editors.
 		 * With the new presentation reconciler, we no longer need to force the painting. This
@@ -3622,7 +3725,7 @@ public class StructuredTextEditor extends TextEditor {
 									final CharacterPairing pairing = new CharacterPairing();
 									pairing.priority = priority;
 									String[] partitions = StringUtils.unpack(contentTypes[j].getAttribute("partitions"));
-									pairing.partitions = new HashSet(partitions.length);
+									pairing.partitions = new HashSet<>(partitions.length);
 									// Only add the inserter if there is at least one partition for the content type
 									for (int k = 0; k < partitions.length; k++) {
 										pairing.partitions.add(partitions[k]);
@@ -3633,10 +3736,12 @@ public class StructuredTextEditor extends TextEditor {
 										fPairInserter.addInserter(pairing);
 										/* use a SafeRunner since this method is also invoked during Part creation */
 										SafeRunner.run(new ISafeRunnable() {
+											@Override
 											public void run() throws Exception {
 												pairing.inserter.initialize();
 											}
 
+											@Override
 											public void handleException(Throwable exception) {
 												// rely on default logging
 											}
@@ -3726,6 +3831,7 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	private IInformationControlCreator getOutlinePresenterControlCreator(final AbstractQuickOutlineConfiguration config) {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				int shellStyle = SWT.RESIZE;
 				return new QuickOutlinePopupDialog(parent, shellStyle, getInternalModel(), config);
@@ -3733,6 +3839,7 @@ public class StructuredTextEditor extends TextEditor {
 		};
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
 		super.setInitializationData(cfig, propertyName, data);
 		if (data instanceof Map) {

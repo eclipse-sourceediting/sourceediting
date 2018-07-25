@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xml.ui.internal.editor;
+package org.eclipse.jst.jsp.ui.internal.editor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -31,9 +32,8 @@ import org.w3c.dom.NamedNodeMap;
 
 /**
  * @author nitin
- *
  */
-public class DOMSelectionConverterFactory implements IAdapterFactory {
+public class JSPSelectionConverterFactory implements IAdapterFactory {
 
 	private static final Class<?>[] ADAPTER_LIST = new Class[]{SelectionConverter.class};
 
@@ -100,6 +100,12 @@ public class DOMSelectionConverterFactory implements IAdapterFactory {
 				if (DOMRegionContext.XML_TAG_NAME.equals(region.getType())) {
 					return new Region(collection.getStartOffset(region), region.getTextLength());
 				}
+				if (DOMJSPRegionContexts.JSP_DIRECTIVE_NAME.equals(region.getType())) {
+					return new Region(collection.getStartOffset(region), region.getTextLength());
+				}
+				if (DOMJSPRegionContexts.JSP_ROOT_TAG_NAME.equals(region.getType())) {
+					return new Region(collection.getStartOffset(region), region.getTextLength());
+				}
 				if (DOMRegionContext.XML_DOCTYPE_NAME.equals(region.getType())) {
 					return new Region(collection.getStartOffset(region), region.getTextLength());
 				}
@@ -109,10 +115,10 @@ public class DOMSelectionConverterFactory implements IAdapterFactory {
 				if (DOMRegionContext.XML_ATTLIST_DECL_NAME.equals(region.getType())) {
 					return new Region(collection.getStartOffset(region), region.getTextLength());
 				}
-				if (DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType())) {
+				if (DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType()) || DOMJSPRegionContexts.JSP_COMMENT_TEXT.equals(region.getType())) {
 					String commented = collection.getText(region);
 					int inset = 0;
-					while (inset < region.getTextLength() && Character.isWhitespace(commented.charAt(inset))) {
+					while (inset < Math.min(region.getTextLength(), 240) && Character.isWhitespace(commented.charAt(inset))) {
 						inset++;
 					}
 					return new Region(collection.getStartOffset(region) + inset, 0);
@@ -140,7 +146,7 @@ public class DOMSelectionConverterFactory implements IAdapterFactory {
 	/**
 	 * 
 	 */
-	public DOMSelectionConverterFactory() {
+	public JSPSelectionConverterFactory() {
 	}
 
 	@SuppressWarnings("unchecked")

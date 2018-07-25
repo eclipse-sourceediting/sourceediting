@@ -25,7 +25,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
  * objects covering that range, and determining the text ranges represented by
  * domain objects. The domain objects handled are those used in structured
  * selections and being sent across the selection service.
- * 
+ *
+ * Obtained as an adapter on the IStructuredModel
+ *
  * @since 1.5
  */
 public class SelectionConverter {
@@ -67,7 +69,8 @@ public class SelectionConverter {
 	/**
 	 * @param o
 	 *            - a domain object being used in structured selections
-	 * @return a {@link Region} containing the object's start and length
+	 * @return a {@link Region} containing the object's start and length, used
+	 *         for operations requiring the entire text span
 	 */
 	public IRegion getRegion(Object o) {
 		if (o instanceof ITextRegion) {
@@ -79,5 +82,24 @@ public class SelectionConverter {
 		}
 		int startOffset = ((IndexedRegion) o).getStartOffset();
 		return new Region(startOffset, ((IndexedRegion) o).getEndOffset() - startOffset);
+	}
+
+	/**
+	 * @param o
+	 *            - a domain object being used in structured selections
+	 * @return a {@link Region} containing a start and length, used for
+	 *         operations where using the entire text span would be
+	 *         undesirable
+	 */
+	public IRegion getSelectionRegion(Object o) {
+		if (o instanceof ITextRegion) {
+			int start = ((ITextRegion) o).getStart();
+			return new Region(start, 0);
+		}
+		else if (o instanceof IRegion) {
+			return new Region(((IRegion) o).getOffset(), 0);
+		}
+		int startOffset = ((IndexedRegion) o).getStartOffset();
+		return new Region(startOffset, 0);
 	}
 }

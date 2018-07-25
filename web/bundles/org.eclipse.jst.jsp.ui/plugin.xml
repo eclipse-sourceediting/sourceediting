@@ -202,6 +202,15 @@
 		</adapterFactoryDescription>
 	</extension>
 
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory
+			adaptableType="org.eclipse.jst.jsp.core.internal.domdocument.DOMModelForJSP"
+			class="org.eclipse.jst.jsp.ui.internal.editor.JSPSelectionConverterFactory">
+			<adapter
+			type="org.eclipse.wst.sse.ui.SelectionConverter"/>
+		</factory>
+	</extension>
+
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">
 		<factory
