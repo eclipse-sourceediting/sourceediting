@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2014 IBM Corporation and others.
+ * Copyright (c) 2001, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,9 +47,8 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 	private static final boolean DEBUG_TASKSPERF = false;
 
 	// the list of attribute maps for the new tasks for the current file
-	protected List fNewMarkerAttributeMaps = null;
+	protected List<Map<String, Object>> fNewMarkerAttributeMaps = null;
 
-	List oldMarkers = null;
 	private long time0;
 	private String runtimeMarkerType;
 
@@ -63,8 +62,8 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 	 * 
 	 * @return the initial marker attributes
 	 */
-	protected Map createInitialMarkerAttributes(String text, int documentLine, int startOffset, int length, int priority) {
-		Map attributes = new HashMap(6);
+	protected Map<String, Object> createInitialMarkerAttributes(String text, int documentLine, int startOffset, int length, int priority) {
+		Map<String, Object> attributes = new HashMap<>(6);
 		// marker line numbers are 1-based
 		attributes.put(IMarker.LINE_NUMBER, new Integer(documentLine + 1));
 		attributes.put(IMarker.TASK, getMarkerType());
@@ -111,9 +110,7 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 		for (int i = 0; i < searchTags.length; i++) {
 			searchTags[i] = taskTags[i].getTag().toLowerCase(Locale.ENGLISH);
 		}
-		InputStream contents = null;
-		try {
-			contents = file.getContents(true);
+		try (InputStream contents = file.getContents(true)) {
 			reset(new BufferedReader(new InputStreamReader(contents, charset)));
 			while (!isEOF()) {
 				String regionType = primGetNextToken();
@@ -139,7 +136,7 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 			}
 		}
 		catch (IOException e) {
-			Logger.logException(e);
+			Logger.logException("IOException reading file " + file.getFullPath().toString(), e);
 		}
 		catch (CoreException e) {
 			Logger.logException(e);
@@ -148,14 +145,6 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 			Logger.logException(e);
 		}
 		finally {
-			if (contents != null) {
-				try {
-					contents.close();
-				}
-				catch (IOException e) {
-					// nothing to do
-				}
-			}
 			try {
 				yyclose();
 			}
@@ -185,8 +174,9 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 		return DOMRegionContext.XML_COMMENT_TEXT.equals(regionType);
 	}
 
-	public synchronized Map[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor) {
-		fNewMarkerAttributeMaps = new ArrayList();
+	@SuppressWarnings("unchecked")
+	public synchronized Map<String, Object>[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor) {
+		fNewMarkerAttributeMaps = new ArrayList<>();
 		if (monitor.isCanceled() || !shouldScan(file)) {
 			return new Map[0];
 		}
@@ -199,7 +189,7 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 		if (DEBUG_TASKSPERF) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		return (Map[]) fNewMarkerAttributeMaps.toArray(new Map[fNewMarkerAttributeMaps.size()]);
+		return fNewMarkerAttributeMaps.toArray(new Map[fNewMarkerAttributeMaps.size()]);
 	}
 
 	/*
@@ -210,6 +200,7 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 	 * (org.eclipse.core.runtime.IConfigurationElement, java.lang.String,
 	 * java.lang.Object)
 	 */
+	@SuppressWarnings("rawtypes")
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		if (data != null && data instanceof String) {
 			runtimeMarkerType = data.toString();
