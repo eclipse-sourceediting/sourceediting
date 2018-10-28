@@ -172,22 +172,17 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 	}
 
 	private void addPosition(Position position, HighlightingStyle highlighting, boolean isReadOnly) {
-		boolean isExisting = false;
 		// TODO: use binary search
 		for (int i = 0, n = fRemovedPositions.size(); i < n; i++) {
 			HighlightedPosition highlightedPosition = (HighlightedPosition) fRemovedPositions.get(i);
 			if (highlightedPosition == null)
 				continue;
 			if (highlightedPosition.isEqual(position, highlighting)) {
-				isExisting = true;
 				fRemovedPositions.set(i, null);
 				fNOfRemovedPositions--;
-				break;
 			}
 		}
-		if (!isExisting) {
-			fAddedPositions.add(fJobPresenter.createHighlightedPosition(position, highlighting, isReadOnly));
-		}
+		fAddedPositions.add(fJobPresenter.createHighlightedPosition(position, highlighting, isReadOnly));
 	}
 
 	/**
