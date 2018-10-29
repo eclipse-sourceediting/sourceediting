@@ -1,4 +1,4 @@
-org.eclipse.wst.jsdt.web.core/debug=true
+org.eclipse.wst.jsdt.web.core/debug=false
 org.eclipse.wst.jsdt.web.core/debug/tracefilter=
 org.eclipse.wst.jsdt.web.core/debug/jsindexmanager=false
 org.eclipse.wst.jsdt.web.core/debug/jstranslation=false

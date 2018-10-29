@@ -1,4 +1,4 @@
-org.eclipse.wst.sse.core/debug=true
+org.eclipse.wst.sse.core/debug=false
 org.eclipse.wst.sse.core/dom/adapter/notification/time=false
 org.eclipse.wst.sse.core/dom/adapter/notification/time/criteria=10
 org.eclipse.wst.sse.core/structureddocument=false

@@ -1,4 +1,4 @@
-org.eclipse.jst.jsp.core/debug=true
+org.eclipse.jst.jsp.core/debug=false
 org.eclipse.jst.jsp.core/debug/tracefilter=
 org.eclipse.jst.jsp.core/debug/jspindexmanager=false
 org.eclipse.jst.jsp.core/debug/jsptranslation=false

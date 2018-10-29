@@ -1,4 +1,4 @@
-org.eclipse.wst.sse.ui/debug=true
+org.eclipse.wst.sse.ui/debug=false
 org.eclipse.wst.sse.ui/debug/tracefilter=
 
 #org.eclipse.wst.sse.ui.edit.util.ActionContributer._showDebugStatus
