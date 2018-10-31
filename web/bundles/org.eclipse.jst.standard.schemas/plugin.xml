@@ -292,6 +292,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
                 uri="dtdsAndSchemas/orm_2_1.xsd" />
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"
+                uri="dtdsAndSchemas/orm_2_2.xsd" />
 
 
             <uri
@@ -309,6 +312,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
                 uri="dtdsAndSchemas/persistence_2_1.xsd" />
+            <uri
+                name="http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+                uri="dtdsAndSchemas/persistence_2_2.xsd" />
 
 
             <uri
