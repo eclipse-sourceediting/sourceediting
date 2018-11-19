@@ -954,8 +954,10 @@
               id="generateMenuId"
               label="%genMenuLabel">
 	        <command
-	              commandId="org.eclipse.wst.sse.ui.generate.xml"
+	              commandId="org.eclipse.wst.xml.ui.generate.xml"
 	              id="GenerateXML"
+	              label="%_UI_LABEL_GEN_XML"
+	              tooltip="%_UI_DESC_GEN_XML"
 	              style="push">
 	           <visibleWhen checkEnabled="false">
 	              <or>
@@ -1222,7 +1224,7 @@
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.wizards.NewXMLHandler"
-             commandId="org.eclipse.wst.sse.ui.generate.xml">
+             commandId="org.eclipse.wst.xml.ui.generate.xml">
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.ExpandAllHandler"
@@ -1255,7 +1257,8 @@
     <extension
        point="org.eclipse.ui.commands">
 	    <command
-	          id="org.eclipse.wst.sse.ui.generate.xml"
+	          id="org.eclipse.wst.xml.ui.generate.xml"
+	          description="%_UI_DESC_GEN_XML"
 	          name="%_UI_ACTION_CREATE_XML">
 	    </command>
 	    <command
