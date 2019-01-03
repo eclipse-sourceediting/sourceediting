@@ -1,15 +1,17 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 Andrea Bittau, University College London, and others
+ * Copyright (c) 2005, 2013 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moller  - bug 340933 - Migrate to new XPath2 API
  *     Jesper Steen Moller - bug 343804 - Updated API information
- *     Lukasz Wycisk - bug 361802 - Default variable namespace Ð no namespace
+ *     Lukasz Wycisk - bug 361802 - Default variable namespace ï¿½ no namespace
  *     
  *******************************************************************************/
 

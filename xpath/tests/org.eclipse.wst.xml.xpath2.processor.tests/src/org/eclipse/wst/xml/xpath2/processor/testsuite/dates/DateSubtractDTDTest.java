@@ -1,10 +1,11 @@
-
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2017 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
@@ -19,8 +20,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.StaticError;
 import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
-      
-      
+
 public class DateSubtractDTDTest extends AbstractPsychoPathTest {
 
    //Evaluates the "op:subtract-dayTimeDuration-from-date" operator with the arguments set as follows: $arg1 = xs:date(lower bound) $arg2 = xs:dayTimeDuration(lower bound).

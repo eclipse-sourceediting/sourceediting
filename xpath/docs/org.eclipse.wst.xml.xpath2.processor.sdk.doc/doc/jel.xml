@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2009, 2018 IBM Corporation and others.
+    This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License 2.0
+    which accompanies this distribution, and is available at
+    https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        IBM Corporation - initial API and implementation
+ -->
+
 <jel>
 	<admin creation="Thu May 19 00:54:27 CEST 2011" xsdversion="1.0.0" version="1.0.0" />
 	<jelclass abstract="true" visibility="public" package="org.eclipse.wst.xml.xpath2.api" interface="true" fulltype="org.eclipse.wst.xml.xpath2.api.AtomicItemType" type="AtomicItemType">

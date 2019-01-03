@@ -1,20 +1,22 @@
 /*******************************************************************************
  * Copyright (c) 2005, 2012 Andrea Bittau, University College London, and others
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
- *     David Carver - bug 262765 - fix issue with casting items to XSDouble cast
- *                                 needed to cast to Numeric so that evaluations
- *                                 and formatting occur correctly.
- *                               - fix fn:avg casting issues and divide by zero issues.
- *     Jesper Moller - bug 281028 - fix promotion rules for fn:avg
- *     Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
- *    Lukasz Wycisk - bug 361060 - Aggregations with nil=ÕtrueÕ throw exceptions.
+ *    Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *    Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *    David Carver - bug 262765 - fix issue with casting items to XSDouble cast
+ *                                needed to cast to Numeric so that evaluations
+ *                                and formatting occur correctly.
+ *                              - fix fn:avg casting issues and divide by zero issues.
+ *    Jesper Moller - bug 281028 - fix promotion rules for fn:avg
+ *    Mukul Gandhi - bug 280798 - PsychoPath support for JDK 1.4
+ *    Lukasz Wycisk - bug 361060 - Aggregations with nil=ï¿½trueï¿½ throw exceptions.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
