@@ -139,7 +139,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				type = TemporaryAnnotation.ANNOT_WARNING;
 				break;
 			case IMessage.LOW_SEVERITY :
-				type = TemporaryAnnotation.ANNOT_WARNING;
+				type = TemporaryAnnotation.ANNOT_INFO;
 				break;
 			case IMessage.ERROR_AND_WARNING :
 				type = TemporaryAnnotation.ANNOT_WARNING;
