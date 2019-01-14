@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (c) 2014-2016 Red Hat, Inc. and others.
+ * Copyright (c) 2014-2019 Red Hat, Inc. and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,30 +9,16 @@
  * 
  * Contributors:
  *     JBoss by Red Hat - Initial implementation.
+ *     Nitin Dahyabhai <nitind@us.ibm.com> - remove JAXB dependency
  ************************************************************************************/
 package org.eclipse.wst.json.core.internal.schema.catalog;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.Collections;
+import java.net.URI;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -40,28 +26,31 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.json.core.JSONCorePlugin;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
-@SuppressWarnings("nls")
 public class EntryParser {
 
 	public static final String JSON_CATALOG_ENTRIES = "catalogEntries"; //$NON-NLS-1$
-	private static final JAXBContext jaxbContext;
-	
-	static {
-		try {
-			jaxbContext = JAXBContext.newInstance(EntriesWrapper.class);
-		} catch (JAXBException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	public Set<UserEntry> parse(String xml) throws CoreException {
 		if (xml == null || xml.trim().isEmpty()) {
 			return null;
 		}
+		Set<UserEntry> list = new HashSet<>();
 		try {
-			EntriesWrapper list = (EntriesWrapper) unmarshall(jaxbContext, xml);
-			return list.entries == null ? Collections.<UserEntry>emptySet() : list.entries;
+			Document parsed = CommonXML.getDocumentBuilder(false).parse(new InputSource(new StringReader(xml)));
+			NodeList entryElements = parsed.getElementsByTagName("entry");
+			for (int i = 0; i < entryElements.getLength(); i++) {
+				Element el = (Element) entryElements.item(i);
+				UserEntry entry = new UserEntry();
+				entry.setFileMatch(el.getAttribute("fileMatch"));
+				entry.setUrl(new URI(el.getAttribute("url")));
+				list.add(entry);
+			}
+			return list;
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, JSONCorePlugin.PLUGIN_ID,
 					"Unable to parse entry", e));
@@ -70,13 +59,19 @@ public class EntryParser {
 	
 	public String serialize(Set<UserEntry> entries) throws CoreException {
 		try {
-			EntriesWrapper list = new EntriesWrapper();
-			list.entries = entries;
-			Marshaller marshaller = jaxbContext.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-			StringWriter writer = new StringWriter();
-			marshaller.marshal(list, writer);
-			return writer.toString();
+			Document document = CommonXML.getDocumentBuilder(false).newDocument();
+			Element entriesElement = document.createElement("entries");
+			document.appendChild(entriesElement);
+			for(UserEntry userEntry: entries) {
+				Element entryElement = document.createElement("entry");
+				entriesElement.appendChild(entryElement);
+				entryElement.setAttribute("fileMatch", userEntry.getFileMatch());
+				entryElement.setAttribute("url", userEntry.getUrl().toString());
+			}
+			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			CommonXML.serialize(document, bytes);
+			return new String(bytes.toByteArray(), "utf8");
+			
 		} catch (Exception shouldntHappen) {
 			throw new CoreException(new Status(IStatus.ERROR, JSONCorePlugin.PLUGIN_ID,
 					"Unable to serialize entries ", shouldntHappen));
@@ -106,35 +101,5 @@ public class EntryParser {
 		IEclipsePreferences preferences = InstanceScope.INSTANCE
 				  .getNode("org.eclipse.wst.json.ui"); //$NON-NLS-1$
 		return preferences;
-	}
-	
-	@XmlRootElement(name = "entries")
-	@XmlAccessorType (XmlAccessType.FIELD)
-	static class EntriesWrapper {
-		@XmlElement(name = "entry", type=UserEntry.class)
-		Set<UserEntry> entries;
-	}
-	
-	protected Object unmarshall(JAXBContext jaxbContext, String xml) throws JAXBException, IOException, XMLStreamException {
-		return unmarshall(jaxbContext, new StringReader(xml));
-	}
-	
-	protected Object unmarshall(JAXBContext jaxbContext, File file) throws JAXBException, IOException, XMLStreamException {
-		return unmarshall(jaxbContext, new FileReader(file));
-	}
-
-	protected Object unmarshall(JAXBContext jaxbContext, Reader reader) throws JAXBException, IOException, XMLStreamException {
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		XMLInputFactory xmlif = XMLInputFactory.newInstance();
-		Reader r = null;
-		try {
-			r = reader;
-			XMLStreamReader xmler = xmlif.createXMLStreamReader(r);
-			return jaxbUnmarshaller.unmarshal(xmler);
-		} finally {
-			if (r != null) {
-				r.close();
-			}
-		}
 	}
 }

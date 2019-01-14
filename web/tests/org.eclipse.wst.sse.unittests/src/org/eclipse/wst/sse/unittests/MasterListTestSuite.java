@@ -27,6 +27,7 @@ import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestSuite;
 import org.eclipse.wst.html.ui.tests.HTMLUITestSuite;
 import org.eclipse.wst.jsdt.web.core.tests.AllWebCoreTests;
 import org.eclipse.wst.jsdt.web.ui.tests.AllWebUITests;
+import org.eclipse.wst.json.core.tests.JsonCoreTestSuite;
 import org.eclipse.wst.sse.core.tests.SSEModelTestSuite;
 import org.eclipse.wst.sse.ui.tests.SSEUITestSuite;
 import org.eclipse.wst.xml.core.tests.SSEModelXMLTestSuite;
@@ -57,6 +58,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		CSSUITestSuite.class,
 		HTMLUITestSuite.class,
 		JSPUITestSuite.class,
+		JsonCoreTestSuite.class,
 		AllWebCoreTests.class,
 		AllWebUITests.class,
 //		RunJSDTCoreTests.class,
@@ -66,7 +68,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		CSSEncodingTestSuite.class,
 		HTMLEncodingTestSuite.class,
 		JSPEncodingTestSuite.class,
-		AllTestsSuite.class
+		AllTestsSuite.class,
 //		RegressionBucket.class,
 //		AllTestCases.class
 

@@ -14,19 +14,8 @@ package org.eclipse.wst.json.core.internal.schema.catalog;
 
 import java.net.URI;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlAccessorType (XmlAccessType.FIELD)
-@XmlRootElement(name="entry")
 public class UserEntry {
-
-	@XmlAttribute
 	private String fileMatch;
-
-	@XmlAttribute
 	private URI url;
 
 	public String getFileMatch() {

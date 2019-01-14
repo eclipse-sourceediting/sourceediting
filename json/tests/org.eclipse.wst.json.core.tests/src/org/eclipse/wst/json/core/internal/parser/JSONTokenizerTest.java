@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2015, 2017 Angelo ZERR.
+ *  Copyright (c) 2015, 2019 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class JSONTokenizerTest {
+import junit.framework.TestCase;
+
+public class JSONTokenizerTest extends TestCase {
 
 	@Test
 	public void array() {
