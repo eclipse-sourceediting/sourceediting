@@ -20,6 +20,7 @@ Require-Bundle: org.junit;bundle-version="3.8.2",
  org.eclipse.wst.html.core.tests;resolution:=optional,
  org.eclipse.wst.html.tests.encoding;resolution:=optional,
  org.eclipse.wst.html.ui.tests;resolution:=optional,
+ org.eclipse.wst.json.core.tests;resolution:=optional,
  org.eclipse.wst.sse.core.tests;resolution:=optional,
  org.eclipse.wst.sse.ui.tests;resolution:=optional,
  org.eclipse.wst.xml.core.tests;resolution:=optional,
@@ -44,3 +45,4 @@ Require-Bundle: org.junit;bundle-version="3.8.2",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
+
