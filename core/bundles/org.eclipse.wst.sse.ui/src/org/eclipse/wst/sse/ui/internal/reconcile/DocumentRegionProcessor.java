@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -103,9 +103,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	private boolean fValidationEnabled;
 
 	public void addReconcilingListener(ISourceReconcilingListener listener) {
-		Set listeners = new HashSet(Arrays.asList(fReconcileListeners));
+		Set<ISourceReconcilingListener> listeners = new HashSet<>(Arrays.asList(fReconcileListeners));
 		listeners.add(listener);
-		fReconcileListeners = (ISourceReconcilingListener[]) listeners.toArray(new ISourceReconcilingListener[listeners.size()]);
+		fReconcileListeners = listeners.toArray(new ISourceReconcilingListener[listeners.size()]);
 	}
 
 	protected void beginProcessing() {
@@ -261,7 +261,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 					validatorStrategy = new ValidatorStrategy(viewer, contentTypeId);
 					ValidatorBuilder vBuilder = new ValidatorBuilder();
 					ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData(SSE_UI_ID);
-					List enabledValidators = new ArrayList(1);
+					List<ValidatorMetaData> enabledValidators = new ArrayList<>(1);
 					/* if any "must" handle this content type, just add them */
 					boolean foundSpecificContentTypeValidators = false;
 					for (int i = 0; i < vmds.length; i++) {
@@ -282,7 +282,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 						}
 					}
 					for (int i = 0; i < enabledValidators.size(); i++) {
-						validatorStrategy.addValidatorMetaData((ValidatorMetaData) enabledValidators.get(i));
+						validatorStrategy.addValidatorMetaData(enabledValidators.get(i));
 					}
 				}
 			}
@@ -334,9 +334,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	}
 	
 	public void removeReconcilingListener(ISourceReconcilingListener listener) {
-		Set listeners = new HashSet(Arrays.asList(fReconcileListeners));
+		Set<ISourceReconcilingListener> listeners = new HashSet<>(Arrays.asList(fReconcileListeners));
 		listeners.remove(listener);
-		fReconcileListeners = (ISourceReconcilingListener[]) listeners.toArray(new ISourceReconcilingListener[listeners.size()]);
+		fReconcileListeners = listeners.toArray(new ISourceReconcilingListener[listeners.size()]);
 	}
 
 

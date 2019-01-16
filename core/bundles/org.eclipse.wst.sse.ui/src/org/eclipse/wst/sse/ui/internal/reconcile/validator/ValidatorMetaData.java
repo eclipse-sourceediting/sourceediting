@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -49,14 +50,14 @@ public class ValidatorMetaData {
 	// contentTypeId -> List(paritionType, paritionType, partitionType, ...)
 	// contentTypeId2 -> List(partitionType, partitionType, ...)
 	// ...
-	private HashMap fMatrix = null;
+	private Map<String, List<String>> fMatrix = null;
 
 	public ValidatorMetaData(IConfigurationElement element, String vId, String vClass, String vScope) {
 		fId = vId;
 		fClass = vClass;
 		fConfigurationElement = element;
 		fScope = vScope;
-		fMatrix = new HashMap();
+		fMatrix = new HashMap<>();
 	}
 
     /**
@@ -66,15 +67,13 @@ public class ValidatorMetaData {
      * @return
      */
     private String[] calculateParentContentTypeIds(String contentTypeId) {
-
-        Set parentTypes = new HashSet();
+        Set<String> parentTypes = new HashSet<>();
         
         IContentTypeManager ctManager = Platform.getContentTypeManager();    
         IContentType ct = ctManager.getContentType(contentTypeId);
         String id = contentTypeId;
 
         while(ct != null && id != null) {
-            
             parentTypes.add(id);
             ct = ctManager.getContentType(id);
             if(ct != null) {
@@ -82,19 +81,21 @@ public class ValidatorMetaData {
                 id = (baseType != null) ? baseType.getId() : null;
             }
         }
-        return (String[])parentTypes.toArray(new String[parentTypes.size()]);
+        return parentTypes.toArray(new String[parentTypes.size()]);
     }
     
 	public void addContentTypeId(String contentTypeId) {
-		if (!fMatrix.containsKey(contentTypeId))
-			fMatrix.put(contentTypeId, new ArrayList());
+		if (!fMatrix.containsKey(contentTypeId)) {
+			fMatrix.put(contentTypeId, new ArrayList<String>());
+		}
 	}
 
 	public void addParitionType(String contentTypeId, String partitionType) {
-		if (!fMatrix.containsKey(contentTypeId))
-			fMatrix.put(contentTypeId, new ArrayList());
+		if (!fMatrix.containsKey(contentTypeId)) {
+			fMatrix.put(contentTypeId, new ArrayList<String>());
+		}
 
-		List partitionList = (List) fMatrix.get(contentTypeId);
+		List<String> partitionList = fMatrix.get(contentTypeId);
 		partitionList.add(partitionType);
 	}
 
@@ -130,15 +131,16 @@ public class ValidatorMetaData {
 	 *         type
 	 */
 	public boolean canHandlePartitionType(String contentTypeIds[], String paritionType) {
-        for(int i=0; i<contentTypeIds.length; i++) {
-        	List partitions = (List) fMatrix.get(contentTypeIds[i]);
-    		if (partitions != null) {
-    			for (int j = 0; j < partitions.size(); j++) {
-    				if (paritionType.equals(partitions.get(j)))
-    					return true;
-    			}
-    		}
-        }
+		for (int i = 0; i < contentTypeIds.length; i++) {
+			List<String> partitions = fMatrix.get(contentTypeIds[i]);
+			if (partitions != null) {
+				for (int j = 0; j < partitions.size(); j++) {
+					if (paritionType.equals(partitions.get(j))) {
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 

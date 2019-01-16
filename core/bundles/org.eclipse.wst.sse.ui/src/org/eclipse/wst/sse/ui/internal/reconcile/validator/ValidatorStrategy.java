@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -63,15 +64,15 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	private static final Object NO_FILE = new Object();
 
 	private String[] fContentTypeIds = null;
-	private List fMetaData = null;
+	private List<ValidatorMetaData> fMetaData = null;
 	/** validator id (as declared in ext point) -> ReconcileStepForValidator * */
-	private HashMap fVidToVStepMap = null;
+	private Map<String, IReconcileStep> fVidToVStepMap = null;
 
 	/*
 	 * List of ValidatorMetaDatas of total scope validators that have been run
 	 * since beginProcessing() was called.
 	 */
-	private List fTotalScopeValidatorsAlreadyRun = new ArrayList();
+	private List<ValidatorMetaData> fTotalScopeValidatorsAlreadyRun = new ArrayList<>();
 	
 	/*
 	 * Whether the Validation Framework has indicated that validation is
@@ -83,9 +84,9 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 
 	public ValidatorStrategy(ISourceViewer sourceViewer, String contentType) {
 		super(sourceViewer);
-		fMetaData = new ArrayList();
+		fMetaData = new ArrayList<>();
 		fContentTypeIds = calculateParentContentTypeIds(contentType);
-		fVidToVStepMap = new HashMap();
+		fVidToVStepMap = new HashMap<>();
 	}
 
 	public void addValidatorMetaData(ValidatorMetaData vmd) {
@@ -104,15 +105,13 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 * @return
 	 */
 	private String[] calculateParentContentTypeIds(String contentTypeId) {
-
-		Set parentTypes = new HashSet();
+		Set<String> parentTypes = new HashSet<>();
 
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
 		IContentType ct = ctManager.getContentType(contentTypeId);
 		String id = contentTypeId;
 
 		while (ct != null && id != null) {
-
 			parentTypes.add(id);
 			ct = ctManager.getContentType(id);
 			if (ct != null) {
@@ -120,13 +119,13 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 				id = (baseType != null) ? baseType.getId() : null;
 			}
 		}
-		return (String[]) parentTypes.toArray(new String[parentTypes.size()]);
+		return parentTypes.toArray(new String[parentTypes.size()]);
 	}
 
 	protected boolean canHandlePartition(String partitionType) {
 		ValidatorMetaData vmd = null;
 		for (int i = 0; i < fMetaData.size(); i++) {
-			vmd = (ValidatorMetaData) fMetaData.get(i);
+			vmd = fMetaData.get(i);
 			if (vmd.canHandlePartitionType(getContentTypeIds(), partitionType))
 				return true;
 		}
@@ -179,26 +178,26 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		String partitionType = tr.getType();
 
 		ValidatorMetaData vmd = null;
-		List annotationsToAdd = new ArrayList();
-		List stepsRanOnThisDirtyRegion = new ArrayList(1);
+		List<IReconcileResult> annotationsToAdd = new ArrayList<>();
+		List<ReconcileStepForValidator> stepsRanOnThisDirtyRegion = new ArrayList<>(1);
 		
 		/*
 		 * Keep track of the disabled validators by source id for the V2
 		 * validators.
 		 */
-		Set disabledValsBySourceId = new HashSet(20);
+		Set<String> disabledValsBySourceId = new HashSet<>(20);
 		
 		/*
 		 * Keep track of the disabled validators by class id for the v1
 		 * validators.
 		 */
-		Set disabledValsByClass = new HashSet(20);
+		Set<String> disabledValsByClass = new HashSet<>(20);
 		IFile file = getFile();
 		if (file != null) {
 			if(!file.isAccessible())
 				return;
 
-			Collection disabledValidators = null;
+			Collection<Validator> disabledValidators = null;
 			try {
 				/*
 				 * Take extra care when calling this external code, as it
@@ -211,8 +210,8 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 			}
 
 			if (disabledValidators != null) {
-				for (Iterator it = disabledValidators.iterator(); it.hasNext();) {
-					Validator v = (Validator) it.next();
+				for (Iterator<Validator> it = disabledValidators.iterator(); it.hasNext();) {
+					Validator v = it.next();
 					Validator.V1 v1 = null;
 					try {
 						v1 = v.asV1Validator();
@@ -240,7 +239,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		 * here anyway to find the right vmd.
 		 */
 		for (int i = 0; i < fMetaData.size() && !isCanceled(); i++) {
-			vmd = (ValidatorMetaData) fMetaData.get(i);
+			vmd = fMetaData.get(i);
 			if (vmd.canHandlePartitionType(getContentTypeIds(), partitionType)) {
 				/*
 				 * Check if validator is enabled according to validation
@@ -289,18 +288,19 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 
 		TemporaryAnnotation[] annotationsToRemove = getAnnotationsToRemove(dr, stepsRanOnThisDirtyRegion);
 		if (annotationsToRemove.length + annotationsToAdd.size() > 0 && !fIsCancelled)
-			smartProcess(annotationsToRemove, (IReconcileResult[]) annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
+			smartProcess(annotationsToRemove, annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
 	}
 
 	public void release() {
 		super.release();
 		fIsCancelled = true;
-		Iterator it = fVidToVStepMap.values().iterator();
+		Iterator<IReconcileStep> it = fVidToVStepMap.values().iterator();
 		IReconcileStep step = null;
 		while (it.hasNext()) {
-			step = (IReconcileStep) it.next();
-			if (step instanceof IReleasable)
+			step = it.next();
+			if (step instanceof IReleasable) {
 				((IReleasable) step).release();
+			}
 		}
 		fFile = null;
 	}
@@ -330,10 +330,10 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		
 		// validator steps are in "fVIdToVStepMap" (as opposed to fFirstStep >
 		// next step etc...)
-		Iterator it = fVidToVStepMap.values().iterator();
+		Iterator<IReconcileStep> it = fVidToVStepMap.values().iterator();
 		IReconcileStep step = null;
 		while (it.hasNext()) {
-			step = (IReconcileStep) it.next();
+			step = it.next();
 			step.setInputModel(new DocumentAdapter(document));
 		}
 	}
