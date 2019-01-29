@@ -23,9 +23,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.junit.Assert;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class JSONTokenizerTest extends TestCase {
+public class JSONTokenizerTest {
 
 	@Test
 	public void array() {
