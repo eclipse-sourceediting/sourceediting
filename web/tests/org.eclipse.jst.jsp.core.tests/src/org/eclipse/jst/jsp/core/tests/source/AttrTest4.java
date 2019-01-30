@@ -10,11 +10,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.core.tests.parser;
+package org.eclipse.jst.jsp.core.tests.source;
 
 import java.io.StringWriter;
 
-import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -43,7 +43,7 @@ public class AttrTest4 extends TestCase {
 		IDOMModel model = null;
 		try {
 			IModelManager modelManager = StructuredModelManager.getModelManager();
-			model = (IDOMModel) modelManager.createUnManagedStructuredModelFor(ContentTypeIdForHTML.ContentTypeID_HTML);
+			model = (IDOMModel) modelManager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -289,4 +289,5 @@ public class AttrTest4 extends TestCase {
 			model.releaseFromEdit();
 		}
 	}
+
 }

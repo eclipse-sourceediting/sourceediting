@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2018 IBM Corporation and others.
+ * Copyright (c) 2004, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -941,7 +941,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
         return XML_TAG_NAME;
 }
 /* another attribute name was found, resume looking for the equals sign */
-<ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> ({Letter} | _ | : | \[ | \] | \( | \) | \* | #){NameChar}* {
+<ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> ({Letter} | _ | : | \[ | \] | \( | \) | \* | @ | #){NameChar}* {
 	if(Debug.debugTokenizer)
 		dump("attr name");//$NON-NLS-1$
         yybegin(ST_XML_EQUALS);

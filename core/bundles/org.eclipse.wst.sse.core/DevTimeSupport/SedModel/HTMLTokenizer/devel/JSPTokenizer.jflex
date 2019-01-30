@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2016 IBM Corporation and others.
+ * Copyright (c) 2004, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -1004,7 +1004,7 @@ Char = [\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]
 S = [\x20\x09\x0D\x0A]+
 
 // [4] NameChar ::= Letter | Digit | '.' | '-' | '_' | ':' | CombiningChar | Extender
-NameChar = ({Letter} | {Digit} | \. | \- | _ | : | {CombiningChar} | {Extender})
+NameChar = ({Letter} | {Digit} | \. | \- | _ | : | {CombiningChar} | {Extender} | \[ | \] | \( | \) | # | \*)
 
 // [5] Name ::= (Letter | '_' | ':') NameChar*
 //Name = ({NameChar}{NameChar}*)
@@ -1562,7 +1562,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 }
 
 /* another attribute name was found, resume looking for the equals sign */
-<ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> {Name} {
+<ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> ({Letter} | _ | : | \[ | \] | \( | \) | \* | @ | #){NameChar}* {
 	if(Debug.debugTokenizer)
 		dump("attr name");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;

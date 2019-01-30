@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2017 IBM Corporation and others.
+ * Copyright (c) 2004, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.jst.jsp.core.tests.dom.TestImportedNodes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelIncludes;
 import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
 import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
+import org.eclipse.jst.jsp.core.tests.source.AttrTest4;
 import org.eclipse.jst.jsp.core.tests.source.JSPTokenizerTest;
 import org.eclipse.jst.jsp.core.tests.tei.TEIValidation;
 import org.eclipse.jst.jsp.core.tests.translation.JSPELTranslationTest;
@@ -59,6 +60,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestModelManager.class, "Test Model Manager with JSP"));
 		addTest(new TestSuite(FormatTester.class, "Format Tester"));
 		addTest(new TestSuite(TestModelRelease.class, "Model Tests"));
+		addTest(new TestSuite(AttrTest4.class, "Special Attribute Name Tests"));
 		addTest(new TestSuite(TestModelWithNoFile.class, "Model with no file Tests"));
 		// temporarily removed since unstable, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=213754 
 		// addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
