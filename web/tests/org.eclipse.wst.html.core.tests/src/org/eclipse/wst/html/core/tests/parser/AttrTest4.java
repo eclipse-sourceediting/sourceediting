@@ -258,6 +258,22 @@ public class AttrTest4 extends TestCase {
 		}
 	}
 
+	public void testAttrNameWithColon() {
+		IDOMModel model = null;
+		try {
+			model = createModel();
+			IStructuredDocument structuredDocument = model.getStructuredDocument();
+			structuredDocument.setText(this, "<a v-on:d=''>text</a>");
+			printDOMDocument(model);
+			assertEquals("Not as expected", "StructuredDocument Regions :\n[0, 13] (<a v-on:d=''>)\n[13, 17] (text)\n[17, 21] (</a>)\nTree :\n#document\n--a/a@[0, 13] (<a v-on:d&#61;''>)@[17, 21] (</a>)\n----#text(text)@[13, 17] (text)\n", fOutputWriter.toString());
+			assertEquals("Wrong attribute name", "v-on:d", structuredDocument.getFirstStructuredDocumentRegion().getText(structuredDocument.getFirstStructuredDocumentRegion().getRegions().get(2)));
+			assertEquals("Wrong attribute name", "v-on:d", model.getDocument().getDocumentElement().getAttributes().item(0).getNodeName());
+		}
+		finally {
+			model.releaseFromEdit();
+		}
+	}
+
 	public void testAttrNameLeadingColon() {
 		IDOMModel model = null;
 		try {
