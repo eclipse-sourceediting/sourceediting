@@ -155,8 +155,8 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 					if (breakpoints.length > 0) {
 						IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 						for (int i = 0; i < breakpoints.length; i++) {
-							breakpoints[i].getMarker().delete();
 							breakpointManager.removeBreakpoint(breakpoints[i], true);
+							breakpoints[i].getMarker().delete();
 						}
 					}
 					else {
