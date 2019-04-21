@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.filter;
+package org.eclipse.wst.sse.ui.quickoutline;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A string pattern matcher. Supports '*' and '?' wildcards.
@@ -28,7 +29,6 @@ public class StringMatcher {
 
 	/* boundary value beyond which we don't need to search in the text */
 	protected int fBound= 0;
-
 
 	protected static final char fSingleWildCard= '\u0000';
 
@@ -241,7 +241,7 @@ public class StringMatcher {
 			}
 		}
 
-		Vector temp= new Vector();
+		List<String> temp= new ArrayList<String>();
 
 		int pos= 0;
 		StringBuffer buf= new StringBuffer();
@@ -266,7 +266,7 @@ public class StringMatcher {
 				case '*':
 					if (buf.length() > 0) {
 						/* new segment */
-						temp.addElement(buf.toString());
+						temp.add(buf.toString());
 						fBound += buf.length();
 						buf.setLength(0);
 					}
@@ -282,12 +282,12 @@ public class StringMatcher {
 
 		/* add last buffer to segment list */
 		if (buf.length() > 0) {
-			temp.addElement(buf.toString());
+			temp.add(buf.toString());
 			fBound += buf.length();
 		}
 
 		fSegments= new String[temp.size()];
-		temp.copyInto(fSegments);
+		temp.toArray(fSegments);
 	}
 	/**
 	 * @param text a string which contains no wildcard

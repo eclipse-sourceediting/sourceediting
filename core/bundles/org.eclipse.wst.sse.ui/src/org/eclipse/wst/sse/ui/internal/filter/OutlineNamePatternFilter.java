@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.wst.sse.ui.quickoutline.StringMatcher;
 
 /**
  * The NamePatternFilter selects the elements which

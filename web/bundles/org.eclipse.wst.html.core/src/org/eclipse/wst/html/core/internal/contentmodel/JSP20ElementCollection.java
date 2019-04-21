@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
- * Factory for element declarations of JSP 1.1 and JSP 1.2.
+ * Factory for element declarations of JSP 2.0
  */
 class JSP20ElementCollection extends JSPElementCollection implements JSP20Namespace.ElementName {
 

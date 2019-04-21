@@ -126,7 +126,7 @@
 	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
 			file-extensions="html,htm,xhtml,htpl,wml,shtml,shtm"
-			priority="high"
+			priority="normal"
 			name="%HTML_Content_Type_Extension_Element.name"
 			id="org.eclipse.wst.html.core.htmlsource"
 			base-type="org.eclipse.core.runtime.text">

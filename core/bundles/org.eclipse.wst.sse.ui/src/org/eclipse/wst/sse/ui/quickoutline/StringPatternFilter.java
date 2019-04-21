@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.quickoutline;
+package org.eclipse.wst.sse.ui.quickoutline;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.osgi.util.TextProcessor;
-import org.eclipse.wst.sse.ui.internal.filter.StringMatcher;
+import org.eclipse.wst.sse.ui.internal.quickoutline.QuickOutlinePopupDialog;
 
 /**
  * Default Viewer Filter to be used by the {@link QuickOutlinePopupDialog}
@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.ui.internal.filter.StringMatcher;
  */
 public class StringPatternFilter extends ViewerFilter {
 
-	private StringMatcher fStringMatcher;
+	protected StringMatcher fStringMatcher;
 
 	/*
 	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -39,12 +39,16 @@ public class StringPatternFilter extends ViewerFilter {
 			return true;
 		TreeViewer treeViewer = (TreeViewer) viewer;
 
-		String matchName = ((ILabelProvider) treeViewer.getLabelProvider()).getText(element);
+		String matchName = getMatchLabel(element, treeViewer);
 		matchName = TextProcessor.deprocess(matchName);
 		if (matchName != null && matcher.match(matchName))
 			return true;
 
 		return hasUnfilteredChild(treeViewer, element);
+	}
+
+	protected String getMatchLabel(Object element, TreeViewer treeViewer) {
+		return ((ILabelProvider) treeViewer.getLabelProvider()).getText(element);
 	}
 
 	private boolean hasUnfilteredChild(TreeViewer viewer, Object element) {

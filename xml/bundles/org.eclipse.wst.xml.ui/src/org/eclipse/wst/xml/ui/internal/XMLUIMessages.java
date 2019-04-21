@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2019 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License 2.0 which accompanies this distribution, and is
  * available at https://www.eclipse.org/legal/epl-2.0/
@@ -349,6 +349,9 @@ public class XMLUIMessages extends NLS {
 	public static String Namespace_in_pi_target;
 	public static String Tag_name_missing;
 	public static String Whitespace_at_start;
+
+	public static String QuickOutlineShowAttributes;
+	public static String QuickOutlineHideAttributes;
 
 	static {
 		// load message values from bundle file

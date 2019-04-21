@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2018 IBM Corporation and others.
+ * Copyright (c) 2006, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	}
 
 	private class SpellingProblemCollector implements ISpellingProblemCollector {
-		List annotations = new ArrayList();
+		List<Annotation> annotations = new ArrayList<>();
 
 		public void accept(SpellingProblem problem) {
 			if (isInterestingProblem(problem)) {
@@ -106,7 +106,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		}
 
 		Annotation[] getAnnotations() {
-			return (Annotation[]) annotations.toArray(new Annotation[annotations.size()]);
+			return annotations.toArray(new Annotation[annotations.size()]);
 		}
 	}
 
@@ -151,7 +151,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		/**
 		 * Inherit spelling region rules
 		 */
-		List contexts = new ArrayList();
+		List<String> contexts = new ArrayList<>();
 		IContentType testType = contentType;
 		final String[] ignoredDefinitions = ExtendedConfigurationBuilder.getInstance().getDefinitions("ignorebasetypes", testType.getId()); //$NON-NLS-1$
 		// Look for ignorebasetypes on spellingregions
@@ -168,7 +168,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			}
 			testType = !ignoreBaseTypes ? testType.getBaseType() : null;
 		}
-		fSupportedTextRegionContexts = (String[]) contexts.toArray(new String[contexts.size()]);
+		fSupportedTextRegionContexts = contexts.toArray(new String[contexts.size()]);
 
 		fSpellCheckPreferenceListener = new SpellCheckPreferenceListener();
 	}
@@ -182,11 +182,11 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	}
 
 	private TemporaryAnnotation[] getSpellingAnnotationsToRemove(IRegion region) {
-		List toRemove = new ArrayList();
+		List<Annotation> toRemove = new ArrayList<>();
 		IAnnotationModel annotationModel = getAnnotationModel();
 		// can be null when closing the editor
 		if (annotationModel != null) {
-			Iterator i = null;
+			Iterator<Annotation> i = null;
 			boolean annotationOverlaps = false;
 			if (annotationModel instanceof IAnnotationModelExtension2) {
 				i = ((IAnnotationModelExtension2) annotationModel).getAnnotationIterator(region.getOffset(), region.getLength(), true, true);
@@ -217,7 +217,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			}
 		}
 
-		return (TemporaryAnnotation[]) toRemove.toArray(new TemporaryAnnotation[toRemove.size()]);
+		return toRemove.toArray(new TemporaryAnnotation[toRemove.size()]);
 	}
 
 	/**
@@ -350,7 +350,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 
 		if (annotationModel instanceof IAnnotationModelExtension) {
 			IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) annotationModel;
-			Map annotationsToAddMap = new HashMap();
+			Map<Annotation,Position> annotationsToAddMap = new HashMap<>();
 			for (int i = 0; i < annotationsToAdd.length; i++) {
 				annotationsToAddMap.put(annotationsToAdd[i], ((TemporaryAnnotation) annotationsToAdd[i]).getPosition());
 			}

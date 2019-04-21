@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2017 IBM Corporation and others.
+ * Copyright (c) 2010, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,9 @@
 package org.eclipse.wst.sse.ui.internal.quickoutline;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.bindings.TriggerSequence;
+import org.eclipse.jface.bindings.keys.KeySequence;
+import org.eclipse.jface.bindings.keys.SWTKeySupport;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
@@ -25,10 +28,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -54,13 +60,16 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommand;
+import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.IContentSelectionProvider;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.filter.StringMatcher;
 import org.eclipse.wst.sse.ui.quickoutline.AbstractQuickOutlineConfiguration;
+import org.eclipse.wst.sse.ui.quickoutline.StringMatcher;
+import org.eclipse.wst.sse.ui.quickoutline.StringPatternFilter;
 
 /**
  * Popup dialog that contains the filtering input and the outline
@@ -92,12 +101,30 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 
 	private StringPatternFilter fFilter;
 
+	/**
+	 * Support for cycling using the original command's invocation trigger
+	 * (key binding or otherwise), taken from
+	 * {@link org.eclipse.jdt.internal.ui.text.JavaOutlineInformationControl}
+	 */
+	private KeyAdapter fKeyAdapter;
+	private ICommand fInvokingCommand;
+	private TriggerSequence[] fInvokingCommandKeySequences;
+	private AbstractQuickOutlineConfiguration fFirstConfiguration;
+	private AbstractQuickOutlineConfiguration fConfiguration;
+
 	public QuickOutlinePopupDialog(Shell parent, int shellStyle, IStructuredModel model, AbstractQuickOutlineConfiguration configuration) {
 		super(parent, shellStyle, true, true, true, true, true, null, null);
+		fConfiguration = fFirstConfiguration = configuration;
 		fContentProvider = configuration.getContentProvider();
 		fLabelProvider = configuration.getLabelProvider();
 		fSelectionProvider = configuration.getContentSelectionProvider();
+		fFilter = configuration.getFilter();
 		fModel = model;
+
+		fInvokingCommand = PlatformUI.getWorkbench().getCommandSupport().getCommandManager().getCommand(DIALOG_SECTION);
+
+		updateStatusText();
+
 		create();
 	}
 
@@ -106,12 +133,12 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		addListeners(fTreeViewer.getTree());
 
 		installFilter();
+		
 		return fTreeViewer.getControl();
 	}
 
 	protected Control createTitleControl(Composite parent) {
 		createFilterText(parent);
-
 		return fFilterText;
 	}
 
@@ -152,16 +179,12 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 				// do nothing
 			}
 		});
-	}
-
-	protected void installFilter() {
-		fFilter = new StringPatternFilter();
-		fTreeViewer.addFilter(fFilter);
+		fFilterText.addKeyListener(getKeyAdapter());
 		fFilterText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String text = ((Text) e.widget).getText();
 				int length = text.length();
-				if (length > 0 && text.charAt(length -1 ) != '*') {
+				if (length > 0 && text.charAt(length - 1) != '*') {
 					text = text + '*';
 				}
 				setMatcherString(text, true);
@@ -169,17 +192,33 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		});
 	}
 
+	protected void installFilter() {
+		ViewerFilter[] filters = fTreeViewer.getFilters();
+		for (int i = 0; i < filters.length; i++) {
+			if (filters[i] instanceof StringPatternFilter) {
+				fTreeViewer.removeFilter(filters[i]);
+			}
+		}
+		fTreeViewer.addFilter(fFilter);
+	}
+
 	protected void setMatcherString(String pattern, boolean update) {
 		fFilter.updatePattern(pattern);
 		if (update)
 			stringMatcherUpdated();
 	}
+
 	/**
 	 * The string matcher has been modified. The default implementation
 	 * refreshes the view and selects the first matched element
 	 */
 	protected void stringMatcherUpdated() {
 		// refresh viewer to re-filter
+		/*
+		 * there's an unsolved problem that happens when you have a filter
+		 * pattern that matches a different configuration--switching
+		 * configurations does not reveal the matching tree item
+		 */
 		fTreeViewer.getControl().setRedraw(false);
 		fTreeViewer.refresh();
 		fTreeViewer.expandAll();
@@ -250,6 +289,44 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 			}
 		}
 		return editor;
+	}
+
+	final protected ICommand getInvokingCommand() {
+		return fInvokingCommand;
+	}
+
+	final protected TriggerSequence[] getInvokingCommandKeySequences() {
+		if (fInvokingCommandKeySequences == null) {
+			if (getInvokingCommand() != null) {
+				IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+				fInvokingCommandKeySequences = bindingService.getActiveBindingsFor(getInvokingCommand().getId());
+				return fInvokingCommandKeySequences;
+			}
+		}
+		return fInvokingCommandKeySequences;
+	}
+
+	private KeyAdapter getKeyAdapter() {
+		if (fKeyAdapter == null) {
+			fKeyAdapter= new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					int accelerator = SWTKeySupport.convertEventToUnmodifiedAccelerator(e);
+					KeySequence keySequence = KeySequence.getInstance(SWTKeySupport.convertAcceleratorToKeyStroke(accelerator));
+					TriggerSequence[] sequences= getInvokingCommandKeySequences();
+					if (sequences == null)
+						return;
+					for (int i= 0; i < sequences.length; i++) {
+						if (sequences[i].equals(keySequence)) {
+							e.doit= false;
+							showNextConfiguration();
+							return;
+						}
+					}
+				}
+			};
+		}
+		return fKeyAdapter;
 	}
 
 	private Object getSelectedElement() {
@@ -426,6 +503,24 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		}
 	}
 
+	protected void showNextConfiguration() {
+		AbstractQuickOutlineConfiguration nextConfiguration = fConfiguration.getNextConfiguration();
+		if (nextConfiguration == null) {
+			nextConfiguration = fFirstConfiguration;
+		}
+		if (fConfiguration != nextConfiguration) {
+			fTreeViewer.setContentProvider(fContentProvider = nextConfiguration.getContentProvider());
+			fTreeViewer.setLabelProvider(fLabelProvider = nextConfiguration.getLabelProvider());
+			fSelectionProvider = nextConfiguration.getContentSelectionProvider();
+			fFilter = nextConfiguration.getFilter();
+			installFilter();
+			fConfiguration = nextConfiguration;
+			fTreeViewer.refresh(true);
+			setMatcherString(fFilterText.getText(), true);
+			updateStatusText();
+		}
+	}
+
 	public void widgetDisposed(DisposeEvent e) {
 		fTreeViewer = null;
 		fFilterText = null;
@@ -437,4 +532,17 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		super.fillDialogMenu(dialogMenu);
 	}
 
+	protected void updateStatusText() {
+		AbstractQuickOutlineConfiguration nextConfiguration = fConfiguration.getNextConfiguration();
+		if (nextConfiguration == null) {
+			nextConfiguration = fFirstConfiguration;
+		}
+		if (fConfiguration != nextConfiguration && nextConfiguration.getShowMessage() != null) {
+			TriggerSequence[] sequences = getInvokingCommandKeySequences();
+			if (sequences != null && sequences.length > 0) {
+				String keySequence = sequences[0].format();
+				setInfoText(NLS.bind(nextConfiguration.getShowMessage(), keySequence));
+			}
+		}
+	}
 }

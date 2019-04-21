@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,33 @@ public abstract class AbstractQuickOutlineConfiguration {
 	 * null indicating that the selection in the editor translates to the selection in the outline.
 	 */
 	public IContentSelectionProvider getContentSelectionProvider() {
+		return null;
+	}
+
+	/**
+	 * @return The filter that will apply the contents of the filter text box
+	 * to what is shown by this configuration.
+	 */
+	public StringPatternFilter getFilter() {
+		return new StringPatternFilter();
+	}
+
+	/**
+	 * @return the next configuration for the quick outline to cycle through,
+	 *         or <code>null</code> when the original contributed
+	 *         configuration should be shown next, or there are no others.
+	 */
+	public AbstractQuickOutlineConfiguration getNextConfiguration() {
+		return null;
+	}
+
+	/**
+	 * @return The string to show the user indicating what this configuration
+	 *         will do when active with an open placeholder for the trigger
+	 *         key binding, e.g. "Press ''{0}'' to filter on these things",
+	 *         or <code>null<.code> if it will not be shown.
+	 */
+	public String getShowMessage() {
 		return null;
 	}
 }

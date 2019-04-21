@@ -79,7 +79,7 @@
 	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
 			file-extensions="css"
-			priority="high"
+			priority="normal"
 			name="%CSS_Content_Type_Extension_Element.name"
 			id="org.eclipse.wst.css.core.csssource"
 			base-type="org.eclipse.core.runtime.text">
