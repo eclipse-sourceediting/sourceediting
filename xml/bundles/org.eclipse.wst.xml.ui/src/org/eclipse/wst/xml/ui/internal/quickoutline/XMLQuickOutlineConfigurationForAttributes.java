@@ -37,12 +37,10 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 			 * to be smarter
 			 */
 			if ((valueStart = text.indexOf('=', 1)) > 1) {
-				System.out.println("Match '" + fPattern + "' to '" + text.substring(valueStart + 1) + "'");
 				if (valueStart + 1 < length)
 					return match(text, valueStart + 1, length);
 			}
 			if ((valueStart = text.indexOf(" : ", 1)) > 1) {
-				System.out.println("Match '" + fPattern + "' to '" + text.substring(valueStart + 3) + "'");
 				if (valueStart + 3 < length) {
 					return match(text, valueStart + 3, length);
 				}
