@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.quickoutline;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -62,6 +65,9 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implem
 		return truncated;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Node getAttributeToShow(Element element) {
 		NamedNodeMap attributes = element.getAttributes();
 		Node idTypedAttribute = null;
@@ -130,6 +136,74 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implem
 		return shownAttribute;
 	}
 
+	public Node[] getAttributesToShow(Element element) {
+		NamedNodeMap attributes = element.getAttributes();
+		Node idTypedAttribute = null;
+		Node requiredAttribute = null;
+		boolean hasId = false;
+		boolean hasName = false;
+		Collection<Node> shownAttributes = new ArrayList<>();
+
+		// try to get content model element
+		// declaration
+		CMElementDeclaration elementDecl = null;
+		ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
+		if (mq != null) {
+			elementDecl = mq.getCMElementDeclaration(element);
+		}
+		// find an attribute of data type (or just named) ID
+		if (elementDecl != null) {
+			final CMNamedNodeMap attributeDeclarationMap = elementDecl.getAttributes();
+			int i = 0;
+			while (i < attributes.getLength()) {
+				Node attr = attributes.item(i);
+				String attrName = attr.getNodeName();
+				CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attributeDeclarationMap.getNamedItem(attrName);
+				if (attrDecl != null) {
+					if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
+						idTypedAttribute = attr;
+					}
+					else if ((attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) && (requiredAttribute == null)) {
+						/*
+						 * as a backup, keep tabs on any required
+						 * attributes
+						 */
+						requiredAttribute = attr;
+					}
+					else {
+						hasId = hasId || attrName.equals(ATTR_ID);
+						hasName = hasName || attrName.equals(ATTR_NAME);
+					}
+				}
+				++i;
+			}
+		}
+
+		/*
+		 * If no suitable attribute with type "ID" was found, then prefer
+		 * "id" or "name", otherwise try using a required attribute, if
+		 * none, then just use the first attribute
+		 */
+		Node item = null;
+		if (idTypedAttribute != null) {
+			shownAttributes.add(idTypedAttribute);
+		}
+		if (hasId && (item = attributes.getNamedItem(ATTR_ID)) != null && !shownAttributes.contains(item)) {
+			shownAttributes.add(item);
+		}
+		if (hasName && (item = attributes.getNamedItem(ATTR_NAME)) != null && !shownAttributes.contains(item)) {
+			shownAttributes.add(item);
+		}
+		if (requiredAttribute != null && !shownAttributes.contains(requiredAttribute)) {
+			shownAttributes.add(requiredAttribute);
+		}
+		if (shownAttributes.isEmpty()) {
+			shownAttributes.add(attributes.item(0));
+		}
+
+		return shownAttributes.toArray(new Node[shownAttributes.size()]);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -143,11 +217,11 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implem
 				builder.append(super.getText(node));
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 				if (node.hasAttributes()) {
-					Node shownAttribute = getAttributeToShow((Element) node);
-					if (shownAttribute != null) {
-						String attributeName = shownAttribute.getNodeName();
+					Node[] shownAttributes = getAttributesToShow((Element) node);
+					for (int i = 0; i < shownAttributes.length; i++) {
+						String attributeName = shownAttributes[i].getNodeName();
 						if (attributeName != null && attributeName.length() > 0) {
-							String attributeValue = shownAttribute.getNodeValue();
+							String attributeValue = shownAttributes[i].getNodeValue();
 							if (attributeValue != null) {
 								builder.append(" "); //$NON-NLS-1$
 								builder.append(attributeName);
@@ -161,7 +235,7 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implem
 				else if (node instanceof IDOMElement) {
 					Node possibleText = node.getFirstChild();
 					if (possibleText != null && possibleText.getNextSibling() == null && possibleText.getNodeType() == Node.TEXT_NODE) {
-						builder.append(" : ");
+						builder.append(" : ");//$NON-NLS-1$
 						builder.append(firstLine(possibleText.getNodeValue().trim(), true));
 					}
 				}
@@ -184,15 +258,22 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implem
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 				if (node.hasAttributes()) {
-					Node shownAttribute = getAttributeToShow((Element) node);
-					if (shownAttribute != null) {
-						String attributeName = shownAttribute.getNodeName();
+					StringBuilder builder = new StringBuilder();
+					Node[] shownAttributes = getAttributesToShow((Element) node);
+					for (int i = 0; i < shownAttributes.length; i++) {
+						String attributeName = shownAttributes[i].getNodeName();
 						if (attributeName != null && attributeName.length() > 0) {
-							String attributeValue = shownAttribute.getNodeValue();
+							String attributeValue = shownAttributes[i].getNodeValue();
 							if (attributeValue != null) {
-								return attributeValue;
+								if (builder.length() > 0) {
+									builder.append("\n");//$NON-NLS-1$
+								}
+								builder.append(attributeValue);
 							}
 						}
+					}
+					if (builder.length() > 0) {
+						return builder.toString();
 					}
 				}
 				else if (node instanceof IDOMElement) {
@@ -267,12 +348,12 @@ public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implem
 				styleString.append(super.getText(node));
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 				if (node.hasAttributes()) {
-					Node shownAttribute = getAttributeToShow((Element) node);
-					if (shownAttribute != null) {
+					Node[] shownAttributes = getAttributesToShow((Element) node);
+					for (int i = 0; i < shownAttributes.length; i++) {
 						// display the attribute and styled value
-						String attributeName = shownAttribute.getNodeName();
+						String attributeName = shownAttributes[i].getNodeName();
 						if (attributeName != null && attributeName.length() > 0) {
-							String attributeValue = shownAttribute.getNodeValue();
+							String attributeValue = shownAttributes[i].getNodeValue();
 							if (attributeValue != null) {
 								styleString.append(" "); //$NON-NLS-1$
 								styleString.append(attributeName, StyledString.DECORATIONS_STYLER);

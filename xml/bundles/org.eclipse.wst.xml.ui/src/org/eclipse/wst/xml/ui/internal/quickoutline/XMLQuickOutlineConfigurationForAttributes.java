@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.quickoutline;
 
+import java.util.StringTokenizer;
+
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -32,13 +34,27 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 		public boolean match(String text) {
 			int valueStart;
 			int length = text.length();
+			if (text.indexOf('\n') > 1) {
+				StringTokenizer s = new StringTokenizer(text, "\n");
+				while (s.hasMoreTokens()) {
+					if (match(s.nextToken())) {
+						return true;
+					}
+				}
+			}
 			/*
 			 * This is very imprecise, but there's not enough shared context
 			 * to be smarter
 			 */
 			if ((valueStart = text.indexOf('=', 1)) > 1) {
-				if (valueStart + 1 < length)
-					return match(text, valueStart + 1, length);
+				if (valueStart + 1 < length) {
+					if (match(text, valueStart + 1, length)) {
+						return true;
+					}
+					if ((valueStart = text.indexOf('=', valueStart)) > 1 && text.length() > valueStart) {
+						return match(text.substring(valueStart + 1));
+					}
+				}
 			}
 			if ((valueStart = text.indexOf(" : ", 1)) > 1) {
 				if (valueStart + 3 < length) {
