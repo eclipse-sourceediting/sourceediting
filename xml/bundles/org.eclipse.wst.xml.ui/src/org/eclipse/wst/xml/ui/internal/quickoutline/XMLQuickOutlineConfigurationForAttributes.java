@@ -50,7 +50,8 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 			return super.match(text);
 		}
 	}
-	AttributeShowingLabelProvider labelProvider = new AttributeShowingLabelProvider();
+
+	AttributeShowingLabelProvider fLastLabelProvider = null;
 
 	/*
 	 * (non-Javadoc)
@@ -77,6 +78,7 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 	 * @see org.eclipse.wst.sse.ui.IOutlineContentManager#getLabelProvider()
 	 */
 	public ILabelProvider getLabelProvider() {
+		AttributeShowingLabelProvider labelProvider = fLastLabelProvider = new AttributeShowingLabelProvider();
 		labelProvider.showAttributes(true);
 		return labelProvider;
 	}
@@ -101,9 +103,11 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 
 			@Override
 			protected String getMatchLabel(Object element, TreeViewer treeViewer) {
-				String matchLabel = labelProvider.getIdMatchValue(element);
-				if (matchLabel != null) {
-					return matchLabel;
+				if (fLastLabelProvider != null) {
+					String matchLabel = fLastLabelProvider.getIdMatchValue(element);
+					if (matchLabel != null) {
+						return matchLabel;
+					}
 				}
 				return super.getMatchLabel(element, treeViewer);
 			}
