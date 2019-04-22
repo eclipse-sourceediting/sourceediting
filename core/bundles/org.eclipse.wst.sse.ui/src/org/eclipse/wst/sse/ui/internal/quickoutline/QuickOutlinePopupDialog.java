@@ -22,6 +22,8 @@ import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlExtension;
 import org.eclipse.jface.text.IInformationControlExtension2;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -150,7 +152,12 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 
 		fTreeViewer = new TreeViewer(tree);
 		fTreeViewer.setContentProvider(fContentProvider);
-		fTreeViewer.setLabelProvider(fLabelProvider);
+		if (fLabelProvider instanceof IStyledLabelProvider) {
+			new DelegatingStyledCellLabelProvider((IStyledLabelProvider) fLabelProvider);
+		}
+		else {
+			fTreeViewer.setLabelProvider(fLabelProvider);
+		}
 		fTreeViewer.setAutoExpandLevel(2);
 		fTreeViewer.setUseHashlookup(true);
 		fTreeViewer.setInput(fModel);
@@ -509,8 +516,17 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 			nextConfiguration = fFirstConfiguration;
 		}
 		if (fConfiguration != nextConfiguration) {
+			fContentProvider.dispose();
+			fLabelProvider.dispose();
+
 			fTreeViewer.setContentProvider(fContentProvider = nextConfiguration.getContentProvider());
-			fTreeViewer.setLabelProvider(fLabelProvider = nextConfiguration.getLabelProvider());
+			fLabelProvider = nextConfiguration.getLabelProvider();
+			if (fLabelProvider instanceof IStyledLabelProvider) {
+				fTreeViewer.setLabelProvider(new DelegatingStyledCellLabelProvider((IStyledLabelProvider) fLabelProvider));
+			}
+			else {
+				fTreeViewer.setLabelProvider(fLabelProvider);
+			}
 			fSelectionProvider = nextConfiguration.getContentSelectionProvider();
 			fFilter = nextConfiguration.getFilter();
 			installFilter();
