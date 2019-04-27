@@ -37,7 +37,7 @@
 			class="org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<contentOutlineConfiguration
-			class="org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration"
+			class="org.eclipse.wst.xml.ui.views.contentoutline.DecoratedXMLContentOutlineConfiguration"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<quickOutlineConfiguration
 			class="org.eclipse.wst.xml.ui.internal.quickoutline.XMLQuickOutlineConfiguration"

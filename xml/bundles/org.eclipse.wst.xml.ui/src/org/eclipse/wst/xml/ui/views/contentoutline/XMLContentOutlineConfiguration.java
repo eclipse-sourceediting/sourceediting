@@ -16,31 +16,231 @@ package org.eclipse.wst.xml.ui.views.contentoutline;
 
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
-import org.eclipse.wst.xml.ui.internal.quickoutline.AttributeShowingLabelProvider;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
- * More advanced Outline Configuration for XML support.  Expects that the viewer's
+ * Outline Configuration for XML support.  Expects that the viewer's
  * input will be the DOM Model.
  * 
  * @see AbstractXMLContentOutlineConfiguration
  * @since 1.0
  */
 public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineConfiguration {
+	static final String ATTR_NAME = "name";
+	static final String ATTR_ID = "id";
+
+	private class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implements IStyledLabelProvider {
+		public boolean isLabelProperty(Object element, String property) {
+			return true;
+		}
+
+		private Node getAttributeToShow(Element element) {
+			NamedNodeMap attributes = element.getAttributes();
+			Node idTypedAttribute = null;
+			Node requiredAttribute = null;
+			boolean hasId = false;
+			boolean hasName = false;
+			Node shownAttribute = null;
+
+			// try to get content model element
+			// declaration
+			CMElementDeclaration elementDecl = null;
+			ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
+			if (mq != null) {
+				elementDecl = mq.getCMElementDeclaration(element);
+			}
+			// find an attribute of type (or just named)
+			// ID
+			if (elementDecl != null) {
+				final CMNamedNodeMap attributeDeclarationMap = elementDecl.getAttributes();
+				int i = 0;
+				while (i < attributes.getLength() && idTypedAttribute == null) {
+					Node attr = attributes.item(i);
+					String attrName = attr.getNodeName();
+					CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attributeDeclarationMap.getNamedItem(attrName);
+					if (attrDecl != null) {
+						if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
+							idTypedAttribute = attr;
+						}
+						else if ((attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) && (requiredAttribute == null)) {
+							/*
+							 * as a backup, keep tabs on any required
+							 * attributes
+							 */
+							requiredAttribute = attr;
+						}
+						else {
+							hasId = hasId || attrName.equals(ATTR_ID);
+							hasName = hasName || attrName.equals(ATTR_NAME);
+						}
+					}
+					++i;
+				}
+			}
+
+			/*
+			 * If no suitable attribute with type "ID" was found, then prefer
+			 * "id" or "name", otherwise try using a required attribute, if
+			 * none, then just use the first attribute
+			 */
+			if (idTypedAttribute != null) {
+				shownAttribute = idTypedAttribute;
+			}
+			else if (hasId) {
+				shownAttribute = attributes.getNamedItem(ATTR_ID);
+			}
+			else if (hasName) {
+				shownAttribute = attributes.getNamedItem(ATTR_NAME);
+			}
+			else if (requiredAttribute != null) {
+				shownAttribute = requiredAttribute;
+			}
+			if (shownAttribute == null) {
+				shownAttribute = attributes.item(0);
+			}
+
+			return shownAttribute;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+		 */
+		public String getText(Object o) {
+			if (o instanceof Node) {
+				Node node = (Node) o;
+				StringBuffer buffer = new StringBuffer(super.getText(node));
+				if (node.getNodeType() == Node.ELEMENT_NODE && fShowAttributes) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+					if (node.hasAttributes()) {
+						Node shownAttribute = getAttributeToShow((Element) node);
+						if (shownAttribute != null) {
+							String attributeName = shownAttribute.getNodeName();
+							if (attributeName != null && attributeName.length() > 0) {
+								String attributeValue = shownAttribute.getNodeValue();
+								if (attributeValue != null) {
+									buffer.append(" "); //$NON-NLS-1$
+									buffer.append(attributeName);
+									// https://bugs.eclipse.org/486252
+									buffer.append("="); //$NON-NLS-1$
+									buffer.append(attributeValue);
+								}
+							}
+						}
+					}
+				}
+				return buffer.toString();
+			}
+			return super.toString();
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+		 */
+		public String getToolTipText(Object element) {
+			if (element instanceof Node) {
+				switch (((Node) element).getNodeType()) {
+					case Node.COMMENT_NODE :
+					case Node.CDATA_SECTION_NODE :
+					case Node.PROCESSING_INSTRUCTION_NODE :
+					case Node.TEXT_NODE : {
+						String nodeValue = ((Node) element).getNodeValue().trim();
+						return prepareText(nodeValue);
+					}
+					case Node.ELEMENT_NODE : {
+						// show the preceding comment's tooltip information
+						Node previous = ((Node) element).getPreviousSibling();
+						if (previous != null && previous.getNodeType() == Node.TEXT_NODE)
+							previous = previous.getPreviousSibling();
+						if (previous != null && previous.getNodeType() == Node.COMMENT_NODE)
+							return getToolTipText(previous);
+					}
+				}
+			}
+			return super.getToolTipText(element);
+		}
+
+		/**
+		 * Remove leading indentation from each line in the give string.
+		 * @param text
+		 * @return
+		 */
+		private String prepareText(String text) {
+			StringBuffer nodeText = new StringBuffer();
+			for (int i = 0; i < text.length(); i++) {
+				char c = text.charAt(i);
+				if (c != '\r' && c != '\n') {
+					nodeText.append(c);
+				}
+				else if (c == '\r' || c == '\n') {
+					nodeText.append('\n');
+					while (Character.isWhitespace(c) && i < text.length()) {
+						i++;
+						c = text.charAt(i);
+					}
+					nodeText.append(c);
+				}
+			}
+			return nodeText.toString();
+		}
+
+		public StyledString getStyledText(Object element) {
+			if (element instanceof Node) {
+				Node node = (Node) element;
+				StyledString styleString = new StyledString(super.getText(node));
+				if (node.getNodeType() == Node.ELEMENT_NODE && fShowAttributes) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+					if (node.hasAttributes()) {
+						Node shownAttribute = getAttributeToShow((Element) node);
+						if (shownAttribute != null) {
+							// display the attribute and styled value
+							String attributeName = shownAttribute.getNodeName();
+							if (attributeName != null && attributeName.length() > 0) {
+								String attributeValue = shownAttribute.getNodeValue();
+								if (attributeValue != null) {
+									StringBuffer buffer = new StringBuffer(" "); //$NON-NLS-1$
+									buffer.append(attributeName);
+									// https://bugs.eclipse.org/486252
+									buffer.append("="); //$NON-NLS-1$
+									buffer.append(attributeValue);
+									styleString.append(buffer.toString(), StyledString.QUALIFIER_STYLER);
+								}
+							}
+						}
+					}
+				}
+				return styleString;
+			}
+			return new StyledString(getText(element));
+		}
+	}
+
 	/**
 	 * Toggle action for whether or not to display element's first attribute
 	 */
@@ -67,9 +267,7 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 		public void update() {
 			super.update();
 			fShowAttributes = isChecked();
-			if (fAttributeShowingLabelProvider != null) {
-				fAttributeShowingLabelProvider.showAttributes(fShowAttributes);
-			}
+
 			// notify the configuration of the change
 			enableShowAttributes(fShowAttributes, fTreeViewer);
 
@@ -78,7 +276,7 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 		}
 	}
 	
-	private AttributeShowingLabelProvider fAttributeShowingLabelProvider;
+	private ILabelProvider fAttributeShowingLabelProvider;
 	private IContentProvider fContentProvider = null;
 
 	boolean fShowAttributes = false;
@@ -212,7 +410,6 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (fAttributeShowingLabelProvider == null) {
 			fAttributeShowingLabelProvider = new AttributeShowingLabelProvider();
-			fAttributeShowingLabelProvider.showAttributes(fShowAttributes);
 		}
 		return fAttributeShowingLabelProvider;
 	}

@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.quickoutline;
 
-import java.util.StringTokenizer;
-
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -24,7 +22,7 @@ import org.eclipse.wst.sse.ui.quickoutline.StringPatternFilter;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 
-public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQuickOutlineConfiguration {
+public final class XMLQuickOutlineConfigurationForContents extends AbstractQuickOutlineConfiguration {
 	static class IdMatcher extends StringMatcher {
 		public IdMatcher(String pattern, boolean ignoreCase, boolean ignoreWildCards) {
 			super(pattern, ignoreCase, ignoreWildCards);
@@ -34,13 +32,13 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 		public boolean match(String text) {
 			int valueStart;
 			int length = text.length();
-			if (text.indexOf('\n') > 1) {
-				StringTokenizer s = new StringTokenizer(text, "\n");
-				while (s.hasMoreTokens()) {
-					if (match(s.nextToken())) {
-						return true;
-					}
+			int subStartPos = 0;
+			int subEndPos = 0;
+			while (subEndPos + 1 < length && (subEndPos = text.indexOf('\n', subStartPos)) > 1) {
+				if (match(text, subStartPos, subEndPos)) {
+					return true;
 				}
+				subStartPos = subEndPos + 1;
 			}
 			/*
 			 * This is very imprecise, but there's not enough shared context
@@ -51,8 +49,8 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 					if (match(text, valueStart + 1, length)) {
 						return true;
 					}
-					if ((valueStart = text.indexOf('=', valueStart)) > 1 && text.length() > valueStart) {
-						return match(text.substring(valueStart + 1));
+					if (text.length() > valueStart && (valueStart = text.indexOf('=', valueStart + 1)) > 1) {
+						return match(text, valueStart + 1, length);
 					}
 				}
 			}
@@ -61,11 +59,11 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 					return match(text, valueStart + 3, length);
 				}
 			}
-			return super.match(text);
+			return super.match(text, subStartPos, length);
 		}
 	}
 
-	AttributeShowingLabelProvider fLastLabelProvider = null;
+	XMLContentLabelProvider fLastLabelProvider = null;
 
 	/*
 	 * (non-Javadoc)
@@ -92,7 +90,7 @@ public final class XMLQuickOutlineConfigurationForAttributes extends AbstractQui
 	 * @see org.eclipse.wst.sse.ui.IOutlineContentManager#getLabelProvider()
 	 */
 	public ILabelProvider getLabelProvider() {
-		AttributeShowingLabelProvider labelProvider = fLastLabelProvider = new AttributeShowingLabelProvider();
+		XMLContentLabelProvider labelProvider = fLastLabelProvider = new XMLContentLabelProvider();
 		labelProvider.showAttributes(true);
 		return labelProvider;
 	}

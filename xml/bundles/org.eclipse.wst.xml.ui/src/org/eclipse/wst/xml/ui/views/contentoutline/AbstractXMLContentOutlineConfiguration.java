@@ -135,9 +135,6 @@ public abstract class AbstractXMLContentOutlineConfiguration extends ContentOutl
 
 	private TransferDropTargetListener[] fTransferDropTargetListeners;
 
-	/**
-	 * Create new instance of XMLContentOutlineConfiguration
-	 */
 	public AbstractXMLContentOutlineConfiguration() {
 		// Must have empty constructor to createExecutableExtension
 		super();

@@ -18,7 +18,7 @@ import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.contentoutline.HTMLNodeActionManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
-import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
+import org.eclipse.wst.xml.ui.views.contentoutline.DecoratedXMLContentOutlineConfiguration;
 
 /**
  * Configuration for outline view page which shows HTML content.
@@ -26,7 +26,7 @@ import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguratio
  * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
  * @since 1.0
  */
-public class HTMLContentOutlineConfiguration extends XMLContentOutlineConfiguration {
+public class HTMLContentOutlineConfiguration extends DecoratedXMLContentOutlineConfiguration {
 	private static final String OUTLINE_FILTER_PREF = "org.eclipse.wst.html.ui.OutlinePage"; //$NON-NLS-1$
 	/**
 	 * Create new instance of HTMLContentOutlineConfiguration

@@ -26,13 +26,13 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
+import org.eclipse.wst.xml.ui.views.contentoutline.DecoratedXMLContentOutlineConfiguration;
 import org.w3c.dom.Element;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class TLDContentOutlineConfiguration extends XMLContentOutlineConfiguration {
+public class TLDContentOutlineConfiguration extends DecoratedXMLContentOutlineConfiguration {
 
 	private class ContentLabelProvider implements ILabelProvider {
 		ILabelProvider fParentProvider = null;
@@ -328,7 +328,7 @@ public class TLDContentOutlineConfiguration extends XMLContentOutlineConfigurati
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration
+	 * org.eclipse.wst.xml.ui.views.contentoutline.DecoratedXMLContentOutlineConfiguration
 	 * #getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {

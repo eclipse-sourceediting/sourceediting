@@ -21,7 +21,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 
 public class XMLQuickOutlineConfiguration extends AbstractQuickOutlineConfiguration {
-	XMLQuickOutlineConfigurationForAttributes fNext = new XMLQuickOutlineConfigurationForAttributes();
+	XMLQuickOutlineConfigurationForContents fNext = new XMLQuickOutlineConfigurationForContents();
 
 	/*
 	 * (non-Javadoc)

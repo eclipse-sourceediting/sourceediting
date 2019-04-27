@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-public class AttributeShowingLabelProvider extends JFaceNodeLabelProvider implements IStyledLabelProvider {
+public class XMLContentLabelProvider extends JFaceNodeLabelProvider implements IStyledLabelProvider {
 	static final String ATTR_NAME = "name";
 	static final String ATTR_ID = "id";
 	private boolean fShowAttributes;

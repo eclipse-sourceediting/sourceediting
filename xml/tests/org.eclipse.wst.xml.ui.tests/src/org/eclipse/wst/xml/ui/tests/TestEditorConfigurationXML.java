@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
-import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
+import org.eclipse.wst.xml.ui.views.contentoutline.DecoratedXMLContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
 
 /**
@@ -39,7 +39,7 @@ public class TestEditorConfigurationXML extends TestCase {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ContentTypeIdForXML.ContentTypeID_XML);
 		assertNotNull("no content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, XMLContentOutlineConfiguration.class, o.getClass());
+		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForXML.ContentTypeID_XML, DecoratedXMLContentOutlineConfiguration.class, o.getClass());
 	}
 
 	public void testGetPropertySheetConfiguration() {
