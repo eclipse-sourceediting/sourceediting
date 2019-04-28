@@ -656,6 +656,11 @@
           id="org.eclipse.wst.html.ui.proposalCategory.htmlTemplates"
           name="%proposalCategory.htmlTemplates">
     </proposalCategory>
+    <proposalCategory
+          icon="icons/full/obj16/attribute_obj.gif"
+          id="org.eclipse.wst.html.ui.proposalCategory.htmlAttributeValues"
+          name="%proposalCategory.htmlAttributeValues">
+    </proposalCategory>
     <proposalComputer
           activate="false"
           categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"
@@ -680,7 +685,55 @@
           </partitionType>
        </contentType>
     </proposalComputer>
-    <proposalComputerExtendedActivation
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlAttributeValues"
+          class="org.eclipse.wst.html.ui.internal.contentassist.resources.CSSWebResourcesCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.html.resources.css">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlAttributeValues"
+          class="org.eclipse.wst.html.ui.internal.contentassist.resources.ImageWebResourcesCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.html.resources.image">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlAttributeValues"
+          class="org.eclipse.wst.html.ui.internal.contentassist.resources.ScriptWebResourcesCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.html.resources.script">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlAttributeValues"
+          class="org.eclipse.wst.html.ui.internal.contentassist.resources.HrefWebResourcesCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.html.resources.href">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+     <proposalComputerExtendedActivation
           id="org.eclipse.wst.css.ui.proposalComputer.css">
        <contentType
              id="org.eclipse.wst.html.core.htmlsource">

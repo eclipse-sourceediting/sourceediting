@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2018 IBM Corporation and others.
+ * Copyright (c) 2010, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,15 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import junit.extensions.TestSetup;
-import junit.framework.Assert;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -42,6 +35,12 @@ import org.eclipse.wst.html.ui.tests.ProjectUtil;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+
+import junit.extensions.TestSetup;
+import junit.framework.Assert;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class TestHTMLContentAssistComputers extends TestCase {
 	/** The name of the project that all of these tests will use */
@@ -98,37 +97,37 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	
 	public void testEmptyDocument() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {7, 6, 1, 7};
+		int[] expectedProposalCounts = new int[] {7, 6, 1, 0, 7};
 		runProposalTest("test0.html", 0, 0, expectedProposalCounts);
 	}
 	
 	public void testAfterDocTypeBeforeHTMLTagProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {8, 8, 0, 8};
+		int[] expectedProposalCounts = new int[] {8, 8, 0, 0, 8};
 		runProposalTest("test1.html", 1, 0, expectedProposalCounts);
 	}
 	
 	public void testAfterDocTypeBeforeEmptyDocProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {9, 8, 1, 9};
+		int[] expectedProposalCounts = new int[] {9, 8, 1, 0, 9};
 		runProposalTest("test2.html", 1, 0, expectedProposalCounts);
 	}
 	
 	public void testBodyTagChildElementProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {78, 8, 70, 78};
+		int[] expectedProposalCounts = new int[] {78, 8, 70, 0, 78};
 		runProposalTest("test1.html", 8, 0, expectedProposalCounts);
 	}
 	
 	public void testPTagChildElementProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {54, 8, 46, 54};
+		int[] expectedProposalCounts = new int[] {54, 8, 46, 0, 54};
 		runProposalTest("test1.html", 14, 0, expectedProposalCounts);
 	}
 	
 	public void testDIVTagChildElementProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {78, 8, 70, 78};
+		int[] expectedProposalCounts = new int[] {78, 8, 70, 0, 78};
 		runProposalTest("test1.html", 18, 0, expectedProposalCounts);
 	}
 	
@@ -140,32 +139,63 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	
 	public void testDIVTagAttributeNameProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {18, 0, 18, 18};
+		int[] expectedProposalCounts = new int[] {18, 0, 18, 0, 18};
 		runProposalTest("test1.html", 17, 5, expectedProposalCounts);
 	}
 	
-	public void testFinishClosingTagNamePropsoals() throws Exception {
+	public void testFinishClosingTagNameProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {1, 0, 1, 1};
+		int[] expectedProposalCounts = new int[] {1, 0, 1, 0, 1};
 		runProposalTest("test4.html", 9, 9, expectedProposalCounts);
 	}
 	
-	public void testFinishClosingTagPropsoals() throws Exception {
+	public void testFinishClosingTagProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {2, 0, 2, 2};
+		int[] expectedProposalCounts = new int[] {2, 0, 2, 0, 2};
 		runProposalTest("test4.html", 10, 0, expectedProposalCounts);
 	}
 	
-	public void testFinishClosingTagNamePropsoalsXHTML() throws Exception {
+	public void testFinishClosingTagNameProposalsXHTML() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {1, 0, 1, 1};
+		int[] expectedProposalCounts = new int[] {1, 0, 1, 0, 1};
 		runProposalTest("test5.xhtml", 9, 9, expectedProposalCounts);
 	}
 	
-	public void testFinishClosingTagPropsoalsXHTML() throws Exception {
+	public void testFinishClosingTagProposalsXHTML() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {2, 0, 2, 2};
+		int[] expectedProposalCounts = new int[] {1, 0, 2, 0, 2};
 		runProposalTest("test5.xhtml", 10, 0, expectedProposalCounts);
+	}
+
+	public void testResourceProposalsForAHref() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
+		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 13, 19, expectedProposalCounts);
+		assertEquals("the expected text file proposals", "targets/empty.css", proposals[0][0].getDisplayString());
+		assertEquals("the expected text file proposals", "targets/empty.js", proposals[0][1].getDisplayString());
+		assertEquals("the expected text file proposals", "targets/empty.txt", proposals[0][2].getDisplayString());
+	}
+	
+	public void testResourceProposalsForImgSrc() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
+		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 13, 52, expectedProposalCounts);
+		assertEquals("the expected graphics file proposals", "targets/empty.gif", proposals[0][0].getDisplayString());
+		assertEquals("the expected graphics file proposals", "targets/empty.png", proposals[0][1].getDisplayString());
+	}
+	
+	public void testResourceProposalsForLinkHref() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
+		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 5, 22, expectedProposalCounts);
+		assertEquals("the expected CSS file proposals", "targets/empty.css", proposals[0][0].getDisplayString());
+	}
+	
+	public void testResourceProposalsForScriptSrc() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
+		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 10, 46, expectedProposalCounts);
+		assertEquals("the expected JS file proposals", "targets/empty.js", proposals[0][0].getDisplayString());
 	}
 	
 	/**
@@ -180,7 +210,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	 * @param expectedProposalCounts
 	 * @throws Exception
 	 */
-	private static void runProposalTest(String fileName,
+	private static ICompletionProposal[][] runProposalTest(String fileName,
 			int lineNum, int lineRelativeCharOffset,
 			int[] expectedProposalCounts) throws Exception{
 		
@@ -192,6 +222,8 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		ICompletionProposal[][] pages = getProposals(viewer, offset, expectedProposalCounts.length);
 		
 		verifyProposalCounts(pages, expectedProposalCounts);
+		
+		return pages;
 	}
 	
 	/**
@@ -384,7 +416,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 			}
 			
 			//remove project
-			fProject.delete(true, new NullProgressMonitor());
+//			fProject.delete(true, new NullProgressMonitor());
 			
 			//restore properties
 			if (previousWTPAutoTestNonInteractivePropValue != null) {
