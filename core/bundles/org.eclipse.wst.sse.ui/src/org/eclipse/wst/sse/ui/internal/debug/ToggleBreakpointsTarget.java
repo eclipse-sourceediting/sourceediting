@@ -102,6 +102,9 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 				if (allMarkers != null) {
 					for (int i = 0; i < allMarkers.length; i++) {
 						Position p = model.getMarkerPosition(allMarkers[i]);
+						if (p == null) {
+							continue;
+						}
 						int markerLine = -1;
 						try {
 							markerLine = document.getLineOfOffset(p.getOffset());
