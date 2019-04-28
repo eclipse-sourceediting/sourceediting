@@ -108,10 +108,6 @@
 	          autoinsert="true" context="xsl_xpath" deleted="false"
 	          description='The lang function returns true or false depending on whether the language of the context node as specified by xml:lang attributes is the same as or is a sublanguage of the language specified by the argument string. The language of the context node is determined by the value of the xml:lang attribute on the context node, or, if the context node has no xml:lang attribute, by the value of the xml:lang attribute on the nearest ancestor of the context node that has an xml:lang attribute. If there is no such attribute, then lang returns false. If there is such an attribute, then lang returns true if the attribute value is equal to the argument ignoring case, or if there is some suffix starting with - such that the attribute value is equal to the argument ignoring that suffix of the attribute value and ignoring case.'
 	          enabled="true" name="lang(string)">lang(${cursor})</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.boolean"
-	          autoinsert="true" context="xsl_xpath" deleted="false"
-	          description='Returns a boolean false value.'
-	          enabled="true" name="boolean(arg)">number(${cursor})</template>
 	<template id="org.eclipse.wst.xslt.templates.xpath.number"
 	          autoinsert="true" context="xsl_xpath" deleted="false"
 	          description='Returns the numeric value of the argument. The argument could be a boolean, string, or node-set.'
