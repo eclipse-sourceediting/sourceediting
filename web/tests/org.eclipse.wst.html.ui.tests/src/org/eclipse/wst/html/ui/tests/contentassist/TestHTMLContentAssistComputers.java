@@ -170,31 +170,28 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	public void testResourceProposalsForAHref() throws Exception {
 		// default page, templates page, tags page, default page again
 		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
-		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 13, 19, expectedProposalCounts);
-		assertEquals("the expected text file proposals", "targets/empty.css", proposals[0][0].getDisplayString());
-		assertEquals("the expected text file proposals", "targets/empty.js", proposals[0][1].getDisplayString());
-		assertEquals("the expected text file proposals", "targets/empty.txt", proposals[0][2].getDisplayString());
+		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 13, 18, expectedProposalCounts);
+		assertEquals("the expected text file proposals", "targets/empty.css,targets/empty.js,targets/empty.txt", StringUtils.pack(new String[] {proposals[0][0].getDisplayString(),proposals[0][1].getDisplayString(),proposals[0][2].getDisplayString()}));
 	}
 	
 	public void testResourceProposalsForImgSrc() throws Exception {
 		// default page, templates page, tags page, default page again
 		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
-		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 13, 52, expectedProposalCounts);
-		assertEquals("the expected graphics file proposals", "targets/empty.gif", proposals[0][0].getDisplayString());
-		assertEquals("the expected graphics file proposals", "targets/empty.png", proposals[0][1].getDisplayString());
+		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 13, 51, expectedProposalCounts);
+		assertEquals("the expected graphics file proposals", "targets/empty.gif,targets/empty.png", StringUtils.pack(new String[] {proposals[0][0].getDisplayString(),proposals[0][1].getDisplayString()}));
 	}
 	
 	public void testResourceProposalsForLinkHref() throws Exception {
 		// default page, templates page, tags page, default page again
 		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
-		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 5, 22, expectedProposalCounts);
+		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 5, 21, expectedProposalCounts);
 		assertEquals("the expected CSS file proposals", "targets/empty.css", proposals[0][0].getDisplayString());
 	}
 	
 	public void testResourceProposalsForScriptSrc() throws Exception {
 		// default page, templates page, tags page, default page again
 		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
-		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 10, 46, expectedProposalCounts);
+		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 10, 45, expectedProposalCounts);
 		assertEquals("the expected JS file proposals", "targets/empty.js", proposals[0][0].getDisplayString());
 	}
 	
