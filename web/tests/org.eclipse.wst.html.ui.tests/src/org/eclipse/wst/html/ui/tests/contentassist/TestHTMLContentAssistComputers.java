@@ -14,12 +14,15 @@
 package org.eclipse.wst.html.ui.tests.contentassist;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -30,7 +33,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
+import org.eclipse.wst.html.ui.internal.contentassist.resources.AbstractWebResourcesCompletionProposalComputer;
+import org.eclipse.wst.html.ui.internal.contentassist.resources.CSSWebResourcesCompletionProposalComputer;
+import org.eclipse.wst.html.ui.internal.contentassist.resources.HrefWebResourcesCompletionProposalComputer;
+import org.eclipse.wst.html.ui.internal.contentassist.resources.ImageWebResourcesCompletionProposalComputer;
+import org.eclipse.wst.html.ui.internal.contentassist.resources.ScriptWebResourcesCompletionProposalComputer;
 import org.eclipse.wst.html.ui.tests.ProjectUtil;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -132,7 +141,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	}
 	
 	public void testCommentTagChildElementProposals() throws Exception {
-		// default page
+		// default page (error message)
 		int[] expectedProposalCounts = new int[] {0};
 		runProposalTest("test1.html", 22, 0, expectedProposalCounts);
 	}
@@ -168,31 +177,52 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	}
 
 	public void testResourceProposalsForAHref() throws Exception {
-		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
-		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 13, 18, expectedProposalCounts);
-		assertEquals("the expected text file proposals", "targets/empty.css,targets/empty.js,targets/empty.txt", StringUtils.pack(new String[] {proposals[0][0].getDisplayString(),proposals[0][1].getDisplayString(),proposals[0][2].getDisplayString()}));
+		IFile referencePoint = fProject.getFile("testResources.html");
+		AbstractWebResourcesCompletionProposalComputer proposalComputer = new HrefWebResourcesCompletionProposalComputer();
+		Method findMatchingPaths = HrefWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		findMatchingPaths.setAccessible(true);
+		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
+		assertTrue(paths.length > 5);
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.css")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.js")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.txt")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.css")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.js")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.txt")));
 	}
 	
 	public void testResourceProposalsForImgSrc() throws Exception {
-		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
-		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 13, 51, expectedProposalCounts);
-		assertEquals("the expected graphics file proposals", "targets/empty.gif,targets/empty.png", StringUtils.pack(new String[] {proposals[0][0].getDisplayString(),proposals[0][1].getDisplayString()}));
+		IFile referencePoint = fProject.getFile("testResources.html");
+		AbstractWebResourcesCompletionProposalComputer proposalComputer = new ImageWebResourcesCompletionProposalComputer();
+		Method findMatchingPaths = ImageWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		findMatchingPaths.setAccessible(true);
+		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
+		assertEquals(3, paths.length);
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.png")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.gif")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.png")));
 	}
 	
 	public void testResourceProposalsForLinkHref() throws Exception {
-		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
-		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 5, 21, expectedProposalCounts);
-		assertEquals("the expected CSS file proposals", "targets/empty.css", proposals[0][0].getDisplayString());
+		IFile referencePoint = fProject.getFile("testResources.html");
+		AbstractWebResourcesCompletionProposalComputer proposalComputer = new CSSWebResourcesCompletionProposalComputer();
+		Method findMatchingPaths = CSSWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		findMatchingPaths.setAccessible(true);
+		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
+		assertEquals(2, paths.length);
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.css")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.css")));
 	}
 	
 	public void testResourceProposalsForScriptSrc() throws Exception {
-		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[]{1, 0, 0, 0, 1};
-		ICompletionProposal[][] proposals = runProposalTest("testResources.html", 10, 45, expectedProposalCounts);
-		assertEquals("the expected JS file proposals", "targets/empty.js", proposals[0][0].getDisplayString());
+		IFile referencePoint = fProject.getFile("testResources.html");
+		AbstractWebResourcesCompletionProposalComputer proposalComputer = new ScriptWebResourcesCompletionProposalComputer();
+		Method findMatchingPaths = ScriptWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		findMatchingPaths.setAccessible(true);
+		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
+		assertEquals(2, paths.length);
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.js")));
+		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.js")));
 	}
 	
 	/**
@@ -214,7 +244,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		IFile file = getFile(fileName);
 		StructuredTextEditor editor  = getEditor(file);
 		StructuredTextViewer viewer = editor.getTextViewer();
-		int offset = viewer.getDocument().getLineOffset(lineNum) + lineRelativeCharOffset;
+		int offset = editor.getDocumentProvider().getDocument(editor.getEditorInput()).getLineOffset(lineNum) + lineRelativeCharOffset;
 
 		ICompletionProposal[][] pages = getProposals(viewer, offset, expectedProposalCounts.length);
 		
@@ -242,6 +272,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		
 		//get the processor
 		String partitionTypeID = viewer.getDocument().getPartition(offset).getType();
+		assertEquals("partition type", IHTMLPartitions.HTML_DEFAULT, partitionTypeID);
 		IContentAssistProcessor processor = contentAssistant.getContentAssistProcessor(partitionTypeID);
 
 		//fire content assist session about to start
