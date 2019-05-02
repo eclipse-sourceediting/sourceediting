@@ -35,7 +35,6 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.html.ui.internal.contentassist.resources.AbstractWebResourcesCompletionProposalComputer;
 import org.eclipse.wst.html.ui.internal.contentassist.resources.CSSWebResourcesCompletionProposalComputer;
 import org.eclipse.wst.html.ui.internal.contentassist.resources.HrefWebResourcesCompletionProposalComputer;
 import org.eclipse.wst.html.ui.internal.contentassist.resources.ImageWebResourcesCompletionProposalComputer;
@@ -68,7 +67,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	 * Used to keep track of the already open editors so that the tests don't go through
 	 * the trouble of opening the same editors over and over again
 	 */
-	private static Map fFileToEditorMap = new HashMap();
+	private static Map<IFile, StructuredTextEditor> fFileToEditorMap = new HashMap<>();
 	
 	/**
 	 * <p>Default constructor<p>
@@ -178,11 +177,11 @@ public class TestHTMLContentAssistComputers extends TestCase {
 
 	public void testResourceProposalsForAHref() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
-		AbstractWebResourcesCompletionProposalComputer proposalComputer = new HrefWebResourcesCompletionProposalComputer();
+		HrefWebResourcesCompletionProposalComputer proposalComputer = new HrefWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = HrefWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
-		assertTrue(paths.length > 5);
+		assertTrue(String.valueOf(paths.length), paths.length > 5);
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.css")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.js")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.txt")));
@@ -193,11 +192,11 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	
 	public void testResourceProposalsForImgSrc() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
-		AbstractWebResourcesCompletionProposalComputer proposalComputer = new ImageWebResourcesCompletionProposalComputer();
+		ImageWebResourcesCompletionProposalComputer proposalComputer = new ImageWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = ImageWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
-		assertEquals(3, paths.length);
+		assertEquals(String.valueOf(paths.length), 3, paths.length);
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.png")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.gif")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.png")));
@@ -205,22 +204,22 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	
 	public void testResourceProposalsForLinkHref() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
-		AbstractWebResourcesCompletionProposalComputer proposalComputer = new CSSWebResourcesCompletionProposalComputer();
+		CSSWebResourcesCompletionProposalComputer proposalComputer = new CSSWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = CSSWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
-		assertEquals(2, paths.length);
+		assertEquals(String.valueOf(paths.length), 2, paths.length);
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.css")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.css")));
 	}
 	
 	public void testResourceProposalsForScriptSrc() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
-		AbstractWebResourcesCompletionProposalComputer proposalComputer = new ScriptWebResourcesCompletionProposalComputer();
+		ScriptWebResourcesCompletionProposalComputer proposalComputer = new ScriptWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = ScriptWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
-		assertEquals(2, paths.length);
+		assertEquals(String.valueOf(paths.length), 2, paths.length);
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.js")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.js")));
 	}
@@ -344,7 +343,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	 * @return <code>StructuredTextEditor</code> opened from the given <code>file</code>
 	 */
 	private static StructuredTextEditor getEditor(IFile file)  {
-		StructuredTextEditor editor = (StructuredTextEditor)fFileToEditorMap.get(file);
+		StructuredTextEditor editor = fFileToEditorMap.get(file);
 		
 		if(editor == null) {
 			try {
