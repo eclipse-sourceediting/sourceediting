@@ -14,9 +14,14 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jface.text.quickassist.IQuickFixableAnnotation;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.source.Annotation;
@@ -31,8 +36,11 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
+import org.eclipse.ui.texteditor.IAnnotationImageProvider;
 import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
 
 
@@ -59,6 +67,31 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
     private static final int WARNING_LAYER;
 
     private static final int ERROR_LAYER;
+	/**
+	 * Constant for the error system image.
+	 */
+	public static final String ERROR_SYSTEM_IMAGE = "error"; //$NON-NLS-1$
+	/**
+	 * Constant for the warning system image.
+	 */
+	public static final String WARNING_SYSTEM_IMAGE = "warning"; //$NON-NLS-1$
+	/**
+	 * Constant for the info system image.
+	 */
+	public static final String INFO_SYSTEM_IMAGE = "info"; //$NON-NLS-1$
+	/**
+	 * Constant for the task system image.
+	 */
+	public static final String TASK_SYSTEM_IMAGE = "task"; //$NON-NLS-1$
+	/**
+	 * Constant for the bookmark system image.
+	 */
+	public static final String BOOKMARK_SYSTEM_IMAGE = "bookmark"; //$NON-NLS-1$
+
+	/**
+	 * The mapping between external and internal symbolic system image names.
+	 */
+	private final static Map<String, String> MAPPING;
 
     static {
         AnnotationPreferenceLookup lookup= EditorsUI.getAnnotationPreferenceLookup();
@@ -66,7 +99,16 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
         WARNING_LAYER= computeLayer("org.eclipse.wst.sse.ui.temp.warning", lookup); //$NON-NLS-1$
         ERROR_LAYER= computeLayer("org.eclipse.wst.sse.ui.temp.error", lookup); //$NON-NLS-1$
     }
-    
+
+	static {
+		MAPPING = new HashMap<>();
+		MAPPING.put(ERROR_SYSTEM_IMAGE, ISharedImages.IMG_OBJS_ERROR_TSK);
+		MAPPING.put(WARNING_SYSTEM_IMAGE, ISharedImages.IMG_OBJS_WARN_TSK);
+		MAPPING.put(INFO_SYSTEM_IMAGE, ISharedImages.IMG_OBJS_INFO_TSK);
+		MAPPING.put(TASK_SYSTEM_IMAGE, IDE.SharedImages.IMG_OBJS_TASK_TSK);
+		MAPPING.put(BOOKMARK_SYSTEM_IMAGE, IDE.SharedImages.IMG_OBJS_BKMRK_TSK);
+	}
+
     private static int computeLayer(String annotationType, AnnotationPreferenceLookup lookup) {
         Annotation annotation= new Annotation(annotationType, false, null);
         AnnotationPreference preference= lookup.getAnnotationPreference(annotation);
@@ -88,20 +130,9 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 	private int fProblemID;
 
     private int fLayer = DEFAULT_LAYER;
-    
-    private Image fImage = null;
-    
-	private static Image fInfoImage;
-	private static Image fWarningImage;
-	private static Image fErrorImage;
 
-	static {
-		ISharedImages sharedImages= PlatformUI.getWorkbench().getSharedImages();
-		fInfoImage= sharedImages.getImage(ISharedImages.IMG_OBJS_INFO_TSK);
-		fWarningImage= sharedImages.getImage(ISharedImages.IMG_OBJS_WARN_TSK);
-		fErrorImage= sharedImages.getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
-	}
-	
+	private Image fImage = null;
+
 	public TemporaryAnnotation(Position p, String type, String message, ReconcileAnnotationKey key) {
 		super();
 		fPosition = p;
@@ -109,7 +140,6 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 		fKey = key;
 		setText(message);
         initLayer();
-        initImage();
 	}
 
 	public TemporaryAnnotation(Position p, String type, String message, ReconcileAnnotationKey key, int problemId) {
@@ -120,7 +150,6 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 		setText(message);
 		fProblemID = problemId;
         initLayer();
-        initImage();
 	}
 
     private void initLayer() {
@@ -136,21 +165,8 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
             fLayer = INFO_LAYER;
         }
     }
-    
-    private void initImage() {
-        String type = getType();
-        if(type.equals(ANNOT_ERROR)) {
-            fImage = fErrorImage;
-        } else if(type.equals(ANNOT_WARNING)) {
-            fImage = fWarningImage;
-        } else if(type.equals(ANNOT_INFO)) {
-            fImage = fInfoImage;
-        } else {
-            fImage = null;
-        }
-    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -239,11 +255,12 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
     /*
      * @see Annotation#paint
      */
-    public void paint(GC gc, Canvas canvas, Rectangle r) {
-        initImage();
-        if (fImage != null)
-            ImageUtilities.drawImage(fImage, gc, canvas, r, SWT.CENTER, SWT.TOP);
-    }
+	public void paint(GC gc, Canvas canvas, Rectangle r) {
+		if (fImage == null || fImage.isDisposed())
+			fImage = getImage();
+		if (fImage != null)
+			ImageUtilities.drawImage(fImage, gc, canvas, r, SWT.CENTER, SWT.TOP);
+	}
     
 	public String toString() {
 		return "" + fPosition.getOffset() + ':' + fPosition.getLength() + ": " + getText(); //$NON-NLS-1$ //$NON-NLS-2$
@@ -268,5 +285,106 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 	
 	public boolean isQuickFixableStateSet() {
 		return fIsQuickFixableStateSet;
+	}
+
+	/**
+	 * Returns the annotation preference for the given annotation.
+	 */
+	private AnnotationPreference getAnnotationPreference() {
+		AnnotationPreferenceLookup lookup = EditorsUI.getAnnotationPreferenceLookup();
+		return lookup != null ? lookup.getAnnotationPreference(this) : null;
+	}
+
+	private boolean hasQuickFix() {
+		Object object = getAdditionalFixInfo();
+		if (object instanceof IQuickAssistProcessor) {
+			return ((IQuickAssistProcessor) object).canFix(this);
+		}
+		return false;
+	}
+
+	private Image getImage() {// Copied from org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess
+		AnnotationPreference preference = getAnnotationPreference();
+		ImageRegistry registry = EditorsPlugin.getDefault().getImageRegistry();
+
+		IAnnotationImageProvider annotationImageProvider = preference.getAnnotationImageProvider();
+		if (annotationImageProvider != null) {
+
+			Image image = annotationImageProvider.getManagedImage(this);
+			if (image != null)
+				return image;
+
+			String id = annotationImageProvider.getImageDescriptorId(this);
+			if (id != null) {
+				image = registry.get(id);
+				if (image == null) {
+					ImageDescriptor descriptor = annotationImageProvider.getImageDescriptor(id);
+					registry.put(id, descriptor);
+					image = registry.get(id);
+				}
+				return image;
+			}
+		}
+		String annotationType = getType();
+		if (annotationType == null)
+			return null;
+
+		if (hasQuickFix()) {
+			ImageDescriptor quickFixImageDesc = preference.getQuickFixImageDescriptor();
+			if (quickFixImageDesc != null) {
+				Image image = registry.get(quickFixImageDesc.toString());
+				if (image == null) {
+					registry.put(quickFixImageDesc.toString(), quickFixImageDesc);
+					image = registry.get(quickFixImageDesc.toString());
+				}
+				if (image != null)
+					return image;
+			}
+		}
+
+		Image image = registry.get(annotationType);
+		if (image == null) {
+			ImageDescriptor descriptor = preference.getImageDescriptor();
+			if (descriptor != null) {
+				registry.put(annotationType, descriptor);
+				image = registry.get(annotationType);
+			} else {
+				String symbolicImageName = preference.getSymbolicImageName();
+				if (symbolicImageName != null) {
+					String key = getSharedImageName(preference.getSymbolicImageName());
+					if (key != null) {
+						ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+						image = sharedImages.getImage(key);
+					}
+				}
+			}
+		}
+
+		if (image == null) { // fail safe
+			String key = null;
+			switch (annotationType) {
+			case ANNOT_ERROR:
+				key = getSharedImageName(ERROR_SYSTEM_IMAGE);
+				break;
+			case ANNOT_WARNING:
+				key = getSharedImageName(WARNING_SYSTEM_IMAGE);
+				break;
+			case ANNOT_INFO:
+				key = getSharedImageName(INFO_SYSTEM_IMAGE);
+				break;
+			}
+			if (key != null) {
+				ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+				image = sharedImages.getImage(key);
+			}
+		}
+		return image;
+	}
+
+	public static String getSharedImageName(String symbolicImageName) {
+		Assert.isLegal(symbolicImageName != null);
+		String sharedImageName = MAPPING.get(symbolicImageName);
+		Assert.isLegal(sharedImageName != null);
+		return sharedImageName;
 	}
 }
