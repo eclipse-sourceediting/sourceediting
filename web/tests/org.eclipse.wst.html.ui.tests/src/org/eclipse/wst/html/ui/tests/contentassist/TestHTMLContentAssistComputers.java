@@ -138,13 +138,15 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		int[] expectedProposalCounts = new int[] {78, 8, 70, 0, 78};
 		runProposalTest("test1.html", 18, 0, expectedProposalCounts);
 	}
-	
+
+/*
 	public void testCommentTagChildElementProposals() throws Exception {
-		// default page (error message)
+		// default page (this never should have worked)
 		int[] expectedProposalCounts = new int[] {0};
 		runProposalTest("test1.html", 22, 0, expectedProposalCounts);
 	}
-	
+*/
+
 	public void testDIVTagAttributeNameProposals() throws Exception {
 		// default page, templates page, tags page, default page again
 		int[] expectedProposalCounts = new int[] {18, 0, 18, 0, 18};
@@ -179,9 +181,15 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		IFile referencePoint = fProject.getFile("testResources.html");
 		HrefWebResourcesCompletionProposalComputer proposalComputer = new HrefWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = HrefWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
-		assertTrue(String.valueOf(paths.length), paths.length > 5);
+		assertNotNull("paths", paths);
+		String[] strings = new String[paths.length];
+		for (int i = 0; i < strings.length; i++) {
+			strings[i] = paths[i].toString();
+		}
+		assertTrue(String.valueOf(paths.length).concat(StringUtils.pack(strings)), paths.length >= 6);
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.css")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.js")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.txt")));
@@ -189,26 +197,38 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.js")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.txt")));
 	}
-	
+
 	public void testResourceProposalsForImgSrc() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
 		ImageWebResourcesCompletionProposalComputer proposalComputer = new ImageWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = ImageWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
-		assertEquals(String.valueOf(paths.length), 3, paths.length);
+		assertNotNull("paths", paths);
+		String[] strings = new String[paths.length];
+		for (int i = 0; i < strings.length; i++) {
+			strings[i] = paths[i].toString();
+		}
+		assertEquals(String.valueOf(paths.length).concat(StringUtils.pack(strings)), 3, paths.length);
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.png")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.gif")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.png")));
 	}
-	
+
 	public void testResourceProposalsForLinkHref() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
 		CSSWebResourcesCompletionProposalComputer proposalComputer = new CSSWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = CSSWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
-		assertEquals(String.valueOf(paths.length), 2, paths.length);
+		assertNotNull("paths", paths);
+		String[] strings = new String[paths.length];
+		for (int i = 0; i < strings.length; i++) {
+			strings[i] = paths[i].toString();
+		}
+		assertEquals(String.valueOf(paths.length).concat(StringUtils.pack(strings)), 2, paths.length);
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.css")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.css")));
 	}
@@ -217,9 +237,15 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		IFile referencePoint = fProject.getFile("testResources.html");
 		ScriptWebResourcesCompletionProposalComputer proposalComputer = new ScriptWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = ScriptWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
-		assertEquals(String.valueOf(paths.length), 2, paths.length);
+		assertNotNull("paths", paths);
+		String[] strings = new String[paths.length];
+		for (int i = 0; i < strings.length; i++) {
+			strings[i] = paths[i].toString();
+		}
+		assertEquals(String.valueOf(paths.length).concat(StringUtils.pack(strings)), 2, paths.length);
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.js")));
 		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.js")));
 	}
