@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2015 IBM Corporation and others.
+ * Copyright (c) 2001, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Lakshminarayana Nekkanti <narayana.nekkanti@gmail.com> - Support for showing quickfixes in the vertical ruler
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile;
@@ -37,11 +38,11 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 import org.eclipse.ui.texteditor.IAnnotationImageProvider;
 import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 
 /**
@@ -123,7 +124,7 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 
 	private Object fKey = null;
 	private Position fPosition = null;
-	private Map fAttributes = null;
+	private Map<String,String> fAttributes = null;
 	private boolean fIsQuickFixable = false;
 	private boolean fIsQuickFixableStateSet = false;
 
@@ -256,21 +257,23 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
      * @see Annotation#paint
      */
 	public void paint(GC gc, Canvas canvas, Rectangle r) {
-		if (fImage == null || fImage.isDisposed())
+		if (fImage == null || fImage.isDisposed()) {
 			fImage = getImage();
-		if (fImage != null)
+		}
+		if (fImage != null) {
 			ImageUtilities.drawImage(fImage, gc, canvas, r, SWT.CENTER, SWT.TOP);
+		}
 	}
     
 	public String toString() {
 		return "" + fPosition.getOffset() + ':' + fPosition.getLength() + ": " + getText(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
-	public Map getAttributes() {
+	public Map<String,String> getAttributes() {
 		return fAttributes;
 	}
 	
-	public void setAttributes(Map attributes) {
+	public void setAttributes(Map<String,String> attributes) {
 		fAttributes = attributes;
 	}
 	
@@ -305,14 +308,15 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 
 	private Image getImage() {// Copied from org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess
 		AnnotationPreference preference = getAnnotationPreference();
-		ImageRegistry registry = EditorsPlugin.getDefault().getImageRegistry();
+		ImageRegistry registry = SSEUIPlugin.getInstance().getImageRegistry();
 
 		IAnnotationImageProvider annotationImageProvider = preference.getAnnotationImageProvider();
 		if (annotationImageProvider != null) {
 
 			Image image = annotationImageProvider.getManagedImage(this);
-			if (image != null)
+			if (image != null) {
 				return image;
+			}
 
 			String id = annotationImageProvider.getImageDescriptorId(this);
 			if (id != null) {
@@ -326,8 +330,9 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 			}
 		}
 		String annotationType = getType();
-		if (annotationType == null)
+		if (annotationType == null) {
 			return null;
+		}
 
 		if (hasQuickFix()) {
 			ImageDescriptor quickFixImageDesc = preference.getQuickFixImageDescriptor();
@@ -337,8 +342,9 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 					registry.put(quickFixImageDesc.toString(), quickFixImageDesc);
 					image = registry.get(quickFixImageDesc.toString());
 				}
-				if (image != null)
+				if (image != null) {
 					return image;
+				}
 			}
 		}
 

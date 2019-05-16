@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -71,10 +71,11 @@ class AnnotationQuery {
 	 * @return a annotation query result or <code>null</code>
 	 */
 	public AnnotationQueryResult performQuery(Annotation anno) {
-		if (!(anno instanceof TemporaryAnnotation))
+		if (!(anno instanceof TemporaryAnnotation)) {
 			return null;
+		}
 
-		Map annoAttributes = ((TemporaryAnnotation) anno).getAttributes();
+		Map<String,String> annoAttributes = ((TemporaryAnnotation) anno).getAttributes();
 		/*
 		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=243660
 		 * 
@@ -88,18 +89,19 @@ class AnnotationQuery {
 		
 		// Check type
 		if (type != null) {
-			String problemType = (String) annoAttributes.get("problemType"); //$NON-NLS-1$;
-			if (!type.equals(problemType))
+			String problemType = annoAttributes.get("problemType"); //$NON-NLS-1$;
+			if (!type.equals(problemType)) {
 				return null;
+			}
 		}
 
 		String[] values = new String[attributes.length];
 		for (int i = 0; i < attributes.length; i++) {
-			Object value = annoAttributes.get(attributes[i]);
+			String value = annoAttributes.get(attributes[i]);
 			if (value == null) {
 				return null;
 			}
-			values[i] = value.toString();
+			values[i] = value;
 		}
 		// Create and return the result
 		return new AnnotationQueryResult(values);

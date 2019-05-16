@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -99,7 +99,7 @@ public class QuickFixRegistry {
 
 	public IQuickAssistProcessor[] getQuickFixProcessors(Annotation anno) {
 		// Collect all matches
-		List processors = new ArrayList();
+		List<IQuickAssistProcessor> processors = new ArrayList<>();
 		for (Iterator iter = resolutionQueries.keySet().iterator(); iter.hasNext();) {
 			AnnotationQuery query = (AnnotationQuery) iter.next();
 			AnnotationQueryResult result = null;
@@ -134,6 +134,6 @@ public class QuickFixRegistry {
 				}
 			}
 		}
-		return (IQuickAssistProcessor[]) processors.toArray(new IQuickAssistProcessor[processors.size()]);
+		return processors.toArray(new IQuickAssistProcessor[processors.size()]);
 	}
 }
