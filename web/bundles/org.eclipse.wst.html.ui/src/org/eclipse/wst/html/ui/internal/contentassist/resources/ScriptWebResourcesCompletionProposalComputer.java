@@ -43,9 +43,9 @@ public class ScriptWebResourcesCompletionProposalComputer extends
 					if (proxy.getType() == IResource.FILE && fileMatcher.matches(proxy.getName())) {
 						res.add(proxy.requestFullPath());
 					}
-					return true;
+					return !proxy.isDerived();
 				}
-			}, 0);
+			}, IResource.NONE);
 		} catch (CoreException ex) {
 			HTMLUIPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, HTMLUIPlugin.ID, ex.getMessage(), ex));
 		}
