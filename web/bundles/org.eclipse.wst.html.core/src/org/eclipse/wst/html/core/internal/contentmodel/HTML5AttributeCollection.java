@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2017 IBM Corporation and others.
+ * Copyright (c) 2010, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -1070,7 +1070,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attributes.putNamedItem(ATTR_NAME_TYPE, attr);
 			
 			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
-			String[] values = {ATTR_NAME_ASYNC};
+			String[] values = {ATTR_VALUE_FALSE,ATTR_VALUE_TRUE};
 			atype.setEnumValues(values);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ASYNC, atype, CMAttributeDeclaration.OPTIONAL);
 			attributes.putNamedItem(ATTR_NAME_ASYNC, attr);
