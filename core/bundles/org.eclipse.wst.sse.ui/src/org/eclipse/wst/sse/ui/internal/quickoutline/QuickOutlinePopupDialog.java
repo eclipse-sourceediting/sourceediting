@@ -516,6 +516,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 			nextConfiguration = fFirstConfiguration;
 		}
 		if (fConfiguration != nextConfiguration) {
+			fTreeViewer.setInput(null);
 			fContentProvider.dispose();
 			fLabelProvider.dispose();
 
@@ -531,8 +532,16 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 			fFilter = nextConfiguration.getFilter();
 			installFilter();
 			fConfiguration = nextConfiguration;
-			fTreeViewer.refresh(true);
-			setMatcherString(fFilterText.getText(), true);
+
+			fTreeViewer.setInput(fModel);
+			// reapply and reappend (if needed) the wildcard for this new filter
+			String text = fFilterText.getText();
+			int length = text.length();
+			if (length > 0 && text.charAt(length - 1) != '*') {
+				text = text + '*';
+			}
+			setMatcherString(text, true);
+
 			updateStatusText();
 		}
 	}
