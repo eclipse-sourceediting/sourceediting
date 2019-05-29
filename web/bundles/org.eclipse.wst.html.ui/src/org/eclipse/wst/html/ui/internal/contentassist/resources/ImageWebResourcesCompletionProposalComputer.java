@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -31,6 +32,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.html.ui.internal.wizard.FacetModuleCoreSupport;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.w3c.dom.Node;
@@ -68,18 +70,23 @@ public class ImageWebResourcesCompletionProposalComputer extends
 	@Override
 	protected IPath[] findMatchingPaths(IResource referenceResource) {
 		final List<IPath> res = new ArrayList<>();
-		try {
-			referenceResource.getProject().accept(new IResourceProxyVisitor() {
-				@Override
-				public boolean visit(IResourceProxy proxy) throws CoreException {
-					if (proxy.getType() == IResource.FILE && fileMatcher.matches(proxy.getName())) {
-						res.add(proxy.requestFullPath());
+		IWorkspaceRoot root = referenceResource.getWorkspace().getRoot();
+		IPath[] roots = FacetModuleCoreSupport.getAcceptableRootPaths(referenceResource.getProject());
+		for (int i = 0; i < roots.length; i++) {
+			try {
+				root.findMember(roots[i]).accept(new IResourceProxyVisitor() {
+					@Override
+					public boolean visit(IResourceProxy proxy) throws CoreException {
+						if (proxy.getType() == IResource.FILE && fileMatcher.matches(proxy.getName())) {
+							res.add(proxy.requestFullPath());
+						}
+						return !proxy.isDerived();
 					}
-					return !proxy.isDerived();
-				}
-			}, IResource.NONE);
-		} catch (CoreException ex) {
-			HTMLUIPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, HTMLUIPlugin.ID, ex.getMessage(), ex));
+				}, IResource.NONE);
+			}
+			catch (CoreException ex) {
+				HTMLUIPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, HTMLUIPlugin.ID, ex.getMessage(), ex));
+			}
 		}
 		return res.toArray(new IPath[res.size()]);
 	}

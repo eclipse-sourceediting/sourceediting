@@ -190,12 +190,12 @@ public class TestHTMLContentAssistComputers extends TestCase {
 			strings[i] = paths[i].toString();
 		}
 		assertTrue(String.valueOf(paths.length).concat(StringUtils.pack(strings)), paths.length >= 6);
-		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.css")));
-		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.js")));
-		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.txt")));
-		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.css")));
-		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.js")));
-		assertTrue(Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.txt")));
+		assertTrue(StringUtils.pack(strings), Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.css")));
+		assertTrue(StringUtils.pack(strings), Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.js")));
+		assertTrue(StringUtils.pack(strings), Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/alsoempty.txt")));
+		assertTrue(StringUtils.pack(strings), Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.css")));
+		assertTrue(StringUtils.pack(strings), Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.js")));
+		assertTrue(StringUtils.pack(strings), Arrays.asList(paths).stream().map((p)->p.toString()).anyMatch((s)->s.endsWith("/empty.txt")));
 	}
 
 	public void testResourceProposalsForImgSrc() throws Exception {

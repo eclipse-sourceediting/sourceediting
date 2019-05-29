@@ -24,8 +24,10 @@ import org.eclipse.core.runtime.Path;
  * Because ModuleCore API calls can result in locks needing to be acquired,
  * none of these methods should be called while other thread locks have
  * already been acquired.
+ * 
+ * <b>For internal use only.</b>
  */
-final class FacetModuleCoreSupport {
+public final class FacetModuleCoreSupport {
 	static final boolean _dump_NCDFE = false;
 	static final String META_INF_RESOURCES = "META-INF/resources/"; //$NON-NLS-1$
 	static final IPath META_INF_RESOURCES_PATH = new Path(META_INF_RESOURCES);
