@@ -13,8 +13,10 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentassist.resources;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
@@ -57,12 +59,12 @@ public class ContentTypeSpecs {
 	}
 
 	String[] fFilenames = new String[0];
-	String[] fFilenameExtensions = new String[0];
+	String[] fExtensions = new String[0];
 
 	private ContentTypeSpecs(String[] fileNames, String[] extensions) {
 		super();
 		fFilenames = fileNames;
-		fFilenameExtensions = extensions;
+		fExtensions = extensions;
 		Arrays.sort(fileNames);
 	}
 
@@ -70,13 +72,34 @@ public class ContentTypeSpecs {
 		if (Arrays.binarySearch(fFilenames, filename) >= 0) {
 			return true;
 		}
-		for (int i = 0; i < fFilenameExtensions.length; i++) {
-			if (filename.length() > fFilenameExtensions[i].length() + 1
-					&& filename.charAt(filename.length() - fFilenameExtensions[i].length() - 1) == '.'
-					&& filename.endsWith(fFilenameExtensions[i])) {
+		for (int i = 0; i < fExtensions.length; i++) {
+			if (filename.length() > fExtensions[i].length() + 1
+					&& filename.charAt(filename.length() - fExtensions[i].length() - 1) == '.'
+					&& filename.endsWith(fExtensions[i])) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public void addFilename(String filename) {
+		List<String> combinedList = new ArrayList<String>(fFilenames.length + 1);
+		for (int i = 0; i < fFilenames.length; i++) {
+			combinedList.add(fFilenames[i]);
+		}
+		combinedList.add(filename);
+		String[] combinedArray = combinedList.toArray(new String[combinedList.size()]);
+		Arrays.sort(combinedArray);
+		fFilenames = combinedArray;
+	}
+
+	public void addFilenameExtension(String extension) {
+		List<String> combinedList = new ArrayList<String>(fExtensions.length + 1);
+		for (int i = 0; i < fExtensions.length; i++) {
+			combinedList.add(fExtensions[i]);
+		}
+		combinedList.add(extension);
+		String[] combinedArray = combinedList.toArray(new String[combinedList.size()]);
+		fExtensions = combinedArray;
 	}
 }

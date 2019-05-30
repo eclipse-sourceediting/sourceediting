@@ -35,6 +35,7 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
+import org.eclipse.wst.html.ui.internal.contentassist.resources.AbstractWebResourcesCompletionProposalComputer;
 import org.eclipse.wst.html.ui.internal.contentassist.resources.CSSWebResourcesCompletionProposalComputer;
 import org.eclipse.wst.html.ui.internal.contentassist.resources.HrefWebResourcesCompletionProposalComputer;
 import org.eclipse.wst.html.ui.internal.contentassist.resources.ImageWebResourcesCompletionProposalComputer;
@@ -45,7 +46,6 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 import junit.extensions.TestSetup;
-import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -61,13 +61,13 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	private static final String PROJECT_FILES = "/testresources/contentassist";
 	
 	/** The project that all of the tests use */
-	private static IProject fProject;
+	static IProject fProject;
 	
 	/**
 	 * Used to keep track of the already open editors so that the tests don't go through
 	 * the trouble of opening the same editors over and over again
 	 */
-	private static Map<IFile, StructuredTextEditor> fFileToEditorMap = new HashMap<>();
+	static Map<IFile, StructuredTextEditor> fFileToEditorMap = new HashMap<>();
 	
 	/**
 	 * <p>Default constructor<p>
@@ -180,7 +180,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	public void testResourceProposalsForAHref() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
 		HrefWebResourcesCompletionProposalComputer proposalComputer = new HrefWebResourcesCompletionProposalComputer();
-		Method findMatchingPaths = HrefWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		Method findMatchingPaths = AbstractWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
@@ -201,7 +201,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	public void testResourceProposalsForImgSrc() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
 		ImageWebResourcesCompletionProposalComputer proposalComputer = new ImageWebResourcesCompletionProposalComputer();
-		Method findMatchingPaths = ImageWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		Method findMatchingPaths = AbstractWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
@@ -219,7 +219,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	public void testResourceProposalsForLinkHref() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
 		CSSWebResourcesCompletionProposalComputer proposalComputer = new CSSWebResourcesCompletionProposalComputer();
-		Method findMatchingPaths = CSSWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		Method findMatchingPaths = AbstractWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
@@ -236,7 +236,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	public void testResourceProposalsForScriptSrc() throws Exception {
 		IFile referencePoint = fProject.getFile("testResources.html");
 		ScriptWebResourcesCompletionProposalComputer proposalComputer = new ScriptWebResourcesCompletionProposalComputer();
-		Method findMatchingPaths = ScriptWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
+		Method findMatchingPaths = AbstractWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
 		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
@@ -313,10 +313,9 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		}
 		
 		//fire content assist session ending
-		Method privateFireSessionEndEventMethod = ContentAssistant.class.
-        getDeclaredMethod("fireSessionEndEvent", null);
+		Method privateFireSessionEndEventMethod = ContentAssistant.class.getDeclaredMethod("fireSessionEndEvent", new Class[0]);
 		privateFireSessionEndEventMethod.setAccessible(true);
-		privateFireSessionEndEventMethod.invoke(contentAssistant, null);
+		privateFireSessionEndEventMethod.invoke(contentAssistant, new Object[0]);
 		
 		return pages;
 	}
@@ -339,7 +338,7 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		
 		//if errors report them
 		if(error.length() > 0) {
-			Assert.fail(error.toString());
+			fail(error.toString());
 		}
 	}
 	
@@ -461,9 +460,9 @@ public class TestHTMLContentAssistComputers extends TestCase {
 		 */
 		public void tearDown() throws Exception {
 			//close out the editors
-			Iterator iter = fFileToEditorMap.values().iterator();
+			Iterator<StructuredTextEditor> iter = fFileToEditorMap.values().iterator();
 			while(iter.hasNext()) {
-				StructuredTextEditor editor = (StructuredTextEditor)iter.next();
+				StructuredTextEditor editor = iter.next();
 				editor.doSave(null);
 				editor.close(false);
 			}

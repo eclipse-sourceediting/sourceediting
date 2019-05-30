@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2016 IBM Corporation and others.
+ * Copyright (c) 2007, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -104,7 +104,7 @@ final class FacetModuleCoreSupportDelegate {
 			return new IPath[]{project.getFullPath()};
 		}
 
-		List paths = new ArrayList();
+		List<IPath> paths = new ArrayList<>();
 		IVirtualFolder componentFolder = ComponentCore.createFolder(project, Path.ROOT);
 		if (componentFolder != null && componentFolder.exists()) {
 			IContainer[] workspaceFolders = componentFolder.getUnderlyingFolders();
@@ -143,10 +143,10 @@ final class FacetModuleCoreSupportDelegate {
 			}
 
 		}
-		else {
+		if (paths.isEmpty()) {
 			paths.add(project.getFullPath());
 		}
-		return (IPath[]) paths.toArray(new IPath[paths.size()]);
+		return paths.toArray(new IPath[paths.size()]);
 	}
 
 	static IPath getDefaultRoot(IProject project) {

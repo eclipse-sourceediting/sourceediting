@@ -14,20 +14,30 @@
  */
 package org.eclipse.wst.html.ui.internal.contentassist.resources;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.core.internal.validate.ModuleCoreSupport;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.Logger;
+import org.eclipse.wst.html.ui.internal.wizard.FacetModuleCoreSupport;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
@@ -97,14 +107,53 @@ public abstract class AbstractWebResourcesCompletionProposalComputer extends Def
 		if (image != null) {
 			this.images.add(image);
 		}
-		final int replacementLength = request.getRegion().getLength();
+		final int replacementLength = request.getRegion().getTextLength();
 		final int replacementOffset = request.getStartOffset();
 
-		return new CustomCompletionProposal(replacementString, replacementOffset, replacementLength, cursorPosition, image, relativeProposal, null, null, 0);
+		return new CustomCompletionProposal(replacementString, replacementOffset, replacementLength, cursorPosition, image, relativeProposal, null, proposalPath.toString(), 0);
 	}
 
-	abstract protected IPath[] findMatchingPaths(IResource referenceResource);
+	protected IPath[] findMatchingPaths(IResource referenceResource) {
+		ContentTypeSpecs fileMatcher = createFilenameMatcher();
+		final List<IPath> res = new ArrayList<>();
+		IWorkspaceRoot root = referenceResource.getWorkspace().getRoot();
+		IPath referencePath = referenceResource.getFullPath();
+		IPath[] roots = FacetModuleCoreSupport.getAcceptableRootPaths(referenceResource.getProject());
+		/*
+		 * If editing a file not within one of the roots, offer everything
+		 * project-wide. The deployment information is either wrong or the
+		 * user is intentionally editing something that won't be deployed, and
+		 * they know better than us.
+		 */
+		boolean referencePathWithinValidRoot = false;
+		for (int i = 0; i < roots.length; i++) {
+			referencePathWithinValidRoot |= roots[i].isPrefixOf(referencePath);
+		}
+		if (!referencePathWithinValidRoot) {
+			roots = new IPath[]{referenceResource.getProject().getFullPath()};
+		}
+		for (int i = 0; i < roots.length; i++) {
+			try {
+				root.findMember(roots[i]).accept(new IResourceProxyVisitor() {
+					@Override
+					public boolean visit(IResourceProxy proxy) throws CoreException {
+						if (proxy.getType() == IResource.FILE && fileMatcher.matches(proxy.getName())) {
+							res.add(proxy.requestFullPath());
+						}
+						return !proxy.isDerived();
+					}
+				}, IResource.NONE);
+			}
+			catch (CoreException ex) {
+				HTMLUIPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, HTMLUIPlugin.ID, ex.getMessage(), ex));
+			}
+		}
+		return res.toArray(new IPath[res.size()]);
+	}
+
 	abstract boolean matchRequest(ContentAssistRequest contentAssistRequest);
+
+	abstract ContentTypeSpecs createFilenameMatcher();
 
 	@Override
 	public void sessionEnded() {

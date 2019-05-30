@@ -15,24 +15,13 @@
 package org.eclipse.wst.html.ui.internal.contentassist.resources;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceProxy;
-import org.eclipse.core.resources.IResourceProxyVisitor;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
-import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
-import org.eclipse.wst.html.ui.internal.wizard.FacetModuleCoreSupport;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.w3c.dom.Node;
@@ -50,12 +39,12 @@ public class ImageWebResourcesCompletionProposalComputer extends
 		if (image != null) {
 			super.images.add(image);
 		}
-		final int replacementLength = request.getRegion().getLength();
+		final int replacementLength = request.getRegion().getTextLength();
 		final int replacementOffset = request.getStartOffset();
 		URL previewURL = null;
 		String previewErrorInfo = null;
 		try {
-			previewURL =  new URL("platform://resource/" + proposalPath);
+			previewURL =  new URL("platform://resource" + proposalPath);
 		} catch (Exception ex) {
 			previewErrorInfo = NLS.bind(HTMLUIMessages.cannotGenerateImagePreview, ex.getMessage());
 		}
@@ -66,29 +55,10 @@ public class ImageWebResourcesCompletionProposalComputer extends
 			return new CustomCompletionProposal(replacementString, replacementOffset, replacementLength, cursorPosition, image, relativeProposal, null, previewErrorInfo, 0);
 		}
 	}
-	
+
 	@Override
-	protected IPath[] findMatchingPaths(IResource referenceResource) {
-		final List<IPath> res = new ArrayList<>();
-		IWorkspaceRoot root = referenceResource.getWorkspace().getRoot();
-		IPath[] roots = FacetModuleCoreSupport.getAcceptableRootPaths(referenceResource.getProject());
-		for (int i = 0; i < roots.length; i++) {
-			try {
-				root.findMember(roots[i]).accept(new IResourceProxyVisitor() {
-					@Override
-					public boolean visit(IResourceProxy proxy) throws CoreException {
-						if (proxy.getType() == IResource.FILE && fileMatcher.matches(proxy.getName())) {
-							res.add(proxy.requestFullPath());
-						}
-						return !proxy.isDerived();
-					}
-				}, IResource.NONE);
-			}
-			catch (CoreException ex) {
-				HTMLUIPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, HTMLUIPlugin.ID, ex.getMessage(), ex));
-			}
-		}
-		return res.toArray(new IPath[res.size()]);
+	ContentTypeSpecs createFilenameMatcher() {
+		return fileMatcher;
 	}
 
 	@Override
