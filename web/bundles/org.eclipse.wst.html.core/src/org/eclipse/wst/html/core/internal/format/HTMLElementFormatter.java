@@ -318,13 +318,16 @@ public class HTMLElementFormatter extends HTMLFormatter {
 	private void formatStyleAttr(Attr attr) {
 		if (attr == null)
 			return;
+		String oldValue = ((IDOMNode) attr).getValueSource();
+		if (oldValue != null && oldValue.indexOf("#{") > -1) { //$NON-NLS-1$
+			return;// Workaround.Otherwise, need to update jflex grammar.
+		}
 		// if someone's made it a container somehow, CSS can't format it
 		if (((IDOMNode) attr).getValueRegion() instanceof ITextRegionContainer)
 			return;
 		String value = getCSSValue(attr);
 		if (value == null)
 			return;
-		String oldValue = ((IDOMNode) attr).getValueSource();
 		if (oldValue != null && value.equals(oldValue))
 			return;
 		attr.setValue(value);
