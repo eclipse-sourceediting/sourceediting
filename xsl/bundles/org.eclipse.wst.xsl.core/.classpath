@@ -17,6 +17,7 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" output="bin_xinclude" path="src_xinclude"/>
 	<classpathentry kind="src" path="src_sse"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+     Copyright (c) 2019 Red Hat and others.
+
+     This program and the accompanying materials
+     are made available under the terms of the Eclipse Public License 2.0
+     which accompanies this distribution, and is available at
+     https://www.eclipse.org/legal/epl-2.0/
+
+     SPDX-License-Identifier: EPL-2.0
+
+     Contributors:
+         Red Hat - initial API and implementation
+ -->
+
+<project name="Build xinclude.jar" default="build" basedir=".">
+	<target name="build" description="Cleans, builds and refreshes the impacted resources" depends="clean, lib/xinclude.jar"/>
+
+	<target name="lib/xinclude.jar" description="Creates the lib/xinclude.jar">
+		<mkdir dir="${basedir}/lib"/>
+		<jar destfile="${basedir}/lib/xinclude.jar" basedir="${basedir}/bin_xinclude"/>
+	</target>
+
+	<target name="clean">
+		<delete file="${basedir}/lib/xinclude.jar"/>
+	</target>
+</project>
