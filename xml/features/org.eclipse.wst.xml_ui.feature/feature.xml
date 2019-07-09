@@ -11,11 +11,10 @@
     Contributors:
         IBM Corporation - initial API and implementation
  -->
-
 <feature
       id="org.eclipse.wst.xml_ui.feature"
       label="%featureName"
-      version="3.14.0.qualifier"
+      version="3.15.0.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.wst.xml.ui"
       license-feature="org.eclipse.license"

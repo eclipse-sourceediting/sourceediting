@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.wst.xml_userdoc.feature"
       label="%featureName"
-      version="3.11.0.qualifier"
+      version="3.15.0.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="2.0.0.qualifier">

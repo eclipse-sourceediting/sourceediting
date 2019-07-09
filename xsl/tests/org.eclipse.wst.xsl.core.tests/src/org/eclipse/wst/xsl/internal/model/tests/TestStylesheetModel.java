@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2019 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -79,19 +79,19 @@ public class TestStylesheetModel extends AbstractModelTest {
 	@Test
 	public void testCircularReference() {
 		model = XSLCore.getInstance().getStylesheet(getFile("circularref.xsl"));
-		assertTrue("Undettected circular reference", model.hasCircularReference());
+		assertTrue("Undetected circular reference", model.hasCircularReference());
 	}
 
 	@Test
 	public void testStackOverflow() {
 		model = XSLCore.getInstance().getStylesheet(getFile("stackOverflowInclude.xsl"));
-		assertTrue("Undettected circular reference", model.hasCircularReference());
+		assertTrue("Undetected circular reference", model.hasCircularReference());
 	}
 
 	@Test
 	public void testNoCircularReference() {
 		model = XSLCore.getInstance().getStylesheet(getFile("modeTest.xsl"));
-		assertFalse("Undettected circular reference", model.hasCircularReference());
+		assertFalse("Undetected circular reference", model.hasCircularReference());
 	}	
 	
 	@Test
