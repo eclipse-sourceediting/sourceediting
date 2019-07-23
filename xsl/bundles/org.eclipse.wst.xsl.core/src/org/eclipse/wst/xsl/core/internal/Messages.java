@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2019 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License 2.0 which accompanies this distribution, and is
  * available at https://www.eclipse.org/legal/epl-2.0/
@@ -41,54 +41,6 @@ public class Messages extends NLS {
 	 */
 	public static String XSLCorePlugin_coreError;
 	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_0;
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_1;
-	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_2;
-	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_3;
-	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_4;
-	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_5;
-	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_6;
-	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_7;
-	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_8;
-	
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static String XIncludeTask_9;
 	public static String XSLValidator_1;
 	/**
 	 * Stylesheet importing itself

@@ -5,6 +5,7 @@
 /*/*/bin/
 */*/bin/
 bin/
+bin_*/
 build.xml
 bundles/org.eclipse.wst.xml.xpath2.processor/JavaCUP-dump.txt
 bundles/org.eclipse.wst.xml.xpath2.processor/lib/javacup10.jar
