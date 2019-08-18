@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 Jesper Steen M�ller
+ * Copyright (c) 2008, 2019 Jesper Steen M�ller
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -14,20 +14,23 @@
 
 package org.eclipse.wst.xsl.launching.tests.testcase;
 
-import java.io.*;
-import static org.junit.Assert.*;
-import javax.xml.parsers.*;
+import static org.junit.Assert.assertEquals;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import java.io.IOException;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.wst.xsl.launching.tests.AbstractLaunchingTest;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 public class XSLLaunchingTest extends AbstractLaunchingTest {
 
@@ -56,7 +59,7 @@ public class XSLLaunchingTest extends AbstractLaunchingTest {
 		super.tearDown();
 	}
 	
-	@Ignore @Test
+	@Test
 	public void testSimpleTransformation() throws Exception {
 		IPath folder = testProject.getFullPath();
 		env.addFileFromResource(folder, "1-input.xml", "1-input.xml");
@@ -79,7 +82,7 @@ public class XSLLaunchingTest extends AbstractLaunchingTest {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	@Ignore @Test
+	@Test
 	public void testTransformComments() throws Exception {
 		IPath folder = testProject.getFullPath();
 		env.addFileFromResource(folder, "testCommentInput.xml",

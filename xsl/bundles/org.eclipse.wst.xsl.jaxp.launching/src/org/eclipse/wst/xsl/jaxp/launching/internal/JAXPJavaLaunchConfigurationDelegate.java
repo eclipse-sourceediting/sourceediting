@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2019 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -37,6 +38,8 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ISourceLocator;
 import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.IVMInstall2;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -346,15 +349,47 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate
 
 		String[] invokerClasspath = invokerCP.toArray(new String[0]);
 
+		String[] processorJars = new String[0];
+		if (!vmSupportsEndorsedDirs(configuration)) {
+			File endorsedDir = getEndorsedDir();
+			IPath endorsedPath = getEndorsedPath();
+			processorJars = endorsedDir.list();
+			for (int i = 0; i < processorJars.length; i++) {
+				processorJars[i] = endorsedPath.addTrailingSeparator().append(processorJars[i]).toString();
+			}
+		}
+
 		// add them together
 		String[] classpath = new String[userClasspath.length
-				+ invokerClasspath.length];
-		System.arraycopy(invokerClasspath, 0, classpath, 0,
+				+ invokerClasspath.length + processorJars.length];
+		System.arraycopy(processorJars, 0, classpath, 0,
+				processorJars.length);
+		System.arraycopy(invokerClasspath, 0, classpath, processorJars.length,
 				invokerClasspath.length);
-		System.arraycopy(userClasspath, 0, classpath, invokerClasspath.length,
+		System.arraycopy(userClasspath, 0, classpath, processorJars.length + invokerClasspath.length,
 				userClasspath.length);
 
 		return classpath;
+	}
+
+	// https://bugs.eclipse.org/532490
+	public String[][] getClasspathAndModulepath(ILaunchConfiguration config) throws CoreException {
+		String[][] classpathAndModulepath = super.getClasspathAndModulepath(config);
+		boolean needToRemoveJrtFs = false;
+		for (int i = 0; !needToRemoveJrtFs && i < classpathAndModulepath[1].length; i++) {
+			needToRemoveJrtFs = needToRemoveJrtFs || classpathAndModulepath[1][i].indexOf("jrt-fs.jar") > 1; //$NON-NLS-1$
+		}
+		if (needToRemoveJrtFs) {
+			String[] modulesWithoutJrtFs = new String[classpathAndModulepath[1].length - 1];
+			int i = 0;
+			for (String module : classpathAndModulepath[1]) {
+				if (module.indexOf("jrt-fs.jar") < 0) { //$NON-NLS-1$
+					modulesWithoutJrtFs[i++] = module;
+				}
+			}
+			classpathAndModulepath[1] = modulesWithoutJrtFs;
+		}
+		return classpathAndModulepath;
 	}
 
 	@Override
@@ -385,10 +420,13 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate
 							Messages.XSLTLaunchConfigurationDelegate_23
 									+ jars[i], null));
 				File file = new File(tempDir, "END_" + i + ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
-				moveFile(entry, file);
+				copyFile(entry, file);
 			}
-			// add the endorsed dir
-			vmargs += " -Djava.endorsed.dirs=\"" + tempDir.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+			// add the endorsed dir on older versions
+			boolean useEndorsed = vmSupportsEndorsedDirs(configuration);
+			if (useEndorsed) {
+				vmargs += " -Djava.endorsed.dirs=\"" + tempDir.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+			}
 
 			String tfactory = getTransformerFactory(install);
 			if (tfactory != null)
@@ -414,6 +452,21 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate
 		return vmargs;
 	}
 
+	private boolean vmSupportsEndorsedDirs(ILaunchConfiguration configuration) throws CoreException {
+		boolean useEndorsed = true;
+		IVMInstall vmInstall = getVMInstall(configuration);
+		if (vmInstall instanceof IVMInstall2) {
+			String version = ((IVMInstall2) vmInstall).getJavaVersion();
+			if (version != null) {
+				double vmVersion = Double.parseDouble(new StringTokenizer(version, ".").nextToken()); //$NON-NLS-1$
+				if (vmVersion >= 9d) {
+					useEndorsed = false;
+				}
+			}
+		}
+		return useEndorsed;
+	}
+
 	private String getTransformerFactory(IProcessorInstall install) {
 		String tfactory = null;
 		if (ILaunchManager.DEBUG_MODE.equals(mode))
@@ -427,13 +480,17 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate
 	}
 
 	private File getEndorsedDir() {
-		IPath tempLocation = Platform.getStateLocation(
-				JAXPLaunchingPlugin.getDefault().getBundle())
-				.append("endorsed"); //$NON-NLS-1$
-		return tempLocation.toFile();
+		return getEndorsedPath().toFile();
 	}
 
-	private static void moveFile(URL src, File target) throws CoreException {
+	private IPath getEndorsedPath() {
+		IPath location = Platform.getStateLocation(
+				JAXPLaunchingPlugin.getDefault().getBundle())
+				.append("endorsed"); //$NON-NLS-1$
+		return location;
+	}
+
+	private static void copyFile(URL src, File target) throws CoreException {
 		BufferedOutputStream bos = null;
 		BufferedInputStream bis = null;
 		try {
