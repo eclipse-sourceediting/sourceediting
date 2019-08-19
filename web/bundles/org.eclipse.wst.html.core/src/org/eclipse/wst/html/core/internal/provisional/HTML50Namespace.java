@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2017 IBM Corporation and others.
+ * Copyright (c) 2010, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ public interface HTML50Namespace extends HTML40Namespace {
 		String HEADER = "header";
 		String HGROUP = "hgroup";
 		String KEYGEN = "keygen";
+		String MAIN = "main";
 		String MARK = "mark";
 		String MATH = "math";
 		String METER = "meter";
@@ -49,11 +50,15 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String HTML50_TAG_PREFIX = "";
 
 	// global attribute names
+	String ATTR_NAME_AUTOCAPITALIZE = "autocapitalize"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_CONTENT_EDITABLE = "contenteditable"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_CONTEXT_MENU = "contextmenu"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_DRAGGABLE = "draggable"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_DROPZONE = "dropzone"; // %coreattrs; //$NON-NLS-1$
+	String ATTR_NAME_INPUTMODE = "inputmode"; //$NON-NLS-1$
+	String ATTR_NAME_IS = "is"; //$NON-NLS-1$
 	String ATTR_NAME_ROLE = "role"; // %coreattrs; //$NON_NLS-1$
+	String ATTR_NAME_SLOT = "slot"; //$NON-NLS-1$
 	String ATTR_NAME_SPELLCHECK = "spellcheck"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_TRANSLATE = "translate"; // %coreattrs; //$NON-NLS-1$
 	
@@ -189,9 +194,17 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_VALUE_COLOR = "color"; //input type //$NON-NLS-1$
 	String ATTR_VALUE_NUMBER_STRING = "number"; //input type //$NON-NLS-1$
 
+	//Input modes
+	String ATTR_VALUE_DECIMAL = "decimal"; //input type //$NON-NLS-1$
+	String ATTR_VALUE_NUMERIC = "numeric"; //input type //$NON-NLS-1$
+
 	String ATTR_VALUE_ON = "on"; //input autocomplete //$NON-NLS-1$
 	String ATTR_VALUE_OFF = "off"; //input autocomplete //$NON-NLS-1$
 	
+	String ATTR_VALUE_CHARACTERS = "characters"; //global attr autocapitalize //$NON-NLS-1$
+	String ATTR_VALUE_SENTENCES = "sentences"; //global attr autocapitalize //$NON-NLS-1$
+	String ATTR_VALUE_WORDS = "words"; //global attr autocapitalize //$NON-NLS-1$
+
 	String ATTR_VALUE_PUT = "PUT"; //input formmethod //$NON-NLS-1$
 	String ATTR_VALUE_DELETE = "DELETE"; //input formmethod //$NON-NLS-1$
 	

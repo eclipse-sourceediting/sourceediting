@@ -24,6 +24,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 	/** html5 core attribs */
 	private static final String[] CORE = {
 		ATTR_NAME_ACCESSKEY, 
+		ATTR_NAME_AUTOCAPITALIZE,
 		ATTR_NAME_CLASS, 
 		ATTR_NAME_CONTENT_EDITABLE, 
 		ATTR_NAME_CONTEXT_MENU, 
@@ -32,8 +33,11 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 		ATTR_NAME_DROPZONE,
 		ATTR_NAME_HIDDEN, 
 		ATTR_NAME_ID, 
+		ATTR_NAME_INPUTMODE,
+		ATTR_NAME_IS,
 		ATTR_NAME_LANG, 
 		ATTR_NAME_ROLE,
+		ATTR_NAME_SLOT,
 		ATTR_NAME_SPELLCHECK,
 		ATTR_NAME_STYLE, 
 		ATTR_NAME_TABINDEX, 
@@ -133,6 +137,14 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype.setEnumValues(values);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_AUTOFOCUS, atype, CMAttributeDeclaration.OPTIONAL);
 		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_AUTOCAPITALIZE)) {
+			// (contenteditable (EMPTY|TRUE|FALSE|INHERIT) TRUE)
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] values = {ATTR_VALUE_ON, ATTR_VALUE_OFF, ATTR_VALUE_NONE, ATTR_VALUE_SENTENCES, ATTR_VALUE_WORDS, ATTR_VALUE_CHARACTERS};
+			atype.setEnumValues(values);
+			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_NONE);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_AUTOCAPITALIZE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_CONTENT_EDITABLE)) {
 			// (contenteditable (EMPTY|TRUE|FALSE|INHERIT) TRUE)
 			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
@@ -189,9 +201,16 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_HIGH, atype, CMAttributeDeclaration.OPTIONAL);
 		}
-		else if (attrName.equalsIgnoreCase(ATTR_NAME_OPTIMUM)) {
-			atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
-			attr = new HTMLAttrDeclImpl(ATTR_NAME_OPTIMUM, atype, CMAttributeDeclaration.OPTIONAL);
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_INPUTMODE)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] values = {ATTR_VALUE_NONE, ATTR_VALUE_TEXT, ATTR_VALUE_DECIMAL, ATTR_VALUE_NUMERIC, ATTR_VALUE_TEL, ATTR_VALUE_SEARCH, ATTR_VALUE_EMAIL, ATTR_VALUE_URL};
+			atype.setEnumValues(values);
+			atype.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_TEXT);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_INPUTMODE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_IS)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_IS, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_MIN)) {
 			atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
@@ -206,6 +225,10 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype.setEnumValues(new String[] { ATTR_NAME_OPEN });
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_OPEN, atype, CMAttributeDeclaration.OPTIONAL);
 		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_OPTIMUM)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_OPTIMUM, atype, CMAttributeDeclaration.OPTIONAL);
+		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_PUBDATE)) {
 			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
 			atype.setEnumValues(new String[] { ATTR_NAME_PUBDATE });
@@ -215,6 +238,11 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			// (role CDATA #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_ROLE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_SLOT)) {
+			// (span NUMBER 1)
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_SLOT, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_SPELLCHECK)) {
 			// (spellcheck (EMPTY|TRUE|FALSE) TRUE)
@@ -561,7 +589,7 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 	}
 
 	public void getCore(CMNamedNodeMapImpl declarations) {
-		Iterator names = Arrays.asList(CORE).iterator();
+		Iterator<String> names = Arrays.asList(CORE).iterator();
 		getDeclarations(declarations, names);
 	}
 

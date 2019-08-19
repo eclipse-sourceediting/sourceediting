@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -60,6 +60,7 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 		public static final int ID_SVG =131;
 		public static final int ID_TIME =132;
 		public static final int ID_VIDEO =133;
+		public static final int ID_MAIN =134;
 
 		// D205513
 
@@ -111,7 +112,7 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 	/** %preformatted;. PRE */
 	private static final String[] PREFORMATTED = {PRE};
 	/** %sectioning;. ARTICLE | ASIDE | NAV | SECTION */
-	private static final String[] SECTIONING = { ARTICLE, ASIDE, NAV, SECTION };
+	private static final String[] SECTIONING = { ARTICLE, ASIDE, NAV, SECTION, MAIN };
 
 	/** %embedded;. AUDIO|CANVAS|EMBED|IFRAME|IMG|MATH|OBJECT|SVG|VIDEO */
 	private static final String[] EMBEDDED = { AUDIO, CANVAS, EMBED, IFRAME, IMG, MATH, OBJECT, SVG, VIDEO};
@@ -218,6 +219,9 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 		else if (elementName.equalsIgnoreCase(KEYGEN)) {
 			edec = new HedKEYGEN(this);
 
+		}
+		else if (elementName.equalsIgnoreCase(MAIN)) {
+			edec = new HedSectioning(HTML50Namespace.ElementName.MAIN,this);
 		}
 		else if (elementName.equalsIgnoreCase(MARK)) {
 			edec = new HedPhrase(HTML50Namespace.ElementName.MARK,this);
@@ -508,6 +512,7 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 			fNames[Ids.ID_LI] = LI;
 			fNames[Ids.ID_LINK] = LINK;
 			fNames[Ids.ID_MAP] = MAP;
+			fNames[Ids50.ID_MAIN] = MAIN;
 			fNames[Ids50.ID_MARK] = MARK;
 			fNames[Ids.ID_MARQUEE] = MARQUEE;
 			fNames[Ids50.ID_MATH] = MATH;

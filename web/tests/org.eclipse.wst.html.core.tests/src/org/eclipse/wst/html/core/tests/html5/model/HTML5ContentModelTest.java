@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2017 IBM Corporation and others.
+ * Copyright (c) 2010, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -43,8 +43,8 @@ public class HTML5ContentModelTest extends TestCase {
 	private void checkAttrNames(String documentKey, String elementName, String[] attrNames) {
 		CMDocument document = HTMLCMDocumentFactory.getCMDocument(documentKey);
 		CMNode elementDeclaration = document.getElements().getNamedItem(elementName);
+		assertNotNull("no such element declaration:" + elementName, elementDeclaration);
 		assertEquals("not an element declaration:" + elementDeclaration, CMNode.ELEMENT_DECLARATION, elementDeclaration.getNodeType());
-		assertNotNull("missing element declaration:" + elementName, elementDeclaration);
 		
 		CMNamedNodeMap attributes = ((CMElementDeclaration) elementDeclaration).getAttributes();
 		
@@ -160,6 +160,10 @@ public class HTML5ContentModelTest extends TestCase {
 				new String[]{HTML50Namespace.ATTR_NAME_AUTOFOCUS, HTML50Namespace.ATTR_NAME_CHALLENGE, HTML40Namespace.ATTR_NAME_DISABLED,
 				HTML50Namespace.ATTR_NAME_FORM, HTML50Namespace.ATTR_NAME_KEYTYPE, HTML40Namespace.ATTR_NAME_NAME}));
 	
+	}
+	
+	public void testAttributesOnHTML5Main() {
+		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.MAIN, getGlobalList());
 	}
 	
 	public void testAttributesOnHTML5Mark() {
