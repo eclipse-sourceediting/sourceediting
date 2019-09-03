@@ -21,6 +21,6 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.json_sdk.feature</artifactId>
-  <version>1.1.6-SNAPSHOT</version>
+  <version>1.1.7-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>
