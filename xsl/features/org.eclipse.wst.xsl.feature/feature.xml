@@ -19,7 +19,7 @@
       provider-name="%providerName"
       plugin="org.eclipse.wst.xsl"
       license-feature="org.eclipse.license"
-      license-feature-version="2.0.0.qualifier">
+      license-feature-version="0.0.0">
 
    <description>
       %description

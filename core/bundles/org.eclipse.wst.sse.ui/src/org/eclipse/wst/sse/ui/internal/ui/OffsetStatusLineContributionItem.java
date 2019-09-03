@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -534,6 +534,13 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				modelHandlerContentTypeLabel.setLayoutData(gd);
 				modelHandlerContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_5 + model.getModelHandler().getAssociatedContentTypeId() + " (" + model.getModelHandler() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				modelHandlerContentTypeLabel.setBackground(composite.getBackground());
+
+				Text encodingLabel = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
+				encodingLabel.setLayoutData(gd);
+				encodingLabel.setText(model.getStructuredDocument().getEncodingMemento().toString());
+				encodingLabel.setBackground(composite.getBackground());
 
 				final Text counts = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
