@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.wst.web_core.feature.patch"
       label="%featureName"
-      version="1.5.5.qualifier"
+      version="1.5.6.qualifier"
       provider-name="%providerName">
 
    <description>

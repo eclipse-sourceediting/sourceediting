@@ -21,6 +21,6 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.web_ui.feature.patch</artifactId>
-  <version>3.0.4-SNAPSHOT</version>
+  <version>3.0.6-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>
