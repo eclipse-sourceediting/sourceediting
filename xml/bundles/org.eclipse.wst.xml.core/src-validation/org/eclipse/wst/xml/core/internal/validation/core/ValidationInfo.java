@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2016 IBM Corporation and others.
+ * Copyright (c) 2001, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -242,19 +242,23 @@ public class ValidationInfo implements ValidationReport
 	  return sameFilePreferenceContext;
   }
   
-  private IScopeContext[] createPreferenceScopes(URL url) {
-	  IProject p = null;
-	  try {
-		  URI uri = new URI(url.toString());
-		  IFile[] matching = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
-		  if( matching != null && matching.length > 0 ) {
-			  p = matching[0].getProject();
-		  }
-	  } catch(URISyntaxException urie) {
-		  // shouldn't happen, but ignore
-	  }
-	  return createPreferenceScopesFromProject(p);
-  }
+	private IScopeContext[] createPreferenceScopes(URL url) {
+		IProject p = null;
+		// on null, fall through to non-project-specific defaults
+		if (url == null) {
+			try {
+				URI uri = new URI(url.toString());
+				IFile[] matching = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(uri);
+				if (matching != null && matching.length > 0) {
+					p = matching[0].getProject();
+				}
+			}
+			catch (URISyntaxException urie) {
+				// shouldn't happen, but ignore
+			}
+		}
+		return createPreferenceScopesFromProject(p);
+	}
   private IScopeContext[] createPreferenceScopesFromProject(IProject project) {
 	  if (project != null && project.isAccessible()) {
 		  final ProjectScope projectScope = new ProjectScope(project);
