@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,27 +10,40 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Nitin Dahyabhai <nitind@us.ibm.com> with Andrew Obuchowicz <aobuchow@redhat.com> - Add color preview to table, removed dead code
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.PixelConverter;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -38,10 +51,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
@@ -57,38 +70,74 @@ import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrat
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 
 /**
- * Gutted version of JavaEditorPreferencePage
- * 
- * @author pavery
+ * Adapted from
+ * org.eclipse.ui.internal.editors.text.TextEditorDefaultsPreferencePage
  */
 public class StructuredTextEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	private ColorEditor fAppearanceColorEditor;
-	private List fAppearanceColorList;
+	private class ColorEntry implements Comparable<ColorEntry> {
+		public final String colorKey;
+		public final String isSystemDefaultKey;
 
-	private final String[][] fAppearanceColorListModel = new String[][]{{SSEUIMessages.StructuredTextEditorPreferencePage_2, EditorPreferenceNames.MATCHING_BRACKETS_COLOR}, {SSEUIMessages.StructuredTextEditorPreferencePage_41, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND}, {SSEUIMessages.StructuredTextEditorPreferencePage_42, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND}, {SSEUIMessages.StructuredTextEditorPreferencePage_43, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND}, {SSEUIMessages.StructuredTextEditorPreferencePage_44, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND}}; //$NON-NLS-1$
-	private Map fCheckBoxes = new HashMap();
+		public final String label;
+		public final RGB systemColorRGB;
+
+		public ColorEntry(String label, String colorKey, String isSystemDefaultKey, Color systemColor) {
+			this.label = label;
+			this.colorKey = colorKey;
+			this.isSystemDefaultKey = isSystemDefaultKey;
+			this.systemColorRGB = (systemColor != null) ? systemColor.getRGB() : null;
+		}
+
+		@Override
+		public int compareTo(ColorEntry o) {
+			return label.compareTo(o.label);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof ColorEntry))
+				return false;
+			return label.equals(((ColorEntry)obj).label) && colorKey.equals(((ColorEntry)obj).colorKey);
+		}
+
+		public RGB getRGB() {
+			return PreferenceConverter.getColor(fOverlayStore, this.colorKey);
+		}
+
+		public boolean isSystemDefault() {
+			return this.isSystemDefaultKey != null && fOverlayStore.getBoolean(isSystemDefaultKey);
+		}
+	}
+
+	private List<Image> colorPreviewImages;
+	private ColorEditor fAppearanceColorEditor;
+	private final ColorEntry[] fAppearanceColorListModel = new ColorEntry[] {
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_2, EditorPreferenceNames.MATCHING_BRACKETS_COLOR, null, null),
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_41, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND, null, null),
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_42, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, null, null),
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_43, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, null, null),
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_44, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, null, null)};
+
+	private TableViewer fAppearanceColorTableViewer;
+
+	private Map<Button, String> fCheckBoxes = new HashMap<>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fOverlayStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
+			fOverlayStore.setValue(fCheckBoxes.get(button), button.getSelection());
 		}
 	};
 
-	private Map fColorButtons = new HashMap();
+	private Map<ColorEditor, String> fColorButtons = new HashMap<>();
 
-	private ArrayList fNumberFields = new ArrayList();
 	private OverlayPreferenceStore fOverlayStore;
-	/** Button controlling default setting of the selected reference provider. */
-	// TODO: private field never read locally
-	Button fSetDefaultButton;
 	private IPreferenceTab[] fTabs = null;
-	private Map fTextFields = new HashMap();
 
 	public StructuredTextEditorPreferencePage() {
-		setDescription(SSEUIMessages.StructuredTextEditorPreferencePage_6); //$NON-NLS-1$
+		setDescription(SSEUIMessages.StructuredTextEditorPreferencePage_6); // $NON-NLS-1$
 		setPreferenceStore(SSEUIPlugin.getDefault().getPreferenceStore());
 
 		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), createOverlayStoreKeys());
@@ -143,10 +192,10 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		layout.numColumns = 2;
 		appearanceComposite.setLayout(layout);
 
-		String label = SSEUIMessages.StructuredTextEditorPreferencePage_20; //$NON-NLS-1$
+		String label = SSEUIMessages.StructuredTextEditorPreferencePage_20; // $NON-NLS-1$
 		addCheckBox(appearanceComposite, label, EditorPreferenceNames.MATCHING_BRACKETS, 0);
 
-		label = SSEUIMessages.StructuredTextEditorPreferencePage_30; //$NON-NLS-1$
+		label = SSEUIMessages.StructuredTextEditorPreferencePage_30; // $NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
 
 		PreferenceLinkArea contentTypeArea = new PreferenceLinkArea(appearanceComposite, SWT.NONE, "ValidationPreferencePage", SSEUIMessages.StructuredTextEditorPreferencePage_40, (IWorkbenchPreferenceContainer) getContainer(), null); //$NON-NLS-1$
@@ -160,7 +209,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_3;
 		addCheckBox(appearanceComposite, label, AbstractStructuredFoldingStrategy.FOLDING_ENABLED, 0);
-		
+
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_1;
 		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SEMANTIC_HIGHLIGHTING, 0);
 
@@ -171,7 +220,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		l.setLayoutData(gd);
 
 		l = new Label(appearanceComposite, SWT.LEFT);
-		l.setText(SSEUIMessages.StructuredTextEditorPreferencePage_23); //$NON-NLS-1$
+		l.setText(SSEUIMessages.StructuredTextEditorPreferencePage_23); // $NON-NLS-1$
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = 2;
 		l.setLayoutData(gd);
@@ -186,10 +235,13 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		gd.horizontalSpan = 2;
 		editorComposite.setLayoutData(gd);
 
-		fAppearanceColorList = new List(editorComposite, SWT.SINGLE | SWT.V_SCROLL | SWT.BORDER);
-		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.FILL_HORIZONTAL);
-		gd.heightHint = convertHeightInCharsToPixels(7);
-		fAppearanceColorList.setLayoutData(gd);
+		Composite tableComposite = new Composite(editorComposite, SWT.NONE);
+		GridData tableGD = new GridData(GridData.FILL_VERTICAL);
+		tableComposite.setLayoutData(tableGD);
+		fAppearanceColorTableViewer = new TableViewer(tableComposite, SWT.SINGLE | SWT.V_SCROLL | SWT.BORDER);
+		initializeAppearanceColorTable(tableComposite);
+		Arrays.sort(fAppearanceColorListModel);
+		fAppearanceColorTableViewer.setInput(fAppearanceColorListModel);
 
 		Composite stylesComposite = new Composite(editorComposite, SWT.NONE);
 		layout = new GridLayout();
@@ -202,7 +254,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		l = new Label(stylesComposite, SWT.LEFT);
 		// needs to be made final so label can be set in
 		// foregroundcolorbutton's acc listener
-		final String buttonLabel = SSEUIMessages.StructuredTextEditorPreferencePage_24; //$NON-NLS-1$ 
+		final String buttonLabel = SSEUIMessages.StructuredTextEditorPreferencePage_24; // $NON-NLS-1$
 		l.setText(buttonLabel);
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.BEGINNING;
@@ -214,30 +266,26 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		gd.horizontalAlignment = GridData.BEGINNING;
 		foregroundColorButton.setLayoutData(gd);
 
-		fAppearanceColorList.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// do nothing
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				handleAppearanceColorListSelection();
-			}
-		});
 		foregroundColorButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// do nothing
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				int i = fAppearanceColorList.getSelectionIndex();
-				String key = fAppearanceColorListModel[i][1];
+				if (!fAppearanceColorTableViewer.getSelection().isEmpty()) {
+					Object element = fAppearanceColorTableViewer.getStructuredSelection().getFirstElement();
+					int i = Arrays.binarySearch(fAppearanceColorListModel, element);
+					String key = fAppearanceColorListModel[i].colorKey;
 
-				PreferenceConverter.setValue(fOverlayStore, key, fAppearanceColorEditor.getColorValue());
+					PreferenceConverter.setValue(fOverlayStore, key, fAppearanceColorEditor.getColorValue());
+					fAppearanceColorTableViewer.refresh(element, true);
+				}
 			}
 		});
 
 		// bug2541 - associate color label to button's label field
 		foregroundColorButton.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getName(AccessibleEvent e) {
 				if (e.childID == ACC.CHILDID_SELF)
 					e.result = buttonLabel;
@@ -264,7 +312,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		TabItem item = new TabItem(folder, SWT.NONE);
-		item.setText(SSEUIMessages.StructuredTextEditorPreferencePage_0); //$NON-NLS-1$
+		item.setText(SSEUIMessages.StructuredTextEditorPreferencePage_0); // $NON-NLS-1$
 		item.setControl(createAppearancePage(folder));
 
 		item = new TabItem(folder, SWT.NONE);
@@ -279,28 +327,20 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		return folder;
 	}
 
-	/*
-	 * @see PreferencePage#createControl(Composite)
-	 */
-	public void createControl(Composite parent) {
-		super.createControl(parent);
-		// WorkbenchHelp.setHelp(getControl(),
-		// IJavaHelpContextIds.JAVA_EDITOR_PREFERENCE_PAGE);
-	}
-
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
-		ArrayList overlayKeys = new ArrayList();
+		List<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.MATCHING_BRACKETS_COLOR));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.MATCHING_BRACKETS));
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG));
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AbstractStructuredFoldingStrategy.FOLDING_ENABLED));
-		
+
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SEMANTIC_HIGHLIGHTING));
 
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.MATCHING_BRACKETS));
+
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.MATCHING_BRACKETS_COLOR));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND));
@@ -311,9 +351,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		return keys;
 	}
 
-	/*
-	 * @see DialogPage#dispose()
-	 */
+	@Override
 	public void dispose() {
 		if (fOverlayStore != null) {
 			fOverlayStore.stop();
@@ -323,64 +361,91 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		super.dispose();
 	}
 
-	private void handleAppearanceColorListSelection() {
-		int i = fAppearanceColorList.getSelectionIndex();
-		String key = fAppearanceColorListModel[i][1];
-		RGB rgb = PreferenceConverter.getColor(fOverlayStore, key);
-		fAppearanceColorEditor.setColorValue(rgb);
+	private void handleAppearanceColorViewerSelection() {
+		if (!fAppearanceColorTableViewer.getSelection().isEmpty()) {
+			Object firstElement = fAppearanceColorTableViewer.getStructuredSelection().getFirstElement();
+			int i = Arrays.binarySearch(fAppearanceColorListModel, firstElement);
+			String key = fAppearanceColorListModel[i].colorKey;
+			RGB rgb = PreferenceConverter.getColor(fOverlayStore, key);
+			fAppearanceColorEditor.setColorValue(rgb);
+		}
+		else {
+			fAppearanceColorTableViewer.refresh(true);
+		}
 	}
 
-	/*
-	 * @see IWorkbenchPreferencePage#init()
-	 */
+	@Override
 	public void init(IWorkbench workbench) {
 		// nothing to do
 	}
 
 	private void initialize() {
 		initializeFields();
+	}
 
-		for (int i = 0; i < fAppearanceColorListModel.length; i++)
-			fAppearanceColorList.add(fAppearanceColorListModel[i][0]);
-		fAppearanceColorList.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				if (fAppearanceColorList != null && !fAppearanceColorList.isDisposed()) {
-					fAppearanceColorList.select(0);
-					handleAppearanceColorListSelection();
+	private void initializeAppearanceColorTable(Composite tableComposite) {
+		fAppearanceColorTableViewer.addSelectionChangedListener((SelectionChangedEvent event) -> handleAppearanceColorViewerSelection());
+		colorPreviewImages = new ArrayList<>();
+		fAppearanceColorTableViewer.setContentProvider(new ArrayContentProvider());
+		fAppearanceColorTableViewer.setLabelProvider(new LabelProvider() {
+			@Override
+			public Image getImage(Object element) {
+				ColorEntry colorEntry = ((ColorEntry) element);
+				if (colorEntry.isSystemDefault() && colorEntry.systemColorRGB == null) {
+					return null;
 				}
+				RGB rgb = colorEntry.isSystemDefault() ? colorEntry.systemColorRGB : colorEntry.getRGB();
+				Color color = new Color(tableComposite.getParent().getDisplay(), rgb.red, rgb.green, rgb.blue);
+				int dimensions = 10;
+				Image image = new Image(tableComposite.getParent().getDisplay(), dimensions, dimensions);
+				GC gc = new GC(image);
+				// Draw color preview
+				gc.setBackground(color);
+				gc.fillRectangle(0, 0, dimensions, dimensions);
+				// Draw outline around color preview
+				gc.setBackground(new Color(tableComposite.getParent().getDisplay(), 0, 0, 0));
+				gc.setLineWidth(2);
+				gc.drawRectangle(0, 0, dimensions, dimensions);
+				gc.dispose();
+				color.dispose();
+				colorPreviewImages.add(image);
+				return image;
+			}
+
+			@Override
+			public String getText(Object element) {
+				return ((ColorEntry) element).label;
 			}
 		});
+		TableColumn tc = new TableColumn(fAppearanceColorTableViewer.getTable(), SWT.NONE, 0);
+		TableColumnLayout tableColumnLayout = new TableColumnLayout(true);
+		PixelConverter pixelConverter = new PixelConverter(tableComposite.getParent().getFont());
+		tableColumnLayout.setColumnData(tc, new ColumnWeightData(1, pixelConverter.convertWidthInCharsToPixels(30)));
+		tableComposite.setLayout(tableColumnLayout);
+		GridData gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.FILL_BOTH);
+		Table fAppearanceColorTable = fAppearanceColorTableViewer.getTable();
+		gd.heightHint = fAppearanceColorTable.getItemHeight() * fAppearanceColorListModel.length + fAppearanceColorTable.getItemHeight()/2;
+		fAppearanceColorTable.setLayoutData(gd);
 	}
 
 	private void initializeFields() {
-		Iterator e = fColorButtons.keySet().iterator();
-		while (e.hasNext()) {
-			ColorEditor c = (ColorEditor) e.next();
-			String key = (String) fColorButtons.get(c);
+		Iterator<ColorEditor> colorEditors = fColorButtons.keySet().iterator();
+		while (colorEditors.hasNext()) {
+			ColorEditor c = colorEditors.next();
+			String key = fColorButtons.get(c);
 			RGB rgb = PreferenceConverter.getColor(fOverlayStore, key);
 			c.setColorValue(rgb);
 		}
 
-		e = fCheckBoxes.keySet().iterator();
-		while (e.hasNext()) {
-			Button b = (Button) e.next();
-			String key = (String) fCheckBoxes.get(b);
+		Iterator<Button> checkBoxes = fCheckBoxes.keySet().iterator();
+		while (checkBoxes.hasNext()) {
+			Button b = checkBoxes.next();
+			String key = fCheckBoxes.get(b);
 			b.setSelection(fOverlayStore.getBoolean(key));
-		}
-
-		e = fTextFields.keySet().iterator();
-		while (e.hasNext()) {
-			Text t = (Text) e.next();
-			String key = (String) fTextFields.get(t);
-			t.setText(fOverlayStore.getString(key));
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
-	 */
+	@Override
 	protected void performApply() {
 		for (int i = 0; i < fTabs.length; i++) {
 			fTabs[i].performApply();
@@ -388,29 +453,22 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		super.performApply();
 	}
 
-	/*
-	 * @see PreferencePage#performDefaults()
-	 */
+	@Override
 	protected void performDefaults() {
 		fOverlayStore.loadDefaults();
 
 		initializeFields();
 
-		handleAppearanceColorListSelection();
+		handleAppearanceColorViewerSelection();
 
 		for (int i = 0; i < fTabs.length; i++) {
 			fTabs[i].performDefaults();
 		}
 
 		super.performDefaults();
-
-		// there is currently no need for a viewer
-		// fPreviewViewer.invalidateTextPresentation();
 	}
 
-	/*
-	 * @see PreferencePage#performOk()
-	 */
+	@Override
 	public boolean performOk() {
 		for (int i = 0; i < fTabs.length; i++) {
 			fTabs[i].performOk();
@@ -419,45 +477,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		fOverlayStore.propagate();
 		SSEUIPlugin.getDefault().savePluginPreferences();
 
-		// tab width is also a model-side preference so need to set it
-		// TODO need to handle tab width for formatter somehow
-		// int tabWidth =
-		// getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
-		// ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TAB_WIDTH,
-		// tabWidth);
-		// ModelPlugin.getDefault().savePluginPreferences();
-
 		return true;
 	}
 
-	void updateStatus(IStatus status) {
-		if (!status.matches(IStatus.ERROR)) {
-			for (int i = 0; i < fNumberFields.size(); i++) {
-				Text text = (Text) fNumberFields.get(i);
-				IStatus s = validatePositiveNumber(text.getText());
-				status = s.getSeverity() > status.getSeverity() ? s : status;
-			}
-		}
-
-		setValid(!status.matches(IStatus.ERROR));
-		applyToStatusLine(this, status);
-	}
-
-	private IStatus validatePositiveNumber(String number) {
-		StatusInfo status = new StatusInfo();
-		if (number.length() == 0) {
-			status.setError(SSEUIMessages.StructuredTextEditorPreferencePage_37);
-		}
-		else {
-			try {
-				int value = Integer.parseInt(number);
-				if (value < 0)
-					status.setError(number + SSEUIMessages.StructuredTextEditorPreferencePage_38);
-			}
-			catch (NumberFormatException e) {
-				status.setError(number + SSEUIMessages.StructuredTextEditorPreferencePage_38);
-			}
-		}
-		return status;
-	}
 }
