@@ -34,31 +34,40 @@ public class CSSDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		if (word != null)
 			return word;
 		word = findWord(document, offset);
-		IRegion line;
-		try {
-			line = document.getLineInformationOfOffset(offset);
-			if (offset == line.getOffset() + line.getLength())
-				return null;
-			int start = word.getOffset();
-			int end = start + word.getLength();
-			while (start > 0 && Arrays.binarySearch(NON_BREAKERS, document.getChar(start - 1)) > -1) {
-				IRegion previous = findWord(document, --start);
-				if (previous != null) {
-					start = previous.getOffset();
+		if (word != null) {
+			// see if it needs expansion past a non-breaker
+			try {
+				IRegion line = document.getLineInformationOfOffset(offset);
+				if (offset == line.getOffset() + line.getLength())
+					return null;
+				int start = word.getOffset();
+				int end = start + word.getLength();
+				while (start > 0 && Arrays.binarySearch(NON_BREAKERS, document.getChar(start - 1)) > -1) {
+					IRegion previous = findWord(document, --start);
+					if (previous != null) {
+						start = previous.getOffset();
+					}
+					else {
+						break;
+					}
 				}
-			}
-			while (end < line.getOffset() + line.getLength() && Arrays.binarySearch(NON_BREAKERS, document.getChar(end)) > -1) {
-				IRegion next = findExtendedDoubleClickSelection(document, end + 1);
-				if (next != null) {
-					end = next.getOffset() + next.getLength();
+				while (end < line.getOffset() + line.getLength() && Arrays.binarySearch(NON_BREAKERS, document.getChar(end)) > -1) {
+					IRegion next = findExtendedDoubleClickSelection(document, end + 1);
+					if (next != null) {
+						end = next.getOffset() + next.getLength();
+					}
+					else {
+						break;
+					}
 				}
+				if (start == end)
+					return null;
+				return new Region(start, end - start);
 			}
-			if (start == end)
+			catch (BadLocationException e) {
 				return null;
-			return new Region(start, end - start);
+			}
 		}
-		catch (BadLocationException e) {
-			return null;
-		}
+		return null;
 	}
 }
