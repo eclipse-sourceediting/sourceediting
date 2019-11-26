@@ -45,6 +45,10 @@
 			type="preferencepages"
 			value="org.eclipse.wst.sse.ui.preferences.editor"
 			target="org.eclipse.wst.sse.ui.StructuredTextEditor" />
+		<provisionalDefinition
+			type="showintarget"
+			value="org.eclipse.ui.views.minimap.MinimapView"
+			target="org.eclipse.wst.sse.ui.StructuredTextEditor" />
 	</extension>
 	<!-- associate the NavigateActionSet with various parts of the XML perspective-->
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
