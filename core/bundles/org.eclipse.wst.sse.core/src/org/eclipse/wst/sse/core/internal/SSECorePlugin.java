@@ -16,6 +16,8 @@ package org.eclipse.wst.sse.core.internal;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
@@ -89,7 +91,11 @@ public class SSECorePlugin extends Plugin {
 		 */
 		String scan = System.getProperty("org.eclipse.wst.sse.core.taskscanner"); //$NON-NLS-1$
 		if (scan == null || !scan.equalsIgnoreCase("off")) { //$NON-NLS-1$
-			TaskScanningScheduler.startup();
+			// schedule a job to avoid deadlocks with build process, see bug 536668
+			Job.createSystem("SSE core task scheduler startup", p -> {
+				TaskScanningScheduler.startup();
+				return Status.OK_STATUS;
+			}).schedule();
 		}
 	}
 
