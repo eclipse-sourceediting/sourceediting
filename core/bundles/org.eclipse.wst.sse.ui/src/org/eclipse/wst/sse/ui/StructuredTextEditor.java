@@ -109,8 +109,9 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -137,6 +138,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.dnd.IDragAndDropService;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
@@ -173,6 +175,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.sse.ui.internal.DefaultTextTransferDropTargetAdapterProxy;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.internal.ExtendedEditorDropTargetAdapter;
@@ -320,9 +323,7 @@ public class StructuredTextEditor extends TextEditor {
 					service.warnOfContentChange();
 				}
 			}
-		}
-
-		// Note: this one should probably be used to
+		}// Note: this one should probably be used to
 		// control viewer
 		// instead of viewer having its own listener
 		@Override
@@ -1088,7 +1089,6 @@ public class StructuredTextEditor extends TextEditor {
 	boolean fDirtyBeforeDocumentEvent = false;
 	int validateEditCount = 0;
 	private ExtendedEditorDropTargetAdapter fDropAdapter;
-	private DropTarget fDropTarget;
 	boolean fEditorDisposed = false;
 	private IEditorPart fEditorPart;
 	private InternalModelStateListener fInternalModelStateListener;
@@ -1873,9 +1873,6 @@ public class StructuredTextEditor extends TextEditor {
 		fEditorDisposed = true;
 		disposeModelDependentFields();
 
-		if (fDropTarget != null)
-			fDropTarget.dispose();
-
 		if (fPartListener != null) {
 			getSite().getWorkbenchWindow().getPartService().removePartListener(fPartListener);
 			fPartListener = null;
@@ -1897,7 +1894,6 @@ public class StructuredTextEditor extends TextEditor {
 		 * severe
 		 */
 		fDropAdapter = null;
-		fDropTarget = null;
 
 		if (fStructuredSelectionProvider != null) {
 			fStructuredSelectionProvider.dispose();
@@ -2724,38 +2720,6 @@ public class StructuredTextEditor extends TextEditor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#initializeDragAndDrop(org.eclipse.jface.text.source.ISourceViewer)
-	 */
-	@Override
-	protected void initializeDragAndDrop(ISourceViewer viewer) {
-		IPreferenceStore store = getPreferenceStore();
-		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
-			initializeDrop(viewer);
-	}
-
-	protected void initializeDrop(ITextViewer textViewer) {
-		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		fDropTarget = new DropTarget(textViewer.getTextWidget(), operations);
-		fDropAdapter = new ReadOnlyAwareDropTargetAdapter(true);
-		fDropAdapter.setTargetEditor(this);
-		fDropAdapter.setTargetIDs(getConfigurationPoints());
-		fDropAdapter.setTextViewer(textViewer);
-		fDropTarget.setTransfer(fDropAdapter.getTransfers());
-		fDropTarget.addDropListener(fDropAdapter);
-		fDropTarget.addDisposeListener(new DisposeListener() {
-			
-			@Override
-			public void widgetDisposed(DisposeEvent e) {
-				fDropTarget.removeDropListener(fDropAdapter);
-				fDropTarget.removeDisposeListener(this);
-				fDropTarget.dispose();
-			}
-		});
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#initializeEditor()
 	 */
 	@Override
@@ -2826,8 +2790,26 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	@Override
-	protected void installTextDragAndDrop(ISourceViewer viewer) {
-		// do nothing
+	protected void installTextDragAndDrop(final ISourceViewer textViewer) {
+		super.installTextDragAndDrop(textViewer);
+		IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
+		Object dropTarget = textViewer.getTextWidget().getData(DND.DROP_TARGET_KEY); 
+		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+		if (dropTarget instanceof DropTarget) {
+			DropTargetListener[] dropListeners = ((DropTarget)dropTarget).getDropListeners();
+			fDropAdapter = new DefaultTextTransferDropTargetAdapterProxy(dropListeners[dropListeners.length-1]);
+		} else {
+			fDropAdapter = new ReadOnlyAwareDropTargetAdapter(true);
+		}
+		fDropAdapter.setTargetEditor(this);
+		fDropAdapter.setTargetIDs(getConfigurationPoints());
+		fDropAdapter.setTextViewer(textViewer);
+		Transfer[] transfers = fDropAdapter.getTransfers();
+		if (dropTarget instanceof DropTarget) {
+			transfers = Arrays.copyOf(transfers, transfers.length + 1);
+			transfers[transfers.length - 1] = TextTransfer.getInstance();
+		}
+		dndService.addMergedDropTarget(textViewer.getTextWidget(), operations, transfers, fDropAdapter);
 	}
 
 	/*
@@ -3176,7 +3158,8 @@ public class StructuredTextEditor extends TextEditor {
 
 	@Override
 	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
-		// do nothing
+		super.uninstallTextDragAndDrop(viewer);
+		fDropAdapter = null;
 	}
 
 	/**

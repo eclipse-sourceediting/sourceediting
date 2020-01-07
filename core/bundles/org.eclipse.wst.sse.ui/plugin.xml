@@ -390,7 +390,7 @@
 				transferID="org.eclipse.swt.dnd.FileTransfer"
 				id="org.eclipse.wst.sse.ui.internal.FileDropAction">
 			</dropAction>
-			<transfer
+			<!--transfer
 				priority="low"
 				singleton="true"
 				class="org.eclipse.swt.dnd.TextTransfer"
@@ -401,7 +401,7 @@
 				class="org.eclipse.wst.sse.ui.internal.TextDropAction"
 				transferID="org.eclipse.swt.dnd.TextTransfer"
 				id="org.eclipse.wst.sse.ui.internal.TextDropAction">
-			</dropAction>
+			</dropAction-->
 		</dropTargetContribution>
 	</extension>
 
