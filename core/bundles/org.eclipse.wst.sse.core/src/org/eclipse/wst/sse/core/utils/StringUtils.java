@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,17 +15,16 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.utils;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.sse.core.internal.Logger;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 public class StringUtils {
@@ -224,7 +223,7 @@ public class StringUtils {
 
 		String newText = ""; //$NON-NLS-1$
 		int lineCount = tempDoc.getNumberOfLines();
-		StringBuffer sb = new StringBuffer(newText);
+		StringBuilder sb = new StringBuilder(newText);
 		for (int i = 0; i < lineCount; i++) {
 			try {
 				org.eclipse.jface.text.IRegion lineInfo = tempDoc.getLineInformation(i);
@@ -283,7 +282,7 @@ public class StringUtils {
 	public static String escape(String normalString) {
 		if (normalString == null)
 			return null;
-		StringBuffer escapedBuffer = new StringBuffer();
+		StringBuilder escapedBuffer = new StringBuilder();
 		StringTokenizer toker = new StringTokenizer(normalString, EQUAL_SIGN + LINE_FEED + CARRIAGE_RETURN + LINE_TAB, true);
 		String chunk = null;
 		while (toker.hasMoreTokens()) {
@@ -309,7 +308,7 @@ public class StringUtils {
 
 	/**
 	 * Returns the first line of the given text without a trailing delimiter
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -327,6 +326,48 @@ public class StringUtils {
 			// do nothing
 		}
 		return text;
+	}
+
+	/**
+	 * Returns the first line of the given text, up to a certain length, appending ellipses as indicated
+	 *
+	 * @return
+	 */
+	public static final String firstLine(String s, int limit, boolean appendEllipsesIfExceeded) {
+		int lineSeparatorIndex = 0;
+		int fullLength = s.length();
+		int startOffset = -1;
+		do {
+			startOffset++;
+		}
+		while (startOffset < fullLength && Character.isWhitespace(s.charAt(startOffset)));
+
+		if (startOffset == fullLength) {
+			return ""; //$NON-NLS-1$
+		}
+
+		// find the first line delimiter
+		if ((lineSeparatorIndex = s.indexOf('\r', startOffset)) < 0) {
+			lineSeparatorIndex = s.indexOf('\n', startOffset);
+		}
+
+		if (lineSeparatorIndex > 0) {
+			if (appendEllipsesIfExceeded) {
+				return s.substring(startOffset, Math.min(startOffset + limit, lineSeparatorIndex)).concat("...");
+			}
+			else {
+				return s.substring(startOffset, Math.min(startOffset + limit, lineSeparatorIndex));
+			}
+		}
+		else if (fullLength - startOffset > limit) {
+			if (appendEllipsesIfExceeded) {
+				return s.substring(startOffset, startOffset + limit).concat("...");
+			}
+			else {
+				return s.substring(startOffset, startOffset + limit);
+			}
+		}
+		return s;
 	}
 
 	public static int indexOfLastLineDelimiter(String aString) {
@@ -507,7 +548,7 @@ public class StringUtils {
 	 * @todo Generated comment
 	 */
 	public static String pack(String[] strings) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < strings.length; i++) {
 			buf.append(StringUtils.replace(strings[i], ",", "&comma;")); //$NON-NLS-1$ //$NON-NLS-2$
 			if (i < strings.length - 1)
@@ -522,7 +563,7 @@ public class StringUtils {
 	 */
 	public static String paste(String oldText, String newText, int start, int length) {
 		String result = null;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int startIndex = start;
 		int endIndex = start + length;
 		if (startIndex > oldText.length()) {
@@ -552,7 +593,7 @@ public class StringUtils {
 		int position = 0;
 		int previous = 0;
 		int spacer = source.length();
-		StringBuffer sb = new StringBuffer(normalString);
+		StringBuilder sb = new StringBuilder(normalString);
 		while (position + spacer - 1 < length && aString.indexOf(source, position) > -1) {
 			position = aString.indexOf(source, previous);
 			sb.append(normalString);
