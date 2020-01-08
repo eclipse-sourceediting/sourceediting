@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -119,7 +119,7 @@ public class TestPropertySheetConfiguration extends TestCase {
 	}
 
 	public void testPropertySourceRemoval() throws BadLocationException {
-		IDocument document = (IDocument) fEditor.getAdapter(IDocument.class);
+		IDocument document = fEditor.getAdapter(IDocument.class);
 		// set up the editor document
 		document.replace(0, 0, "<test><myproperty props=\"yes\" /></test>");
 
@@ -133,7 +133,7 @@ public class TestPropertySheetConfiguration extends TestCase {
 		if (selection instanceof IStructuredSelection) {
 			item = ((IStructuredSelection) selection).getFirstElement();
 
-			IPropertySheetPage propertySheet = (IPropertySheetPage) fEditor.getAdapter(IPropertySheetPage.class);
+			IPropertySheetPage propertySheet = fEditor.getAdapter(IPropertySheetPage.class);
 			assertTrue("No ConfigurablePropertySheetPage found", propertySheet instanceof ConfigurablePropertySheetPage);
 			if (propertySheet instanceof ConfigurablePropertySheetPage) {
 				ConfigurablePropertySheetPage cps = (ConfigurablePropertySheetPage) propertySheet;
