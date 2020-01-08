@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -1062,7 +1062,7 @@ public class StructuredTextEditor extends TextEditor {
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.RulerContext"; //$NON-NLS-1$
 	private static final String RULER_CONTEXT_MENU_SUFFIX = ".source.RulerContext"; //$NON-NLS-1$
 
-	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
+	private static final String UNDERSCORE = "_"; //$NON-NLS-1$
 	/** Translatable strings */
 	private static final String UNDO_ACTION_DESC = SSEUIMessages.Undo___0___UI_; // = "Undo: {0}."
 
@@ -1107,7 +1107,7 @@ public class StructuredTextEditor extends TextEditor {
 	/** The ruler context menu manager to be disposed. */
 	private MenuManager fRulerContextMenuManager;
 
-	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV, IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.ID_OUTLINE};
+	String[] fShowInTargetIds = new String[]{IPageLayout.ID_OUTLINE, IPageLayout.ID_PROP_SHEET, IPageLayout.ID_MINIMAP_VIEW};
 
 	private IAction fShowPropertiesAction = null;
 	private IStructuredModel fStructuredModel;
@@ -1126,7 +1126,7 @@ public class StructuredTextEditor extends TextEditor {
 	private QuickOutlineHandler fOutlineHandler;
 
 	/** initialization data from this instance's editor extension */
-	private Map fInitializationData = null;
+	private Map<String, String> fInitializationData = null;
 
 	private boolean shouldClose = false;
 	private long startPerfTime;
@@ -2159,24 +2159,20 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(Class required) {
+	public <T> T getAdapter(Class<T> required) {
 		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			startPerfTime = System.currentTimeMillis();
 		}
-		Object result = null;
+		T result = null;
 		// text editor
 		IStructuredModel internalModel = getInternalModel();
 		if (ITextEditor.class.equals(required) || ITextEditorExtension5.class.equals(required) || ITextEditorExtension4.class.equals(required) || ITextEditorExtension3.class.equals(required) || ITextEditorExtension2.class.equals(required) || ITextEditorExtension.class.equals(required)) {
-			result = this;
+			result = (T) this;
 		}
 		else if (IWorkbenchSiteProgressService.class.equals(required)) {
-			return getEditorPart().getSite().getAdapter(IWorkbenchSiteProgressService.class);
+			return (T) getEditorPart().getSite().getAdapter(IWorkbenchSiteProgressService.class);
 		}
 		// content outline page
 		else if (IContentOutlinePage.class.equals(required)) {
@@ -2200,7 +2196,7 @@ public class StructuredTextEditor extends TextEditor {
 					fOutlinePage = outlinePage;
 				}
 			}
-			result = fOutlinePage;
+			result = (T) fOutlinePage;
 		}
 		// property sheet page, but only if the input's editable
 		else if (IPropertySheetPage.class.equals(required) && isEditable()) {
@@ -2212,30 +2208,31 @@ public class StructuredTextEditor extends TextEditor {
 					fPropertySheetPage = propertySheetPage;
 				}
 			}
-			result = fPropertySheetPage;
+			result = (T) fPropertySheetPage;
 		}
 		else if (IDocument.class.equals(required)) {
-			result = getDocumentProvider().getDocument(getEditorInput());
+			result = (T) getDocumentProvider().getDocument(getEditorInput());
 		}
 		else if (ISourceEditingTextTools.class.equals(required)) {
-			result = createSourceEditingTextTools();
+			result = (T) createSourceEditingTextTools();
 		}
 		else if (IToggleBreakpointsTarget.class.equals(required)) {
-			result = ToggleBreakpointsTarget.getInstance();
+			result = (T) ToggleBreakpointsTarget.getInstance();
 		}
 		else if (ITextEditorExtension4.class.equals(required)) {
-			result = this;
+			result = (T) this;
 		}
 		else if (IShowInTargetList.class.equals(required)) {
-			result = new ShowInTargetListAdapter();
+			result = (T) new ShowInTargetListAdapter();
 		}
 		else if (IVerticalRuler.class.equals(required)) {
-			return getVerticalRuler();
+			return (T) getVerticalRuler();
 		}
 		else if (SelectionHistory.class.equals(required)) {
-			if (fSelectionHistory == null)
+			if (fSelectionHistory == null) {
 				fSelectionHistory = new SelectionHistory(this);
-			result = fSelectionHistory;
+			}
+			result = (T) fSelectionHistory;
 		}
 		else if (IResource.class.equals(required)) {
 			IEditorInput input = getEditorInput();

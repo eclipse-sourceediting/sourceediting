@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2017 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -447,18 +447,15 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		super.dispose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class key) {
-		Object adapter = null;
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> key) {
+		T adapter = null;
 		if (key.equals(IShowInTarget.class)) {
-			adapter = new ShowInTarget();
+			adapter = (T) new ShowInTarget();
 		}
 		else if (key.equals(IShowInSource.class)) {
-			adapter = new ShowInSource();
+			adapter = (T) new ShowInSource();
 		}
 		else if (key.equals(IShowInTargetList.class) && fEditor != null) {
 			adapter = fEditor.getAdapter(key);

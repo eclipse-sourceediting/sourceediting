@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2019 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -126,11 +126,11 @@ import com.ibm.icu.text.NumberFormat;
  *         partitions, document regions, annotations, and selection.
  */
 public class OffsetStatusLineContributionItem extends StatusLineContributionItem {
+	static final String[] TEMPORARY_ANNOTATION_KEYS = new String[]{"Partition Type", "Step", "Scope", "Offset", "Length", "Description"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 	class AnnotationPropertySource implements IPropertySource {
 		Annotation fAnnotation = null;
 		IPropertyDescriptor[] fDescriptors = null;
-		String[] TEMPORARY_ANNOTATION_KEYS = new String[]{"Partition Type", "Step", "Scope", "Offset", "Length", "Description"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 		public AnnotationPropertySource(Annotation annotation) {
 			super();
@@ -1054,7 +1054,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 							}
 								break;
 							case 2 : {
-								text = StringUtils.firstLineOf(element.toString());
+								text = StringUtils.firstLine(element.toString(), 999, true);
 							}
 								break;
 							default :

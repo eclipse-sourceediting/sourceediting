@@ -153,7 +153,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		fTreeViewer = new TreeViewer(tree);
 		fTreeViewer.setContentProvider(fContentProvider);
 		if (fLabelProvider instanceof IStyledLabelProvider) {
-			new DelegatingStyledCellLabelProvider((IStyledLabelProvider) fLabelProvider);
+			fTreeViewer.setLabelProvider(new DelegatingStyledCellLabelProvider((IStyledLabelProvider) fLabelProvider));
 		}
 		else {
 			fTreeViewer.setLabelProvider(fLabelProvider);

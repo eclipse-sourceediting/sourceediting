@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ public abstract class StructureSelectAction extends Action {
 
 		Assert.isNotNull(editor);
 		fEditor = editor;
-		fHistory = (SelectionHistory) editor.getAdapter(SelectionHistory.class);
+		fHistory = editor.getAdapter(SelectionHistory.class);
 		fViewer = editor.getTextViewer();
 		fModel = editor.getModel();
 		Assert.isNotNull(fViewer);
