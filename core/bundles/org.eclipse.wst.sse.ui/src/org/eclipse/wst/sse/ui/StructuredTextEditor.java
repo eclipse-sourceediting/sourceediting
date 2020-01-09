@@ -2717,6 +2717,14 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	/**
+	 * @deprecated since 1.6.300 - no longer used in favor of platform text
+	 *             drag and drop, left for binary compatibility
+	 * @param textViewer
+	 */
+	protected void initializeDrop(ITextViewer textViewer) {
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -2791,25 +2799,33 @@ public class StructuredTextEditor extends TextEditor {
 
 	@Override
 	protected void installTextDragAndDrop(final ISourceViewer textViewer) {
-		super.installTextDragAndDrop(textViewer);
-		IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
-		Object dropTarget = textViewer.getTextWidget().getData(DND.DROP_TARGET_KEY); 
-		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		if (dropTarget instanceof DropTarget) {
-			DropTargetListener[] dropListeners = ((DropTarget)dropTarget).getDropListeners();
-			fDropAdapter = new DefaultTextTransferDropTargetAdapterProxy(dropListeners[dropListeners.length-1]);
-		} else {
-			fDropAdapter = new ReadOnlyAwareDropTargetAdapter(true);
+		/**
+		 * For compatibility, let subclasses install their own support and
+		 * supersede the default
+		 */
+		initializeDrop(textViewer);
+		if (textViewer.getTextWidget().getData(DND.DROP_TARGET_KEY) == null) {
+			super.installTextDragAndDrop(textViewer);
+			IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
+			Object dropTarget = textViewer.getTextWidget().getData(DND.DROP_TARGET_KEY);
+			int operations = DND.DROP_COPY | DND.DROP_MOVE;
+			if (dropTarget instanceof DropTarget) {
+				DropTargetListener[] dropListeners = ((DropTarget) dropTarget).getDropListeners();
+				fDropAdapter = new DefaultTextTransferDropTargetAdapterProxy(dropListeners[dropListeners.length - 1]);
+			}
+			else {
+				fDropAdapter = new ReadOnlyAwareDropTargetAdapter(true);
+			}
+			fDropAdapter.setTargetEditor(this);
+			fDropAdapter.setTargetIDs(getConfigurationPoints());
+			fDropAdapter.setTextViewer(textViewer);
+			Transfer[] transfers = fDropAdapter.getTransfers();
+			if (dropTarget instanceof DropTarget) {
+				transfers = Arrays.copyOf(transfers, transfers.length + 1);
+				transfers[transfers.length - 1] = TextTransfer.getInstance();
+			}
+			dndService.addMergedDropTarget(textViewer.getTextWidget(), operations, transfers, fDropAdapter);
 		}
-		fDropAdapter.setTargetEditor(this);
-		fDropAdapter.setTargetIDs(getConfigurationPoints());
-		fDropAdapter.setTextViewer(textViewer);
-		Transfer[] transfers = fDropAdapter.getTransfers();
-		if (dropTarget instanceof DropTarget) {
-			transfers = Arrays.copyOf(transfers, transfers.length + 1);
-			transfers[transfers.length - 1] = TextTransfer.getInstance();
-		}
-		dndService.addMergedDropTarget(textViewer.getTextWidget(), operations, transfers, fDropAdapter);
 	}
 
 	/*
