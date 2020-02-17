@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -1053,7 +1053,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			return ((IDocumentPartitionerExtension2) partitioner).computePartitioning(offset, length, includeZeroLengthPartitions);
 		else if (partitioner != null)
 			return partitioner.computePartitioning(offset, length);
-		else if (IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
+		else if (IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning) || DEFAULT_PARTITIONING.equals(partitioning))
 			return new TypedRegion[]{new TypedRegion(offset, length, DEFAULT_CONTENT_TYPE)};
 		else
 			throw new BadPartitioningException();
