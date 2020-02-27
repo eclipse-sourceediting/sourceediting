@@ -415,7 +415,7 @@
 )
     ContextRegion--> S: 0-2, 
 [1306, 1320] (html:lang(fr) )
-    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4, ContextRegion--> SELECTOR_PSEUDO: 4-13/14, 
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4, ContextRegion--> SELECTOR_PSEUDO: 4-9, ContextRegion--> SELECTOR_PSEUDO_START: 9-10, ContextRegion--> SELECTOR_PSEUDO_VALUE: 10-12, ContextRegion--> SELECTOR_PSEUDO_END: 12-13/14, 
 [1320, 1323] ({  )
     ContextRegion--> LBRACE: 0-1/3, 
 [1323, 1340] (quotes: '<<' '>>')
@@ -428,7 +428,7 @@
 )
     ContextRegion--> S: 0-2, 
 [1345, 1359] (html:lang(de) )
-    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4, ContextRegion--> SELECTOR_PSEUDO: 4-13/14, 
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-4, ContextRegion--> SELECTOR_PSEUDO: 4-9, ContextRegion--> SELECTOR_PSEUDO_START: 9-10, ContextRegion--> SELECTOR_PSEUDO_VALUE: 10-12, ContextRegion--> SELECTOR_PSEUDO_END: 12-13/14, 
 [1359, 1362] ({  )
     ContextRegion--> LBRACE: 0-1/3, 
 [1362, 1395] (quotes: '>>' '<<' '\2039' '\203A')
@@ -441,7 +441,7 @@
 )
     ContextRegion--> S: 0-2, 
 [1400, 1414] (:lang(fr) > Q )
-    ContextRegion--> SELECTOR_PSEUDO: 0-9/10, ContextRegion--> SELECTOR_COMBINATOR: 10-11/12, ContextRegion--> SELECTOR_ELEMENT_NAME: 12-13/14, 
+    ContextRegion--> SELECTOR_PSEUDO: 0-5, ContextRegion--> SELECTOR_PSEUDO_START: 5-6, ContextRegion--> SELECTOR_PSEUDO_VALUE: 6-8, ContextRegion--> SELECTOR_PSEUDO_END: 8-9/10, ContextRegion--> SELECTOR_COMBINATOR: 10-11/12, ContextRegion--> SELECTOR_ELEMENT_NAME: 12-13/14, 
 [1414, 1417] ({  )
     ContextRegion--> LBRACE: 0-1/3, 
 [1417, 1434] (quotes: '<<' '>>')
@@ -454,7 +454,7 @@
 )
     ContextRegion--> S: 0-2, 
 [1439, 1453] (:lang(de) > Q )
-    ContextRegion--> SELECTOR_PSEUDO: 0-9/10, ContextRegion--> SELECTOR_COMBINATOR: 10-11/12, ContextRegion--> SELECTOR_ELEMENT_NAME: 12-13/14, 
+    ContextRegion--> SELECTOR_PSEUDO: 0-5, ContextRegion--> SELECTOR_PSEUDO_START: 5-6, ContextRegion--> SELECTOR_PSEUDO_VALUE: 6-8, ContextRegion--> SELECTOR_PSEUDO_END: 8-9/10, ContextRegion--> SELECTOR_COMBINATOR: 10-11/12, ContextRegion--> SELECTOR_ELEMENT_NAME: 12-13/14, 
 [1453, 1456] ({  )
     ContextRegion--> LBRACE: 0-1/3, 
 [1456, 1489] (quotes: '>>' '<<' '\2039' '\203A')
@@ -525,7 +525,7 @@
 )
     ContextRegion--> S: 0-2, 
 [1707, 1721] (*:lang(ja-jp) )
-    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-13/14, 
+    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-6, ContextRegion--> SELECTOR_PSEUDO_START: 6-7, ContextRegion--> SELECTOR_PSEUDO_VALUE: 7-12, ContextRegion--> SELECTOR_PSEUDO_END: 12-13/14, 
 [1721, 1723] ({ )
     ContextRegion--> LBRACE: 0-1/2, 
 [1723, 1768] (font: 900 14pt/16pt "Heisei Mincho W9", serif)
@@ -538,7 +538,7 @@
 )
     ContextRegion--> S: 0-2, 
 [1772, 1786] (*:lang(zh-tw) )
-    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-13/14, 
+    ContextRegion--> SELECTOR_UNIVERSAL: 0-1, ContextRegion--> SELECTOR_PSEUDO: 1-6, ContextRegion--> SELECTOR_PSEUDO_START: 6-7, ContextRegion--> SELECTOR_PSEUDO_VALUE: 7-12, ContextRegion--> SELECTOR_PSEUDO_END: 12-13/14, 
 [1786, 1788] ({ )
     ContextRegion--> LBRACE: 0-1/2, 
 [1788, 1826] (font: 800 14pt/16.5pt "Li Sung", serif)

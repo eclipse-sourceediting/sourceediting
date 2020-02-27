@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Gautier de SAINT MARTIN LACAZE - bug 441104, 432472, 446745, 481719
  *******************************************************************************/
 package org.eclipse.wst.css.core.tests.source;
 
@@ -518,17 +519,17 @@ public class CSSSelectorTest extends TestCase {
 
 	public void testSelector27() {
 		ICSSSelectorList list = createSelectorList("HTML:lang(de) > Q");
-		checkSelectorList(list, "HTML:lang(de) > Q", 1, 0);
+		checkSelectorList(list, "HTML:lang > Q", 1, 3);
 
 		ICSSSelector selector;
 		ICSSSelectorItem item;
 
 		selector = list.getSelector(0);
-		checkSelector(selector, "HTML:lang(de) > Q", 3, 102, 0);
+		checkSelector(selector, "HTML:lang > Q", 3, 102, 3);
 
 		item = selector.getItem(0);
 		checkSimpleSelector(item, "HTML", false, 0, 0, 0, 1);
-		checkSimpleSelectorPseudoNames(item, new String[]{"lang(de)"});
+		checkSimpleSelectorPseudoNames(item, new String[]{"lang"});
 
 		item = selector.getItem(1);
 		checkSelectorCombinator(item, ">", ICSSSelectorCombinator.CHILD);

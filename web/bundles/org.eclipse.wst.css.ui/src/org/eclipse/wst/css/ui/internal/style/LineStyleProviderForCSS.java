@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Gautier de SAINT MARTIN LACAZE - bug 441104, 432472, 446745, 481719
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal.style;
 
@@ -91,6 +92,9 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_UNIVERSAL, IStyleConstantsCSS.UNIVERSAL);
 
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO, IStyleConstantsCSS.PSEUDO);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO_START, IStyleConstantsCSS.SEMI_COLON);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO_END, IStyleConstantsCSS.SEMI_COLON);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO_VALUE, IStyleConstantsCSS.PSEUDO);
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_CLASS, IStyleConstantsCSS.SELECTOR_CLASS);
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ID, IStyleConstantsCSS.ID);
 

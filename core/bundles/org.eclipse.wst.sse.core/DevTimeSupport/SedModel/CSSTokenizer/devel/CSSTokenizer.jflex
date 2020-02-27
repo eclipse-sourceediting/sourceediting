@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Gautier de SAINT MARTIN LACAZE - bug 441104, 432472, 446745, 481719
  *******************************************************************************/
 /*nlsXXX*/
 package org.eclipse.wst.css.core.internal.parser;
@@ -416,17 +417,20 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
  * element_name [ HASH | class | attrib | pseudo ]* | [ HASH | class | attrib | pseudo ]+
  */
 
+<YYINITIAL, ST_SELECTOR> {
+	{ident} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_ELEMENT_NAME; }
+}
+
 <YYINITIAL, ST_SELECTOR_MODIFIER, ST_SELECTOR> {
 	"*" { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_UNIVERSAL; }
 	{hash} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_ID; }
-//	":"{ident}("("{s}*{ident}{s}*")")? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
-	":"({ident}("("{s}*([a-zA-Z0-9]|[-+]|{s})*{s}*")")?)? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
+	":"({ident})? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
 	"."{name} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_CLASS; }
 	"[" { yybegin(ST_SELECTOR_ATTRIBUTE_NAME); return CSS_SELECTOR_ATTRIBUTE_START; }
-}
-
-<YYINITIAL, ST_SELECTOR> {
-	{ident} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_ELEMENT_NAME; }
+	"(" { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO_START; }
+	")" { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO_END; }
+	// case for the content of nth-child and others pseudo selector content
+	{name} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO_VALUE; }
 }
 
 <ST_SELECTOR_MODIFIER> {

@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Gautier de SAINT MARTIN LACAZE - bug 441104, 432472, 446745, 481719
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.parserz;
 
@@ -43,6 +44,9 @@ public interface CSSRegionContexts {
 	public static final String CSS_SELECTOR_ELEMENT_NAME = "SELECTOR_ELEMENT_NAME"; //$NON-NLS-1$
 	public static final String CSS_SELECTOR_UNIVERSAL = "SELECTOR_UNIVERSAL"; //$NON-NLS-1$
 	public static final String CSS_SELECTOR_PSEUDO = "SELECTOR_PSEUDO"; //$NON-NLS-1$
+	public static final String CSS_SELECTOR_PSEUDO_START = "SELECTOR_PSEUDO_START"; //$NON-NLS-1$
+	public static final String CSS_SELECTOR_PSEUDO_END = "SELECTOR_PSEUDO_END"; //$NON-NLS-1$
+	public static final String CSS_SELECTOR_PSEUDO_VALUE = "SELECTOR_PSEUDO_VALUE"; //$NON-NLS-1$
 	public static final String CSS_SELECTOR_CLASS = "SELECTOR_CLASS"; //$NON-NLS-1$
 	public static final String CSS_SELECTOR_ID = "SELECTOR_ID"; //$NON-NLS-1$
 	public static final String CSS_SELECTOR_COMBINATOR = "SELECTOR_COMBINATOR"; //$NON-NLS-1$

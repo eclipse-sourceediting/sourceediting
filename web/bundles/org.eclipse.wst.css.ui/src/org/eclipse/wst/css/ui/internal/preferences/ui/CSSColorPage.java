@@ -7,6 +7,7 @@
  * SPDX-License-Identifier: EPL-2.0
  * 
  * Contributors: IBM Corporation - initial API and implementation
+ *     Gautier de SAINT MARTIN LACAZE - bug 441104, 432472, 446745, 481719
  ****************************************************************************/
 package org.eclipse.wst.css.ui.internal.preferences.ui;
 
@@ -116,6 +117,9 @@ public class CSSColorPage extends AbstractColorPage {
 		contextStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME, IStyleConstantsCSS.SELECTOR);
 		contextStyleMap.put(CSSRegionContexts.CSS_SELECTOR_UNIVERSAL, IStyleConstantsCSS.SELECTOR);
 		contextStyleMap.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO, IStyleConstantsCSS.SELECTOR);
+		contextStyleMap.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO_START, IStyleConstantsCSS.SEMI_COLON);
+		contextStyleMap.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO_END, IStyleConstantsCSS.SEMI_COLON);
+		contextStyleMap.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO_VALUE, IStyleConstantsCSS.PSEUDO);
 		contextStyleMap.put(CSSRegionContexts.CSS_SELECTOR_CLASS, IStyleConstantsCSS.SELECTOR);
 		contextStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ID, IStyleConstantsCSS.SELECTOR);
 

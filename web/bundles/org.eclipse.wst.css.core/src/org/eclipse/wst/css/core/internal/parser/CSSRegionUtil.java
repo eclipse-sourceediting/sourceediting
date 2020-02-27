@@ -9,6 +9,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Gautier de SAINT MARTIN LACAZE - bug 441104, 432472, 446745, 481719
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.parser;
 
@@ -47,7 +48,7 @@ public class CSSRegionUtil {
 	 * @return
 	 */
 	public static boolean isSelectorType(String type) {
-		return (type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_END || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_OPERATOR || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE || type == CSSRegionContexts.CSS_SELECTOR_CLASS || type == CSSRegionContexts.CSS_SELECTOR_COMBINATOR || type == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || type == CSSRegionContexts.CSS_SELECTOR_ID || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO || type == CSSRegionContexts.CSS_SELECTOR_SEPARATOR || type == CSSRegionContexts.CSS_SELECTOR_UNIVERSAL);
+		return (type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_END || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_OPERATOR || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE || type == CSSRegionContexts.CSS_SELECTOR_CLASS || type == CSSRegionContexts.CSS_SELECTOR_COMBINATOR || type == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || type == CSSRegionContexts.CSS_SELECTOR_ID || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO || type == CSSRegionContexts.CSS_SELECTOR_SEPARATOR || type == CSSRegionContexts.CSS_SELECTOR_UNIVERSAL || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO_START || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO_END || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO_VALUE);
 	}
 
 }
