@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2019 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -223,10 +223,10 @@ public class XMLContentLabelProvider extends JFaceNodeLabelProvider implements I
 						if (attributeName != null && attributeName.length() > 0) {
 							String attributeValue = shownAttributes[i].getNodeValue();
 							if (attributeValue != null) {
-								builder.append(" "); //$NON-NLS-1$
+								builder.append(' ');
 								builder.append(attributeName);
 								// https://bugs.eclipse.org/486252
-								builder.append("="); //$NON-NLS-1$
+								builder.append('='); //$NON-NLS-1$
 								builder.append(attributeValue);
 							}
 						}

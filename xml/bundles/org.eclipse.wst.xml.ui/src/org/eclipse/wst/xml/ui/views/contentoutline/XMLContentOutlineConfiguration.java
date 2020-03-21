@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2019 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -135,7 +135,7 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 		public String getText(Object o) {
 			if (o instanceof Node) {
 				Node node = (Node) o;
-				StringBuffer buffer = new StringBuffer(super.getText(node));
+				StringBuilder buffer = new StringBuilder(super.getText(node));
 				if (node.getNodeType() == Node.ELEMENT_NODE && fShowAttributes) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 					if (node.hasAttributes()) {
@@ -145,10 +145,10 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 							if (attributeName != null && attributeName.length() > 0) {
 								String attributeValue = shownAttribute.getNodeValue();
 								if (attributeValue != null) {
-									buffer.append(" "); //$NON-NLS-1$
+									buffer.append(' '); //$NON-NLS-1$
 									buffer.append(attributeName);
 									// https://bugs.eclipse.org/486252
-									buffer.append("="); //$NON-NLS-1$
+									buffer.append('='); //$NON-NLS-1$
 									buffer.append(attributeValue);
 								}
 							}
@@ -224,12 +224,11 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 							if (attributeName != null && attributeName.length() > 0) {
 								String attributeValue = shownAttribute.getNodeValue();
 								if (attributeValue != null) {
-									StringBuffer buffer = new StringBuffer(" "); //$NON-NLS-1$
-									buffer.append(attributeName);
+									styleString.append(' '); //$NON-NLS-1$
+									styleString.append(attributeName, StyledString.QUALIFIER_STYLER);
 									// https://bugs.eclipse.org/486252
-									buffer.append("="); //$NON-NLS-1$
-									buffer.append(attributeValue);
-									styleString.append(buffer.toString(), StyledString.QUALIFIER_STYLER);
+									styleString.append('=', StyledString.QUALIFIER_STYLER); //$NON-NLS-1$
+									styleString.append(attributeValue, StyledString.QUALIFIER_STYLER);
 								}
 							}
 						}
