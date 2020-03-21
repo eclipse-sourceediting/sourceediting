@@ -14,7 +14,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.catalog;
 
-import com.ibm.icu.text.Collator;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -34,6 +33,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
@@ -43,8 +44,10 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.IRewriteEntry;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ISuffixEntry;
 
+import com.ibm.icu.text.Collator;
 
-public class XMLCatalogTreeViewer extends TreeViewer {
+
+public class XMLCatalogTreeViewerBuilder extends Object {
 	protected static Image xmlCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/xmlcatalog_obj.gif"); //$NON-NLS-1$
 	protected static Image errorImage = ImageFactory.INSTANCE.getImage("icons/ovr16/error-overlay.gif"); //$NON-NLS-1$
 	protected static Image entryImage = ImageFactory.INSTANCE.getImage("icons/obj16/entry_obj.png"); //$NON-NLS-1$
@@ -58,21 +61,31 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 	protected ICatalog fWorkingUserCatalog;
 	protected ICatalog fSystemCatalog;
 
+	private Composite fParent = null;
+	private FilteredTree fTree = null;
+	private TreeViewer fTreeViewer = null;
+
 	public static String USER_SPECIFIED_ENTRIES_OBJECT = XMLCatalogMessages.UI_LABEL_USER_SPECIFIED_ENTRIES;
 	public static String PLUGIN_SPECIFIED_ENTRIES_OBJECT = XMLCatalogMessages.UI_LABEL_PLUGIN_SPECIFIED_ENTRIES;
 
-	public XMLCatalogTreeViewer(Composite parent, ICatalog workingUserCatalog, ICatalog systemCatalog) {
-		super(parent, SWT.MULTI | SWT.BORDER);
-		this.fWorkingUserCatalog = workingUserCatalog;
-		this.fSystemCatalog = systemCatalog;
+	XMLCatalogTreeViewerBuilder(Composite parent, ICatalog workingUserCatalog, ICatalog systemCatalog) {
+		fParent = parent;
+		fWorkingUserCatalog = workingUserCatalog;
+		fSystemCatalog = systemCatalog;
+	}
+	
+	public TreeViewer create() {
+		fTree = new FilteredTree(fParent, SWT.MULTI, new PatternFilter(), true, false);
+		fTreeViewer = fTree.getViewer();
 
-		setContentProvider(new CatalogEntryContentProvider());
-		setLabelProvider(new CatalogEntryLabelProvider());
+		fTreeViewer.setContentProvider(new CatalogEntryContentProvider());
+		fTreeViewer.setLabelProvider(new CatalogEntryLabelProvider());
+		return fTreeViewer;
 	}
 
 	public void setFilterExtensions(String[] extensions) {
-		resetFilters();
-		addFilter(new XMLCatalogTableViewerFilter(extensions));
+		fTreeViewer.resetFilters();
+		fTreeViewer.addFilter(new XMLCatalogTableViewerFilter(extensions));
 	}
 
 	public class CatalogEntryLabelProvider extends LabelProvider {
@@ -294,7 +307,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 					}
 				}
 			}
-			else if (element.equals(XMLCatalogTreeViewer.PLUGIN_SPECIFIED_ENTRIES_OBJECT) || element.equals(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT)) {
+			else if (element.equals(XMLCatalogTreeViewerBuilder.PLUGIN_SPECIFIED_ENTRIES_OBJECT) || element.equals(XMLCatalogTreeViewerBuilder.USER_SPECIFIED_ENTRIES_OBJECT)) {
 				return true;
 			}
 			return result;

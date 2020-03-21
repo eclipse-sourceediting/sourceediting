@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2011 IBM Corporation and others.
+ * Copyright (c) 2002, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -47,7 +47,7 @@ public class XMLCatalogEntriesView extends Composite {
 	protected Button editButton;
 	protected Button deleteButton;
 	protected Button clearCacheButton;
-	protected XMLCatalogTreeViewer tableViewer;
+	protected TreeViewer catalogViewer;
 	protected ICatalog workingUserCatalog;
 	protected ICatalog systemCatalog;
 
@@ -62,26 +62,26 @@ public class XMLCatalogEntriesView extends Composite {
 		gridLayout.numColumns = 2;
 		this.setLayout(gridLayout);
 
-		tableViewer = createTableViewer(this);
-		tableViewer.setInput("dummy"); //$NON-NLS-1$
+		catalogViewer = createTableViewer(this);
+		catalogViewer.setInput("dummy"); //$NON-NLS-1$
 		
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=202692
 		// specifically set size of tree before expanding it
-		Point initialSize = tableViewer.getTree().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		Point initialSize = catalogViewer.getTree().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		GridData gridData = new GridData(GridData.FILL_BOTH);
 		gridData.widthHint = initialSize.x;
 		gridData.heightHint = initialSize.y;
-		tableViewer.getControl().setLayoutData(gridData);
+		catalogViewer.getControl().setLayoutData(gridData);
 		
-		tableViewer.expandToLevel(2);
-		tableViewer.reveal(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
+		catalogViewer.expandToLevel(2);
+		catalogViewer.reveal(XMLCatalogTreeViewerBuilder.USER_SPECIFIED_ENTRIES_OBJECT);
 		
 		ISelectionChangedListener listener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateWidgetEnabledState();
 			}
 		};
-		tableViewer.addSelectionChangedListener(listener);
+		catalogViewer.addSelectionChangedListener(listener);
 
 		createButtons(this);
 	}
@@ -99,13 +99,13 @@ public class XMLCatalogEntriesView extends Composite {
 		return uri;
 	}
 
-	protected XMLCatalogTreeViewer createTableViewer(Composite parent) {
+	protected TreeViewer createTableViewer(Composite parent) {
 		String headings[] = new String[2];
 		headings[0] = XMLCatalogMessages.UI_LABEL_KEY;
 		headings[1] = XMLCatalogMessages.UI_LABEL_URI;
 
-		XMLCatalogTreeViewer theTableViewer = new XMLCatalogTreeViewer(parent, workingUserCatalog, systemCatalog);
-		return theTableViewer;
+		TreeViewer viewer = new XMLCatalogTreeViewerBuilder(parent, workingUserCatalog, systemCatalog).create();
+		return viewer;
 	}
 
 	protected void createButtons(Composite parent) {
@@ -200,7 +200,7 @@ public class XMLCatalogEntriesView extends Composite {
 	}
 
 	public void refresh() {
-		tableViewer.refresh();// XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
+		catalogViewer.refresh();// XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
 	}
 
 	protected EditCatalogEntryDialog invokeDialog(String title, ICatalogElement entry, ICatalog catalog) {
@@ -226,13 +226,13 @@ public class XMLCatalogEntriesView extends Composite {
 		ICatalogElement element = dialog.getCatalogElement();
 		if (dialog.getReturnCode() == Window.OK) {
 			workingUserCatalog.addCatalogElement(element);
-			tableViewer.setSelection(new StructuredSelection(element), true);
-			tableViewer.refresh();
+			catalogViewer.setSelection(new StructuredSelection(element), true);
+			catalogViewer.refresh();
 		}
 	}
 
 	protected void performEdit() {
-		ISelection selection = tableViewer.getSelection();
+		ISelection selection = catalogViewer.getSelection();
 		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 
 		if (selectedObject instanceof ICatalogElement) {
@@ -248,7 +248,7 @@ public class XMLCatalogEntriesView extends Composite {
 				// update the new mapping
 				//
 				workingUserCatalog.addCatalogElement(newEntry);
-				tableViewer.setSelection(new StructuredSelection(newEntry));
+				catalogViewer.setSelection(new StructuredSelection(newEntry));
 			}
 		}
 	}
@@ -258,7 +258,7 @@ public class XMLCatalogEntriesView extends Composite {
 	}
 
 	protected void performDelete() {
-		ISelection selection = tableViewer.getSelection();
+		ISelection selection = catalogViewer.getSelection();
 		if(selection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection)selection;
 			Iterator iterator = structuredSelection.iterator();
@@ -274,7 +274,7 @@ public class XMLCatalogEntriesView extends Composite {
 
 	protected void updateWidgetEnabledState() {
 		boolean isEditable = false;
-		ISelection selection = tableViewer.getSelection();
+		ISelection selection = catalogViewer.getSelection();
 		boolean multipleSelection = false;
 		if(selection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection)selection;
@@ -316,8 +316,8 @@ public class XMLCatalogEntriesView extends Composite {
 		updateWidgetEnabledState();
 	}
 
-	public Viewer getViewer() {
-		return tableViewer;
+	public TreeViewer getViewer() {
+		return catalogViewer;
 	}
 
 

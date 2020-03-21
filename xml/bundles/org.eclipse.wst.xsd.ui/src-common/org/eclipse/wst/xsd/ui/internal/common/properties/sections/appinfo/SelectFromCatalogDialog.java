@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -34,7 +35,7 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogEntriesView;
 import org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogEntryDetailsView;
 import org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogMessages;
-import org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogTreeViewer;
+import org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogTreeViewerBuilder;
 
 public class SelectFromCatalogDialog extends Dialog
 {
@@ -122,7 +123,7 @@ public class SelectFromCatalogDialog extends Dialog
 
     // Only XML Schema entry is selectable
     catalogEntriesView.setLayoutData(gridData);
-    XMLCatalogTreeViewer catalogTreeViewer = ((XMLCatalogTreeViewer) catalogEntriesView.getViewer());
+    StructuredViewer catalogTreeViewer = catalogEntriesView.getViewer();
     catalogTreeViewer.resetFilters();
 
     catalogTreeViewer.addFilter(new XMLCatalogTableViewerFilter(new String[] { ".xsd" }));
@@ -158,7 +159,7 @@ public class SelectFromCatalogDialog extends Dialog
           }
         }
       }
-      else if (element.equals(XMLCatalogTreeViewer.PLUGIN_SPECIFIED_ENTRIES_OBJECT) || element.equals(XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT))
+      else if (element.equals(XMLCatalogTreeViewerBuilder.PLUGIN_SPECIFIED_ENTRIES_OBJECT) || element.equals(XMLCatalogTreeViewerBuilder.USER_SPECIFIED_ENTRIES_OBJECT))
       {
         return true;
       }

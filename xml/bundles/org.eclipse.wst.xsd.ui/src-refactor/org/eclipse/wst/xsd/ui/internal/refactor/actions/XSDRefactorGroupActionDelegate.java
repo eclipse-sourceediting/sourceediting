@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.wst.xsd.ui.internal.editor.ISelectionMapper;
-import org.eclipse.wst.xsd.ui.internal.refactor.actions.XSDRefactorActionGroup;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactorActionGroup;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactorGroupActionDelegate;
 import org.eclipse.wst.xsd.ui.internal.refactor.wizard.RefactorGroupSubMenu;
