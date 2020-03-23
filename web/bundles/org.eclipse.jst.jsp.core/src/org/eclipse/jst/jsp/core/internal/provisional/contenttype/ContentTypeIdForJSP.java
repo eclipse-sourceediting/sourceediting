@@ -53,7 +53,10 @@ public class ContentTypeIdForJSP {
 
 	static char[][] JSP_EXTENSIONS;
 	static char[][] JSP_FILENAMES;
+	static char[][] JSPF_EXTENSIONS;
+	static char[][] JSPF_FILENAMES;
 	private static String JSP = "jsp";
+	private static String JSPF = "jspf";
 
 	private static ContentTypeChangeListener typeChangeListener = new ContentTypeChangeListener();
 
@@ -80,6 +83,40 @@ public class ContentTypeIdForJSP {
 		return typeChangeListener;
 	}
 
+	/**
+	 * @param fileName
+	 * @return the first index within an array of filename extensions that
+	 *         denote the JSP content type or a subtype and match the
+	 *         extension of the given filename, or the index within an
+	 *         array of explicitly defined filenames that matches.
+	 */
+	public static int indexOfJSPFExtension(String fileName) {
+		char[] name = fileName.toCharArray();
+		int fileNameLength = fileName.length();
+		char[][] jspfExtensions = getJSPFExtensions();
+		extensions: for (int i = 0, length = jspfExtensions.length; i < length; i++) {
+			char[] extension = jspfExtensions[i];
+			int extensionLength = extension.length;
+			int extensionStart = fileNameLength - extensionLength;
+			int dotIndex = extensionStart - 1;
+			if (dotIndex < 0) continue;
+			if (name[dotIndex] != '.') continue;
+			for (int j = 0; j < extensionLength; j++) {
+				if (name[extensionStart + j] != extension[j])
+					continue extensions;
+			}
+			return dotIndex;
+		}
+		char[][] filenames = JSPF_FILENAMES;
+		if (filenames != null) {
+			for (int i = 0; i < filenames.length; i++) {
+				if (Arrays.equals(name, filenames[i]))
+					return i;
+			}
+		}
+		return -1;
+	}
+	
 	/**
 	 * @param fileName
 	 * @return the first index within an array of filename extensions that
@@ -160,6 +197,52 @@ public class ContentTypeIdForJSP {
 			JSP_FILENAMES = names;
 		}
 		return JSP_EXTENSIONS;
+	}
+	/**
+	 * @return an array of all filename extensions that are of the JSP content
+	 *         type or one of its subtypes
+	 */
+	public static char[][] getJSPFExtensions() {
+		if (JSPF_EXTENSIONS == null) {
+			IContentType contentType = Platform.getContentTypeManager().getContentType(getFragmentConstantString());
+			Set<String> fileExtensions = new HashSet<>();
+			Set<String> fileNames = new HashSet<>();
+			// content types derived from main content type should be included (https://bugs.eclipse.org/bugs/show_bug.cgi?id=121715)
+			IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
+			for (int i = 0, length = contentTypes.length; i < length; i++) {
+				if (contentTypes[i].isKindOf(contentType)) { // note that contentType.isKindOf(contentType) == true
+					String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+					for (int j = 0; j < fileExtension.length; j++) {
+						fileExtensions.add(fileExtension[j]);
+					}
+					String[] names = contentTypes[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
+					for (int j = 0; j < names.length; j++) {
+						fileNames.add(names[j]);
+					}
+				}
+			}
+			int length = fileExtensions.size();
+			char[][] extensions = new char[length][];
+			extensions[0] = JSPF.toCharArray(); // ensure that the default extension is first
+			int index = 1;
+			Iterator<String> iterator = fileExtensions.iterator();
+			while (iterator.hasNext()) {
+				String fileExtension = iterator.next();
+				if (JSPF.equalsIgnoreCase(fileExtension))
+					continue;
+				extensions[index++] = fileExtension.toCharArray();
+			}
+			JSPF_EXTENSIONS = extensions;
+
+			char[][] names = new char[fileNames.size()][];
+			iterator = fileNames.iterator();
+			int i = 0;
+			while (iterator.hasNext()) {
+				names[i++] = iterator.next().toCharArray();
+			}
+			JSPF_FILENAMES = names;
+		}
+		return JSPF_EXTENSIONS;
 	}
 	
 	static class ContentTypeChangeListener implements IContentTypeChangeListener {

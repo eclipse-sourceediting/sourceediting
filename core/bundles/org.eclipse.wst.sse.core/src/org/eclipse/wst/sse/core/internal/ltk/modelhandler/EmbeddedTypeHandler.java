@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
-
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 
 /**
  */
@@ -31,7 +31,7 @@ public interface EmbeddedTypeHandler {
 	 * to the model's own factory registry should be done in
 	 * {@link #initializeFactoryRegistry(FactoryRegistry)}
 	 */
-	List getAdapterFactories();
+	List<INodeAdapterFactory> getAdapterFactories();
 
 	/**
 	 * Returns the unique identifier for the content type family this
@@ -43,7 +43,7 @@ public interface EmbeddedTypeHandler {
 	 * Returns a list of mime types (as Strings) this handler is appropriate
 	 * for
 	 */
-	List getSupportedMimeTypes();
+	List<String> getSupportedMimeTypes();
 	
 	/**
 	 * If this hander can handle a given mimeType.

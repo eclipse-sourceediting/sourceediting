@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.encoding;
+
+import java.util.Arrays;
 
 import org.eclipse.core.runtime.content.IContentDescription;
 
@@ -63,6 +65,14 @@ public class EncodingMemento implements Cloneable {
 	public final static String USED_CONTENT_TYPE_DEFAULT = "UsedContentTypeDefault"; //$NON-NLS-1$
 	public final static String USED_JAVA_DEFAULT = "UsedJavaDefault"; //$NON-NLS-1$
 	public final static String USED_MEMENTO_FROM_LOAD = "usedMementoFromLoad"; //$NON-NLS-1$
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("EncodingMemento [fAppropriateDefault=").append(fAppropriateDefault).append(", fDetectedCharsetName=").append(fDetectedCharsetName).append(", fInvalidEncoding=").append(fInvalidEncoding).append(", fJavaCharsetName=").append(fJavaCharsetName).append(", fUnicodeStream=").append(fUnicodeStream).append(", fUTF83ByteBOMUsed=").append(fUTF83ByteBOMUsed).append(", fBOM=").append(Arrays.toString(fBOM)).append("]");
+		return builder.toString();
+	}
+
 	public final static String USED_PROPERTY_SETTINGS = "USED_PROPERTY_SETTINGS"; //$NON-NLS-1$
 	public final static String USED_USER_SPECIFIED_PREFERENCE = "UsedUserSpecifiedPreference"; //$NON-NLS-1$
 	public final static String USED_WORKSPACE_DEFAULT = "UsedWorkspaceDefault"; //$NON-NLS-1$

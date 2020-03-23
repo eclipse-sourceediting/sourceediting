@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2017 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,7 @@ public class TextViewerUndoManagerTest extends AbstractUndoManagerTest {
 
 	public void internalTestTransferNonTextOp(final boolean isUndoable) throws Exception {
 		Object context= new Object();
-		DocumentUndoManager tempUndoManager= new DocumentUndoManager(new Document());
+		DocumentUndoManager tempUndoManager= new DocumentUndoManager(createDocument(""));
 		tempUndoManager.connect(context);
 
 		IUndoableOperation operation= new AbstractOperation("") {

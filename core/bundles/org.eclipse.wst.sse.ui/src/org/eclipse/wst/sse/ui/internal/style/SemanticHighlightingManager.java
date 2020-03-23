@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * Copyright (c) 2009, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -38,11 +38,11 @@ import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension2;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.sse.ui.preferences.AppearancePreferenceNames;
 
 /**
  * Semantic highlighting manager. Responsible for maintaining the semantic highlightings
@@ -676,7 +676,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	 */
 	private void handlePropertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
-		if (property == null || !property.equals(EditorPreferenceNames.SEMANTIC_HIGHLIGHTING))
+		if (property == null || !property.equals(AppearancePreferenceNames.SEMANTIC_HIGHLIGHTING))
 			return;
 		
 		Object newValue = event.getNewValue();
@@ -769,7 +769,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	 * @return <code>true</code> iff semantic highlighting is enabled in the preferences
 	 */
 	private boolean isEnabled() {
-		return (fPreferenceStore != null) ? fPreferenceStore.getBoolean(EditorPreferenceNames.SEMANTIC_HIGHLIGHTING) : false;
+		return (fPreferenceStore != null) ? fPreferenceStore.getBoolean(AppearancePreferenceNames.SEMANTIC_HIGHLIGHTING) : false;
 	}
 	
 	public void uninstall() {

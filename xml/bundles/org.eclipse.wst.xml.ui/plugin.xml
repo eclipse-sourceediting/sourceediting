@@ -225,6 +225,15 @@
             id="org.eclipse.wst.sse.ui.preferences.xml.validation">
        	    <keywordReference id="org.eclipse.wst.xml.ui.severities"/>
     	</page>
+		<page
+			name="%Appearance"
+            category="org.eclipse.wst.sse.ui.preferences.xml.source"
+			id="org.eclipse.wst.xml.ui.preferences.editor">
+			<class class="org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.xml.ui"/>
+			</class>
+			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
+		</page>
 	</extension>
 	
 	<!-- Web content settings -->
@@ -322,6 +331,7 @@
 			id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart">
 			<class class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart">
 				<parameter name="org.eclipse.wst.sse.ui.unsupported_preferred_default" value="org.eclipse.wst.xml.core.xmlsource"/>
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.xml.ui"/>
 			</class>
 			<contentTypeBinding
 				contentTypeId="org.eclipse.core.runtime.xml" />

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 IBM Corporation and others.
+ * Copyright (c) 2009, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -73,13 +73,7 @@ public abstract class AbstractStructuredFoldingStrategy
 	 * The org.eclipse.wst.sse.ui.editorConfiguration provisionalConfiguration type
 	 */
 	public static final String ID = "foldingstrategy"; //$NON-NLS-1$ 
-	
-	/**
-	 * A named preference that controls whether folding is enabled in the
-	 * Structured Text editor.
-	 */
-	public final static String FOLDING_ENABLED = "foldingEnabled"; //$NON-NLS-1$ 
-	
+
 	/**
 	 * The annotation model associated with this folding strategy
 	 */

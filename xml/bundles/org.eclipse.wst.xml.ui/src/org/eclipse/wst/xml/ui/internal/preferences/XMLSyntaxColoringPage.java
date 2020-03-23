@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -99,7 +98,7 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 	private Label fForegroundLabel;
 	private Label fBackgroundLabel;
 	private Button fClearStyle;
-	private Map fContextToStyleMap;
+	private Map<String, String> fContextToStyleMap;
 	private Color fDefaultForeground = null;
 	private Color fDefaultBackground = null;
 	private IStructuredDocument fDocument;
@@ -108,9 +107,9 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 	private Button fItalic;
 	private OverlayPreferenceStore fOverlayStore;
 	private Button fStrike;
-	private Collection fStylePreferenceKeys;
+	private Collection<String> fStylePreferenceKeys;
 	private StructuredViewer fStylesViewer = null;
-	private Map fStyleToDescriptionMap;
+	private Map<String, String> fStyleToDescriptionMap;
 	private StyledText fText;
 	private Button fUnderline;
 
@@ -174,16 +173,16 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 			for (int i = 0; i < regions.size(); i++) {
 				ITextRegion currentRegion = regions.get(i);
 				// lookup the local coloring type and apply it
-				String namedStyle = (String) fContextToStyleMap.get(currentRegion.getType());
+				String namedStyle = fContextToStyleMap.get(currentRegion.getType());
 				if (namedStyle == null)
 					continue;
 				TextAttribute attribute = getAttributeFor(namedStyle);
-				if (attribute == null)
-					continue;
-				StyleRange style = new StyleRange(documentRegion.getStartOffset(currentRegion), currentRegion.getTextLength(), attribute.getForeground(), attribute.getBackground(), attribute.getStyle());
-				style.strikeout = (attribute.getStyle() & TextAttribute.STRIKETHROUGH) != 0;
-				style.underline = (attribute.getStyle() & TextAttribute.UNDERLINE) != 0;
-				fText.setStyleRange(style);
+				if (attribute != null) {
+					StyleRange style = new StyleRange(documentRegion.getStartOffset(currentRegion), currentRegion.getTextLength(), attribute.getForeground(), attribute.getBackground(), attribute.getStyle());
+					style.strikeout = (attribute.getStyle() & TextAttribute.STRIKETHROUGH) != 0;
+					style.underline = (attribute.getStyle() & TextAttribute.UNDERLINE) != 0;
+					fText.setStyleRange(style);
+				}
 			}
 			documentRegion = documentRegion.getNext();
 		}
@@ -353,62 +352,57 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 					Object o = ((IStructuredSelection) event.getSelection()).getFirstElement();
 					String namedStyle = o.toString();
 					activate(namedStyle);
-					if (namedStyle == null)
-						return;
 				}
 			}
 		});
 
-		fForegroundColorEditor.addListener(new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
-					Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
-					String namedStyle = o.toString();
-					String prefString = getOverlayStore().getString(namedStyle);
-					String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
-					if (stylePrefs != null) {
-						String oldValue = stylePrefs[0];
-						// open color dialog to get new color
-						String newValue = ColorHelper.toRGBString(fForegroundColorEditor.getColorValue());
+		fForegroundColorEditor.addListener((PropertyChangeEvent event) -> {
+			if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
+				Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
+				String namedStyle = o.toString();
+				String prefString = getOverlayStore().getString(namedStyle);
+				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+				if (stylePrefs != null) {
+					String oldValue = stylePrefs[0];
+					// open color dialog to get new color
+					String newValue = ColorHelper.toRGBString(fForegroundColorEditor.getColorValue());
 
-						if (!newValue.equals(oldValue)) {
-							stylePrefs[0] = newValue;
-							String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-							getOverlayStore().setValue(namedStyle, newPrefString);
-							applyStyles();
-							fText.redraw();
-						}
+					if (!newValue.equals(oldValue)) {
+						stylePrefs[0] = newValue;
+						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
+						getOverlayStore().setValue(namedStyle, newPrefString);
+						applyStyles();
+						fText.redraw();
 					}
 				}
 			}
 		});
 
-		fBackgroundColorEditor.addListener(new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
-					Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
-					String namedStyle = o.toString();
-					String prefString = getOverlayStore().getString(namedStyle);
-					String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
-					if (stylePrefs != null) {
-						String oldValue = stylePrefs[1];
-						// open color dialog to get new color
-						String newValue = ColorHelper.toRGBString(fBackgroundColorEditor.getColorValue());
+		fBackgroundColorEditor.addListener((PropertyChangeEvent event) -> {
+			if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
+				Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
+				String namedStyle = o.toString();
+				String prefString = getOverlayStore().getString(namedStyle);
+				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+				if (stylePrefs != null) {
+					String oldValue = stylePrefs[1];
+					// open color dialog to get new color
+					String newValue = ColorHelper.toRGBString(fBackgroundColorEditor.getColorValue());
 
-						if (!newValue.equals(oldValue)) {
-							stylePrefs[1] = newValue;
-							String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-							getOverlayStore().setValue(namedStyle, newPrefString);
-							applyStyles();
-							fText.redraw();
-							activate(namedStyle);
-						}
+					if (!newValue.equals(oldValue)) {
+						stylePrefs[1] = newValue;
+						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
+						getOverlayStore().setValue(namedStyle, newPrefString);
+						applyStyles();
+						fText.redraw();
+						activate(namedStyle);
 					}
 				}
 			}
 		});
 
 		fBold.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -431,6 +425,7 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 		});
 
 		fItalic.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -453,6 +448,7 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 		});
 
 		fStrike.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -475,6 +471,7 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 		});
 
 		fUnderline.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -497,6 +494,7 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 		});
 
 		fClearStyle.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (fStylesViewer.getSelection().isEmpty())
 					return;
@@ -523,23 +521,20 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractSyntaxColoringPage#getSourcePreview()
 	 */
+	@Override
 	protected ISourceViewer getSourcePreviewViewer() {
 		return fPreviewViewer;
 	}
-
-	// protected Label createDescriptionLabel(Composite parent) {
-	// return null;
-	// }
 
 	/**
 	 * Set up all the style preference keys in the overlay store
 	 */
 	private OverlayKey[] createOverlayStoreKeys() {
-		List overlayKeys = new ArrayList();
+		List<OverlayKey> overlayKeys = new ArrayList<>();
 
-		Iterator i = getStylePreferenceKeys().iterator();
+		Iterator<String> i = getStylePreferenceKeys().iterator();
 		while (i.hasNext()) {
-			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, (String) i.next()));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, i.next()));
 		}
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
@@ -668,7 +663,7 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 				return null;
 			// find the named style (internal/selectable name) for that
 			// context
-			String namedStyle = (String) fContextToStyleMap.get(regionContext);
+			String namedStyle = fContextToStyleMap.get(regionContext);
 			if (namedStyle != null) {
 				return namedStyle;
 			}
@@ -680,9 +675,9 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 		return fOverlayStore;
 	}
 
-	private Collection getStylePreferenceKeys() {
+	private Collection<String> getStylePreferenceKeys() {
 		if (fStylePreferenceKeys == null) {
-			List styles = new ArrayList();
+			List<String> styles = new ArrayList<>();
 			styles.add(IStyleConstantsXML.DOCTYPE_NAME);
 			styles.add(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
 			styles.add(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF);
@@ -776,8 +771,8 @@ public final class XMLSyntaxColoringPage extends AbstractSyntaxColoringPage impl
 	public void init(IWorkbench workbench) {
 		setDescription(SSEUIMessages.SyntaxColoring_Description);
 
-		fStyleToDescriptionMap = new HashMap();
-		fContextToStyleMap = new HashMap();
+		fStyleToDescriptionMap = new HashMap<>();
+		fContextToStyleMap = new HashMap<>();
 
 		initStyleToDescriptionMap();
 		initRegionContextToStyleMap();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -452,7 +452,7 @@ public abstract class AbstractUndoManagerTest extends TestCase {
 		return createRandomString(length);
 	}
 	
-	private IDocument createDocument(String contents) {
+	IDocument createDocument(String contents) {
 		IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId("org.eclipse.core.runtime.xml");
 		BasicStructuredDocument document = (BasicStructuredDocument) handler.getDocumentLoader().createNewStructuredDocument();
 		document.set(contents);

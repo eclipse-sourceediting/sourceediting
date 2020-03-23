@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,7 @@
 
 package org.eclipse.jface.text.tests.rules;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
@@ -28,6 +25,11 @@ import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
+import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
+import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
+
+import junit.framework.TestCase;
 
 
 /**
@@ -41,8 +43,15 @@ public class FastPartitionerTest extends TestCase {
 	private IDocument fDoc;
 	private IDocumentPartitioner fPartitioner;
 
+	IDocument createDocument(String contents) {
+		IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId("org.eclipse.core.runtime.xml");
+		BasicStructuredDocument document = (BasicStructuredDocument) handler.getDocumentLoader().createNewStructuredDocument();
+		document.set(contents);
+		return document;
+	}
+	
 	public void setUp() {
-		fDoc= new Document();
+		fDoc= createDocument("");
 		IPartitionTokenScanner scanner= new RuleBasedPartitionScanner() {
 			{
 				IToken comment= new Token(COMMENT);

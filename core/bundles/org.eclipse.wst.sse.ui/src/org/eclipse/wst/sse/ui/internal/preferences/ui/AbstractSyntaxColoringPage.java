@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -32,13 +32,10 @@ public abstract class AbstractSyntaxColoringPage extends PreferencePage {
 	private Color fSelectionForegroundColor;
 	private Color fSelectionBackgroundColor;
 
-	final private IPropertyChangeListener fListener = new IPropertyChangeListener() {
-
-		public void propertyChange(PropertyChangeEvent event) {
-			final String property = event.getProperty();
-			if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_SELECTION_FOREGROUND.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_SELECTION_FOREGROUND_SYSTEM_DEFAULT.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_SELECTION_BACKGROUND.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_SELECTION_BACKGROUND_SYSTEM_DEFAULT.equals(property)) {
-				initializeSourcePreviewColors(getSourcePreviewViewer());
-			}
+	final private IPropertyChangeListener fListener = (PropertyChangeEvent event) -> {
+		final String property = event.getProperty();
+		if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_SELECTION_FOREGROUND.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_SELECTION_FOREGROUND_SYSTEM_DEFAULT.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_SELECTION_BACKGROUND.equals(property) || AbstractTextEditor.PREFERENCE_COLOR_SELECTION_BACKGROUND_SYSTEM_DEFAULT.equals(property)) {
+			initializeSourcePreviewColors(getSourcePreviewViewer());
 		}
 	};
 
@@ -73,8 +70,9 @@ public abstract class AbstractSyntaxColoringPage extends PreferencePage {
 			color = store.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT) ? null : createColor(store, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND, styledText.getDisplay());
 			styledText.setBackground(color);
 
-			if (fBackgroundColor != null)
+			if (fBackgroundColor != null) {
 				fBackgroundColor.dispose();
+			}
 
 			fBackgroundColor = color;
 
@@ -82,8 +80,9 @@ public abstract class AbstractSyntaxColoringPage extends PreferencePage {
 			color = store.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_SELECTION_FOREGROUND_SYSTEM_DEFAULT) ? null : createColor(store, AbstractTextEditor.PREFERENCE_COLOR_SELECTION_FOREGROUND, styledText.getDisplay());
 			styledText.setSelectionForeground(color);
 
-			if (fSelectionForegroundColor != null)
+			if (fSelectionForegroundColor != null) {
 				fSelectionForegroundColor.dispose();
+			}
 
 			fSelectionForegroundColor = color;
 
@@ -91,8 +90,9 @@ public abstract class AbstractSyntaxColoringPage extends PreferencePage {
 			color = store.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_SELECTION_BACKGROUND_SYSTEM_DEFAULT) ? null : createColor(store, AbstractTextEditor.PREFERENCE_COLOR_SELECTION_BACKGROUND, styledText.getDisplay());
 			styledText.setSelectionBackground(color);
 
-			if (fSelectionBackgroundColor != null)
+			if (fSelectionBackgroundColor != null) {
 				fSelectionBackgroundColor.dispose();
+			}
 
 			fSelectionBackgroundColor = color;
 		}

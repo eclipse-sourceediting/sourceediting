@@ -79,17 +79,16 @@
 			label="%preferenceKeywords.sseeditor"
 			id="org.eclipse.wst.sse.ui.sseeditor"/>
     </extension>
-    
+
 	<extension point="org.eclipse.ui.preferencePages">
 		<!-- Source Editor Preference page under Workbench->Editors -->
 		<page
 			name="%Structured_Text_Editor.name"
 			category="org.eclipse.ui.preferencePages.Editors"
-			class="org.eclipse.wst.sse.ui.internal.preferences.ui.StructuredTextEditorPreferencePage"
+			class="org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.editor">
 			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
 		</page>
-
 		<!-- SSE task tags preference page under that-->
 		<page
 			name="%Task_Tags_Preferences.name"
@@ -390,18 +389,6 @@
 				transferID="org.eclipse.swt.dnd.FileTransfer"
 				id="org.eclipse.wst.sse.ui.internal.FileDropAction">
 			</dropAction>
-			<!--transfer
-				priority="low"
-				singleton="true"
-				class="org.eclipse.swt.dnd.TextTransfer"
-				method="getInstance"
-				id="org.eclipse.swt.dnd.TextTransfer">
-			</transfer>
-			<dropAction
-				class="org.eclipse.wst.sse.ui.internal.TextDropAction"
-				transferID="org.eclipse.swt.dnd.TextTransfer"
-				id="org.eclipse.wst.sse.ui.internal.TextDropAction">
-			</dropAction-->
 		</dropTargetContribution>
 	</extension>
 

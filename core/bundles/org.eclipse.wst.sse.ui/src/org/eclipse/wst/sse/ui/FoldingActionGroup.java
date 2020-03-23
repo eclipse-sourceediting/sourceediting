@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2018 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,7 @@ import org.eclipse.ui.texteditor.ResourceAction;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
+import org.eclipse.wst.sse.ui.preferences.AppearancePreferenceNames;
 
 class FoldingActionGroup extends ActionGroup {
 	private static abstract class PreferenceAction extends ResourceAction implements IUpdate {
@@ -87,8 +87,8 @@ class FoldingActionGroup extends ActionGroup {
 		fToggle = new PreferenceAction(SSEUIMessages.getResourceBundle(), "Projection_Toggle_", IAction.AS_CHECK_BOX) { //$NON-NLS-1$
 			public void run() {
 				IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
-				boolean current = store.getBoolean(AbstractStructuredFoldingStrategy.FOLDING_ENABLED);
-				store.setValue(AbstractStructuredFoldingStrategy.FOLDING_ENABLED, !current);
+				boolean current = store.getBoolean(AppearancePreferenceNames.FOLDING_ENABLED);
+				store.setValue(AppearancePreferenceNames.FOLDING_ENABLED, !current);
 			}
 
 			public void update() {
@@ -100,7 +100,7 @@ class FoldingActionGroup extends ActionGroup {
 		};
 		
 		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
-		boolean checked = store.getBoolean(AbstractStructuredFoldingStrategy.FOLDING_ENABLED);
+		boolean checked = store.getBoolean(AppearancePreferenceNames.FOLDING_ENABLED);
 		fToggle.setChecked(checked);
 		fToggle.setActionDefinitionId(IFoldingCommandIds.FOLDING_TOGGLE);
 		editor.setAction("FoldingToggle", fToggle); //$NON-NLS-1$

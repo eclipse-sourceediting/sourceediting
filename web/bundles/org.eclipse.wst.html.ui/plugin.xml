@@ -13,6 +13,7 @@
 			id="org.eclipse.wst.html.core.htmlsource.source">
 			<class class="org.eclipse.wst.sse.ui.StructuredTextEditor">
 				<parameter name="org.eclipse.wst.sse.ui.unsupported_preferred_default" value="org.eclipse.wst.html.core.htmlsource"/>
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.html.ui"/>
 			</class>
 			<contentTypeBinding
 				contentTypeId="org.eclipse.wst.html.core.htmlsource" />
@@ -110,15 +111,24 @@
 			id="org.eclipse.wst.html.ui.preferences.source">
 			<keywordReference id="org.eclipse.wst.html.ui.source"/>
 		</page>
-  <page
-        category="org.eclipse.wst.html.ui.preferences.source"
-        class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLContentAssistPreferencePage"
-        id="org.eclipse.wst.html.ui.preferences.contentassist"
-        name="%HTML_Content_Assist.name">
-     <keywordReference
-           id="org.eclipse.wst.html.ui.contentassist">
-     </keywordReference>
-  </page>
+		<page
+			name="%Appearance"
+            category="org.eclipse.wst.html.ui.preferences.source"
+			id="org.eclipse.wst.xml.ui.preferences.editor">
+			<class class="org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.html.ui"/>
+			</class>
+			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
+		</page>
+	  <page
+	        category="org.eclipse.wst.html.ui.preferences.source"
+	        class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLContentAssistPreferencePage"
+	        id="org.eclipse.wst.html.ui.preferences.contentassist"
+	        name="%HTML_Content_Assist.name">
+	     <keywordReference
+	           id="org.eclipse.wst.html.ui.contentassist">
+	     </keywordReference>
+	  </page>
 		<page
 			name="%HTML_Templates.name"
 			category="org.eclipse.wst.html.ui.preferences.source"
@@ -661,6 +671,25 @@
           id="org.eclipse.wst.html.ui.proposalCategory.htmlAttributeValues"
           name="%proposalCategory.htmlAttributeValues">
     </proposalCategory>
+    <!--
+    <proposalCategory
+          icon="platform:/plugin/org.eclipse.ui.genericeditor/icons/full/obj16/generic_editor.png"
+          id="org.eclipse.wst.html.ui.proposalCategory.generic"
+          name="%proposalCategory.generic"/>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.generic"
+          class="org.eclipse.wst.html.ui.internal.contentassist.GenericCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.generic">
+       <contentType
+             id="org.eclipse.wst.html.core.htmlsource">
+          <partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+          <partitionType id="org.eclipse.wst.css.STYLE"/>
+          <partitionType id="org.eclipse.wst.html.SCRIPT"/>
+          <partitionType id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"/>
+       </contentType>
+    </proposalComputer>
+    -->
     <proposalComputer
           activate="false"
           categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"

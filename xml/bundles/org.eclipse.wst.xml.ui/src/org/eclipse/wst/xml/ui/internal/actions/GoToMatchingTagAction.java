@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -97,10 +97,10 @@ class GoToMatchingTagAction extends TextEditorAction {
 			return;
 		}
 
-		Iterator annotationIterator = annotationModel.getAnnotationIterator();
-		List oldAnnotations = new ArrayList();
+		Iterator<Annotation> annotationIterator = annotationModel.getAnnotationIterator();
+		List<Annotation> oldAnnotations = new ArrayList<>();
 		while (annotationIterator.hasNext()) {
-			Annotation annotation = (Annotation) annotationIterator.next();
+			Annotation annotation = annotationIterator.next();
 			if (ANNOTATION_TYPE.equals(annotation.getType())) {
 				annotation.markDeleted(true);
 				/**
@@ -122,7 +122,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 		if (!oldAnnotations.isEmpty()) {
 			int size = oldAnnotations.size();
 			for (int i = 0; i < size; i++) {
-				annotationModel.removeAnnotation((Annotation) oldAnnotations.get(i));
+				annotationModel.removeAnnotation(oldAnnotations.get(i));
 			}
 		}
 	}
@@ -132,6 +132,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 	 * 
 	 * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
 	 */
+	@Override
 	public void runWithEvent(Event event) {
 		super.runWithEvent(event);
 		if (getTextEditor() == null)
@@ -178,6 +179,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 	 * 
 	 * @see org.eclipse.ui.texteditor.TextEditorAction#setEditor(org.eclipse.ui.texteditor.ITextEditor)
 	 */
+	@Override
 	public void setEditor(ITextEditor editor) {
 		ITextEditor textEditor = getTextEditor();
 		if (textEditor != null) {
@@ -199,6 +201,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 		}
 	}
 
+	@Override
 	public void update() {
 		setEnabled(true);
 
@@ -227,10 +230,10 @@ class GoToMatchingTagAction extends TextEditorAction {
 			return;
 		}
 
-		List oldAnnotations = new ArrayList(2);
-		Iterator annotationIterator = annotationModel.getAnnotationIterator();
+		List<Annotation> oldAnnotations = new ArrayList<>(2);
+		Iterator<Annotation> annotationIterator = annotationModel.getAnnotationIterator();
 		while (annotationIterator.hasNext()) {
-			Annotation annotation = (Annotation) annotationIterator.next();
+			Annotation annotation = annotationIterator.next();
 			if (ANNOTATION_TYPE.equals(annotation.getType())) {
 				annotation.markDeleted(true);
 				if (DEBUG) {
@@ -240,7 +243,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 			}
 		}
 
-		Map newAnnotations = new HashMap();
+		Map<Annotation, Position> newAnnotations = new HashMap<>();
 		if (!selection.isEmpty() && selection instanceof IStructuredSelection && selection instanceof ITextSelection) {
 			Object o = ((IStructuredSelection) selection).getFirstElement();
 			if (o instanceof IDOMNode) {
@@ -298,6 +301,6 @@ class GoToMatchingTagAction extends TextEditorAction {
 				}
 			}
 		}
-		((IAnnotationModelExtension) annotationModel).replaceAnnotations((Annotation[]) oldAnnotations.toArray(new Annotation[oldAnnotations.size()]), newAnnotations);
+		((IAnnotationModelExtension) annotationModel).replaceAnnotations(oldAnnotations.toArray(new Annotation[oldAnnotations.size()]), newAnnotations);
 	}
 }
