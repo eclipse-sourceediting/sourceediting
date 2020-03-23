@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -20,13 +20,14 @@ import java.util.List;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryAdapterFactoryForEmbeddedXML;
 
 
 public class EmbeddedXML implements EmbeddedTypeHandler {
 
-	private static List supportedMimeTypes;
-	public String ContentTypeID_EmbeddedXML = "org.eclipse.wst.xml.core.contenttype.EmbeddedXML"; //$NON-NLS-1$
+	private static List<String> supportedMimeTypes;
+	String ContentTypeID_EmbeddedXML = "org.eclipse.wst.xml.core.contenttype.EmbeddedXML"; //$NON-NLS-1$
 
 	/**
 	 * Constructor for EmbeddedXML.
@@ -38,10 +39,9 @@ public class EmbeddedXML implements EmbeddedTypeHandler {
 	/*
 	 * @see EmbeddedContentType#getAdapterFactories()
 	 */
-	public List getAdapterFactories() {
-		List factories = new ArrayList();
+	public List<INodeAdapterFactory> getAdapterFactories() {
+		List<INodeAdapterFactory> factories = new ArrayList<>();
 		factories.add(new ModelQueryAdapterFactoryForEmbeddedXML());
-		// factories.addAll(PluginContributedFactoryReader.getInstance().getFactories(this));
 		return factories;
 	}
 
@@ -52,9 +52,9 @@ public class EmbeddedXML implements EmbeddedTypeHandler {
 		return ModelHandlerForXML.AssociatedContentTypeID;
 	}
 
-	public List getSupportedMimeTypes() {
+	public List<String> getSupportedMimeTypes() {
 		if (supportedMimeTypes == null) {
-			supportedMimeTypes = new ArrayList();
+			supportedMimeTypes = new ArrayList<>();
 			supportedMimeTypes.add("application/xml"); //$NON-NLS-1$
 			supportedMimeTypes.add("text/xml"); //$NON-NLS-1$
 		}
@@ -89,7 +89,7 @@ public class EmbeddedXML implements EmbeddedTypeHandler {
 
 	public boolean canHandleMimeType(String mimeType) {
 		boolean canHandle = getSupportedMimeTypes().contains(mimeType);
-		if(!canHandle) {
+		if (!canHandle) {
 			canHandle = mimeType.endsWith("+xml"); //$NON-NLS-1$
 		}
 		return canHandle;

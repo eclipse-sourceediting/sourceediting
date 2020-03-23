@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -75,6 +75,7 @@ import org.eclipse.wst.sse.ui.internal.taginfo.BestMatchHover;
 import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.sse.ui.preferences.AppearancePreferenceNames;
 
 
 /**
@@ -269,17 +270,17 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 				int delay = fPreferenceStore.getInt(EditorPreferenceNames.CODEASSIST_AUTOACTIVATION_DELAY);
 				fContentAssistant.setAutoActivationDelay(delay);
 
-				Color color = getColor(EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
+				Color color = getColor(AppearancePreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
 				fContentAssistant.setProposalSelectorBackground(color);
 
-				color = getColor(EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
+				color = getColor(AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
 				fContentAssistant.setProposalSelectorForeground(color);
 
-				color = getColor(EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND);
+				color = getColor(AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND);
 				fContentAssistant.setContextInformationPopupBackground(color);
 				fContentAssistant.setContextSelectorBackground(color);
 
-				color = getColor(EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND);
+				color = getColor(AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND);
 				fContentAssistant.setContextInformationPopupForeground(color);
 				fContentAssistant.setContextSelectorForeground(color);
 			}
@@ -580,10 +581,10 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=133731
 			// set content assist preferences
 			if (fPreferenceStore != null) {
-				Color color = getColor(EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
+				Color color = getColor(AppearancePreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
 				assistant.setProposalSelectorBackground(color);
 
-				color = getColor(EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
+				color = getColor(AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
 				assistant.setProposalSelectorForeground(color);
 			}
 			fQuickAssistant = assistant;

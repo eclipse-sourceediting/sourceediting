@@ -10,9 +10,11 @@
 			name="%JSON_Editor.name"
 			icon="$nl$/icons/full/obj16/json-16.png"
 			contributorClass="org.eclipse.wst.json.ui.internal.editor.ActionContributorJSON"
-			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.json.ui.JSONEditor">
+			<class class="org.eclipse.wst.sse.ui.StructuredTextEditor">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.json.ui"/>
+			</class>
 			<contentTypeBinding
 				contentTypeId="org.eclipse.wst.json.core.jsonsource" />
 		</editor>
@@ -132,6 +134,15 @@
 			class="org.eclipse.wst.json.ui.internal.preferences.JSONSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.json.colors">
          	<keywordReference id="org.eclipse.wst.json.ui.styles"/>
+		</page>
+		<page
+			name="%Appearance"
+            category="org.eclipse.wst.sse.ui.preferences.json.source"
+			id="org.eclipse.wst.xml.ui.preferences.editor">
+			<class class="org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.json.ui"/>
+			</class>
+			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
 		</page>
 		<page
 			name="%_UI_PREF_JSON_CATALOG"

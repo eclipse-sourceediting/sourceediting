@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -44,6 +45,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.runtime.content.IContentTypeSettings;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.jface.action.Action;
@@ -145,6 +147,7 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.IShowInTargetList;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ContentAssistAction;
@@ -209,7 +212,6 @@ import org.eclipse.wst.sse.ui.internal.handlers.RemoveBlockCommentHandler;
 import org.eclipse.wst.sse.ui.internal.handlers.ToggleLineCommentHandler;
 import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 import org.eclipse.wst.sse.ui.internal.properties.ConfigurablePropertySheetPage;
 import org.eclipse.wst.sse.ui.internal.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ConfigurationPointCalculator;
@@ -226,6 +228,8 @@ import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.text.SourceInfoProvider;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.sse.ui.preferences.AppearancePreferenceNames;
+import org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage;
 import org.eclipse.wst.sse.ui.quickoutline.AbstractQuickOutlineConfiguration;
 import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 import org.eclipse.wst.sse.ui.typing.AbstractCharacterPairInserter;
@@ -1378,7 +1382,7 @@ public class StructuredTextEditor extends TextEditor {
 	@Override
 	protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support) {
 		support.setCharacterPairMatcher(createCharacterPairMatcher());
-		support.setMatchingCharacterPainterPreferenceKeys(EditorPreferenceNames.MATCHING_BRACKETS, EditorPreferenceNames.MATCHING_BRACKETS_COLOR);
+		support.setMatchingCharacterPainterPreferenceKeys(AppearancePreferenceNames.MATCHING_BRACKETS, AppearancePreferenceNames.MATCHING_BRACKETS_COLOR);
 
 		super.configureSourceViewerDecorationSupport(support);
 	}
@@ -1518,9 +1522,21 @@ public class StructuredTextEditor extends TextEditor {
 	 * @return IPreferenceStore
 	 */
 	private IPreferenceStore createCombinedPreferenceStore() {
-		IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
-		IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
-		return new ChainedPreferenceStore(new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs});
+		final List<IPreferenceStore> stores = new ArrayList<>(3);
+
+		if (fInitializationData != null) {
+			fInitializationData.entrySet().forEach((entry) -> {
+				if (StructuredTextEditorPreferencePage.PREFERENCE_SCOPE_NAME.equalsIgnoreCase(entry.getKey().toString())) {
+					stores.add(new ScopedPreferenceStore(InstanceScope.INSTANCE, entry.getValue().toString().toLowerCase(Locale.US)));
+				}
+			});
+		}
+
+		// sseEditorPrefs
+		stores.add(SSEUIPlugin.getDefault().getPreferenceStore());
+		// baseEditorPrefs
+		stores.add(EditorsUI.getPreferenceStore());
+		return new ChainedPreferenceStore(stores.toArray(new IPreferenceStore[stores.size()]));
 	}
 
 	private ContentOutlineConfiguration createContentOutlineConfiguration() {
@@ -2002,7 +2018,7 @@ public class StructuredTextEditor extends TextEditor {
 		/* if could not get the model prompt user to update content type
 		 * if preferences allow, then try to get model again
 		 */
-		if (model == null && SSEUIPlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
+		if (model == null && SSEUIPlugin.getDefault().getPreferenceStore().getBoolean(AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
 			if (fInitializationData != null && fInitializationData.containsKey(PREFERRED_CONTENT_TYPE_WHEN_UNSUPPORTED)) {
 				IContentType contentType = Platform.getContentTypeManager().getContentType(fInitializationData.get(PREFERRED_CONTENT_TYPE_WHEN_UNSUPPORTED).toString());
 				if (contentType != null && !StringUtils.contains(contentType.getFileSpecs(IContentTypeSettings.FILE_NAME_SPEC), input.getName(), false)) {
@@ -2019,7 +2035,7 @@ public class StructuredTextEditor extends TextEditor {
 				 * Display a dialog informing user of unknown content type,
 				 * giving them chance to update preferences
 				 */
-				UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
+				UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
 				dialog.open();
 			}
 
@@ -2590,7 +2606,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
-		else if (AbstractStructuredFoldingStrategy.FOLDING_ENABLED.equals(property)) {
+		else if (AppearancePreferenceNames.FOLDING_ENABLED.equals(property)) {
 			if (getSourceViewer() instanceof ProjectionViewer) {
 				// install projection support if it has not even been
 				// installed yet
@@ -2607,7 +2623,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		// update content assist preferences
-		else if (EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND.equals(property)) {
+		else if (AppearancePreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -2615,7 +2631,7 @@ public class StructuredTextEditor extends TextEditor {
 					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
 					if (contentAssistant instanceof ContentAssistant) {
 						ContentAssistant assistant = (ContentAssistant) contentAssistant;
-						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
+						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), AppearancePreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND);
 						Color color = EditorUtility.getColor(rgb);
 						assistant.setProposalSelectorBackground(color);
 					}
@@ -2624,7 +2640,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		// update content assist preferences
-		else if (EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND.equals(property)) {
+		else if (AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -2632,7 +2648,7 @@ public class StructuredTextEditor extends TextEditor {
 					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
 					if (contentAssistant instanceof ContentAssistant) {
 						ContentAssistant assistant = (ContentAssistant) contentAssistant;
-						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
+						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND);
 						Color color = EditorUtility.getColor(rgb);
 						assistant.setProposalSelectorForeground(color);
 					}
@@ -2641,7 +2657,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		// update content assist preferences
-		else if (EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND.equals(property)) {
+		else if (AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -2649,7 +2665,7 @@ public class StructuredTextEditor extends TextEditor {
 					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
 					if (contentAssistant instanceof ContentAssistant) {
 						ContentAssistant assistant = (ContentAssistant) contentAssistant;
-						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND);
+						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND);
 						Color color = EditorUtility.getColor(rgb);
 						assistant.setContextInformationPopupBackground(color);
 						assistant.setContextSelectorBackground(color);
@@ -2659,7 +2675,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		// update content assist preferences
-		else if (EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND.equals(property)) {
+		else if (AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -2667,7 +2683,7 @@ public class StructuredTextEditor extends TextEditor {
 					IContentAssistant contentAssistant = configuration.getContentAssistant(sourceViewer);
 					if (contentAssistant instanceof ContentAssistant) {
 						ContentAssistant assistant = (ContentAssistant) contentAssistant;
-						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND);
+						RGB rgb = PreferenceConverter.getColor(getPreferenceStore(), AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND);
 						Color color = EditorUtility.getColor(rgb);
 						assistant.setContextInformationPopupForeground(color);
 						assistant.setContextSelectorForeground(color);
@@ -2870,7 +2886,7 @@ public class StructuredTextEditor extends TextEditor {
 	private boolean isFoldingEnabled() {
 		IPreferenceStore store = getPreferenceStore();
 		// check both preference store and vm argument
-		return (store.getBoolean(AbstractStructuredFoldingStrategy.FOLDING_ENABLED));
+		return (store.getBoolean(AppearancePreferenceNames.FOLDING_ENABLED));
 	}
 	
 	/**
@@ -3842,6 +3858,7 @@ public class StructuredTextEditor extends TextEditor {
 		super.setInitializationData(cfig, propertyName, data);
 		if (data instanceof Map) {
 			fInitializationData = (Map) data;
+			setPreferenceStore(createCombinedPreferenceStore());
 		}
 	}
 }

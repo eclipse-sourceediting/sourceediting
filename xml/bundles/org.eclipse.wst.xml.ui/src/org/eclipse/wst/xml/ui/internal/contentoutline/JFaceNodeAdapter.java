@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ package org.eclipse.wst.xml.ui.internal.contentoutline;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -42,8 +43,8 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	private static boolean getDebugValue() {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
-		boolean result = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-		return result;
+		 //$NON-NLS-1$
+		return Boolean.parseBoolean(value);
 	}
 
 	JFaceNodeAdapterFactory fAdapterFactory;
@@ -108,6 +109,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		return XMLEditorPluginImageHelper.getInstance().getImage(imageResourceName);
 	}
 
+	@Override
 	public Object[] getChildren(Object object) {
 
 		// (pa) 20021217
@@ -115,7 +117,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		// performance enhancement: using child.getNextSibling() rather than
 		// nodeList(item) for O(n) vs. O(n*n)
 		//
-		ArrayList v = new ArrayList();
+		List<Node> v = new ArrayList<>();
 		if (object instanceof Node) {
 			Node node = (Node) object;
 			for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
@@ -132,6 +134,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	 * Returns an enumeration with the elements belonging to the passed
 	 * element. These are the top level items in a list, tree, table, etc...
 	 */
+	@Override
 	public Object[] getElements(Object node) {
 		return getChildren(node);
 	}
@@ -139,6 +142,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	/**
 	 * Fetches the label image specific to this object instance.
 	 */
+	@Override
 	public Image getLabelImage(Object node) {
 		Image image = null;
 		if (node instanceof Node) {
@@ -159,24 +163,20 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	/**
 	 * Fetches the label text specific to this object instance.
 	 */
-	public String getLabelText(Object node) {
-		return getNodeName(node);
-	}
-
-	private String getNodeName(Object object) {
-		StringBuffer nodeName = new StringBuffer();
+	@Override
+	public String getLabelText(Object object) {
 		if (object instanceof Node) {
 			Node node = (Node) object;
-			nodeName.append(node.getNodeName());
-
 			if (node.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
-				nodeName.insert(0, "DOCTYPE:"); //$NON-NLS-1$
+				StringBuilder nodeName = new StringBuilder();
+				nodeName.append("DOCTYPE:"); //$NON-NLS-1$
+				nodeName.append(node.getNodeName());
+				return nodeName.toString();
 			}
-
+			return node.getNodeName();
 		}
-		return nodeName.toString();
+		return object.toString();
 	}
-
 
 	public Object getParent(Object object) {
 		if (object instanceof Node) {
@@ -215,7 +215,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		if (type == null) {
 			return false;
 		}
-		return type.equals(ADAPTER_KEY);
+		return ADAPTER_KEY.equals(type);
 	}
 
 	/**

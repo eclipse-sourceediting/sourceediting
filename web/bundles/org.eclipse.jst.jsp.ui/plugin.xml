@@ -9,9 +9,11 @@
 			icon="$nl$/icons//full/obj16/sourceEditor.gif"
 			extensions="jsp, jsf, jspf, jspx, tag, tagx, tagf"
 			contributorClass="org.eclipse.jst.jsp.ui.internal.editor.ActionContributorJSP"
-			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.jst.jsp.core.jspsource.source">
+			<class class="org.eclipse.wst.sse.ui.StructuredTextEditor">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.jst.jsp.ui"/>
+			</class>
 			<contentTypeBinding
 				contentTypeId="org.eclipse.jst.jsp.core.jspsource" />
 		</editor>
@@ -232,15 +234,15 @@
 			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPSourcePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp.source">
 		</page>
-  <page
-        category="org.eclipse.wst.sse.ui.preferences.jsp.source"
-        class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPContentAssistPreferencePage"
-        id="org.eclipse.wst.sse.ui.preferences.jsp.contentassist"
-        name="%JSP_Content_Assist.name">
-     <keywordReference
-           id="org.eclipse.jst.jsp.ui.contentassist">
-     </keywordReference>
-  </page>
+	  <page
+	        category="org.eclipse.wst.sse.ui.preferences.jsp.source"
+	        class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPContentAssistPreferencePage"
+	        id="org.eclipse.wst.sse.ui.preferences.jsp.contentassist"
+	        name="%JSP_Content_Assist.name">
+	     <keywordReference
+	           id="org.eclipse.jst.jsp.ui.contentassist">
+	     </keywordReference>
+	  </page>
 		<page
 			name="%JSP_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.jsp.source"
@@ -267,6 +269,15 @@
 			category="org.eclipse.wst.sse.ui.preferences.jsp.source"
 			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPTypingPreferencePage"
 			id="org.eclipse.jst.jsp.ui.preferences.typing">
+		</page>
+		<page
+			name="%Appearance"
+            category="org.eclipse.wst.sse.ui.preferences.jsp.source"
+			id="org.eclipse.jst.jsp.ui.preferences.editor">
+			<class class="org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.jst.jsp.ui"/>
+			</class>
+			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
 		</page>
 	</extension>
 	

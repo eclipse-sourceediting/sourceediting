@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2014 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
@@ -55,11 +55,11 @@ public final class CommonCharsetNames {
 
 	private static Properties defaultIANAmappings = null;
 
-	private static ArrayList encodings = null;
+	private static List<String> encodings = null;
 
-	private static Hashtable supportedEncodingDisplayNames = null;
+	private static Map<String, String> supportedEncodingDisplayNames = null;
 
-	private static Map prefNames = null;
+	private static Map<String, String> prefNames = null;
 
 	/**
 	 * Returns list of commonly available encoding names. Suitable for
@@ -114,7 +114,7 @@ public final class CommonCharsetNames {
 	public static String getDisplayString(String charsetName) {
 		if (charsetName == null)
 			return null;
-		String result = (String) getSupportedEncodingDisplayNames().get(charsetName);
+		String result = getSupportedEncodingDisplayNames().get(charsetName);
 		if (result == null) {
 			// if we don't have a special one, just return
 			// what's provided by Charset
@@ -135,7 +135,7 @@ public final class CommonCharsetNames {
 		if (charsetName == null)
 			return null;
 
-		String result = (String) getPreferenceNames().get(charsetName);
+		String result = getPreferenceNames().get(charsetName);
 		if (result == null) {
 			return charsetName;
 		}
@@ -145,7 +145,7 @@ public final class CommonCharsetNames {
 	/**
 	 * @return Returns the javaEncodings.
 	 */
-	private static ArrayList getEncodings() {
+	private static List<String> getEncodings() {
 		if (encodings == null) {
 			initHashTables();
 		}
@@ -202,14 +202,14 @@ public final class CommonCharsetNames {
 	/**
 	 * @return
 	 */
-	private static Hashtable getSupportedEncodingDisplayNames() {
+	private static Map<String, String> getSupportedEncodingDisplayNames() {
 		if (supportedEncodingDisplayNames == null) {
 			initHashTables();
 		}
 		return supportedEncodingDisplayNames;
 	}
 
-	private static Map getPreferenceNames() {
+	private static Map<String,String> getPreferenceNames() {
 		if (prefNames == null) {
 			initHashTables();
 		}
@@ -219,9 +219,9 @@ public final class CommonCharsetNames {
 	private static void initHashTables() {
 		if (supportedEncodingDisplayNames == null) {
 			// Initialize hash table for encoding table
-			supportedEncodingDisplayNames = new Hashtable();
-			encodings = new ArrayList();
-			prefNames = new HashMap();
+			supportedEncodingDisplayNames = new HashMap<String,String>();
+			encodings = new ArrayList<>();
+			prefNames = new HashMap<String,String>();
 
 			FallbackPropertyResourceBundle bundle = null;
 			InputStream bundleStream = null;

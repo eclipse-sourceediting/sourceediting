@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2019 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,16 +13,21 @@
  *     Nitin Dahyabhai <nitind@us.ibm.com> with Andrew Obuchowicz <aobuchow@redhat.com> - Add color preview to table, removed dead code
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.preferences.ui;
+package org.eclipse.wst.sse.ui.preferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -60,20 +65,33 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
-import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
-import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorEditor;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.IPreferenceTab;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.TextHoverPreferenceTab;
 
 /**
  * Adapted from
- * org.eclipse.ui.internal.editors.text.TextEditorDefaultsPreferencePage
+ * org.eclipse.ui.internal.editors.text.TextEditorDefaultsPreferencePage, made
+ * reusable by extension configuration parameters that are respected in the
+ * StructuredTextEditor.
  */
-public class StructuredTextEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class StructuredTextEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IExecutableExtension {
+	/**
+	 * Initialization parameter to determine which context in the INSTANCE and DEFAULT scopes to load/store shown preference values
+	 */
+	public static final String PREFERENCE_SCOPE_NAME = "org.eclipse.wst.sse.ui.appearancePreferenceScopeName"; // $NON-NLS-1$
+	/**
+	 * Initialization parameter to indicate a custom page description
+	 */
+	public static final String DESCRIPTION = "org.eclipse.wst.sse.ui.appearancePreferencePageDescription"; // $NON-NLS-1$
+
+
 	private class ColorEntry implements Comparable<ColorEntry> {
 		public final String colorKey;
 		public final String isSystemDefaultKey;
@@ -111,16 +129,17 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 	private List<Image> colorPreviewImages;
 	private ColorEditor fAppearanceColorEditor;
+
 	private final ColorEntry[] fAppearanceColorListModel = new ColorEntry[] {
-		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_2, EditorPreferenceNames.MATCHING_BRACKETS_COLOR, null, null),
-		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_41, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND, null, null),
-		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_42, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, null, null),
-		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_43, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, null, null),
-		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_44, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, null, null)};
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_2, AppearancePreferenceNames.MATCHING_BRACKETS_COLOR, null, null),
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_41, AppearancePreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND, null, null),
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_42, AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, null, null),
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_43, AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, null, null),
+		new ColorEntry(SSEUIMessages.StructuredTextEditorPreferencePage_44, AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, null, null)};
 
 	private TableViewer fAppearanceColorTableViewer;
-
 	private Map<Button, String> fCheckBoxes = new HashMap<>();
+
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
@@ -132,14 +151,13 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	};
 
 	private Map<ColorEditor, String> fColorButtons = new HashMap<>();
-
 	private OverlayPreferenceStore fOverlayStore;
 	private IPreferenceTab[] fTabs = null;
 
 	public StructuredTextEditorPreferencePage() {
+		// subject to be overridden via initialization data
 		setDescription(SSEUIMessages.StructuredTextEditorPreferencePage_6); // $NON-NLS-1$
 		setPreferenceStore(SSEUIPlugin.getDefault().getPreferenceStore());
-
 		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), createOverlayStoreKeys());
 	}
 
@@ -161,7 +179,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	/**
 	 * Applies the status to the status line of a dialog page.
 	 */
-	public void applyToStatusLine(DialogPage page, IStatus status) {
+	void applyToStatusLine(DialogPage page, IStatus status) {
 		String message = status.getMessage();
 		switch (status.getSeverity()) {
 			case IStatus.OK :
@@ -193,10 +211,10 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		appearanceComposite.setLayout(layout);
 
 		String label = SSEUIMessages.StructuredTextEditorPreferencePage_20; // $NON-NLS-1$
-		addCheckBox(appearanceComposite, label, EditorPreferenceNames.MATCHING_BRACKETS, 0);
+		addCheckBox(appearanceComposite, label, AppearancePreferenceNames.MATCHING_BRACKETS, 0);
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_30; // $NON-NLS-1$
-		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
+		addCheckBox(appearanceComposite, label, AppearancePreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
 
 		PreferenceLinkArea contentTypeArea = new PreferenceLinkArea(appearanceComposite, SWT.NONE, "ValidationPreferencePage", SSEUIMessages.StructuredTextEditorPreferencePage_40, (IWorkbenchPreferenceContainer) getContainer(), null); //$NON-NLS-1$
 
@@ -205,13 +223,13 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		contentTypeArea.getControl().setLayoutData(data);
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_39;
-		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, 0);
+		addCheckBox(appearanceComposite, label, AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, 0);
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_3;
-		addCheckBox(appearanceComposite, label, AbstractStructuredFoldingStrategy.FOLDING_ENABLED, 0);
+		addCheckBox(appearanceComposite, label, AppearancePreferenceNames.FOLDING_ENABLED, 0);
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_1;
-		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SEMANTIC_HIGHLIGHTING, 0);
+		addCheckBox(appearanceComposite, label, AppearancePreferenceNames.SEMANTIC_HIGHLIGHTING, 0);
 
 		Label l = new Label(appearanceComposite, SWT.LEFT);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -330,27 +348,26 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 		List<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AppearancePreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG));
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AppearancePreferenceNames.FOLDING_ENABLED));
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AbstractStructuredFoldingStrategy.FOLDING_ENABLED));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AppearancePreferenceNames.SEMANTIC_HIGHLIGHTING));
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SEMANTIC_HIGHLIGHTING));
-
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.MATCHING_BRACKETS));
-
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.MATCHING_BRACKETS_COLOR));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AppearancePreferenceNames.MATCHING_BRACKETS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AppearancePreferenceNames.MATCHING_BRACKETS_COLOR));
+		
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AppearancePreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
 		return keys;
 	}
-
+	
 	@Override
 	public void dispose() {
 		if (fOverlayStore != null) {
@@ -480,4 +497,21 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		return true;
 	}
 
+	@Override
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		if (data instanceof Map) {
+			// clear the default description
+			setDescription(""); // $NON-NLS-1$
+			Map<?, ?> initializationData = (Map<?, ?>) data;
+			initializationData.entrySet().forEach((entry) -> {
+				if (PREFERENCE_SCOPE_NAME.equalsIgnoreCase(entry.getKey().toString())) {
+					setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE, entry.getValue().toString().toLowerCase(Locale.US)));
+					fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), createOverlayStoreKeys());
+				}
+				if (DESCRIPTION.equalsIgnoreCase(entry.getKey().toString())) {
+					setDescription(entry.getValue().toString());
+				}
+			});
+		}
+	}
 }

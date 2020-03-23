@@ -246,6 +246,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 						return null;
 
 					StringBuffer s = new StringBuffer();
+// CCE possible with CSS? https://dev.eclipse.org/recommenders/committers/aeri/v2#!/problems/5598a884e4b08735226b9770
 					Node node = (Node) element;
 					while (node != null) {
 						if (node.getNodeType() != Node.DOCUMENT_NODE) {

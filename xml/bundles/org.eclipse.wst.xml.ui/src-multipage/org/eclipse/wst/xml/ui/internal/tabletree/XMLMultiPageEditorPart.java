@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2017 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2020 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License 2.0 which accompanies this distribution, and
  * is available at https://www.eclipse.org/legal/epl-2.0/
@@ -174,6 +174,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 		/*
 		 * @see IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
 		 */
+		@Override
 		public void partOpened(IWorkbenchPart part) {
 			if (fDesignViewer instanceof AbstractTreeViewer) {
 				IDocument document = getDocument();
@@ -245,11 +246,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 				 * http://dev.eclipse.org/bugs/show_bug.cgi?id=11731 Will be
 				 * removed when SWT has solved the problem.
 				 */
-				window.getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						handleActivation();
-					}
-				});
+				window.getShell().getDisplay().asyncExec(() -> handleActivation());
 			}
 		}
 
@@ -324,11 +321,13 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 		}
 
 		void sendInitializationData(IExecutableExtension executableExtension) {
-			try {
-				executableExtension.setInitializationData(fElement, fPropertyName, fData);
-			}
-			catch (CoreException e) {
-				Logger.logException(e);
+			if (fData != null) {
+				try {
+					executableExtension.setInitializationData(fElement, fPropertyName, fData);
+				}
+				catch (CoreException e) {
+					Logger.logException(e);
+				}
 			}
 		}
 	}
@@ -337,6 +336,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	 * Internal IPropertyListener on the source page
 	 */
 	class PropertyListener implements IPropertyListener {
+		@Override
 		public void propertyChanged(Object source, int propId) {
 			switch (propId) {
 				// had to implement input changed "listener" so that
@@ -359,37 +359,31 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 								model.releaseFromRead();
 						}
 					}
+					break;
 				}
 				case IEditorPart.PROP_DIRTY : {
-					if (source == getTextEditor()) {
-						if (getTextEditor().getEditorInput() != getEditorInput()) {
-							setInput(getTextEditor().getEditorInput());
-							/*
-							 * title should always change when input changes.
-							 * create runnable for following post call
-							 */
-							Runnable runnable = new Runnable() {
-								public void run() {
-									_firePropertyChange(IWorkbenchPart.PROP_TITLE);
-								}
-							};
-							/*
-							 * Update is just to post things on the display
-							 * queue (thread). We have to do this to get the
-							 * dirty property to get updated after other
-							 * things on the queue are executed.
-							 */
-							((Control) getTextEditor().getAdapter(Control.class)).getDisplay().asyncExec(runnable);
-						}
+					if (source == getTextEditor() && ((IEditorPart)source).getEditorInput() != getEditorInput()) {
+						setInput(getTextEditor().getEditorInput());
+						/*
+						 * title should always change when input changes.
+						 * create runnable for following post call
+						 */
+						/*
+						 * Update is just to post things on the display
+						 * queue (thread). We have to do this to get the
+						 * dirty property to get updated after other
+						 * things on the queue are executed.
+						 */
+						getTextEditor().getAdapter(Control.class).getDisplay().asyncExec(() -> {
+							_firePropertyChange(IWorkbenchPart.PROP_TITLE);
+						});
 					}
 					break;
 				}
 				case IWorkbenchPart.PROP_TITLE : {
 					// update the input if the title is changed
-					if (source == getTextEditor()) {
-						if (getTextEditor().getEditorInput() != getEditorInput()) {
-							setInput(getTextEditor().getEditorInput());
-						}
+					if (source == getTextEditor() && ((IEditorPart)source).getEditorInput() != getEditorInput()) {
+						setInput(getTextEditor().getEditorInput());
 					}
 					break;
 				}
@@ -419,8 +413,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 
 	class StatusLineLabelProvider extends JFaceNodeLabelProvider {
 		public StatusLineLabelProvider() {
+			super();
 		}
 
+		@Override
 		public String getText(Object element) {
 			if (element == null)
 				return null;
@@ -430,9 +426,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 				return getText(((Attr) node).getOwnerElement());
 			}
 
-			StringBuffer s = new StringBuffer();
+			StringBuilder s = new StringBuilder();
 			if (node.getNodeType() != Node.DOCUMENT_NODE) {
-				while (node != null && node instanceof INodeNotifier) {
+				while (node instanceof INodeNotifier) {
 					INodeNotifier notifier = (INodeNotifier) node;
 					if (node.getNodeType() != Node.DOCUMENT_NODE) {
 						IJFaceNodeAdapter adapter = (IJFaceNodeAdapter) notifier.getAdapterFor(IJFaceNodeAdapter.class);
@@ -448,6 +444,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 			return s.toString();
 		}
 
+		@Override
 		public Image getImage(Object element) {
 			if (element == null)
 				return null;
@@ -504,7 +501,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 
 	/*
 	 * This method is just to make firePropertyChanged accessible from some
-	 * (anonomous) inner classes.
+	 * (anonymous) inner classes.
 	 */
 	void _firePropertyChange(int property) {
 		super.firePropertyChange(property);
@@ -710,14 +707,17 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 			fToolbar = toolbar;
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor() {
 			return XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImageHelper.EDITOR_MENU);
 		}
 
+		@Override
 		public String getToolTipText() {
 			return XMLEditorMessages.EditorMenu_tooltip;
 		}
 
+		@Override
 		public void run() {
 			Menu menu = fMenuManager.createContextMenu(fDesignContainer);
 			Point size = fToolbar.getSize();
@@ -798,6 +798,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	/**
 	 * @see org.eclipse.ui.part.MultiPageEditorPart#createSite(org.eclipse.ui.IEditorPart)
 	 */
+	@Override
 	protected IEditorSite createSite(IEditorPart editor) {
 		IEditorSite site = null;
 		if (editor == fTextEditor) {
@@ -814,6 +815,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 					return contributor;
 				}
 
+				@Override
 				public String getId() {
 					// sets this id so nested editor is considered xml source
 					// page
@@ -861,6 +863,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 		}
 	}
 
+	@Override
 	public void dispose() {
 		Logger.trace("Source Editor", "XMLMultiPageEditorPart::dispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -937,8 +940,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	 * 
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
-	public Object getAdapter(Class key) {
-		Object result = null;
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> key) {
+		T result = null;
 
 		// we extend superclass, not override it, so allow it first
 		// chance to satisfy request.
@@ -946,15 +951,11 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 
 		if (result == null) {
 			if (key == IDesignViewer.class) {
-				result = fDesignViewer;
+				result = (T) fDesignViewer;
 
 			}
 			else if (key.equals(IGotoMarker.class)) {
-				result = new IGotoMarker() {
-					public void gotoMarker(IMarker marker) {
-						XMLMultiPageEditorPart.this.gotoMarker(marker);
-					}
-				};
+				result = (T) (IGotoMarker) marker -> XMLMultiPageEditorPart.this.gotoMarker(marker);
 			}
 			else {
 				/*
@@ -1022,6 +1023,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite,
 	 * org.eclipse.ui.IEditorInput)
 	 */
+	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		try {
 			super.init(site, input);
@@ -1050,6 +1052,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	 * 
 	 * @see org.eclipse.ui.ISaveablePart#isSaveOnCloseNeeded()
 	 */
+	@Override
 	public boolean isSaveOnCloseNeeded() {
 		// overriding super class since it does a lowly isDirty!
 		if (fTextEditor != null) {
@@ -1071,6 +1074,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	 * 
 	 * @see org.eclipse.ui.part.MultiPageEditorPart#pageChange(int)
 	 */
+	@Override
 	protected void pageChange(int newPageIndex) {
 		if (newPageIndex == fSourcePageIndex && fDesignViewer != null) {
 			ISelectionProvider provider = fDesignViewer.getSelectionProvider();
@@ -1099,6 +1103,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 		getPreferenceStore().setValue(getEditorSite().getId() + "." + IXMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex); //$NON-NLS-1$
 	}
 
+	@Override
 	public void setFocus() {
 		super.setFocus();
 		Control control = fDesignViewer.getControl();
@@ -1107,6 +1112,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 		control.forceFocus();
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
 		super.setInitializationData(cfig, propertyName, data);
 		fPageInitializer = new PageInitializationData(cfig, propertyName, data);
@@ -1117,6 +1123,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 	 * 
 	 * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
 	 */
+	@Override
 	protected void setInput(IEditorInput input) {
 		/*
 		 * If driven from the Source page, it's "model" may not be up to date

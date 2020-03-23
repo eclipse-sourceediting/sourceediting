@@ -7,8 +7,10 @@
 			name="%_UI_EDITOR_NAME"
 			icon="icons/XSDFile.gif"
             contributorClass="org.eclipse.wst.xsd.ui.internal.editor.XSDMultiPageEditorContributor"
-            class="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor"
             id="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor">
+            <class class="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.xsd.ui"/>
+			</class>
             <contentTypeBinding
                 contentTypeId="org.eclipse.wst.xsd.core.xsdsource" />
 		</editor>
@@ -63,6 +65,15 @@
           id="org.eclipse.wst.xsd.ui.internal.preferences.XSDValidatorPreferencePage"
           name="%_UI_XML_SCHEMA_VALIDATOR_PREFERENCE">
     </page>
+		<page
+			name="%Appearance"
+            category="org.eclipse.wst.xsd.ui.internal.preferences.XSDEditorPreferencePage"
+			id="org.eclipse.wst.xsd.ui.preferences.editor">
+			<class class="org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.xsd.ui"/>
+			</class>
+			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
+		</page>
 	</extension>
 	
 	   <extension

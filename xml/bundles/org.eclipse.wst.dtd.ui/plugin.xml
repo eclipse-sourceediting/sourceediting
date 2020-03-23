@@ -8,9 +8,11 @@
 			name="%DTD_Source_Page_Editor.name"
 			icon="$nl$/icons/full/obj16/DTDFile.gif"
 			contributorClass="org.eclipse.wst.dtd.ui.internal.editor.ActionContributorDTD"
-			class="org.eclipse.wst.dtd.ui.internal.DTDEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.dtd.core.dtdsource.source">
+			<class class="org.eclipse.wst.dtd.ui.internal.DTDEditor">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.dtd.ui"/>
+			</class>
 			<contentTypeBinding
 				contentTypeId="org.eclipse.wst.dtd.core.dtdsource" />
 		</editor>
@@ -160,6 +162,15 @@
 			category="org.eclipse.wst.dtd.ui.preferences.dtd"
 			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDEditorPreferencePage"
 			id="org.eclipse.wst.dtd.ui.preferences.editor">
+		</page>
+		<page
+			name="%Appearance"
+            category="org.eclipse.wst.dtd.ui.preferences.dtd"
+			id="org.eclipse.wst.dtd.ui.preferences.editor">
+			<class class="org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.dtd.ui"/>
+			</class>
+			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
 		</page>
 	</extension>
 	

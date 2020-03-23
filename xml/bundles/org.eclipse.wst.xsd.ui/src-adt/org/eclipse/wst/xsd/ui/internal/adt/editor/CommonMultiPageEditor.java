@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
@@ -109,6 +110,10 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   protected ModeComboListener modeComboListener;
   protected int maxLength = 0;
   protected CommonActivationListener fActivationListener;
+
+private Object fInitializationData;
+private String fInitializationPropertyName;
+private IConfigurationElement fInitializationElement;
   
   public CommonMultiPageEditor()
   {
@@ -292,6 +297,13 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   // ie. when doing a saveAs
   protected void setInputToGraphicalViewer(IDocument newInput)
   {
+  }
+
+  public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
+    super.setInitializationData(cfig, propertyName, data);
+    fInitializationElement = cfig;
+    fInitializationPropertyName = propertyName;
+    fInitializationData = data;
   }
 
   protected void setInput(IEditorInput input)
@@ -539,6 +551,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     structuredTextEditor = new StructuredTextEditor();
     try
     {
+      structuredTextEditor.setInitializationData(fInitializationElement, fInitializationPropertyName, fInitializationData);
       int index = addPage(structuredTextEditor, getEditorInput());
       setPageText(index, Messages._UI_LABEL_SOURCE);
       structuredTextEditor.update();

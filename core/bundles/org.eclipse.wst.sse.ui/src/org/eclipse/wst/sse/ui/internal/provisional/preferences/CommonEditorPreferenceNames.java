@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@
 
 package org.eclipse.wst.sse.ui.internal.provisional.preferences;
 
-import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
+import org.eclipse.wst.sse.ui.preferences.AppearancePreferenceNames;
 
 /**
  * Common editor preference keys used by the Structured Text Editor.
@@ -32,6 +32,7 @@ public class CommonEditorPreferenceNames {
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
+	 * @deprecated
 	 */
-	public static final String EVALUATE_TEMPORARY_PROBLEMS = EditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS;
+	public static final String EVALUATE_TEMPORARY_PROBLEMS = AppearancePreferenceNames.EVALUATE_TEMPORARY_PROBLEMS;
 }

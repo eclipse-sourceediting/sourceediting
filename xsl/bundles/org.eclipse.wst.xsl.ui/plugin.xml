@@ -7,10 +7,12 @@
 		<editor name="%editorName" 
 			icon="$nl$/icons/full/xslt_file.gif"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.SourcePageActionContributor"
-			class="org.eclipse.wst.xsl.ui.internal.editor.XSLEditor"
 			extensions="xsl,xslt"
 			id="org.eclipse.wst.xsl.ui.XSLEditor">
 			<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xslsource" />
+			<class class="org.eclipse.wst.xsl.ui.internal.editor.XSLEditor">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.xml.ui"/>
+			</class>
 		</editor>
 	</extension>
 	
@@ -111,6 +113,15 @@
 		    class="org.eclipse.wst.xsl.ui.internal.preferences.XSLSyntaxColoringPage"
 		    id="org.eclipse.wst.xsl.ui.preferences.SyntaxColoring"
 		    name="%pageSyntaxColoring"/>
+		<page
+			name="%Appearance"
+            category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			id="org.eclipse.wst.xsl.ui.preferences.appearance">
+			<class class="org.eclipse.wst.sse.ui.preferences.StructuredTextEditorPreferencePage">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.xsl.ui"/>
+			</class>
+			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
+		</page>
 	</extension>
 	
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
