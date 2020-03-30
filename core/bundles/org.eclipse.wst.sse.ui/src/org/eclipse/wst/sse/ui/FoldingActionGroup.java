@@ -47,6 +47,8 @@ class FoldingActionGroup extends ActionGroup {
 	private final TextOperationAction fCollapse;
 	private final TextOperationAction fCollapseAll;
 
+	private IPreferenceStore fPreferenceStore = SSEUIPlugin.getDefault().getPreferenceStore();
+
 
 	/**
 	 * Creates a new projection action group for <code>editor</code>. If
@@ -86,7 +88,7 @@ class FoldingActionGroup extends ActionGroup {
 
 		fToggle = new PreferenceAction(SSEUIMessages.getResourceBundle(), "Projection_Toggle_", IAction.AS_CHECK_BOX) { //$NON-NLS-1$
 			public void run() {
-				IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+				IPreferenceStore store = getPreferenceStore();
 				boolean current = store.getBoolean(AppearancePreferenceNames.FOLDING_ENABLED);
 				store.setValue(AppearancePreferenceNames.FOLDING_ENABLED, !current);
 			}
@@ -99,7 +101,7 @@ class FoldingActionGroup extends ActionGroup {
 			}
 		};
 		
-		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = getPreferenceStore();
 		boolean checked = store.getBoolean(AppearancePreferenceNames.FOLDING_ENABLED);
 		fToggle.setChecked(checked);
 		fToggle.setActionDefinitionId(IFoldingCommandIds.FOLDING_TOGGLE);
@@ -174,6 +176,17 @@ class FoldingActionGroup extends ActionGroup {
 			manager.add(fExpandAll);
 			manager.add(fCollapse);
 			manager.add(fCollapseAll);
+		}
+	}
+
+	IPreferenceStore getPreferenceStore() {
+		return fPreferenceStore;
+	}
+	void setPreferenceStore(IPreferenceStore store) {
+		fPreferenceStore = store;
+		if (fToggle != null) {
+			boolean checked = store.getBoolean(AppearancePreferenceNames.FOLDING_ENABLED);
+			fToggle.setChecked(checked);
 		}
 	}
 

@@ -1130,7 +1130,7 @@ public class StructuredTextEditor extends TextEditor {
 	private QuickOutlineHandler fOutlineHandler;
 
 	/** initialization data from this instance's editor extension */
-	private Map<String, String> fInitializationData = null;
+	private Map<?, ?> fInitializationData = null;
 
 	private boolean shouldClose = false;
 	private long startPerfTime;
@@ -1495,6 +1495,7 @@ public class StructuredTextEditor extends TextEditor {
 
 		fShowPropertiesAction = new ShowPropertiesAction(getEditorPart(), getSelectionProvider());
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
+		fFoldingGroup.setPreferenceStore(getPreferenceStore());
 	}
 
 	@Override
@@ -2018,7 +2019,7 @@ public class StructuredTextEditor extends TextEditor {
 		/* if could not get the model prompt user to update content type
 		 * if preferences allow, then try to get model again
 		 */
-		if (model == null && SSEUIPlugin.getDefault().getPreferenceStore().getBoolean(AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
+		if (model == null && getPreferenceStore().getBoolean(AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
 			if (fInitializationData != null && fInitializationData.containsKey(PREFERRED_CONTENT_TYPE_WHEN_UNSUPPORTED)) {
 				IContentType contentType = Platform.getContentTypeManager().getContentType(fInitializationData.get(PREFERRED_CONTENT_TYPE_WHEN_UNSUPPORTED).toString());
 				if (contentType != null && !StringUtils.contains(contentType.getFileSpecs(IContentTypeSettings.FILE_NAME_SPEC), input.getName(), false)) {
@@ -2026,7 +2027,7 @@ public class StructuredTextEditor extends TextEditor {
 					 * Display a dialog informing user of unknown content type,
 					 * offering to update preferences for them
 					 */
-					UnknownContentTypeDialog2 dialog = new UnknownContentTypeDialog2(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), input.getName(), contentType);
+					UnknownContentTypeDialog2 dialog = new UnknownContentTypeDialog2(getSite().getShell(), getPreferenceStore(), input.getName(), contentType);
 					dialog.open();
 				}
 			}
@@ -2035,7 +2036,7 @@ public class StructuredTextEditor extends TextEditor {
 				 * Display a dialog informing user of unknown content type,
 				 * giving them chance to update preferences
 				 */
-				UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
+				UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), getPreferenceStore(), AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
 				dialog.open();
 			}
 
@@ -3856,8 +3857,8 @@ public class StructuredTextEditor extends TextEditor {
 	@Override
 	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
 		super.setInitializationData(cfig, propertyName, data);
-		if (data instanceof Map) {
-			fInitializationData = (Map) data;
+		if (data instanceof Map<?, ?>) {
+			fInitializationData = (Map<?,?>) data;
 			setPreferenceStore(createCombinedPreferenceStore());
 		}
 	}
