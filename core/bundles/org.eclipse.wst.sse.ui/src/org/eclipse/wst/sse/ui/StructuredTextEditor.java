@@ -3087,13 +3087,14 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * Set editor part associated with this editor.
-	 * <p>
-	 * Not API. May be removed in the future.
-	 * </p>
+	 * Set the WorkbenchPage-level editor part associated with this editor.
+	 * Encouraged if using the
+	 * <code>org.eclipse.wst.sse.ui.editorConfiguration</code> extension point
+	 * with the <code>StructuredTextEditor</code> as a source page in a
+	 * MultiPageEditorPart.
 	 * 
 	 * @param editorPart
-	 *            editor part associated with this editor
+	 *            editor part associated with (containing) this editor
 	 */
 	public void setEditorPart(IEditorPart editorPart) {
 		fEditorPart = editorPart;
