@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -56,11 +56,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager.TextHoverDescriptor;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.sse.ui.preferences.AppearancePreferenceNames;
 
 /**
  * Preference tab for Structured text editor hover help preferences
@@ -297,7 +297,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 		ArrayList overlayKeys = new ArrayList();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
@@ -413,7 +413,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	 */
 	public void performOk() {
 		String textHoverString = generateTextHoverString();
-		getOverlayStore().setValue(EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, textHoverString);
+		getOverlayStore().setValue(AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, textHoverString);
 		getTextHoverManager().resetTextHovers(); // notify text hover manager
 		// it should reset to get
 		// latest preferences
@@ -424,7 +424,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	 * store (which is the preferences)
 	 */
 	private void restoreFromOverlay() {
-		String descriptorsString = getOverlayStore().getString(EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS);
+		String descriptorsString = getOverlayStore().getString(AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS);
 		fTextHovers = getTextHoverManager().generateTextHoverDescriptors(descriptorsString);
 	}
 

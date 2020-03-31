@@ -121,4 +121,15 @@ public final class AppearancePreferenceNames {
 		return "matchingBrackets"; //$NON-NLS-1$
 	}
 
+	/**
+	 * A named preference that defines the key for the hover modifiers.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_TEXT_HOVER_MODIFIERS = getTextHoverModifiersKey();
+
+	private static String getTextHoverModifiersKey() {
+		return "hoverModifiers"; //$NON-NLS-1$
+	}
 }

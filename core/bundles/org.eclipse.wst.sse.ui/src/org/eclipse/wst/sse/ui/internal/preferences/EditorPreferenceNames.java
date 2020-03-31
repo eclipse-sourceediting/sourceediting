@@ -13,22 +13,16 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.preferences;
 
+import org.eclipse.wst.sse.ui.preferences.AppearancePreferenceNames;
 
 /**
  * Preference keys for SSE UI
  */
 public class EditorPreferenceNames {
 	/**
-	 * A named preference that defines the key for the hover modifiers.
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
+	 * @deprecated
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIERS = getTextHoverModifiersKey();
-
-	private static String getTextHoverModifiersKey() {
-		return "hoverModifiers"; //$NON-NLS-1$
-	}
+	public static final String EDITOR_TEXT_HOVER_MODIFIERS = AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS;
 
 	/**
 	 * A named preference that defines read only contrast scale.

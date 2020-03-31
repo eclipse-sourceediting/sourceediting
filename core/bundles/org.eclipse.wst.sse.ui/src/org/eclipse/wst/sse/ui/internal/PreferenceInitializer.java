@@ -48,15 +48,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		//		store.setDefault("warningIndicationInVerticalRuler", false);
 		// //$NON-NLS-1$
 
-
-
-		// hover help preferences are not part of base text editor preference
-		String mod2Name = Action.findModifierString(SWT.MOD2); // SWT.COMMAND
-		// on Mac;
-		// SWT.CONTROL
-		// elsewhere
-		store.setDefault(EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, "combinationHover|true|0;problemHover|false|0;documentationHover|false|0;annotationHover|true|" + mod2Name); //$NON-NLS-1$
-
 		// set default read-only foreground color scale value
 		store.setDefault(EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE, 30);
 		
@@ -87,5 +78,12 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		PreferenceConverter.setDefault(store, AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, ColorHelper.findRGB(registry, AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, new RGB(0, 0, 0)));
 		PreferenceConverter.setDefault(store, AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, ColorHelper.findRGB(registry, AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, new RGB(255, 255, 255)));
 		PreferenceConverter.setDefault(store, AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, ColorHelper.findRGB(registry, AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0)));
+
+		// hover help preferences are not part of base text editor preference
+		String mod2Name = Action.findModifierString(SWT.MOD2);
+		/*
+		 * SWT.MOD2 is currently SWT.COMMAND on Mac; SWT.CONTROL elsewhere
+		 */
+		store.setDefault(AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, "combinationHover|true|0;problemHover|false|0;documentationHover|false|0;annotationHover|true|" + mod2Name); //$NON-NLS-1$
 	}
 }
