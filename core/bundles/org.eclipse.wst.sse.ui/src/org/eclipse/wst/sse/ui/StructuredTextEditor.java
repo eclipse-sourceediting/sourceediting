@@ -1500,7 +1500,7 @@ public class StructuredTextEditor extends TextEditor {
 
 	@Override
 	protected LineChangeHover createChangeHover() {
-		return super.createChangeHover(); //new StructuredLineChangeHover();
+		return super.createChangeHover();
 	}
 
 	protected ICharacterPairMatcher createCharacterPairMatcher() {
