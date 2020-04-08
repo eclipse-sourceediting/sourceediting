@@ -184,8 +184,8 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			String[] jspTypes = StructuredTextPartitionerForJSP.getConfiguredContentTypes();
 			fConfiguredContentTypes = new String[htmlTypes.length + jspTypes.length];
 
-			System.arraycopy(htmlTypes, 0, fConfiguredContentTypes, 2, htmlTypes.length);
-			System.arraycopy(jspTypes, 0, fConfiguredContentTypes, 2 + htmlTypes.length, jspTypes.length);
+			System.arraycopy(htmlTypes, 0, fConfiguredContentTypes, 0, htmlTypes.length);
+			System.arraycopy(jspTypes, 0, fConfiguredContentTypes, htmlTypes.length, jspTypes.length);
 		}
 
 		return fConfiguredContentTypes;
