@@ -135,9 +135,17 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @return IPreferenceStore
 	 */
 	private IPreferenceStore createCombinedPreferenceStore() {
+		return new ChainedPreferenceStore(createPreferenceStores());
+	}
+
+	/**
+	 * @since 1.7.0
+	 * Create the preference stores from which this viewer configuration will draw values.
+	 */
+	protected IPreferenceStore[] createPreferenceStores() {
 		IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
 		IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
-		return new ChainedPreferenceStore(new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs});
+		return new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs};
 	}
 
 	/**
