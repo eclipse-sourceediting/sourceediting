@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,13 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.dtd.core.text.IDTDPartitions;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.style.LineStyleProviderForDTD;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -49,6 +54,17 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	public StructuredTextViewerConfigurationDTD() {
 		// Must have empty constructor to createExecutableExtension
 		super();
+	}
+
+	@Override
+	protected IPreferenceStore[] createPreferenceStores() {
+		IPreferenceStore[] defaults = super.createPreferenceStores();
+		List<IPreferenceStore> preferenceStores = new ArrayList<>();
+		preferenceStores.add(DTDUIPlugin.getDefault().getPreferenceStore());
+		for (int i = 0; i < defaults.length; i++) {
+			preferenceStores.add(defaults[i]);
+		}
+		return preferenceStores.toArray(new IPreferenceStore[preferenceStores.size()]);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {

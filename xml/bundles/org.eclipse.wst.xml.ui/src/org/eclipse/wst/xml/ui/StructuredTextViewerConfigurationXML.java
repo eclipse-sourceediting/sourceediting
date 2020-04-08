@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,10 +17,11 @@ package org.eclipse.wst.xml.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -77,8 +78,19 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		super();
 	}
 
+	@Override
+	protected IPreferenceStore[] createPreferenceStores() {
+		IPreferenceStore[] defaults = super.createPreferenceStores();
+		List<IPreferenceStore> preferenceStores = new ArrayList<>();
+		preferenceStores.add(XMLUIPlugin.getDefault().getPreferenceStore());
+		for (int i = 0; i < defaults.length; i++) {
+			preferenceStores.add(defaults[i]);
+		}
+		return preferenceStores.toArray(new IPreferenceStore[preferenceStores.size()]);
+	}
+
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
-		List allStrategies = new ArrayList(0);
+		List<IAutoEditStrategy> allStrategies = new ArrayList<>(0);
 
 		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		for (int i = 0; i < superStrategies.length; i++) {
@@ -90,7 +102,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		// add auto edit strategy that handles when tab key is pressed
 		allStrategies.add(new AutoEditStrategyForTabs());
 
-		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
+		return allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -138,7 +150,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	}
 
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
-		Vector vector = new Vector();
+		List<String> prefixes = new ArrayList<>();
 
 		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
 		Preferences preferences = XMLCorePlugin.getDefault().getPluginPreferences();
@@ -171,17 +183,17 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 
 			if (appendTab) {
 				prefix.append('\t');
-				vector.add(prefix.toString());
+				prefixes.add(prefix.toString());
 				// remove the tab so that indentation - tab is also an indent
 				// prefix
 				prefix.deleteCharAt(prefix.length() - 1);
 			}
-			vector.add(prefix.toString());
+			prefixes.add(prefix.toString());
 		}
 
-		vector.add(""); //$NON-NLS-1$
+		prefixes.add(""); //$NON-NLS-1$
 
-		return (String[]) vector.toArray(new String[vector.size()]);
+		return prefixes.toArray(new String[prefixes.size()]);
 	}
 
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
@@ -232,7 +244,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		return fStatusLineLabelProvider;
 	}
 
-	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+	protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
 		targets.put(ContentTypeIdForXML.ContentTypeID_XML, null);
 		return targets;

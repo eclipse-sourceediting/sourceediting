@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2015 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,11 +15,16 @@
  *******************************************************************************/
 package org.eclipse.wst.json.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.json.core.format.FormatProcessorJSON;
 import org.eclipse.wst.json.core.text.IJSONPartitions;
+import org.eclipse.wst.json.ui.internal.JSONUIPlugin;
 import org.eclipse.wst.json.ui.internal.style.LineStyleProviderForJSON;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -48,6 +53,17 @@ public class StructuredTextViewerConfigurationJSON extends
 	 * One instance per configuration
 	 */
 	private LineStyleProvider fLineStyleProviderForJSON;
+
+	@Override
+	protected IPreferenceStore[] createPreferenceStores() {
+		IPreferenceStore[] defaults = super.createPreferenceStores();
+		List<IPreferenceStore> preferenceStores = new ArrayList<>();
+		preferenceStores.add(JSONUIPlugin.getDefault().getPreferenceStore());
+		for (int i = 0; i < defaults.length; i++) {
+			preferenceStores.add(defaults[i]);
+		}
+		return preferenceStores.toArray(new IPreferenceStore[preferenceStores.size()]);
+	}
 
 	@Override
 	public LineStyleProvider[] getLineStyleProviders(

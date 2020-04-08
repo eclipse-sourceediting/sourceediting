@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,10 @@ package org.eclipse.wst.css.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -68,15 +69,26 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		super();
 	}
 
+	@Override
+	protected IPreferenceStore[] createPreferenceStores() {
+		IPreferenceStore[] defaults = super.createPreferenceStores();
+		List<IPreferenceStore> preferenceStores = new ArrayList<>();
+		preferenceStores.add(CSSUIPlugin.getDefault().getPreferenceStore());
+		for (int i = 0; i < defaults.length; i++) {
+			preferenceStores.add(defaults[i]);
+		}
+		return preferenceStores.toArray(new IPreferenceStore[preferenceStores.size()]);
+	}
+
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
-		List allStrategies = new ArrayList(0);
+		List<IAutoEditStrategy> allStrategies = new ArrayList<>(0);
 
 		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
 		}
 
-		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[0]);
+		return allStrategies.toArray(new IAutoEditStrategy[0]);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -106,9 +118,11 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		IContentFormatter formatter = super.getContentFormatter(sourceViewer);
-		// super was unable to create a formatter, probably because
-		// sourceViewer does not have document set yet, so just create a
-		// generic one
+		/*
+		 * "super" was unable to create a formatter, probably because
+		 * sourceViewer does not have document set yet, so just create a
+		 * generic one
+		 */
 		if (!(formatter instanceof MultiPassContentFormatter))
 			formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitions.STYLE);
 
@@ -118,7 +132,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	}
 
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
-		Vector vector = new Vector();
+		List<String> prefixes = new ArrayList<>();
 
 		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
 		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
@@ -147,17 +161,17 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 
 			if (appendTab) {
 				prefix.append('\t');
-				vector.add(prefix.toString());
+				prefixes.add(prefix.toString());
 				// remove the tab so that indentation - tab is also an indent
 				// prefix
 				prefix.deleteCharAt(prefix.length() - 1);
 			}
-			vector.add(prefix.toString());
+			prefixes.add(prefix.toString());
 		}
 
-		vector.add(""); //$NON-NLS-1$
+		prefixes.add(""); //$NON-NLS-1$
 
-		return (String[]) vector.toArray(new String[vector.size()]);
+		return prefixes.toArray(new String[prefixes.size()]);
 	}
 
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
@@ -177,8 +191,8 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		return fLineStyleProviderForCSS;
 	}
 
-	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
-		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
+	protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+		Map<String, IAdaptable> targets = super.getHyperlinkDetectorTargets(sourceViewer);
 		targets.put(ContentTypeIdForCSS.ContentTypeID_CSS, null);
 		return targets;
 	}

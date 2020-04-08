@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.PreferenceConstants;
@@ -102,12 +103,17 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer,
-	 *      java.lang.String)
-	 */
+	@Override
+	protected IPreferenceStore[] createPreferenceStores() {
+		IPreferenceStore[] defaults = super.createPreferenceStores();
+		List<IPreferenceStore> preferenceStores = new ArrayList<>();
+		preferenceStores.add(JSPUIPlugin.getDefault().getPreferenceStore());
+		for (int i = 0; i < defaults.length; i++) {
+			preferenceStores.add(defaults[i]);
+		}
+		return preferenceStores.toArray(new IPreferenceStore[preferenceStores.size()]);
+	}
+
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		IAutoEditStrategy[] strategies = null;
 
@@ -117,7 +123,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		}
 		else if (contentType == IJSPPartitions.JSP_CONTENT_JAVA) {
 			// jsp java autoedit strategies
-			List allStrategies = new ArrayList(0);
+			List<IAutoEditStrategy> allStrategies = new ArrayList<>(0);
 
 			// add the scritplet autoedit strategy first
 			allStrategies.add(new StructuredAutoEditStrategyJSPJava());
@@ -131,11 +137,11 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// add auto edit strategy that handles when tab key is pressed
 			allStrategies.add(new AutoEditStrategyForTabs());
 
-			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
+			strategies = allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
 		else if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.HTML_DECLARATION || contentType == IJSPPartitions.JSP_DIRECTIVE) {
 			// html and jsp autoedit strategies
-			List allStrategies = new ArrayList(0);
+			List<IAutoEditStrategy> allStrategies = new ArrayList<>(0);
 
 			// add the jsp autoedit strategy first then add all html's
 			allStrategies.add(new StructuredAutoEditStrategyJSP());
@@ -145,11 +151,11 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 				allStrategies.add(htmlStrategies[i]);
 			}
 
-			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
+			strategies = allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
 		else {
 			// default autoedit strategies
-			List allStrategies = new ArrayList(0);
+			List<IAutoEditStrategy> allStrategies = new ArrayList<>(0);
 
 			IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 			for (int i = 0; i < superStrategies.length; i++) {
@@ -161,7 +167,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// add auto edit strategy that handles when tab key is pressed
 			allStrategies.add(new AutoEditStrategyForTabs());
 
-			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
+			strategies = allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
 
 		return strategies;
@@ -178,9 +184,8 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			String[] jspTypes = StructuredTextPartitionerForJSP.getConfiguredContentTypes();
 			fConfiguredContentTypes = new String[htmlTypes.length + jspTypes.length];
 
-			int index = 0;
-			System.arraycopy(htmlTypes, 0, fConfiguredContentTypes, index, htmlTypes.length);
-			System.arraycopy(jspTypes, 0, fConfiguredContentTypes, index += htmlTypes.length, jspTypes.length);
+			System.arraycopy(htmlTypes, 0, fConfiguredContentTypes, 2, htmlTypes.length);
+			System.arraycopy(jspTypes, 0, fConfiguredContentTypes, 2 + htmlTypes.length, jspTypes.length);
 		}
 
 		return fConfiguredContentTypes;
@@ -369,8 +374,8 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		return fXMLSourceViewerConfiguration;
 	}
 
-	protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
-		Map targets = super.getHyperlinkDetectorTargets(sourceViewer);
+	protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
+		Map<String, IAdaptable> targets = super.getHyperlinkDetectorTargets(sourceViewer);
 		targets.put(ContentTypeIdForJSP.ContentTypeID_JSP, null);
 
 		// also add html & xml since there could be html/xml content in jsp

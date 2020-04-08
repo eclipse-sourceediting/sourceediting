@@ -91,7 +91,6 @@ import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.LineChangeHover;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
@@ -1496,11 +1495,6 @@ public class StructuredTextEditor extends TextEditor {
 		fShowPropertiesAction = new ShowPropertiesAction(getEditorPart(), getSelectionProvider());
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
 		fFoldingGroup.setPreferenceStore(getPreferenceStore());
-	}
-
-	@Override
-	protected LineChangeHover createChangeHover() {
-		return super.createChangeHover();
 	}
 
 	protected ICharacterPairMatcher createCharacterPairMatcher() {
