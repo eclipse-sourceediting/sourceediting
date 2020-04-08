@@ -122,7 +122,7 @@ public final class AppearancePreferenceNames {
 	}
 
 	/**
-	 * A named preference that defines the key for the hover modifiers.
+	 * A named preference that defines the key for the hover modifiers. Not yet used.
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>

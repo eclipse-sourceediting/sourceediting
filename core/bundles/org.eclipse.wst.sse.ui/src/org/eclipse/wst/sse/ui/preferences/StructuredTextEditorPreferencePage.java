@@ -154,6 +154,13 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private OverlayPreferenceStore fOverlayStore;
 	private IPreferenceTab[] fTabs = null;
 
+	/*
+	 * Unless/until the hover management can be broken out into a per-plug-in
+	 * setup rather than a singleton in SSSE UI, the Hover preferences need to
+	 * remain in one place only
+	 */
+	private boolean showHoverTab = true;
+
 	public StructuredTextEditorPreferencePage() {
 		// subject to be overridden via initialization data
 		setDescription(SSEUIMessages.StructuredTextEditorPreferencePage_6); // $NON-NLS-1$
@@ -320,7 +327,10 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	protected Control createContents(Composite parent) {
 		// need to create tabs before loading/starting overlaystore in case
 		// tabs also add values
-		IPreferenceTab hoversTab = new TextHoverPreferenceTab(this, fOverlayStore);
+		IPreferenceTab hoversTab = null;
+		if (showHoverTab) {
+			hoversTab = new TextHoverPreferenceTab(this, fOverlayStore);
+		}
 
 		fOverlayStore.load();
 		fOverlayStore.start();
@@ -333,12 +343,17 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		item.setText(SSEUIMessages.StructuredTextEditorPreferencePage_0); // $NON-NLS-1$
 		item.setControl(createAppearancePage(folder));
 
-		item = new TabItem(folder, SWT.NONE);
-		item.setText(hoversTab.getTitle());
-		item.setControl(hoversTab.createContents(folder));
+		if (hoversTab != null) {
+			item = new TabItem(folder, SWT.NONE);
+			item.setText(hoversTab.getTitle());
+			item.setControl(hoversTab.createContents(folder));
 
-		fTabs = new IPreferenceTab[]{hoversTab};
-
+			fTabs = new IPreferenceTab[]{hoversTab};
+		}
+		else {
+			fTabs = new IPreferenceTab[0];
+		}
+		
 		initialize();
 
 		Dialog.applyDialogFont(folder);
@@ -507,6 +522,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 				if (PREFERENCE_SCOPE_NAME.equalsIgnoreCase(entry.getKey().toString())) {
 					setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE, entry.getValue().toString().toLowerCase(Locale.US)));
 					fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), createOverlayStoreKeys());
+					showHoverTab = false;
 				}
 				if (DESCRIPTION.equalsIgnoreCase(entry.getKey().toString())) {
 					setDescription(entry.getValue().toString());
