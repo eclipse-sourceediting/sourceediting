@@ -57,7 +57,7 @@ public class StructuredTextViewerConfigurationJSON extends
 	@Override
 	protected IPreferenceStore[] createPreferenceStores() {
 		IPreferenceStore[] defaults = super.createPreferenceStores();
-		List<IPreferenceStore> preferenceStores = new ArrayList<>();
+		List<IPreferenceStore> preferenceStores = new ArrayList<IPreferenceStore>();
 		preferenceStores.add(JSONUIPlugin.getDefault().getPreferenceStore());
 		for (int i = 0; i < defaults.length; i++) {
 			preferenceStores.add(defaults[i]);
