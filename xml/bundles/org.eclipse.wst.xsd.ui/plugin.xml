@@ -86,7 +86,7 @@
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage"
+			value="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage,org.eclipse.wst.xsd.ui.preferences.editor"
 			target="org.eclipse.wst.xsd.core.xsdsource" />
    		<sourceViewerConfiguration
 			class="org.eclipse.wst.xsd.ui.internal.editor.StructuredTextViewerConfigurationXSD"

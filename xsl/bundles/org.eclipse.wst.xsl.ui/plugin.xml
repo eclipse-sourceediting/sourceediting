@@ -49,7 +49,7 @@
         	target="org.eclipse.core.runtime.xml" />
         <provisionalDefinition
             type="preferencepages"
-            value="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage, org.eclipse.wst.xsl.ui.template.preferencePage, org.eclipse.wst.xsl.ui.preferences.Validation, org.eclipse.wst.xml.xpath.ui.XPathPreferencePage, org.eclipse.wst.xsl.ui.XPath"
+            value="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage, org.eclipse.wst.xsl.ui.template.preferencePage, org.eclipse.wst.xsl.ui.preferences.Validation, org.eclipse.wst.xml.xpath.ui.XPathPreferencePage, org.eclipse.wst.xsl.ui.XPath, org.eclipse.wst.xsl.ui.preferences.appearance"
             target="org.eclipse.wst.xml.core.xslsource"/>
 	</extension>
 	

@@ -94,6 +94,7 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -1040,6 +1041,16 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
+	 * Internal property change listener for handling changes in a preferences.
+	 */
+	private class PropertyChangeListener implements IPropertyChangeListener {
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			handlePreferenceStoreChanged(event);
+		}
+	}
+
+	/**
 	 * Not API. May be removed in the future.
 	 */
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
@@ -1138,6 +1149,12 @@ public class StructuredTextEditor extends TextEditor {
 	 * The action group for folding.
 	 */
 	private FoldingActionGroup fFoldingGroup;
+	/**
+	 * The specific preference store for appearance settings, since
+	 * ChainedPreferenceStores are not writeable
+	 */
+	private IPreferenceStore fAppearancePreferenceStore;
+	private IPropertyChangeListener fAppearancePropertyChangeListener;
 
 	private ILabelProvider fStatusLineLabelProvider;
 
@@ -1146,6 +1163,7 @@ public class StructuredTextEditor extends TextEditor {
 	private boolean fSelectionChangedFromGoto = false;
 
 	private CharacterPairListener fPairInserter = new CharacterPairListener();
+
 
 	/**
 	 * Creates a new Structured Text Editor.
@@ -1493,8 +1511,9 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		fShowPropertiesAction = new ShowPropertiesAction(getEditorPart(), getSelectionProvider());
+
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
-		fFoldingGroup.setPreferenceStore(getPreferenceStore());
+		fFoldingGroup.setPreferenceStore(fAppearancePreferenceStore);
 	}
 
 	protected ICharacterPairMatcher createCharacterPairMatcher() {
@@ -1821,6 +1840,14 @@ public class StructuredTextEditor extends TextEditor {
 		if (fFoldingGroup != null) {
 			fFoldingGroup.dispose();
 			fFoldingGroup = null;
+		}
+
+		if (fAppearancePropertyChangeListener != null) {
+			if (fAppearancePreferenceStore != null) {
+				fAppearancePreferenceStore.removePropertyChangeListener(fAppearancePropertyChangeListener);
+				fAppearancePreferenceStore = null;
+			}
+			fAppearancePropertyChangeListener = null;
 		}
 
 		// dispose of menus that were being tracked
@@ -2879,11 +2906,10 @@ public class StructuredTextEditor extends TextEditor {
 	 * @return <code>true</code> if document folding should be enabled
 	 */
 	private boolean isFoldingEnabled() {
-		IPreferenceStore store = getPreferenceStore();
-		// check both preference store and vm argument
-		return (store.getBoolean(AppearancePreferenceNames.FOLDING_ENABLED));
+		IPreferenceStore store = fAppearancePreferenceStore;
+		return store.getBoolean(AppearancePreferenceNames.FOLDING_ENABLED);
 	}
-	
+
 	/**
 	 * Determine if the user preference for as you type validation is enabled or not
 	 */
@@ -3112,6 +3138,34 @@ public class StructuredTextEditor extends TextEditor {
 		// update() should be called whenever the model is
 		// set or changed
 		update();
+	}
+
+	@Override
+	protected void setPreferenceStore(IPreferenceStore store) {
+		super.setPreferenceStore(store);
+
+		if (fAppearancePropertyChangeListener != null) {
+			if (fAppearancePreferenceStore != null) {
+				fAppearancePreferenceStore.removePropertyChangeListener(fAppearancePropertyChangeListener);
+				fAppearancePreferenceStore= null;
+			}
+			fAppearancePropertyChangeListener= null;
+		}
+
+		if (store != null) {
+			fAppearancePreferenceStore = SSEUIPlugin.getDefault().getPreferenceStore();
+
+			if (fInitializationData != null) {
+				fInitializationData.entrySet().forEach((entry) -> {
+					if (StructuredTextEditorPreferencePage.PREFERENCE_SCOPE_NAME.equalsIgnoreCase(entry.getKey().toString())) {
+						ScopedPreferenceStore scopedPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, entry.getValue().toString().toLowerCase(Locale.US));
+						fAppearancePreferenceStore = scopedPreferenceStore;
+					}
+				});
+			}
+
+			fAppearancePreferenceStore.addPropertyChangeListener(fAppearancePropertyChangeListener = new PropertyChangeListener());
+		}
 	}
 
 	/**
