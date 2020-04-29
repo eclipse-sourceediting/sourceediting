@@ -208,6 +208,7 @@ public class TestXMLContentAssistComputers extends TestCase {
 	 * @param expectedProposalCounts
 	 * @param proposalPage
 	 * @param proposalExt2ToAccept
+	 * @param proposalOffset
 	 * @throws Exception
 	 */
 	private static void runProposalAcceptanceTest(String beforeFileName, String afterFileName,
