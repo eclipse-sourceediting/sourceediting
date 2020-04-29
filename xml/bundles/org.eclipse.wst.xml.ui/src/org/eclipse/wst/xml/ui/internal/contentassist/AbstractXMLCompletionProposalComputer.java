@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 IBM Corporation and others.
+ * Copyright (c) 2010, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,8 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -131,7 +133,7 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 					}
 					if (sModel != null) {
 						IDOMDocument docNode = ((IDOMModel) sModel).getDocument();
-						contentAssistRequest = new ContentAssistRequest(docNode, docNode, sdRegion, completionRegion, documentPosition, 0, null);
+						contentAssistRequest = new ContentAssistRequest(docNode, docNode, sdRegion, completionRegion, documentPosition - matchString.length(), matchString.length(), null);
 						addEmptyDocumentProposals(contentAssistRequest, context);
 					}
 				}
@@ -606,7 +608,7 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 		ContentAssistRequest contentAssistRequest = null;
 
 		// setup to add children at the content node's position
-		contentAssistRequest = new ContentAssistRequest(nodeAtOffset, node, getStructuredDocumentRegion(documentPosition), completionRegion, documentPosition, 0, matchString);
+		contentAssistRequest = new ContentAssistRequest(nodeAtOffset, node, getStructuredDocumentRegion(documentPosition), completionRegion, documentPosition - matchString.length(), matchString.length(), matchString);
 		if ((node != null) && (node.getNodeType() == Node.DOCUMENT_NODE) && (((Document) node).getDoctype() == null)) {
 			addStartDocumentProposals(contentAssistRequest, context);
 		}
@@ -1051,7 +1053,19 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 			matchString = ""; //$NON-NLS-1$
 		}
 		else if (regionType == DOMRegionContext.XML_CONTENT) {
+			int start = offset;
+			int end = offset;
+			IDocument document = parent.getParentDocument();
+			try {
+				while (start >= 0 && !Character.isWhitespace(document.getChar(start - 1))) {
+					start--;
+				}
+				matchString = document.get(start, end - start);
+			}
+			catch (BadLocationException e) {
+				Logger.logException(e);
 			matchString = ""; //$NON-NLS-1$
+		}
 		}
 		else {
 			if ((parent.getText(aRegion).length() > 0) && (parent.getStartOffset(aRegion) < offset)) {

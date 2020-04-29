@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2017 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
+ *
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.tests.contentassist;
 
@@ -18,12 +18,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import junit.extensions.TestSetup;
-import junit.framework.Assert;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -43,6 +40,12 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.eclipse.wst.xml.ui.tests.ProjectUtil;
+
+import junit.extensions.TestSetup;
+import junit.framework.Assert;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class TestXMLContentAssistComputers extends TestCase {
 	/** The name of the project that all of these tests will use */
@@ -105,6 +108,18 @@ public class TestXMLContentAssistComputers extends TestCase {
 		runProposalTest("test1.xml", 24, 6, expectedProposalCounts);
 	}
 	
+	public void testChildElementProposals3() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[] {3, 2, 1};
+		runProposalTest("test3.xml", 3, 3, expectedProposalCounts);
+	}
+	
+	public void testChildElementAcceptance1() throws Exception {
+		// default page, templates page, tags page, default page again
+		int[] expectedProposalCounts = new int[] {3,2,1};
+		runProposalAcceptanceTest("test3.xml", "test3after.xml", 3, 3, expectedProposalCounts, 0, 0, 258);
+	}
+	
 	public void testAttributeProposals() throws Exception {
 		// default page, templates page, tags page, default page again
 		int[] expectedProposalCounts = new int[] {5, 4, 1};
@@ -162,7 +177,7 @@ public class TestXMLContentAssistComputers extends TestCase {
 	 * expected number of proposals.</p>
 	 * 
 	 * @param fileName
-	 * @param lineNum
+	 * @param lineNum (0 based)
 	 * @param lineRelativeCharOffset
 	 * @param expectedProposalCounts
 	 * @throws Exception
@@ -179,6 +194,44 @@ public class TestXMLContentAssistComputers extends TestCase {
 		ICompletionProposal[][] pages = getProposals(viewer, offset, expectedProposalCounts.length);
 		
 		verifyProposalCounts(pages, expectedProposalCounts);
+	}
+	
+	/**
+	 * <p>Run a proposal test by opening the given file and invoking content assist for
+	 * each expected proposal count at the given line number and line character
+	 * offset and then compare the number of proposals for each invocation (pages) to the
+	 * expected number of proposals.</p>
+	 * 
+	 * @param beforeFileName
+	 * @param lineNum (0 based)
+	 * @param lineRelativeCharOffset
+	 * @param expectedProposalCounts
+	 * @param proposalPage
+	 * @param proposalExt2ToAccept
+	 * @throws Exception
+	 */
+	private static void runProposalAcceptanceTest(String beforeFileName, String afterFileName,
+			int lineNum, int lineRelativeCharOffset,
+			int[] expectedProposalCounts,
+			int proposalPage,
+			int proposalExt2ToAccept,
+			int proposalOffset) throws Exception{
+		
+		IFile file = getFile(beforeFileName);
+		StructuredTextEditor editor  = getEditor(file);
+		StructuredTextViewer viewer = editor.getTextViewer();
+		int offset = viewer.getDocument().getLineOffset(lineNum) + lineRelativeCharOffset;
+
+		ICompletionProposal[][] pages = getProposals(viewer, offset, expectedProposalCounts.length);
+		
+		verifyProposalCounts(pages, expectedProposalCounts);
+
+		((ICompletionProposalExtension2) pages[proposalPage][proposalExt2ToAccept]).apply(viewer, (char) 0, 0, proposalOffset);
+		FileBuffers.getTextFileBufferManager().connect(getFile(afterFileName).getFullPath(), LocationKind.IFILE, null);
+		ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(getFile(afterFileName).getFullPath(), LocationKind.IFILE);
+		String after = buffer.getDocument().get().replace("\r\n", "\n".replace("\r", "\n"));
+		FileBuffers.getTextFileBufferManager().disconnect(getFile(afterFileName).getFullPath(), LocationKind.IFILE, null);
+		assertEquals(after, viewer.getDocument().get().replace("\r\n", "\n").replace("\r", "\n"));
 	}
 	
 	/**
@@ -232,10 +285,14 @@ public class TestXMLContentAssistComputers extends TestCase {
 	 */
 	private static void verifyProposalCounts(ICompletionProposal[][] pages, int[] expectedProposalCounts) {
 		StringBuffer error = new StringBuffer();
-		for(int page = 0; page < expectedProposalCounts.length; ++page) {
-			if(expectedProposalCounts[page] != pages[page].length) {
+		for (int page = 0; page < expectedProposalCounts.length; ++page) {
+			if (expectedProposalCounts[page] != pages[page].length) {
+				String[] displayNames = new String[pages[page].length];
+				for (int i = 0; i < displayNames.length; i++) {
+					displayNames[i] = pages[page][i].getDisplayString();
+				}
 				error.append("\nProposal page " + page + " did not have the expected number of proposals: was " +
-						pages[page].length + " expected " + expectedProposalCounts[page]);
+						pages[page].length + " expected " + expectedProposalCounts[page] + "[" + StringUtils.pack(displayNames) +  "]");
 			}
 		}
 		
@@ -280,7 +337,7 @@ public class TestXMLContentAssistComputers extends TestCase {
 				IEditorPart editorPart = IDE.openEditor(page, file, true, true);
 				if(editorPart instanceof XMLMultiPageEditorPart) {
 					XMLMultiPageEditorPart xmlEditorPart = (XMLMultiPageEditorPart)editorPart;
-					editor = (StructuredTextEditor)xmlEditorPart.getAdapter(StructuredTextEditor.class);
+					editor = xmlEditorPart.getAdapter(StructuredTextEditor.class);
 				} else if(editorPart instanceof StructuredTextEditor) {
 					editor = ((StructuredTextEditor)editorPart);
 				} else {

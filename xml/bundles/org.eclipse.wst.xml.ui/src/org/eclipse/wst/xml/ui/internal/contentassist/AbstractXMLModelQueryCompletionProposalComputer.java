@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -1010,6 +1010,10 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 						}
 						String proposedText = getRequiredText(parent, ed);
 						String tagname = getRequiredName(parent, ed);
+						// check against match string
+						if (!tagname.toLowerCase(Locale.ENGLISH).contains(contentAssistRequest.getMatchString().toLowerCase(Locale.ENGLISH)))
+							continue;
+
 						// account for the &lt; and &gt;
 						int markupAdjustment = getContentGenerator().getMinimalStartTagLength(parent, ed);
 						String proposedInfo = getAdditionalInfo(null, ed);

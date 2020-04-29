@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2018 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import junit.extensions.TestSetup;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -54,13 +54,13 @@ public class TestCSSContentAssistComputers extends TestCase {
 	private static final String PROJECT_FILES = "/testresources/contentassist";
 	
 	/** The project that all of the tests use */
-	private static IProject fProject;
+	static IProject fProject;
 	
 	/**
 	 * Used to keep track of the already open editors so that the tests don't go through
 	 * the trouble of opening the same editors over and over again
 	 */
-	private static Map fFileToEditorMap = new HashMap();
+	static Map<IFile, StructuredTextEditor> fFileToEditorMap = new HashMap<>();
 	
 	/**
 	 * <p>Default constructor<p>
@@ -219,9 +219,9 @@ public class TestCSSContentAssistComputers extends TestCase {
 		
 		//fire content assist session ending
 		Method privateFireSessionEndEventMethod = ContentAssistant.class.
-        getDeclaredMethod("fireSessionEndEvent", null);
+        getDeclaredMethod("fireSessionEndEvent");
 		privateFireSessionEndEventMethod.setAccessible(true);
-		privateFireSessionEndEventMethod.invoke(contentAssistant, null);
+		privateFireSessionEndEventMethod.invoke(contentAssistant);
 		
 		return pages;
 	}
@@ -274,7 +274,7 @@ public class TestCSSContentAssistComputers extends TestCase {
 	 * @return <code>StructuredTextEditor</code> opened from the given <code>file</code>
 	 */
 	private static StructuredTextEditor getEditor(IFile file)  {
-		StructuredTextEditor editor = (StructuredTextEditor)fFileToEditorMap.get(file);
+		StructuredTextEditor editor = fFileToEditorMap.get(file);
 		
 		if(editor == null) {
 			try {
@@ -363,9 +363,9 @@ public class TestCSSContentAssistComputers extends TestCase {
 		 */
 		public void tearDown() throws Exception {
 			//close out the editors
-			Iterator iter = fFileToEditorMap.values().iterator();
+			Iterator<StructuredTextEditor> iter = fFileToEditorMap.values().iterator();
 			while(iter.hasNext()) {
-				StructuredTextEditor editor = (StructuredTextEditor)iter.next();
+				StructuredTextEditor editor = iter.next();
 				editor.doSave(null);
 				editor.close(false);
 			}
