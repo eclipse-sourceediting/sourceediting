@@ -3160,11 +3160,11 @@ public class StructuredTextEditor extends TextEditor {
 					if (StructuredTextEditorPreferencePage.PREFERENCE_SCOPE_NAME.equalsIgnoreCase(entry.getKey().toString())) {
 						ScopedPreferenceStore scopedPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, entry.getValue().toString().toLowerCase(Locale.US));
 						fAppearancePreferenceStore = scopedPreferenceStore;
+						fAppearancePreferenceStore.addPropertyChangeListener(fAppearancePropertyChangeListener = new PropertyChangeListener());
 					}
 				});
 			}
 
-			fAppearancePreferenceStore.addPropertyChangeListener(fAppearancePropertyChangeListener = new PropertyChangeListener());
 		}
 	}
 
