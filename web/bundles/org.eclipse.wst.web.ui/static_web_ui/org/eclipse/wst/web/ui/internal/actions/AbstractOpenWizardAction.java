@@ -53,8 +53,13 @@ public abstract class AbstractOpenWizardAction implements IWorkbenchWindowAction
 
 	protected void openWizardDialog( IWorkbenchWizard wizard )
 	{
+		WizardDialog dialog = createWizardDialog(wizard);
+		dialog.open();
+	}
+
+	protected WizardDialog createWizardDialog(IWorkbenchWizard wizard) {
 		ISelection selection = window.getSelectionService().getSelection();
-	
+		
 		if ( selection instanceof IStructuredSelection )
 		{
 			wizard.init( window.getWorkbench(), (IStructuredSelection) selection );
@@ -68,7 +73,6 @@ public abstract class AbstractOpenWizardAction implements IWorkbenchWindowAction
 		WizardDialog dialog = new WizardDialog( parent, wizard );
 	
 		dialog.create();
-		dialog.open();
+		return dialog;
 	}
-
 }

@@ -117,7 +117,7 @@
 					tooltip="%action.tooltip.CSS" />
 			<action
 					class="org.eclipse.wst.web.ui.internal.actions.OpenJSWizardAction"
-					icon="platform:/plugin/org.eclipse.wst.jsdt.ui/icons/full/etool16/newjscript_wiz.gif"
+					icon="platform:/plugin/org.eclipse.wst.web.ui/icons/full/etool16/newjscript_wiz.gif"
 					id="org.eclipse.wst.web.ui.actions.newJSFile"
 					label="%action.label.JS"
 					style="push"
