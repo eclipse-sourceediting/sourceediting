@@ -124,17 +124,16 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_OWN_PAGE, "");
 		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER,
 				"org.eclipse.wst.html.ui.proposalCategory.htmlTags\0" +
+				"org.eclipse.wst.html.ui.proposalCategory.generic\0" +
 				"org.eclipse.wst.css.ui.proposalCategory.css\0" +
 				"org.eclipse.wst.html.ui.proposalCategory.htmlTemplates\0" +
 				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates");
-//				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates\0" +
-//				"org.eclipse.wst.html.ui.proposalCategory.generic");
 		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_OWN_PAGE_SORT_ORDER,
-//				"org.eclipse.wst.html.ui.proposalCategory.generic\0" +
 				"org.eclipse.wst.html.ui.proposalCategory.htmlTemplates\0"+
 				"org.eclipse.wst.css.ui.proposalCategory.cssTemplates\0" +
 				"org.eclipse.wst.html.ui.proposalCategory.htmlTags\0" +
-				"org.eclipse.wst.css.ui.proposalCategory.css");
+				"org.eclipse.wst.css.ui.proposalCategory.css\0" +
+				"org.eclipse.wst.html.ui.proposalCategory.generic");
 
 		initAppearancePreferences(store, registry);
 	}
@@ -169,5 +168,4 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		 */
 		store.setDefault(AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, "combinationHover|true|0;problemHover|false|0;documentationHover|false|0;annotationHover|true|" + mod2Name); //$NON-NLS-1$
 	}
-
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 IBM Corporation and others.
+ * Copyright (c) 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.internal.genericeditor.ContentAssistProcessorRegistry;
 import org.eclipse.ui.internal.genericeditor.GenericEditorPlugin;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer;
 
@@ -54,9 +55,16 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 			Set<IContentType> types = new HashSet<>();
 			IContentType contentType = contentTypeManager.getContentType(ContentTypeIdForHTML.ContentTypeID_HTML);
 			types.add(contentType);
+			contentType = contentTypeManager.getContentType("org.eclipse.wildwebdeveloper.html");
+			types.add(contentType);
 			contentType = contentTypeManager.getContentType("org.eclipse.core.runtime.text");
 			types.add(contentType);
-			fContentAssistProcessors = contentAssistProcessorRegistry.getContentAssistProcessors(viewer, null, types);
+			try {
+				fContentAssistProcessors = contentAssistProcessorRegistry.getContentAssistProcessors(viewer, null, types);
+			}
+			catch (NoClassDefFoundError e) {
+				Logger.logException(e);
+			}
 		}
 		List<ICompletionProposal> proposals = new ArrayList<>();
 		for (IContentAssistProcessor processor : fContentAssistProcessors) {

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005, 2018 BEA Systems, Inc.
+ * Copyright (c) 2005, 2020 BEA Systems, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator;
 import org.eclipse.ui.views.markers.WorkbenchMarkerResolution;
 import org.eclipse.wst.common.componentcore.internal.ModuleMigratorManager;
-import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
 /**
  * This has been deprecated since WTP 3.1.2 and will be deleted post WTP 3.2.

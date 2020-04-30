@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -78,7 +78,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	private static final String ATT_TARGET = "target"; //$NON-NLS-1$
 	private static final String ATT_TYPE = "type"; //$NON-NLS-1$
 	private static final String CONFIGURATION = "provisionalConfiguration"; //$NON-NLS-1$
-	private static Map configurationMap = null;
+	private static Map<String, List<IConfigurationElement>> configurationMap = null;
 	private final static boolean debugTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/extendedconfigurationbuilder/time")); //$NON-NLS-1$  //$NON-NLS-2$
 	private static final String DEFINITION = "provisionalDefinition"; //$NON-NLS-1$
 	private static final String EP_EXTENDEDCONFIGURATION = "editorConfiguration"; //$NON-NLS-1$
@@ -94,10 +94,11 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	 * @param classAttribute
 	 *            the name of the attribute carrying the class
 	 * @returns the extension object if successful. If an error occurs when
-	 *          createing executable extension, the exception is logged, and
+	 *          creating executable extension, the exception is logged, and
 	 *          null returned.
 	 */
-	static Object createExtension(final IConfigurationElement element, final String classAttribute, final String targetID) {
+	@SuppressWarnings("unchecked")
+	static <T> T createExtension(final IConfigurationElement element, final String classAttribute, final String targetID) {
 		final Object[] result = new Object[1];
 		String pluginId = element.getDeclaringExtension().getNamespace();
 		Bundle bundle = Platform.getBundle(pluginId);
@@ -123,7 +124,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				}
 			});
 		}
-		return result[0];
+		return (T) result[0];
 	}
 
 	public synchronized static ExtendedConfigurationBuilder getInstance() {
@@ -138,17 +139,17 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		super();
 	}
 
-	private List createConfigurations(List configurations, String extensionType, String targetID) {
+	private <T> List<T> createConfigurations(List<IConfigurationElement> configurations, String extensionType, String targetID) {
 		if (configurations == null)
-			return new ArrayList(0);
-		List result = new ArrayList(1);
+			return new ArrayList<>(0);
+		List<T> result = new ArrayList<>(1);
 		for (int i = 0; i < configurations.size(); i++) {
-			IConfigurationElement element = (IConfigurationElement) configurations.get(i);
+			IConfigurationElement element = configurations.get(i);
 			if ((element.getName().equals(extensionType) || (element.getName().equals(CONFIGURATION) && extensionType.equals(element.getAttribute(ATT_TYPE))))) {
 				String[] targets = StringUtils.unpack(element.getAttribute(ATT_TARGET));
 				for (int j = 0; j < targets.length; j++) {
 					if (targetID.equals(targets[j].trim())) {
-						Object o = createExtension(element, ATT_CLASS, targetID);
+						T o = createExtension(element, ATT_CLASS, targetID);
 						if (o != null) {
 							result.add(o);
 						}
@@ -159,12 +160,12 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		return result;
 	}
 
-	private IConfigurationElement[] findConfigurationElements(List configurations, String extensionType, String targetID) {
+	private IConfigurationElement[] findConfigurationElements(List<IConfigurationElement> configurations, String extensionType, String targetID) {
 		if (configurations == null)
 			return new IConfigurationElement[0];
-		List result = new ArrayList(1);
+		List<IConfigurationElement> result = new ArrayList<>(1);
 		for (int i = 0; i < configurations.size(); i++) {
-			IConfigurationElement element = (IConfigurationElement) configurations.get(i);
+			IConfigurationElement element = configurations.get(i);
 			if ((element.getName().equals(extensionType) || (element.getName().equals(DEFINITION) && extensionType.equals(element.getAttribute(ATT_TYPE))))) {
 				String[] targets = StringUtils.unpack(element.getAttribute(ATT_TARGET));
 				for (int j = 0; j < targets.length; j++) {
@@ -174,7 +175,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				}
 			}
 		}
-		return (IConfigurationElement[]) result.toArray(new IConfigurationElement[0]);
+		return result.toArray(new IConfigurationElement[0]);
 	}
 
 	/**
@@ -189,7 +190,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	public Object getConfiguration(String extensionType, String targetID) {
 		if (targetID == null || targetID.length() == 0)
 			return null;
-		List configurations = getConfigurations(extensionType, targetID);
+		List<IConfigurationElement> configurations = getConfigurations(extensionType, targetID);
 		if (configurations.isEmpty())
 			return null;
 		return configurations.get(0);
@@ -198,16 +199,17 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	/**
 	 * Returns all configurations for the given extensionType matching the
 	 * targetID, if any are available.
+	 * @param <T>
 	 * 
 	 * @param extensionType
 	 * @param targetID
 	 * @return a List of configuration objects, which may or may not be empty
 	 */
-	public List getConfigurations(String extensionType, String targetID) {
+	public <T> List<T> getConfigurations(String extensionType, String targetID) {
 		if (targetID == null || targetID.length() == 0)
-			return new ArrayList(0);
+			return new ArrayList<>(0);
 		if (configurationMap == null) {
-			configurationMap = new HashMap(0);
+			configurationMap = new HashMap<>(0);
 			synchronized (configurationMap) {
 				readRegistry(Platform.getExtensionRegistry(), SSEUIPlugin.ID, EP_EXTENDEDCONFIGURATION);
 				if (debugTime) {
@@ -216,8 +218,8 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				}
 			}
 		}
-		List extensions = (List) configurationMap.get(extensionType);
-		List configurations = createConfigurations(extensions, extensionType, targetID);
+		List<IConfigurationElement> extensions = configurationMap.get(extensionType);
+		List<T> configurations = createConfigurations(extensions, extensionType, targetID);
 		if (debugTime) {
 			if (!configurations.isEmpty())
 				System.out.println(getClass().getName() + "#getConfiguration(" + extensionType + ", " + targetID + "): configurations loaded in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -243,7 +245,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 			time0 = System.currentTimeMillis();
 		}
 		if (configurationMap == null) {
-			configurationMap = new HashMap(0);
+			configurationMap = new HashMap<>(0);
 			synchronized (configurationMap) {
 				readRegistry(Platform.getExtensionRegistry(), SSEUIPlugin.ID, EP_EXTENDEDCONFIGURATION);
 				if (debugTime) {
@@ -252,7 +254,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				}
 			}
 		}
-		List definitions = (List) configurationMap.get(extensionType);
+		List<IConfigurationElement> definitions = configurationMap.get(extensionType);
 		IConfigurationElement[] elements = findConfigurationElements(definitions, extensionType, targetID);
 		String[] values = new String[elements.length];
 		for (int i = 0; i < values.length; i++) {
@@ -271,9 +273,9 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		String name = element.getName();
 		if (name.equals(CONFIGURATION) || name.equals(DEFINITION))
 			name = element.getAttribute(ATT_TYPE);
-		List configurations = (List) configurationMap.get(name);
+		List<IConfigurationElement> configurations = configurationMap.get(name);
 		if (configurations == null) {
-			configurations = new ArrayList(1);
+			configurations = new ArrayList<>(1);
 			configurationMap.put(name, configurations);
 		}
 		configurations.add(element);

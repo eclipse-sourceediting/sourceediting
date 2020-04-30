@@ -671,7 +671,6 @@
           id="org.eclipse.wst.html.ui.proposalCategory.htmlAttributeValues"
           name="%proposalCategory.htmlAttributeValues">
     </proposalCategory>
-    <!--
     <proposalCategory
           icon="platform:/plugin/org.eclipse.ui.genericeditor/icons/full/obj16/generic_editor.png"
           id="org.eclipse.wst.html.ui.proposalCategory.generic"
@@ -689,7 +688,6 @@
           <partitionType id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"/>
        </contentType>
     </proposalComputer>
-    -->
     <proposalComputer
           activate="false"
           categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"

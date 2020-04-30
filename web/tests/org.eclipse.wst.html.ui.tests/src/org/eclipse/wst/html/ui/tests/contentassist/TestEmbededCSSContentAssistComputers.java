@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2017 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -97,85 +97,85 @@ public class TestEmbededCSSContentAssistComputers extends TestCase {
 	
 	public void testSelectorProposals_StyleTag() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {90, 0, 90, 90};
+		int[] expectedProposalCounts = new int[] {90, 0, 90, 0, 90};
 		runProposalTest("test3.html", 9, 0, expectedProposalCounts);
 	}
 	
 	public void testDeclarationPropertyProposals_StyleTag() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 0, 122};
 		runProposalTest("test3.html", 12, 0, expectedProposalCounts);
 	}
 	
 	public void testDeclarationValueProposals_StyleTag() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {11, 0, 11, 11};
+		int[] expectedProposalCounts = new int[] {11, 0, 11, 0, 11};
 		runProposalTest("test3.html", 13, 16, expectedProposalCounts);
 	}
 	
 	public void testFinishSelectorProposals_StyleTag() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {20, 0, 20, 20};
+		int[] expectedProposalCounts = new int[] {20, 0, 20, 0, 20};
 		runProposalTest("test3.html", 24, 1, expectedProposalCounts);
 	}
 	
 	public void testFinishDeclarationProposals_StyleTag() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {4, 0, 4, 4};
+		int[] expectedProposalCounts = new int[] {4, 0, 4, 0, 4};
 		runProposalTest("test3.html", 17, 14, expectedProposalCounts);
 	}
 	
 	public void testFinishDeclarationValueProposals_StyleTag() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {4, 0, 4, 4};
+		int[] expectedProposalCounts = new int[] {4, 0, 4, 0, 4};
 		runProposalTest("test3.html", 21, 23, expectedProposalCounts);
 	}
 	
 	public void testDeclarationPropertyProposals_SpacedQuotes_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 0, 122};
 		runProposalTest("test3.html", 31, 14, expectedProposalCounts);
 	}
 	
 	public void testDeclarationPropertyProposals_EmptyQuotes_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 0, 122};
 		runProposalTest("test3.html", 33, 12, expectedProposalCounts);
 	}
 	
 	public void testDeclarationValueProposals_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {11, 0, 11, 11};
+		int[] expectedProposalCounts = new int[] {11, 0, 11, 0, 11};
 		runProposalTest("test3.html", 35, 26, expectedProposalCounts);
 	}
 	
 	public void testFinishDeclarationProposals_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {4, 0, 4, 4};
+		int[] expectedProposalCounts = new int[] {4, 0, 4, 0, 4};
 		runProposalTest("test3.html", 37, 25, expectedProposalCounts);
 	}
 	
 	public void testFinishDeclarationValueProposals_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {4, 0, 4, 4};
+		int[] expectedProposalCounts = new int[] {4, 0, 4, 0, 4};
 		runProposalTest("test3.html", 39, 34, expectedProposalCounts);
 	}
 	
 	public void testDeclarationPropertyProposals_AfterSemicolon_NoSpace_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 0, 122};
 		runProposalTest("test3.html", 41, 40, expectedProposalCounts);
 	}
 	
 	public void testDeclarationPropertyProposals_AfterSemicolon_BeforeSpace_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 0, 122};
 		runProposalTest("test3.html", 43, 40, expectedProposalCounts);
 	}
 	
 	public void testDeclarationPropertyProposals_AfterSemicolon_AfterSpace_StyleAttribute() throws Exception {
 		// default page, templates page, standard page, default page again
-		int[] expectedProposalCounts = new int[] {122, 0, 122, 122};
+		int[] expectedProposalCounts = new int[] {122, 0, 122, 0, 122};
 		runProposalTest("test3.html", 43, 41, expectedProposalCounts);
 	}
 	

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2019 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -105,37 +105,37 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	
 	public void testEmptyDocument() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {7, 6, 1, 0, 7};
+		int[] expectedProposalCounts = new int[] {7, 6, 1, 0, 0, 7};
 		runProposalTest("test0.html", 0, 0, expectedProposalCounts);
 	}
 	
 	public void testAfterDocTypeBeforeHTMLTagProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {8, 8, 0, 0, 8};
+		int[] expectedProposalCounts = new int[] {8, 8, 0, 0, 0, 8};
 		runProposalTest("test1.html", 1, 0, expectedProposalCounts);
 	}
 	
 	public void testAfterDocTypeBeforeEmptyDocProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {9, 8, 1, 0, 9};
+		int[] expectedProposalCounts = new int[] {9, 8, 1, 0, 0, 9};
 		runProposalTest("test2.html", 1, 0, expectedProposalCounts);
 	}
 	
 	public void testBodyTagChildElementProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {78, 8, 70, 0, 78};
+		int[] expectedProposalCounts = new int[] {78, 8, 70, 0, 0, 78};
 		runProposalTest("test1.html", 8, 0, expectedProposalCounts);
 	}
 	
 	public void testPTagChildElementProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {54, 8, 46, 0, 54};
+		int[] expectedProposalCounts = new int[] {54, 8, 46, 0, 0, 54};
 		runProposalTest("test1.html", 14, 0, expectedProposalCounts);
 	}
 	
 	public void testDIVTagChildElementProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {78, 8, 70, 0, 78};
+		int[] expectedProposalCounts = new int[] {78, 8, 70, 0, 0, 78};
 		runProposalTest("test1.html", 18, 0, expectedProposalCounts);
 	}
 
@@ -149,31 +149,31 @@ public class TestHTMLContentAssistComputers extends TestCase {
 
 	public void testDIVTagAttributeNameProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {18, 0, 18, 0, 18};
+		int[] expectedProposalCounts = new int[] {18, 0, 18, 0, 0, 18};
 		runProposalTest("test1.html", 17, 5, expectedProposalCounts);
 	}
 	
 	public void testFinishClosingTagNameProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {1, 0, 1, 0, 1};
+		int[] expectedProposalCounts = new int[] {1, 0, 1, 0, 0, 1};
 		runProposalTest("test4.html", 9, 9, expectedProposalCounts);
 	}
 	
 	public void testFinishClosingTagProposals() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {2, 0, 2, 0, 2};
+		int[] expectedProposalCounts = new int[] {2, 0, 2, 0, 0, 2};
 		runProposalTest("test4.html", 10, 0, expectedProposalCounts);
 	}
 	
 	public void testFinishClosingTagNameProposalsXHTML() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {1, 0, 1, 0, 1};
+		int[] expectedProposalCounts = new int[] {1, 0, 1, 0, 0, 1};
 		runProposalTest("test5.xhtml", 9, 9, expectedProposalCounts);
 	}
 	
 	public void testFinishClosingTagProposalsXHTML() throws Exception {
 		// default page, templates page, tags page, default page again
-		int[] expectedProposalCounts = new int[] {1, 0, 2, 0, 2};
+		int[] expectedProposalCounts = new int[] {1, 0, 2, 0, 0, 2};
 		runProposalTest("test5.xhtml", 10, 0, expectedProposalCounts);
 	}
 
