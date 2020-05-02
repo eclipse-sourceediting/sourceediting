@@ -53,11 +53,8 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 			IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 			ContentAssistProcessorRegistry contentAssistProcessorRegistry = GenericEditorPlugin.getDefault().getContentAssistProcessorRegistry();
 			Set<IContentType> types = new HashSet<>();
-			IContentType contentType = contentTypeManager.getContentType(ContentTypeIdForHTML.ContentTypeID_HTML);
-			types.add(contentType);
-			contentType = contentTypeManager.getContentType("org.eclipse.wildwebdeveloper.html");
-			types.add(contentType);
-			contentType = contentTypeManager.getContentType("org.eclipse.core.runtime.text");
+			types.addAll(Arrays.asList(contentTypeManager.findContentTypesFor("file.html")));
+			IContentType contentType = contentTypeManager.getContentType(IContentTypeManager.CT_TEXT);
 			types.add(contentType);
 			try {
 				fContentAssistProcessors = contentAssistProcessorRegistry.getContentAssistProcessors(viewer, null, types);
