@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2019 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -28,29 +28,40 @@ import org.eclipse.core.runtime.content.IContentType;
  */
 public class ContentTypeSpecs {
 	public static ContentTypeSpecs createFor(String contentTypeId) {
+		return createFor(new String[]{contentTypeId});
+	}
+
+	public static ContentTypeSpecs createFor(String[] contentTypeIds) {
 //		long startTime = System.currentTimeMillis();
-		IContentType baseContentType = Platform.getContentTypeManager().getContentType(contentTypeId);
-		String[] baseExtensions = baseContentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-		Arrays.sort(baseExtensions);
 		Set<String> filenameExtensions = new HashSet<>();
 		Set<String> filenames = new HashSet<>();
-		IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
-		for (int i = 0, length = contentTypes.length; i < length; i++) {
-			if (contentTypes[i].isKindOf(baseContentType)) {
-				String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-				for (int j = 0; j < fileExtension.length; j++) {
-					filenameExtensions.add(fileExtension[j]);
-				}
-				String[] names = contentTypes[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
-				for (int j = 0; j < names.length; j++) {
-					filenames.add(names[j]);
+		Set<String> combinedBaseExtensions = new HashSet<>();
+		for (String contentTypeId: contentTypeIds) {
+			IContentType baseContentType = Platform.getContentTypeManager().getContentType(contentTypeId);
+			String[] baseExtensions = baseContentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			for (int i = 0; i < baseExtensions.length; i++) {
+				combinedBaseExtensions.add(baseExtensions[i]);
+			}
+			Arrays.sort(baseExtensions);
+			IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
+			for (int i = 0, length = contentTypes.length; i < length; i++) {
+				if (contentTypes[i].isKindOf(baseContentType)) {
+					String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+					for (int j = 0; j < fileExtension.length; j++) {
+						filenameExtensions.add(fileExtension[j]);
+					}
+					String[] names = contentTypes[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
+					for (int j = 0; j < names.length; j++) {
+						filenames.add(names[j]);
+					}
 				}
 			}
 		}
+		String[] baseTypeFilenameExtensions = combinedBaseExtensions.toArray(new String[combinedBaseExtensions.size()]);
 		// move the extensions of the base type to the start to match quicker
 		String[] stringExtensions = filenameExtensions.toArray(new String[filenameExtensions.size()]);
 		for (int i = stringExtensions.length - 1; i > 0; i--) {
-			if (Arrays.binarySearch(baseExtensions, stringExtensions[i]) >= 0) {
+			if (Arrays.binarySearch(baseTypeFilenameExtensions, stringExtensions[i]) >= 0) {
 				stringExtensions[i] = stringExtensions[i - 1];
 			}
 		}

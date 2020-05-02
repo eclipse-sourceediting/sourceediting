@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013, 2019 Angelo ZERR and others
+ *  Copyright (c) 2013, 2020 Angelo ZERR and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -14,14 +14,24 @@
  */
 package org.eclipse.wst.html.ui.internal.contentassist.resources;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.w3c.dom.Node;
 
-public class ScriptWebResourcesCompletionProposalComputer extends
-		AbstractWebResourcesCompletionProposalComputer {
+public class ScriptWebResourcesCompletionProposalComputer extends AbstractWebResourcesCompletionProposalComputer {
 
-	ContentTypeSpecs fileMatcher = ContentTypeSpecs.createFor("org.eclipse.wst.jsdt.core.jsSource");
-	
+	ContentTypeSpecs fileMatcher = null;
+
+	public ScriptWebResourcesCompletionProposalComputer() {
+		IContentType[] types = Platform.getContentTypeManager().findContentTypesFor("file.js");
+		String[] typeNames = new String[types.length];
+		for (int i = 0; i < typeNames.length; i++) {
+			typeNames[i] = types[i].getId();
+		}
+		fileMatcher = ContentTypeSpecs.createFor(typeNames);
+	}
+
 	@Override
 	ContentTypeSpecs createFilenameMatcher() {
 		return fileMatcher;
@@ -30,9 +40,7 @@ public class ScriptWebResourcesCompletionProposalComputer extends
 	@Override
 	boolean matchRequest(ContentAssistRequest contentAssistRequest) {
 		Node node = contentAssistRequest.getNode();
-		return
-			"script".equals(node.getLocalName()) &&
-			"src".equals(getCurrentAttributeName(contentAssistRequest));
+		return "script".equals(node.getLocalName()) && "src".equals(getCurrentAttributeName(contentAssistRequest));
 	}
 
 }

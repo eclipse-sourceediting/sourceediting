@@ -39,6 +39,7 @@ import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdF
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLStructuredContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
@@ -232,6 +233,9 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		}
 		else if (partitionType == ICSSPartitions.STYLE || partitionType == ICSSPartitions.COMMENT) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForEmbeddedCSS()};
+		}
+		else {
+			Logger.log(Logger.INFO, "No line style provider for " + partitionType);
 		}
 
 		return providers;
