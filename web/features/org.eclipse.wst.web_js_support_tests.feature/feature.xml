@@ -12,7 +12,7 @@
         IBM Corporation - initial API and implementation
  -->
 <feature
-      id="org.eclipse.wst.web_tests.feature"
+      id="org.eclipse.wst.web_js_support_tests.feature"
       label="%featureName"
       version="3.18.0.qualifier"
       provider-name="%providerName"
@@ -31,43 +31,14 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.wst.web_js_support_tests.feature"
-         version="0.0.0"
-         optional="true"/>
-
    <plugin
-         id="org.eclipse.wst.css.core.tests"
+         id="org.eclipse.wst.jsdt.web.core.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.wst.css.tests.encoding"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.wst.css.ui.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.wst.html.core.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.wst.html.tests.encoding"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.wst.html.ui.tests"
+         id="org.eclipse.wst.jsdt.web.ui.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

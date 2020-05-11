@@ -43,15 +43,19 @@
   <bundle id="org.eclipse.jst.jsp.tests.encoding"><category name="wtp.bundles"/></bundle>
 
   <bundle id="org.eclipse.jst.standard.schemas"><category name="wtp.bundles"/></bundle>
-  <bundle id="org.eclipse.wst.jsdt.web.support.jsp"><category name="wtp.bundles"/></bundle>
   <bundle id="org.eclipse.jst.jsp.ui.infopop"><category name="wtp.bundles"/></bundle>
   <bundle id="org.eclipse.jst.jsp.core.tests"><category name="wtp.bundles"/></bundle>
   <bundle id="org.eclipse.jst.jsp.ui.tests"><category name="wtp.bundles"/></bundle>
 
-  <bundle id="org.eclipse.wtp.javascript.capabilities"><category name="wtp.bundles"/></bundle>
   <bundle id="org.eclipse.wtp.web.capabilities"><category name="wtp.bundles"/></bundle>
   <bundle id="org.eclipse.wtp.xml.capabilities"><category name="wtp.bundles"/></bundle>
 
+  <feature id="org.eclipse.wst.web_js_support.feature"><category name="wtp.js_sopport"/></feature>
+  <feature id="org.eclipse.wst.web_js_support_sdk.feature"><category name="wtp.js_sopport.sdk"/></feature>
+
+  <bundle id="org.eclipse.wst.jsdt.web.support.jsp"><category name="wtp.js_sopport"/></bundle>
+  <bundle id="org.eclipse.wtp.javascript.capabilities"><category name="wtp.js_sopport"/></bundle>
+  
   <!-- sources -->
 
   <feature id="org.eclipse.wst.json_core.feature.source"><category name="wtp.sources"/></feature>
@@ -72,17 +76,28 @@
   <feature id="org.eclipse.wst.xml.xpath2.processor.sdk.feature.source"><category name="wtp.sdk.sources"/></feature>
   <bundle id="org.eclipse.wst.xml.xpath2.processor.sdk.doc.source"><category name="wtp.bundles.sdk.sources"/></bundle>
 
+  <feature id="org.eclipse.wst.web_js_support.feature.source"><category name="wtp.js_sopport.sources"/></feature>
+  <feature id="org.eclipse.wst.web_js_support_sdk.feature.source"><category name="wtp.js_sopport.sdk.sources"/></feature>
+  
+  <bundle id="org.eclipse.wst.jsdt.web.support.jsp.source"><category name="wtp.js_sopport.sources"/></bundle>
+  <bundle id="org.eclipse.wtp.javascript.capabilities.source"><category name="wtp.js_sopport.sources"/></bundle>
+
+  <!-- tests -->
+
   <feature id="org.eclipse.wst.json_tests.feature.source"><category name="wtp.tests"/></feature>
   <feature id="org.eclipse.wst.web_tests.feature.source"><category name="wtp.tests"/></feature>
   <feature id="org.eclipse.wst.xml_tests.feature.source"><category name="wtp.tests"/></feature>
   <feature id="org.eclipse.wst.xsl_tests.feature.source"><category name="wtp.tests"/></feature>
   <bundle id="org.eclipse.wst.xml.xpath2.wtptypes.tests.source"><category name="wtp.tests"/></bundle>
 
+  <feature id="org.eclipse.wst.web_js_support_tests.feature.source"><category name="wtp.js_sopport.tests"/></feature>
+  
+  <!-- bundles -->
+
   <bundle id="org.eclipse.jst.jsp.core.source"><category name="wtp.bundles"/></bundle>
   <bundle id="org.eclipse.jst.jsp.ui.source"><category name="wtp.bundles"/></bundle>
   <bundle id="org.eclipse.jst.jsp.tests.encoding.source"><category name="wtp.bundles"/></bundle>
 
-  <bundle id="org.eclipse.wtp.javascript.capabilities.source"><category name="wtp.bundles.sources"/></bundle>
   <bundle id="org.eclipse.wtp.web.capabilities.source"><category name="wtp.bundles.sources"/></bundle>
   <bundle id="org.eclipse.wtp.xml.capabilities.source"><category name="wtp.bundles.sources"/></bundle>
 
@@ -98,4 +113,9 @@
   <category-def name="wtp.bundles.sources" label="Web Tools Platform (WTP) Bundle Sources"><description>These bundles provide sources.</description></category-def>
   <category-def name="wtp.bundles.sdk.sources" label="Web Tools Platform SDK (WTP SDK) Bundle Sources"><description>These bundles provide sources.</description></category-def>
 
+  <category-def name="wtp.js_sopport" label="Web Tools Platform (WTP) JavaScript Support"><description>These bundles are most likely include in features, but are provided here for completeness.</description></category-def>
+  <category-def name="wtp.js_support.sdk" label="Web Tools Platform SDK (WTP SDK) JavaScript Support"><description>These bundles are most likely include in features, but are provided here for completeness.</description></category-def>
+
+  <category-def name="wtp.js_sopport.sources" label="Web Tools Platform (WTP) JavaScript Support Sources"><description>These bundles provide sources.</description></category-def>
+  <category-def name="wtp.js_sopport.sdk.sources" label="Web Tools Platform SDK (WTP SDK) JavaScript Support Sources"><description>These bundles provide sources.</description></category-def>
 </site>

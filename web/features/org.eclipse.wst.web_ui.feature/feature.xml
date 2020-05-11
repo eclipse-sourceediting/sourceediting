@@ -53,19 +53,10 @@
       <import feature="org.eclipse.wst.server_ui.feature"/>
    </requires>
 
-   <plugin
-         id="org.eclipse.wst.jsdt.web.core"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="org.eclipse.wst.web_js_support.feature"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.wst.jsdt.web.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         optional="true"/>
 
    <plugin
          id="org.eclipse.wst.html.ui.infopop"

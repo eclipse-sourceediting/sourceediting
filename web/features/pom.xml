@@ -62,5 +62,9 @@
     <module>org.eclipse.wst.web_tests.feature</module>
     <module>org.eclipse.wst.web_ui.feature</module>
     <module>org.eclipse.wst.web_userdoc.feature</module>
+    
+    <module>org.eclipse.wst.web_js_support.feature</module>
+    <module>org.eclipse.wst.web_js_support_sdk.feature</module>
+    <module>org.eclipse.wst.web_js_support_tests.feature</module>
   </modules>
 </project>
