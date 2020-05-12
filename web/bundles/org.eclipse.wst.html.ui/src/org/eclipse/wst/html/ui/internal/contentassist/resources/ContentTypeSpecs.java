@@ -33,7 +33,7 @@ public class ContentTypeSpecs {
 
 	public static ContentTypeSpecs createFor(String[] contentTypeIds) {
 //		long startTime = System.currentTimeMillis();
-		Set<String> filenameExtensions = new HashSet<>();
+		List<String> filenameExtensions = new ArrayList<String>();
 		Set<String> filenames = new HashSet<>();
 		Set<String> combinedBaseExtensions = new HashSet<>();
 		for (String contentTypeId: contentTypeIds) {
@@ -42,29 +42,28 @@ public class ContentTypeSpecs {
 			for (int i = 0; i < baseExtensions.length; i++) {
 				combinedBaseExtensions.add(baseExtensions[i]);
 			}
+			String[] names = baseContentType.getFileSpecs(IContentType.FILE_NAME_SPEC);
+			for (int j = 0; j < names.length; j++) {
+				filenames.add(names[j]);
+			}
 			Arrays.sort(baseExtensions);
 			IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
 			for (int i = 0, length = contentTypes.length; i < length; i++) {
 				if (contentTypes[i].isKindOf(baseContentType)) {
 					String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 					for (int j = 0; j < fileExtension.length; j++) {
-						filenameExtensions.add(fileExtension[j]);
+						if (!filenameExtensions.contains(fileExtension[j])) {
+							filenameExtensions.add(fileExtension[j]);
+						}
 					}
-					String[] names = contentTypes[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
+					names = contentTypes[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
 					for (int j = 0; j < names.length; j++) {
 						filenames.add(names[j]);
 					}
 				}
 			}
 		}
-		String[] baseTypeFilenameExtensions = combinedBaseExtensions.toArray(new String[combinedBaseExtensions.size()]);
-		// move the extensions of the base type to the start to match quicker
 		String[] stringExtensions = filenameExtensions.toArray(new String[filenameExtensions.size()]);
-		for (int i = stringExtensions.length - 1; i > 0; i--) {
-			if (Arrays.binarySearch(baseTypeFilenameExtensions, stringExtensions[i]) >= 0) {
-				stringExtensions[i] = stringExtensions[i - 1];
-			}
-		}
 //		System.out.println("Discovered content types for " + contentTypeId + " in " + (System.currentTimeMillis() - startTime) + "ms");
 		return new ContentTypeSpecs(filenames.toArray(new String[filenames.size()]), stringExtensions);
 	}
