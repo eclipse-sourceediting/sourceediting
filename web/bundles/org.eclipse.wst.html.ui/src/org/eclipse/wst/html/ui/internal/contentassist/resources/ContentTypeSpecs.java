@@ -35,12 +35,11 @@ public class ContentTypeSpecs {
 //		long startTime = System.currentTimeMillis();
 		List<String> filenameExtensions = new ArrayList<String>();
 		Set<String> filenames = new HashSet<>();
-		Set<String> combinedBaseExtensions = new HashSet<>();
 		for (String contentTypeId: contentTypeIds) {
 			IContentType baseContentType = Platform.getContentTypeManager().getContentType(contentTypeId);
 			String[] baseExtensions = baseContentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 			for (int i = 0; i < baseExtensions.length; i++) {
-				combinedBaseExtensions.add(baseExtensions[i]);
+				filenameExtensions.add(baseExtensions[i]);
 			}
 			String[] names = baseContentType.getFileSpecs(IContentType.FILE_NAME_SPEC);
 			for (int j = 0; j < names.length; j++) {
