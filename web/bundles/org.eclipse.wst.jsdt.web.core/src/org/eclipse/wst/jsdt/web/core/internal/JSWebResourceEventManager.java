@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2018 IBM Corporation and others.
+ * Copyright (c) 2011, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,15 +21,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.ModuleCoreNature;
-import org.eclipse.wst.common.componentcore.resources.IVirtualFile;
 import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.core.ClasspathEntry;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
+import org.eclipse.wst.jsdt.web.core.internal.project.ModuleCoreSupport;
 import org.eclipse.wst.jsdt.web.core.internal.project.ModuleSourcePathProvider;
 import org.eclipse.wst.sse.core.indexing.AbstractIndexManager;
 
@@ -137,7 +134,7 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 			 * if a JS project with Module Core nature, check if include path
 			 * needs to be updated
 			 */
-			if (project.isAccessible() && project.hasNature(JavaScriptCore.NATURE_ID) && ModuleCoreNature.isFlexibleProject(project)) {
+			if (project.isAccessible() && project.hasNature(JavaScriptCore.NATURE_ID) && ModuleCoreSupport.isFlexibleProject(project)) {
 				JavaProject jsProject = (JavaProject) JavaScriptCore.create(project);
 
 				IIncludePathEntry[] oldEntries = jsProject.getRawIncludepath();
@@ -240,18 +237,10 @@ public class JSWebResourceEventManager extends AbstractIndexManager {
 	}
 	
 	/**
-	 * <p>Uses module core to get the roots of the given project.</p>
-	 *
-	 * @param project find the module core roots for this {@link IProject}
-	 * @return the module core roots for the given {@link IProject
+	 * @param project find the deployable roots for this {@link IProject}
+	 * @return the deployable roots for the given {@link IProject
 	 */
 	private static IResource[] getRoots(IProject project) {
-		IVirtualFile root = ComponentCore.createFile(project, Path.ROOT);
-		IResource[] underlyingResources = root.getUnderlyingResources();
-		if (underlyingResources == null || underlyingResources.length == 0) {
-			underlyingResources = new IResource[]{root.getUnderlyingResource()};
-		}
-		
-		return underlyingResources;
+		return ModuleCoreSupport.getWebContentRoots(project);
 	}
 }

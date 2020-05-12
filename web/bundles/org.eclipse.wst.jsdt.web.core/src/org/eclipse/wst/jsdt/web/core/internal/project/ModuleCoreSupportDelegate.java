@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2018 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -40,7 +41,11 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
  */
 final class ModuleCoreSupportDelegate {
 	private static final String SLASH = "/";
-	private static Map fResolvedMap = new HashMap();
+	private static Map<IPath, Map<String, Reference<IPath>>> fResolvedMap = new HashMap<>();
+	
+	static boolean isFlexibleProject(IProject p) {
+		return ModuleCoreNature.isFlexibleProject(p);
+	}
 
 	/**
 	 * @param path
@@ -83,6 +88,14 @@ final class ModuleCoreSupportDelegate {
 		return path;
 	}
 
+	static IResource[] getWebContentRoots(IProject project) {
+		IVirtualFile root = ComponentCore.createFile(project, Path.ROOT);
+		IResource[] underlyingResources = root.getUnderlyingResources();
+		if (underlyingResources == null || underlyingResources.length == 0) {
+			underlyingResources = new IResource[]{root.getUnderlyingResource()};
+		}
+		return underlyingResources;
+	}
 	/**
 	 * @param basePath
 	 *            - the full path to a resource within the workspace
@@ -106,15 +119,15 @@ final class ModuleCoreSupportDelegate {
 			 * cache the result.
 			 */
 			IPath resolved = null;
-			Map mapForBaseResource = null;
-			mapForBaseResource = (Map) fResolvedMap.get(basePath);
+			Map<String, Reference<IPath>> mapForBaseResource = null;
+			mapForBaseResource = fResolvedMap.get(basePath);
 			if (mapForBaseResource != null) {
-				Reference resolvedReference = (Reference) mapForBaseResource.get(reference);
+				Reference<IPath> resolvedReference = mapForBaseResource.get(reference);
 				if (resolvedReference != null)
-					resolved = (IPath) resolvedReference.get();
+					resolved = resolvedReference.get();
 			}
 			else {
-				mapForBaseResource = new HashMap();
+				mapForBaseResource = new HashMap<>();
 				fResolvedMap.put(basePath, mapForBaseResource);
 			}
 
@@ -135,7 +148,7 @@ final class ModuleCoreSupportDelegate {
 						IFile[] underlyingFiles = virtualFile.getUnderlyingFiles();
 						for (int j = 0; j < underlyingFiles.length; j++) {
 							if (underlyingFiles[j].getProject().equals(project) && underlyingFiles[j].exists()) {
-								mapForBaseResource.put(reference, new SoftReference(underlyingFiles[j].getFullPath()));
+								mapForBaseResource.put(reference, new SoftReference<>(underlyingFiles[j].getFullPath()));
 								resolved = underlyingFiles[j].getFullPath();
 							}
 

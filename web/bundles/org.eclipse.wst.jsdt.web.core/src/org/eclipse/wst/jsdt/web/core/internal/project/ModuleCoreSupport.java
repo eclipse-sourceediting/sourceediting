@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,17 @@ public final class ModuleCoreSupport {
 	static final boolean _dump_NCDFE = false;
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
+	
+	public static boolean isFlexibleProject(IProject p) {
+		try {
+			return ModuleCoreSupportDelegate.isFlexibleProject(p);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+			return false;
+		}
+	}
 
 	/**
 	 * @param project
@@ -83,6 +94,21 @@ public final class ModuleCoreSupport {
 		return path;
 	}
 
+	public static IResource[] getWebContentRoots(IProject project) {
+		IResource[] roots = null;
+		try {
+			roots = ModuleCoreSupportDelegate.getWebContentRoots(project);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+		}
+		if (roots == null) {
+			roots = new IResource[]{ResourcesPlugin.getWorkspace().getRoot().getFolder(ModuleCoreSupportDelegate.getWebContentRootPath(project))};
+		}
+		return roots;
+	}
+	
 	/**
 	 * @param path
 	 *            - the full path to a resource within the workspace
