@@ -199,12 +199,12 @@ public class TestHTMLContentAssistComputers extends TestCase {
 	}
 
 	public void testResourceProposalsForImgSrc() throws Exception {
-		IFile referencePoint = fProject.getFile("testResources.html");
+		IFile referenceFile = fProject.getFile("testResources.html");
 		ImageWebResourcesCompletionProposalComputer proposalComputer = new ImageWebResourcesCompletionProposalComputer();
 		Method findMatchingPaths = AbstractWebResourcesCompletionProposalComputer.class.getDeclaredMethod("findMatchingPaths", IResource.class);
 		assertNotNull("findMatchingPaths", findMatchingPaths);
 		findMatchingPaths.setAccessible(true);
-		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referencePoint);
+		IPath[] paths = (IPath[]) findMatchingPaths.invoke(proposalComputer, referenceFile);
 		assertNotNull("paths", paths);
 		String[] strings = new String[paths.length];
 		for (int i = 0; i < strings.length; i++) {
