@@ -116,7 +116,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	
 	private final String CONTENT_ASSIST_SIZE = "contentassistsize";
 	
-	private ReconcilerHighlighter fHighlighter = null;
+	protected ReconcilerHighlighter fHighlighter = null;
 	
 	/**
 	 * Creates a structured text viewer configuration.

@@ -18,7 +18,7 @@
 	<extension-point
 		id="semanticHighlighting"
 		name="%Semantic_Highlighting_Extension.name"
-		schema="schema/semanticHighlighting.exsd" ></extension-point>
+		schema="schema/semanticHighlighting.exsd" />
 	<extension-point
 		id="characterPairing"
 		name="%Character_Pairing.name"
