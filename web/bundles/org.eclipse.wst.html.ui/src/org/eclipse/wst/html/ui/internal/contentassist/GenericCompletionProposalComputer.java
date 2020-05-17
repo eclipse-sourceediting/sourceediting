@@ -27,13 +27,14 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.internal.genericeditor.ContentAssistProcessorRegistry;
 import org.eclipse.ui.internal.genericeditor.GenericEditorPlugin;
-import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer;
 
 public class GenericCompletionProposalComputer implements ICompletionProposalComputer {
 	List<IContentAssistProcessor> fContentAssistProcessors = null;
+	private String fLastErrorMessage;
+	private static final String fExampleFileName = "filename.html"; //$NON-NLS-1$
 
 	public void sessionEnded() {
 		fContentAssistProcessors = null;
@@ -46,6 +47,7 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 	@Override
 	public List computeCompletionProposals(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
 		ISourceViewer viewer = null;
+		fLastErrorMessage = null;
 		if (context.getViewer() instanceof ISourceViewer) {
 			viewer = (ISourceViewer) context.getViewer();
 		}
@@ -53,7 +55,7 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 			IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 			ContentAssistProcessorRegistry contentAssistProcessorRegistry = GenericEditorPlugin.getDefault().getContentAssistProcessorRegistry();
 			Set<IContentType> types = new HashSet<>();
-			types.addAll(Arrays.asList(contentTypeManager.findContentTypesFor("file.html")));
+			types.addAll(Arrays.asList(contentTypeManager.findContentTypesFor(fExampleFileName)));
 			IContentType contentType = contentTypeManager.getContentType(IContentTypeManager.CT_TEXT);
 			types.add(contentType);
 			try {
@@ -67,6 +69,15 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 		for (IContentAssistProcessor processor : fContentAssistProcessors) {
 			ICompletionProposal[] computed = processor.computeCompletionProposals(context.getViewer(), context.getInvocationOffset());
 			proposals.addAll(Arrays.asList(computed));
+			String errorMessage = processor.getErrorMessage();
+			if (errorMessage != null) {
+				if (fLastErrorMessage == null) {
+					fLastErrorMessage = processor.getErrorMessage();
+				}
+				else {
+					fLastErrorMessage = fLastErrorMessage.concat("\n").concat(errorMessage);
+				}
+			}
 		}
 		return proposals;
 	}
@@ -74,6 +85,7 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 	@Override
 	public List computeContextInformation(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
 		ISourceViewer viewer = null;
+		fLastErrorMessage = null;
 		if (context.getViewer() instanceof ISourceViewer) {
 			viewer = (ISourceViewer) context.getViewer();
 		}
@@ -81,9 +93,8 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 			IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 			ContentAssistProcessorRegistry contentAssistProcessorRegistry = GenericEditorPlugin.getDefault().getContentAssistProcessorRegistry();
 			Set<IContentType> types = new HashSet<>();
-			IContentType contentType = contentTypeManager.getContentType(ContentTypeIdForHTML.ContentTypeID_HTML);
-			types.add(contentType);
-			contentType = contentTypeManager.getContentType("org.eclipse.core.runtime.text");
+			types.addAll(Arrays.asList(contentTypeManager.findContentTypesFor(fExampleFileName)));
+			IContentType contentType = contentTypeManager.getContentType(IContentTypeManager.CT_TEXT);
 			types.add(contentType);
 			fContentAssistProcessors = contentAssistProcessorRegistry.getContentAssistProcessors(viewer, null, types);
 		}
@@ -91,13 +102,21 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 		for (IContentAssistProcessor processor : fContentAssistProcessors) {
 			IContextInformation[] computed = processor.computeContextInformation(context.getViewer(), context.getInvocationOffset());
 			infos.addAll(Arrays.asList(computed));
+			String errorMessage = processor.getErrorMessage();
+			if (errorMessage != null) {
+				if (fLastErrorMessage == null) {
+					fLastErrorMessage = processor.getErrorMessage();
+				}
+				else {
+					fLastErrorMessage = fLastErrorMessage.concat("\n").concat(errorMessage);
+				}
+			}
 		}
 		return infos;
 	}
 
 	@Override
 	public String getErrorMessage() {
-		// TODO Auto-generated method stub
-		return null;
+		return fLastErrorMessage;
 	}
 }

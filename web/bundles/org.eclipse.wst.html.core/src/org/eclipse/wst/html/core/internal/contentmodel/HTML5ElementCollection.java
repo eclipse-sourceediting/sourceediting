@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2019 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel;
 
-
-
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -61,6 +60,8 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 		public static final int ID_TIME =132;
 		public static final int ID_VIDEO =133;
 		public static final int ID_MAIN =134;
+		public static final int ID_TEMPLATE =135;
+		public static final int ID_SLOT =136;
 
 		// D205513
 
@@ -71,7 +72,7 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 			// NOTE: If the reflection is too slow, this method should
 			// just return the literal value, like 105.
 			// -- 5/25/2001
-			Class clazz = Ids50.class;
+			Class<Ids50> clazz = Ids50.class;
 			Field[] fields = clazz.getFields();
 			numofids = 0;
 			for (int i = 0; i < fields.length; i++) {
@@ -269,9 +270,11 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 			edec = new HedSectioning(SECTION, this);
 
 		}
+		else if (elementName.equalsIgnoreCase(SLOT)) {
+			edec = new HedSLOT(this);
+		}
 		else if (elementName.equalsIgnoreCase(SOURCE)) {
 			edec = new HedSOURCE(this);
-
 		}
 		else if (elementName.equalsIgnoreCase(STRIKE)) {
 			edec = new HedFontStyle(STRIKE, this);
@@ -285,6 +288,9 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 		}
 		else if (elementName.equalsIgnoreCase(TIME)) {
 			edec = new HedTIME(this);
+		}
+		else if (elementName.equalsIgnoreCase(TEMPLATE)) {
+			edec = new HedTEMPLATE(this);
 		}
 		else if (elementName.equalsIgnoreCase(TT)) {
 			edec = new HedFontStyle(TT, this);
@@ -313,18 +319,17 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 		return attributeCollection;
 	}
 
-	public final Collection getNamesOfBlock() {
+	public final Collection<String> getNamesOfBlock() {
 		// P, DL, DIV, CENTER, NOSCRIPT, NOFRAMES, BLOCKQUOTE, FORM, ISINDEX, HR,
 		// TABLE, FIELDSET, ADDRESS, RUBY, FIGURE
 		String[] blockMisc = {HEADER, FOOTER, HGROUP, P, DL, DIV, CENTER, NOSCRIPT, NOFRAMES, BLOCKQUOTE, FORM, ISINDEX, HR, TABLE, FIELDSET, ADDRESS, RUBY, FIGURE};
-		Vector names = new Vector(Arrays.asList(blockMisc));
+		List<String> names = new ArrayList<>(Arrays.asList(blockMisc));
 		// %heading;
 		names.addAll(Arrays.asList(HEADING));
 		// %list;
 		names.addAll(Arrays.asList(LIST));
 		// %preformatted;
 		names.addAll(Arrays.asList(PREFORMATTED));
-
 		
 		return names;
 	}
@@ -348,6 +353,14 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 		super.getFlow(group);
 		getSectioning(group);
 		CMNode node = getNamedItem(DETAILS);
+		if (node != null) {
+			group.appendChild(node);
+		}
+		node = getNamedItem(TEMPLATE);
+		if (node != null) {
+			group.appendChild(node);
+		}
+		node = getNamedItem(SLOT);
 		if (node != null) {
 			group.appendChild(node);
 		}
@@ -542,6 +555,7 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 			fNames[Ids50.ID_SECTION] = SECTION;
 			fNames[Ids.ID_SELECT] = SELECT;
 			fNames[Ids.ID_SMALL] = SMALL;
+			fNames[Ids50.ID_SLOT] = SLOT;
 			fNames[Ids50.ID_SOURCE] = SOURCE;
 			fNames[Ids.ID_SPAN] = SPAN;
 			fNames[Ids.ID_STRIKE] = STRIKE;
@@ -554,6 +568,7 @@ class HTML5ElementCollection extends ElementCollection implements org.eclipse.ws
 			fNames[Ids.ID_TABLE] = TABLE;
 			fNames[Ids.ID_TBODY] = TBODY;
 			fNames[Ids.ID_TD] = TD;
+			fNames[Ids50.ID_TEMPLATE] = TEMPLATE;
 			fNames[Ids.ID_TEXTAREA] = TEXTAREA;
 			fNames[Ids.ID_TFOOT] = TFOOT;
 			fNames[Ids.ID_TH] = TH;

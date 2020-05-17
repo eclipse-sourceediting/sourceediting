@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel;
 
-
-
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -47,6 +46,9 @@ final class CtdTrContainer extends ComplexTypeDefinition {
 		CMNode tr = collection.getNamedItem(HTML40Namespace.ElementName.TR);
 		if (tr != null)
 			content.appendChild(tr);
+		CMNode template = collection.getNamedItem(HTML50Namespace.ElementName.TEMPLATE);
+		if (template != null)
+			content.appendChild(template);
 	}
 
 	/**

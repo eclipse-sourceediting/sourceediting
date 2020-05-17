@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2019 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.html5.model;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.eclipse.wst.html.core.internal.contentmodel.HTML5AttributeCollection;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLAttributeDeclaration;
@@ -28,6 +27,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
+
+import junit.framework.TestCase;
 
 public class HTML5ContentModelTest extends TestCase {
 
@@ -45,12 +46,32 @@ public class HTML5ContentModelTest extends TestCase {
 		CMNode elementDeclaration = document.getElements().getNamedItem(elementName);
 		assertNotNull("no such element declaration:" + elementName, elementDeclaration);
 		assertEquals("not an element declaration:" + elementDeclaration, CMNode.ELEMENT_DECLARATION, elementDeclaration.getNodeType());
+
+		CMNamedNodeMap attributes = ((CMElementDeclaration) elementDeclaration).getAttributes();
+
+		StringBuilder actualNames = new StringBuilder();
+		for (int i = 0; i < attrNames.length; i++, actualNames.append(',')) {
+			actualNames.append(attrNames[i]);
+			assertNotNull("missing attribute declaration:" + attrNames[i] + " for element: " + elementName, attributes.getNamedItem(attrNames[i]));
+		}
+		assertEquals("Attributes defined in content model that are not expected by the test for element: " + elementName, attributes.getLength(), attrNames.length);
+	}
+
+	private void checkAttrNames(String documentKey, String elementName, String[] attrNames, String sortedExpectedNames) {
+		CMDocument document = HTMLCMDocumentFactory.getCMDocument(documentKey);
+		CMNode elementDeclaration = document.getElements().getNamedItem(elementName);
+		assertNotNull("no such element declaration:" + elementName, elementDeclaration);
+		assertEquals("not an element declaration:" + elementDeclaration, CMNode.ELEMENT_DECLARATION, elementDeclaration.getNodeType());
 		
 		CMNamedNodeMap attributes = ((CMElementDeclaration) elementDeclaration).getAttributes();
 		
-		for (int i = 0; i < attrNames.length; i++) {
+		StringBuilder actualNames = new StringBuilder();
+		Arrays.sort(attrNames);
+		for (int i = 0; i < attrNames.length; i++, actualNames.append('\n')) {
+			actualNames.append(attrNames[i]);
 			assertNotNull("missing attribute declaration:" + attrNames[i] + " for element: " + elementName, attributes.getNamedItem(attrNames[i]));
 		}
+		assertEquals("List of attribute names does not match", sortedExpectedNames, actualNames.toString());
 		assertEquals("Attributes defined in content model that are not expected by the test for element: " + elementName, attributes.getLength(), attrNames.length);
 	}
 
@@ -84,6 +105,7 @@ public class HTML5ContentModelTest extends TestCase {
 		CMNamedNodeMap elements = document.getElements();
 		for (int i = 0; i < elements.getLength(); i++) {
 			CMNode item = elements.item(i);
+			assertNotNull(documentKey + " contained a null element declaration at index " + i, item);
 			verifyElementDeclarationHasName(item);
 		}
 	}
@@ -157,8 +179,9 @@ public class HTML5ContentModelTest extends TestCase {
 	
 	public void testAttributesOnHTML5Keygen() {
 		checkAttrNames(CMDocType.HTML5_DOC_TYPE, HTML50Namespace.ElementName.KEYGEN, getMergedlist(getGlobalList(), 
-				new String[]{HTML50Namespace.ATTR_NAME_AUTOFOCUS, HTML50Namespace.ATTR_NAME_CHALLENGE, HTML40Namespace.ATTR_NAME_DISABLED,
-				HTML50Namespace.ATTR_NAME_FORM, HTML50Namespace.ATTR_NAME_KEYTYPE, HTML40Namespace.ATTR_NAME_NAME}));
+				new String[]{HTML50Namespace.ATTR_NAME_CHALLENGE, HTML40Namespace.ATTR_NAME_DISABLED,
+				HTML50Namespace.ATTR_NAME_FORM, HTML50Namespace.ATTR_NAME_KEYTYPE, HTML40Namespace.ATTR_NAME_NAME}),
+				"accesskey\nautocapitalize\nautofocus\nchallenge\nclass\ncontenteditable\ncontextmenu\ndir\ndisabled\ndraggable\ndropzone\nenterkeyhint\nform\nhidden\nid\ninputmode\nis\nitemid\nitemprop\nitemref\nitemscope\nitemtype\nkeytype\nlang\nname\nnonce\nonabort\nonblur\noncancel\noncanplay\noncanplaythrough\nonchange\nonclick\nonclose\noncontextmenu\noncuechange\nondblclick\nondrag\nondragend\nondragenter\nondragexit\nondragleave\nondragover\nondragstart\nondrop\nondurationchange\nonemptied\nonended\nonerror\nonfocus\nonformchange\nonforminput\noninput\noninvalid\nonkeydown\nonkeypress\nonkeyup\nonload\nonloadeddata\nonloadedmetadata\nonloadstart\nonmousedown\nonmouseenter\nonmouseleave\nonmousemove\nonmouseout\nonmouseover\nonmouseup\nonmousewheel\nonpause\nonplay\nonplaying\nonprogress\nonratechange\nonreadystatechange\nonreset\nonresize\nonscroll\nonseeked\nonseeking\nonselect\nonshow\nonstalled\nonsubmit\nonsuspend\nontimeupdate\nontoggle\nonvolumechange\nonvolumeupdate\nonwaiting\nrole\nslot\nspellcheck\nstyle\ntabindex\ntitle\ntranslate\n");
 	
 	}
 	

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2019 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,33 +17,35 @@ public interface HTML50Namespace extends HTML40Namespace {
 	public static interface ElementName extends HTML40Namespace.ElementName {
 		String ARTICLE = "article"; //$NON-NLS-1$
 		String ASIDE = "aside"; //$NON-NLS-1$
-		String AUDIO = "audio";
-		String CANVAS = "canvas";
-		String COMMAND = "command";
-		String DATALIST = "datalist";
-		String DETAILS = "details";
+		String AUDIO = "audio"; //$NON-NLS-1$
+		String CANVAS = "canvas"; //$NON-NLS-1$
+		String COMMAND = "command"; //$NON-NLS-1$
+		String DATALIST = "datalist"; //$NON-NLS-1$
+		String DETAILS = "details"; //$NON-NLS-1$
 		String FIGURE = "figure"; //$NON-NLS-1$
 		String FIGCAPTION = "figcaption"; //$NON-NLS-1$
 		String FOOTER = "footer"; //$NON-NLS-1$
-		String HEADER = "header";
-		String HGROUP = "hgroup";
-		String KEYGEN = "keygen";
-		String MAIN = "main";
-		String MARK = "mark";
-		String MATH = "math";
-		String METER = "meter";
-		String NAV = "nav";
-		String OUTPUT = "output";
-		String PROGRESS = "progress";
-		String RP = "rp";
-		String RT = "rt";
-		String RUBY = "ruby";
+		String HEADER = "header"; //$NON-NLS-1$
+		String HGROUP = "hgroup"; //$NON-NLS-1$
+		String KEYGEN = "keygen"; //$NON-NLS-1$
+		String MAIN = "main"; //$NON-NLS-1$
+		String MARK = "mark"; //$NON-NLS-1$
+		String MATH = "math"; //$NON-NLS-1$
+		String METER = "meter"; //$NON-NLS-1$
+		String NAV = "nav"; //$NON-NLS-1$
+		String OUTPUT = "output"; //$NON-NLS-1$
+		String PROGRESS = "progress"; //$NON-NLS-1$
+		String RP = "rp"; //$NON-NLS-1$
+		String RT = "rt"; //$NON-NLS-1$
+		String RUBY = "ruby"; //$NON-NLS-1$
 		String SECTION = "section"; //$NON-NLS-1$
-		String SOURCE = "source";
-		String SUMMARY = "summary";
-		String SVG = "svg";
-		String TIME = "time";
-		String VIDEO = "video";
+		String SLOT = "slot"; //$NON-NLS-1$
+		String SOURCE = "source"; //$NON-NLS-1$
+		String SUMMARY = "summary"; //$NON-NLS-1$
+		String SVG = "svg"; //$NON-NLS-1$
+		String TEMPLATE = "template"; //$NON-NLS-1$
+		String TIME = "time"; //$NON-NLS-1$
+		String VIDEO = "video"; //$NON-NLS-1$
 	}
 
 	String HTML50_URI = "http://www.w3.org/TR/html50/";
@@ -55,8 +57,15 @@ public interface HTML50Namespace extends HTML40Namespace {
 	String ATTR_NAME_CONTEXT_MENU = "contextmenu"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_DRAGGABLE = "draggable"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_DROPZONE = "dropzone"; // %coreattrs; //$NON-NLS-1$
+	String ATTR_NAME_ENTERKEYHINT = "enterkeyhint"; // %coreattrs; //$NON-NLS-1$
 	String ATTR_NAME_INPUTMODE = "inputmode"; //$NON-NLS-1$
 	String ATTR_NAME_IS = "is"; //$NON-NLS-1$
+	String ATTR_NAME_ITEMID = "itemid"; //$NON-NLS-1$
+	String ATTR_NAME_ITEMPROP = "itemprop"; //$NON-NLS-1$
+	String ATTR_NAME_ITEMREF = "itemref"; //$NON-NLS-1$
+	String ATTR_NAME_ITEMSCOPE = "itemscope"; //$NON-NLS-1$
+	String ATTR_NAME_ITEMTYPE = "itemtype"; //$NON-NLS-1$
+	String ATTR_NAME_NONCE = "nonce"; //$NON-NLS-1$
 	String ATTR_NAME_ROLE = "role"; // %coreattrs; //$NON_NLS-1$
 	String ATTR_NAME_SLOT = "slot"; //$NON-NLS-1$
 	String ATTR_NAME_SPELLCHECK = "spellcheck"; // %coreattrs; //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2019 IBM Corporation and others.
+ * Copyright (c) 2010, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,21 +21,29 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 
 public class HTML5AttributeCollection extends AttributeCollection implements HTML50Namespace {
-	/** html5 core attribs */
+	/** html5 core/global attributes */
 	private static final String[] CORE = {
 		ATTR_NAME_ACCESSKEY, 
 		ATTR_NAME_AUTOCAPITALIZE,
+		ATTR_NAME_AUTOFOCUS,
 		ATTR_NAME_CLASS, 
 		ATTR_NAME_CONTENT_EDITABLE, 
 		ATTR_NAME_CONTEXT_MENU, 
 		ATTR_NAME_DIR, 
 		ATTR_NAME_DRAGGABLE,
 		ATTR_NAME_DROPZONE,
+		ATTR_NAME_ENTERKEYHINT,
 		ATTR_NAME_HIDDEN, 
 		ATTR_NAME_ID, 
 		ATTR_NAME_INPUTMODE,
 		ATTR_NAME_IS,
-		ATTR_NAME_LANG, 
+		ATTR_NAME_ITEMID,
+		ATTR_NAME_ITEMPROP,
+		ATTR_NAME_ITEMREF,
+		ATTR_NAME_ITEMSCOPE,
+		ATTR_NAME_ITEMTYPE,
+		ATTR_NAME_LANG,
+		ATTR_NAME_NONCE,
 		ATTR_NAME_ROLE,
 		ATTR_NAME_SLOT,
 		ATTR_NAME_SPELLCHECK,
@@ -176,6 +184,12 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_DROPZONE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ENTERKEYHINT)) {
+			// (errmsg CDATA #IMPLIED)
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ENTERKEYHINT, atype, CMAttributeDeclaration.OPTIONAL);
+
+		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_FORM)) {
 			// (form CDATA; #IMPLIED)
 			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
@@ -212,6 +226,26 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_IS, atype, CMAttributeDeclaration.OPTIONAL);
 		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ITEMID)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.IDREF);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ITEMID, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ITEMPROP)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ITEMPROP, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ITEMREF)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.IDREF);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ITEMREF, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ITEMSCOPE)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ITEMSCOPE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_ITEMTYPE)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_ITEMTYPE, atype, CMAttributeDeclaration.OPTIONAL);
+		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_MIN)) {
 			atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_MIN, atype, CMAttributeDeclaration.OPTIONAL);
@@ -219,6 +253,10 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_MAX)) {
 			atype = new HTMLCMDataTypeImpl(CMDataType.NUMBER);
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_MAX, atype, CMAttributeDeclaration.OPTIONAL);
+		}
+		else if (attrName.equalsIgnoreCase(ATTR_NAME_NONCE)) {
+			atype = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			attr = new HTMLAttrDeclImpl(ATTR_NAME_NONCE, atype, CMAttributeDeclaration.OPTIONAL);
 		}
 		else if (attrName.equalsIgnoreCase(ATTR_NAME_OPEN)) {
 			atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
@@ -594,12 +632,12 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 	}
 
 	public void getEvents(CMNamedNodeMapImpl declarations) {
-		Iterator names = Arrays.asList(EVENTS).iterator();
+		Iterator<String> names = Arrays.asList(EVENTS).iterator();
 		getDeclarations(declarations, names);
 	}
 	
 	public void getBodyEvents(CMNamedNodeMapImpl declarations) {
-		Iterator names = Arrays.asList(BODY_EVENTS).iterator();
+		Iterator<String> names = Arrays.asList(BODY_EVENTS).iterator();
 		getDeclarations(declarations, names);
 	}
 	
@@ -1016,7 +1054,11 @@ public class HTML5AttributeCollection extends AttributeCollection implements HTM
 			attr = new HTMLAttrDeclImpl(ATTR_NAME_VALUE, atype, CMAttributeDeclaration.OPTIONAL);
 			attributes.putNamedItem(ATTR_NAME_VALUE, attr);
 			
-			// gloabl attrs
+			// global attrs
+			getAttrs(attributes);
+		}
+		else if (elementName.equals(HTML50Namespace.ElementName.TEMPLATE)){
+			// just global attrs
 			getAttrs(attributes);
 		}
 		/*

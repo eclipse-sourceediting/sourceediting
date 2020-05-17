@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,12 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel;
 
-
-
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.HTML50Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -59,10 +60,18 @@ final class CtdHead extends ComplexTypeDefinition {
 		// %head.misc;
 		//   ( | )*
 		CMGroupImpl misc = new CMGroupImpl(CMGroup.CHOICE, 0, CMContentImpl.UNBOUNDED);
-		if (misc == null)
-			return;
-		String[] names = {HTML40Namespace.ElementName.SCRIPT, HTML40Namespace.ElementName.STYLE, HTML40Namespace.ElementName.META, HTML40Namespace.ElementName.LINK, HTML40Namespace.ElementName.OBJECT, HTML40Namespace.ElementName.ISINDEX};
-		collection.getDeclarations(misc, Arrays.asList(names).iterator());
+
+		List<String> names = new ArrayList<>(Arrays.asList(
+			HTML40Namespace.ElementName.SCRIPT,
+			HTML40Namespace.ElementName.STYLE,
+			HTML40Namespace.ElementName.META,
+			HTML40Namespace.ElementName.LINK,
+			HTML40Namespace.ElementName.OBJECT,
+			HTML40Namespace.ElementName.ISINDEX));
+		if (collection.getNamedItem(HTML50Namespace.ElementName.TEMPLATE) != null) {
+			names.add(HTML50Namespace.ElementName.TEMPLATE);
+		}
+		collection.getDeclarations(misc, names.iterator());
 		// 2nd, get a title
 		CMNode title = collection.getNamedItem(HTML40Namespace.ElementName.TITLE);
 		// 3rd, get a base

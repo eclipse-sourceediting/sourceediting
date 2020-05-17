@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -11,8 +11,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel;
-
-
 
 import java.util.Arrays;
 
@@ -367,6 +365,13 @@ final class CtdHtml extends ComplexTypeDefinition {
 		if (edec != null)
 			content.appendChild(edec);
 		edec = collection.getNamedItem(HTML50Namespace.ElementName.RUBY);
+		if (edec != null)
+			content.appendChild(edec);
+
+		edec = collection.getNamedItem(HTML50Namespace.ElementName.TEMPLATE);
+		if (edec != null)
+			content.appendChild(edec);
+		edec = collection.getNamedItem(HTML50Namespace.ElementName.SLOT);
 		if (edec != null)
 			content.appendChild(edec);
 	}
