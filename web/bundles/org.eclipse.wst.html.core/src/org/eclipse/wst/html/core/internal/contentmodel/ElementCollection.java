@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,10 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
@@ -146,7 +147,7 @@ class ElementCollection extends DeclCollection implements org.eclipse.wst.html.c
 			// NOTE: If the reflection is too slow, this method should
 			// just return the literal value, like 105.
 			// -- 5/25/2001
-			Class clazz = Ids.class;
+			Class<Ids> clazz = Ids.class;
 			Field[] fields = clazz.getFields();
 			numofids = 0;
 			for (int i = 0; i < fields.length; i++) {
@@ -644,11 +645,11 @@ class ElementCollection extends DeclCollection implements org.eclipse.wst.html.c
 		return attributeCollection;
 	}
 
-	public Collection getNamesOfBlock() {
+	public Collection<String> getNamesOfBlock() {
 		// P, DL, DIV, CENTER, NOSCRIPT, NOFRAMES, BLOCKQUOTE, FORM, ISINDEX, HR,
 		// TABLE, FIELDSET, ADDRESS
 		String[] blockMisc = {P, DL, DIV, CENTER, NOSCRIPT, NOFRAMES, BLOCKQUOTE, FORM, ISINDEX, HR, TABLE, FIELDSET, ADDRESS};
-		Vector names = new Vector(Arrays.asList(blockMisc));
+		List<String> names = new ArrayList<>(Arrays.asList(blockMisc));
 		// %heading;
 		names.addAll(Arrays.asList(HEADING));
 		// %list;
