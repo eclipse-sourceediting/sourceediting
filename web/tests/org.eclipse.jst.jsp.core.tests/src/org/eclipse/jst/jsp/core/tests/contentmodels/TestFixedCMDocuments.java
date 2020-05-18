@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2017 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,17 +12,18 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests.contentmodels;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jst.jsp.core.internal.contentmodel.JSPCMDocumentFactory;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP11Namespace;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
+import org.eclipse.wst.html.core.internal.contentmodel.JSP21Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
+
+import junit.framework.TestCase;
 
 public class TestFixedCMDocuments extends TestCase {
 
@@ -169,6 +170,10 @@ public class TestFixedCMDocuments extends TestCase {
 		checkAttrNames(CMDocType.JSP20_DOC_TYPE, JSP11Namespace.ElementName.USEBEAN, new String[]{JSP11Namespace.ATTR_NAME_ID, JSP11Namespace.ATTR_NAME_SCOPE, JSP11Namespace.ATTR_NAME_CLASS, JSP11Namespace.ATTR_NAME_TYPE, JSP11Namespace.ATTR_NAME_BEAN_NAME});
 	}
 	
+	public void testAttributesOnJSP21Attribute() {
+		checkAttrNames(CMDocType.JSP21_DOC_TYPE, JSP21Namespace.ElementName.ATTRIBUTE, new String[]{JSP11Namespace.ATTR_NAME_NAME, JSP20Namespace.ATTR_NAME_TRIM, JSP21Namespace.ATTR_NAME_OMIT});
+	}
+
 	public void testAttributesOnTAG20Attribute() {
 		checkAttrNames(CMDocType.TAG20_DOC_TYPE, JSP20Namespace.ElementName.ATTRIBUTE, new String[]{JSP11Namespace.ATTR_NAME_NAME, JSP20Namespace.ATTR_NAME_TRIM});
 	}

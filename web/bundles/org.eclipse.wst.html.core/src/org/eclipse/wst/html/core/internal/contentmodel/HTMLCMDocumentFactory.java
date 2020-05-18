@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel;
 
-
-
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.wst.html.core.internal.contentmodel.chtml.CHCMDocImpl;
 import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
@@ -29,8 +28,8 @@ import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
  */
 public final class HTMLCMDocumentFactory {
 
-	private static Hashtable cmdocs = new Hashtable();
-	private static List supportedCMtypes = Arrays.asList(new Object[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE, CMDocType.TAG21_DOC_TYPE, CMDocType.JSP21_DOC_TYPE, CMDocType.HTML5_DOC_TYPE});
+	private static Map<String, CMDocument> cmdocs = new HashMap<>();
+	private static List<String> supportedCMtypes = Arrays.asList(new String[]{CMDocType.HTML_DOC_TYPE, CMDocType.CHTML_DOC_TYPE, CMDocType.JSP11_DOC_TYPE, CMDocType.JSP12_DOC_TYPE, CMDocType.JSP20_DOC_TYPE, CMDocType.TAG20_DOC_TYPE, CMDocType.TAG21_DOC_TYPE, CMDocType.JSP21_DOC_TYPE, CMDocType.HTML5_DOC_TYPE});
 
 	private static JCMDocImpl jsp11doc = null;
 
@@ -47,7 +46,7 @@ public final class HTMLCMDocumentFactory {
 	 *            java.lang.String
 	 */
 	public static CMDocument getCMDocument(String cmtype) {
-		Object obj = cmdocs.get(cmtype);
+		CMDocument obj = cmdocs.get(cmtype);
 		if (obj == null && cmtype != null) {
 			if (supportedCMtypes.contains(cmtype)) {
 				obj = doCreateCMDocument(cmtype);
@@ -55,10 +54,10 @@ public final class HTMLCMDocumentFactory {
 			}
 		}
 
-		return (CMDocument) obj;
+		return obj;
 	}
 
-	private static Object doCreateCMDocument(String cmtype) {
+	private static CMDocument doCreateCMDocument(String cmtype) {
 		if (CMDocType.HTML_DOC_TYPE.equals(cmtype)) {
 			CMNamespaceImpl h40ns = new CMNamespaceImpl(HTML40Namespace.HTML40_URI, HTML40Namespace.HTML40_TAG_PREFIX);
 			HCMDocImpl html40doc = new HCMDocImpl(CMDocType.HTML_DOC_TYPE, h40ns);

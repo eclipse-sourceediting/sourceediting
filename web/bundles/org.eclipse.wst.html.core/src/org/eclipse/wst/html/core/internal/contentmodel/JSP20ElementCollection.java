@@ -41,7 +41,7 @@ class JSP20ElementCollection extends JSPElementCollection implements JSP20Namesp
 			// NOTE: If the reflection is too slow, this method should
 			// just return the literal value, like 105.
 			// -- 5/25/2001
-			Class clazz = Ids20.class;
+			Class<Ids20> clazz = Ids20.class;
 			Field[] fields = clazz.getFields();
 			numofids = 0;
 			for (int i = 0; i < fields.length; i++) {
@@ -228,7 +228,7 @@ class JSP20ElementCollection extends JSPElementCollection implements JSP20Namesp
 			declarations.putNamedItem(ATTR_NAME_NAME, adec);
 		}
 
-		private void createForAttribute() {
+		void createForAttribute() {
 			AttrDecl adec = new AttrDecl(ATTR_NAME_NAME);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
 			adec.usage = CMAttributeDeclaration.REQUIRED;
