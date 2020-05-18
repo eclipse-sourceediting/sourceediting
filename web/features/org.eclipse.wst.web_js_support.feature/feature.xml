@@ -31,10 +31,6 @@
       %license
    </license>
 
-   <requires>
-      <import feature="org.eclipse.wst.jsdt.feature"/>
-   </requires>
-
    <plugin
          id="org.eclipse.wst.jsdt.web.core"
          download-size="0"
