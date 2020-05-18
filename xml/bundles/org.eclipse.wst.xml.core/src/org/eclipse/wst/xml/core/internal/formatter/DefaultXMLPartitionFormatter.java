@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2017 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -67,6 +67,18 @@ public class DefaultXMLPartitionFormatter {
 	static private final String SPACE = " "; //$NON-NLS-1$
 	static private final String EMPTY = ""; //$NON-NLS-1$
 	static private final String PROPERTY_WHITESPACE_FACET = "org.eclipse.wst.xsd.cm.properties/whitespace"; //$NON-NLS-1$
+
+	/**
+	 * @param c
+	 * @return whether the character falls within the XML Recommendation
+	 *         syntactic construct for whitespace. The standard Java Character
+	 *         class considers "em space" and "en space" to be whitespace,
+	 *         even though ICU4J does not.
+	 */
+	static boolean isWhitespace(char c) {
+		// https://bugs.eclipse.org/527258 : to preserve en space and em space
+		return c == 0x20 || c == '\t' || c == '\n' || c == '\r';
+	}
 
 	private XMLFormattingPreferences fPreferences = null;
 	private IProgressMonitor fProgressMonitor;
@@ -1061,7 +1073,7 @@ public class DefaultXMLPartitionFormatter {
 		for (int i = 0; i < length; i++) {
 			c = text.charAt(i);
 			// Compress whitespace unless its a line delimiter and formatting does not permit joining lines
-			if (Character.isWhitespace(c)) {
+			if (isWhitespace(c)) {
 				if ((c != '\r' && c!= '\n') || joinLines) {
 					// Just came off of a word
 					if (start == end) {
@@ -1163,7 +1175,7 @@ public class DefaultXMLPartitionFormatter {
 		boolean nonCharacterFound = false;
 		while (textOffset < fullTextArray.length && !nonCharacterFound) {
 			char c = fullTextArray[textOffset];
-			boolean isWhitespace = Character.isWhitespace(c);
+			boolean isWhitespace = isWhitespace(c);
 			if ((forWhitespace && isWhitespace) || (!forWhitespace && !isWhitespace))
 				characterRun.append(c);
 			else
@@ -1178,7 +1190,7 @@ public class DefaultXMLPartitionFormatter {
 		int index = text.length() - 1;
 		while(index >= 0) {
 			char c = text.charAt(index--);
-			if (Character.isWhitespace(c))
+			if (isWhitespace(c))
 				whitespaceRun.insert(0, c);
 			else
 				break;
@@ -1311,7 +1323,7 @@ public class DefaultXMLPartitionFormatter {
 				previousRegionFullText = previousDocumentRegion.getFullText();
 				int length = previousRegionFullText.length();
 				if (length > 1)
-					canIndent = Character.isWhitespace(previousRegionFullText.charAt(length - 1));
+					canIndent = isWhitespace(previousRegionFullText.charAt(length - 1));
 			}
 		}
 		if (canIndent) {
