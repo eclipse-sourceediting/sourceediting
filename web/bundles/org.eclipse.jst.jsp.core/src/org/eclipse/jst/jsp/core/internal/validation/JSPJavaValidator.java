@@ -194,6 +194,7 @@ public class JSPJavaValidator extends JSPValidator {
 					sev = ValidationMessage.IGNORE;
 				}
 				break;
+				case IProblem.UndefinedName:
 				case IProblem.UnresolvedVariable : {
 					try {
 						// If the unresolved variable is in a fragment, post as a warning. The fragment may be included in a page that has declared the variable
