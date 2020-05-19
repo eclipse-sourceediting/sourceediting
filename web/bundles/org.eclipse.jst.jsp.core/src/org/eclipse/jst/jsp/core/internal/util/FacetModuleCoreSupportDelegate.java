@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2016 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -179,6 +179,9 @@ final class FacetModuleCoreSupportDelegate {
 		return false;
 	}
 
+	/*
+	 * Handle resolution in a required web fragment
+	 */
 	private static IPath resolveInReferenced(IProject project, IPath runtimeReference) {
 		IVirtualReference[] references = ComponentCore.createComponent(project).getReferences();
 		if (references != null) {
@@ -199,9 +202,31 @@ final class FacetModuleCoreSupportDelegate {
 					 * See Servlet 3.0, section 4.6, web fragments as required
 					 * projects
 					 */
+					/* https://bugs.eclipse.org/398698 */
 					IPath resolved = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES).append(runtimeReference);
 					if (resolved != null && component.getProject().findMember(resolved.removeFirstSegments(1)) != null) {
 						return resolved;
+					}
+					/*
+					 * Handle multi-root fragments, and ones where the default root marked for deployment doesn't exist
+					 */
+					IVirtualFile virtualFile = ComponentCore.createFile(component.getProject(), FacetModuleCoreSupport.META_INF_RESOURCES_PATH.append(runtimeReference));
+					if (virtualFile != null) {
+						IFile[] underlyingFiles = virtualFile.getUnderlyingFiles();
+						for (int j = 0; j < underlyingFiles.length; j++) {
+							if (underlyingFiles[i].isAccessible()) {
+								return underlyingFiles[i].getFullPath();
+							}
+						}
+					}
+					IVirtualFolder virtualFolder = ComponentCore.createFolder(component.getProject(), FacetModuleCoreSupport.META_INF_RESOURCES_PATH.append(runtimeReference));
+					if (virtualFolder != null) {
+						IContainer[] underlyingFolders = virtualFolder.getUnderlyingFolders();
+						for (int j = 0; j < underlyingFolders.length; j++) {
+							if (underlyingFolders[i].isAccessible()) {
+								return underlyingFolders[i].getFullPath();
+							}
+						}
 					}
 				}
 				// overlay?
@@ -293,7 +318,7 @@ final class FacetModuleCoreSupportDelegate {
 			return new IPath[]{project.getFullPath()};
 		}
 
-		List paths = new ArrayList();
+		List<IPath> paths = new ArrayList<>();
 		IVirtualFolder componentFolder = ComponentCore.createFolder(project, Path.ROOT);
 		if (componentFolder != null && componentFolder.exists()) {
 			IContainer[] workspaceFolders = componentFolder.getUnderlyingFolders();
@@ -335,7 +360,7 @@ final class FacetModuleCoreSupportDelegate {
 		else {
 			paths.add(project.getFullPath());
 		}
-		return (IPath[]) paths.toArray(new IPath[paths.size()]);
+		return paths.toArray(new IPath[paths.size()]);
 	}
 
 	static IPath getDefaultRoot(IProject project) {
@@ -352,7 +377,7 @@ final class FacetModuleCoreSupportDelegate {
 		if (!ModuleCoreNature.isFlexibleProject(current))
 			return new IProject[0];
 		
-		Set projects = new HashSet();
+		Set<IProject> projects = new HashSet<IProject>();
 		IVirtualReference[] references = ComponentCore.createComponent(current).getReferences();
 		if (references != null) {
 			for (int i = 0; i < references.length; i++) {
@@ -365,7 +390,7 @@ final class FacetModuleCoreSupportDelegate {
 				projects.add(project);
 			}
 		}
-		return (IProject[]) projects.toArray(new IProject[projects.size()]);
+		return projects.toArray(new IProject[projects.size()]);
 	}
 
 	static IPath getRootContainerForPath(IProject project, IPath path) {

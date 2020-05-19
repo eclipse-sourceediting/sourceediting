@@ -211,9 +211,9 @@ public class TestHTMLContentAssistComputers extends TestCase {
 			strings[i] = paths[i].toString();
 		}
 		assertEquals(String.valueOf(paths.length).concat(StringUtils.pack(strings)), 3, paths.length);
-		assertTrue(Arrays.asList(paths).stream().map((proposedPath)->proposedPath.toString()).anyMatch((pathAsString)->pathAsString.endsWith("/alsoempty.png")));
-		assertTrue(Arrays.asList(paths).stream().map((proposedPath)->proposedPath.toString()).anyMatch((pathAsString)->pathAsString.endsWith("/empty.gif")));
-		assertTrue(Arrays.asList(paths).stream().map((proposedPath)->proposedPath.toString()).anyMatch((pathAsString)->pathAsString.endsWith("/empty.png")));
+		assertTrue(Arrays.asList(paths).stream().map((proposedPath)->proposedPath.toString()).anyMatch((pathAsString)->pathAsString.equals("/TestHTMLContentAssistComputers/targets/alsoempty.png")));
+		assertTrue(Arrays.asList(paths).stream().map((proposedPath)->proposedPath.toString()).anyMatch((pathAsString)->pathAsString.equals("/TestHTMLContentAssistComputers/targets/empty.gif")));
+		assertTrue(Arrays.asList(paths).stream().map((proposedPath)->proposedPath.toString()).anyMatch((pathAsString)->pathAsString.equals("/TestHTMLContentAssistComputers/targets/empty.png")));
 	}
 
 	public void testResourceProposalsForLinkHref() throws Exception {

@@ -27,16 +27,19 @@ import org.eclipse.core.runtime.content.IContentType;
  * type and all of its descendants
  */
 public class ContentTypeSpecs {
+	/**
+	 * @param contentTypeId - the registered content type's ID
+	 * @return
+	 */
 	public static ContentTypeSpecs createFor(String contentTypeId) {
-		return createFor(new String[]{contentTypeId});
+		return createFor(new IContentType[]{Platform.getContentTypeManager().getContentType(contentTypeId)});
 	}
 
-	public static ContentTypeSpecs createFor(String[] contentTypeIds) {
+	public static ContentTypeSpecs createFor(IContentType[] contentTypes) {
 //		long startTime = System.currentTimeMillis();
 		List<String> filenameExtensions = new ArrayList<String>();
 		Set<String> filenames = new HashSet<>();
-		for (String contentTypeId: contentTypeIds) {
-			IContentType baseContentType = Platform.getContentTypeManager().getContentType(contentTypeId);
+		for (IContentType baseContentType: contentTypes) {
 			String[] baseExtensions = baseContentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 			for (int i = 0; i < baseExtensions.length; i++) {
 				filenameExtensions.add(baseExtensions[i]);
@@ -46,16 +49,16 @@ public class ContentTypeSpecs {
 				filenames.add(names[j]);
 			}
 			Arrays.sort(baseExtensions);
-			IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
-			for (int i = 0, length = contentTypes.length; i < length; i++) {
-				if (contentTypes[i].isKindOf(baseContentType)) {
-					String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			IContentType[] allContentTypes1 = Platform.getContentTypeManager().getAllContentTypes();
+			for (int i = 0, length = allContentTypes1.length; i < length; i++) {
+				if (allContentTypes1[i].isKindOf(baseContentType)) {
+					String[] fileExtension = allContentTypes1[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 					for (int j = 0; j < fileExtension.length; j++) {
 						if (!filenameExtensions.contains(fileExtension[j])) {
 							filenameExtensions.add(fileExtension[j]);
 						}
 					}
-					names = contentTypes[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
+					names = allContentTypes1[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
 					for (int j = 0; j < names.length; j++) {
 						filenames.add(names[j]);
 					}
