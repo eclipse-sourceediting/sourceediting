@@ -49,16 +49,16 @@ public class ContentTypeSpecs {
 				filenames.add(names[j]);
 			}
 			Arrays.sort(baseExtensions);
-			IContentType[] allContentTypes1 = Platform.getContentTypeManager().getAllContentTypes();
-			for (int i = 0, length = allContentTypes1.length; i < length; i++) {
-				if (allContentTypes1[i].isKindOf(baseContentType)) {
-					String[] fileExtension = allContentTypes1[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			IContentType[] allContentTypes = Platform.getContentTypeManager().getAllContentTypes();
+			for (int i = 0, length = allContentTypes.length; i < length; i++) {
+				if (!baseContentType.equals(allContentTypes[i]) && allContentTypes[i].isKindOf(baseContentType)) {
+					String[] fileExtension = allContentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 					for (int j = 0; j < fileExtension.length; j++) {
 						if (!filenameExtensions.contains(fileExtension[j])) {
 							filenameExtensions.add(fileExtension[j]);
 						}
 					}
-					names = allContentTypes1[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
+					names = allContentTypes[i].getFileSpecs(IContentType.FILE_NAME_SPEC);
 					for (int j = 0; j < names.length; j++) {
 						filenames.add(names[j]);
 					}

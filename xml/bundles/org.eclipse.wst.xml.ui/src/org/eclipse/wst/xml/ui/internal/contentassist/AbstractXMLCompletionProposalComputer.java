@@ -1057,7 +1057,7 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 			int end = offset;
 			IDocument document = parent.getParentDocument();
 			try {
-				while (start >= 0 && !Character.isWhitespace(document.getChar(start - 1))) {
+				while (start > 0 && !Character.isWhitespace(document.getChar(start - 1))) {
 					start--;
 				}
 				matchString = document.get(start, end - start);
