@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2019 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -127,16 +127,18 @@ final class FacetModuleCoreSupportDelegate {
 					IVirtualFolder rootFolder = component.getRootFolder();
 					if (rootFolder == null)
 						continue;
-					IPath referencedPathRoot = rootFolder.getWorkspaceRelativePath();
 					/* http://bugs.eclipse.org/410161 */
-					if (referencedPathRoot != null) {
-						/*
-						 * See Servlet 3.0, section 4.6 ; this is the only
-						 * referenced module/component type we support
-						 */
-						IPath resources = referencedPathRoot.append(FacetModuleCoreSupport.META_INF_RESOURCES);
-						if (resources != null && component.getProject().findMember(resources.removeFirstSegments(1)) != null) {
-							paths.add(resources);
+					/*
+					 * See Servlet 3.0, section 4.6 ; this is the only
+					 * referenced module/component type we support
+					 */
+					IVirtualFolder virtualFolder = ComponentCore.createFolder(component.getProject(), FacetModuleCoreSupport.META_INF_RESOURCES_PATH);
+					if (virtualFolder != null) {
+						IContainer[] underlyingFolders = virtualFolder.getUnderlyingFolders();
+						for (int j = 0; j < underlyingFolders.length; j++) {
+							if (underlyingFolders[i].isAccessible()) {
+								paths.add(underlyingFolders[i].getFullPath());
+							}
 						}
 					}
 				}

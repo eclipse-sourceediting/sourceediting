@@ -15,7 +15,6 @@
 package org.eclipse.wst.html.ui.internal.contentassist.resources;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.w3c.dom.Node;
 
@@ -24,12 +23,7 @@ public class ScriptWebResourcesCompletionProposalComputer extends AbstractWebRes
 	ContentTypeSpecs fileMatcher = null;
 
 	public ScriptWebResourcesCompletionProposalComputer() {
-		IContentType[] types = Platform.getContentTypeManager().findContentTypesFor("file.js");
-		String[] typeNames = new String[types.length];
-		for (int i = 0; i < typeNames.length; i++) {
-			typeNames[i] = types[i].getId();
-		}
-		fileMatcher = ContentTypeSpecs.createFor(typeNames);
+		fileMatcher = ContentTypeSpecs.createFor(Platform.getContentTypeManager().findContentTypesFor("file.js"));
 	}
 
 	@Override

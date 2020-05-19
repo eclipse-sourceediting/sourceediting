@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013, 2019 Angelo ZERR and others
+ *  Copyright (c) 2013, 2020 Angelo ZERR and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -72,7 +72,8 @@ public abstract class AbstractWebResourcesCompletionProposalComputer extends Def
 //			this.completionComputerJob = new Job("Compute completion proposals") {
 //				@Override
 //				protected IStatus run(IProgressMonitor arg0) {
-				for (IPath path : findMatchingPaths(file)) {
+				IPath[] matchingPaths = findMatchingPaths(file);
+				for (IPath path : matchingPaths) {
 					if (!referencePath.equals(path)) {
 						String proposalText = null;
 						try {
@@ -116,7 +117,7 @@ public abstract class AbstractWebResourcesCompletionProposalComputer extends Def
 	protected IPath[] findMatchingPaths(IResource referenceResource) {
 		ContentTypeSpecs fileMatcher = createFilenameMatcher();
 		final List<IPath> res = new ArrayList<>();
-		IWorkspaceRoot root = referenceResource.getWorkspace().getRoot();
+		IWorkspaceRoot workspaceRoot = referenceResource.getWorkspace().getRoot();
 		IPath referencePath = referenceResource.getFullPath();
 		IPath[] roots = FacetModuleCoreSupport.getAcceptableRootPaths(referenceResource.getProject());
 		/*
@@ -134,7 +135,7 @@ public abstract class AbstractWebResourcesCompletionProposalComputer extends Def
 		}
 		for (int i = 0; i < roots.length; i++) {
 			try {
-				root.findMember(roots[i]).accept(new IResourceProxyVisitor() {
+				workspaceRoot.findMember(roots[i]).accept(new IResourceProxyVisitor() {
 					@Override
 					public boolean visit(IResourceProxy proxy) throws CoreException {
 						if (proxy.getType() == IResource.FILE && fileMatcher.matches(proxy.getName())) {
