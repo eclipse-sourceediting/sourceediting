@@ -120,7 +120,7 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(HTMLUIPreferenceNames.TYPING_CLOSE_BRACKETS, true);
 		
 		// Defaults for Content Assist preference page
-		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_DEFAULT_PAGE, "");
+		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_DEFAULT_PAGE, "org.eclipse.wst.html.ui.proposalCategory.generic");
 		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DO_NOT_DISPLAY_ON_OWN_PAGE, "");
 		store.setDefault(HTMLUIPreferenceNames.CONTENT_ASSIST_DEFAULT_PAGE_SORT_ORDER,
 				"org.eclipse.wst.html.ui.proposalCategory.htmlTags\0" +
