@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2019 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2020 Chase Technology Ltd., and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Doug Satchwell (Chase Technology Ltd., http://www.chasetechnology.co.uk)
+ *      - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.launching.internal;
 
@@ -352,10 +353,14 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate
 		String[] processorJars = new String[0];
 		if (!vmSupportsEndorsedDirs(configuration)) {
 			File endorsedDir = getEndorsedDir();
-			IPath endorsedPath = getEndorsedPath();
-			processorJars = endorsedDir.list();
-			for (int i = 0; i < processorJars.length; i++) {
-				processorJars[i] = endorsedPath.addTrailingSeparator().append(processorJars[i]).toString();
+			if (endorsedDir.exists()) {
+				IPath endorsedPath = getEndorsedPath();
+				processorJars = endorsedDir.list();
+				if (processorJars != null) {
+					for (int i = 0; i < processorJars.length; i++) {
+						processorJars[i] = endorsedPath.addTrailingSeparator().append(processorJars[i]).toString();
+					}
+				}
 			}
 		}
 
