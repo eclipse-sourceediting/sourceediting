@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.wst.web_sdk.feature"
       label="%featureName"
-      version="3.18.0.qualifier"
+      version="3.19.0.qualifier"
       provider-name="%providerName"
       license-feature="org.eclipse.license"
       license-feature-version="0.0.0">
@@ -31,6 +31,11 @@
       %license
    </license>
 
+   <includes
+         id="org.eclipse.wst.web_js_support_sdk.feature"
+         version="0.0.0"
+         optional="true"/>
+
    <requires>
       <import feature="org.eclipse.wst.server_sdk.feature"/>
       <import feature="org.eclipse.wst.common_sdk.feature"/>
@@ -38,10 +43,5 @@
       <import feature="org.eclipse.wst.xml_sdk.feature"/>
       <import feature="org.eclipse.wst.json_sdk.feature"/>
    </requires>
-
-   <includes
-         id="org.eclipse.wst.web_js_support_sdk.feature"
-         version="0.0.0"
-         optional="true"/>
 
 </feature>
