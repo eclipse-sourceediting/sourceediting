@@ -20,7 +20,7 @@ import org.eclipse.wst.common.encoding.contentspecific.HeadParserToken;
 import org.eclipse.wst.common.encoding.contentspecific.IntStack;
 import org.eclipse.wst.common.encoding.contentspecific.xml.XMLHeadTokenizerConstants;
 
-
+// This copy is outdated, see the version in org.eclipse.wst.xml.core instead
 
 
 %%
