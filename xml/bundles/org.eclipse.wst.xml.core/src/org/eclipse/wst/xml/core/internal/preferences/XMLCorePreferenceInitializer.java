@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 
 /**
@@ -61,8 +62,8 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.put(XMLCorePreferenceNames.DEFAULT_EXTENSION, "xml"); //$NON-NLS-1$
 
 		node.putBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR, true);
-		// 1 = IMarker.SEVERITY_WARNING
-		node.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 1);
+		// 1 = IMarker.SEVERITY_WARNING/ValidationMessage.WARNING
+		node.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, ValidationMessage.IGNORE);
 		node.putInt(XMLCorePreferenceNames.INDICATE_REFERENCED_FILE_CONTAINS_ERRORS, 2);
 		node.putInt(XMLCorePreferenceNames.INDICATE_NO_DOCUMENT_ELEMENT, -1); // ignore
 		node.putBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
