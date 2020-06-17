@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -24,9 +24,12 @@ import java.util.Vector;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -105,6 +108,10 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 			reader.setDTDHandler(this);
 			reader.setErrorHandler(this);
 			reader.setEntityResolver(this);
+
+			boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
+			reader.setFeature("http://xml.org/sax/features/external-general-entities", resolveExternalEntities); //$NON-NLS-1$
+			reader.setFeature("http://xml.org/sax/features/external-parameter-entities", resolveExternalEntities); //$NON-NLS-1$
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -553,8 +560,13 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 					elementPool.put(name, baseNode);
 					break;
 				}
-				case DeclNode.INTERNAL_ENTITY :
 				case DeclNode.EXTERNAL_ENTITY : {
+					boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
+					if (!resolveExternalEntities) {
+						break;
+					}
+				}
+				case DeclNode.INTERNAL_ENTITY : {
 					if (!parseExternalPEReference(declarationString)) {
 						scanner = new DTDScanner(currentDTD.getName(), declarationString);
 						baseNode = scanner.scanEntityDecl();
