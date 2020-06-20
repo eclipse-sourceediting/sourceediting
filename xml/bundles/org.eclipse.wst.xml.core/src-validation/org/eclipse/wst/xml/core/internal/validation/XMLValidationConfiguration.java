@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
  *     David Carver (STAR) - bug 297005 - Some static constants not made final.
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.validation;
+
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 
 /**
  * An XML validation configuration allows setting specific configuration
@@ -33,7 +35,7 @@ public class XMLValidationConfiguration
 
   private boolean warn_no_grammar_value = false;
   // 1 = Warning, 2 = Error, 0/-1 = Ignore 
-  private int indicate_no_grammar_value = 1;
+  private int indicate_no_grammar_value = ValidationMessage.IGNORE;
   private boolean use_xinclude = false;
   private boolean honour_all_schema_locations_value = false;
   private int indicate_no_document_value = 0;

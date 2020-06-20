@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2017 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.validation;
+
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -136,7 +138,7 @@ public class XMLValidationConfigurationTest extends TestCase
   {
 	try
 	{
-		assertEquals("The INDICATE_NO_GRAMMAR feature is not set by default to Ignore.", 1, configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR));
+		assertEquals("The INDICATE_NO_GRAMMAR feature is not set by default to Ignore.", ValidationMessage.IGNORE, configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR));
 	}
 	catch(Exception e)
 	{

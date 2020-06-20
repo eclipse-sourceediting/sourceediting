@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2019 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2020 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License 2.0 which accompanies this distribution, and is
  * available at https://www.eclipse.org/legal/epl-2.0/
@@ -337,6 +337,7 @@ public class XMLUIMessages extends NLS {
 	public static String MarkupValidation_files;
 	public static String Severity_error;
 	public static String Severity_warning;
+	public static String Severity_information;
 	public static String Severity_ignore;
 	public static String Empty_element_tag;
 	public static String End_tag_with_attributes;

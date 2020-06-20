@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2012 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -399,7 +399,7 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
   }
 	  
   /**
-   * Create markers for the valiation messages generated from the validation.
+   * Create markers for the validation messages generated from the validation.
    * 
    * @param iFile
    *          The resource to create the markers on.
@@ -421,7 +421,7 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
       LocalizedMessage message;
       if (validationMessage.getSeverity() == ValidationMessage.SEV_LOW)
       {
-        message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, 
+        message = new LocalizedMessage(IMessage.LOW_SEVERITY, 
         		validationMessage.getMessage(), iFile);
       }
       else

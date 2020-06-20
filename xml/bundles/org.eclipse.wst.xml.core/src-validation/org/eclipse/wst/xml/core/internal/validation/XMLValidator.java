@@ -47,6 +47,7 @@ import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -58,6 +59,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.internal.ValOperation;
 import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
@@ -373,13 +375,15 @@ public class XMLValidator
     		Thread.currentThread().setContextClassLoader(originalClzLoader);
     	}
            
-        if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) > 0 && 
+        if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) > ValidationMessage.IGNORE && 
         		valinfo.isValid() && !isGrammarEncountered)
         {
-          if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) == 1)
+          if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) == IMarker.SEVERITY_WARNING)
             valinfo.addWarning(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
-          else // 2
+          else if (configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) == IMarker.SEVERITY_ERROR) // 2
               valinfo.addError(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
+          else
+              valinfo.addInfo(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
         }
         if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_DOCUMENT_ELEMENT) > 0 && valinfo.isValid() && !helper.isDocumentElementEncountered) {
         	if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_DOCUMENT_ELEMENT) == 1)

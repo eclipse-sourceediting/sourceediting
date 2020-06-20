@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2014 IBM Corporation and others.
+ * Copyright (c) 2011, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -55,8 +55,8 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 
-	private List fCombos;
-	protected List fExpandables;
+	private List<Combo> fCombos;
+	protected List<ExpandableComposite> fExpandables;
 	
 	private SelectionListener fSelectionListener;
 	
@@ -97,13 +97,13 @@ public abstract class AbstractValidationSettingsPage extends PropertyPreferenceP
 		 * @param severity the severity level
 		 */
 		public void setSeverity(int severity) {
-			for(int i = 0; fSeverities != null && i < fSeverities.length; i++) {
-				if(fSeverities[i] == severity) {
+			for (int i = 0; fSeverities != null && i < fSeverities.length; i++) {
+				if (fSeverities[i] == severity) {
 					fIndex = i;
 					return;
 				}
 			}
-			
+
 			fIndex = -1;
 		}
 		
@@ -118,8 +118,8 @@ public abstract class AbstractValidationSettingsPage extends PropertyPreferenceP
 	
 	public AbstractValidationSettingsPage() {
 		super();
-		fCombos = new ArrayList();
-		fExpandables = new ArrayList();
+		fCombos = new ArrayList<>();
+		fExpandables = new ArrayList<>();
 		fPreferencesService = Platform.getPreferencesService();
 		fValidation = ValidationFramework.getDefault();
 	}
@@ -177,16 +177,18 @@ public abstract class AbstractValidationSettingsPage extends PropertyPreferenceP
 		makeScrollableCompositeAware(comboBox);
 		
 		int severity = -1;
-		if(key != null)
+		if (key != null) {
 			severity = fPreferencesService.getInt(getPreferenceNodeQualifier(), key, ValidationMessage.WARNING, createPreferenceScopes());
+		}
 
-		if (severity == ValidationMessage.ERROR || severity == ValidationMessage.WARNING || severity == ValidationMessage.IGNORE) {
+		if (severity == ValidationMessage.ERROR || severity == ValidationMessage.WARNING || severity == ValidationMessage.IGNORE || severity == ValidationMessage.INFORMATION) {
 			data.setSeverity(severity);
 			data.originalSeverity = severity;
 		}
 		
-		if(data.getIndex() >= 0)
+		if(data.getIndex() >= 0) {
 			comboBox.select(data.getIndex());
+		}
 		
 		fCombos.add(comboBox);
 		return comboBox;
@@ -222,12 +224,12 @@ public abstract class AbstractValidationSettingsPage extends PropertyPreferenceP
 		if(fCombos == null || fCombos.size() == 0)
 			return;
 		
-		Iterator it = fCombos.iterator();
+		Iterator<Combo> it = fCombos.iterator();
 		
 		IScopeContext[] contexts = createPreferenceScopes();
 
 		while(it.hasNext()) {
-			ComboData data = (ComboData) ((Combo)it.next()).getData();
+			ComboData data = (ComboData) it.next().getData();
 			if(data.getKey() != null) {
 				contexts[0].getNode(getPreferenceNodeQualifier()).putInt(data.getKey(), data.getSeverity());
 				data.originalSeverity = data.getSeverity();
@@ -319,14 +321,14 @@ public abstract class AbstractValidationSettingsPage extends PropertyPreferenceP
 	
 	protected void storeSectionExpansionStates(IDialogSettings section) {
 		for(int i = 0; i < fExpandables.size(); i++) {
-			ExpandableComposite comp = (ExpandableComposite) fExpandables.get(i);
+			ExpandableComposite comp = fExpandables.get(i);
 			section.put(SETTINGS_EXPANDED + String.valueOf(i), comp.isExpanded());
 		}
 	}
 	
 	protected void restoreSectionExpansionStates(IDialogSettings settings) {
 		for (int i= 0; i < fExpandables.size(); i++) {
-			ExpandableComposite excomposite= (ExpandableComposite) fExpandables.get(i);
+			ExpandableComposite excomposite= fExpandables.get(i);
 			if (settings == null) {
 				excomposite.setExpanded(i == 0); // only expand the first node by default
 			} else {
@@ -338,18 +340,18 @@ public abstract class AbstractValidationSettingsPage extends PropertyPreferenceP
 	protected void resetSeverities() {
 		IEclipsePreferences defaultContext = new DefaultScope().getNode(getPreferenceNodeQualifier());
 		for(int i = 0; i < fCombos.size(); i++) {
-			ComboData data = (ComboData)((Combo)fCombos.get(i)).getData();
+			ComboData data = (ComboData)fCombos.get(i).getData();
 			int severity = defaultContext.getInt(data.getKey(), ValidationMessage.WARNING);
 			data.setSeverity(severity);
-			((Combo)fCombos.get(i)).select(data.getIndex());
+			fCombos.get(i).select(data.getIndex());
 		}
 	}
 	
 	protected boolean shouldRevalidateOnSettingsChange() {
-		Iterator it = fCombos.iterator();
+		Iterator<Combo> it = fCombos.iterator();
 
 		while (it.hasNext()) {
-			ComboData data = (ComboData) ((Combo) it.next()).getData();
+			ComboData data = (ComboData) it.next().getData();
 			if (data.isChanged())
 				return true;
 		}
@@ -400,7 +402,7 @@ public abstract class AbstractValidationSettingsPage extends PropertyPreferenceP
 					/* Get all of the projects in the workspace */
 					projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					IEclipsePreferences prefs = null;
-					List projectList = new ArrayList();
+					List<IProject> projectList = new ArrayList<>();
 					
 					/* Filter out projects that use project-specific settings or have been closed */
 					for(int i = 0; i < projects.length; i++) {
@@ -408,7 +410,7 @@ public abstract class AbstractValidationSettingsPage extends PropertyPreferenceP
 						if(projects[i].isAccessible() && !prefs.getBoolean(getProjectSettingsKey(), false))
 							projectList.add(projects[i]);
 					}
-					projects = (IProject[]) projectList.toArray(new IProject[projectList.size()]);
+					projects = projectList.toArray(new IProject[projectList.size()]);
 				}
 				fValidation.validate(projects, true, false, monitor);
 			}

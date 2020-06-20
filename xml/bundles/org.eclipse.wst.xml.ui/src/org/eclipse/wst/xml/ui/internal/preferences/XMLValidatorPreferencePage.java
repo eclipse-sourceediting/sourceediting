@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2017 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -95,10 +95,14 @@ public class XMLValidatorPreferencePage extends AbstractValidationSettingsPage {
 
 	private static final String[] MARKUP_SEVERITIES = { XMLUIMessages.Severity_error, XMLUIMessages.Severity_warning, XMLUIMessages.Severity_ignore };
 
+	private static final int[] NO_GRAMMAR_XML_SEVERITIES = { ValidationMessage.ERROR, ValidationMessage.WARNING, ValidationMessage.INFORMATION, ValidationMessage.IGNORE };
+
+	private static final String[] NO_GRAMMAR_MESSAGE_SEVERITIES = { XMLUIMessages.Severity_error, XMLUIMessages.Severity_warning, XMLUIMessages.Severity_information, XMLUIMessages.Severity_ignore };
+
 	protected void createContentsForValidatingGroup(Composite validatingGroup) {
 
 		if (fIndicateNoGrammar == null)
-			fIndicateNoGrammar = addComboBox(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified, XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, XML_SEVERITIES, MARKUP_SEVERITIES, 0);
+			fIndicateNoGrammar = addComboBox(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified, XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, NO_GRAMMAR_XML_SEVERITIES, NO_GRAMMAR_MESSAGE_SEVERITIES, 0);
 
 		if (fIndicateReferencedFileError == null) {
 			fIndicateReferencedFileError = addComboBox(validatingGroup, XMLUIMessages.Indicate_referenced_file_error, 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2019 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ public class ValidationInfo implements ValidationReport
   private boolean WRAPPER_ERROR_SUPPORT_ENABLED = true;
   public static final int  SEV_ERROR = 0;
   public static final int SEV_WARNING = 1;
+  public static final int SEV_INFO = 2;
   
   private String validating_file_uri = null;
   private URL validating_file_url = null;
@@ -109,6 +110,25 @@ public class ValidationInfo implements ValidationReport
   public void addError(String message, int line, int column, String uri, String key, Object[] messageArguments)
   {    
     if(addMessage(message, line, column, uri, SEV_ERROR, key, messageArguments))
+    {
+      valid = false;
+    }
+  }
+
+  /**
+   *
+   * Add an informational message.
+   *
+   * @param message The message to add.
+   * @param line The line location of the message.
+   * @param column The column location of the message.
+   * @param uri The URI of the file that contains the message.
+   * @param key The key for the message.
+   * @param messageArguments more information about the error
+   */
+  public void addInfo(String message, int line, int column, String uri, String key, Object[] messageArguments)
+  {
+    if(addMessage(message, line, column, uri, SEV_INFO, key, messageArguments))
     {
       valid = false;
     }
