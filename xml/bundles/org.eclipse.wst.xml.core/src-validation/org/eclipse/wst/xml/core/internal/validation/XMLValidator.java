@@ -59,7 +59,6 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
-import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.internal.ValOperation;
 import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
@@ -374,8 +373,9 @@ public class XMLValidator
     	}finally{
     		Thread.currentThread().setContextClassLoader(originalClzLoader);
     	}
-           
-        if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) > ValidationMessage.IGNORE && 
+
+        // 0 accounts for it not being set at all
+        if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) > 0 &&
         		valinfo.isValid() && !isGrammarEncountered)
         {
           if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) == IMarker.SEVERITY_WARNING)
