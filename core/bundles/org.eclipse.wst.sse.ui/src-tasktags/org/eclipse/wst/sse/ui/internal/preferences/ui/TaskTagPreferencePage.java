@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -86,7 +86,7 @@ public class TaskTagPreferencePage extends PropertyPreferencePage {
 			fRedetectButton.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					Job redetectJob = new Job(SSEUIMessages.TaskTagPreferenceTab_27) { //$NON-NLS-1$
-						public Object getAdapter(Class adapter) {
+						public <T> T getAdapter(Class<T> adapter) {
 							return null;
 						}
 
@@ -281,7 +281,7 @@ public class TaskTagPreferencePage extends PropertyPreferencePage {
 			int button = dialog.open();
 			if (button == 0) {
 				Job redetectJob = new Job(SSEUIMessages.TaskTagPreferenceTab_27) { //$NON-NLS-1$
-					public Object getAdapter(Class adapter) {
+					public <T> T getAdapter(Class<T> adapter) {
 						return null;
 					}
 

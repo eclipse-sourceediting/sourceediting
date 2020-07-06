@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2017 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "RootNoNSChildNS";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "RootNoNSChildNS/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	int numErrors = 0;
 	int numWarnings = 0;
 
@@ -57,7 +57,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "Empty";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "EmptyFile/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	int numErrors = 0;
 	int numWarnings = 0;
 
@@ -71,7 +71,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "ValidateWithDTDValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	int numErrors = 0;
 	int numWarnings = 0;
 
@@ -85,7 +85,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "ValidateWithDTDInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	keys.add("MSG_CONTENT_INVALID");
 	int numErrors = 1;
 	int numWarnings = 0;
@@ -100,7 +100,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "NotWellFormed";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "NotWellFormed/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	keys.add("ETagRequired");
 	int numErrors = 1;
 	int numWarnings = 0;
@@ -115,7 +115,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "InvalidHost";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "CannotLocateDTD/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	keys.add("FILE_NOT_FOUND");
 	int numErrors = 0;
 	int numWarnings = 1;
@@ -130,7 +130,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "InvalidLocation";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "CannotLocateDTD/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	keys.add("FILE_NOT_FOUND");
 	int numErrors = 0;
 	int numWarnings = 1;
@@ -145,7 +145,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "NoGrammar";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "NoGrammar/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	keys.add("NO_GRAMMAR_FOUND");
 	int numErrors = 0;
 	int numWarnings = 1;
@@ -178,7 +178,7 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "NoNamespaceSchema";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "NoNamespaceSchema/" + testname + ".xml";
-	List keys = new ArrayList();
+	List<String> keys = new ArrayList<>();
 	keys.add("cvc-complex-type.2.4.b");
 	int numErrors = 1;
 	int numWarnings = 0;

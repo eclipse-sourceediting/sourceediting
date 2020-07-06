@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -176,9 +176,9 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 	protected IScopeContext[] createPreferenceScopes() {
 		IProject project = getProject();
 		if (project != null) {
-			return new IScopeContext[]{new ProjectScope(project), new InstanceScope(), new DefaultScope()};
+			return new IScopeContext[]{new ProjectScope(project), InstanceScope.INSTANCE, DefaultScope.INSTANCE};
 		}
-		return new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+		return new IScopeContext[]{InstanceScope.INSTANCE, DefaultScope.INSTANCE};
 	}
 
 	protected abstract String getPreferenceNodeQualifier();
