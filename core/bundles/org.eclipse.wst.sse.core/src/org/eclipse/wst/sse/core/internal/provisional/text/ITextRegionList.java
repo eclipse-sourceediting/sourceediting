@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -84,7 +84,7 @@ public interface ITextRegionList {
 	 * 
 	 * @return an iterator for this list.
 	 */
-	public Iterator iterator();
+	public Iterator<ITextRegion> iterator();
 
 	/**
 	 * Removes the region at index.
