@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.html.ui.internal.contentassist;
+package org.eclipse.wst.sse.ui.internal.contentassist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,9 +27,9 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.internal.genericeditor.ContentAssistProcessorRegistry;
 import org.eclipse.ui.internal.genericeditor.GenericEditorPlugin;
-import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 public class GenericCompletionProposalComputer implements ICompletionProposalComputer {
 	List<IContentAssistProcessor> fContentAssistProcessors = null;
@@ -45,7 +45,7 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 	}
 
 	@Override
-	public List computeCompletionProposals(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
+	public List<ICompletionProposal> computeCompletionProposals(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
 		ISourceViewer viewer = null;
 		fLastErrorMessage = null;
 		if (context.getViewer() instanceof ISourceViewer) {
@@ -83,7 +83,7 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 	}
 
 	@Override
-	public List computeContextInformation(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
+	public List<IContextInformation> computeContextInformation(CompletionProposalInvocationContext context, IProgressMonitor monitor) {
 		ISourceViewer viewer = null;
 		fLastErrorMessage = null;
 		if (context.getViewer() instanceof ISourceViewer) {
