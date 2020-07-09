@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -239,9 +239,9 @@ public abstract class CodedIO {
 		String javaCharset = contentDescription.getCharset();
 		// integrity checks for debugging
 		if (javaCharset == null) {
-			Logger.log(Logger.INFO_DEBUG, "charset equaled null!"); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "content description's charset equaled null!"); //$NON-NLS-1$
 		} else if (javaCharset.length() == 0) {
-			Logger.log(Logger.INFO_DEBUG, "charset equaled emptyString!"); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "content description's charset equaled emptyString!"); //$NON-NLS-1$
 		}
 		byte[] BOM = (byte[]) contentDescription.getProperty(IContentDescription.BYTE_ORDER_MARK);
 		//result = (EncodingMemento)
@@ -250,7 +250,7 @@ public abstract class CodedIO {
 		if (!result.isValid()) {
 			result.setAppropriateDefault(appropriateDefault);
 			// integrity check for debugging "invalid" cases.
-			// the apprriate default we have, should equal what's in the
+			// the appropriate default we have, should equal what's in the
 			// detected field. (not sure this is always required)
 			if (DEBUG && appropriateDefault != null && !appropriateDefault.equals(detectedCharset)) {
 				Logger.log(Logger.INFO_DEBUG, "appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$

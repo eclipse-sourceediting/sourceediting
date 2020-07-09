@@ -237,7 +237,7 @@ public class CodedReaderCreator extends CodedIO {
 
 			}
 			else {
-				// stream null, may name's not.
+				// stream null, maybe name's not.
 				if (fFilename != null) {
 					// filename not null
 					IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
