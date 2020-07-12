@@ -16,9 +16,7 @@ package org.eclipse.wst.dtd.core.internal.validation;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -188,13 +186,13 @@ public class DTDValidator {
 
 		private static final String MODEL_DELIMITERS = ",()| "; //$NON-NLS-1$
 
-		private Map fElemDecls = new HashMap();
+		private Map<String, List<ElementLocation>> fElemDecls = new HashMap<>();
 
-		private Hashtable fElemRefs = new Hashtable();
+		private Map<String, ElementRefLocation> fElemRefs = new HashMap<>();
 
-		private List fIgnoreElemModel = new ArrayList();
+		private List<String> fIgnoreElemModel = new ArrayList<>();
 
-		private List fIgnoreElemRefs = new ArrayList();
+		private List<String> fIgnoreElemRefs = new ArrayList<>();
 
 		private Locator fLocator = null;
 
@@ -236,9 +234,9 @@ public class DTDValidator {
 			int column = fLocator.getColumnNumber();
 			String uri = fLocator.getSystemId();			
 			// Add this element to the list of declared elements.
-			List locations = (List) fElemDecls.get(name);
+			List<ElementLocation> locations = fElemDecls.get(name);
 			if (locations == null) {
-				locations = new ArrayList();
+				locations = new ArrayList<>();
 				fElemDecls.put(name, locations);
 			}
 			locations.add(new ElementLocation(column, line, uri));
@@ -265,7 +263,7 @@ public class DTDValidator {
 				if (fIgnoreElemRefs.contains(token)) {
 					continue;
 				}
-				ElementRefLocation elemLoc = (ElementRefLocation) fElemRefs.get(token);
+				ElementRefLocation elemLoc = fElemRefs.get(token);
 				ElementRefLocation tokenLoc = new ElementRefLocation(line, column, uri, elemLoc);
 				fElemRefs.put(token, tokenLoc);
 			}
@@ -314,7 +312,7 @@ public class DTDValidator {
 		 * 
 		 * @return The list of element declarations.
 		 */
-		public Map getElementDeclarations() {
+		public Map<String, List<ElementLocation>> getElementDeclarations() {
 			return fElemDecls;
 		}
 
@@ -323,7 +321,7 @@ public class DTDValidator {
 		 * 
 		 * @return The element references hashtable.
 		 */
-		public Hashtable getElementReferences() {
+		public Map<String, ElementRefLocation> getElementReferences() {
 			return fElemRefs;
 		}
 
@@ -417,7 +415,9 @@ public class DTDValidator {
 	public ValidationReport validate(String uri) {
 		ValidationInfo valinfo = new ValidationInfo(uri);
 		try {
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+			SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+			parserFactory.setValidating(true);
+			SAXParser parser = parserFactory.newSAXParser();
 			XMLReader reader = parser.getXMLReader();
 			MultiHandler dtdHandler = new MultiHandler();
 			reader.setProperty("http://xml.org/sax/properties/declaration-handler", dtdHandler); //$NON-NLS-1$
@@ -434,8 +434,8 @@ public class DTDValidator {
 
 			reader.parse(new InputSource(new StringReader(document)));
 
-			Map elemDecls = dtdHandler.getElementDeclarations();
-			Hashtable elemRefs = dtdHandler.getElementReferences();
+			Map<String, List<ElementLocation>> elemDecls = dtdHandler.getElementDeclarations();
+			Map<String, ElementRefLocation> elemRefs = dtdHandler.getElementReferences();
 			validateElementReferences(elemDecls, elemRefs, valinfo);
 
 			validateDuplicateElementDecls(elemDecls, valinfo);
@@ -452,15 +452,15 @@ public class DTDValidator {
 		return valinfo;
 	}
 
-	private void validateDuplicateElementDecls(Map elemDecls, ValidationInfo valinfo) {
-		final Iterator it = elemDecls.entrySet().iterator();
+	private void validateDuplicateElementDecls(Map<String, List<ElementLocation>> elemDecls, ValidationInfo valinfo) {
+		final Iterator<Map.Entry<String, List<ElementLocation>>> it = elemDecls.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry elem = (Map.Entry) it.next();
-			List locations = (List) elem.getValue();
+			Map.Entry<String, List<ElementLocation>> elem = it.next();
+			List<ElementLocation> locations = elem.getValue();
 			if (locations.size() > 1) {
-				final Iterator locationIterator = locations.iterator();
+				final Iterator<ElementLocation> locationIterator = locations.iterator();
 				while (locationIterator.hasNext()) {
-					ElementLocation elemLoc = (ElementLocation) locationIterator.next();
+					ElementLocation elemLoc = locationIterator.next();
 					valinfo.addError(NLS.bind(DTDValidationMessages._ERROR_DUPLICATE_ELEMENT_DECLARATION, "'" + elem.getKey() + "'"), elemLoc.line, elemLoc.column, elemLoc.uri); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
@@ -479,13 +479,13 @@ public class DTDValidator {
 	 * @param valinfo
 	 *            The validation info object to store validation information.
 	 */
-	private void validateElementReferences(Map elemDecls, Hashtable elemRefs, ValidationInfo valinfo) {
-		Enumeration keys = elemRefs.keys();
-		while (keys.hasMoreElements()) {
-			String elemRef = (String) keys.nextElement();
+	private void validateElementReferences(Map<String, List<ElementLocation>> elemDecls, Map<String, ElementRefLocation> elemRefs, ValidationInfo valinfo) {
+		Iterator<String> keys = elemRefs.keySet().iterator();
+		while (keys.hasNext()) {
+			String elemRef = keys.next();
 			// If the element hasn't been declared create an error.
 			if (!elemDecls.containsKey(elemRef)) {
-				ElementRefLocation elemLoc = (ElementRefLocation) elemRefs.get(elemRef);
+				ElementRefLocation elemLoc = elemRefs.get(elemRef);
 				do {
 					valinfo.addError(NLS.bind(DTDValidationMessages._ERROR_REF_ELEMENT_UNDEFINED, "'" + elemRef + "'"), elemLoc.getLine(), elemLoc.getColumn(), elemLoc.getURI()); //$NON-NLS-1$ //$NON-NLS-2$
 					elemLoc = elemLoc.getNext();
