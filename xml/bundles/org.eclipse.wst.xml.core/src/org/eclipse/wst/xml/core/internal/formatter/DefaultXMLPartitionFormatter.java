@@ -84,7 +84,7 @@ public class DefaultXMLPartitionFormatter {
 	private IProgressMonitor fProgressMonitor;
 
 	private int replaceSpaces(TextEdit textEdit, int spaceStartOffset, int availableLineWidth, String whitespaceRun) {
-		StringBuffer buff = new StringBuffer(whitespaceRun);
+		StringBuilder buff = new StringBuilder(whitespaceRun);
 		for(int i = 0; i < buff.length(); i++) {
 			buff.setCharAt(i, ' '); //$NON-NLS-1$
 		}
@@ -433,7 +433,7 @@ public class DefaultXMLPartitionFormatter {
 				}
 			}
 		}
-		// format the end tag itself
+		// format the end tag itself, if the contents weren't trimmed
 		formatWithinEndTag(textEdit, constraints, currentDocumentRegion, previousDocumentRegion);
 	}
 
@@ -1171,7 +1171,7 @@ public class DefaultXMLPartitionFormatter {
 	 *         returns null
 	 */
 	private String getCharacterRun(char[] fullTextArray, int textOffset, boolean forWhitespace) {
-		StringBuffer characterRun = new StringBuffer();
+		StringBuilder characterRun = new StringBuilder();
 		boolean nonCharacterFound = false;
 		while (textOffset < fullTextArray.length && !nonCharacterFound) {
 			char c = fullTextArray[textOffset];
@@ -1186,7 +1186,7 @@ public class DefaultXMLPartitionFormatter {
 	}
 	
 	private String getTrailingWhitespace(String text) {
-		StringBuffer whitespaceRun = new StringBuffer();
+		StringBuilder whitespaceRun = new StringBuilder();
 		int index = text.length() - 1;
 		while(index >= 0) {
 			char c = text.charAt(index--);
@@ -1199,7 +1199,7 @@ public class DefaultXMLPartitionFormatter {
 	}
 
 	private String getIndentString(int indentLevel) {
-		StringBuffer indentString = new StringBuffer();
+		StringBuilder indentString = new StringBuilder();
 		String indent = getFormattingPreferences().getOneIndent();
 		for (int i = 0; i < indentLevel; ++i) {
 			indentString.append(indent);
@@ -1259,8 +1259,12 @@ public class DefaultXMLPartitionFormatter {
 					String existingDelimiters = extractLineDelimiters(whitespaceRun, currentRegion);
 					if(existingDelimiters != null && existingDelimiters.length() > 0) {
 						String formatted = existingDelimiters + indentString;
-						// Don't perform a replace if the formatted string is the same as the existing whitespaceRun
-						if(!formatted.equals(whitespaceRun))
+						/*
+						 * Don't perform a replace if the formatted string is
+						 * the same as the existing whitespaceRun or already
+						 * modified
+						 */
+						if(!formatted.equals(whitespaceRun) && !(textEdit.hasChildren() && textEdit.getChildren()[textEdit.getChildrenSize() - 1].getOffset() == indentStartOffset))
 							indentation = new ReplaceEdit(indentStartOffset, whitespaceRun.length(), formatted);
 					}
 					// No blank lines to preserve - correct the indent
@@ -1571,8 +1575,9 @@ public class DefaultXMLPartitionFormatter {
 							int contentType = elementDeclaration.getContentType();
 							
 							String facetValue = null;
-							if(elementDeclaration.getDataType() != null)
-								facetValue = (String) elementDeclaration.getDataType().getProperty(PROPERTY_WHITESPACE_FACET);
+							CMDataType elementDataType = elementDeclaration.getDataType();
+							if(elementDataType != null)
+								facetValue = (String) elementDataType.getProperty(PROPERTY_WHITESPACE_FACET);
 							if(facetValue != null) {
 								if(PRESERVE.equals(facetValue))
 									childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.PRESERVE);
@@ -1586,7 +1591,12 @@ public class DefaultXMLPartitionFormatter {
 								childConstraints.setWhitespaceStrategy(preferences.getPCDataWhitespaceStrategy());
 							}
 							else if (contentType == CMElementDeclaration.ELEMENT && parentConstraints != null && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
-								childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.IGNORE);
+								if (elementDataType != null && elementDataType.getDataTypeName() == CMDataType.ENUM) {
+									childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.COLLAPSE);
+								}
+								else {
+									childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.IGNORE);
+								}
 								childConstraints.setIndentStrategy(XMLFormattingConstraints.INDENT);
 								childConstraints.setIsWhitespaceStrategyAHint(true);
 								childConstraints.setIsIndentStrategyAHint(true);
@@ -1710,7 +1720,7 @@ public class DefaultXMLPartitionFormatter {
 	
 	private String extractLineDelimiters(String base, IStructuredDocumentRegion currentRegion) {
 		String lineDelimiter = getLineDelimiter(currentRegion);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for(int index = 0; index < base.length();) {
 			index = base.indexOf(lineDelimiter, index);
 			if(index++ >= 0)
