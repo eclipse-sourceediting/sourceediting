@@ -16,12 +16,14 @@ package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.text.Assert;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -56,6 +58,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager.TextHoverDescriptor;
@@ -286,6 +289,10 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		gd.horizontalSpan = 2;
 		fDescription.setLayoutData(gd);
 
+		new Label(hoverComposite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
+
+		addCheckBox(hoverComposite, SSEUIMessages.TextHoverPreferenceTab_generic, EditorPreferenceNames.PREFER_GENERIC_HOVER, 0);
+
 		initialize();
 
 		Dialog.applyDialogFont(hoverComposite);
@@ -295,9 +302,10 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	}
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
-		ArrayList overlayKeys = new ArrayList();
+		List<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.PREFER_GENERIC_HOVER));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
@@ -383,8 +391,9 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 
 		fModifierEditor.setEnabled(false);
 		// initialize checkboxes in hover table
-		for (int i = 0; i < fTextHovers.length; i++)
+		for (int i = 0; i < fTextHovers.length; i++) {
 			fHoverTable.getItem(i).setChecked(fTextHovers[i].isEnabled());
+		}
 		fHoverTableViewer.refresh();
 	}
 
@@ -414,9 +423,10 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	public void performOk() {
 		String textHoverString = generateTextHoverString();
 		getOverlayStore().setValue(AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, textHoverString);
-		getTextHoverManager().resetTextHovers(); // notify text hover manager
-		// it should reset to get
-		// latest preferences
+		/*
+		 * notify text hover manager it should reset to get latest preferences
+		 */
+		getTextHoverManager().resetTextHovers();
 	}
 
 	/**
@@ -435,7 +445,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 			status = new StatusInfo(IStatus.ERROR, NLS.bind(SSEUIMessages.TextHoverPreferenceTab_modifierIsNotValid, new String[]{hoverConfig.getModifierString()}));
 
 		int i = 0;
-		HashMap stateMasks = new HashMap(fTextHovers.length);
+		Map<Integer, String> stateMasks = new HashMap<>(fTextHovers.length);
 		while (status.isOK() && i < fTextHovers.length) {
 			if (fTextHovers[i].isEnabled()) {
 				String label = fTextHovers[i].getLabel();
@@ -443,7 +453,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 				if (stateMask.intValue() == -1)
 					status = new StatusInfo(IStatus.ERROR, NLS.bind(SSEUIMessages.TextHoverPreferenceTab_modifierIsNotValidForHover, new String[]{fTextHovers[i].getModifierString(), label}));
 				else if (stateMasks.containsKey(stateMask))
-					status = new StatusInfo(IStatus.ERROR, NLS.bind(SSEUIMessages.TextHoverPreferenceTab_duplicateModifier, new String[]{label, (String) stateMasks.get(stateMask)}));
+					status = new StatusInfo(IStatus.ERROR, NLS.bind(SSEUIMessages.TextHoverPreferenceTab_duplicateModifier, new String[]{label, stateMasks.get(stateMask)}));
 				else
 					stateMasks.put(stateMask, label);
 			}

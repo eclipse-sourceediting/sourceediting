@@ -524,7 +524,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @param partitionType
 	 *            the partition type for which the lineStyleProviders are
 	 *            applicable
-	 * @return LineStyleProvders or null if should not be supported
+	 * @return LineStyleProvders or <code>null</code> if should not be supported
 	 */
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		return null;
@@ -736,7 +736,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 	
 	/**
-	 * @return the associated content assistnat
+	 * @return the associated content assistant
 	 */
 	protected StructuredContentAssistant getContentAssistant() {
 		return this.fContentAssistant;

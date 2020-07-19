@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,17 +15,28 @@
 package org.eclipse.wst.sse.ui.internal.taginfo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextHoverExtension2;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.internal.genericeditor.GenericEditorPlugin;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 
 /**
  * Provides the best hover help documentation (by using other hover help
@@ -40,7 +51,7 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 	 */
 	private ITextHover[] fTagInfoHovers;
 	/** List of text hovers to consider in best match */
-	private List fTextHovers;
+	private List<ITextHover> fTextHovers;
 	/**
 	 * Partition type for which to create text hovers (when deferred for
 	 * performance)
@@ -48,6 +59,8 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 	private String fPartitionType;
 
 	private ITextHover controlCreatorProvider;
+
+	private Set<IContentType> fDetectedContentTypes;
 
 	public BestMatchHover(ITextHover infoTagHover) {
 		this(new ITextHover[]{infoTagHover});
@@ -67,8 +80,8 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 	 * 
 	 * @return List of ITextHover - in abstract class this is empty list
 	 */
-	private List createTextHoversList() {
-		List hoverList = new ArrayList();
+	private List<ITextHover> createTextHoversList(ITextViewer textViewer) {
+		List<ITextHover> hoverList = new ArrayList<>();
 		// if currently debugging, then add the debug hover to the list of
 		// best match
 		if (Logger.isTracing(DebugInfoHoverProcessor.TRACEFILTER)) {
@@ -78,8 +91,8 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 		hoverList.add(new ProblemAnnotationHoverProcessor());
 		
 		if (fPartitionType != null && fTagInfoHovers == null) {
-			List extendedTextHover = ExtendedConfigurationBuilder.getInstance().getConfigurations(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, fPartitionType);
-			fTagInfoHovers = (ITextHover[]) extendedTextHover.toArray(new ITextHover[extendedTextHover.size()]);
+			List<ITextHover> extendedTextHover = ExtendedConfigurationBuilder.getInstance().getConfigurations(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, fPartitionType);
+			fTagInfoHovers = extendedTextHover.toArray(new ITextHover[extendedTextHover.size()]);
 		}
 		if (fTagInfoHovers != null) {
 			for (int i = 0; i < fTagInfoHovers.length; i++) {
@@ -87,7 +100,37 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 			}
 		}
 		hoverList.add(new AnnotationHoverProcessor());
+
+		if (SSEUIPlugin.getInstance().getPreferenceStore().getBoolean(EditorPreferenceNames.PREFER_GENERIC_HOVER)) {
+			Set<IContentType> detectedContentTypes = detectContentTypes(textViewer);
+			if (textViewer instanceof ISourceViewer && detectedContentTypes != null) {
+				List<ITextHover> genericHovers = GenericEditorPlugin.getDefault().getHoverRegistry().getAvailableHovers((ISourceViewer) textViewer, null, detectedContentTypes);
+				hoverList.addAll(0, genericHovers);
+			}
+		}
 		return hoverList;
+	}
+
+	private Set<IContentType> detectContentTypes(ITextViewer viewer) {
+		if (fDetectedContentTypes == null) {
+			Set<IContentType> types = new HashSet<>();
+			IDocument currentDocument = viewer.getDocument();
+			if (currentDocument != null) {
+				ITextFileBuffer textFileBuffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(currentDocument);
+				if (textFileBuffer != null) {
+					IContentType[] foundTypes = Platform.getContentTypeManager().findContentTypesFor(textFileBuffer.getLocation().lastSegment());
+					for (int i = 0; i < foundTypes.length; i++) {
+						IContentType type = foundTypes[i];
+						while (type != null) {
+							types.add(type);
+							type = type.getBaseType();
+						}
+					}
+				}
+			}
+			fDetectedContentTypes = types;
+		}
+		return fDetectedContentTypes;
 	}
 
 	public IInformationControlCreator getHoverControlCreator() {
@@ -118,9 +161,9 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 		// either had no best match hover or best match hover returned null
 		if (displayText == null) {
 			// go through list of text hovers and return first display string
-			Iterator i = getTextHovers().iterator();
+			Iterator<ITextHover> i = getTextHovers(viewer).iterator();
 			while ((i.hasNext()) && (displayText == null)) {
-				ITextHover hover = (ITextHover) i.next();
+				ITextHover hover = i.next();
 				displayText = hover.getHoverInfo(viewer, hoverRegion);
 				if (displayText != null) {
 					controlCreatorProvider = hover;
@@ -146,9 +189,9 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 		// either had no best match hover or best match hover returned null
 		if (information == null) {
 			// go through list of text hovers and return first display string
-			Iterator i = getTextHovers().iterator();
+			Iterator<ITextHover> i = getTextHovers(textViewer).iterator();
 			while ((i.hasNext()) && (information == null)) {
-				ITextHover hover = (ITextHover) i.next();
+				ITextHover hover = i.next();
 				if (hover == fBestMatchHover)
 					continue;
 				if (hover instanceof ITextHoverExtension2) {
@@ -179,9 +222,9 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 
 		// go through list of text hovers and return first hover region
 		ITextHover hover = null;
-		Iterator i = getTextHovers().iterator();
+		Iterator<ITextHover> i = getTextHovers(viewer).iterator();
 		while ((i.hasNext()) && (hoverRegion == null)) {
-			hover = (ITextHover) i.next();
+			hover = i.next();
 			hoverRegion = hover.getHoverRegion(viewer, offset);
 		}
 
@@ -194,9 +237,9 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 		return hoverRegion;
 	}
 
-	private List getTextHovers() {
+	private List<ITextHover> getTextHovers(ITextViewer viewer) {
 		if (fTextHovers == null) {
-			fTextHovers = createTextHoversList();
+			fTextHovers = createTextHoversList(viewer);
 		}
 		return fTextHovers;
 	}
