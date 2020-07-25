@@ -810,5 +810,12 @@
             </contentTypeIdentifier>
         </validator>
     </extension>
+
+	<extension point="org.eclipse.wst.sse.core.taskscanner">
+		<scanner
+			id="org.eclipse.wst.sse.core.internal.tasks.JSFileTaskScanner"
+			class="org.eclipse.wst.jsdt.web.ui.internal.tasks.JSFileTaskScanner"
+			contentTypeIds="org.eclipse.wst.jsdt.core.jsSource" />
+	</extension>
     
 </plugin>
