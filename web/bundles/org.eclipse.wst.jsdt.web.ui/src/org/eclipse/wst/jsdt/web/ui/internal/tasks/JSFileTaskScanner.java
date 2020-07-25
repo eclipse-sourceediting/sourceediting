@@ -18,9 +18,9 @@ import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
@@ -89,13 +89,16 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 	public Map<String, Object>[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor) {
 		List<Map<String, Object>> newMarkers = new ArrayList<>();
 		ITextFileBufferManager textFileBufferManager = FileBuffers.getTextFileBufferManager();
+		SubMonitor localMonitor = SubMonitor.convert(monitor, 3);
 		try {
-			textFileBufferManager.connect(file.getFullPath(), LocationKind.IFILE, monitor);
-			IDocument document = textFileBufferManager.getTextFileBuffer(file.getFullPath()).getDocument();
+			textFileBufferManager.connect(file.getFullPath(), LocationKind.IFILE, localMonitor.newChild(1));
+			IDocument document = textFileBufferManager.getTextFileBuffer(file.getFullPath(), LocationKind.IFILE).getDocument();
 			IDocumentPartitioner partitioner = JavaScriptPlugin.getDefault().getJavaTextTools().createDocumentPartitioner();
 			FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
 			partitioner.connect(document);
 			ITypedRegion[] partitions = partitioner.computePartitioning(0, document.getLength());
+			SubMonitor partitionMonitor = localMonitor.newChild(1);
+			partitionMonitor.beginTask("", partitions.length);
 			for (int i = 0; i < partitions.length; i++) {
 				for (int j = 0; j < taskTags.length; j++) {
 					switch (partitions[i].getType()) {
@@ -106,7 +109,7 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 								int start = lineMatch.getOffset();
 								int lengthToEndOfLine = lineInfo.getLength() - (lineMatch.getOffset() - lineInfo.getOffset());
 								String text = document.get(start, lengthToEndOfLine).trim();
-								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text, document.getLineOfOffset(lineMatch.getOffset()), start, text.length(), IMarker.PRIORITY_NORMAL);
+								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text, document.getLineOfOffset(lineMatch.getOffset()), start, text.length(), taskTags[j].getPriority());
 								newMarkers.add(attributesForNewTaskMarker);
 							}
 							break;
@@ -122,7 +125,7 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 								int lineNumber = document.getLineOfOffset(tagMatch.getOffset());
 								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text, lineNumber, start, text.length(), taskTags[j].getPriority());
 								newMarkers.add(attributesForNewTaskMarker);
-								
+
 								tagMatch = finder.find(lineInfo.getOffset() + lineInfo.getLength(), taskTags[j].getTag(), true, false, true, false);
 							}
 							break;
@@ -130,10 +133,9 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 						default :
 					}
 				}
+				partitionMonitor.worked(1);
 			}
 			partitioner.disconnect();
-
-			file.deleteMarkers(MARKER_TYPE_TASK, true, IResource.DEPTH_ONE);
 		}
 		catch (CoreException e) {
 			Logger.logException(e);
@@ -143,11 +145,12 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 		}
 		finally {
 			try {
-				textFileBufferManager.disconnect(file.getFullPath(), LocationKind.IFILE, monitor);
+				textFileBufferManager.disconnect(file.getFullPath(), LocationKind.IFILE, localMonitor.newChild(1));
 			}
 			catch (CoreException e) {
 				Logger.logException("Exception while disconnecting file buffer", e); //$NON-NLS-1$
 			}
+			localMonitor.done();
 		}
 		return newMarkers.toArray(new Map[newMarkers.size()]);
 	}
@@ -170,8 +173,6 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 	 * startup(org.eclipse.core.resources.IProject)
 	 */
 	public void startup(IProject project) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

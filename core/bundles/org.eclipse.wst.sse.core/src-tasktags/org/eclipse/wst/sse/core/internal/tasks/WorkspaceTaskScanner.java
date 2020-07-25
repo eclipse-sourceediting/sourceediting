@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -289,13 +288,13 @@ class WorkspaceTaskScanner {
 							for (int i = 0; i < markerAttributeMaps.length; i++) {
 								String specifiedMarkerType = (String) markerAttributeMaps[i].get(IMarker.TASK);
 								IMarker marker = finalFile.createMarker(specifiedMarkerType);
-								marker.setAttributes(markerAttributeMaps[i]);
-								marker.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
-								marker.setAttribute(MODIFICATION_STAMP, Long.toString(file.getModificationStamp()));
+								markerAttributeMaps[i].put(IMarker.USER_EDITABLE, Boolean.FALSE);
+								markerAttributeMaps[i].put(MODIFICATION_STAMP, Long.toString(file.getModificationStamp()));
 								if (IMarker.TASK.equals(specifiedMarkerType)) {
 									// set to synthetic and make user editable
-									marker.setAttribute(SYNTHETIC_TASK, true);
+									markerAttributeMaps[i].put(SYNTHETIC_TASK, true);
 								}
+								marker.setAttributes(markerAttributeMaps[i]);
 							}
 						}
 						progressMonitor.worked(1);
@@ -303,7 +302,7 @@ class WorkspaceTaskScanner {
 					}
 				};
 				if (file.isAccessible()) {
-					finalFile.getWorkspace().run(r, ResourcesPlugin.getWorkspace().getRuleFactory().modifyRule(file), IWorkspace.AVOID_UPDATE, monitor);
+					finalFile.getWorkspace().run(r, ResourcesPlugin.getWorkspace().getRuleFactory().markerRule(file), 0, monitor);
 				}
 			}
 			catch (CoreException e1) {
