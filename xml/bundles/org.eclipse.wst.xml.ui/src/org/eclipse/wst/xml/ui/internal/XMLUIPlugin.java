@@ -19,6 +19,7 @@ import java.io.IOException;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -26,6 +27,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegist
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeIdsXML;
+import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -114,6 +116,12 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 	 * @return The image registered for the given name.
 	 */
 	public Image getImage(String imageName) {
-		return getWorkbench().getSharedImages().getImage(imageName);
+		return PlatformUI.getWorkbench().getSharedImages().getImage(imageName);
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		ImageDescriptorRegistry.dispose();
+		super.stop(context);
 	}
 }

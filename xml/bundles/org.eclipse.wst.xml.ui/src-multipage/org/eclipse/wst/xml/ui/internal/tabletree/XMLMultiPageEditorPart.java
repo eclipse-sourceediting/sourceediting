@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -87,6 +88,7 @@ import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.ui.internal.ImageDescriptorRegistry;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -788,6 +790,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements INavi
 			else {
 				setActivePage(fSourcePageIndex);
 			}
+
+			setPageImage(fDesignPageIndex, ImageDescriptorRegistry.getImage(ImageDescriptor.createFromURL(Platform.getBundle(XMLUIPlugin.ID).getResource("icons/full/elcl16/hierarchicalLayout.png"))));
+			setPageImage(fSourcePageIndex, ImageDescriptorRegistry.getImage(ImageDescriptor.createFromURL(Platform.getBundle(XMLUIPlugin.ID).getResource("icons/full/obj16/text.gif"))));
 		}
 		catch (PartInitException e) {
 			Logger.logException(e);
