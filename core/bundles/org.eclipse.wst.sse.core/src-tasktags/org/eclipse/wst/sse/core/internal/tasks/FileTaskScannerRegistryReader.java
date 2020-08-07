@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,18 +10,24 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     David Carver (Intalio) - bug 300434 - Make inner classes static where possibl *     
+ *     David Carver (Intalio) - bug 300434 - Make inner classes static where
+ *                                           possible
+ *
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.tasks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
@@ -31,6 +37,15 @@ import org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 public class FileTaskScannerRegistryReader {
+	static class EnabledDisabledScanners {
+		public IFileTaskScanner[] enabled;
+		public IFileTaskScanner[] disabled;
+		EnabledDisabledScanners(IFileTaskScanner[] enabled, IFileTaskScanner[] disabled) {
+			this.enabled = enabled;
+			this.disabled = disabled;
+		}
+	}
+
 	private static class ScannerInfo {
 		String fId;
 		IFileTaskScanner fScanner;
@@ -60,15 +75,18 @@ public class FileTaskScannerRegistryReader {
 	}
 
 	private String ATT_CLASS = "class"; //$NON-NLS-1$
+	private String ATT_ID = "id"; //$NON-NLS-1$
 
 	private String ATT_CONTENT_TYPES = "contentTypeIds"; //$NON-NLS-1$
-
-	private String ATT_ID = "id"; //$NON-NLS-1$
+	private String ATT_FILENAME_EXTENSIONS = "fileExtensions"; //$NON-NLS-1$
 
 	private IConfigurationElement[] fScannerElements;
 
 	// a mapping from content types to ScannerInfo instances
-	private Map<String, ScannerInfo[]> fScannerInfos = null;
+	private Map<String, ScannerInfo[]> fScannerInfoByContentTypes = null;
+
+	// a mapping from filename extensions to scanner configuration elements
+	private Map<String, IConfigurationElement[]> fConfigurationElementsByFilenameExtensions = null;
 
 	private String NAME_SCANNER = "scanner"; //$NON-NLS-1$
 
@@ -86,7 +104,7 @@ public class FileTaskScannerRegistryReader {
 		List<ScannerInfo> scannerInfos = new ArrayList<>(1);
 
 		for (int i = 0; i < contentTypes.length; i++) {
-			ScannerInfo[] scannerInfosForContentType = fScannerInfos.get(contentTypes[i].getId());
+			ScannerInfo[] scannerInfosForContentType = fScannerInfoByContentTypes.get(contentTypes[i].getId());
 			if (scannerInfosForContentType == null) {
 				scannerInfosForContentType = loadScanners(contentTypes[i]);
 			}
@@ -102,6 +120,66 @@ public class FileTaskScannerRegistryReader {
 			scanners[i] = scannerInfos.get(i).getScanner();
 		}
 		return scanners;
+	}
+
+	EnabledDisabledScanners getFileTaskScanners(IPath filePath, IContentType[] exceptForContentTypeIds) {
+		if (fScannerElements == null) {
+			readRegistry();
+		}
+		String fileExtension = filePath.getFileExtension();
+		// what if there is no filename extension?
+		if (fileExtension == null) {
+			return new EnabledDisabledScanners(new IFileTaskScanner[0], new IFileTaskScanner[0]);
+		}
+
+		String loweredExtension = fileExtension.toLowerCase(Locale.US);
+		IConfigurationElement[] matchingElements = fConfigurationElementsByFilenameExtensions.get(loweredExtension);
+		if (matchingElements == null) {
+			Set<String> classnames = new HashSet<>();
+			List<IConfigurationElement> collectedMatchingElements = new ArrayList<>(0);
+			for (int i = 0; i < fScannerElements.length; i++) {
+				if (!fScannerElements[i].getName().equals(NAME_SCANNER))
+					continue;
+				String[] supportedFilenameExtensions = StringUtils.unpack(fScannerElements[i].getAttribute(ATT_FILENAME_EXTENSIONS));
+				for (int k = 0; k < supportedFilenameExtensions.length; k++) {
+					String scannerClassName = fScannerElements[i].getAttribute(ATT_CLASS);
+					if (scannerClassName != null && loweredExtension.equals(supportedFilenameExtensions[k].toLowerCase(Locale.US)) && !classnames.contains(scannerClassName)) {
+						classnames.add(scannerClassName);
+						collectedMatchingElements.add(fScannerElements[i]);
+					}
+				}
+			}
+			matchingElements = collectedMatchingElements.toArray(new IConfigurationElement[collectedMatchingElements.size()]);
+			fConfigurationElementsByFilenameExtensions.put(loweredExtension, matchingElements);
+		}
+		// instantiate and return the scanners
+		List<IFileTaskScanner> enabled = new ArrayList<>();
+		List<IFileTaskScanner> disabled = new ArrayList<>();
+		for (int i = 0; i < matchingElements.length; i++) {
+			boolean disallowed = false;
+			if (exceptForContentTypeIds.length > 0) {
+				String[] supportedContentTypeIds = StringUtils.unpack(matchingElements[i].getAttribute(ATT_CONTENT_TYPES));
+				for (int j = 0; !disallowed && j < supportedContentTypeIds.length; j++) {
+					for (int k = 0; !disallowed && k < exceptForContentTypeIds.length; k++) {
+						if (supportedContentTypeIds[j].equals(exceptForContentTypeIds[k].getId()))
+							disallowed = true;
+					}
+				}
+			}
+			try {
+				IFileTaskScanner scanner = (IFileTaskScanner) matchingElements[i].createExecutableExtension(ATT_CLASS);
+				if (disallowed) {
+					disabled.add(scanner);
+				}
+				else {
+					enabled.add(scanner);
+				}
+			}
+			catch (CoreException e) {
+				Logger.logException("Non-fatal exception creating file task scanner for " + filePath + " from " + matchingElements[i].getContributor().getName(), e); //$NON-NLS-1$
+			}
+		}
+		return new EnabledDisabledScanners(enabled.toArray(new IFileTaskScanner[enabled.size()]), disabled.toArray(new IFileTaskScanner[disabled.size()]));
 	}
 
 	public String[] getSupportedContentTypeIds() {
@@ -161,7 +239,7 @@ public class FileTaskScannerRegistryReader {
 				}
 			}
 			scannerInfos = scannerInfoList.toArray(new ScannerInfo[scannerInfoList.size()]);
-			fScannerInfos.put(contentType.getId(), scannerInfos);
+			fScannerInfoByContentTypes.put(contentType.getId(), scannerInfos);
 			if (Logger.DEBUG_TASKSREGISTRY) {
 				System.out.println("Created " + scannerInfos.length + " task scanner for " + contentType.getId()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -170,7 +248,8 @@ public class FileTaskScannerRegistryReader {
 	}
 
 	private void readRegistry() {
-		fScannerInfos = new HashMap<>();
+		fScannerInfoByContentTypes = new HashMap<>();
+		fConfigurationElementsByFilenameExtensions = new HashMap<>();
 		// Just remember the elements, so plug-ins don't have to be activated,
 		// unless extension attributes match those of interest
 		IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(SCANNER_EXTENSION_POINT_ID);

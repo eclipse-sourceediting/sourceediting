@@ -56,6 +56,13 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="fileExtensions" type="string" use="optional">
+            <annotation>
+               <documentation>
+                  Case-insensitive filename extensions for which this scanner applies, separated by commas.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>

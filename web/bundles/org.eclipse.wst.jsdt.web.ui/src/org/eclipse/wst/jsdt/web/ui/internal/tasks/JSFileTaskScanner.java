@@ -121,6 +121,8 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 								int start = tagMatch.getOffset();
 								IRegion lineInfo = document.getLineInformationOfOffset(tagMatch.getOffset());
 								int lengthToEndOfLine = lineInfo.getLength() - (tagMatch.getOffset() - lineInfo.getOffset());
+								// shorter of end of line or all but the close of the comment
+								lengthToEndOfLine = Math.min(lengthToEndOfLine, partitions[i].getOffset() + partitions[i].getLength() - 2 - start);
 								String text = document.get(start, lengthToEndOfLine).trim();
 								int lineNumber = document.getLineOfOffset(tagMatch.getOffset());
 								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text, lineNumber, start, text.length(), taskTags[j].getPriority());

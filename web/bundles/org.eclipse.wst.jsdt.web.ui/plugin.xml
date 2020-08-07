@@ -815,7 +815,8 @@
 		<scanner
 			id="org.eclipse.wst.sse.core.internal.tasks.JSFileTaskScanner"
 			class="org.eclipse.wst.jsdt.web.ui.internal.tasks.JSFileTaskScanner"
-			contentTypeIds="org.eclipse.wst.jsdt.core.jsSource" />
+			contentTypeIds="org.eclipse.wst.jsdt.core.jsSource"
+			fileExtensions="ts, jsx" />
 	</extension>
     
 </plugin>

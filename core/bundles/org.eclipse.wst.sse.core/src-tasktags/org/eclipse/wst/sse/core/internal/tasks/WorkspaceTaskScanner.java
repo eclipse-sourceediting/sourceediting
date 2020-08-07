@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -80,6 +81,19 @@ class WorkspaceTaskScanner {
 		fActiveScanners = new ArrayList<>();
 		fCurrentTaskTags = new TaskTag[0];
 		fCurrentIgnoreContentTypes = new IContentType[0];
+	}
+
+	private IFileTaskScanner[] combined(IFileTaskScanner[] a, IFileTaskScanner[] b) {
+		if (a.length == 0) {
+			return b;
+		}
+		if (b.length == 0) {
+			return a;
+		}
+		IFileTaskScanner[] both = new  IFileTaskScanner[a.length + b.length];
+		System.arraycopy(a, 0, both, 0, a.length);
+		System.arraycopy(b, 0, both, a.length, b.length);
+		return both;
 	}
 
 	private IContentType[] detectContentTypes(IResource resource) {
@@ -302,7 +316,7 @@ class WorkspaceTaskScanner {
 					}
 				};
 				if (file.isAccessible()) {
-					finalFile.getWorkspace().run(r, ResourcesPlugin.getWorkspace().getRuleFactory().markerRule(file), 0, monitor);
+					finalFile.getWorkspace().run(r, ResourcesPlugin.getWorkspace().getRuleFactory().markerRule(file), IWorkspace.AVOID_UPDATE, monitor);
 				}
 			}
 			catch (CoreException e1) {
@@ -394,10 +408,16 @@ class WorkspaceTaskScanner {
 				}
 				fileScanners = registry.getFileTaskScanners(validTypes.toArray(new IContentType[validTypes.size()]));
 			}
+			FileTaskScannerRegistryReader.EnabledDisabledScanners filenameExtensionScanners = registry.getFileTaskScanners(file.getFullPath(), fCurrentIgnoreContentTypes);
+			fileScanners = combined(fileScanners, filenameExtensionScanners.enabled);
 			monitor.worked(1);
 			if (ignoredFileScanners != null && ignoredFileScanners.length > 0) {
-				for (int i = 0; i < ignoredFileScanners.length; i++)
+				for (int i = 0; i < ignoredFileScanners.length; i++) {
 					markerTypes.add(ignoredFileScanners[i].getMarkerType());
+				}
+			}
+			for (int i = 0; i < filenameExtensionScanners.disabled.length; i++) {
+				markerTypes.add(filenameExtensionScanners.disabled[i].getMarkerType());
 			}
 
 			if (fileScanners.length > 0) {
@@ -440,7 +460,8 @@ class WorkspaceTaskScanner {
 			return;
 		// only update markers if we ran a scanner on this file
 		if (fileScanners != null && fileScanners.length > 0 ||
-				ignoredFileScanners != null && ignoredFileScanners.length > 0) {
+				ignoredFileScanners != null && ignoredFileScanners.length > 0 ||
+				markerTypes.size() > 0) {
 			IProgressMonitor markerUpdateMonitor = new SubProgressMonitor(monitor, 3, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 			if (markerAttributes != null) {
 				replaceTaskMarkers(file, markerTypes.toArray(new String[markerTypes.size()]), markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
