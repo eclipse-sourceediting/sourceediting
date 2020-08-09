@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,8 @@
 // TODO... open a bugzilla to get the JDT class moved to non internal platform
 package org.eclipse.wst.xsd.ui.internal.search.actions;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.util.Assert;
 
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionContext;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.wizards;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -23,8 +23,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 
 public class NamespaceInfoContentBuilder extends ContentBuilder {
 	protected int count = 1;
-	public List list = new Vector();
-	protected Hashtable table = new Hashtable();
+	public List<NamespaceInfo> list = new ArrayList<>();
+	protected Hashtable<String, NamespaceInfo> table = new Hashtable<>();
 
 	public NamespaceInfoContentBuilder() {
 		super();

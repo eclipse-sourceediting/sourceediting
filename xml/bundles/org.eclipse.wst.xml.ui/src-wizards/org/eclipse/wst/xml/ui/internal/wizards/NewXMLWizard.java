@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,12 +15,14 @@ package org.eclipse.wst.xml.ui.internal.wizards;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,7 +32,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -659,17 +660,17 @@ public class NewXMLWizard extends NewModelWizard {
 					combo.removeAll();
 					if ((generator.getCMDocument() != null) && (cmDocumentErrorMessage == null)) {
 						CMNamedNodeMap nameNodeMap = generator.getCMDocument().getElements();
-						Vector nameNodeVector = new Vector();
+						List<String> nameNodeList = new ArrayList<>();
 
 						for (int i = 0; i < nameNodeMap.getLength(); i++) {
 							CMElementDeclaration cmElementDeclaration = (CMElementDeclaration) nameNodeMap.item(i);
 							Object value = cmElementDeclaration.getProperty("Abstract"); //$NON-NLS-1$
 							if (value != Boolean.TRUE) {
-								nameNodeVector.add(cmElementDeclaration.getElementName());
+								nameNodeList.add(cmElementDeclaration.getElementName());
 							}
 						}
 
-						Object[] nameNodeArray = nameNodeVector.toArray();
+						String[] nameNodeArray = nameNodeList.toArray(new String[nameNodeList.size()]);
 						if (nameNodeArray.length > 0) {
 							Arrays.sort(nameNodeArray, Collator.getInstance());
 						}
@@ -677,7 +678,7 @@ public class NewXMLWizard extends NewModelWizard {
 						String defaultRootName = (String) (generator.getCMDocument()).getProperty("http://org.eclipse.wst/cm/properties/defaultRootName"); //$NON-NLS-1$
 						int defaultRootIndex = -1;
 						for (int i = 0; i < nameNodeArray.length; i++) {
-							String elementName = (String) nameNodeArray[i];
+							String elementName = nameNodeArray[i];
 
 							combo.add(elementName);
 							if ((defaultRootName != null) && defaultRootName.equals(elementName)) {
@@ -700,7 +701,7 @@ public class NewXMLWizard extends NewModelWizard {
 
 						// Provide default namespace prefix if none
 						for (int i = 0; i < generator.namespaceInfoList.size(); i++) {
-							NamespaceInfo nsinfo = (NamespaceInfo) generator.namespaceInfoList.get(i);
+							NamespaceInfo nsinfo = generator.namespaceInfoList.get(i);
 							if (((nsinfo.prefix == null) || (nsinfo.prefix.trim().length() == 0)) && ((nsinfo.uri != null) && (nsinfo.uri.trim().length() != 0))) {
 								nsinfo.prefix = getDefaultPrefix(generator.namespaceInfoList);
 							}
@@ -726,15 +727,15 @@ public class NewXMLWizard extends NewModelWizard {
 			}
 		}
 
-		private String getDefaultPrefix(List nsInfoList) {
+		private String getDefaultPrefix(List<NamespaceInfo> nsInfoList) {
 			String defaultPrefix = "p"; //$NON-NLS-1$
 			if (nsInfoList == null) {
 				return defaultPrefix;
 			}
 
-			Vector v = new Vector();
+			Vector<String> v = new Vector<>();
 			for (int i = 0; i < nsInfoList.size(); i++) {
-				NamespaceInfo nsinfo = (NamespaceInfo) nsInfoList.get(i);
+				NamespaceInfo nsinfo = nsInfoList.get(i);
 				if (nsinfo.prefix != null) {
 					v.addElement(nsinfo.prefix);
 				}

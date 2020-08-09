@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.wst.xsd.ui.internal.adt.design.ADTFloatingToolbar.ADTFloatingToolbarModel;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.AbstractModelCollection;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.Compartment;

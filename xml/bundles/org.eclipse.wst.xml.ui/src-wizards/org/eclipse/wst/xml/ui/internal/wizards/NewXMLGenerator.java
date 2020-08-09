@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2016 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -26,12 +27,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
@@ -66,7 +67,7 @@ public class NewXMLGenerator {
 	protected String defaultSystemId;
 
 	// info for xsd
-	public List namespaceInfoList;
+	public List<NamespaceInfo> namespaceInfoList;
 
 	public NewXMLGenerator() {
 		super();
@@ -229,7 +230,7 @@ public class NewXMLGenerator {
 
 		// TODO... instead of relying on file extensions, we need to keep
 		// track of the grammar type
-		// better yet we should reate an SSE document so that we can format it
+		// better yet we should create an SSE document so that we can format it
 		// nicely before saving
 		// then we won't need the DOMWriter at all
 		//
@@ -242,14 +243,14 @@ public class NewXMLGenerator {
 
 
 	public void createNamespaceInfoList() {
-		List result = new Vector();
+		List<NamespaceInfo> result = new ArrayList<>();
 		if (cmDocument != null) {
-			List result2 = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/completeNamespaceInfo"); //$NON-NLS-1$
+			List<NamespaceInfo> result2 = (List<NamespaceInfo>) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/completeNamespaceInfo"); //$NON-NLS-1$
 			if (result2 != null) {
                 result = result2;
 				int size = result.size();
 				for (int i = 0; i < size; i++) {
-					NamespaceInfo info = (NamespaceInfo) result.get(i);
+					NamespaceInfo info = result.get(i);
 					if (i == 0) {
 						String locationInfo = null;
 						if (xmlCatalogEntry != null) {
@@ -284,8 +285,8 @@ public class NewXMLGenerator {
 
 	public boolean isMissingNamespaceLocation() {
 		boolean result = false;
-		for (Iterator i = namespaceInfoList.iterator(); i.hasNext();) {
-			NamespaceInfo info = (NamespaceInfo) i.next();
+		for (Iterator<NamespaceInfo> i = namespaceInfoList.iterator(); i.hasNext();) {
+			NamespaceInfo info = i.next();
 			if (info.locationHint == null) {
 				result = true;
 				break;
@@ -376,11 +377,11 @@ public class NewXMLGenerator {
 
 
 	protected class MyExternalCMDocumentSupport implements DOMContentBuilderImpl.ExternalCMDocumentSupport {
-		protected List namespaceInfoList1;
+		protected List<NamespaceInfo> namespaceInfoList1;
 		protected URIResolver idResolver;
 		protected String resourceLocation;
 
-		protected MyExternalCMDocumentSupport(List namespaceInfoListParam, String resourceLocation) {
+		protected MyExternalCMDocumentSupport(List<NamespaceInfo> namespaceInfoListParam, String resourceLocation) {
 			this.namespaceInfoList1 = namespaceInfoListParam;
 			this.resourceLocation = resourceLocation;
 			idResolver = URIResolverPlugin.createResolver();
