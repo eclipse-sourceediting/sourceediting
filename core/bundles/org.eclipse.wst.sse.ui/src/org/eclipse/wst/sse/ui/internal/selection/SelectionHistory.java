@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,24 +18,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class SelectionHistory {
 	private ITextEditor fEditor;
-	private List fHistory;
-	private List fHistoryActions;
+	private List<IRegion> fHistory;
+	private List<IAction> fHistoryActions;
 	private int fSelectionChangeListenerCounter;
 	private ISelectionChangedListener fSelectionListener;
 
 	public SelectionHistory(ITextEditor editor) {
 		Assert.isNotNull(editor);
 		fEditor = editor;
-		fHistory = new ArrayList(3);
+		fHistory = new ArrayList<>(3);
 		fSelectionListener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (fSelectionChangeListenerCounter == 0)
@@ -67,7 +67,7 @@ public class SelectionHistory {
 		if (isEmpty())
 			return null;
 		int size = fHistory.size();
-		IRegion result = (IRegion) fHistory.remove(size - 1);
+		IRegion result = fHistory.remove(size - 1);
 		updateHistoryAction();
 		return result;
 	}
@@ -93,7 +93,7 @@ public class SelectionHistory {
 		Assert.isNotNull(action);
 		
 		if (fHistoryActions == null)
-			fHistoryActions = new ArrayList();
+			fHistoryActions = new ArrayList<IAction>();
 		if (!fHistoryActions.contains(action))
 			fHistoryActions.add(action);
 		
@@ -110,9 +110,9 @@ public class SelectionHistory {
 			if (fHistory != null && !fHistory.isEmpty())
 				enabled = true;
 
-			Iterator iter = fHistoryActions.iterator();
+			Iterator<IAction> iter = fHistoryActions.iterator();
 			while (iter.hasNext()) {
-				((IAction)iter.next()).setEnabled(enabled);
+				iter.next().setEnabled(enabled);
 			}
 		}
 	}

@@ -14,8 +14,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.ui.editors.text.EditorsUI;
 
 /**
