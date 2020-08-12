@@ -905,11 +905,14 @@
              </activeWhen>
        </handler>
 	</extension>
-	
+
 	<extension point="org.eclipse.ui.perspectiveExtensions">
+        <perspectiveExtension targetID="org.eclipse.jst.j2ee.J2EEPerspective">
+            <newWizardShortcut id="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard"/>
+        </perspectiveExtension>
         <perspectiveExtension targetID="org.eclipse.wst.web.ui.webDevPerspective">
             <newWizardShortcut id="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard"/>
-        </perspectiveExtension> 
+        </perspectiveExtension>
 	</extension>
 	
 	<!-- JSP Fragment Property Page -->
