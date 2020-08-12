@@ -222,7 +222,38 @@
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
 	</extension>
-	
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+        <perspectiveExtension targetID="org.eclipse.jst.j2ee.J2EEPerspective">
+            <newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"/>
+        </perspectiveExtension>
+        <perspectiveExtension targetID="org.eclipse.wst.web.ui.webDevPerspective">
+            <newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"/>
+        </perspectiveExtension>
+	</extension>
+	<extension
+		id="org.eclipse.wst.css.commonWizard.newCSS"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="org.eclipse.wst.web.ui"
+        type="new"
+        wizardId="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard">
+			<enablement>
+				<or>
+					<adapt type="org.eclipse.core.resources.IResource">
+						<or>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="wst.web"/>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="jst.web"/>
+						</or>
+					</adapt>
+				</or>
+			</enablement>
+		</commonWizard>
+	</extension>
+
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="menu:edit?after=additions">
 			<command commandId="org.eclipse.ui.edit.text.contentAssist.proposals" id="CSSContentAssist" style="push">
