@@ -818,5 +818,13 @@
 			contentTypeIds="org.eclipse.wst.jsdt.core.jsSource"
 			fileExtensions="ts, jsx" />
 	</extension>
-    
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            name="%javaPrefName"
+            category="org.eclipse.wst.html.ui.preferences.web"
+            class="org.eclipse.wst.jsdt.internal.ui.preferences.StandaloneJSPreferencePage"
+            id="org.eclipse.wst.jsdt.internal.ui.preferences.TaskTagPreferencePage">
+            <keywordReference id="org.eclipse.wst.jsdt.ui.todo"/>
+      </page>
+   </extension>
 </plugin>
