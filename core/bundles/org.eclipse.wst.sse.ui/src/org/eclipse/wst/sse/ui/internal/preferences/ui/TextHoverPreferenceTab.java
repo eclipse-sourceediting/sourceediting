@@ -58,7 +58,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager.TextHoverDescriptor;
@@ -291,8 +290,6 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 
 		new Label(hoverComposite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
 
-		addCheckBox(hoverComposite, SSEUIMessages.TextHoverPreferenceTab_generic, EditorPreferenceNames.PREFER_GENERIC_HOVER, 0);
-
 		initialize();
 
 		Dialog.applyDialogFont(hoverComposite);
@@ -305,7 +302,6 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		List<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.PREFER_GENERIC_HOVER));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);

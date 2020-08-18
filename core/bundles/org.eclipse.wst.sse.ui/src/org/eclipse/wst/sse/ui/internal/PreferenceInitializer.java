@@ -85,7 +85,5 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		 * SWT.MOD2 is currently SWT.COMMAND on Mac; SWT.CONTROL elsewhere
 		 */
 		store.setDefault(AppearancePreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, "combinationHover|true|0;problemHover|false|0;documentationHover|false|0;annotationHover|true|" + mod2Name); //$NON-NLS-1$
-
-		store.setDefault(EditorPreferenceNames.PREFER_GENERIC_HOVER, true);
 	}
 }

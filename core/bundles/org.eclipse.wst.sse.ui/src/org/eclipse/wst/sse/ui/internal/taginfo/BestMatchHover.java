@@ -15,28 +15,17 @@
 package org.eclipse.wst.sse.ui.internal.taginfo;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextHoverExtension2;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.ui.internal.genericeditor.GenericEditorPlugin;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 
 /**
  * Provides the best hover help documentation (by using other hover help
@@ -59,8 +48,6 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 	private String fPartitionType;
 
 	private ITextHover controlCreatorProvider;
-
-	private Set<IContentType> fDetectedContentTypes;
 
 	public BestMatchHover(ITextHover infoTagHover) {
 		this(new ITextHover[]{infoTagHover});
@@ -100,37 +87,7 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension, ITextHov
 			}
 		}
 		hoverList.add(new AnnotationHoverProcessor());
-
-		if (SSEUIPlugin.getInstance().getPreferenceStore().getBoolean(EditorPreferenceNames.PREFER_GENERIC_HOVER)) {
-			Set<IContentType> detectedContentTypes = detectContentTypes(textViewer);
-			if (textViewer instanceof ISourceViewer && detectedContentTypes != null) {
-				List<ITextHover> genericHovers = GenericEditorPlugin.getDefault().getHoverRegistry().getAvailableHovers((ISourceViewer) textViewer, null, detectedContentTypes);
-				hoverList.addAll(0, genericHovers);
-			}
-		}
 		return hoverList;
-	}
-
-	private Set<IContentType> detectContentTypes(ITextViewer viewer) {
-		if (fDetectedContentTypes == null) {
-			Set<IContentType> types = new HashSet<>();
-			IDocument currentDocument = viewer.getDocument();
-			if (currentDocument != null) {
-				ITextFileBuffer textFileBuffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(currentDocument);
-				if (textFileBuffer != null) {
-					IContentType[] foundTypes = Platform.getContentTypeManager().findContentTypesFor(textFileBuffer.getLocation().lastSegment());
-					for (int i = 0; i < foundTypes.length; i++) {
-						IContentType type = foundTypes[i];
-						while (type != null) {
-							types.add(type);
-							type = type.getBaseType();
-						}
-					}
-				}
-			}
-			fDetectedContentTypes = types;
-		}
-		return fDetectedContentTypes;
 	}
 
 	public IInformationControlCreator getHoverControlCreator() {

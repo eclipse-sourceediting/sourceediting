@@ -44,9 +44,4 @@ public class EditorPreferenceNames {
 	 * </p>
 	 */
 	public final static String CODEASSIST_AUTOACTIVATION_DELAY = "content_assist_autoactivation_delay"; //$NON-NLS-1$
-
-	/**
-	 * Preference name for boolean value controlling whether to defer to Generic Editor hovers
-	 */
-	public final static String PREFER_GENERIC_HOVER = "prefer_generic_hover"; //$NON-NLS-1$
 }

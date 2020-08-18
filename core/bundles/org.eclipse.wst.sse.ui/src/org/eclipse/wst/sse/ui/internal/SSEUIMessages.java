@@ -256,7 +256,6 @@ public class SSEUIMessages extends NLS {
 	public static String TextHoverPreferenceTab_hoverPreferences;
 	public static String TextHoverPreferenceTab_keyModifier;
 	public static String TextHoverPreferenceTab_description;
-	public static String TextHoverPreferenceTab_generic;
 	public static String TextHoverPreferenceTab_modifierIsNotValid;
 	public static String TextHoverPreferenceTab_modifierIsNotValidForHover;
 	public static String TextHoverPreferenceTab_duplicateModifier;
