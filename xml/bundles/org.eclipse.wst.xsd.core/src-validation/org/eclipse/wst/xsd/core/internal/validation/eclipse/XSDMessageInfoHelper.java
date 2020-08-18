@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Nikolay Metchev <nikolaymetchev@gmail.com> - 490769: XML Schema validation shows incorrect location for error
  *******************************************************************************/
 package org.eclipse.wst.xsd.core.internal.validation.eclipse;
 
@@ -25,12 +26,12 @@ public class XSDMessageInfoHelper
   public String[] createMessageInfo(String errorKey, String errorMessage)
   { 
     //Now map the error key to what we would want to underline:
-    String nameOrValue = "";
-    String selectionStrategy = "";
+    String nameOrValue = ""; //$NON-NLS-1$
+    String selectionStrategy = ""; //$NON-NLS-1$
     if(errorKey != null)
     {
-      if (errorKey.equals("s4s-elt-invalid-content.1") || errorKey.equals("s4s-elt-must-match.1") || 
-    		  errorKey.equals("s4s-att-must-appear") || errorKey.equals("s4s-elt-invalid-content.2"))  //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$  //$NON-NLS-4$
+      if (errorKey.equals("s4s-elt-invalid-content.1") || errorKey.equals("s4s-elt-must-match.1") ||   //$NON-NLS-1$//$NON-NLS-2$
+          errorKey.equals("s4s-att-must-appear") || errorKey.equals("s4s-elt-invalid-content.2"))  //$NON-NLS-1$  //$NON-NLS-2$
       { 
     	selectionStrategy = "START_TAG"; //$NON-NLS-1$
       }
@@ -46,15 +47,23 @@ public class XSDMessageInfoHelper
       }
       else if (errorKey.equals("s4s-elt-character")) //$NON-NLS-1$
       { 
-    	selectionStrategy = "TEXT"; //$NON-NLS-1$
+        selectionStrategy = "TEXT"; //$NON-NLS-1$
       }
       else if (errorKey.equals("src-resolve.4.2") || errorKey.equals("src-resolve"))  //$NON-NLS-1$  //$NON-NLS-2$
       { 
-    	selectionStrategy = "VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE"; //$NON-NLS-1$
-        nameOrValue = getFirstStringBetweenSingleQuotes(errorMessage);
+        if (errorMessage.endsWith("to a(n) 'type definition' component.")) //$NON-NLS-1$
+        {
+          selectionStrategy = "ATTRIBUTE_VALUE"; //$NON-NLS-1$
+          nameOrValue = "type"; //$NON-NLS-1$
+        }
+        else
+        {
+          selectionStrategy = "VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE"; //$NON-NLS-1$
+          nameOrValue = getFirstStringBetweenSingleQuotes(errorMessage);
+        }
       }
-      else if (errorKey.equals("EqRequiredInAttribute") || errorKey.equals("OpenQuoteExpected") || 
-    		  errorKey.equals("LessthanInAttValue")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      else if (errorKey.equals("EqRequiredInAttribute") || errorKey.equals("OpenQuoteExpected") ||  //$NON-NLS-1$ //$NON-NLS-2$
+               errorKey.equals("LessthanInAttValue")) //$NON-NLS-1$
       {
       	selectionStrategy = "ATTRIBUTE_NAME"; //$NON-NLS-1$
         nameOrValue = getFirstStringBetweenQuotes(errorMessage);
