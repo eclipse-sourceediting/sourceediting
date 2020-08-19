@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ public class HTMLEditorPluginImages {
 	public static final String IMG_OBJ_TAG_TEMPLATE = "icons/full/obj16/tag-template.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_TITLE = "icons/full/obj16/tag-title.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG = "icons/full/obj16/tag.gif";			//$NON-NLS-1$
+	public static final String IMG_OBJ_ATTRIBUTE = "icons/full/obj16/attribute_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_WIZBAN_NEWHTMLFILE = "icons/full/wizban/newhfile_wiz.png";			//$NON-NLS-1$
 	public static final String IMG_DTOOL_DO_NOT_VALIDATE = "icons/full/etool16/donotvalidate.png";			//$NON-NLS-1$
 }

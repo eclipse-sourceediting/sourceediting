@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2015 IBM Corporation and others.
+ * Copyright (c) 2014, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -42,9 +42,11 @@ import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.validate.StringMatcher;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Element;
 
 public class HTMLSyntaxValidationQuickFixProcessor implements IQuickAssistProcessor {
@@ -113,11 +115,11 @@ public class HTMLSyntaxValidationQuickFixProcessor implements IQuickAssistProces
 		if (model == null)
 			return null;
 
-		List proposals = new ArrayList();
+		List<ICompletionProposal> proposals = new ArrayList<>();
 		if (model instanceof IAnnotationModelExtension2) {
-			Iterator iter = ((IAnnotationModelExtension2) model).getAnnotationIterator(documentOffset, length, true, true);
+			Iterator<Annotation> iter = ((IAnnotationModelExtension2) model).getAnnotationIterator(documentOffset, length, true, true);
 			while (iter.hasNext()) {
-				Annotation anno = (Annotation) iter.next();
+				Annotation anno = iter.next();
 				if (canFix(anno)) {
 					int offset = -1;
 					
@@ -133,15 +135,21 @@ public class HTMLSyntaxValidationQuickFixProcessor implements IQuickAssistProces
 					if (!(node instanceof Element))
 						continue;
 
-					Object adapter = (node instanceof IAdaptable ? ((IAdaptable)node).getAdapter(IResource.class) : null);
-					IProject project = (adapter instanceof IResource ? ((IResource)adapter).getProject() : null);
+					// dangling attributes
+					IStructuredDocumentRegion documentRegion = ContentAssistUtils.getStructuredDocumentRegion(viewer, documentOffset);
+					if (documentRegion != null && documentRegion.getNumberOfRegions() > 2 && DOMRegionContext.XML_END_TAG_OPEN.equals(documentRegion.getFirstRegion().getType())) {
+						proposals.add(new RemoveAttributesProposal(documentRegion, HTMLUIMessages.RemoveAttributes));
+					}
 
-					IScopeContext[] fLookupOrder = new IScopeContext[] {new InstanceScope(), new DefaultScope()};
+					Object adapter = (node instanceof IAdaptable ? ((IAdaptable) node).getAdapter(IResource.class) : null);
+					IProject project = (adapter instanceof IResource ? ((IResource) adapter).getProject() : null);
+
+					IScopeContext[] fLookupOrder = new IScopeContext[] {InstanceScope.INSTANCE, DefaultScope.INSTANCE};
 					if (project != null) {
 						ProjectScope projectScope = new ProjectScope(project);
 						if(projectScope.getNode(getPreferenceNodeQualifier())
 								.getBoolean(getProjectSettingsKey(), false))
-							fLookupOrder = new IScopeContext[] {projectScope, new InstanceScope(), new DefaultScope()};
+							fLookupOrder = new IScopeContext[] {projectScope, InstanceScope.INSTANCE, DefaultScope.INSTANCE};
 					}
 					
 					boolean ignore = fPreferenceService.getBoolean(
@@ -152,7 +160,7 @@ public class HTMLSyntaxValidationQuickFixProcessor implements IQuickAssistProces
 							getPreferenceNodeQualifier(), HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE, 
 							HTMLCorePreferenceNames.ELEMENT_NAMES_TO_IGNORE_DEFAULT, fLookupOrder);
 
-					Set result = new HashSet();
+					Set<String> result = new HashSet<>();
 					if (ignoreList.trim().length() > 0) {
 						String[] names = ignoreList.split(","); //$NON-NLS-1$
 						for (int i = 0; names != null && i < names.length; i++) {
@@ -198,7 +206,7 @@ public class HTMLSyntaxValidationQuickFixProcessor implements IQuickAssistProces
 		if (proposals.isEmpty())
 			return null;
 
-		return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
+		return proposals.toArray(new ICompletionProposal[proposals.size()]);
 
 	}
 
@@ -206,9 +214,9 @@ public class HTMLSyntaxValidationQuickFixProcessor implements IQuickAssistProces
 		return node.getNodeName();
 	}
 	
-	private boolean shouldShowQuickFix(Set lcIgnoredPatterns, String attrName) {
+	private boolean shouldShowQuickFix(Set<String> lcIgnoredPatterns, String attrName) {
 		// Check the attribute name absence in ignore list
-		String [] lcPatterns = (String[])lcIgnoredPatterns.toArray(new String[0]);
+		String [] lcPatterns = lcIgnoredPatterns.toArray(new String[0]);
 		for (int i = 0; i < lcPatterns.length; i++) {
 			StringMatcher strMatcher = new StringMatcher(lcPatterns[i]);
 			if (strMatcher.match(attrName.toLowerCase())) {
