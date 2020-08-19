@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -53,23 +53,23 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 		int documentOffset = quickAssistContext.getOffset();
 		int length = viewer != null ? viewer.getSelectedRange().y : 0;
 
-		IAnnotationModel model = viewer.getAnnotationModel();
+		IAnnotationModel model = viewer != null ? viewer.getAnnotationModel() : null;
 		if (model == null)
 			return null;
 
-		List allProposals = new ArrayList();
+		List<ICompletionProposal> allProposals = new ArrayList<>();
 		if (model instanceof IAnnotationModelExtension2) {
-			Iterator iter = ((IAnnotationModelExtension2) model).getAnnotationIterator(documentOffset, length, true, true);
+			Iterator<Annotation> iter = ((IAnnotationModelExtension2) model).getAnnotationIterator(documentOffset, length, true, true);
 			while (iter.hasNext()) {
-				List processors = new ArrayList();
-				Annotation anno = (Annotation) iter.next();
+				List<IQuickAssistProcessor> processors = new ArrayList<>();
+				Annotation anno = iter.next();
 				if (canFix(anno)) {
 					// first check to see if annotation already has a quick
 					// fix processor attached to it
 					if (anno instanceof TemporaryAnnotation) {
 						Object o = ((TemporaryAnnotation) anno).getAdditionalFixInfo();
 						if (o instanceof IQuickAssistProcessor) {
-							processors.add(o);
+							processors.add((IQuickAssistProcessor) o);
 						}
 					}
 
@@ -78,7 +78,7 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 					processors.addAll(Arrays.asList(registry.getQuickFixProcessors(anno)));
 
 					// set up context
-					Map attributes = null;
+					Map<String, String> attributes = null;
 					if (anno instanceof TemporaryAnnotation) {
 						attributes = ((TemporaryAnnotation) anno).getAttributes();
 					}
@@ -87,8 +87,8 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 
 					// call each processor
 					for (int i = 0; i < processors.size(); ++i) {
-						List proposals = new ArrayList();
-						collectProposals((IQuickAssistProcessor) processors.get(i), anno, sseContext, proposals);
+						List<ICompletionProposal> proposals = new ArrayList<>();
+						collectProposals(processors.get(i), anno, sseContext, proposals);
 
 						if (proposals.size() > 0) {
 							allProposals.addAll(proposals);
@@ -102,10 +102,10 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 		if (allProposals.isEmpty())
 			return null;
 
-		return (ICompletionProposal[]) allProposals.toArray(new ICompletionProposal[allProposals.size()]);
+		return allProposals.toArray(new ICompletionProposal[allProposals.size()]);
 	}
 
-	private void collectProposals(IQuickAssistProcessor processor, Annotation annotation, IQuickAssistInvocationContext invocationContext, List proposalsList) {
+	private void collectProposals(IQuickAssistProcessor processor, Annotation annotation, IQuickAssistInvocationContext invocationContext, List<ICompletionProposal> proposalsList) {
 		ICompletionProposal[] proposals = processor.computeQuickAssistProposals(invocationContext);
 		if (proposals != null && proposals.length > 0) {
 			proposalsList.addAll(Arrays.asList(proposals));

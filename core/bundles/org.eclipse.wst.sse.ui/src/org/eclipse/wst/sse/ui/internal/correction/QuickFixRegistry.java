@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2019 IBM Corporation and others.
+ * Copyright (c) 2008, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,8 @@ public class QuickFixRegistry {
 	/**
 	 * Table of queries for marker resolutions
 	 */
-	private Map resolutionQueries = new HashMap();
+	private Map<AnnotationQuery, Map<AnnotationQueryResult, Collection<IConfigurationElement>>> resolutionQueries = new HashMap<>();
+
 	/**
 	 * Resolution class attribute name in configuration element
 	 */
@@ -72,36 +73,36 @@ public class QuickFixRegistry {
 	 * @param element
 	 *            the configuration element defining the result
 	 */
-	private void addQuery(Map table, AnnotationQuery query, AnnotationQueryResult result, IConfigurationElement element) {
+	private void addQuery(Map<AnnotationQuery, Map<AnnotationQueryResult, Collection<IConfigurationElement>>> table, AnnotationQuery query, AnnotationQueryResult result, IConfigurationElement element) {
 
 		// See if the query is already in the table
-		Map results = (Map) table.get(query);
+		Map<AnnotationQueryResult, Collection<IConfigurationElement>> results = table.get(query);
 		if (results == null) {
 			// Create a new results table
-			results = new HashMap();
+			results = new HashMap<>();
 
 			// Add the query to the table
 			table.put(query, results);
 		}
 
 		if (results.containsKey(result)) {
-			Collection currentElements = (Collection) results.get(result);
+			Collection<IConfigurationElement> currentElements = results.get(result);
 			currentElements.add(element);
 		}
 		else {
-			Collection elements = new HashSet();
-			elements.add(element);
+			Collection<IConfigurationElement> configElements = new HashSet<>();
+			configElements.add(element);
 
 			// Add the new result
-			results.put(result, elements);
+			results.put(result, configElements);
 		}
 	}
 
 	public IQuickAssistProcessor[] getQuickFixProcessors(Annotation anno) {
 		// Collect all matches
 		List<IQuickAssistProcessor> processors = new ArrayList<>();
-		for (Iterator iter = resolutionQueries.keySet().iterator(); iter.hasNext();) {
-			AnnotationQuery query = (AnnotationQuery) iter.next();
+		for (Iterator<AnnotationQuery> iter = resolutionQueries.keySet().iterator(); iter.hasNext();) {
+			AnnotationQuery query = iter.next();
 			AnnotationQueryResult result = null;
 			try {
 				/* AnnotationQuery objects are contributed by extension point */
@@ -112,13 +113,13 @@ public class QuickFixRegistry {
 			}
 			if (result != null) {
 				// See if a matching result is registered
-				Map resultsTable = (Map) resolutionQueries.get(query);
+				Map<AnnotationQueryResult, Collection<IConfigurationElement>> resultsTable = resolutionQueries.get(query);
 
 				if (resultsTable.containsKey(result)) {
 
-					Iterator elements = ((Collection) resultsTable.get(result)).iterator();
+					Iterator<IConfigurationElement> elements = resultsTable.get(result).iterator();
 					while (elements.hasNext()) {
-						IConfigurationElement element = (IConfigurationElement) elements.next();
+						IConfigurationElement element = elements.next();
 
 						IQuickAssistProcessor processor = null;
 						try {

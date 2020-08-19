@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,7 @@ import org.eclipse.jface.text.source.TextInvocationContext;
  * Structured Text quick assist invocation context.
  */
 public final class StructuredTextInvocationContext extends TextInvocationContext {
-	private Map fAttributes;
+	private Map<String, String> fAttributes;
 
 	/**
 	 * @param sourceViewer
@@ -38,7 +38,7 @@ public final class StructuredTextInvocationContext extends TextInvocationContext
 	 * @param length
 	 * @param attributes
 	 */
-	public StructuredTextInvocationContext(ISourceViewer sourceViewer, int offset, int length, Map attributes) {
+	public StructuredTextInvocationContext(ISourceViewer sourceViewer, int offset, int length, Map<String, String> attributes) {
 		super(sourceViewer, offset, length);
 		fAttributes = attributes;
 	}

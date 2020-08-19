@@ -678,7 +678,7 @@
     <proposalComputer
           activate="false"
           categoryId="org.eclipse.wst.html.ui.proposalCategory.generic"
-          class="org.eclipse.wst.sse.ui.internal.contentassist.GenericCompletionProposalComputer"
+          class="org.eclipse.wst.sse.ui.internal.contentassist.GenericCompletionProposalComputer:example.html"
           id="org.eclipse.wst.html.ui.proposalComputer.generic">
        <contentType
              id="org.eclipse.wst.html.core.htmlsource">

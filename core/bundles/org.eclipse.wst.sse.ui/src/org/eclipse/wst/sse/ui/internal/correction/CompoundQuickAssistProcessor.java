@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -41,69 +41,74 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  */
 public class CompoundQuickAssistProcessor implements IQuickAssistProcessor {
 	private final String QUICK_ASSIST_PROCESSOR_EXTENDED_ID = IQuickAssistProcessor.class.getName();
-	private Map fProcessors;
+	private Map<String, Set<IQuickAssistProcessor>> fProcessors;
 	private IQuickAssistProcessor fQuickFixProcessor;
+
 	/**
 	 * list of partition types where extended processors have been installed
 	 */
-	private List fInstalledExtendedContentTypes;
+	private List<String> fInstalledExtendedContentTypes;
 
-	private Set getQuickAssistProcessors(String partitionType) {
+	private Set<IQuickAssistProcessor> getQuickAssistProcessors(IQuickAssistInvocationContext invocationContext, String partitionType) {
 		if (fInstalledExtendedContentTypes == null || !fInstalledExtendedContentTypes.contains(partitionType)) {
 			// get extended quick assist processors that have not already
 			// been set
-			List processors = ExtendedConfigurationBuilder.getInstance().getConfigurations(QUICK_ASSIST_PROCESSOR_EXTENDED_ID, partitionType);
+			List<IQuickAssistProcessor> processors = ExtendedConfigurationBuilder.getInstance().getConfigurations(QUICK_ASSIST_PROCESSOR_EXTENDED_ID, partitionType);
 			if (processors != null && !processors.isEmpty()) {
-				Iterator iter = processors.iterator();
+				Iterator<IQuickAssistProcessor> iter = processors.iterator();
 				while (iter.hasNext()) {
-					IQuickAssistProcessor processor = (IQuickAssistProcessor) iter.next();
+					IQuickAssistProcessor processor = iter.next();
 					setQuickAssistProcessor(partitionType, processor);
 				}
 			}
 			// add partition type to list of extended partition types
 			// installed (regardless of whether or not any extended content
-			// assist processors were installed because dont want to look it
+			// assist processors were installed because don't want to look it
 			// up every time)
-			if (fInstalledExtendedContentTypes == null)
-				fInstalledExtendedContentTypes = new ArrayList();
+			if (fInstalledExtendedContentTypes == null) {
+				fInstalledExtendedContentTypes = new ArrayList<>();
+			}
 			fInstalledExtendedContentTypes.add(partitionType);
 		}
 
-		Set processors = null;
-		if (fProcessors != null)
-			processors = (Set) fProcessors.get(partitionType);
+		Set<IQuickAssistProcessor> processors = null;
+		if (fProcessors != null) {
+			processors = fProcessors.get(partitionType);
+		}
 
 		return processors;
 	}
 
 	/**
-	 * Gets all the quick assist processors relevant to the partion which is
-	 * calcuated from the given document and offset.
+	 * Gets all the quick assist processors relevant to the partition which is
+	 * calculated from the given document and offset.
 	 * 
 	 * @param invocationContext
 	 * @return Set of quick assist processors or null if none exist
 	 */
-	private Set getQuickAssistProcessors(IQuickAssistInvocationContext invocationContext) {
-		Set processsors = null;
+	private Set<IQuickAssistProcessor> getQuickAssistProcessors(IQuickAssistInvocationContext invocationContext) {
+		Set<IQuickAssistProcessor> processors = null;
 
 		ISourceViewer sourceViewer = invocationContext.getSourceViewer();
 		if (sourceViewer != null) {
 			IDocument document = sourceViewer.getDocument();
 			try {
 				String partitionType;
-				if (document != null)
+				if (document != null) {
 					partitionType = TextUtilities.getContentType(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, invocationContext.getOffset(), true);
-				else
+				}
+				else {
 					partitionType = IDocument.DEFAULT_CONTENT_TYPE;
+				}
 
-				processsors = getQuickAssistProcessors(partitionType);
+				processors = getQuickAssistProcessors(invocationContext, partitionType);
 			}
 			catch (BadLocationException x) {
 				Logger.log(Logger.WARNING_DEBUG, x.getMessage(), x);
 			}
 		}
 
-		return processsors;
+		return processors;
 	}
 
 	/**
@@ -127,9 +132,9 @@ public class CompoundQuickAssistProcessor implements IQuickAssistProcessor {
 	 */
 	private void setQuickAssistProcessor(String partitionType, IQuickAssistProcessor processor) {
 		if (fProcessors == null)
-			fProcessors = new HashMap();
+			fProcessors = new HashMap<>();
 
-		Set processors = (Set) fProcessors.get(partitionType);
+		Set<IQuickAssistProcessor> processors = fProcessors.get(partitionType);
 
 		if (processor == null && processors != null) {
 			// removing quick assist processor for this partition type
@@ -139,7 +144,7 @@ public class CompoundQuickAssistProcessor implements IQuickAssistProcessor {
 		}
 		else {
 			if (processors == null) {
-				processors = new LinkedHashSet();
+				processors = new LinkedHashSet<>();
 			}
 			processors.add(processor);
 			fProcessors.put(partitionType, processors);
@@ -147,12 +152,12 @@ public class CompoundQuickAssistProcessor implements IQuickAssistProcessor {
 	}
 
 	public boolean canAssist(IQuickAssistInvocationContext invocationContext) {
-		Set processors = getQuickAssistProcessors(invocationContext);
+		Set<IQuickAssistProcessor> processors = getQuickAssistProcessors(invocationContext);
 		if (processors != null) {
 			// iterate through list of processors until one processor says
 			// canAssist
-			for (Iterator it = processors.iterator(); it.hasNext();) {
-				IQuickAssistProcessor p = (IQuickAssistProcessor) it.next();
+			for (Iterator<IQuickAssistProcessor> it = processors.iterator(); it.hasNext();) {
+				IQuickAssistProcessor p = it.next();
 				if (p.canAssist(invocationContext))
 					return true;
 			}
@@ -167,7 +172,7 @@ public class CompoundQuickAssistProcessor implements IQuickAssistProcessor {
 	}
 
 	public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext invocationContext) {
-		List proposalsList = new ArrayList();
+		List<ICompletionProposal> proposalsList = new ArrayList<>();
 
 		// first get list of fixes
 		IQuickAssistProcessor processor = getQuickFixProcessor();
@@ -178,12 +183,12 @@ public class CompoundQuickAssistProcessor implements IQuickAssistProcessor {
 
 		// no fixes, so try adding assists
 		if (proposalsList.isEmpty()) {
-			Set processors = getQuickAssistProcessors(invocationContext);
+			Set<IQuickAssistProcessor> processors = getQuickAssistProcessors(invocationContext);
 			if (processors != null) {
 				// iterate through list of processors until one processor says
 				// canAssist
-				for (Iterator it = processors.iterator(); it.hasNext();) {
-					IQuickAssistProcessor assistProcessor = (IQuickAssistProcessor) it.next();
+				for (Iterator<IQuickAssistProcessor> it = processors.iterator(); it.hasNext();) {
+					IQuickAssistProcessor assistProcessor = it.next();
 					ICompletionProposal[] assistProposals = assistProcessor.computeQuickAssistProposals(invocationContext);
 					if (assistProposals != null && assistProposals.length > 0) {
 						proposalsList.addAll(Arrays.asList(assistProposals));
@@ -202,7 +207,7 @@ public class CompoundQuickAssistProcessor implements IQuickAssistProcessor {
 			return null;
 		}
 
-		return (ICompletionProposal[]) proposalsList.toArray(new ICompletionProposal[proposalsList.size()]);
+		return proposalsList.toArray(new ICompletionProposal[proposalsList.size()]);
 	}
 
 	public String getErrorMessage() {

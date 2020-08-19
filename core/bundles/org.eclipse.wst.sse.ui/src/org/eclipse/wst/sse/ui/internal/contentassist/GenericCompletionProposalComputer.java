@@ -17,6 +17,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
@@ -31,10 +37,10 @@ import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.contentassist.ICompletionProposalComputer;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
-public class GenericCompletionProposalComputer implements ICompletionProposalComputer {
+public class GenericCompletionProposalComputer implements ICompletionProposalComputer, IExecutableExtension {
 	List<IContentAssistProcessor> fContentAssistProcessors = null;
 	private String fLastErrorMessage;
-	private static final String fExampleFileName = "filename.html"; //$NON-NLS-1$
+	private String fDefaultFileName = "filename.html"; //$NON-NLS-1$
 
 	public void sessionEnded() {
 		fContentAssistProcessors = null;
@@ -52,10 +58,18 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 			viewer = (ISourceViewer) context.getViewer();
 		}
 		if (fContentAssistProcessors == null && viewer != null) {
+			String filename = fDefaultFileName;
+			ITextFileBuffer fileBuffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(viewer.getDocument());
+			if (fileBuffer != null) {
+				IPath path = fileBuffer.getLocation();
+				if (path != null  ) {
+					filename = path.lastSegment();
+				}
+			}
 			IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 			ContentAssistProcessorRegistry contentAssistProcessorRegistry = GenericEditorPlugin.getDefault().getContentAssistProcessorRegistry();
 			Set<IContentType> types = new HashSet<>();
-			types.addAll(Arrays.asList(contentTypeManager.findContentTypesFor(fExampleFileName)));
+			types.addAll(Arrays.asList(contentTypeManager.findContentTypesFor(filename)));
 			IContentType contentType = contentTypeManager.getContentType(IContentTypeManager.CT_TEXT);
 			types.add(contentType);
 			try {
@@ -93,7 +107,7 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 			IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 			ContentAssistProcessorRegistry contentAssistProcessorRegistry = GenericEditorPlugin.getDefault().getContentAssistProcessorRegistry();
 			Set<IContentType> types = new HashSet<>();
-			types.addAll(Arrays.asList(contentTypeManager.findContentTypesFor(fExampleFileName)));
+			types.addAll(Arrays.asList(contentTypeManager.findContentTypesFor(fDefaultFileName)));
 			IContentType contentType = contentTypeManager.getContentType(IContentTypeManager.CT_TEXT);
 			types.add(contentType);
 			fContentAssistProcessors = contentAssistProcessorRegistry.getContentAssistProcessors(viewer, null, types);
@@ -118,5 +132,12 @@ public class GenericCompletionProposalComputer implements ICompletionProposalCom
 	@Override
 	public String getErrorMessage() {
 		return fLastErrorMessage;
+	}
+
+	@Override
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		if (data instanceof String) {
+			fDefaultFileName = data.toString();
+		}
 	}
 }

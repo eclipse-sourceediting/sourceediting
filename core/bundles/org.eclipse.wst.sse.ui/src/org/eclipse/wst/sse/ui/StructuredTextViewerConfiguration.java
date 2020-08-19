@@ -178,7 +178,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
 	 */
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
-		List allStrategies = new ArrayList(0);
+		List<IAutoEditStrategy> allStrategies = new ArrayList<>(0);
 
 		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		for (int i = 0; i < superStrategies.length; i++) {
@@ -186,12 +186,12 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		}
 
 		// add auto edit strategies contributed by clients
-		List extendedAutoEdits = ExtendedConfigurationBuilder.getInstance().getConfigurations(AUTOEDITSTRATEGY, contentType);
+		List<IAutoEditStrategy> extendedAutoEdits = ExtendedConfigurationBuilder.getInstance().getConfigurations(AUTOEDITSTRATEGY, contentType);
 		if (!extendedAutoEdits.isEmpty()) {
 			allStrategies.addAll(extendedAutoEdits);
 		}
 
-		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
+		return allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 	}
 
 	/**
@@ -582,6 +582,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	public IQuickAssistAssistant getQuickAssistAssistant(ISourceViewer sourceViewer) {
 		if (fQuickAssistant == null) {
 			IQuickAssistAssistant assistant = new QuickAssistAssistant();
+
 			assistant.setQuickAssistProcessor(new CompoundQuickAssistProcessor());
 			assistant.setInformationControlCreator(getQuickAssistAssistantInformationControlCreator());
 
@@ -679,8 +680,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @return
 	 */
 	private ITextHover[] createDocumentationHovers(String partitionType) {
-		List extendedTextHover = ExtendedConfigurationBuilder.getInstance().getConfigurations(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, partitionType);
-		ITextHover[] hovers = (ITextHover[]) extendedTextHover.toArray(new ITextHover[extendedTextHover.size()]);
+		List<ITextHover> extendedTextHover = ExtendedConfigurationBuilder.getInstance().getConfigurations(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, partitionType);
+		ITextHover[] hovers = extendedTextHover.toArray(new ITextHover[extendedTextHover.size()]);
 		return hovers;
 	}
 
