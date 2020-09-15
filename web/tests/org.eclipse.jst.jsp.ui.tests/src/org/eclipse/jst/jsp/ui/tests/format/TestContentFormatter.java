@@ -250,4 +250,46 @@ public class TestContentFormatter extends TestCase {
 			JSPUIPlugin.getInstance().getPreferenceStore().setValue(JSPUIPreferenceNames.USE_HTML_FORMATTER, true);
 		}
 	}
+
+	public void testFormatJava1() throws UnsupportedEncodingException, IOException, CoreException {
+		String beforePath = "/" + PROJECT_NAME + "/WebContent/format_java1.jsp";
+		String afterPath =  "/" + PROJECT_NAME + "/WebContent/format_java1-fmt.jsp";
+		formatAndAssertSignificantEquals(beforePath, false);
+		formatAndAssertEquals(beforePath, afterPath, true);
+	}
+
+	public void testFormatJava2() throws UnsupportedEncodingException, IOException, CoreException {
+		String beforePath = "/" + PROJECT_NAME + "/WebContent/format_java2.jsp";
+		String afterPath =  "/" + PROJECT_NAME + "/WebContent/format_java2-fmt.jsp";
+		formatAndAssertSignificantEquals(beforePath, false);
+		formatAndAssertEquals(beforePath, afterPath, true);
+	}
+
+	public void testFormatJava3() throws UnsupportedEncodingException, IOException, CoreException {
+		String beforePath = "/" + PROJECT_NAME + "/WebContent/format_java3.jsp";
+		String afterPath =  "/" + PROJECT_NAME + "/WebContent/format_java3-fmt.jsp";
+		formatAndAssertSignificantEquals(beforePath, false);
+		formatAndAssertEquals(beforePath, afterPath, true);
+	}
+
+	public void testFormatJava4() throws UnsupportedEncodingException, IOException, CoreException {
+		String beforePath = "/" + PROJECT_NAME + "/WebContent/format_java4.jsp";
+		String afterPath =  "/" + PROJECT_NAME + "/WebContent/format_java4-fmt.jsp";
+		formatAndAssertSignificantEquals(beforePath, false);
+		formatAndAssertEquals(beforePath, afterPath, true);
+	}
+
+	public void testFormatJava5() throws UnsupportedEncodingException, IOException, CoreException {
+		String beforePath = "/" + PROJECT_NAME + "/WebContent/format_java5.jsp";
+		String afterPath =  "/" + PROJECT_NAME + "/WebContent/format_java5-fmt.jsp";
+		formatAndAssertSignificantEquals(beforePath, false);
+		formatAndAssertEquals(beforePath, afterPath, true);
+	}
+
+	public void testFormatJava6() throws UnsupportedEncodingException, IOException, CoreException {
+		String beforePath = "/" + PROJECT_NAME + "/WebContent/format_java6.jsp";
+		String afterPath =  "/" + PROJECT_NAME + "/WebContent/format_java6-fmt.jsp";
+		formatAndAssertSignificantEquals(beforePath, false);
+		formatAndAssertEquals(beforePath, afterPath, true);
+	}
 }

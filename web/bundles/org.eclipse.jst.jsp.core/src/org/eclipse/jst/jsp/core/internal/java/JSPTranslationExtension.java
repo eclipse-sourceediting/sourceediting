@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2011 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -271,11 +271,8 @@ public class JSPTranslationExtension extends JSPTranslation {
 						preDelimiterWhitespace = preDelimiterWhitespace.replaceAll("\r", ""); //$NON-NLS-1$ //$NON-NLS-2$
 						preDelimiterWhitespace = preDelimiterWhitespace.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
-						// need to determine indent for that first line...
-						String initialIndent = getInitialIndent(result);
-
 						// fix the first line of java code
-						result = TextUtilities.getDefaultLineDelimiter(sDoc) + initialIndent + result;
+						result = TextUtilities.getDefaultLineDelimiter(sDoc) + result;
 
 						result = adjustIndent(result, preDelimiterWhitespace, TextUtilities.getDefaultLineDelimiter(sDoc));
 
@@ -347,27 +344,6 @@ public class JSPTranslationExtension extends JSPTranslation {
 		}
 		return textAfter.toString();
 
-	}
-
-	private String getInitialIndent(String result) {
-		// BUG188636 - just get initial indent from code formatter
-		String indent = getCodeFormatter().createIndentationString(1);
-		// // get indent after 2nd line break
-		// String indent = ""; //$NON-NLS-1$
-		// StringTokenizer st = new StringTokenizer(result, "\r\n", false);
-		// //$NON-NLS-1$
-		// if (st.countTokens() > 1) {
-		// String tok = st.nextToken();
-		// tok = st.nextToken();
-		// int index = 0;
-		// if (tok != null) {
-		// while (tok.charAt(index) == ' ' || tok.charAt(index) == '\t') {
-		// indent += tok.charAt(index);
-		// index++;
-		// }
-		// }
-		// }
-		return indent;
 	}
 
 	private CodeFormatter getCodeFormatter() {
