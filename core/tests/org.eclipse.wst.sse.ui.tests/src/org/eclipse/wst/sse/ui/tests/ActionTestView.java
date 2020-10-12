@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.tests;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,16 +21,20 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
@@ -90,7 +96,7 @@ public class ActionTestView extends ViewPart {
 		}
 	}
 
-	Control fControl = null;
+	StyledText fControl = null;
 
 	ISelection fSelection;
 	private ISelectionListener fSelectionListener;
@@ -117,10 +123,54 @@ public class ActionTestView extends ViewPart {
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
-		ITextViewer text = new TextViewer(parent, SWT.READ_ONLY);
+		ITextViewer text = new TextViewer(parent, SWT.MULTI);
 		text.setDocument(new Document());
 		fControl = text.getTextWidget();
-		text.getDocument().set("Use either the toolbar or the menu to run your actions\n\n");
+		text.getDocument().set("Use either the toolbar or the menu to run your actions\n\nWrite new lines with file paths and hit enter to open them.\n\n");
+		fControl.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.character == '\r' ) {
+					int offset = fControl.getCaretOffset();
+					try {
+						IRegion lineInformation = text.getDocument().getLineInformationOfOffset(offset - 1);
+						String path = text.getDocument().get(lineInformation.getOffset(), lineInformation.getLength());
+						Event event = new Event();
+						event.type = SWT.OpenDocument;
+						event.text = path;
+						event.widget = fControl;
+						Method m  = parent.getDisplay().getClass().getDeclaredMethod("sendEvent", new Class[] {int.class, Event.class});
+						m.setAccessible(true);
+						m.invoke(parent.getDisplay(), event.type, event);
+					}
+					catch (BadLocationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					catch (NoSuchMethodException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					catch (SecurityException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					catch (IllegalAccessException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					catch (IllegalArgumentException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					catch (InvocationTargetException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				super.keyReleased(e);
+			}
+		});
 	}
 
 	private ISelectionListener getSelectionListener() {
@@ -157,7 +207,7 @@ public class ActionTestView extends ViewPart {
 	}
 
 	void print(String s) {
-		((StyledText) fControl).append(s);
+		fControl.append(s);
 	}
 
 
