@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2018 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -36,6 +35,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
@@ -49,9 +49,14 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualResource;
 /**
  * @author nitin
  * 
- * A view to hang actions off of to execute arbitrary code at arbitrary times.
+ *         A view to hang actions off of to execute arbitrary code at
+ *         arbitrary times.
  */
 public class ActionTestView extends ViewPart {
+
+	private static final String ACTIONTEXT = "actiontext";
+	private static final String DEFAULT_ACTION_TEXT = "Use either the toolbar or the menu to run your actions\n\nWrite new lines with file paths and hit enter to open them.\n\n";
+
 
 	private class ComponentViewer extends Action {
 		public void run() {
@@ -100,9 +105,10 @@ public class ActionTestView extends ViewPart {
 
 	ISelection fSelection;
 	private ISelectionListener fSelectionListener;
+	private IDocument fDocument = new Document();
 
-	private List createActions() {
-		List actions = new ArrayList();
+	private List<Action> createActions() {
+		List<Action> actions = new ArrayList<>();
 
 		actions.add(new EmptyTextSetter());
 		actions.add(new ComponentViewer());
@@ -112,65 +118,74 @@ public class ActionTestView extends ViewPart {
 	/**
 	 * @return
 	 */
-	private List createContribututions() {
-		List actions = new ArrayList();
+	private List<IContributionItem> createContribututions() {
+		List<IContributionItem> actions = new ArrayList<>();
 		return actions;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets
+	 * .Composite)
 	 */
 	public void createPartControl(Composite parent) {
 		ITextViewer text = new TextViewer(parent, SWT.MULTI);
-		text.setDocument(new Document());
+		text.setDocument(fDocument);
 		fControl = text.getTextWidget();
-		text.getDocument().set("Use either the toolbar or the menu to run your actions\n\nWrite new lines with file paths and hit enter to open them.\n\n");
 		fControl.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.character == '\r' ) {
+			public void keyPressed(KeyEvent keyEvent) {
+				if (keyEvent.character == '\r') {
 					int offset = fControl.getCaretOffset();
 					try {
 						IRegion lineInformation = text.getDocument().getLineInformationOfOffset(offset - 1);
 						String path = text.getDocument().get(lineInformation.getOffset(), lineInformation.getLength());
-						Event event = new Event();
-						event.type = SWT.OpenDocument;
-						event.text = path;
-						event.widget = fControl;
-						Method m  = parent.getDisplay().getClass().getDeclaredMethod("sendEvent", new Class[] {int.class, Event.class});
-						m.setAccessible(true);
-						m.invoke(parent.getDisplay(), event.type, event);
+						if (path.trim().length() > 0) {
+							Event event = new Event();
+							event.type = SWT.OpenDocument;
+							event.text = path.trim();
+							event.widget = fControl;
+							Method m = parent.getDisplay().getClass().getDeclaredMethod("sendEvent", new Class[]{int.class, Event.class});
+							m.setAccessible(true);
+							m.invoke(parent.getDisplay(), event.type, event);
+						}
 					}
-					catch (BadLocationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					catch (BadLocationException e) {
+						Logger.logException(e);
+						e.printStackTrace();
 					}
-					catch (NoSuchMethodException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					catch (NoSuchMethodException e) {
+						Logger.logException(e);
+						e.printStackTrace();
 					}
-					catch (SecurityException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					catch (SecurityException e) {
+						Logger.logException(e);
+						e.printStackTrace();
 					}
-					catch (IllegalAccessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					catch (IllegalAccessException e) {
+						Logger.logException(e);
+						e.printStackTrace();
 					}
-					catch (IllegalArgumentException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					catch (IllegalArgumentException e) {
+						Logger.logException(e);
+						e.printStackTrace();
 					}
-					catch (InvocationTargetException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					catch (InvocationTargetException e) {
+						Logger.logException(e);
+						e.printStackTrace();
 					}
 				}
-				super.keyReleased(e);
+				super.keyReleased(keyEvent);
 			}
 		});
+	}
+
+	@Override
+	public void saveState(IMemento memento) {
+		memento.putString(ACTIONTEXT, fDocument.get());
+		super.saveState(memento);
 	}
 
 	private ISelectionListener getSelectionListener() {
@@ -184,24 +199,22 @@ public class ActionTestView extends ViewPart {
 		return fSelectionListener;
 	}
 
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite)
-	 */
-	public void init(IViewSite site) throws PartInitException {
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site);
-		List actions = createActions();
-		for (int i = 0; i < actions.size(); i++) {
-			site.getActionBars().getToolBarManager().add((IAction) actions.get(i));
-			site.getActionBars().getMenuManager().add((IAction) actions.get(i));
+		String contents = memento.getString(ACTIONTEXT);
+		if (contents == null || contents.length() == 0) {
+			contents = DEFAULT_ACTION_TEXT;
 		}
-		List contributions = createContribututions();
+		fDocument.set(contents);
+		List<Action> actions = createActions();
+		for (int i = 0; i < actions.size(); i++) {
+			site.getActionBars().getToolBarManager().add(actions.get(i));
+			site.getActionBars().getMenuManager().add(actions.get(i));
+		}
+		List<IContributionItem> contributions = createContribututions();
 		for (int i = 0; i < contributions.size(); i++) {
-			site.getActionBars().getToolBarManager().add((IContributionItem) contributions.get(i));
-			site.getActionBars().getMenuManager().add((IContributionItem) contributions.get(i));
+			site.getActionBars().getToolBarManager().add(contributions.get(i));
+			site.getActionBars().getMenuManager().add(contributions.get(i));
 		}
 		site.getWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionListener());
 	}
